@@ -133,25 +133,55 @@ public final class MobHighlighterModule implements Module {
 		sub.add(entryBuilder.startStrField(Component.literal("Name Pattern"), rule.namePattern)
 				.setSaveConsumer(value -> rule.namePattern = value)
 				.build());
-		sub.add(entryBuilder.startStrField(Component.literal("Color (hex RRGGBB)"), String.format("%06X", rule.color & 0xFFFFFF))
+		// Hex/preview/R/G/B all ultimately write the same rule.color int. Each captures its own
+		// initial value at build time and only applies on save if it actually changed — otherwise,
+		// whichever field the user *didn't* touch would unconditionally re-apply its stale
+		// snapshot and clobber an edit made through one of the others (e.g. editing R/G/B would
+		// get silently undone by hex's untouched original value re-saving over it, or vice versa).
+		int initialColor = rule.color;
+		String initialHex = String.format("%06X", initialColor & 0xFFFFFF);
+		int initialRed = (initialColor >> 16) & 0xFF;
+		int initialGreen = (initialColor >> 8) & 0xFF;
+		int initialBlue = initialColor & 0xFF;
+
+		sub.add(entryBuilder.startStrField(Component.literal("Color (hex RRGGBB)"), initialHex)
 				.setErrorSupplier(value -> isValidHexColor(value) ? Optional.empty() : Optional.of(Component.literal("Expected 6 hex digits, e.g. FF4500")))
 				.setSaveConsumer(value -> {
-					if (isValidHexColor(value)) {
+					if (isValidHexColor(value) && !value.equalsIgnoreCase(initialHex)) {
 						rule.color = Integer.parseInt(value, 16);
 					}
 				})
 				.build());
-		sub.add(entryBuilder.startIntField(Component.literal("Color Red"), (rule.color >> 16) & 0xFF)
-				.setMin(0).setMax(255)
-				.setSaveConsumer(value -> rule.color = (rule.color & 0x00FFFF) | (value << 16))
+		sub.add(entryBuilder.startColorField(Component.literal("Color Preview"), initialColor)
+				.setSaveConsumer(value -> {
+					if (value != initialColor) {
+						rule.color = value;
+					}
+				})
 				.build());
-		sub.add(entryBuilder.startIntField(Component.literal("Color Green"), (rule.color >> 8) & 0xFF)
+		sub.add(entryBuilder.startIntField(Component.literal("Color Red"), initialRed)
 				.setMin(0).setMax(255)
-				.setSaveConsumer(value -> rule.color = (rule.color & 0xFF00FF) | (value << 8))
+				.setSaveConsumer(value -> {
+					if (value != initialRed) {
+						rule.color = (rule.color & 0x00FFFF) | (value << 16);
+					}
+				})
 				.build());
-		sub.add(entryBuilder.startIntField(Component.literal("Color Blue"), rule.color & 0xFF)
+		sub.add(entryBuilder.startIntField(Component.literal("Color Green"), initialGreen)
 				.setMin(0).setMax(255)
-				.setSaveConsumer(value -> rule.color = (rule.color & 0xFFFF00) | value)
+				.setSaveConsumer(value -> {
+					if (value != initialGreen) {
+						rule.color = (rule.color & 0xFF00FF) | (value << 8);
+					}
+				})
+				.build());
+		sub.add(entryBuilder.startIntField(Component.literal("Color Blue"), initialBlue)
+				.setMin(0).setMax(255)
+				.setSaveConsumer(value -> {
+					if (value != initialBlue) {
+						rule.color = (rule.color & 0xFFFF00) | value;
+					}
+				})
 				.build());
 		sub.add(entryBuilder.startDoubleField(Component.literal("Max Distance (0 = unlimited)"), rule.maxDistance)
 				.setMin(0)
