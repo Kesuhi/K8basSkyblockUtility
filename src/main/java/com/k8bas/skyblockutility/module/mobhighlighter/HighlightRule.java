@@ -13,4 +13,6 @@ public class HighlightRule {
 	public String namePattern = "";
 	/** Packed 0xRRGGBB. */
 	public int color = 0xFF0000;
+	/** Blocks; 0 or negative means unlimited. */
+	public double maxDistance = 0;
 }

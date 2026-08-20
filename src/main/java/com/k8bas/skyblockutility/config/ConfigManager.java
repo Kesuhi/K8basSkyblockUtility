@@ -66,6 +66,7 @@ public final class ConfigManager {
 		if (value == null) {
 			value = defaultFactory.get();
 			putModuleSection(moduleId, value);
+			save();
 		}
 		return value;
 	}

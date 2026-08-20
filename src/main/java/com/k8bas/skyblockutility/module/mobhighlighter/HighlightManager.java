@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.module.mobhighlighter;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
@@ -68,24 +70,32 @@ public final class HighlightManager {
 			return 0;
 		}
 
+		LocalPlayer player = Minecraft.getInstance().player;
 		String normalizedName = normalizeName(entity);
 		Identifier typeId = EntityType.getKey(entity.getType());
 
 		List<CompiledRule> typeRules = byType.get(typeId);
 		if (typeRules != null) {
-			for (CompiledRule compiled : typeRules) {
-				if (compiled.matchesName(normalizedName)) {
-					return ARGB.opaque(compiled.rule.color);
-				}
+			int color = findMatch(typeRules, entity, normalizedName, player);
+			if (color != 0) {
+				return color;
 			}
 		}
 
-		for (CompiledRule compiled : anyType) {
+		return findMatch(anyType, entity, normalizedName, player);
+	}
+
+	private static int findMatch(List<CompiledRule> candidates, Entity entity, String normalizedName, LocalPlayer player) {
+		for (CompiledRule compiled : candidates) {
+			// Distance check first: cheaper than the string/regex match below.
+			double maxDistance = compiled.rule.maxDistance;
+			if (maxDistance > 0 && player != null && entity.distanceToSqr(player) > maxDistance * maxDistance) {
+				continue;
+			}
 			if (compiled.matchesName(normalizedName)) {
 				return ARGB.opaque(compiled.rule.color);
 			}
 		}
-
 		return 0;
 	}
 
