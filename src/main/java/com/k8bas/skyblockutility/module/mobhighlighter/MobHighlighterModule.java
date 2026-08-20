@@ -2,9 +2,16 @@ package com.k8bas.skyblockutility.module.mobhighlighter;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.Module;
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.gui.entries.MultiElementListEntry;
+import me.shedaniel.clothconfig2.gui.entries.NestedListListEntry;
 import net.minecraft.network.chat.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public final class MobHighlighterModule implements Module {
 	public static final String ID = "mob_highlighter";
@@ -75,5 +82,53 @@ public final class MobHighlighterModule implements Module {
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
 				.setSaveConsumer(this::setEnabled)
 				.build());
+
+		category.addEntry(new NestedListListEntry<HighlightRule, MultiElementListEntry<HighlightRule>>(
+				Component.literal("Rules"),
+				config.rules,
+				false,
+				Optional::empty,
+				this::applyRules,
+				() -> createDefaultConfig().rules,
+				entryBuilder.getResetButtonKey(),
+				false,
+				true,
+				(rule, listEntry) -> buildRuleEntry(rule, entryBuilder)));
+	}
+
+	private MultiElementListEntry<HighlightRule> buildRuleEntry(HighlightRule existing, ConfigEntryBuilder entryBuilder) {
+		HighlightRule rule = existing != null ? existing : new HighlightRule();
+
+		List<AbstractConfigListEntry<?>> fields = new ArrayList<>();
+		fields.add(entryBuilder.startStrField(Component.literal("Label"), rule.label)
+				.setSaveConsumer(value -> rule.label = value)
+				.build());
+		fields.add(entryBuilder.startBooleanToggle(Component.literal("Enabled"), rule.enabled)
+				.setSaveConsumer(value -> rule.enabled = value)
+				.build());
+		fields.add(entryBuilder.startStrField(Component.literal("Entity Type (blank = any)"), rule.entityTypeId == null ? "" : rule.entityTypeId)
+				.setSaveConsumer(value -> rule.entityTypeId = value.isBlank() ? null : value)
+				.build());
+		fields.add(entryBuilder.startEnumSelector(Component.literal("Name Match Mode"), NameMatchMode.class, rule.nameMatchMode)
+				.setSaveConsumer(value -> rule.nameMatchMode = value)
+				.build());
+		fields.add(entryBuilder.startStrField(Component.literal("Name Pattern"), rule.namePattern)
+				.setSaveConsumer(value -> rule.namePattern = value)
+				.build());
+		fields.add(entryBuilder.startColorField(Component.literal("Color"), rule.color)
+				.setSaveConsumer(value -> rule.color = value)
+				.build());
+		fields.add(entryBuilder.startDoubleField(Component.literal("Max Distance (0 = unlimited)"), rule.maxDistance)
+				.setSaveConsumer(value -> rule.maxDistance = value)
+				.build());
+
+		return new MultiElementListEntry<>(Component.literal(rule.label), rule, fields, true);
+	}
+
+	private void applyRules(List<HighlightRule> newRules) {
+		config.rules = new ArrayList<>(newRules);
+		ConfigManager.putModuleSection(ID, config);
+		ConfigManager.save();
+		HighlightManager.rebuild(config.rules);
 	}
 }
