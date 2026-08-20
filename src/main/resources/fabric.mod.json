@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "skyblockhighlighter",
+	"version": "${version}",
+	"name": "Skyblock Mob Highlighter",
+	"description": "Draws colored outlines on specific mobs while playing Hypixel Skyblock.",
+	"authors": [
+		"Kesuhi"
+	],
+	"contact": {
+		"sources": "https://github.com/Kesuhi/HighlightHypixelSkyblock"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/skyblockhighlighter/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.kesuhi.skyblockhighlighter.SkyblockMobHighlighterClient"
+		]
+	},
+	"mixins": [
+		"skyblockhighlighter.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

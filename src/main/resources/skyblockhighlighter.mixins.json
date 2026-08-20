@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.kesuhi.skyblockhighlighter.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"SkyblockMobHighlighterMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
