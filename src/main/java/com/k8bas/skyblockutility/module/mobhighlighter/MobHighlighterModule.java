@@ -9,8 +9,11 @@ import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Rule fields used to live inside a NestedListListEntry cell (a list-of-lists, two levels of
@@ -23,9 +26,14 @@ import java.util.Optional;
 public final class MobHighlighterModule implements Module {
 	public static final String ID = "mob_highlighter";
 
+	private static final int[] COLOR_PALETTE = {
+			0xFF4500, 0x00BFFF, 0x00FF00, 0xFFD700, 0xFF00FF, 0x1E90FF, 0xFF69B4, 0x7FFF00
+	};
+
 	private MobHighlighterConfig config;
 	private final List<HighlightRule> pendingDeletions = new ArrayList<>();
 	private boolean pendingAdd = false;
+	private final Set<String> pendingMobAdds = new LinkedHashSet<>();
 
 	/** Seeded only the first time this module's config section is created (no existing file entry). */
 	private static MobHighlighterConfig createDefaultConfig() {
@@ -70,6 +78,7 @@ public final class MobHighlighterModule implements Module {
 		config = ConfigManager.getModuleSection(ID, MobHighlighterConfig.class, MobHighlighterModule::createDefaultConfig);
 		HighlightManager.setEnabled(config.enabled);
 		HighlightManager.rebuild(config.rules);
+		MobDatabase.fetchInBackground();
 	}
 
 	@Override
@@ -89,14 +98,19 @@ public final class MobHighlighterModule implements Module {
 	public void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
 		pendingDeletions.clear();
 		pendingAdd = false;
+		pendingMobAdds.clear();
 
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
 				.setSaveConsumer(this::setEnabled)
 				.build());
 
-		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Add a new rule (toggle, then Save)"), false)
+		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Add a blank new rule (toggle, then Save)"), false)
 				.setSaveConsumer(shouldAdd -> pendingAdd = shouldAdd)
 				.build());
+
+		for (Map.Entry<String, List<MobDatabaseEntry>> island : MobDatabase.byIsland().entrySet()) {
+			category.addEntry(buildMobPickerIsland(island.getKey(), island.getValue(), entryBuilder));
+		}
 
 		for (HighlightRule rule : new ArrayList<>(config.rules)) {
 			category.addEntry(buildRuleSubCategory(rule, entryBuilder));
@@ -111,8 +125,44 @@ public final class MobHighlighterModule implements Module {
 			config.rules.add(new HighlightRule());
 			pendingAdd = false;
 		}
+		for (String mobId : pendingMobAdds) {
+			MobDatabase.entries().stream()
+					.filter(entry -> entry.id.equals(mobId))
+					.findFirst()
+					.ifPresent(mob -> config.rules.add(createRuleForMob(mob)));
+		}
+		pendingMobAdds.clear();
 		ConfigManager.putModuleSection(ID, config);
 		HighlightManager.rebuild(config.rules);
+	}
+
+	/** Uses Cloth Config's own built-in screen search (it already filters entries by title as
+	 *  you type — verified directly against the jar, no custom search UI needed) to make this
+	 *  "searchable": entries just need clear, findable titles, one toggle per database mob,
+	 *  grouped into a folder per island. */
+	private AbstractConfigListEntry<?> buildMobPickerIsland(String island, List<MobDatabaseEntry> mobs, ConfigEntryBuilder entryBuilder) {
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(false);
+		for (MobDatabaseEntry mob : mobs) {
+			sub.add(entryBuilder.startBooleanToggle(Component.literal("Add rule: " + mob.displayName), false)
+					.setSaveConsumer(shouldAdd -> {
+						if (shouldAdd) {
+							pendingMobAdds.add(mob.id);
+						} else {
+							pendingMobAdds.remove(mob.id);
+						}
+					})
+					.build());
+		}
+		return sub.build();
+	}
+
+	private HighlightRule createRuleForMob(MobDatabaseEntry mob) {
+		HighlightRule rule = new HighlightRule();
+		rule.label = mob.displayName;
+		rule.namePattern = mob.matchText;
+		rule.nameMatchMode = NameMatchMode.CONTAINS;
+		rule.color = COLOR_PALETTE[config.rules.size() % COLOR_PALETTE.length];
+		return rule;
 	}
 
 	private AbstractConfigListEntry<?> buildRuleSubCategory(HighlightRule rule, ConfigEntryBuilder entryBuilder) {

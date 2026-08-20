@@ -41,6 +41,8 @@ public final class SettingsScreenFactory {
 						ConfigManager.general().mobScanRangeBlocks, 0, 128)
 				.setSaveConsumer(value -> ConfigManager.general().mobScanRangeBlocks = value)
 				.build());
+		general.addEntry(entryBuilder.fillKeybindingField(Component.literal("Open Settings Key"),
+				SettingsKeybind.OPEN_SETTINGS_KEY).build());
 
 		for (Module module : ModuleManager.modules()) {
 			ConfigCategory category = builder.getOrCreateCategory(Component.literal(module.displayName()));

@@ -17,7 +17,9 @@ public final class SettingsCommand {
 				dispatcher.register(ClientCommands.literal(name).executes(context -> {
 					K8basSkyblockUtilityClient.LOGGER.info("/{} executed, opening settings screen", name);
 					var client = context.getSource().getClient();
-					client.setScreen(SettingsScreenFactory.build(client.screen));
+					// Deferred to next tick: the chat input's own Enter keystroke can otherwise
+					// leak into the freshly opened screen and close it again immediately.
+					client.execute(() -> client.setScreen(SettingsScreenFactory.build(client.screen)));
 					return 1;
 				}));
 			}

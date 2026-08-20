@@ -7,7 +7,10 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 
 public final class SettingsKeybind {
-	private static final KeyMapping OPEN_SETTINGS_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+	/** Public so it can be exposed as a rebindable entry in the General Cloth Config category
+	 *  too, not just vanilla's Controls screen (Cloth Config's fillKeybindingField binds to the
+	 *  same KeyMapping instance, so both stay in sync automatically). */
+	public static final KeyMapping OPEN_SETTINGS_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 			"key.k8bas_skyblock_utility.open_settings",
 			InputConstants.Type.KEYSYM,
 			InputConstants.UNKNOWN.getValue(),
@@ -19,7 +22,10 @@ public final class SettingsKeybind {
 	public static void register() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (OPEN_SETTINGS_KEY.consumeClick()) {
-				client.setScreen(SettingsScreenFactory.build(client.screen));
+				// Deferred to next tick: opening a screen synchronously from the same input
+				// event that triggered it (also true for the /ksu command) risks the screen
+				// swallowing a stray leftover keystroke and closing itself immediately.
+				client.execute(() -> client.setScreen(SettingsScreenFactory.build(client.screen)));
 			}
 		});
 	}
