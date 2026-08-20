@@ -115,8 +115,17 @@ public final class MobHighlighterModule implements Module {
 		fields.add(entryBuilder.startStrField(Component.literal("Name Pattern"), rule.namePattern)
 				.setSaveConsumer(value -> rule.namePattern = value)
 				.build());
-		fields.add(entryBuilder.startColorField(Component.literal("Color"), rule.color)
-				.setSaveConsumer(value -> rule.color = value)
+		// A picker-based startColorField() didn't reliably commit edits made inside a nested
+		// list cell (edits to other field types in the same cell did save correctly) — a plain
+		// hex string sidesteps whatever that widget-specific issue is, and lets an exact color
+		// be typed directly.
+		fields.add(entryBuilder.startStrField(Component.literal("Color (hex RRGGBB)"), String.format("%06X", rule.color & 0xFFFFFF))
+				.setErrorSupplier(value -> isValidHexColor(value) ? Optional.empty() : Optional.of(Component.literal("Expected 6 hex digits, e.g. FF4500")))
+				.setSaveConsumer(value -> {
+					if (isValidHexColor(value)) {
+						rule.color = Integer.parseInt(value, 16);
+					}
+				})
 				.build());
 		fields.add(entryBuilder.startDoubleField(Component.literal("Max Distance (0 = unlimited)"), rule.maxDistance)
 				.setSaveConsumer(value -> rule.maxDistance = value)
@@ -130,5 +139,9 @@ public final class MobHighlighterModule implements Module {
 		ConfigManager.putModuleSection(ID, config);
 		ConfigManager.save();
 		HighlightManager.rebuild(config.rules);
+	}
+
+	private static boolean isValidHexColor(String value) {
+		return value != null && value.matches("[0-9A-Fa-f]{6}");
 	}
 }

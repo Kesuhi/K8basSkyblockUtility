@@ -3,7 +3,8 @@
 	"package": "com.k8bas.skyblockutility.module.mobhighlighter.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
-		"EntityRendererMixin"
+		"EntityRendererMixin",
+		"MinecraftMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
