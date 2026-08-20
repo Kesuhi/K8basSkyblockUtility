@@ -11,7 +11,8 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
-import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
+import me.shedaniel.clothconfig2.gui.entries.EmptyEntry;
+import me.shedaniel.clothconfig2.gui.widget.SearchFieldEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -99,17 +100,20 @@ public final class MobHighlighterModule implements Module {
 
 	/** A separate screen, opened via the button above, instead of inline in the main category —
 	 *  with 300+ database entries, showing them all the time would swamp the module's own
-	 *  settings. Island/event folders default to collapsed; the search field above them expands
-	 *  only the folders containing a match as you type (Cloth Config's own built-in search box,
-	 *  confirmed against its real source, filters which top-level entries are shown but never
-	 *  auto-expands a collapsed SubCategory to reveal a match inside it — so a second, custom
-	 *  live-updating field drives the actual expand behavior). */
+	 *  settings. Cloth Config's own built-in search box (confirmed against its real source) can't
+	 *  do what's needed here — it only filters which already-visible top-level entries render, it
+	 *  never reveals a match buried inside a collapsed folder — so it's stripped out via
+	 *  stripBuiltInSearchBox() and replaced with a custom live search field. Every keystroke
+	 *  throws away and rebuilds the folder tree from scratch, containing only islands/events/mobs
+	 *  that actually match (auto-expanded), which is real hide-on-no-match rather than the
+	 *  earlier expand/collapse-only approach. */
 	private Screen buildMobPickerScreen(Screen parent) {
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
 				.setTitle(Component.literal("Mob Database"))
 				.setSavingRunnable(() -> {
-				});
+				})
+				.setAfterInitConsumer(MobHighlighterModule::stripBuiltInSearchBox);
 
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		ConfigCategory category = builder.getOrCreateCategory(Component.literal("Mob Database"));
@@ -124,55 +128,115 @@ public final class MobHighlighterModule implements Module {
 			return builder.build();
 		}
 
-		List<SearchableFolder> folders = new ArrayList<>();
-		category.addEntry(new LiveTextFieldEntry(Component.literal("Search"), "Type to expand matching folders...", query -> {
+		List<AbstractConfigListEntry<?>> currentFolderEntries = new ArrayList<>();
+		category.addEntry(new LiveTextFieldEntry(Component.literal("Search"), "Search mobs...", query -> {
 			String normalized = query.trim().toLowerCase(Locale.ROOT);
-			for (SearchableFolder folder : folders) {
-				folder.entry().setExpanded(!normalized.isEmpty() && folder.matches(normalized));
+			Screen active = Minecraft.getInstance().screen;
+			if (active instanceof ClothConfigScreen clothScreen) {
+				replaceFolderEntries(clothScreen, currentFolderEntries,
+						buildFolderList(byIsland, entryBuilder, parent, normalized));
 			}
 		}));
 
-		for (Map.Entry<String, List<MobDatabaseEntry>> island : byIsland.entrySet()) {
-			category.addEntry(buildIslandSubCategory(island.getKey(), island.getValue(), entryBuilder, parent, folders));
+		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, ""));
+		for (AbstractConfigListEntry<?> entry : currentFolderEntries) {
+			category.addEntry(entry);
 		}
 
 		return builder.build();
 	}
 
+	/** Cloth Config unconditionally injects its own search box (plus a blank spacer row on each
+	 *  side) into every screen it builds — there's no builder flag to opt out (confirmed against
+	 *  the real source: ClothConfigScreen.init() adds it directly, not gated by any setting).
+	 *  With our own search field doing the actual filtering, Cloth's box would just sit there as
+	 *  a second, non-functional search-looking field, so this removes it from the live screen
+	 *  right after each init() (afterInitConsumer fires on every init, including on resize). */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private static void stripBuiltInSearchBox(Screen screenObj) {
+		if (!(screenObj instanceof ClothConfigScreen clothScreen)) {
+			return;
+		}
+		List children = clothScreen.listWidget.children();
+		for (Object entry : new ArrayList<>(children)) {
+			if (entry instanceof SearchFieldEntry || entry instanceof EmptyEntry) {
+				children.remove(entry);
+			}
+		}
+	}
+
+	/** Builds the full island/event/mob folder tree. With a blank query this is the unfiltered,
+	 *  all-collapsed browse view; with a query, islands/events with no matching mob are omitted
+	 *  entirely and everything remaining is force-expanded, since it's guaranteed to contain only
+	 *  matches. */
+	private List<AbstractConfigListEntry<?>> buildFolderList(Map<String, List<MobDatabaseEntry>> byIsland,
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery) {
+		List<AbstractConfigListEntry<?>> result = new ArrayList<>();
+		for (Map.Entry<String, List<MobDatabaseEntry>> island : byIsland.entrySet()) {
+			AbstractConfigListEntry<?> entry = buildIslandSubCategory(
+					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery);
+			if (entry != null) {
+				result.add(entry);
+			}
+		}
+		return result;
+	}
+
+	/** Replaces the currently-shown folder entries with a freshly filtered set, patching the
+	 *  live, already-open screen directly (same technique as liveAddRuleEntry/liveRemoveRuleEntry)
+	 *  rather than rebuilding the whole screen, so the search field itself never loses focus. */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private void replaceFolderEntries(ClothConfigScreen clothScreen, List<AbstractConfigListEntry<?>> current,
+			List<AbstractConfigListEntry<?>> replacement) {
+		List categoryEntries = clothScreen.getCategorizedEntries().values().iterator().next();
+		List liveChildren = clothScreen.listWidget.children();
+		for (AbstractConfigListEntry<?> old : current) {
+			categoryEntries.remove(old);
+			liveChildren.remove(old);
+		}
+		current.clear();
+		for (AbstractConfigListEntry<?> fresh : replacement) {
+			fresh.setScreen(clothScreen);
+			categoryEntries.add(fresh);
+			liveChildren.add(fresh);
+			current.add(fresh);
+		}
+	}
+
+	/** Returns null (island omitted entirely) when filtering and nothing under it matches. */
 	private AbstractConfigListEntry<?> buildIslandSubCategory(String island, List<MobDatabaseEntry> mobs,
-			ConfigEntryBuilder entryBuilder, Screen parentScreen, List<SearchableFolder> folders) {
-		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(false);
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery) {
+		boolean filtering = !normalizedQuery.isEmpty();
 
 		Map<String, List<MobDatabaseEntry>> bySubfolder = new LinkedHashMap<>();
 		List<MobDatabaseEntry> direct = new ArrayList<>();
-		List<String> allNames = new ArrayList<>();
 		for (MobDatabaseEntry mob : mobs) {
-			allNames.add(mob.displayName);
+			if (filtering && !mob.displayName.toLowerCase(Locale.ROOT).contains(normalizedQuery)) {
+				continue;
+			}
 			if (mob.subfolder != null) {
 				bySubfolder.computeIfAbsent(mob.subfolder, key -> new ArrayList<>()).add(mob);
 			} else {
 				direct.add(mob);
 			}
 		}
+		if (filtering && direct.isEmpty() && bySubfolder.isEmpty()) {
+			return null;
+		}
 
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(filtering);
 		for (MobDatabaseEntry mob : direct) {
 			sub.add(buildMobButton(mob, parentScreen));
 		}
 		for (Map.Entry<String, List<MobDatabaseEntry>> event : bySubfolder.entrySet()) {
-			SubCategoryBuilder eventSub = entryBuilder.startSubCategory(Component.literal(event.getKey())).setExpanded(false);
-			List<String> eventNames = new ArrayList<>();
+			SubCategoryBuilder eventSub = entryBuilder.startSubCategory(Component.literal(event.getKey())).setExpanded(filtering);
 			for (MobDatabaseEntry mob : event.getValue()) {
-				eventNames.add(mob.displayName);
 				eventSub.add(buildMobButton(mob, parentScreen));
 			}
-			SubCategoryListEntry eventEntry = eventSub.build();
-			folders.add(new SearchableFolder(eventEntry, eventNames));
-			sub.add(eventEntry);
+			sub.add(eventSub.build());
 		}
 
-		SubCategoryListEntry islandEntry = sub.build();
-		folders.add(new SearchableFolder(islandEntry, allNames));
-		return islandEntry;
+		return sub.build();
 	}
 
 	private ButtonEntry buildMobButton(MobDatabaseEntry mob, Screen parentScreen) {
@@ -269,7 +333,7 @@ public final class MobHighlighterModule implements Module {
 			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);
 		}));
 
-		SubCategoryListEntry built = sub.build();
+		AbstractConfigListEntry<?> built = sub.build();
 		selfRef[0] = built;
 		return built;
 	}
@@ -320,16 +384,5 @@ public final class MobHighlighterModule implements Module {
 
 	private static boolean isValidHexColor(String value) {
 		return value != null && value.matches("[0-9A-Fa-f]{6}");
-	}
-
-	private record SearchableFolder(SubCategoryListEntry entry, List<String> mobNames) {
-		boolean matches(String normalizedQuery) {
-			for (String name : mobNames) {
-				if (name.toLowerCase(Locale.ROOT).contains(normalizedQuery)) {
-					return true;
-				}
-			}
-			return false;
-		}
 	}
 }

@@ -28,14 +28,13 @@ import java.util.function.Consumer;
  */
 public final class LiveTextFieldEntry extends AbstractConfigListEntry<String> {
 	private final EditBox editBox;
+	private final String placeholder;
 
-	public LiveTextFieldEntry(Component fieldName, String suggestion, Consumer<String> onChange) {
+	public LiveTextFieldEntry(Component fieldName, String placeholder, Consumer<String> onChange) {
 		super(fieldName, false);
+		this.placeholder = placeholder;
 		this.editBox = new EditBox(Minecraft.getInstance().font, 0, 0, 100, 18, Component.empty());
 		this.editBox.setResponder(onChange);
-		if (suggestion != null) {
-			this.editBox.setSuggestion(suggestion);
-		}
 	}
 
 	@Override
@@ -49,6 +48,10 @@ public final class LiveTextFieldEntry extends AbstractConfigListEntry<String> {
 		this.editBox.setWidth(Mth.clamp(entryWidth - 10, 0, 500));
 		this.editBox.setX(x + entryWidth / 2 - this.editBox.getWidth() / 2);
 		this.editBox.setY(y + entryHeight / 2 - 9);
+		// setSuggestion has to be recalculated every frame (matching Cloth Config's own
+		// SearchFieldEntry) rather than set once in the constructor — otherwise the placeholder
+		// text stays rendered behind whatever the user actually typed instead of disappearing.
+		this.editBox.setSuggestion(this.editBox.getValue().isEmpty() ? placeholder : null);
 		this.editBox.extractRenderState(graphics, mouseX, mouseY, delta);
 		super.extractRenderState(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
 	}
