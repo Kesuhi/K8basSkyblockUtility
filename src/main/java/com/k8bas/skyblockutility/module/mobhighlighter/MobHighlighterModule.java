@@ -3,12 +3,16 @@ package com.k8bas.skyblockutility.module.mobhighlighter;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.Module;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
+import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +24,9 @@ import java.util.Set;
  * nesting) — keyboard text input didn't reliably reach fields at that depth, while click-based
  * controls (toggles, the enum selector) worked fine. Each rule is now its own SubCategory
  * (one level of nesting, same depth as General's already-working fields) instead. Cloth Config
- * has no plain button widget (checked directly), so add/delete are "toggle then press Save"
- * actions reconciled in onConfigScreenSaved(), not a dedicated +/- control.
+ * has no plain button widget (checked directly), so add/delete/open-database are all
+ * "toggle then press Save" actions — the toggle firing its action and resetting to unchecked
+ * afterward is expected (it's a momentary trigger, not persisted state), not a bug.
  */
 public final class MobHighlighterModule implements Module {
 	public static final String ID = "mob_highlighter";
@@ -33,35 +38,8 @@ public final class MobHighlighterModule implements Module {
 	private MobHighlighterConfig config;
 	private final List<HighlightRule> pendingDeletions = new ArrayList<>();
 	private boolean pendingAdd = false;
+	private boolean pendingOpenDatabase = false;
 	private final Set<String> pendingMobAdds = new LinkedHashSet<>();
-
-	/** Seeded only the first time this module's config section is created (no existing file entry). */
-	private static MobHighlighterConfig createDefaultConfig() {
-		MobHighlighterConfig defaultConfig = new MobHighlighterConfig();
-
-		HighlightRule voidling = new HighlightRule();
-		voidling.label = "Voidling Extremist";
-		voidling.namePattern = "Voidling Extremist";
-		voidling.color = 0xFF4500;
-		defaultConfig.rules.add(voidling);
-
-		HighlightRule sven = new HighlightRule();
-		sven.label = "Sven Packmaster";
-		sven.namePattern = "Sven Packmaster";
-		sven.color = 0x00BFFF;
-		defaultConfig.rules.add(sven);
-
-		HighlightRule zombies = new HighlightRule();
-		zombies.label = "Nearby Zombies";
-		zombies.entityTypeId = "minecraft:zombie";
-		zombies.nameMatchMode = NameMatchMode.NONE;
-		zombies.namePattern = "";
-		zombies.color = 0x00FF00;
-		zombies.maxDistance = 32;
-		defaultConfig.rules.add(zombies);
-
-		return defaultConfig;
-	}
 
 	@Override
 	public String id() {
@@ -75,7 +53,7 @@ public final class MobHighlighterModule implements Module {
 
 	@Override
 	public void onRegister() {
-		config = ConfigManager.getModuleSection(ID, MobHighlighterConfig.class, MobHighlighterModule::createDefaultConfig);
+		config = ConfigManager.getModuleSection(ID, MobHighlighterConfig.class, MobHighlighterConfig::new);
 		HighlightManager.setEnabled(config.enabled);
 		HighlightManager.rebuild(config.rules);
 		MobDatabase.fetchInBackground();
@@ -98,19 +76,20 @@ public final class MobHighlighterModule implements Module {
 	public void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
 		pendingDeletions.clear();
 		pendingAdd = false;
+		pendingOpenDatabase = false;
 		pendingMobAdds.clear();
 
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
 				.setSaveConsumer(this::setEnabled)
 				.build());
 
+		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Open Mob Database (toggle, then Save)"), false)
+				.setSaveConsumer(value -> pendingOpenDatabase = value)
+				.build());
+
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Add a blank new rule (toggle, then Save)"), false)
 				.setSaveConsumer(shouldAdd -> pendingAdd = shouldAdd)
 				.build());
-
-		for (Map.Entry<String, List<MobDatabaseEntry>> island : MobDatabase.byIsland().entrySet()) {
-			category.addEntry(buildMobPickerIsland(island.getKey(), island.getValue(), entryBuilder));
-		}
 
 		for (HighlightRule rule : new ArrayList<>(config.rules)) {
 			category.addEntry(buildRuleSubCategory(rule, entryBuilder));
@@ -125,35 +104,109 @@ public final class MobHighlighterModule implements Module {
 			config.rules.add(new HighlightRule());
 			pendingAdd = false;
 		}
-		for (String mobId : pendingMobAdds) {
-			MobDatabase.entries().stream()
-					.filter(entry -> entry.id.equals(mobId))
-					.findFirst()
-					.ifPresent(mob -> config.rules.add(createRuleForMob(mob)));
-		}
-		pendingMobAdds.clear();
 		ConfigManager.putModuleSection(ID, config);
 		HighlightManager.rebuild(config.rules);
+
+		if (pendingOpenDatabase) {
+			pendingOpenDatabase = false;
+			Minecraft client = Minecraft.getInstance();
+			// Deferred to next tick, same reasoning as the settings keybind/command fix: opening
+			// a screen synchronously here risks a stray input event closing it immediately while
+			// Cloth Config's own screen-close transition is still resolving.
+			client.execute(() -> client.setScreen(buildMobPickerScreen(client.screen)));
+		}
 	}
 
-	/** Uses Cloth Config's own built-in screen search (it already filters entries by title as
-	 *  you type — verified directly against the jar, no custom search UI needed) to make this
-	 *  "searchable": entries just need clear, findable titles, one toggle per database mob,
-	 *  grouped into a folder per island. */
-	private AbstractConfigListEntry<?> buildMobPickerIsland(String island, List<MobDatabaseEntry> mobs, ConfigEntryBuilder entryBuilder) {
-		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(false);
-		for (MobDatabaseEntry mob : mobs) {
-			sub.add(entryBuilder.startBooleanToggle(Component.literal("Add rule: " + mob.displayName), false)
-					.setSaveConsumer(shouldAdd -> {
-						if (shouldAdd) {
-							pendingMobAdds.add(mob.id);
-						} else {
-							pendingMobAdds.remove(mob.id);
-						}
-					})
-					.build());
+	/** A separate screen, opened via the toggle above, instead of inline in the main category —
+	 *  with 200+ database entries, showing them all the time would swamp the module's own
+	 *  settings. Reuses Cloth Config's own built-in screen search (verified against the jar) for
+	 *  "searchable", rather than building custom filter UI. */
+	private Screen buildMobPickerScreen(Screen parent) {
+		ConfigBuilder builder = ConfigBuilder.create()
+				.setParentScreen(parent)
+				.setTitle(Component.literal("Mob Database"))
+				.setSavingRunnable(this::reconcileMobAdds);
+
+		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
+		ConfigCategory category = builder.getOrCreateCategory(Component.literal("Mob Database"));
+
+		Map<String, List<MobDatabaseEntry>> byIsland = MobDatabase.byIsland();
+		if (byIsland.isEmpty()) {
+			category.addEntry(entryBuilder.startTextDescription(Component.literal(
+					"Mob database hasn't finished loading yet — close and reopen this screen in a moment.")).build());
 		}
+		for (Map.Entry<String, List<MobDatabaseEntry>> island : byIsland.entrySet()) {
+			category.addEntry(buildIslandSubCategory(island.getKey(), island.getValue(), entryBuilder));
+		}
+
+		return builder.build();
+	}
+
+	private AbstractConfigListEntry<?> buildIslandSubCategory(String island, List<MobDatabaseEntry> mobs, ConfigEntryBuilder entryBuilder) {
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(false);
+
+		Map<String, List<MobDatabaseEntry>> bySubfolder = new LinkedHashMap<>();
+		List<MobDatabaseEntry> direct = new ArrayList<>();
+		for (MobDatabaseEntry mob : mobs) {
+			if (mob.subfolder != null) {
+				bySubfolder.computeIfAbsent(mob.subfolder, key -> new ArrayList<>()).add(mob);
+			} else {
+				direct.add(mob);
+			}
+		}
+
+		for (MobDatabaseEntry mob : direct) {
+			sub.add(buildMobToggle(mob, entryBuilder));
+		}
+		for (Map.Entry<String, List<MobDatabaseEntry>> event : bySubfolder.entrySet()) {
+			SubCategoryBuilder eventSub = entryBuilder.startSubCategory(Component.literal(event.getKey())).setExpanded(false);
+			for (MobDatabaseEntry mob : event.getValue()) {
+				eventSub.add(buildMobToggle(mob, entryBuilder));
+			}
+			sub.add(eventSub.build());
+		}
+
 		return sub.build();
+	}
+
+	private AbstractConfigListEntry<?> buildMobToggle(MobDatabaseEntry mob, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startBooleanToggle(Component.literal("Add rule: " + mob.displayName), false)
+				.setSaveConsumer(shouldAdd -> {
+					if (shouldAdd) {
+						pendingMobAdds.add(mob.id);
+					} else {
+						pendingMobAdds.remove(mob.id);
+					}
+				})
+				.build();
+	}
+
+	private void reconcileMobAdds() {
+		int added = 0;
+		for (String mobId : pendingMobAdds) {
+			MobDatabaseEntry mob = MobDatabase.entries().stream()
+					.filter(entry -> entry.id.equals(mobId))
+					.findFirst()
+					.orElse(null);
+			if (mob != null) {
+				config.rules.add(createRuleForMob(mob));
+				added++;
+			}
+		}
+		pendingMobAdds.clear();
+
+		if (added > 0) {
+			ConfigManager.putModuleSection(ID, config);
+			ConfigManager.save();
+			HighlightManager.rebuild(config.rules);
+
+			int addedCount = added;
+			Minecraft client = Minecraft.getInstance();
+			if (client.player != null) {
+				client.player.sendSystemMessage(Component.literal(
+						"Added " + addedCount + " highlight rule" + (addedCount == 1 ? "" : "s") + " from the mob database."));
+			}
+		}
 	}
 
 	private HighlightRule createRuleForMob(MobDatabaseEntry mob) {
