@@ -3,10 +3,15 @@ package com.k8bas.skyblockutility.module.mobhighlighter;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
+import com.k8bas.skyblockutility.settings.HexColorFieldEntry;
+import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
+import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
+import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,11 +30,13 @@ import java.util.Optional;
  * controls (toggles, the enum selector) worked fine. Each rule is now its own SubCategory
  * (one level of nesting, same depth as General's already-working fields) instead.
  *
- * Add/Delete/Open-Database are real clickable buttons (ButtonEntry — Cloth Config has no
+ * Add/Delete/Open-Database/Return are real clickable buttons (ButtonEntry — Cloth Config has no
  * built-in button widget, so this hosts a real vanilla Button modeled on Cloth Config's own
- * BooleanListEntry source) that act immediately, not gated behind the screen's Save button.
- * Editing an existing rule's fields (name, color, etc.) still follows the normal Cloth Config
- * save cycle, reconciled in onConfigScreenSaved().
+ * BooleanListEntry source) that act immediately, not gated behind the screen's Save button. They
+ * also patch the live, already-open screen's entry list directly (see liveAddRuleEntry /
+ * liveRemoveRuleEntry) so the rule list reflects add/delete instantly, without needing to close
+ * and reopen the settings screen. Editing an existing rule's other fields (name, entity type,
+ * etc.) still follows the normal Cloth Config save cycle, reconciled in onConfigScreenSaved().
  */
 public final class MobHighlighterModule implements Module {
 	public static final String ID = "mob_highlighter";
@@ -90,12 +98,12 @@ public final class MobHighlighterModule implements Module {
 	}
 
 	/** A separate screen, opened via the button above, instead of inline in the main category —
-	 *  with 200+ database entries, showing them all the time would swamp the module's own
-	 *  settings. Island/event folders default to expanded: Cloth Config's built-in screen search
-	 *  (verified against the jar) only filters entries that are already displayed — a collapsed
-	 *  SubCategory's contents are excluded from search entirely, with no auto-expand-on-match
-	 *  hook available (confirmed against the real source), so leaving them open is what actually
-	 *  makes "search finds a mob in this folder" work. */
+	 *  with 300+ database entries, showing them all the time would swamp the module's own
+	 *  settings. Island/event folders default to collapsed; the search field above them expands
+	 *  only the folders containing a match as you type (Cloth Config's own built-in search box,
+	 *  confirmed against its real source, filters which top-level entries are shown but never
+	 *  auto-expands a collapsed SubCategory to reveal a match inside it — so a second, custom
+	 *  live-updating field drives the actual expand behavior). */
 	private Screen buildMobPickerScreen(Screen parent) {
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
@@ -113,20 +121,33 @@ public final class MobHighlighterModule implements Module {
 		if (byIsland.isEmpty()) {
 			category.addEntry(entryBuilder.startTextDescription(Component.literal(
 					"Mob database hasn't finished loading yet — close and reopen this screen in a moment.")).build());
+			return builder.build();
 		}
+
+		List<SearchableFolder> folders = new ArrayList<>();
+		category.addEntry(new LiveTextFieldEntry(Component.literal("Search"), "Type to expand matching folders...", query -> {
+			String normalized = query.trim().toLowerCase(Locale.ROOT);
+			for (SearchableFolder folder : folders) {
+				folder.entry().setExpanded(!normalized.isEmpty() && folder.matches(normalized));
+			}
+		}));
+
 		for (Map.Entry<String, List<MobDatabaseEntry>> island : byIsland.entrySet()) {
-			category.addEntry(buildIslandSubCategory(island.getKey(), island.getValue(), entryBuilder));
+			category.addEntry(buildIslandSubCategory(island.getKey(), island.getValue(), entryBuilder, parent, folders));
 		}
 
 		return builder.build();
 	}
 
-	private AbstractConfigListEntry<?> buildIslandSubCategory(String island, List<MobDatabaseEntry> mobs, ConfigEntryBuilder entryBuilder) {
-		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(true);
+	private AbstractConfigListEntry<?> buildIslandSubCategory(String island, List<MobDatabaseEntry> mobs,
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, List<SearchableFolder> folders) {
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(false);
 
 		Map<String, List<MobDatabaseEntry>> bySubfolder = new LinkedHashMap<>();
 		List<MobDatabaseEntry> direct = new ArrayList<>();
+		List<String> allNames = new ArrayList<>();
 		for (MobDatabaseEntry mob : mobs) {
+			allNames.add(mob.displayName);
 			if (mob.subfolder != null) {
 				bySubfolder.computeIfAbsent(mob.subfolder, key -> new ArrayList<>()).add(mob);
 			} else {
@@ -135,25 +156,33 @@ public final class MobHighlighterModule implements Module {
 		}
 
 		for (MobDatabaseEntry mob : direct) {
-			sub.add(buildMobButton(mob));
+			sub.add(buildMobButton(mob, parentScreen));
 		}
 		for (Map.Entry<String, List<MobDatabaseEntry>> event : bySubfolder.entrySet()) {
-			SubCategoryBuilder eventSub = entryBuilder.startSubCategory(Component.literal(event.getKey())).setExpanded(true);
+			SubCategoryBuilder eventSub = entryBuilder.startSubCategory(Component.literal(event.getKey())).setExpanded(false);
+			List<String> eventNames = new ArrayList<>();
 			for (MobDatabaseEntry mob : event.getValue()) {
-				eventSub.add(buildMobButton(mob));
+				eventNames.add(mob.displayName);
+				eventSub.add(buildMobButton(mob, parentScreen));
 			}
-			sub.add(eventSub.build());
+			SubCategoryListEntry eventEntry = eventSub.build();
+			folders.add(new SearchableFolder(eventEntry, eventNames));
+			sub.add(eventEntry);
 		}
 
-		return sub.build();
+		SubCategoryListEntry islandEntry = sub.build();
+		folders.add(new SearchableFolder(islandEntry, allNames));
+		return islandEntry;
 	}
 
-	private ButtonEntry buildMobButton(MobDatabaseEntry mob) {
+	private ButtonEntry buildMobButton(MobDatabaseEntry mob, Screen parentScreen) {
 		return new ButtonEntry(Component.literal(mob.displayName), Component.literal("Add rule"), () -> {
-			config.rules.add(createRuleForMob(mob));
+			HighlightRule newRule = createRuleForMob(mob);
+			config.rules.add(newRule);
 			ConfigManager.putModuleSection(ID, config);
 			ConfigManager.save();
 			HighlightManager.rebuild(config.rules);
+			liveAddRuleEntry(parentScreen, newRule);
 
 			Minecraft client = Minecraft.getInstance();
 			if (client.player != null) {
@@ -173,6 +202,10 @@ public final class MobHighlighterModule implements Module {
 
 	private AbstractConfigListEntry<?> buildRuleSubCategory(HighlightRule rule, ConfigEntryBuilder entryBuilder) {
 		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(rule.label)).setExpanded(false);
+		// Filled in right after sub.build() below so the Delete button's own closure can remove
+		// this exact entry instance from the live screen — it can't reference the built entry
+		// before it exists, so it reads through this one-slot holder at click time instead.
+		AbstractConfigListEntry<?>[] selfRef = new AbstractConfigListEntry<?>[1];
 
 		sub.add(entryBuilder.startStrField(Component.literal("Label"), rule.label)
 				.setSaveConsumer(value -> rule.label = value)
@@ -189,8 +222,8 @@ public final class MobHighlighterModule implements Module {
 		sub.add(entryBuilder.startStrField(Component.literal("Name Pattern"), rule.namePattern)
 				.setSaveConsumer(value -> rule.namePattern = value)
 				.build());
-		// Hex/preview/R/G/B all ultimately write the same rule.color int. Each captures its own
-		// initial value at build time and only applies on save if it actually changed — otherwise,
+		// Hex/R/G/B all ultimately write the same rule.color int. Each captures its own initial
+		// value at build time and only applies on save if it actually changed — otherwise,
 		// whichever field the user *didn't* touch would unconditionally re-apply its stale
 		// snapshot and clobber an edit made through one of the others.
 		int initialColor = rule.color;
@@ -199,21 +232,11 @@ public final class MobHighlighterModule implements Module {
 		int initialGreen = (initialColor >> 8) & 0xFF;
 		int initialBlue = initialColor & 0xFF;
 
-		sub.add(entryBuilder.startStrField(Component.literal("Color (hex RRGGBB)"), initialHex)
-				.setErrorSupplier(value -> isValidHexColor(value) ? Optional.empty() : Optional.of(Component.literal("Expected 6 hex digits, e.g. FF4500")))
-				.setSaveConsumer(value -> {
-					if (isValidHexColor(value) && !value.equalsIgnoreCase(initialHex)) {
-						rule.color = Integer.parseInt(value, 16);
-					}
-				})
-				.build());
-		sub.add(entryBuilder.startColorField(Component.literal("Color Preview"), initialColor)
-				.setSaveConsumer(value -> {
-					if (value != initialColor) {
-						rule.color = value;
-					}
-				})
-				.build());
+		sub.add(new HexColorFieldEntry(Component.literal("Color (hex RRGGBB)"), initialHex, initialColor, value -> {
+			if (isValidHexColor(value) && !value.equalsIgnoreCase(initialHex)) {
+				rule.color = Integer.parseInt(value, 16);
+			}
+		}));
 		sub.add(entryBuilder.startIntField(Component.literal("Color Red"), initialRed)
 				.setMin(0).setMax(255)
 				.setSaveConsumer(value -> {
@@ -243,14 +266,70 @@ public final class MobHighlighterModule implements Module {
 			ConfigManager.putModuleSection(ID, config);
 			ConfigManager.save();
 			HighlightManager.rebuild(config.rules);
-			// The already-open list still shows this row until the screen is closed and reopened
-			// (Cloth Config screens are built once per open) — the deletion itself is immediate.
+			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);
 		}));
 
-		return sub.build();
+		SubCategoryListEntry built = sub.build();
+		selfRef[0] = built;
+		return built;
+	}
+
+	/** Patches an already-built, possibly not-currently-displayed screen's live entry list so a
+	 *  rule added from the Mob Database picker shows up immediately when the user returns to it,
+	 *  instead of only after closing and reopening the settings screen. Cloth Config copies each
+	 *  category's entries into the screen at construction time (ClothConfigScreen's constructor,
+	 *  confirmed via its real source) rather than reading live from the ConfigCategory, so the
+	 *  screen's own already-built lists have to be mutated directly. */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private void liveAddRuleEntry(Screen screenObj, HighlightRule rule) {
+		if (!(screenObj instanceof ClothConfigScreen clothScreen)) {
+			return;
+		}
+		AbstractConfigListEntry<?> entry = buildRuleSubCategory(rule, ConfigEntryBuilder.create());
+		entry.setScreen(clothScreen);
+		List<AbstractConfigEntry<?>> categoryEntries = findLiveCategoryEntries(clothScreen);
+		if (categoryEntries != null) {
+			categoryEntries.add(entry);
+		}
+		((List) clothScreen.listWidget.children()).add(entry);
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private void liveRemoveRuleEntry(Screen screenObj, AbstractConfigListEntry<?> entry) {
+		if (entry == null || !(screenObj instanceof ClothConfigScreen clothScreen)) {
+			return;
+		}
+		List<AbstractConfigEntry<?>> categoryEntries = findLiveCategoryEntries(clothScreen);
+		if (categoryEntries != null) {
+			categoryEntries.remove(entry);
+		}
+		((List) clothScreen.listWidget.children()).remove(entry);
+	}
+
+	/** Component doesn't reliably participate as a Map key across this codebase (Cloth Config
+	 *  itself routes around Component-keyed lookups elsewhere in favor of comparing the plain
+	 *  string), so this matches by category title string instead of trusting Component#equals. */
+	private List<AbstractConfigEntry<?>> findLiveCategoryEntries(ClothConfigScreen clothScreen) {
+		for (Map.Entry<Component, List<AbstractConfigEntry<?>>> entry : clothScreen.getCategorizedEntries().entrySet()) {
+			if (entry.getKey().getString().equals(displayName())) {
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 	private static boolean isValidHexColor(String value) {
 		return value != null && value.matches("[0-9A-Fa-f]{6}");
+	}
+
+	private record SearchableFolder(SubCategoryListEntry entry, List<String> mobNames) {
+		boolean matches(String normalizedQuery) {
+			for (String name : mobNames) {
+				if (name.toLowerCase(Locale.ROOT).contains(normalizedQuery)) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }

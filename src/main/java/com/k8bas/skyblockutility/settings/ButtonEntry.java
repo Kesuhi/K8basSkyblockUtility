@@ -11,6 +11,8 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +33,18 @@ public class ButtonEntry extends TooltipListEntry<Object> {
 		super(fieldName, Optional::empty);
 		this.buttonWidget = Button.builder(buttonLabel, widget -> action.run()).bounds(0, 0, 150, 20).build();
 		this.widgets = Lists.newArrayList(buttonWidget);
+	}
+
+	/**
+	 * Action buttons aren't a "value" someone searches for by name — an unrelated search query
+	 * (e.g. typing a mob name in the Mob Database picker) shouldn't be able to hide the Return
+	 * button or an "Add rule" button. Cloth Config's search (confirmed via its real source)
+	 * treats an entry with zero search tags as an automatic, unconditional match, so this simply
+	 * opts every button out of filtering entirely.
+	 */
+	@Override
+	public Iterator<String> getSearchTags() {
+		return Collections.emptyIterator();
 	}
 
 	@Override
