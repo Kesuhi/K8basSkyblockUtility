@@ -1,6 +1,13 @@
-# Skyblock Mob Highlighter
+# K8bas Skyblock Utility
 
-A client-side Fabric mod that draws colored outlines on specific mobs while playing Hypixel Skyblock.
+A modular, client-side Fabric mod for Hypixel Skyblock. Each feature is a self-contained
+module that can be enabled or disabled independently from an in-game settings screen
+(Cloth Config / Mod Menu, or a dedicated keybind).
+
+Modules so far:
+- **Mob Highlighter** — draws a thin glowing outline (reusing vanilla's Glowing-effect
+  render path) on entities matched by rules (entity type and/or custom-name
+  substring/regex), each rule with its own color.
 
 ## Setup
 

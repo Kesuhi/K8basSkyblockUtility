@@ -10,4 +10,4 @@ pluginManagement {
 }
 
 // Should match your modid
-rootProject.name = 'skyblockhighlighter'
+rootProject.name = 'k8bas_skyblock_utility'

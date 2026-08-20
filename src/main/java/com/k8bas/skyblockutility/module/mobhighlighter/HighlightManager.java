@@ -1,7 +1,5 @@
-package com.kesuhi.skyblockhighlighter.highlight;
+package com.k8bas.skyblockutility.module.mobhighlighter;
 
-import com.kesuhi.skyblockhighlighter.config.ConfigManager;
-import com.kesuhi.skyblockhighlighter.config.HighlightRule;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
@@ -17,19 +15,27 @@ import java.util.regex.PatternSyntaxException;
  * Rules are indexed by entity type so per-frame matching (called from the render
  * thread via EntityRendererMixin) is a map lookup plus a handful of string checks,
  * not a linear scan. The index is only rebuilt when rules actually change.
+ *
+ * Driven entirely by MobHighlighterModule: the "enabled" flag mirrors the module's
+ * config so this class doesn't need to know about ConfigManager or Module at all.
  */
 public final class HighlightManager {
+	private static volatile boolean enabled = true;
 	private static volatile Map<Identifier, List<CompiledRule>> byType = new HashMap<>();
 	private static volatile List<CompiledRule> anyType = new ArrayList<>();
 
 	private HighlightManager() {
 	}
 
-	public static void rebuild() {
+	public static void setEnabled(boolean value) {
+		enabled = value;
+	}
+
+	public static void rebuild(List<HighlightRule> rules) {
 		Map<Identifier, List<CompiledRule>> newByType = new HashMap<>();
 		List<CompiledRule> newAnyType = new ArrayList<>();
 
-		for (HighlightRule rule : ConfigManager.get().rules) {
+		for (HighlightRule rule : rules) {
 			if (!rule.enabled) {
 				continue;
 			}
@@ -58,7 +64,7 @@ public final class HighlightManager {
 
 	/** @return packed ARGB outline color, or 0 if the entity shouldn't be outlined. */
 	public static int getOutlineColor(Entity entity) {
-		if (!ConfigManager.get().modEnabled) {
+		if (!enabled) {
 			return 0;
 		}
 

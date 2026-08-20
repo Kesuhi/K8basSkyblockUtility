@@ -1,7 +1,4 @@
-package com.kesuhi.skyblockhighlighter.highlight;
-
-import com.kesuhi.skyblockhighlighter.config.HighlightRule;
-import com.kesuhi.skyblockhighlighter.config.NameMatchMode;
+package com.k8bas.skyblockutility.module.mobhighlighter;
 
 import java.util.regex.Pattern;
 

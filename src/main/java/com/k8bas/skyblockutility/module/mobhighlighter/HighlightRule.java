@@ -1,4 +1,4 @@
-package com.kesuhi.skyblockhighlighter.config;
+package com.k8bas.skyblockutility.module.mobhighlighter;
 
 import java.util.UUID;
 

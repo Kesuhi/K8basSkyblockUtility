@@ -1,6 +1,6 @@
-package com.kesuhi.skyblockhighlighter.mixin;
+package com.k8bas.skyblockutility.module.mobhighlighter.mixin;
 
-import com.kesuhi.skyblockhighlighter.highlight.HighlightManager;
+import com.k8bas.skyblockutility.module.mobhighlighter.HighlightManager;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin<T extends Entity, S extends EntityRenderState> {
 	@Inject(method = "extractRenderState", at = @At("TAIL"))
-	private void skyblockhighlighter$extractRenderState(T entity, S state, float partialTick, CallbackInfo ci) {
+	private void k8bas$extractRenderState(T entity, S state, float partialTick, CallbackInfo ci) {
 		int color = HighlightManager.getOutlineColor(entity);
 		if (color != 0) {
 			state.outlineColor = color;

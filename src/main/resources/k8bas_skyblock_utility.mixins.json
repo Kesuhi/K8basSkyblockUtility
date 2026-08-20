@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "com.kesuhi.skyblockhighlighter.mixin",
+	"package": "com.k8bas.skyblockutility.module.mobhighlighter.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"EntityRendererMixin"
