@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.settings;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.module.ModuleManager;
+import com.k8bas.skyblockutility.module.mobhighlighter.ModKeybinds;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -43,6 +44,8 @@ public final class SettingsScreenFactory {
 				.build());
 		general.addEntry(entryBuilder.fillKeybindingField(Component.literal("Open Settings Key"),
 				SettingsKeybind.OPEN_SETTINGS_KEY).build());
+		general.addEntry(entryBuilder.fillKeybindingField(Component.literal("Toggle Mob Highlighter Key"),
+				ModKeybinds.TOGGLE_KEY).build());
 
 		for (Module module : ModuleManager.modules()) {
 			ConfigCategory category = builder.getOrCreateCategory(Component.literal(module.displayName()));

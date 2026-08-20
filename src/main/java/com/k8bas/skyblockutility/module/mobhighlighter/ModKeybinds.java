@@ -7,7 +7,9 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 
 public final class ModKeybinds {
-	private static final KeyMapping TOGGLE_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+	/** Public so it can also be exposed as a rebindable entry in the General Cloth Config
+	 *  category (fillKeybindingField binds to this same KeyMapping instance). */
+	public static final KeyMapping TOGGLE_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 			"key.k8bas_skyblock_utility.mob_highlighter_toggle",
 			InputConstants.Type.KEYSYM,
 			InputConstants.UNKNOWN.getValue(),
