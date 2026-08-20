@@ -3,7 +3,7 @@
 	"package": "com.kesuhi.skyblockhighlighter.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
-		"SkyblockMobHighlighterMixin"
+		"EntityRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
