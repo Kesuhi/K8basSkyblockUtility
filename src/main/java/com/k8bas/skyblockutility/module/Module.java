@@ -26,4 +26,11 @@ public interface Module {
 
 	/** Add this module's entries to its own settings category. */
 	void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder);
+
+	/** Called once when the settings screen's Save button fires, before ConfigManager.save()
+	 *  writes the file — override to reconcile pending add/delete actions collected during
+	 *  buildConfigScreen (so they're included in that write) and rebuild any derived runtime
+	 *  state (e.g. a rule-matching index) from the now-final config. */
+	default void onConfigScreenSaved() {
+	}
 }
