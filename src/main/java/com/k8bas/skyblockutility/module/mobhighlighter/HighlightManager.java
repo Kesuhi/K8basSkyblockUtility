@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.module.mobhighlighter;
 
+import com.k8bas.skyblockutility.config.ConfigManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
@@ -88,8 +89,8 @@ public final class HighlightManager {
 	private static int findMatch(List<CompiledRule> candidates, Entity entity, String normalizedName, LocalPlayer player) {
 		for (CompiledRule compiled : candidates) {
 			// Distance check first: cheaper than the string/regex match below.
-			double maxDistance = compiled.rule.maxDistance;
-			if (maxDistance > 0 && player != null && entity.distanceToSqr(player) > maxDistance * maxDistance) {
+			double maxDistance = effectiveMaxDistance(compiled.rule.maxDistance);
+			if (player != null && Double.isFinite(maxDistance) && entity.distanceToSqr(player) > maxDistance * maxDistance) {
 				continue;
 			}
 			if (compiled.matchesName(normalizedName)) {
@@ -97,6 +98,13 @@ public final class HighlightManager {
 			}
 		}
 		return 0;
+	}
+
+	/** The tighter of the rule's own limit (if any) and the General "scan range" cap (if any). */
+	private static double effectiveMaxDistance(double ruleMaxDistance) {
+		double ruleLimit = ruleMaxDistance > 0 ? ruleMaxDistance : Double.POSITIVE_INFINITY;
+		double globalLimit = ConfigManager.general().mobScanRangeBlocks;
+		return Math.min(ruleLimit, globalLimit > 0 ? globalLimit : Double.POSITIVE_INFINITY);
 	}
 
 	private static String normalizeName(Entity entity) {

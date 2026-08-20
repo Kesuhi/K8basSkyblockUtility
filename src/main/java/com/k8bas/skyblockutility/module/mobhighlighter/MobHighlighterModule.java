@@ -127,6 +127,18 @@ public final class MobHighlighterModule implements Module {
 					}
 				})
 				.build());
+		fields.add(entryBuilder.startIntField(Component.literal("Color Red"), (rule.color >> 16) & 0xFF)
+				.setMin(0).setMax(255)
+				.setSaveConsumer(value -> rule.color = (rule.color & 0x00FFFF) | (value << 16))
+				.build());
+		fields.add(entryBuilder.startIntField(Component.literal("Color Green"), (rule.color >> 8) & 0xFF)
+				.setMin(0).setMax(255)
+				.setSaveConsumer(value -> rule.color = (rule.color & 0xFF00FF) | (value << 8))
+				.build());
+		fields.add(entryBuilder.startIntField(Component.literal("Color Blue"), rule.color & 0xFF)
+				.setMin(0).setMax(255)
+				.setSaveConsumer(value -> rule.color = (rule.color & 0xFFFF00) | value)
+				.build());
 		fields.add(entryBuilder.startDoubleField(Component.literal("Max Distance (0 = unlimited)"), rule.maxDistance)
 				.setSaveConsumer(value -> rule.maxDistance = value)
 				.build());

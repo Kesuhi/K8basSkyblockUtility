@@ -30,6 +30,11 @@ public final class SettingsScreenFactory {
 						ConfigManager.general().autoUpdateDownloadEnabled)
 				.setSaveConsumer(value -> ConfigManager.general().autoUpdateDownloadEnabled = value)
 				.build());
+		general.addEntry(entryBuilder.startDoubleField(Component.literal("Mob scan range in blocks (0 = unlimited)"),
+						ConfigManager.general().mobScanRangeBlocks)
+				.setMin(0)
+				.setSaveConsumer(value -> ConfigManager.general().mobScanRangeBlocks = value)
+				.build());
 
 		for (Module module : ModuleManager.modules()) {
 			ConfigCategory category = builder.getOrCreateCategory(Component.literal(module.displayName()));

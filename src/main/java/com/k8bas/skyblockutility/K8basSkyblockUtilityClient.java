@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
+import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.update.UpdateChecker;
 import net.fabricmc.api.ClientModInitializer;
@@ -28,6 +29,7 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		// Future modules get registered here, one line each.
 
 		SettingsKeybind.register();
+		SettingsCommand.register();
 		UpdateChecker.checkInBackgroundIfEnabled();
 
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
