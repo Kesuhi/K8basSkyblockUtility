@@ -20,8 +20,11 @@ import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,8 +43,18 @@ import java.util.Map;
 public final class NpcSearchModule implements Module {
 	public static final String ID = "npc_search";
 
+	/** Don't re-announce the same NPC every single frame it stays on screen — only once per
+	 *  cooldown window. Keyed by rule id since the same NPC could theoretically have more than
+	 *  one active rule (e.g. re-added after a rename). */
+	private static final long FOUND_NOTIFICATION_COOLDOWN_MS = 30_000;
+
 	private final HighlightManager highlightManager = new HighlightManager();
+	private final Map<String, Long> lastFoundNotification = new HashMap<>();
 	private NpcSearchConfig config;
+	/** See MobHighlighterModule.workingRules — same reasoning: Add/Delete mutate this, not
+	 *  config.rules, so Cancel/Escape actually discards them instead of them having already
+	 *  taken effect. */
+	private List<NpcRule> workingRules;
 
 	@Override
 	public String id() {
@@ -57,9 +70,28 @@ public final class NpcSearchModule implements Module {
 	public void onRegister() {
 		config = ConfigManager.getModuleSection(ID, NpcSearchConfig.class, NpcSearchConfig::new);
 		highlightManager.setEnabled(config.enabled);
+		highlightManager.setOnMatchListener(this::onNpcFound);
 		rebuildDerived();
 		NpcDatabase.fetchInBackground();
 		NpcWaypointRenderer.register();
+	}
+
+	/** Called (on the render thread, from HighlightManager) whenever an unfixed NPC's rule
+	 *  matches a nearby entity. Shows a short vanilla title-card in the rule's own color, the
+	 *  same on-screen mechanism as e.g. "Ironman" mode splash text — cheap, and already visible
+	 *  even if the player isn't looking at chat. */
+	private void onNpcFound(HighlightRule rule) {
+		long now = System.currentTimeMillis();
+		Long last = lastFoundNotification.get(rule.id);
+		if (last != null && now - last < FOUND_NOTIFICATION_COOLDOWN_MS) {
+			return;
+		}
+		lastFoundNotification.put(rule.id, now);
+
+		Minecraft client = Minecraft.getInstance();
+		client.gui.resetTitleTimes();
+		client.gui.setTitle(Component.literal("You found " + rule.label)
+				.withStyle(Style.EMPTY.withColor(TextColor.fromRgb(rule.color))));
 	}
 
 	@Override
@@ -117,13 +149,15 @@ public final class NpcSearchModule implements Module {
 			client.setScreen(buildNpcPickerScreen(client.screen));
 		}));
 
-		for (NpcRule rule : new ArrayList<>(config.rules)) {
+		workingRules = new ArrayList<>(config.rules);
+		for (NpcRule rule : workingRules) {
 			category.addEntry(buildRuleSubCategory(rule, entryBuilder));
 		}
 	}
 
 	@Override
 	public void onConfigScreenSaved() {
+		config.rules = new ArrayList<>(workingRules);
 		ConfigManager.putModuleSection(ID, config);
 		rebuildDerived();
 	}
@@ -239,23 +273,26 @@ public final class NpcSearchModule implements Module {
 	private ButtonEntry buildNpcButton(NpcDatabaseEntry npc, Screen parentScreen) {
 		return new ButtonEntry(Component.literal(npc.displayName), Component.literal("Add"), () -> {
 			NpcRule newRule = createRuleForNpc(npc);
-			config.rules.add(newRule);
-			ConfigManager.putModuleSection(ID, config);
-			ConfigManager.save();
-			rebuildDerived();
+			workingRules.add(newRule);
 			liveAddRuleEntry(parentScreen, newRule);
 
 			Minecraft client = Minecraft.getInstance();
 			if (client.player != null) {
-				client.player.sendSystemMessage(Component.literal("Added " + npc.displayName + "."));
+				client.player.sendSystemMessage(Component.literal("Added " + npc.displayName + " — Save & Done to keep it."));
 			}
 		});
 	}
 
+	/** The database groups an NPC we don't actually know the island for under a real, non-null
+	 *  "Unknown" folder (byIsland()'s TreeMap grouping can't take a null key) — but the rule it
+	 *  creates should be genuinely unrestricted, not restricted to a fake island that will never
+	 *  match, so that placeholder is translated to null here specifically. */
+	private static final String UNKNOWN_ISLAND = "Unknown";
+
 	private NpcRule createRuleForNpc(NpcDatabaseEntry npc) {
 		NpcRule rule = new NpcRule();
 		rule.label = npc.displayName;
-		rule.island = npc.island;
+		rule.island = UNKNOWN_ISLAND.equals(npc.island) ? null : npc.island;
 		rule.fixed = npc.fixed;
 		rule.color = 0x00FF00;
 		if (npc.fixed) {
@@ -304,10 +341,7 @@ public final class NpcSearchModule implements Module {
 		}));
 
 		sub.add(new ButtonEntry(Component.literal("Delete"), Component.literal("Delete this NPC"), () -> {
-			config.rules.remove(rule);
-			ConfigManager.putModuleSection(ID, config);
-			ConfigManager.save();
-			rebuildDerived();
+			workingRules.remove(rule);
 			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);
 		}));
 

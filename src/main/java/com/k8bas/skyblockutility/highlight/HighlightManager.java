@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.regex.PatternSyntaxException;
 
@@ -36,6 +37,12 @@ public final class HighlightManager {
 	private volatile boolean enabled = true;
 	private volatile Map<Identifier, List<CompiledRule>> byType = new HashMap<>();
 	private volatile List<CompiledRule> anyType = new ArrayList<>();
+	/** Optional — fires whenever a rule owned by this instance matches an entity. NPC Search uses
+	 *  this for its "You found X" popup; Mob Highlighter leaves it unset. Not deduplicated or
+	 *  throttled here (it fires on every matching frame, same as the render mixin calling this
+	 *  instance) — that's the listener's job, since only it knows what "a new sighting" should
+	 *  mean for its use case. */
+	private volatile Consumer<HighlightRule> onMatch;
 
 	/** Nearby-ArmorStand lookups (see resolveNameTag below) are far more expensive than a plain
 	 *  field read, so the result is cached per entity per game tick — render fires far more often
@@ -50,6 +57,10 @@ public final class HighlightManager {
 
 	public void setEnabled(boolean value) {
 		enabled = value;
+	}
+
+	public void setOnMatchListener(Consumer<HighlightRule> listener) {
+		onMatch = listener;
 	}
 
 	public void rebuild(List<HighlightRule> rules) {
@@ -121,7 +132,7 @@ public final class HighlightManager {
 		return findMatch(anyType, entity, nameTag, player);
 	}
 
-	private static int findMatch(List<CompiledRule> candidates, Entity entity, Supplier<String> nameTag, LocalPlayer player) {
+	private int findMatch(List<CompiledRule> candidates, Entity entity, Supplier<String> nameTag, LocalPlayer player) {
 		String currentIsland = null;
 		boolean currentIslandResolved = false;
 
@@ -143,6 +154,10 @@ public final class HighlightManager {
 				continue;
 			}
 			if (compiled.matchesName(nameTag)) {
+				Consumer<HighlightRule> listener = onMatch;
+				if (listener != null) {
+					listener.accept(compiled.rule);
+				}
 				return ARGB.opaque(compiled.rule.color);
 			}
 		}

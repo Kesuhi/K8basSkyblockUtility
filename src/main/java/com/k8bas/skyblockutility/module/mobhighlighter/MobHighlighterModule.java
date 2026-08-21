@@ -54,6 +54,12 @@ public final class MobHighlighterModule implements Module {
 
 	private final HighlightManager highlightManager = new HighlightManager();
 	private MobHighlighterConfig config;
+	/** A working copy of config.rules for the lifetime of one open settings screen. Add/Delete
+	 *  mutate this, not config.rules directly, so nothing actually takes effect (persisted or
+	 *  live) unless the screen is actually saved — Cancel/Escape just discards it, same as
+	 *  Cloth Config's own field-level edits already behave. Re-seeded fresh from config.rules
+	 *  every time buildConfigScreen runs (i.e. every time the settings screen opens). */
+	private List<HighlightRule> workingRules;
 
 	@Override
 	public String id() {
@@ -98,13 +104,15 @@ public final class MobHighlighterModule implements Module {
 			client.setScreen(buildMobPickerScreen(client.screen));
 		}));
 
-		for (HighlightRule rule : new ArrayList<>(config.rules)) {
+		workingRules = new ArrayList<>(config.rules);
+		for (HighlightRule rule : workingRules) {
 			category.addEntry(buildRuleSubCategory(rule, entryBuilder));
 		}
 	}
 
 	@Override
 	public void onConfigScreenSaved() {
+		config.rules = new ArrayList<>(workingRules);
 		ConfigManager.putModuleSection(ID, config);
 		highlightManager.rebuild(config.rules);
 	}
@@ -253,15 +261,13 @@ public final class MobHighlighterModule implements Module {
 	private ButtonEntry buildMobButton(MobDatabaseEntry mob, Screen parentScreen) {
 		return new ButtonEntry(Component.literal(mob.displayName), Component.literal("Add rule"), () -> {
 			HighlightRule newRule = createRuleForMob(mob);
-			config.rules.add(newRule);
-			ConfigManager.putModuleSection(ID, config);
-			ConfigManager.save();
-			highlightManager.rebuild(config.rules);
+			workingRules.add(newRule);
 			liveAddRuleEntry(parentScreen, newRule);
 
 			Minecraft client = Minecraft.getInstance();
 			if (client.player != null) {
-				client.player.sendSystemMessage(Component.literal("Added highlight rule for " + mob.displayName + "."));
+				client.player.sendSystemMessage(Component.literal(
+						"Added highlight rule for " + mob.displayName + " — Save & Done to keep it."));
 			}
 		});
 	}
@@ -341,10 +347,7 @@ public final class MobHighlighterModule implements Module {
 				})
 				.build());
 		sub.add(new ButtonEntry(Component.literal("Delete"), Component.literal("Delete this rule"), () -> {
-			config.rules.remove(rule);
-			ConfigManager.putModuleSection(ID, config);
-			ConfigManager.save();
-			highlightManager.rebuild(config.rules);
+			workingRules.remove(rule);
 			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);
 		}));
 
