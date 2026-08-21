@@ -9,6 +9,8 @@ Modules so far:
   render path) on entities matched by rules (entity type and/or custom-name
   substring/regex), each rule with its own color.
 
+The mod features some features I wanted but couldn´t find in any other mod, if you encounter any issues or want to request a custom feature dm me on discord (@disable.rx).
+
 ## Setup
 
 For IDE setup instructions, see the [Fabric Documentation page](https://docs.fabricmc.net/develop/getting-started/creating-a-project#setting-up).
@@ -16,5 +18,3 @@ For IDE setup instructions, see the [Fabric Documentation page](https://docs.fab
 ## License
 
 This project is based on the official Fabric example mod template (CC0). See [LICENSE](LICENSE).
-
-The mod features some features I wanted but couldn´t find in any other mod, if you encounter any issues or want to request a custom feature dm me on discord (@disable.rx).
