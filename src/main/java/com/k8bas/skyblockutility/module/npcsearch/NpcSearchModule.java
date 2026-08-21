@@ -177,6 +177,12 @@ public final class NpcSearchModule implements Module {
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		ConfigCategory category = builder.getOrCreateCategory(Component.literal("NPC Database"));
 
+		// Cloth Config disables "Save & Done" unless it thinks something's edited, which nothing
+		// on this screen ever reports (picking an NPC doesn't touch any Cloth-tracked field) — an
+		// always-true marker keeps it permanently clickable so it works as the Return button
+		// (its saving runnable is a no-op, so clicking it just navigates back to parent).
+		category.addEntry(new DirtyMarkerEntry(() -> true));
+
 		Map<String, List<NpcDatabaseEntry>> byIsland = NpcDatabase.byIsland();
 		if (byIsland.isEmpty()) {
 			category.addEntry(entryBuilder.startTextDescription(Component.literal(

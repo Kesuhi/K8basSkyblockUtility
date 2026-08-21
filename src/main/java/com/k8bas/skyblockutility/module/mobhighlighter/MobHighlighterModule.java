@@ -142,6 +142,12 @@ public final class MobHighlighterModule implements Module {
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		ConfigCategory category = builder.getOrCreateCategory(Component.literal("Mob Database"));
 
+		// Cloth Config disables "Save & Done" unless it thinks something's edited, which nothing
+		// on this screen ever reports (picking a mob doesn't touch any Cloth-tracked field) — an
+		// always-true marker keeps it permanently clickable so it works as the Return button
+		// (its saving runnable is a no-op, so clicking it just navigates back to parent).
+		category.addEntry(new DirtyMarkerEntry(() -> true));
+
 		Map<String, List<MobDatabaseEntry>> byIsland = MobDatabase.byIsland();
 		if (byIsland.isEmpty()) {
 			category.addEntry(entryBuilder.startTextDescription(Component.literal(
