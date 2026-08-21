@@ -176,7 +176,10 @@ public final class NpcSearchModule implements Module {
 				.setTitle(Component.literal("NPC Database"))
 				.setSavingRunnable(() -> {
 				})
-				.setAfterInitConsumer(NpcSearchModule::stripBuiltInSearchBox);
+				.setAfterInitConsumer(screenObj -> {
+					stripBuiltInSearchBox(screenObj);
+					relabelSaveButton(screenObj);
+				});
 
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		ConfigCategory category = builder.getOrCreateCategory(Component.literal("NPC Database"));
@@ -237,6 +240,24 @@ public final class NpcSearchModule implements Module {
 		for (Object entry : new ArrayList<>(children)) {
 			if (entry instanceof SearchFieldEntry || entry instanceof EmptyEntry) {
 				children.remove(entry);
+			}
+		}
+	}
+
+	/** Cloth Config's "Save & Done" button (labeled "Save & Quit" by its own translation) is left
+	 *  permanently clickable on this screen (via the always-true DirtyMarkerEntry above) so it
+	 *  works as a Return button — its own saving runnable is a no-op, so clicking it just
+	 *  navigates back to the parent screen. Renaming it here to make that purpose obvious. Unlike
+	 *  the Cancel button (whose label AbstractConfigScreen.tick() overwrites every tick based on
+	 *  isEdited()), the save button's label is only ever set once at init(), so this sticks. */
+	private static void relabelSaveButton(Screen screenObj) {
+		if (!(screenObj instanceof ClothConfigScreen clothScreen)) {
+			return;
+		}
+		for (net.minecraft.client.gui.components.events.GuiEventListener child : clothScreen.children()) {
+			if (child instanceof net.minecraft.client.gui.components.AbstractWidget widget
+					&& "Save & Quit".equals(widget.getMessage().getString())) {
+				widget.setMessage(Component.literal("Return"));
 			}
 		}
 	}
