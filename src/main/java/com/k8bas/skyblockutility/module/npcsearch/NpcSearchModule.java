@@ -16,6 +16,7 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import me.shedaniel.clothconfig2.gui.entries.EmptyEntry;
+import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.gui.widget.SearchFieldEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.Minecraft;
@@ -25,6 +26,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -194,6 +196,10 @@ public final class NpcSearchModule implements Module {
 
 		List<AbstractConfigListEntry<?>> currentFolderEntries = new ArrayList<>();
 		String[] lastQuery = {""};
+		// Remembers which island folders were manually expanded, keyed by folder name, so a
+		// rebuild (triggered by typing a search or adding an NPC) doesn't snap every folder back
+		// to collapsed — captured from the live entries right before each rebuild throws them away.
+		Map<String, Boolean> expandedState = new HashMap<>();
 		// Shared by the search field and every "Add" button: re-derives the folder tree from
 		// scratch against the *current* workingRules and the *last typed* query, and live-patches
 		// the picker screen with it. Adding an NPC needs this same rebuild (to make it disappear
@@ -203,8 +209,9 @@ public final class NpcSearchModule implements Module {
 		refreshPickerRef[0] = () -> {
 			Screen active = Minecraft.getInstance().screen;
 			if (active instanceof ClothConfigScreen clothScreen) {
+				captureExpandedState(currentFolderEntries, expandedState);
 				replaceFolderEntries(clothScreen, currentFolderEntries,
-						buildFolderList(byIsland, entryBuilder, parent, lastQuery[0], refreshPickerRef[0]));
+						buildFolderList(byIsland, entryBuilder, parent, lastQuery[0], refreshPickerRef[0], expandedState));
 			}
 		};
 
@@ -213,7 +220,7 @@ public final class NpcSearchModule implements Module {
 			refreshPickerRef[0].run();
 		}));
 
-		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, "", refreshPickerRef[0]));
+		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, "", refreshPickerRef[0], expandedState));
 		for (AbstractConfigListEntry<?> entry : currentFolderEntries) {
 			category.addEntry(entry);
 		}
@@ -235,7 +242,8 @@ public final class NpcSearchModule implements Module {
 	}
 
 	private List<AbstractConfigListEntry<?>> buildFolderList(Map<String, List<NpcDatabaseEntry>> byIsland,
-			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Runnable refreshPicker) {
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Runnable refreshPicker,
+			Map<String, Boolean> expandedState) {
 		Set<String> addedSourceIds = new HashSet<>();
 		for (NpcRule rule : workingRules) {
 			if (rule.sourceId != null) {
@@ -246,12 +254,24 @@ public final class NpcSearchModule implements Module {
 		List<AbstractConfigListEntry<?>> result = new ArrayList<>();
 		for (Map.Entry<String, List<NpcDatabaseEntry>> island : byIsland.entrySet()) {
 			AbstractConfigListEntry<?> entry = buildIslandSubCategory(
-					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery, addedSourceIds, refreshPicker);
+					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery, addedSourceIds,
+					refreshPicker, expandedState);
 			if (entry != null) {
 				result.add(entry);
 			}
 		}
 		return result;
+	}
+
+	/** Walks the currently-shown folder entries and records each SubCategory's current
+	 *  expanded/collapsed state, so the next rebuild can restore it instead of resetting every
+	 *  folder back to collapsed. */
+	private void captureExpandedState(List<AbstractConfigListEntry<?>> entries, Map<String, Boolean> out) {
+		for (AbstractConfigListEntry<?> entry : entries) {
+			if (entry instanceof SubCategoryListEntry sub) {
+				out.put(sub.getCategoryName().getString(), sub.isExpanded());
+			}
+		}
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -274,7 +294,7 @@ public final class NpcSearchModule implements Module {
 
 	private AbstractConfigListEntry<?> buildIslandSubCategory(String island, List<NpcDatabaseEntry> npcs,
 			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Set<String> addedSourceIds,
-			Runnable refreshPicker) {
+			Runnable refreshPicker, Map<String, Boolean> expandedState) {
 		boolean filtering = !normalizedQuery.isEmpty();
 
 		List<NpcDatabaseEntry> matching = new ArrayList<>();
@@ -290,7 +310,8 @@ public final class NpcSearchModule implements Module {
 			return null;
 		}
 
-		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(filtering);
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island))
+				.setExpanded(filtering || expandedState.getOrDefault(island, false));
 		for (NpcDatabaseEntry npc : matching) {
 			sub.add(buildNpcButton(npc, parentScreen, refreshPicker));
 		}

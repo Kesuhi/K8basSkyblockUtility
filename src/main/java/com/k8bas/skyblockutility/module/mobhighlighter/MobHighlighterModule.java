@@ -16,6 +16,7 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import me.shedaniel.clothconfig2.gui.entries.EmptyEntry;
+import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.gui.widget.SearchFieldEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -159,6 +161,11 @@ public final class MobHighlighterModule implements Module {
 
 		List<AbstractConfigListEntry<?>> currentFolderEntries = new ArrayList<>();
 		String[] lastQuery = {""};
+		// Remembers which island/event folders were manually expanded, keyed by folder name (event
+		// folders keyed "island::event"), so a rebuild (triggered by typing a search or adding a
+		// mob) doesn't snap every folder back to collapsed — captured from the live entries right
+		// before each rebuild throws them away.
+		Map<String, Boolean> expandedState = new HashMap<>();
 		// Shared by the search field and every "Add rule" button: re-derives the folder tree from
 		// scratch against the *current* workingRules and the *last typed* query, and live-patches
 		// the picker screen with it. Adding a mob needs this same rebuild (to make it disappear
@@ -169,8 +176,9 @@ public final class MobHighlighterModule implements Module {
 		refreshPickerRef[0] = () -> {
 			Screen active = Minecraft.getInstance().screen;
 			if (active instanceof ClothConfigScreen clothScreen) {
+				captureExpandedState(currentFolderEntries, expandedState);
 				replaceFolderEntries(clothScreen, currentFolderEntries,
-						buildFolderList(byIsland, entryBuilder, parent, lastQuery[0], refreshPickerRef[0]));
+						buildFolderList(byIsland, entryBuilder, parent, lastQuery[0], refreshPickerRef[0], expandedState));
 			}
 		};
 
@@ -179,7 +187,7 @@ public final class MobHighlighterModule implements Module {
 			refreshPickerRef[0].run();
 		}));
 
-		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, "", refreshPickerRef[0]));
+		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, "", refreshPickerRef[0], expandedState));
 		for (AbstractConfigListEntry<?> entry : currentFolderEntries) {
 			category.addEntry(entry);
 		}
@@ -213,7 +221,8 @@ public final class MobHighlighterModule implements Module {
 	 *  matching mob are omitted entirely and everything remaining is force-expanded, since it's
 	 *  guaranteed to contain only matches. */
 	private List<AbstractConfigListEntry<?>> buildFolderList(Map<String, List<MobDatabaseEntry>> byIsland,
-			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Runnable refreshPicker) {
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Runnable refreshPicker,
+			Map<String, Boolean> expandedState) {
 		Set<String> addedSourceIds = new HashSet<>();
 		for (HighlightRule rule : workingRules) {
 			if (rule.sourceId != null) {
@@ -224,12 +233,32 @@ public final class MobHighlighterModule implements Module {
 		List<AbstractConfigListEntry<?>> result = new ArrayList<>();
 		for (Map.Entry<String, List<MobDatabaseEntry>> island : byIsland.entrySet()) {
 			AbstractConfigListEntry<?> entry = buildIslandSubCategory(
-					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery, addedSourceIds, refreshPicker);
+					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery, addedSourceIds,
+					refreshPicker, expandedState);
 			if (entry != null) {
 				result.add(entry);
 			}
 		}
 		return result;
+	}
+
+	/** Walks the currently-shown folder entries one level deep (island -> event subfolder) and
+	 *  records each SubCategory's current expanded/collapsed state, so the next rebuild can
+	 *  restore it instead of resetting every folder back to collapsed. */
+	@SuppressWarnings("unchecked")
+	private void captureExpandedState(List<AbstractConfigListEntry<?>> entries, Map<String, Boolean> out) {
+		for (AbstractConfigListEntry<?> entry : entries) {
+			if (!(entry instanceof SubCategoryListEntry sub)) {
+				continue;
+			}
+			String islandName = sub.getCategoryName().getString();
+			out.put(islandName, sub.isExpanded());
+			for (Object child : sub.getValue()) {
+				if (child instanceof SubCategoryListEntry childSub) {
+					out.put(islandName + "::" + childSub.getCategoryName().getString(), childSub.isExpanded());
+				}
+			}
+		}
 	}
 
 	/** Replaces the currently-shown folder entries with a freshly filtered set, patching the
@@ -256,7 +285,7 @@ public final class MobHighlighterModule implements Module {
 	/** Returns null (island omitted entirely) when filtering/already-added leaves nothing under it. */
 	private AbstractConfigListEntry<?> buildIslandSubCategory(String island, List<MobDatabaseEntry> mobs,
 			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Set<String> addedSourceIds,
-			Runnable refreshPicker) {
+			Runnable refreshPicker, Map<String, Boolean> expandedState) {
 		boolean filtering = !normalizedQuery.isEmpty();
 
 		Map<String, List<MobDatabaseEntry>> bySubfolder = new LinkedHashMap<>();
@@ -278,12 +307,15 @@ public final class MobHighlighterModule implements Module {
 			return null;
 		}
 
-		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(filtering);
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island))
+				.setExpanded(filtering || expandedState.getOrDefault(island, false));
 		for (MobDatabaseEntry mob : direct) {
 			sub.add(buildMobButton(mob, parentScreen, refreshPicker));
 		}
 		for (Map.Entry<String, List<MobDatabaseEntry>> event : bySubfolder.entrySet()) {
-			SubCategoryBuilder eventSub = entryBuilder.startSubCategory(Component.literal(event.getKey())).setExpanded(filtering);
+			String eventKey = island + "::" + event.getKey();
+			SubCategoryBuilder eventSub = entryBuilder.startSubCategory(Component.literal(event.getKey()))
+					.setExpanded(filtering || expandedState.getOrDefault(eventKey, false));
 			for (MobDatabaseEntry mob : event.getValue()) {
 				eventSub.add(buildMobButton(mob, parentScreen, refreshPicker));
 			}
