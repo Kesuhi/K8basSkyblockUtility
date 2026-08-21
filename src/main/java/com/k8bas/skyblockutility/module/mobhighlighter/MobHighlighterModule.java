@@ -7,7 +7,7 @@ import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
 import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
-import com.k8bas.skyblockutility.settings.HexColorFieldEntry;
+import com.k8bas.skyblockutility.settings.ColorWheelFieldEntry;
 import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
@@ -23,6 +23,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -79,6 +80,9 @@ public final class MobHighlighterModule implements Module {
 		config = ConfigManager.getModuleSection(ID, MobHighlighterConfig.class, MobHighlighterConfig::new);
 		highlightManager.setEnabled(config.enabled);
 		highlightManager.rebuild(config.rules);
+		// Fetched at startup rather than lazily on first picker-open, so opening the picker for
+		// the first time doesn't show the "still loading" message / a moment of an empty list.
+		MobDatabase.fetchIfNeeded();
 		ModKeybinds.register(this);
 	}
 
@@ -130,11 +134,6 @@ public final class MobHighlighterModule implements Module {
 	 *  that actually match (auto-expanded), which is real hide-on-no-match rather than the
 	 *  earlier expand/collapse-only approach. */
 	private Screen buildMobPickerScreen(Screen parent) {
-		// Fetched lazily here rather than at module registration — most sessions never open this
-		// screen at all, so there's no reason to spend a request + parse on every single launch.
-		// Idempotent (safe to call every time this screen opens).
-		MobDatabase.fetchIfNeeded();
-
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
 				.setTitle(Component.literal("Mob Database"))
@@ -159,16 +158,28 @@ public final class MobHighlighterModule implements Module {
 		}
 
 		List<AbstractConfigListEntry<?>> currentFolderEntries = new ArrayList<>();
-		category.addEntry(new LiveTextFieldEntry(Component.literal("Search"), "Search mobs...", query -> {
-			String normalized = query.trim().toLowerCase(Locale.ROOT);
+		String[] lastQuery = {""};
+		// Shared by the search field and every "Add rule" button: re-derives the folder tree from
+		// scratch against the *current* workingRules and the *last typed* query, and live-patches
+		// the picker screen with it. Adding a mob needs this same rebuild (to make it disappear
+		// from the list immediately) as much as typing a new search query does. Declared as a
+		// one-slot holder first, since the Runnable's own body needs to refer to itself (each
+		// rebuilt "Add rule" button needs a way to trigger the *next* rebuild too).
+		Runnable[] refreshPickerRef = new Runnable[1];
+		refreshPickerRef[0] = () -> {
 			Screen active = Minecraft.getInstance().screen;
 			if (active instanceof ClothConfigScreen clothScreen) {
 				replaceFolderEntries(clothScreen, currentFolderEntries,
-						buildFolderList(byIsland, entryBuilder, parent, normalized));
+						buildFolderList(byIsland, entryBuilder, parent, lastQuery[0], refreshPickerRef[0]));
 			}
+		};
+
+		category.addEntry(new LiveTextFieldEntry(Component.literal("Search"), "Search mobs...", query -> {
+			lastQuery[0] = query.trim().toLowerCase(Locale.ROOT);
+			refreshPickerRef[0].run();
 		}));
 
-		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, ""));
+		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, "", refreshPickerRef[0]));
 		for (AbstractConfigListEntry<?> entry : currentFolderEntries) {
 			category.addEntry(entry);
 		}
@@ -195,16 +206,25 @@ public final class MobHighlighterModule implements Module {
 		}
 	}
 
-	/** Builds the full island/event/mob folder tree. With a blank query this is the unfiltered,
-	 *  all-collapsed browse view; with a query, islands/events with no matching mob are omitted
-	 *  entirely and everything remaining is force-expanded, since it's guaranteed to contain only
-	 *  matches. */
+	/** Builds the full island/event/mob folder tree, skipping any mob whose database id is
+	 *  already backing a tracked rule (added-but-not-yet-saved rules count too, via
+	 *  workingRules — no point letting the same mob be "added" twice). With a blank query this
+	 *  is the unfiltered, all-collapsed browse view; with a query, islands/events with no
+	 *  matching mob are omitted entirely and everything remaining is force-expanded, since it's
+	 *  guaranteed to contain only matches. */
 	private List<AbstractConfigListEntry<?>> buildFolderList(Map<String, List<MobDatabaseEntry>> byIsland,
-			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery) {
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Runnable refreshPicker) {
+		Set<String> addedSourceIds = new HashSet<>();
+		for (HighlightRule rule : workingRules) {
+			if (rule.sourceId != null) {
+				addedSourceIds.add(rule.sourceId);
+			}
+		}
+
 		List<AbstractConfigListEntry<?>> result = new ArrayList<>();
 		for (Map.Entry<String, List<MobDatabaseEntry>> island : byIsland.entrySet()) {
 			AbstractConfigListEntry<?> entry = buildIslandSubCategory(
-					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery);
+					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery, addedSourceIds, refreshPicker);
 			if (entry != null) {
 				result.add(entry);
 			}
@@ -233,14 +253,18 @@ public final class MobHighlighterModule implements Module {
 		}
 	}
 
-	/** Returns null (island omitted entirely) when filtering and nothing under it matches. */
+	/** Returns null (island omitted entirely) when filtering/already-added leaves nothing under it. */
 	private AbstractConfigListEntry<?> buildIslandSubCategory(String island, List<MobDatabaseEntry> mobs,
-			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery) {
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Set<String> addedSourceIds,
+			Runnable refreshPicker) {
 		boolean filtering = !normalizedQuery.isEmpty();
 
 		Map<String, List<MobDatabaseEntry>> bySubfolder = new LinkedHashMap<>();
 		List<MobDatabaseEntry> direct = new ArrayList<>();
 		for (MobDatabaseEntry mob : mobs) {
+			if (addedSourceIds.contains(mob.id)) {
+				continue;
+			}
 			if (filtering && !mob.displayName.toLowerCase(Locale.ROOT).contains(normalizedQuery)) {
 				continue;
 			}
@@ -250,18 +274,18 @@ public final class MobHighlighterModule implements Module {
 				direct.add(mob);
 			}
 		}
-		if (filtering && direct.isEmpty() && bySubfolder.isEmpty()) {
+		if (direct.isEmpty() && bySubfolder.isEmpty()) {
 			return null;
 		}
 
 		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(filtering);
 		for (MobDatabaseEntry mob : direct) {
-			sub.add(buildMobButton(mob, parentScreen));
+			sub.add(buildMobButton(mob, parentScreen, refreshPicker));
 		}
 		for (Map.Entry<String, List<MobDatabaseEntry>> event : bySubfolder.entrySet()) {
 			SubCategoryBuilder eventSub = entryBuilder.startSubCategory(Component.literal(event.getKey())).setExpanded(filtering);
 			for (MobDatabaseEntry mob : event.getValue()) {
-				eventSub.add(buildMobButton(mob, parentScreen));
+				eventSub.add(buildMobButton(mob, parentScreen, refreshPicker));
 			}
 			sub.add(eventSub.build());
 		}
@@ -269,11 +293,12 @@ public final class MobHighlighterModule implements Module {
 		return sub.build();
 	}
 
-	private ButtonEntry buildMobButton(MobDatabaseEntry mob, Screen parentScreen) {
+	private ButtonEntry buildMobButton(MobDatabaseEntry mob, Screen parentScreen, Runnable refreshPicker) {
 		return new ButtonEntry(Component.literal(mob.displayName), Component.literal("Add rule"), () -> {
 			HighlightRule newRule = createRuleForMob(mob);
 			workingRules.add(newRule);
 			liveAddRuleEntry(parentScreen, newRule);
+			refreshPicker.run();
 		});
 	}
 
@@ -283,6 +308,7 @@ public final class MobHighlighterModule implements Module {
 		rule.namePattern = mob.matchText;
 		rule.nameMatchMode = NameMatchMode.CONTAINS;
 		rule.color = 0xFF0000;
+		rule.sourceId = mob.id;
 		rule.island = UNGATED_ISLANDS.contains(mob.island) ? null : mob.island;
 		return rule;
 	}
@@ -312,45 +338,12 @@ public final class MobHighlighterModule implements Module {
 		sub.add(entryBuilder.startStrField(Component.literal("Name Pattern"), rule.namePattern)
 				.setSaveConsumer(value -> rule.namePattern = value)
 				.build());
-		// Hex/R/G/B all ultimately write the same rule.color int. Each captures its own initial
-		// value at build time and only applies on save if it actually changed — otherwise,
-		// whichever field the user *didn't* touch would unconditionally re-apply its stale
-		// snapshot and clobber an edit made through one of the others.
-		int initialColor = rule.color;
-		String initialHex = String.format("%06X", initialColor & 0xFFFFFF);
-		int initialRed = (initialColor >> 16) & 0xFF;
-		int initialGreen = (initialColor >> 8) & 0xFF;
-		int initialBlue = initialColor & 0xFF;
-
-		sub.add(new HexColorFieldEntry(Component.literal("Color (hex RRGGBB)"), initialHex, initialColor, value -> {
+		String initialHex = String.format("%06X", rule.color & 0xFFFFFF);
+		sub.add(new ColorWheelFieldEntry(Component.literal("Color"), rule.color, value -> {
 			if (isValidHexColor(value) && !value.equalsIgnoreCase(initialHex)) {
 				rule.color = Integer.parseInt(value, 16);
 			}
 		}));
-		sub.add(entryBuilder.startIntField(Component.literal("Color Red"), initialRed)
-				.setMin(0).setMax(255)
-				.setSaveConsumer(value -> {
-					if (value != initialRed) {
-						rule.color = (rule.color & 0x00FFFF) | (value << 16);
-					}
-				})
-				.build());
-		sub.add(entryBuilder.startIntField(Component.literal("Color Green"), initialGreen)
-				.setMin(0).setMax(255)
-				.setSaveConsumer(value -> {
-					if (value != initialGreen) {
-						rule.color = (rule.color & 0xFF00FF) | (value << 8);
-					}
-				})
-				.build());
-		sub.add(entryBuilder.startIntField(Component.literal("Color Blue"), initialBlue)
-				.setMin(0).setMax(255)
-				.setSaveConsumer(value -> {
-					if (value != initialBlue) {
-						rule.color = (rule.color & 0xFFFF00) | value;
-					}
-				})
-				.build());
 		sub.add(new ButtonEntry(Component.literal("Delete"), Component.literal("Delete this rule"), () -> {
 			workingRules.remove(rule);
 			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);

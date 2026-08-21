@@ -7,7 +7,7 @@ import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
 import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
-import com.k8bas.skyblockutility.settings.HexColorFieldEntry;
+import com.k8bas.skyblockutility.settings.ColorWheelFieldEntry;
 import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
@@ -72,6 +72,9 @@ public final class NpcSearchModule implements Module {
 		highlightManager.setEnabled(config.enabled);
 		highlightManager.setOnMatchListener(this::onNpcFound);
 		rebuildDerived();
+		// Fetched at startup rather than lazily on first picker-open, so opening the picker for
+		// the first time doesn't show the "still loading" message / a moment of an empty list.
+		NpcDatabase.fetchIfNeeded();
 		NpcWaypointRenderer.register();
 		ModKeybinds.register(this);
 	}
@@ -166,11 +169,6 @@ public final class NpcSearchModule implements Module {
 	 *  behind stripping Cloth Config's own search box and rebuilding the folder tree per
 	 *  keystroke instead of just expanding/collapsing it. */
 	private Screen buildNpcPickerScreen(Screen parent) {
-		// Fetched lazily here rather than at module registration — most sessions never open this
-		// screen at all, so there's no reason to spend a request + parse on every single launch.
-		// Idempotent (safe to call every time this screen opens).
-		NpcDatabase.fetchIfNeeded();
-
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
 				.setTitle(Component.literal("NPC Database"))
@@ -195,16 +193,27 @@ public final class NpcSearchModule implements Module {
 		}
 
 		List<AbstractConfigListEntry<?>> currentFolderEntries = new ArrayList<>();
-		category.addEntry(new LiveTextFieldEntry(Component.literal("Search"), "Search NPCs...", query -> {
-			String normalized = query.trim().toLowerCase(Locale.ROOT);
+		String[] lastQuery = {""};
+		// Shared by the search field and every "Add" button: re-derives the folder tree from
+		// scratch against the *current* workingRules and the *last typed* query, and live-patches
+		// the picker screen with it. Adding an NPC needs this same rebuild (to make it disappear
+		// from the list immediately) as much as typing a new search query does. Declared as a
+		// one-slot holder first since the Runnable's own body needs to refer to itself.
+		Runnable[] refreshPickerRef = new Runnable[1];
+		refreshPickerRef[0] = () -> {
 			Screen active = Minecraft.getInstance().screen;
 			if (active instanceof ClothConfigScreen clothScreen) {
 				replaceFolderEntries(clothScreen, currentFolderEntries,
-						buildFolderList(byIsland, entryBuilder, parent, normalized));
+						buildFolderList(byIsland, entryBuilder, parent, lastQuery[0], refreshPickerRef[0]));
 			}
+		};
+
+		category.addEntry(new LiveTextFieldEntry(Component.literal("Search"), "Search NPCs...", query -> {
+			lastQuery[0] = query.trim().toLowerCase(Locale.ROOT);
+			refreshPickerRef[0].run();
 		}));
 
-		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, ""));
+		currentFolderEntries.addAll(buildFolderList(byIsland, entryBuilder, parent, "", refreshPickerRef[0]));
 		for (AbstractConfigListEntry<?> entry : currentFolderEntries) {
 			category.addEntry(entry);
 		}
@@ -226,11 +235,18 @@ public final class NpcSearchModule implements Module {
 	}
 
 	private List<AbstractConfigListEntry<?>> buildFolderList(Map<String, List<NpcDatabaseEntry>> byIsland,
-			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery) {
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Runnable refreshPicker) {
+		Set<String> addedSourceIds = new HashSet<>();
+		for (NpcRule rule : workingRules) {
+			if (rule.sourceId != null) {
+				addedSourceIds.add(rule.sourceId);
+			}
+		}
+
 		List<AbstractConfigListEntry<?>> result = new ArrayList<>();
 		for (Map.Entry<String, List<NpcDatabaseEntry>> island : byIsland.entrySet()) {
 			AbstractConfigListEntry<?> entry = buildIslandSubCategory(
-					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery);
+					island.getKey(), island.getValue(), entryBuilder, parentScreen, normalizedQuery, addedSourceIds, refreshPicker);
 			if (entry != null) {
 				result.add(entry);
 			}
@@ -257,11 +273,15 @@ public final class NpcSearchModule implements Module {
 	}
 
 	private AbstractConfigListEntry<?> buildIslandSubCategory(String island, List<NpcDatabaseEntry> npcs,
-			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery) {
+			ConfigEntryBuilder entryBuilder, Screen parentScreen, String normalizedQuery, Set<String> addedSourceIds,
+			Runnable refreshPicker) {
 		boolean filtering = !normalizedQuery.isEmpty();
 
 		List<NpcDatabaseEntry> matching = new ArrayList<>();
 		for (NpcDatabaseEntry npc : npcs) {
+			if (addedSourceIds.contains(npc.id)) {
+				continue;
+			}
 			if (!filtering || npc.displayName.toLowerCase(Locale.ROOT).contains(normalizedQuery)) {
 				matching.add(npc);
 			}
@@ -272,16 +292,17 @@ public final class NpcSearchModule implements Module {
 
 		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(island)).setExpanded(filtering);
 		for (NpcDatabaseEntry npc : matching) {
-			sub.add(buildNpcButton(npc, parentScreen));
+			sub.add(buildNpcButton(npc, parentScreen, refreshPicker));
 		}
 		return sub.build();
 	}
 
-	private ButtonEntry buildNpcButton(NpcDatabaseEntry npc, Screen parentScreen) {
+	private ButtonEntry buildNpcButton(NpcDatabaseEntry npc, Screen parentScreen, Runnable refreshPicker) {
 		return new ButtonEntry(Component.literal(npc.displayName), Component.literal("Add"), () -> {
 			NpcRule newRule = createRuleForNpc(npc);
 			workingRules.add(newRule);
 			liveAddRuleEntry(parentScreen, newRule);
+			refreshPicker.run();
 		});
 	}
 
@@ -296,6 +317,7 @@ public final class NpcSearchModule implements Module {
 		rule.label = npc.displayName;
 		rule.island = UNKNOWN_ISLAND.equals(npc.island) ? null : npc.island;
 		rule.fixed = npc.fixed;
+		rule.sourceId = npc.id;
 		if (npc.fixed) {
 			rule.x = npc.x;
 			rule.y = npc.y;
@@ -333,9 +355,8 @@ public final class NpcSearchModule implements Module {
 					.build());
 		}
 
-		int initialColor = rule.color;
-		String initialHex = String.format("%06X", initialColor & 0xFFFFFF);
-		sub.add(new HexColorFieldEntry(Component.literal("Color (hex RRGGBB)"), initialHex, initialColor, value -> {
+		String initialHex = String.format("%06X", rule.color & 0xFFFFFF);
+		sub.add(new ColorWheelFieldEntry(Component.literal("Color"), rule.color, value -> {
 			if (isValidHexColor(value) && !value.equalsIgnoreCase(initialHex)) {
 				rule.color = Integer.parseInt(value, 16);
 			}

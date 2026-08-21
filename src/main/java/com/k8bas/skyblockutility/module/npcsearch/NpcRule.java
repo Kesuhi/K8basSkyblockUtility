@@ -15,6 +15,10 @@ public class NpcRule {
 	public boolean enabled = true;
 	public String island;
 	public boolean fixed;
+	/** The database entry's own id this rule was created from (NpcDatabaseEntry.id), or null for
+	 *  a hand-made rule. Lets the picker hide an entry that's already been added instead of
+	 *  letting it be added again as a duplicate. */
+	public String sourceId;
 
 	// Fixed only:
 	public double x;

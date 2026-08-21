@@ -21,9 +21,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * failed), byIsland() just returns empty until it has; the picker section in the settings screen
  * simply shows nothing until the next time it's opened.
  *
- * Fetched lazily (on first fetchIfNeeded() call, not at module registration) since most sessions
- * never open the picker at all — no reason to spend a request and a Gson parse of 300+ entries on
- * every single launch for data most of the time nobody looks at.
+ * Fetched at module registration (mod startup), not lazily on first picker-open — opening the
+ * picker for the first time in a session should never show the "still loading" message if it can
+ * be helped, so the fetch gets a head start before the player is likely to have opened it.
  */
 public final class MobDatabase {
 	private static final String RAW_URL =
@@ -36,7 +36,7 @@ public final class MobDatabase {
 	private MobDatabase() {
 	}
 
-	/** Safe to call every time the picker is opened — only actually starts the fetch once. */
+	/** Idempotent — only actually starts the fetch the first time this is called. */
 	public static void fetchIfNeeded() {
 		if (!fetchStarted.compareAndSet(false, true)) {
 			return;

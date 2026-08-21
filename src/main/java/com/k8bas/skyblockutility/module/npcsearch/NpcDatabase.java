@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Fetched fresh from a public Gist — deliberately not cached to disk, mirroring MobDatabase's
  * approach, so entries added to the Gist show up next launch without a mod update.
  *
- * Fetched lazily (on first fetchIfNeeded() call, not at module registration) since most sessions
- * never open the picker at all — see MobDatabase's javadoc for the full reasoning.
+ * Fetched at module registration (mod startup), not lazily on first picker-open — see
+ * MobDatabase's javadoc for the full reasoning.
  */
 public final class NpcDatabase {
 	private static final String RAW_URL =
@@ -33,7 +33,7 @@ public final class NpcDatabase {
 	private NpcDatabase() {
 	}
 
-	/** Safe to call every time the picker is opened — only actually starts the fetch once. */
+	/** Idempotent — only actually starts the fetch the first time this is called. */
 	public static void fetchIfNeeded() {
 		if (!fetchStarted.compareAndSet(false, true)) {
 			return;

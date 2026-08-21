@@ -22,4 +22,8 @@ public class HighlightRule {
 	 *  on one physical island get this set automatically; hand-made rules and anything sourced
 	 *  from a cross-island event category (Jerry, Fishing, festivals) leave it null. */
 	public String island = null;
+	/** The database entry's own id this rule was created from (MobDatabaseEntry.id), or null for
+	 *  a hand-made rule. Lets the picker hide an entry that's already been added instead of
+	 *  letting it be added again as a duplicate. */
+	public String sourceId = null;
 }
