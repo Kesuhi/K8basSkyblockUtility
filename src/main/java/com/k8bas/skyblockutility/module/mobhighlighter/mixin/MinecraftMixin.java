@@ -1,6 +1,6 @@
 package com.k8bas.skyblockutility.module.mobhighlighter.mixin;
 
-import com.k8bas.skyblockutility.module.mobhighlighter.HighlightManager;
+import com.k8bas.skyblockutility.highlight.HighlightManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MinecraftMixin {
 	@Inject(method = "shouldEntityAppearGlowing", at = @At("HEAD"), cancellable = true)
 	private void k8bas$shouldEntityAppearGlowing(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-		if (HighlightManager.getOutlineColor(entity) != 0) {
+		if (HighlightManager.getOutlineColorFromAny(entity) != 0) {
 			cir.setReturnValue(true);
 		}
 	}

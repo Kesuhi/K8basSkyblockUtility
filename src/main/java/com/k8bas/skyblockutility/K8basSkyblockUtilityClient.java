@@ -1,8 +1,10 @@
 package com.k8bas.skyblockutility;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
+import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.update.UpdateChecker;
@@ -24,8 +26,10 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ConfigManager.load();
+		IslandTracker.register();
 
 		ModuleManager.register(new MobHighlighterModule());
+		ModuleManager.register(new NpcSearchModule());
 		// Future modules get registered here, one line each.
 
 		SettingsKeybind.register();

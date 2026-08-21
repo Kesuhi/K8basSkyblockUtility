@@ -4,6 +4,11 @@ plugins {
 }
 
 repositories {
+	mavenCentral()
+	maven {
+		name = "Hypixel"
+		url = "https://repo.hypixel.net/repository/Hypixel/"
+	}
 	maven {
 		name = "Shedaniel"
 		url = "https://maven.shedaniel.me/"
@@ -29,6 +34,14 @@ dependencies {
 
 	// Mod Menu integration is optional: compiled against, but not required at runtime.
 	compileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
+
+	// Official Hypixel Mod API: how the current island is determined (NPC Search and Mob
+	// Highlighter's island gating both need it). Only the loader-agnostic protocol library is a
+	// compile/bundle dependency here — the actual Fabric networking glue that talks to the
+	// server is a separate mod ("Hypixel Mod API" on Modrinth) players install themselves,
+	// declared via fabric.mod.json's depends, per Hypixel's own documented setup. Bundling a
+	// private copy via include() isn't the supported pattern for this library.
+	implementation "net.hypixel:mod-api:${project.hypixel_modapi_version}"
 }
 
 processResources {

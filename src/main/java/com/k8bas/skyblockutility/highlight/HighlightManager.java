@@ -1,6 +1,7 @@
-package com.k8bas.skyblockutility.module.mobhighlighter;
+package com.k8bas.skyblockutility.highlight;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.location.IslandTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
@@ -20,32 +21,38 @@ import java.util.function.Supplier;
 import java.util.regex.PatternSyntaxException;
 
 /**
- * Rules are indexed by entity type so per-frame matching (called from the render
- * thread via EntityRendererMixin) is a map lookup plus a handful of string checks,
- * not a linear scan. The index is only rebuilt when rules actually change.
+ * Rules are indexed by entity type so per-frame matching (called from the render thread via
+ * EntityRendererMixin) is a map lookup plus a handful of string checks, not a linear scan. The
+ * index is only rebuilt when rules actually change.
  *
- * Driven entirely by MobHighlighterModule: the "enabled" flag mirrors the module's
- * config so this class doesn't need to know about ConfigManager or Module at all.
+ * One instance per module (Mob Highlighter, NPC Search's "unfixed" NPCs) rather than a single
+ * static singleton, since both modules need the exact same nearby-nametag matching machinery but
+ * with independently toggleable enabled state and rule sets. EntityRendererMixin queries every
+ * ACTIVE instance for a given entity, using whichever's the first to return a non-zero color.
  */
 public final class HighlightManager {
-	private static volatile boolean enabled = true;
-	private static volatile Map<Identifier, List<CompiledRule>> byType = new HashMap<>();
-	private static volatile List<CompiledRule> anyType = new ArrayList<>();
+	private static final List<HighlightManager> ACTIVE = new ArrayList<>();
+
+	private volatile boolean enabled = true;
+	private volatile Map<Identifier, List<CompiledRule>> byType = new HashMap<>();
+	private volatile List<CompiledRule> anyType = new ArrayList<>();
 
 	/** Nearby-ArmorStand lookups (see resolveNameTag below) are far more expensive than a plain
 	 *  field read, so the result is cached per entity per game tick — render fires far more often
 	 *  than logic ticks, and the nametag can't change mid-tick anyway. WeakHashMap so despawned
-	 *  entities don't pin cache entries forever. */
+	 *  entities don't pin cache entries forever. Shared across all instances: the same entity's
+	 *  nametag is the same regardless of which module is asking. */
 	private static final Map<Entity, CachedName> nameTagCache = new WeakHashMap<>();
 
-	private HighlightManager() {
+	public HighlightManager() {
+		ACTIVE.add(this);
 	}
 
-	public static void setEnabled(boolean value) {
+	public void setEnabled(boolean value) {
 		enabled = value;
 	}
 
-	public static void rebuild(List<HighlightRule> rules) {
+	public void rebuild(List<HighlightRule> rules) {
 		Map<Identifier, List<CompiledRule>> newByType = new HashMap<>();
 		List<CompiledRule> newAnyType = new ArrayList<>();
 
@@ -76,8 +83,20 @@ public final class HighlightManager {
 		anyType = newAnyType;
 	}
 
+	/** Queries every active HighlightManager instance (Mob Highlighter, NPC Search) for this
+	 *  entity, returning the first non-zero match. Called from EntityRendererMixin. */
+	public static int getOutlineColorFromAny(Entity entity) {
+		for (HighlightManager manager : ACTIVE) {
+			int color = manager.getOutlineColor(entity);
+			if (color != 0) {
+				return color;
+			}
+		}
+		return 0;
+	}
+
 	/** @return packed ARGB outline color, or 0 if the entity shouldn't be outlined. */
-	public static int getOutlineColor(Entity entity) {
+	private int getOutlineColor(Entity entity) {
 		if (!enabled) {
 			return 0;
 		}
@@ -103,8 +122,22 @@ public final class HighlightManager {
 	}
 
 	private static int findMatch(List<CompiledRule> candidates, Entity entity, Supplier<String> nameTag, LocalPlayer player) {
+		String currentIsland = null;
+		boolean currentIslandResolved = false;
+
 		for (CompiledRule compiled : candidates) {
-			// Distance check first: cheaper than the string/regex match below.
+			// Island gating first, then distance: both are cheap rejects that skip the far more
+			// expensive nametag lookup below for rules that can't possibly apply right now.
+			if (compiled.rule.island != null) {
+				if (!currentIslandResolved) {
+					currentIsland = IslandTracker.getCurrentIsland();
+					currentIslandResolved = true;
+				}
+				if (!compiled.rule.island.equals(currentIsland)) {
+					continue;
+				}
+			}
+
 			double maxDistance = effectiveMaxDistance(compiled.rule.maxDistance);
 			if (player != null && Double.isFinite(maxDistance) && entity.distanceToSqr(player) > maxDistance * maxDistance) {
 				continue;

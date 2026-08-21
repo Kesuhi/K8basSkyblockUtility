@@ -29,6 +29,7 @@
 		"minecraft": "~26.1",
 		"java": ">=25",
 		"fabric-api": "*",
-		"cloth-config": "*"
+		"cloth-config": "*",
+		"hypixel-mod-api": ">=1.0"
 	}
 }

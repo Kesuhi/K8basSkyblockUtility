@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.module.mobhighlighter;
 
+import com.k8bas.skyblockutility.highlight.HighlightRule;
+
 import java.util.ArrayList;
 import java.util.List;
 

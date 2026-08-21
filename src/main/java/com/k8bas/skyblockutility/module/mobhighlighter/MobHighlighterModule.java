@@ -1,6 +1,9 @@
 package com.k8bas.skyblockutility.module.mobhighlighter;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.highlight.HighlightManager;
+import com.k8bas.skyblockutility.highlight.HighlightRule;
+import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
 import com.k8bas.skyblockutility.settings.HexColorFieldEntry;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Rule fields used to live inside a NestedListListEntry cell (a list-of-lists, two levels of
@@ -42,6 +46,13 @@ import java.util.Optional;
 public final class MobHighlighterModule implements Module {
 	public static final String ID = "mob_highlighter";
 
+	/** Islands the mob database groups mobs under that aren't a single physical location — Jerry's
+	 *  Workshop can start on whatever island you're already on, and fishing happens all over the
+	 *  place, so a rule sourced from one of these is left ungated (active everywhere) rather than
+	 *  restricted to an island it isn't really tied to. */
+	private static final Set<String> UNGATED_ISLANDS = Set.of("Jerry", "Fishing", "Spooky Festival", "Mythological Creatures");
+
+	private final HighlightManager highlightManager = new HighlightManager();
 	private MobHighlighterConfig config;
 
 	@Override
@@ -57,8 +68,8 @@ public final class MobHighlighterModule implements Module {
 	@Override
 	public void onRegister() {
 		config = ConfigManager.getModuleSection(ID, MobHighlighterConfig.class, MobHighlighterConfig::new);
-		HighlightManager.setEnabled(config.enabled);
-		HighlightManager.rebuild(config.rules);
+		highlightManager.setEnabled(config.enabled);
+		highlightManager.rebuild(config.rules);
 		MobDatabase.fetchInBackground();
 		ModKeybinds.register(this);
 	}
@@ -71,7 +82,7 @@ public final class MobHighlighterModule implements Module {
 	@Override
 	public void setEnabled(boolean enabled) {
 		config.enabled = enabled;
-		HighlightManager.setEnabled(enabled);
+		highlightManager.setEnabled(enabled);
 		ConfigManager.putModuleSection(ID, config);
 		ConfigManager.save();
 	}
@@ -95,7 +106,7 @@ public final class MobHighlighterModule implements Module {
 	@Override
 	public void onConfigScreenSaved() {
 		ConfigManager.putModuleSection(ID, config);
-		HighlightManager.rebuild(config.rules);
+		highlightManager.rebuild(config.rules);
 	}
 
 	/** A separate screen, opened via the button above, instead of inline in the main category —
@@ -245,7 +256,7 @@ public final class MobHighlighterModule implements Module {
 			config.rules.add(newRule);
 			ConfigManager.putModuleSection(ID, config);
 			ConfigManager.save();
-			HighlightManager.rebuild(config.rules);
+			highlightManager.rebuild(config.rules);
 			liveAddRuleEntry(parentScreen, newRule);
 
 			Minecraft client = Minecraft.getInstance();
@@ -261,6 +272,7 @@ public final class MobHighlighterModule implements Module {
 		rule.namePattern = mob.matchText;
 		rule.nameMatchMode = NameMatchMode.CONTAINS;
 		rule.color = 0xFF0000;
+		rule.island = UNGATED_ISLANDS.contains(mob.island) ? null : mob.island;
 		return rule;
 	}
 
@@ -279,6 +291,9 @@ public final class MobHighlighterModule implements Module {
 				.build());
 		sub.add(entryBuilder.startStrField(Component.literal("Entity Type (blank = any)"), rule.entityTypeId == null ? "" : rule.entityTypeId)
 				.setSaveConsumer(value -> rule.entityTypeId = value.isBlank() ? null : value)
+				.build());
+		sub.add(entryBuilder.startStrField(Component.literal("Restrict to Island (blank = any)"), rule.island == null ? "" : rule.island)
+				.setSaveConsumer(value -> rule.island = value.isBlank() ? null : value)
 				.build());
 		sub.add(entryBuilder.startEnumSelector(Component.literal("Name Match Mode"), NameMatchMode.class, rule.nameMatchMode)
 				.setSaveConsumer(value -> rule.nameMatchMode = value)
@@ -329,7 +344,7 @@ public final class MobHighlighterModule implements Module {
 			config.rules.remove(rule);
 			ConfigManager.putModuleSection(ID, config);
 			ConfigManager.save();
-			HighlightManager.rebuild(config.rules);
+			highlightManager.rebuild(config.rules);
 			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);
 		}));
 

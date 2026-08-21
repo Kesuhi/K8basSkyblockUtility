@@ -1,4 +1,4 @@
-package com.k8bas.skyblockutility.module.mobhighlighter;
+package com.k8bas.skyblockutility.highlight;
 
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
