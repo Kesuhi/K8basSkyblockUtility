@@ -36,12 +36,15 @@ import java.util.Set;
  * controls (toggles, the enum selector) worked fine. Each rule is now its own SubCategory
  * (one level of nesting, same depth as General's already-working fields) instead.
  *
- * Add/Delete/Open-Database/Return are real clickable buttons (ButtonEntry — Cloth Config has no
+ * Add/Delete/Open-Database are real clickable buttons (ButtonEntry — Cloth Config has no
  * built-in button widget, so this hosts a real vanilla Button modeled on Cloth Config's own
- * BooleanListEntry source) that act immediately, not gated behind the screen's Save button. They
- * also patch the live, already-open screen's entry list directly (see liveAddRuleEntry /
- * liveRemoveRuleEntry) so the rule list reflects add/delete instantly, without needing to close
- * and reopen the settings screen. Editing an existing rule's other fields (name, entity type,
+ * BooleanListEntry source) that patch the live, already-open screen's entry list directly (see
+ * liveAddRuleEntry/liveRemoveRuleEntry) so the rule list reflects add/delete instantly. The
+ * picker screen has no separate Return button — Cloth Config's own Cancel/Save & Done footer
+ * buttons already navigate back to the parent screen (confirmed: Cloth Config overwrites that
+ * button's own label every tick based on its own isEdited() state, so it can't be relabeled
+ * through the public API either — a custom "Return" button next to it would just be a duplicate
+ * of what's already there). Editing an existing rule's other fields (name, entity type,
  * etc.) still follows the normal Cloth Config save cycle, reconciled in onConfigScreenSaved().
  */
 public final class MobHighlighterModule implements Module {
@@ -138,9 +141,6 @@ public final class MobHighlighterModule implements Module {
 
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		ConfigCategory category = builder.getOrCreateCategory(Component.literal("Mob Database"));
-
-		category.addEntry(new ButtonEntry(Component.literal("Back"), Component.literal("Return"),
-				() -> Minecraft.getInstance().setScreen(parent)));
 
 		Map<String, List<MobDatabaseEntry>> byIsland = MobDatabase.byIsland();
 		if (byIsland.isEmpty()) {

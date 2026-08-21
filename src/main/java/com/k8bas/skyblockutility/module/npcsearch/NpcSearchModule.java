@@ -74,6 +74,7 @@ public final class NpcSearchModule implements Module {
 		rebuildDerived();
 		NpcDatabase.fetchInBackground();
 		NpcWaypointRenderer.register();
+		ModKeybinds.register(this);
 	}
 
 	/** Called (on the render thread, from HighlightManager) whenever an unfixed NPC's rule
@@ -175,9 +176,6 @@ public final class NpcSearchModule implements Module {
 
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		ConfigCategory category = builder.getOrCreateCategory(Component.literal("NPC Database"));
-
-		category.addEntry(new ButtonEntry(Component.literal("Back"), Component.literal("Return"),
-				() -> Minecraft.getInstance().setScreen(parent)));
 
 		Map<String, List<NpcDatabaseEntry>> byIsland = NpcDatabase.byIsland();
 		if (byIsland.isEmpty()) {

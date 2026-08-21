@@ -54,6 +54,8 @@ public final class SettingsScreenFactory {
 				SettingsKeybind.OPEN_SETTINGS_KEY).build());
 		general.addEntry(entryBuilder.fillKeybindingField(Component.literal("Toggle Mob Highlighter Key"),
 				ModKeybinds.TOGGLE_KEY).build());
+		general.addEntry(entryBuilder.fillKeybindingField(Component.literal("Toggle NPC Search Key"),
+				com.k8bas.skyblockutility.module.npcsearch.ModKeybinds.TOGGLE_KEY).build());
 
 		for (Module module : ModuleManager.modules()) {
 			ConfigCategory category = builder.getOrCreateCategory(Component.literal(module.displayName()));
