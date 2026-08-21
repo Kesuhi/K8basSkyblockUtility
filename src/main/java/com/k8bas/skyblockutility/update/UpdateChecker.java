@@ -44,7 +44,7 @@ import java.util.HexFormat;
 public final class UpdateChecker {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/update");
 
-	private static final String MODRINTH_PROJECT_SLUG = "TODO"; // fill in once published on Modrinth
+	private static final String MODRINTH_PROJECT_SLUG = "k8bas-skyblock-utility";
 	private static final String MODRINTH_API_HOST = "api.modrinth.com";
 	private static final String MODRINTH_CDN_HOST = "cdn.modrinth.com";
 	private static final String MINECRAFT_VERSION = "26.1.2";
@@ -82,14 +82,6 @@ public final class UpdateChecker {
 
 	private static void checkNow(boolean manuallyTriggered) {
 		try {
-			if (MODRINTH_PROJECT_SLUG.equals("TODO")) {
-				LOGGER.info("Update check skipped: mod isn't published on Modrinth yet.");
-				if (manuallyTriggered) {
-					notifyUser("K8bas Skyblock Utility isn't published on Modrinth yet — nothing to check against.");
-				}
-				return;
-			}
-
 			String url = "https://" + MODRINTH_API_HOST + "/v2/project/" + MODRINTH_PROJECT_SLUG + "/version"
 					+ "?loaders=" + encode("[\"fabric\"]")
 					+ "&game_versions=" + encode("[\"" + MINECRAFT_VERSION + "\"]");
