@@ -6,6 +6,7 @@ import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
+import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
 import com.k8bas.skyblockutility.settings.HexColorFieldEntry;
 import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
@@ -105,6 +106,7 @@ public final class MobHighlighterModule implements Module {
 		}));
 
 		workingRules = new ArrayList<>(config.rules);
+		category.addEntry(new DirtyMarkerEntry(() -> !workingRules.equals(config.rules)));
 		for (HighlightRule rule : workingRules) {
 			category.addEntry(buildRuleSubCategory(rule, entryBuilder));
 		}
@@ -263,12 +265,6 @@ public final class MobHighlighterModule implements Module {
 			HighlightRule newRule = createRuleForMob(mob);
 			workingRules.add(newRule);
 			liveAddRuleEntry(parentScreen, newRule);
-
-			Minecraft client = Minecraft.getInstance();
-			if (client.player != null) {
-				client.player.sendSystemMessage(Component.literal(
-						"Added highlight rule for " + mob.displayName + " — Save & Done to keep it."));
-			}
 		});
 	}
 
