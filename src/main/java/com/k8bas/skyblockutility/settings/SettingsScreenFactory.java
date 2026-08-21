@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.mobhighlighter.ModKeybinds;
+import com.k8bas.skyblockutility.update.UpdateChecker;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -38,6 +39,13 @@ public final class SettingsScreenFactory {
 						ConfigManager.general().autoUpdateDownloadEnabled)
 				.setSaveConsumer(value -> ConfigManager.general().autoUpdateDownloadEnabled = value)
 				.build());
+		general.addEntry(new ButtonEntry(Component.literal("Updates"), Component.literal("Check Now"),
+				UpdateChecker::checkNowManually));
+		String pendingUpdate = UpdateChecker.getPendingUpdateVersion();
+		if (pendingUpdate != null) {
+			general.addEntry(entryBuilder.startTextDescription(Component.literal(
+					"Update to " + pendingUpdate + " downloaded — restart to apply.")).build());
+		}
 		general.addEntry(entryBuilder.startIntSlider(Component.literal("Mob scan range in blocks (0 = unlimited)"),
 						ConfigManager.general().mobScanRangeBlocks, 0, 128)
 				.setSaveConsumer(value -> ConfigManager.general().mobScanRangeBlocks = value)
