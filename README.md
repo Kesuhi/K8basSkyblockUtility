@@ -1,8 +1,7 @@
 # K8bas Skyblock Utility
 
 A modular, client-side Fabric mod for Hypixel Skyblock. Each feature is a self-contained
-module that can be enabled or disabled independently from an in-game settings screen
-(Cloth Config / Mod Menu, or a dedicated keybind).
+module that can be enabled or disabled independently from an in-game settings screen.
 
 Modules so far:
 - **Mob Highlighter** — draws a thin glowing outline (reusing vanilla's Glowing-effect
