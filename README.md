@@ -6,7 +6,16 @@ module that can be enabled or disabled independently from an in-game settings sc
 Modules so far:
 - **Mob Highlighter** — draws a thin glowing outline (reusing vanilla's Glowing-effect
   render path) on entities matched by rules (entity type and/or custom-name
-  substring/regex), each rule with its own color.
+  substring/regex), each rule with its own color. Comes with a searchable, island-sorted
+  mob database to add rules from without typing patterns by hand.
+- **NPC Search** — tracks NPCs from a searchable, island-sorted database: NPCs with a
+  known fixed location get a permanent floating waypoint (name + live distance), while
+  NPCs without one get the same nametag-based highlighting as Mob Highlighter. Both only
+  activate while you're actually on the matching island.
+
+Also included: a Modrinth-based self-updater (off by default, opt-in in General) that
+downloads and verifies new versions without ever touching the currently-running jar
+while the game is open.
 
 /ksu or /kskyblockutility to access the mod config.
 

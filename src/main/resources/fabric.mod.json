@@ -3,7 +3,7 @@
 	"id": "k8bas_skyblock_utility",
 	"version": "${version}",
 	"name": "K8bas Skyblock Utility",
-	"description": "A modular client-side toolkit for Hypixel Skyblock. Starts with a rule-based mob outline highlighter.",
+	"description": "A modular client-side toolkit for Hypixel Skyblock: rule-based mob/NPC outline highlighting, searchable mob and NPC databases with island-aware waypoints, and self-updating via Modrinth. Purely visual/client-side — no automation, no server-side reads or writes.",
 	"authors": [
 		"Kesuhi"
 	],
