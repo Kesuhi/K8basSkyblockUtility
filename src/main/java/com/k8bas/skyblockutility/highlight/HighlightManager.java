@@ -13,12 +13,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -32,7 +34,12 @@ import java.util.regex.PatternSyntaxException;
  * ACTIVE instance for a given entity, using whichever's the first to return a non-zero color.
  */
 public final class HighlightManager {
-	private static final List<HighlightManager> ACTIVE = new ArrayList<>();
+	/** An array, not a List, and rebuilt (not mutated) on registration — instances only ever get
+	 *  added (once per module, at most a handful ever), so getOutlineColorFromAny (called ~twice
+	 *  per rendered entity per frame) can iterate it directly instead of allocating an Iterator
+	 *  every call. Volatile publishes the reference safely across threads without needing a lock
+	 *  on the read side. */
+	private static volatile HighlightManager[] ACTIVE = new HighlightManager[0];
 
 	private volatile boolean enabled = true;
 	private volatile Map<Identifier, List<CompiledRule>> byType = new HashMap<>();
@@ -48,11 +55,20 @@ public final class HighlightManager {
 	 *  field read, so the result is cached per entity per game tick — render fires far more often
 	 *  than logic ticks, and the nametag can't change mid-tick anyway. WeakHashMap so despawned
 	 *  entities don't pin cache entries forever. Shared across all instances: the same entity's
-	 *  nametag is the same regardless of which module is asking. */
-	private static final Map<Entity, CachedName> nameTagCache = new WeakHashMap<>();
+	 *  nametag is the same regardless of which module is asking. Wrapped as synchronized: it's
+	 *  written from wherever EntityRendererMixin/MinecraftMixin's shouldEntityAppearGlowing run,
+	 *  and other mods' entity-culling hooks (the exact reason MinecraftMixin exists at all) aren't
+	 *  guaranteed to always be the same thread as vanilla's own render path — a bare WeakHashMap
+	 *  under concurrent mutation can corrupt its internal state, not just return a stale value. */
+	private static final Map<Entity, CachedName> nameTagCache = Collections.synchronizedMap(new WeakHashMap<>());
+
+	private static final Pattern COLOR_CODES = Pattern.compile("§[0-9a-fk-or]");
 
 	public HighlightManager() {
-		ACTIVE.add(this);
+		HighlightManager[] current = ACTIVE;
+		HighlightManager[] next = Arrays.copyOf(current, current.length + 1);
+		next[current.length] = this;
+		ACTIVE = next;
 	}
 
 	public void setEnabled(boolean value) {
@@ -111,28 +127,34 @@ public final class HighlightManager {
 		if (!enabled) {
 			return 0;
 		}
+		// ArmorStands are the invisible nametag carriers findNearbyArmorStandName searches for,
+		// never a mob/NPC a rule targets by name — without this, every one of them (there's one
+		// per nearby nametag on Hypixel) would run its own AABB search looking for a *different*
+		// nearby ArmorStand, for a match that could never usefully occur.
+		if (entity instanceof ArmorStand) {
+			return 0;
+		}
 
 		List<CompiledRule> typeRules = byType.get(EntityType.getKey(entity.getType()));
 		if ((typeRules == null || typeRules.isEmpty()) && anyType.isEmpty()) {
-			// Nothing could possibly match this entity — skip building the lazy name supplier
-			// entirely so entities nobody has a rule for never pay for a nametag lookup.
+			// Nothing could possibly match this entity — skip the nametag lookup entirely for
+			// entities nobody has a rule for.
 			return 0;
 		}
 
 		LocalPlayer player = Minecraft.getInstance().player;
-		Supplier<String> nameTag = () -> resolveNameTag(entity);
 
 		if (typeRules != null) {
-			int color = findMatch(typeRules, entity, nameTag, player);
+			int color = findMatch(typeRules, entity, player);
 			if (color != 0) {
 				return color;
 			}
 		}
 
-		return findMatch(anyType, entity, nameTag, player);
+		return findMatch(anyType, entity, player);
 	}
 
-	private int findMatch(List<CompiledRule> candidates, Entity entity, Supplier<String> nameTag, LocalPlayer player) {
+	private int findMatch(List<CompiledRule> candidates, Entity entity, LocalPlayer player) {
 		String currentIsland = null;
 		boolean currentIslandResolved = false;
 
@@ -153,7 +175,11 @@ public final class HighlightManager {
 			if (player != null && Double.isFinite(maxDistance) && entity.distanceToSqr(player) > maxDistance * maxDistance) {
 				continue;
 			}
-			if (compiled.matchesName(nameTag)) {
+			// resolveNameTag is only actually called here, inside matchesName, for match modes
+			// that need it (NONE-mode/entity-type-only rules never touch it) — and its own
+			// per-tick cache means checking it against several rules in the same tick is cheap
+			// after the first, so there's no need for this loop to also cache/share it itself.
+			if (compiled.matchesName(entity)) {
 				Consumer<HighlightRule> listener = onMatch;
 				if (listener != null) {
 					listener.accept(compiled.rule);
@@ -177,7 +203,7 @@ public final class HighlightManager {
 	 *  EntityUtils, read mob nametags: by scanning for a nearby ArmorStand, not the mob's own
 	 *  name). So the mob's own hasCustomName()/getCustomName() is checked only as a fallback,
 	 *  for the rare entity that genuinely carries its own name. */
-	private static String resolveNameTag(Entity entity) {
+	static String resolveNameTag(Entity entity) {
 		long tick = entity.tickCount;
 		CachedName cached = nameTagCache.get(entity);
 		if (cached != null && cached.tick == tick) {
@@ -217,9 +243,15 @@ public final class HighlightManager {
 	}
 
 	// Hypixel bakes §-formatting codes directly into mob name text; strip them so user patterns
-	// don't have to account for color/level-prefix/health-suffix noise.
+	// don't have to account for color/level-prefix/health-suffix noise. String#replaceAll
+	// compiles its regex fresh on every call — COLOR_CODES is compiled once instead, and names
+	// with no color codes at all (the common case for a plain nametag ArmorStand) skip the
+	// matcher entirely.
 	private static String stripColorCodes(String raw) {
-		return raw.replaceAll("§[0-9a-fk-or]", "");
+		if (raw.indexOf('§') < 0) {
+			return raw;
+		}
+		return COLOR_CODES.matcher(raw).replaceAll("");
 	}
 
 	private record CachedName(long tick, String name) {

@@ -56,6 +56,15 @@ public final class ConfigManager {
 		}
 	}
 
+	/** Same write, off the calling thread — for call sites reachable from a keybind's client-tick
+	 *  handler (e.g. a module's setEnabled toggling), where blocking on disk I/O every keypress
+	 *  would be a real (if small) hitch on an action that should feel instant. Not used for the
+	 *  Settings screen's own Save & Done, which should stay synchronous: it's a deliberate,
+	 *  infrequent user action, not something on a hot input path. */
+	public static void saveAsync() {
+		Thread.ofVirtual().name("k8bas-config-save").start(ConfigManager::save);
+	}
+
 	public static GeneralConfig general() {
 		return root.general;
 	}

@@ -72,7 +72,6 @@ public final class NpcSearchModule implements Module {
 		highlightManager.setEnabled(config.enabled);
 		highlightManager.setOnMatchListener(this::onNpcFound);
 		rebuildDerived();
-		NpcDatabase.fetchInBackground();
 		NpcWaypointRenderer.register();
 		ModKeybinds.register(this);
 	}
@@ -103,7 +102,7 @@ public final class NpcSearchModule implements Module {
 		config.enabled = enabled;
 		highlightManager.setEnabled(enabled);
 		ConfigManager.putModuleSection(ID, config);
-		ConfigManager.save();
+		ConfigManager.saveAsync();
 		rebuildDerived();
 	}
 
@@ -167,6 +166,11 @@ public final class NpcSearchModule implements Module {
 	 *  behind stripping Cloth Config's own search box and rebuilding the folder tree per
 	 *  keystroke instead of just expanding/collapsing it. */
 	private Screen buildNpcPickerScreen(Screen parent) {
+		// Fetched lazily here rather than at module registration — most sessions never open this
+		// screen at all, so there's no reason to spend a request + parse on every single launch.
+		// Idempotent (safe to call every time this screen opens).
+		NpcDatabase.fetchIfNeeded();
+
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
 				.setTitle(Component.literal("NPC Database"))
@@ -292,7 +296,6 @@ public final class NpcSearchModule implements Module {
 		rule.label = npc.displayName;
 		rule.island = UNKNOWN_ISLAND.equals(npc.island) ? null : npc.island;
 		rule.fixed = npc.fixed;
-		rule.color = 0x00FF00;
 		if (npc.fixed) {
 			rule.x = npc.x;
 			rule.y = npc.y;

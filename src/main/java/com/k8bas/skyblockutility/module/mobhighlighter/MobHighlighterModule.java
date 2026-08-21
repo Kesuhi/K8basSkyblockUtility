@@ -27,7 +27,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -80,7 +79,6 @@ public final class MobHighlighterModule implements Module {
 		config = ConfigManager.getModuleSection(ID, MobHighlighterConfig.class, MobHighlighterConfig::new);
 		highlightManager.setEnabled(config.enabled);
 		highlightManager.rebuild(config.rules);
-		MobDatabase.fetchInBackground();
 		ModKeybinds.register(this);
 	}
 
@@ -94,7 +92,7 @@ public final class MobHighlighterModule implements Module {
 		config.enabled = enabled;
 		highlightManager.setEnabled(enabled);
 		ConfigManager.putModuleSection(ID, config);
-		ConfigManager.save();
+		ConfigManager.saveAsync();
 	}
 
 	@Override
@@ -132,6 +130,11 @@ public final class MobHighlighterModule implements Module {
 	 *  that actually match (auto-expanded), which is real hide-on-no-match rather than the
 	 *  earlier expand/collapse-only approach. */
 	private Screen buildMobPickerScreen(Screen parent) {
+		// Fetched lazily here rather than at module registration — most sessions never open this
+		// screen at all, so there's no reason to spend a request + parse on every single launch.
+		// Idempotent (safe to call every time this screen opens).
+		MobDatabase.fetchIfNeeded();
+
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
 				.setTitle(Component.literal("Mob Database"))

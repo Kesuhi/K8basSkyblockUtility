@@ -6,19 +6,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.net.SharedHttpClient;
+import com.k8bas.skyblockutility.util.ChatUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
@@ -50,8 +50,6 @@ public final class UpdateChecker {
 	private static final String MINECRAFT_VERSION = "26.1.2";
 	private static final String USER_AGENT =
 			"Kesuhi/k8bas-skyblock-utility/" + currentVersionString() + " (https://github.com/Kesuhi/K8basSkyblockUtility)";
-
-	private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
 	/** Set once a download completes successfully; read by the settings GUI to show a persistent
 	 *  "restart to apply" notice (the chat message is one-shot and easy to miss/scroll past). */
@@ -91,7 +89,7 @@ public final class UpdateChecker {
 					.GET()
 					.build();
 
-			HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+			HttpResponse<String> response = SharedHttpClient.get().send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() != 200) {
 				LOGGER.warn("Update check got HTTP {}", response.statusCode());
 				if (manuallyTriggered) {
@@ -114,11 +112,26 @@ public final class UpdateChecker {
 			Version newestVersion = null;
 			for (JsonElement element : versions) {
 				JsonObject candidate = element.getAsJsonObject();
+				// The query above already asks Modrinth to filter by game_versions/loaders, but
+				// that's a request parameter, not a guarantee about what comes back — checking
+				// each candidate's own declared game_versions/loaders here is the actual
+				// guarantee, and costs nothing since the fields are already in the response.
+				if (!isCompatible(candidate)) {
+					continue;
+				}
 				Version candidateVersion = parseVersion(candidate.get("version_number").getAsString());
 				if (newestVersion == null || candidateVersion.compareTo(newestVersion) > 0) {
 					newest = candidate;
 					newestVersion = candidateVersion;
 				}
+			}
+
+			if (newest == null) {
+				LOGGER.info("No version on Modrinth actually declares support for Minecraft {} / fabric.", MINECRAFT_VERSION);
+				if (manuallyTriggered) {
+					notifyUser("No K8bas Skyblock Utility release compatible with this Minecraft version was found.");
+				}
+				return;
 			}
 
 			if (newestVersion.compareTo(currentVersion) <= 0) {
@@ -143,6 +156,41 @@ public final class UpdateChecker {
 				notifyUser("Update check failed — see the log for details.");
 			}
 		}
+	}
+
+	/** Modrinth's version metadata only exposes which game_versions and which loader *families*
+	 *  (e.g. "fabric") a build declares support for — it doesn't expose a minimum Fabric Loader
+	 *  version anywhere in this API, so that specific a check isn't possible without downloading
+	 *  and inspecting the candidate jar's own fabric.mod.json before deciding whether to trust it,
+	 *  which defeats the point of checking first. In practice this is still covered: the jar's
+	 *  own "fabricloader": ">=0.19.3" depends entry (same as this build's) makes Fabric Loader
+	 *  itself refuse to load it if the installed loader is too old, exactly like the required
+	 *  hypixel-mod-api dependency already works. */
+	private static boolean isCompatible(JsonObject candidate) {
+		JsonArray gameVersions = candidate.getAsJsonArray("game_versions");
+		boolean mcSupported = false;
+		if (gameVersions != null) {
+			for (JsonElement version : gameVersions) {
+				if (MINECRAFT_VERSION.equals(version.getAsString())) {
+					mcSupported = true;
+					break;
+				}
+			}
+		}
+		if (!mcSupported) {
+			return false;
+		}
+
+		JsonArray loaders = candidate.getAsJsonArray("loaders");
+		if (loaders == null) {
+			return false;
+		}
+		for (JsonElement loader : loaders) {
+			if ("fabric".equalsIgnoreCase(loader.getAsString())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Falls back to plain Version parsing (Fabric Loader's general, non-semver-strict parser)
@@ -206,7 +254,7 @@ public final class UpdateChecker {
 				.header("User-Agent", USER_AGENT)
 				.GET()
 				.build();
-		byte[] jarBytes = CLIENT.send(downloadRequest, HttpResponse.BodyHandlers.ofByteArray()).body();
+		byte[] jarBytes = SharedHttpClient.get().send(downloadRequest, HttpResponse.BodyHandlers.ofByteArray()).body();
 
 		MessageDigest sha1Digest = MessageDigest.getInstance("SHA-1");
 		String actualSha1 = HexFormat.of().formatHex(sha1Digest.digest(jarBytes));
@@ -233,11 +281,7 @@ public final class UpdateChecker {
 	}
 
 	private static void notifyUser(String message) {
-		Minecraft.getInstance().execute(() -> {
-			if (Minecraft.getInstance().player != null) {
-				Minecraft.getInstance().player.sendSystemMessage(Component.literal(message));
-			}
-		});
+		Minecraft.getInstance().execute(() -> ChatUtils.chat(message));
 	}
 
 	private static String currentVersionString() {

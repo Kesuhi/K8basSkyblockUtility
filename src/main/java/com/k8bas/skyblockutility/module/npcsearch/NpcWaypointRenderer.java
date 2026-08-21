@@ -36,8 +36,15 @@ public final class NpcWaypointRenderer {
 	 *  pre-filtered. Enabled/island filtering happens fresh every frame in the render loop below
 	 *  (cheap: string compares over a couple dozen entries, not an entity scan), so a waypoint
 	 *  appears/disappears immediately when the player changes island without needing a separate
-	 *  "island changed" event. Pass an empty list while the module itself is disabled. */
+	 *  "island changed" event. Pass an empty list while the module itself is disabled.
+	 *
+	 *  Also (re)computes each waypoint's cachedPos here — once per rebuild instead of once per
+	 *  render frame, since a fixed rule's position never changes without a rebuild happening
+	 *  anyway (there's no coordinate-editing UI). */
 	public static void setActiveWaypoints(List<NpcRule> waypoints) {
+		for (NpcRule waypoint : waypoints) {
+			waypoint.cachedPos = new Vec3(waypoint.x, waypoint.y + 1.5, waypoint.z);
+		}
 		activeWaypoints = waypoints;
 	}
 
@@ -71,16 +78,20 @@ public final class NpcWaypointRenderer {
 
 	private static void renderWaypoint(PoseStack matrices, MultiBufferSource.BufferSource buffers,
 			CameraRenderState camera, NpcRule waypoint) {
-		Vec3 pos = new Vec3(waypoint.x, waypoint.y + 1.5, waypoint.z);
-		double distance = pos.distanceTo(camera.pos);
+		Vec3 pos = waypoint.cachedPos;
+		double dx = pos.x - camera.pos.x;
+		double dy = pos.y - camera.pos.y;
+		double dz = pos.z - camera.pos.z;
+		double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 		matrices.pushPose();
 		matrices.translate(pos.x, pos.y, pos.z);
 		// Billboard towards the camera, and pull the label closer than 10 blocks so it doesn't
-		// visually shrink into the distance the way real world geometry would.
-		double pull = distance < 10 ? 0.0 : -(distance - 10.0);
-		Vec3 towardCamera = pos.subtract(camera.pos).scale(distance == 0 ? 0 : pull / distance);
-		matrices.translate(towardCamera.x, towardCamera.y, towardCamera.z);
+		// visually shrink into the distance the way real world geometry would. Inlined as scalar
+		// math instead of two intermediate Vec3s (subtract + scale) — this runs per waypoint
+		// per frame.
+		double pull = distance < 10 || distance == 0 ? 0.0 : -(distance - 10.0) / distance;
+		matrices.translate(dx * pull, dy * pull, dz * pull);
 		matrices.mulPose(camera.orientation);
 		matrices.scale(0.025F, -0.025F, 1F);
 

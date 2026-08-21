@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.module.npcsearch;
 
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.UUID;
 
@@ -25,5 +26,11 @@ public class NpcRule {
 	public String namePattern = "";
 
 	/** Packed 0xRRGGBB. Used for both the waypoint beam/text and the entity outline. */
-	public int color = 0x00FF00;
+	public int color = 0x0AA351;
+
+	/** Computed once by NpcWaypointRenderer.setActiveWaypoints (called whenever the rule list is
+	 *  rebuilt, i.e. after a save) instead of every render frame — x/y/z never change after a
+	 *  fixed rule is created (there's no coordinate-editing UI), so there's no staleness risk to
+	 *  guard against. transient: not part of the persisted config shape. */
+	public transient Vec3 cachedPos;
 }
