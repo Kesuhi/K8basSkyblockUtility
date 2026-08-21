@@ -24,10 +24,11 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * NPC Search: the same rule-list-plus-database-picker concept as Mob Highlighter, applied to
@@ -43,13 +44,11 @@ import java.util.Map;
 public final class NpcSearchModule implements Module {
 	public static final String ID = "npc_search";
 
-	/** Don't re-announce the same NPC every single frame it stays on screen — only once per
-	 *  cooldown window. Keyed by rule id since the same NPC could theoretically have more than
-	 *  one active rule (e.g. re-added after a rename). */
-	private static final long FOUND_NOTIFICATION_COOLDOWN_MS = 30_000;
-
 	private final HighlightManager highlightManager = new HighlightManager();
-	private final Map<String, Long> lastFoundNotification = new HashMap<>();
+	/** Rule ids that have already shown their "You found X" popup this session — the popup fires
+	 *  once per rule, ever (until the game restarts), not once per sighting; getOutlineColor is
+	 *  called every single frame the NPC is on screen, so without this it would refire constantly. */
+	private final Set<String> alreadyFoundThisSession = new HashSet<>();
 	private NpcSearchConfig config;
 	/** See MobHighlighterModule.workingRules — same reasoning: Add/Delete mutate this, not
 	 *  config.rules, so Cancel/Escape actually discards them instead of them having already
@@ -79,14 +78,12 @@ public final class NpcSearchModule implements Module {
 	/** Called (on the render thread, from HighlightManager) whenever an unfixed NPC's rule
 	 *  matches a nearby entity. Shows a short vanilla title-card in the rule's own color, the
 	 *  same on-screen mechanism as e.g. "Ironman" mode splash text — cheap, and already visible
-	 *  even if the player isn't looking at chat. */
+	 *  even if the player isn't looking at chat. Fires once per rule per session: Set#add
+	 *  returns false if the id was already present, which doubles as the "already shown" check. */
 	private void onNpcFound(HighlightRule rule) {
-		long now = System.currentTimeMillis();
-		Long last = lastFoundNotification.get(rule.id);
-		if (last != null && now - last < FOUND_NOTIFICATION_COOLDOWN_MS) {
+		if (!alreadyFoundThisSession.add(rule.id)) {
 			return;
 		}
-		lastFoundNotification.put(rule.id, now);
 
 		Minecraft client = Minecraft.getInstance();
 		client.gui.resetTitleTimes();
