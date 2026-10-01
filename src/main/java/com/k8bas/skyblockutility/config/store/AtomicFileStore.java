@@ -83,6 +83,13 @@ public final class AtomicFileStore {
 		}
 	}
 
+	/** Drops content queued but not yet written (a write already in progress still finishes). */
+	public void discardPending() {
+		synchronized (lock) {
+			pending = null;
+		}
+	}
+
 	/** Writes any pending content now and waits for it, e.g. on client shutdown. */
 	public void flush() {
 		try {

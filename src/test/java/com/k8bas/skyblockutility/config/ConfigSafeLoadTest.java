@@ -111,6 +111,21 @@ class ConfigSafeLoadTest {
 		assertTrue(notices.getFirst().contains("left untouched"), notices.getFirst());
 	}
 
+	/** Re-review (G1): a save queued before the suspension is not written either. */
+	@Test
+	void aSaveQueuedBeforeTheSuspensionIsDiscarded() throws IOException {
+		byte[] original = ("{\"configVersion\": " + ConfigMigrations.MIGRATOR.currentVersion()
+				+ ", \"general\": {\"mobScanRangeBlocks\": 100}, \"modules\": {\"npc_search\": {\"rules\": 5}}}")
+				.getBytes(StandardCharsets.UTF_8);
+		Files.write(file(), original);
+		ConfigManager.disk = disk(0, true);
+		ConfigManager.load(file());
+		mobs(); // a missing section: its defaults are queued for saving
+		npcs(); // a broken section whose backup fails: saving stops
+		ConfigManager.flush();
+		assertArrayEquals(original, Files.readAllBytes(file()));
+	}
+
 	/** The same when the one-time copy before the first migration cannot be written. */
 	@Test
 	void aMigrationWithoutItsCopyIsNotSaved() throws IOException {

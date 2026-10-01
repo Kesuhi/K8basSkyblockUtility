@@ -239,6 +239,9 @@ public final class ConfigManager {
 			return;
 		}
 		savesSuspended = true;
+		if (store != null) {
+			store.discardPending();
+		}
 		LOGGER.error("Not saving {} this session because {}; the file is left as it is", FILE_NAME, why);
 		pendingNotices.add("Your settings file was left untouched because " + why
 				+ ". Defaults are used where needed, and changes are not saved until the next start.");
