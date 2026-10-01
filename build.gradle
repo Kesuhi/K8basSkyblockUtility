@@ -152,6 +152,39 @@ def sha256Sidecar = tasks.register("sha256Sidecar") {
 }
 tasks.named("jar") { finalizedBy sha256Sidecar }
 
+// Checks a release draft before it is published (REQ-REL-11, T1.17) with the updater's own parser
+// and selector (ReleaseDraftCheck in the test sources, so it never ships). scripts/release-check.sh
+// runs it on the JSON that `gh api` saved, so Gradle never holds a token:
+//   ./gradlew releaseDraftCheck -Pk8bas.draftJson=<file> -Pk8bas.notes=<file>
+// The jar, its sidecar and the versions default to this build's; -Pk8bas.releaseJar,
+// -Pk8bas.releaseSidecar, -Pk8bas.releaseVersion and -Pk8bas.releaseMinecraft override them. It never
+// builds the jar: it checks the file that was uploaded. Fails with one line per problem.
+tasks.register("releaseDraftCheck", JavaExec) {
+	group = "verification"
+	description = "Checks a release draft's JSON against the local jar, sidecar and release notes (REQ-REL-11)."
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = "com.k8bas.skyblockutility.update.ReleaseDraftCheck"
+	// Gradle reads the forked JVM's output as UTF-8; without these, Windows writes the native code
+	// page and a body mismatch on an en dash or curly quote comes out as U+FFFD.
+	jvmArgs "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8"
+	def draftJson = providers.gradleProperty("k8bas.draftJson")
+	def notes = providers.gradleProperty("k8bas.notes")
+	def jarOverride = providers.gradleProperty("k8bas.releaseJar")
+	def sidecarOverride = providers.gradleProperty("k8bas.releaseSidecar")
+	def releaseVersion = providers.gradleProperty("k8bas.releaseVersion").orElse(project.mod_version)
+	def releaseMinecraft = providers.gradleProperty("k8bas.releaseMinecraft").orElse(project.minecraft_version)
+	def defaultJar = tasks.named("jar").flatMap { it.archiveFile }
+	doFirst {
+		if (!draftJson.isPresent() || !notes.isPresent()) {
+			throw new GradleException("usage: ./gradlew releaseDraftCheck -Pk8bas.draftJson=<file> -Pk8bas.notes=<file>")
+		}
+		def jarFile = jarOverride.isPresent() ? file(jarOverride.get()) : defaultJar.get().asFile
+		def sidecarFile = sidecarOverride.isPresent() ? file(sidecarOverride.get()) : new File(jarFile.path + ".sha256")
+		args(file(draftJson.get()).absolutePath, jarFile.absolutePath, sidecarFile.absolutePath, file(notes.get()).absolutePath,
+				releaseVersion.get(), releaseMinecraft.get())
+	}
+}
+
 processResources {
 	def version = project.version
 	inputs.property "version", version
