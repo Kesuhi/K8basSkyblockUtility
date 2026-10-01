@@ -4,6 +4,8 @@ import net.minecraft.resources.Identifier;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -58,6 +60,8 @@ class HighlightGatesTest {
 		assertEquals("minecraft:zombie", HighlightManager.typeKey("zombie").toString());
 	}
 
+	private static final Predicate<Identifier> KNOWN = id -> List.of("minecraft:zombie", "minecraft:player").contains(id.toString());
+
 	@Test
 	void rebuildIndexesEnabledValidRulesByType() {
 		HighlightManager manager = new HighlightManager();
@@ -65,15 +69,53 @@ class HighlightGatesTest {
 				rule("minecraft:zombie", NameMatchMode.CONTAINS, "Zombie", true),
 				rule("minecraft:zombie", NameMatchMode.CONTAINS, "Off", false),
 				rule("", NameMatchMode.CONTAINS, "Trinity", true),
-				rule("Not A Type!", NameMatchMode.EXACT, "Duncan", true),
-				rule(null, NameMatchMode.REGEX, "([", true)));
+				rule("minecraft:player", NameMatchMode.NONE, "", true)), KNOWN);
 
 		List<CompiledRule> zombie = manager.rulesForType(Identifier.tryParse("minecraft:zombie"));
 		assertEquals(1, zombie.size());
 		assertEquals("Zombie", zombie.get(0).rule.namePattern);
+		assertEquals(List.of("Trinity"), manager.rulesForAnyType().stream().map(c -> c.rule.namePattern).toList());
+		assertEquals(1, manager.rulesForType(Identifier.tryParse("minecraft:player")).size());
+		assertTrue(manager.inertRules().isEmpty());
+	}
 
-		List<CompiledRule> any = manager.rulesForAnyType();
-		assertEquals(List.of("Trinity", "Duncan"), any.stream().map(c -> c.rule.namePattern).toList());
+	/** AC-GLOW-09 / EC-CFG-09 (T1.8b): rules that can't be evaluated are inert, never "match everything". */
+	@Test
+	void rulesThatCannotBeEvaluatedAreInert() {
+		HighlightRule emptyContains = rule(null, NameMatchMode.CONTAINS, "", true);
+		HighlightRule emptyExact = rule(null, NameMatchMode.EXACT, "", true);
+		HighlightRule badRegex = rule(null, NameMatchMode.REGEX, "([", true);
+		HighlightRule typo = rule("minecraft:zombi", NameMatchMode.CONTAINS, "Zombie", true);
+		HighlightRule badSyntax = rule("Not A Type!", NameMatchMode.EXACT, "Duncan", true);
+		List<HighlightRule> rules = List.of(emptyContains, emptyExact, badRegex, typo, badSyntax);
+
+		HighlightManager manager = new HighlightManager();
+		manager.rebuild(rules, KNOWN);
+		manager.rebuild(rules, KNOWN);
+
+		assertTrue(manager.rulesForAnyType().isEmpty(), "no inert rule ends up as an any-type rule");
+		assertTrue(manager.rulesForType(Identifier.tryParse("minecraft:zombi")).isEmpty());
+		assertEquals(5, manager.inertRules().size());
+		assertTrue(manager.inertRules().get(badRegex.id).contains("invalid"));
+		assertTrue(manager.inertRules().get(typo.id).contains("minecraft:zombi"));
+		assertEquals("([", badRegex.namePattern, "the rule itself is kept unchanged");
+	}
+
+	@Test
+	void inertReasons() {
+		assertNull(HighlightManager.inertReason(rule("minecraft:zombie", NameMatchMode.CONTAINS, "Zombie", true), KNOWN));
+		assertNull(HighlightManager.inertReason(rule(null, NameMatchMode.NONE, "", true), KNOWN));
+		assertNull(HighlightManager.inertReason(rule("zombie", NameMatchMode.REGEX, "^Z", true), KNOWN));
+		assertEquals("the name pattern is empty", HighlightManager.inertReason(rule(null, NameMatchMode.CONTAINS, null, true), KNOWN));
+		assertEquals("the regular expression is empty", HighlightManager.inertReason(rule(null, NameMatchMode.REGEX, "", true), KNOWN));
+	}
+
+	/** AC-GLOW-10 [A] (T1.8b): real players have random (version 4) UUIDs; Hypixel NPCs do not. */
+	@Test
+	void realPlayersAreRecognisedByTheirUuid() {
+		assertTrue(HighlightManager.isRealPlayerUuid(UUID.randomUUID()));
+		assertFalse(HighlightManager.isRealPlayerUuid(new UUID(0x8a3c1e2b1f4d2a5bL, 0x9c7e0d1e2f3a4b5cL)), "version 2, Hypixel NPC style");
+		assertFalse(HighlightManager.isRealPlayerUuid(UUID.nameUUIDFromBytes("OfflinePlayer:Npc".getBytes())), "version 3");
 	}
 
 	private static HighlightRule rule(String type, NameMatchMode mode, String pattern, boolean enabled) {

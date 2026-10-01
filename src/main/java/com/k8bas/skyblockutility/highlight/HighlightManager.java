@@ -4,13 +4,18 @@ import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +23,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -59,6 +69,10 @@ public final class HighlightManager {
 	 *  and other mods' entity-culling hooks (the exact reason MinecraftMixin exists at all) aren't
 	 *  guaranteed to always be the same thread as vanilla's own render path — a bare WeakHashMap
 	 *  under concurrent mutation can corrupt its internal state, not just return a stale value. */
+	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/highlight");
+	/** Rule id + reason pairs already logged, so an inactive rule is logged once, not per rebuild. */
+	private static final Set<String> LOGGED_INERT = ConcurrentHashMap.newKeySet();
+	private volatile Map<String, String> inertRules = Map.of();
 	private static final Map<Entity, CachedName> nameTagCache = Collections.synchronizedMap(new WeakHashMap<>());
 
 	public HighlightManager() {
@@ -77,21 +91,31 @@ public final class HighlightManager {
 	}
 
 	public void rebuild(List<HighlightRule> rules) {
+		rebuild(rules, BuiltInRegistries.ENTITY_TYPE::containsKey);
+	}
+
+	/** @param knownType whether an entity type id exists (the registry; replaced in tests) */
+	void rebuild(List<HighlightRule> rules, Predicate<Identifier> knownType) {
 		Map<Identifier, List<CompiledRule>> newByType = new HashMap<>();
 		List<CompiledRule> newAnyType = new ArrayList<>();
+		Map<String, String> newInert = new HashMap<>();
 
 		for (HighlightRule rule : rules) {
 			if (!rule.enabled) {
 				continue;
 			}
-
-			CompiledRule compiled;
-			try {
-				compiled = new CompiledRule(rule);
-			} catch (PatternSyntaxException e) {
+			// A rule that can't be evaluated is inert: kept in the file, flagged in the UI, logged
+			// once, and never "matches everything" (REQ-GLOW-10).
+			String inert = inertReason(rule, knownType);
+			if (inert != null) {
+				newInert.put(rule.id, inert);
+				if (LOGGED_INERT.add(rule.id + "|" + inert)) {
+					LOGGER.warn("Highlight rule '{}' is inactive: {}", rule.label, inert);
+				}
 				continue;
 			}
 
+			CompiledRule compiled = new CompiledRule(rule);
 			Identifier typeId = typeKey(rule.entityTypeId);
 
 			if (typeId == null) {
@@ -103,6 +127,43 @@ public final class HighlightManager {
 
 		byType = newByType;
 		anyType = newAnyType;
+		inertRules = Map.copyOf(newInert);
+	}
+
+	/** Why a rule cannot be evaluated, or null if it can: an empty CONTAINS or EXACT pattern, an
+	 *  invalid regex, or an entity type that is not a valid, registered id. */
+	static String inertReason(HighlightRule rule, Predicate<Identifier> knownType) {
+		NameMatchMode mode = rule.nameMatchMode == null ? NameMatchMode.CONTAINS : rule.nameMatchMode;
+		if ((mode == NameMatchMode.CONTAINS || mode == NameMatchMode.EXACT) && (rule.namePattern == null || rule.namePattern.isEmpty())) {
+			return "the name pattern is empty";
+		}
+		if (mode == NameMatchMode.REGEX) {
+			if (rule.namePattern == null || rule.namePattern.isEmpty()) {
+				return "the regular expression is empty";
+			}
+			try {
+				Pattern.compile(rule.namePattern);
+			} catch (PatternSyntaxException e) {
+				return "the regular expression is invalid (" + e.getDescription() + ")";
+			}
+		}
+		if (rule.entityTypeId != null && !rule.entityTypeId.isBlank()) {
+			Identifier id = Identifier.tryParse(rule.entityTypeId);
+			if (id == null || !knownType.test(id)) {
+				return "unknown entity type '" + rule.entityTypeId + "'";
+			}
+		}
+		return null;
+	}
+
+	/** Inactive rules of the last rebuild, rule id to reason, for the settings UI. */
+	public Map<String, String> inertRules() {
+		return inertRules;
+	}
+
+	/** Real players have version-4 (random) UUIDs; Hypixel's player-shaped NPCs do not. */
+	static boolean isRealPlayerUuid(UUID uuid) {
+		return uuid.version() == 4;
 	}
 
 	/** The entity type a rule is indexed under, or null for "any type" (blank or unparsable id). */
@@ -150,6 +211,11 @@ public final class HighlightManager {
 		if (!eligible(entity.isInvisible(), false)) {
 			return 0;
 		}
+		LocalPlayer player = Minecraft.getInstance().player;
+		// The local player never glows, also in third person (REQ-GLOW-11).
+		if (entity == player) {
+			return 0;
+		}
 
 		List<CompiledRule> typeRules = byType.get(EntityType.getKey(entity.getType()));
 		if ((typeRules == null || typeRules.isEmpty()) && anyType.isEmpty()) {
@@ -157,8 +223,6 @@ public final class HighlightManager {
 			// entities nobody has a rule for.
 			return 0;
 		}
-
-		LocalPlayer player = Minecraft.getInstance().player;
 
 		if (typeRules != null) {
 			int color = findMatch(typeRules, entity, player);
@@ -173,8 +237,14 @@ public final class HighlightManager {
 	private int findMatch(List<CompiledRule> candidates, Entity entity, LocalPlayer player) {
 		String currentIsland = null;
 		boolean currentIslandResolved = false;
+		// A real player's own name is never read, so a name-tag match on one can only come from a
+		// neighbouring tag (REQ-GLOW-11). Player-type NPCs keep matching.
+		boolean realPlayer = entity instanceof Player && isRealPlayerUuid(entity.getUUID());
 
 		for (CompiledRule compiled : candidates) {
+			if (realPlayer && NameMatcher.needsName(compiled)) {
+				continue;
+			}
 			// Island gating first, then distance: both are cheap rejects that skip the far more
 			// expensive nametag lookup below for rules that can't possibly apply right now.
 			if (compiled.rule.island != null) {

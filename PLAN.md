@@ -347,7 +347,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T1.8 fix(highlight)!: never highlight invisible entities** (S, deps T0.3). `HighlightManager.findMatch`: `isInvisible()` means no match and no `onMatch`, also with visible armour.
   - Req: REQ-GLOW-03, REQ-XC-RULES-04
   - Accept: AC-GLOW-03 [A] (eligibility unit test: invisible, invisible with armour, visible; the gametest is in T1.10). **Lands before T1.9** (AC-LOC-10), because the island fix enables Shadow Assassin and Fels rules.
-- [ ] **T1.8b fix(highlight): inert invalid rules, no player matches** (S, deps T1.8). `NameMatcher`/`CompiledRule`, `HighlightManager`.
+- [x] **T1.8b fix(highlight): inert invalid rules, no player matches** (S, deps T1.8). `NameMatcher`/`CompiledRule`, `HighlightManager`.
   - Req: REQ-GLOW-10, REQ-GLOW-11
   - An empty CONTAINS/EXACT pattern, an invalid regex or an unparsable type makes the rule inert, logged once and kept in the file (UI flag: T2.5a). The local player never matches; real players are skipped by name-tag rules; player-type NPCs still match.
   - Accept: AC-GLOW-09; AC-GLOW-10 [A] (the [C] part is in T1.10); EC-CFG-09.

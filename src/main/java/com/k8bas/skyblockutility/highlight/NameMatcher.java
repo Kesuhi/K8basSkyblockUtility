@@ -18,7 +18,7 @@ public final class NameMatcher {
 	static boolean needsName(CompiledRule compiled) {
 		return switch (compiled.rule.nameMatchMode) {
 			case NONE -> false;
-			case CONTAINS, EXACT -> compiled.rule.namePattern != null;
+			case CONTAINS, EXACT -> compiled.rule.namePattern != null && !compiled.rule.namePattern.isEmpty();
 			case REGEX -> compiled.pattern != null;
 		};
 	}
@@ -27,8 +27,9 @@ public final class NameMatcher {
 		HighlightRule rule = compiled.rule;
 		return switch (rule.nameMatchMode) {
 			case NONE -> true;
-			case CONTAINS -> rule.namePattern != null && name.contains(rule.namePattern);
-			case EXACT -> rule.namePattern != null && name.equals(rule.namePattern);
+			// An empty pattern never matches (REQ-GLOW-10); in 1.0.1 an empty CONTAINS matched everything.
+			case CONTAINS -> rule.namePattern != null && !rule.namePattern.isEmpty() && name.contains(rule.namePattern);
+			case EXACT -> rule.namePattern != null && !rule.namePattern.isEmpty() && name.equals(rule.namePattern);
 			case REGEX -> compiled.pattern != null && compiled.pattern.matcher(name).find();
 		};
 	}

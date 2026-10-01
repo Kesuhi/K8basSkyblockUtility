@@ -38,12 +38,15 @@ class NameMatcherTest {
 		assertFalse(NameMatcher.matches(contains, "Enderman"));
 	}
 
+	/** Changed on purpose by T1.8b (REQ-GLOW-10): in 1.0.1 an empty CONTAINS pattern matched every name. */
 	@Test
-	void emptyContainsPatternMatchesEveryName() {
-		CompiledRule empty = rule(NameMatchMode.CONTAINS, "");
-		assertTrue(NameMatcher.needsName(empty));
-		assertTrue(NameMatcher.matches(empty, ZEALOT));
-		assertTrue(NameMatcher.matches(empty, ""));
+	void anEmptyPatternNeverMatches() {
+		for (NameMatchMode mode : new NameMatchMode[]{NameMatchMode.CONTAINS, NameMatchMode.EXACT}) {
+			CompiledRule empty = rule(mode, "");
+			assertFalse(NameMatcher.needsName(empty), mode.name());
+			assertFalse(NameMatcher.matches(empty, ZEALOT), mode.name());
+			assertFalse(NameMatcher.matches(empty, ""), mode.name());
+		}
 	}
 
 	@Test
