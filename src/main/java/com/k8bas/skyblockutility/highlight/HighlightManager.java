@@ -200,12 +200,17 @@ public final class HighlightManager {
 		}
 		Int2IntOpenHashMap colors = new Int2IntOpenHashMap();
 		for (Entity entity : level.entitiesForRendering()) {
+			// Every instance is asked, so each one's match listener runs (NPC Search's title also
+			// when a Mob Highlighter rule colours the same NPC); the first colour wins.
+			int first = 0;
 			for (HighlightManager manager : managers) {
 				int color = manager.outlineColor(entity, client.player);
-				if (color != 0) {
-					colors.put(entity.getId(), color);
-					break;
+				if (first == 0) {
+					first = color;
 				}
+			}
+			if (first != 0) {
+				colors.put(entity.getId(), first);
 			}
 		}
 		colorsByEntityId = colors;

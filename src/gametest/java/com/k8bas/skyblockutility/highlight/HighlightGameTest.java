@@ -43,6 +43,8 @@ public class HighlightGameTest implements FabricClientGameTest {
 
 			HighlightManager first = new HighlightManager();
 			HighlightManager second = new HighlightManager();
+			java.util.concurrent.atomic.AtomicInteger secondMatches = new java.util.concurrent.atomic.AtomicInteger();
+			second.setOnMatchListener((rule, entity) -> secondMatches.incrementAndGet());
 			try {
 				context.runOnClient(client -> {
 					List<HighlightRule> rules = new ArrayList<>();
@@ -92,6 +94,8 @@ public class HighlightGameTest implements FabricClientGameTest {
 				});
 				check(colours.size() == 1, "exactly the tagged husk is matched: " + colours.size());
 				check(colours.get(0) == 0xFFFF00FF, "the first-registered instance's colour wins (REQ-GLOW-08)");
+				// Review S-5 (G1): the second instance still sees its match (NPC Search's title).
+				check(secondMatches.get() > 0, "the second instance's match listener runs too: " + secondMatches.get());
 			} finally {
 				context.runOnClient(client -> {
 					first.setEnabled(false);
