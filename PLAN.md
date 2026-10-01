@@ -289,7 +289,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - New `DebugCommand`: `/ksu debug island <name>` is dev-only. `/ksu debug dump tab|sidebar` ships in production and writes raw lines tagged `[K8BAS-DUMP]` to `latest.log`, read-only and only when you run it.
   - The hand-placed glue jar in the ignored `run/mods/` moves to `run/mods.disabled/`, so it does not load twice.
   - Accept: `runClient` reaches the title screen with the glue loaded from the Modrinth maven; the world-level checks are T0.4c's.
-- [ ] **T0.4c test(gametest): client gametest source set + 1.0.1 label baseline** (S, deps T0.4). Moved here from T1.5 because the waypoint baseline for T1.1 can only be captured reliably by a gametest on 26.1.2. `src/gametest` with `DebugToolsGameTest`, run by `./gradlew runClientGameTest` (not part of `check`, as it opens a game window).
+- [x] **T0.4c test(gametest): client gametest source set + 1.0.1 label baseline** (S, deps T0.4). Moved here from T1.5 because the waypoint baseline for T1.1 can only be captured reliably by a gametest on 26.1.2. `src/gametest` with `DebugToolsGameTest`, run by `./gradlew runClientGameTest` (not part of `check`, as it opens a game window).
   - Req: REQ-XC-VERIFY-02, REQ-XC-VERIFY-01, REQ-LOC-08, REQ-GS-13
   - In a singleplayer world: the debug commands are registered, the island can be forced and cleared, and the tab and sidebar dumps write tagged lines. Screenshots of the 1.0.1 label in the open and behind stone; the label crop is the template `waypoint-label-1.0.1-behind-stone.png`.
   - Accept: AC-LOC-09 [B], AC-GS-13 [B] (as a gametest); the template matches with the `exact()` comparison, and a one-glyph label change fails the test.

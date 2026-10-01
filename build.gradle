@@ -26,6 +26,17 @@ repositories {
 	}
 }
 
+fabricApi {
+	// Client gametests (src/gametest) run with `./gradlew runClientGameTest`. They open a game
+	// window, so they are not part of `check`.
+	configureTests {
+		createSourceSet = true
+		modId = "k8bas_skyblock_utility_gametest"
+		enableGameTests = false
+		enableClientGameTests = true
+	}
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

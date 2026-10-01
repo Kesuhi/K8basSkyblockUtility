@@ -1,0 +1,16 @@
+{
+	"schemaVersion": 1,
+	"id": "k8bas_skyblock_utility_gametest",
+	"version": "1.0.0",
+	"name": "K8bas Skyblock Utility client gametests",
+	"environment": "client",
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"com.k8bas.skyblockutility.gametest.DebugToolsGameTest"
+		]
+	},
+	"depends": {
+		"k8bas_skyblock_utility": "*",
+		"fabric-client-gametest-api-v1": "*"
+	}
+}
