@@ -103,25 +103,29 @@ name_records() { # <prefix>
 }
 
 # Added lines and the names of added, copied and renamed files of the staged diff, as records.
+# Returns 2 if a git command fails (pipefail): a partial result must never read as clean.
 staged_records() {
-	git diff --cached -U0 --no-color --no-ext-diff --diff-filter=ACMRT | diff_records ""
-	git diff --cached --name-only -z --no-ext-diff --diff-filter=ACR | name_records ""
+	git diff --cached -U0 --no-color --no-ext-diff --diff-filter=ACMRT | diff_records "" || return 2
+	git diff --cached --name-only -z --no-ext-diff --diff-filter=ACR | name_records "" || return 2
 }
 
 # Every commit of <range>: its author and committer, its message, the lines it adds and the names of
 # the files it adds, copies or renames (for a merge, only those it adds itself), as records located
-# at "<commit>:author", "<commit>:message", "<commit>:<path>".
+# at "<commit>:author", "<commit>:message", "<commit>:<path>". Returns 2 if a git command fails (say
+# a missing object in a partial clone): a partial result must never read as clean.
 range_records() {
-	local c short
-	while IFS= read -r c; do
+	local c short commits
+	commits=$(git rev-list --reverse "$1") || return 2
+	for c in $commits; do
 		short=${c:0:10}
 		git log -1 --format='%an <%ae>%n%cn <%ce>' "$c" \
-			| awk -v c="$short" '{ print c ":" (NR == 1 ? "author" : "committer") "\t1\t" $0 }'
-		git log -1 --format=%B "$c" | awk -v c="$short" '{ sub(/\r$/, ""); print c ":message\t" NR "\t" $0 }'
+			| awk -v c="$short" '{ print c ":" (NR == 1 ? "author" : "committer") "\t1\t" $0 }' || return 2
+		git log -1 --format=%B "$c" | awk -v c="$short" '{ sub(/\r$/, ""); print c ":message\t" NR "\t" $0 }' || return 2
 		git diff-tree -p --cc -U0 --root --no-commit-id --no-color --no-ext-diff --diff-filter=ACMRT "$c" \
-			| diff_records "$short:"
-		git diff-tree -r --cc --name-only -z --root --no-commit-id --diff-filter=ACR "$c" | name_records "$short:"
-	done < <(git rev-list --reverse "$1")
+			| diff_records "$short:" || return 2
+		git diff-tree -r --cc --name-only -z --root --no-commit-id --diff-filter=ACR "$c" \
+			| name_records "$short:" || return 2
+	done
 }
 
 # A text file as records, one per line (CR stripped).
@@ -135,7 +139,7 @@ file_records() {
 
 # --range <base>..<head> and/or --body <file>, in any order.
 range_main() {
-	local range="" body="" base head count=0
+	local range="" body="" base head count=0 rec
 	while [[ $# -gt 0 ]]; do
 		case $1 in
 			--range) [[ $# -ge 2 && -z $range ]] || usage; range=$2; shift 2 ;;
@@ -164,10 +168,24 @@ range_main() {
 		echo "privacy-scan: cannot read $body" >&2
 		exit 2
 	fi
-	if ! { [[ -z $range ]] || range_records "$range"; [[ -z $body ]] || file_records "$body"; } | scan_records; then
+	# The records go through a file, so that a failing producer is seen rather than masked by the pipe.
+	rec=$(mktemp)
+	if [[ -n $range ]] && ! range_records "$range" > "$rec"; then
+		rm -f "$rec"
+		echo "privacy-scan: git failed while reading $range (see above); nothing was scanned" >&2
+		exit 2
+	fi
+	if [[ -n $body ]] && ! file_records "$body" >> "$rec"; then
+		rm -f "$rec"
+		echo "privacy-scan: cannot read $body; nothing was scanned" >&2
+		exit 2
+	fi
+	if ! scan_records < "$rec"; then
+		rm -f "$rec"
 		echo "privacy-scan: personal data found in the lines above. Remove or sanitise it before opening the PR or publishing (RELEASING.md)." >&2
 		exit 1
 	fi
+	rm -f "$rec"
 	echo "privacy-scan: clean (${range:+$count commit(s) in $range}${range:+${body:+, }}${body:+$body})"
 }
 
@@ -316,6 +334,14 @@ repo_self_test() {
 		expect 2 "missing body file" "cannot read" --body no-such-file.md
 		expect 2 "option without a value" "usage:" --range
 		expect 2 "unknown option" "usage:" --staged
+		# A git failure (here a missing object, as in a partial clone) must not read as clean.
+		printf 'lost jane.doe%sexample.org\n' "$at" > lost.txt
+		git add lost.txt
+		c10=$(commit "feat: lost" "$c9")
+		lost=$(git hash-object lost.txt)
+		git rm -q --cached lost.txt
+		rm -f lost.txt ".git/objects/${lost:0:2}/${lost:2}"
+		expect 2 "git failure while reading the range" "git failed while reading" --range "$c9..$c10"
 
 		# The staged mode (the pre-commit hook), against HEAD = c5.
 		git update-ref refs/heads/main "$c5"
@@ -346,10 +372,19 @@ repo_self_test() {
 
 # The staged diff, as .githooks/pre-commit runs it.
 staged_main() {
-	if ! staged_records | scan_records; then
+	local rec
+	rec=$(mktemp)
+	if ! staged_records > "$rec"; then
+		rm -f "$rec"
+		echo "privacy-scan: commit blocked: git failed while reading the staged diff (see above), so nothing was scanned." >&2
+		exit 2
+	fi
+	if ! scan_records < "$rec"; then
+		rm -f "$rec"
 		echo "privacy-scan: commit blocked. Remove or sanitise the lines above (fixtures use m000XX and placeholder names)." >&2
 		exit 1
 	fi
+	rm -f "$rec"
 }
 
 main() {

@@ -7,7 +7,8 @@
 #   - inside a section the only "### " headings are Added, Changed, Deprecated, Removed, Fixed and
 #     Security, each at most once; free paragraphs and bold lead-in lines are allowed anywhere.
 #   - no other headings: no "####" or deeper heading, and no setext heading (a line of only "=" or
-#     "-" right after a text line; a thematic break needs a blank line before it),
+#     "-" right after a text line; a thematic break needs a blank line before it). Headings inside
+#     list items or block quotes ("- ### x", "> ## x") are not detected,
 #   - no link reference definitions ("[x]: url"): the Keep a Changelog link footer would become part
 #     of the last section's release notes. Use inline links.
 # A release body is every line after the version's "## " heading up to (not including) the next

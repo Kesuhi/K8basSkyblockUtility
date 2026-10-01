@@ -4,10 +4,12 @@ This is the maintainer procedure for a release (REQ-REL-16). Every release goes
 **draft → verify → publish**: it is created as a draft, checked against the release contract
 below, and published only when every check passes.
 
-The contract matters because the in-game update check reads it. A release that breaks it is
-one the updater cannot use. The update check of v1.1.0 then says nothing in game; at most, it logs
-that the release has no build for the running Minecraft version. The one-click updater planned for
-2.0.0 would fall back to notify-only.
+The contract matters because the in-game update check reads part of it. The update check of v1.1.0
+looks only at the tag, the draft and pre-release flags, and the jar's name and upload state. A tag
+that is not SemVer, a wrong pre-release flag or a misnamed jar hides the release: nothing shows in
+game, and at most a line is logged. A wrong sidecar, digest, title or body does not hide it, but
+breaks the checksum check users do by hand and the one-click updater planned for 2.0.0, which
+would fall back to notify-only.
 
 The examples use v1.1.0 for Minecraft 26.2. For another release, replace `1.1.0` (the version),
 `v1.1.0` (the tag) and `26.2` (the Minecraft version, `minecraft_version` in `gradle.properties`).
@@ -93,7 +95,9 @@ this layout:
 - There are no other headings. A `####` or deeper heading is rejected: use a bold lead-in line
   instead. A setext heading is rejected too: a line of only `=` or `-` right after a text line
   would render as a heading in the release notes. The rule is strict, also inside lists, so put a
-  blank line before a thematic break (`---`).
+  blank line before a thematic break (`---`). The lint does not look for headings inside list items
+  or block quotes (`- ### Notes`, `> ## Note`): don't write them, because GitHub renders them as
+  headings.
 - There are no link reference definitions (`[1.1.0]: https://…`). The usual Keep a Changelog link
   footer would become part of the last section's release body. Use inline links instead.
 - A release section is self-contained, so it works as the release notes word for word. It holds the
@@ -130,7 +134,7 @@ gh auth status --hostname github.com            # logged in to github.com
 gh api repos/Kesuhi/K8basSkyblockUtility --jq .permissions.push   # true
 git switch main && git pull --ff-only
 git fetch origin --tags
-git status --porcelain                          # prints nothing
+git status --porcelain --untracked-files=all    # prints nothing
 git tag -l v1.1.0                               # prints nothing
 git ls-remote --tags origin refs/tags/v1.1.0    # prints nothing
 grep '^mod_version=' gradle.properties          # mod_version=1.1.0
@@ -154,8 +158,9 @@ git cat-file -t v1.1.0                          # tag
 
 ```bash
 git switch --detach v1.1.0
-git status --porcelain                          # prints nothing
-git status --porcelain --ignored -- src         # prints nothing
+git status --porcelain --untracked-files=all    # prints nothing
+git status --porcelain --ignored --untracked-files=all -- src   # prints nothing
+git ls-files -v | grep -E '^([a-z]|S) '         # prints nothing
 ./gradlew clean build
 (cd build/libs && sha256sum -c "k8bas_skyblock_utility-1.1.0+26.2.jar.sha256")
 ```
@@ -163,7 +168,11 @@ git status --porcelain --ignored -- src         # prints nothing
 - The plain `git status` does not show ignored files. An ignored folder under `src` (an IDE's
   `bin/` or `out/`) would still be packed into the jar, so the second `git status` must print
   nothing too.
-- `release-check.sh` checks both again, and that `HEAD` is the tag's commit.
+- `--untracked-files=all` overrides a `status.showUntrackedFiles=no` in your git config, which
+  would hide untracked and ignored files from both commands.
+- The `git ls-files -v` line finds files marked assume-unchanged or skip-worktree: `git status`
+  cannot see edits to them, and Gradle would pack the edited copy.
+- `release-check.sh` checks all of this again, and that `HEAD` is the tag's commit.
 
 `build/libs` then holds three files:
 
@@ -201,12 +210,14 @@ gh release create v1.1.0 --verify-tag --draft \
 bash scripts/release-check.sh v1.1.0
 ```
 
-The script runs five steps and prints PASS or FAIL for each:
+The script runs five steps, prints `[ok]`, `[FAIL]` or `[skipped]` for each, and ends with one
+overall `release-check: PASS` or `FAIL` line:
 
 1. It lints the CHANGELOG and requires the `[1.1.0]` section.
 2. It extracts the expected notes.
-3. It checks the checkout: `HEAD` is the commit of the tag `v1.1.0`, `git status --porcelain` prints
-   nothing, and no ignored file sits under `src`.
+3. It checks the checkout: `HEAD` is the commit of the tag `v1.1.0`, the step 3 commands print
+   nothing (no change, no untracked file, no assume-unchanged or skip-worktree file), and no ignored
+   file sits under `src`.
 4. It checks that `gh` is logged in to github.com with push access, fetches the release list with an
    authenticated `gh api` call (drafts are invisible to anonymous clients) and keeps the one draft
    whose `tag_name` is `v1.1.0`.
@@ -263,10 +274,14 @@ the fetched mode (not `--draft-json`), prints `release-check: PASS for v1.1.0`:
 ```bash
 gh release edit v1.1.0 --draft=false --latest --prerelease=false
 gh release view v1.1.0 --json isDraft,isPrerelease,name,tagName,assets
+# The published body is still the CHANGELOG section (trailing newlines and CRs ignored):
+diff <(printf '%s\n' "$(gh release view v1.1.0 --json body --jq .body | tr -d '\r')") \
+     <(printf '%s\n' "$(cat build/release-check/notes.md)")   # prints nothing
 ```
 
 - `isDraft` and `isPrerelease` must both be false.
 - The assets must be only the jar and the sidecar.
+- The `diff` must print nothing (AC-REL-08).
 - For a pre-release version, publish with `--prerelease --latest=false` instead.
 
 ### Fixing a draft (EC-REL-05)
@@ -394,7 +409,7 @@ the public repository, so each one needs its own OK.
 The dry run pushes no tag and publishes nothing. A draft creates no git tag, and the updater never
 sees drafts. The draft checks run against a throwaway jar and notes of the same version, so every
 check compares like with like. Run it in Git Bash, from a clean checkout of the branch that holds
-these scripts (`git status --porcelain` prints nothing).
+these scripts (`git status --porcelain --untracked-files=all` prints nothing).
 
 1. Choose the next unused `N` and build a throwaway jar. It is never committed.
 

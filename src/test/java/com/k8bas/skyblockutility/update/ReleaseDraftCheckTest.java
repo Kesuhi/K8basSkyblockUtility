@@ -24,6 +24,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -172,6 +173,14 @@ class ReleaseDraftCheckTest {
 	void aSidecarWithABomFails() throws IOException {
 		sidecar = sidecar(SIDECAR, ReleaseDraftCheck.BOM + sha256(jar) + "  " + JAR + "\n");
 		assertOnly(check(draft(jar, sidecar)), "starts with a UTF-8 BOM");
+	}
+
+	@Test
+	void aBomInsideTheSidecarFails() throws IOException {
+		sidecar = sidecar(SIDECAR, sha256(jar) + "  " + ReleaseDraftCheck.BOM + JAR + "\n");
+		assertOnly(check(draft(jar, sidecar)), "has a BOM (U+FEFF) at index 66");
+		sidecar = sidecar(SIDECAR, sha256(jar) + "  " + JAR + ReleaseDraftCheck.BOM + "\n");
+		assertOnly(check(draft(jar, sidecar)), "has a BOM (U+FEFF) at index " + (66 + JAR.length()));
 	}
 
 	@Test
@@ -397,6 +406,29 @@ class ReleaseDraftCheckTest {
 		assertEquals(2, run(args, out, err));
 		assertTrue(err.toString(StandardCharsets.UTF_8).contains("cannot read the notes file " + args[3] + " (NoSuchFileException)"),
 				err.toString(StandardCharsets.UTF_8));
+	}
+
+	/** After ./gradlew clean the local files are gone: that is an input error, not a defect of the draft. */
+	@Test
+	void missingLocalFilesAreUsageErrorsNotDraftProblems() throws IOException {
+		Path json = dir.resolve("draft.json");
+		Path notes = dir.resolve("notes.md");
+		Files.writeString(json, draft(jar, sidecar).toString());
+		Files.writeString(notes, NOTES);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ByteArrayOutputStream err = new ByteArrayOutputStream();
+		String[] args = {json.toString(), dir.resolve("gone.jar").toString(), sidecar.toString(), notes.toString(), VERSION, MC};
+		assertEquals(2, run(args, out, err));
+		String log = err.toString(StandardCharsets.UTF_8);
+		assertTrue(log.contains("cannot read the local jar " + args[1] + " (NoSuchFileException)"), log);
+		assertFalse(log.contains("release draft check: FAIL"), log);
+
+		args = new String[] {json.toString(), jar.toString(), dir.resolve("gone.jar.sha256").toString(), notes.toString(), VERSION, MC};
+		err.reset();
+		assertEquals(2, run(args, out, err));
+		log = err.toString(StandardCharsets.UTF_8);
+		assertTrue(log.contains("cannot read the local sidecar " + args[2] + " (NoSuchFileException)"), log);
+		assertFalse(log.contains("release draft check: FAIL"), log);
 	}
 
 	// --- helpers ---

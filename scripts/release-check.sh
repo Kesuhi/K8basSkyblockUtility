@@ -11,7 +11,7 @@
 #   5. runs ./gradlew releaseDraftCheck on it: the updater's own parser and selector, the asset digests
 #      against the local SHA-256 and the sidecar, only jar + sidecar and both uploaded, the sidecar's
 #      bytes, title, tag, draft and pre-release flags, the body, and the jar's fabric.mod.json,
-#   6. prints PASS or FAIL per step.
+#   6. prints ok, FAIL or skipped per step, then one overall PASS or FAIL.
 # Only a PASS of the fetched mode is a publish gate. With --draft-json the script checks a saved
 # release object offline and skips steps 3 and 4; its PASS says so. The tier D boot of the exact jar
 # is not part of it (RELEASING.md). Its files go to build/release-check/, which it empties first (an
@@ -89,13 +89,22 @@ check_checkout() { # <rev>
 		echo "release-check: HEAD is $head, but the jar must be built from $1 ($want): git switch --detach $1, then ./gradlew clean build" >&2
 		return 1
 	fi
-	dirty=$(git status --porcelain)
+	# --untracked-files=all: with status.showUntrackedFiles=no in the user's config, git would list
+	# neither untracked nor ignored files, and Gradle would still pack them.
+	dirty=$(git status --porcelain --untracked-files=all)
 	if [[ -n $dirty ]]; then
 		echo "release-check: the working tree is not clean:" >&2
 		printf '%s\n' "$dirty" >&2
 		return 1
 	fi
-	ignored=$(git status --porcelain --ignored -- src)
+	# Edited files marked assume-unchanged (lowercase tag) or skip-worktree (S) look clean to git status.
+	hidden=$(git ls-files -v | grep -E '^([a-z]|S) ' || true)
+	if [[ -n $hidden ]]; then
+		echo "release-check: files are marked assume-unchanged or skip-worktree, so git status cannot see edits to them:" >&2
+		printf '%s\n' "$hidden" >&2
+		return 1
+	fi
+	ignored=$(git status --porcelain --ignored --untracked-files=all -- src)
 	if [[ -n $ignored ]]; then
 		echo "release-check: ignored files under src/ would be packed into the jar; remove them and build again:" >&2
 		printf '%s\n' "$ignored" >&2

@@ -217,9 +217,13 @@ public final class ReleaseDraftCheck {
 			return;
 		}
 		boolean bom = !text.isEmpty() && text.charAt(0) == BOM;
+		int innerBom = text.indexOf(BOM, 1);
 		boolean cr = text.indexOf('\r') >= 0;
 		if (bom) {
 			problems.add("the sidecar starts with a UTF-8 BOM (EC-REL-06); use the file ./gradlew build writes");
+		}
+		if (innerBom >= 0) {
+			problems.add("the sidecar has a BOM (U+FEFF) at index " + innerBom + "; use the file ./gradlew build writes");
 		}
 		if (cr) {
 			problems.add("the sidecar has a CR (CRLF line ending, EC-REL-06); use the file ./gradlew build writes");
@@ -376,7 +380,12 @@ public final class ReleaseDraftCheck {
 			return 2;
 		}
 		Path jar = Path.of(args[1]);
-		List<String> problems = check(draftJson, jar, Path.of(args[2]), notes, args[4], args[5]);
+		Path sidecar = Path.of(args[2]);
+		// A missing local file (say after ./gradlew clean) is an input error: the draft was not checked.
+		if (!readable(jar, "jar", err) || !readable(sidecar, "sidecar", err)) {
+			return 2;
+		}
+		List<String> problems = check(draftJson, jar, sidecar, notes, args[4], args[5]);
 		if (!problems.isEmpty()) {
 			err.println("release draft check: FAIL, " + problems.size() + " problem(s) with the v" + args[4] + " draft:");
 			problems.forEach(problem -> err.println("  - " + problem));
@@ -399,6 +408,17 @@ public final class ReleaseDraftCheck {
 			err.println("release draft check: cannot read the " + what + " " + file + " (" + e.getClass().getSimpleName() + ")");
 		}
 		return null;
+	}
+
+	private static boolean readable(Path file, String what, PrintStream err) {
+		try {
+			Files.readAllBytes(file);
+			return true;
+		} catch (IOException e) {
+			err.println("release draft check: cannot read the local " + what + " " + file + " (" + e.getClass().getSimpleName()
+					+ "); build it again, the draft was not checked");
+			return false;
+		}
 	}
 
 	private static byte[] read(Path file, String what, List<String> problems) {
