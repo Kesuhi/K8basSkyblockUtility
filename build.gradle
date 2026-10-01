@@ -3,6 +3,10 @@ plugins {
 	id 'maven-publish'
 }
 
+// One version string everywhere (REQ-REL-06): the jar name, fabric.mod.json and the running
+// version the updater compares, e.g. 1.1.0+26.2. The tag and the CHANGELOG use mod_version.
+version = "${project.mod_version}+${project.minecraft_version}"
+
 repositories {
 	mavenCentral()
 	maven {
@@ -121,6 +125,11 @@ test {
 	doFirst { testRunDir.mkdirs() }
 	// For tests that read the source tree (RuntimeVersionsTest).
 	systemProperty "k8bas.projectDir", projectDir.absolutePath
+	// ReleaseArtifactTest checks the built jar and its sidecar against the release contract.
+	dependsOn "sha256Sidecar"
+	systemProperty "k8bas.releaseJar", tasks.named("jar").flatMap { it.archiveFile }.get().asFile.absolutePath
+	systemProperty "k8bas.modVersion", project.mod_version
+	systemProperty "k8bas.minecraftVersion", project.minecraft_version
 }
 
 // Gametests never contact GitHub: the update check goes to a closed local port (one WARN line).
@@ -128,6 +137,20 @@ test {
 tasks.matching { it.name == "runClientGameTest" }.configureEach {
 	jvmArgs "-Dk8bas.update.source=http://127.0.0.1:1/updates-disabled-in-gametests"
 }
+
+// The release sidecar (REQ-REL-07): "<64 lowercase hex>  <jar name>" and LF, UTF-8 without a BOM.
+def sha256Sidecar = tasks.register("sha256Sidecar") {
+	def jarFile = tasks.named("jar").flatMap { it.archiveFile }
+	def sidecar = jarFile.map { it.asFile.toPath().resolveSibling(it.asFile.name + ".sha256").toFile() }
+	inputs.file(jarFile)
+	outputs.file(sidecar)
+	doLast {
+		def file = jarFile.get().asFile
+		def hex = java.security.MessageDigest.getInstance("SHA-256").digest(file.bytes).encodeHex().toString()
+		sidecar.get().setText("${hex}  ${file.name}" + "\n", "UTF-8")
+	}
+}
+tasks.named("jar") { finalizedBy sha256Sidecar }
 
 processResources {
 	def version = project.version

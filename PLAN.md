@@ -429,7 +429,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 
 Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your approval covers the merge only; the tag push and publishing need your separate "ship".
 
-- [ ] **T1.15 build(release): version 1.1.0 + `<version>+<mc>` jar naming + sidecar** (S, deps phase 1). Mod version `1.1.0` in `gradle.properties`. `build.gradle` names the jar `k8bas_skyblock_utility-1.1.0+26.2.jar`, sets `fabric.mod.json` `version` to `1.1.0+26.2`, and writes `<jar>.sha256` (64 lowercase hex, two spaces, name, LF, no BOM).
+- [x] **T1.15 build(release): version 1.1.0 + `<version>+<mc>` jar naming + sidecar** (S, deps phase 1). Mod version `1.1.0` in `gradle.properties`. `build.gradle` names the jar `k8bas_skyblock_utility-1.1.0+26.2.jar`, sets `fabric.mod.json` `version` to `1.1.0+26.2`, and writes `<jar>.sha256` (64 lowercase hex, two spaces, name, LF, no BOM).
   - Req: REQ-REL-06, REQ-REL-07, REQ-REL-14
   - Accept: AC-REL-05 with 1.1.0; T1.4b's selector accepts the built name and the running version string.
 - [ ] **T1.16 docs(release): README, CHANGELOG and mod description for v1.1.0** (M, deps T1.14, T1.15).
