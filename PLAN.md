@@ -324,7 +324,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T1.6 build: production-boot task** (S, deps T1.2). `prodClientStack` (`ClientProductionRunTask`) with the mod folder passed as `-Pk8bas.prodMods` and `-Dmixin.debug.export`, kept out of `check`.
   - Req: REQ-XC-VERIFY-02
   - Accept: boots with a copy of your mods; the stack's ERROR lines without our jar are recorded as the "no new ERROR" baseline; the CI build stays green.
-- [ ] **T1.3 fix(npcsearch): see-through labels after translucent terrain** (S, deps T1.5). Route labels through `submitCustom(SubmitRenderPhases.AFTER_TERRAIN, …)`, a 26.2-only Fabric API.
+- [x] **T1.3 fix(npcsearch): see-through labels after translucent terrain** (S, deps T1.5). Route labels through `submitCustom(SubmitRenderPhases.AFTER_TERRAIN, …)`, a 26.2-only Fabric API.
   - Req: REQ-PORT-07, REQ-PORT-06, REQ-MARK-03 (translucent-terrain part; generalised in T3.0b)
   - Accept: AC-PORT-06 (gametest screenshots from 5 and 30 blocks behind nothing, stone, glass and water; height at 30 = height at 10 ± 2 px), against the 1.0.1 style.
 - [ ] **T1.13 fix(lang): keybind category translation key** (XS, deps T1.5).

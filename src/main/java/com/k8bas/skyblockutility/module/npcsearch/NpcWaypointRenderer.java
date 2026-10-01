@@ -2,10 +2,13 @@ package com.k8bas.skyblockutility.module.npcsearch;
 
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhases;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.feature.CustomFeatureRenderer;
+import net.minecraft.client.renderer.feature.TextFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.network.chat.Component;
@@ -115,17 +118,21 @@ public final class NpcWaypointRenderer {
 		matrices.pushPose();
 		matrices.translate(-width / 2F, lineIndex * (lineHeight + 1), 0F);
 
-		submits.order(BACKGROUND_ORDER).submitCustomGeometry(matrices, RenderTypes.textBackgroundSeeThrough(), (pose, background) -> {
-			Matrix4f matrix = pose.pose();
-			background.addVertex(matrix, -1F, -1F, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
-			background.addVertex(matrix, -1F, lineHeight, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
-			background.addVertex(matrix, width, lineHeight, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
-			background.addVertex(matrix, width, -1F, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
-		});
+		// Both parts go into the AFTER_TERRAIN phase: in the normal phases translucent terrain (water,
+		// stained glass, ice) is drawn later and would tint the label (REQ-PORT-07).
+		submits.order(BACKGROUND_ORDER).submitCustom(SubmitRenderPhases.AFTER_TERRAIN, new CustomFeatureRenderer.Submit(
+				matrices.last().copy(), RenderTypes.textBackgroundSeeThrough(), (pose, background) -> {
+					Matrix4f matrix = pose.pose();
+					background.addVertex(matrix, -1F, -1F, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
+					background.addVertex(matrix, -1F, lineHeight, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
+					background.addVertex(matrix, width, lineHeight, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
+					background.addVertex(matrix, width, -1F, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
+				}));
 		matrices.translate(0F, 0F, 0.01F);
 
-		submits.order(TEXT_ORDER).submitText(matrices, 0F, 0F, text.getVisualOrderText(), false, Font.DisplayMode.SEE_THROUGH,
-				LightCoordsUtil.FULL_BRIGHT, textColor, 0, 0);
+		submits.order(TEXT_ORDER).submitCustom(SubmitRenderPhases.AFTER_TERRAIN, new TextFeatureRenderer.Submit(
+				new Matrix4f(matrices.last().pose()), 0F, 0F, text.getVisualOrderText(), false, Font.DisplayMode.SEE_THROUGH,
+				LightCoordsUtil.FULL_BRIGHT, textColor, 0, 0));
 		matrices.popPose();
 	}
 }
