@@ -10,6 +10,7 @@ import com.k8bas.skyblockutility.settings.ButtonEntry;
 import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
 import com.k8bas.skyblockutility.settings.ColorWheelFieldEntry;
 import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
+import com.k8bas.skyblockutility.settings.RuleWarning;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -402,7 +403,12 @@ public final class NpcSearchModule implements Module {
 	}
 
 	private AbstractConfigListEntry<?> buildRuleSubCategory(NpcRule rule, ConfigEntryBuilder entryBuilder) {
-		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(rule.label)).setExpanded(false);
+		// Fixed NPCs are waypoints, never matched, so only moving-NPC rules can be inert.
+		String inertReason = rule.fixed ? null : highlightManager.inertRules().get(rule.id);
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(RuleWarning.title(rule.label, inertReason)).setExpanded(false);
+		if (inertReason != null) {
+			sub.add(RuleWarning.explanation(entryBuilder, inertReason));
+		}
 		AbstractConfigListEntry<?>[] selfRef = new AbstractConfigListEntry<?>[1];
 
 		sub.add(entryBuilder.startStrField(Component.literal("Label"), rule.label)

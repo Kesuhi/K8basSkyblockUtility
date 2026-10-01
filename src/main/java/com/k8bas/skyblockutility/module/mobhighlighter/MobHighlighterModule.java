@@ -6,6 +6,7 @@ import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
+import com.k8bas.skyblockutility.settings.RuleWarning;
 import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
 import com.k8bas.skyblockutility.settings.ColorWheelFieldEntry;
 import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
@@ -116,6 +117,17 @@ public final class MobHighlighterModule implements Module {
 		for (HighlightRule rule : workingRules) {
 			category.addEntry(buildRuleSubCategory(rule, entryBuilder));
 		}
+	}
+
+	/** For gametests: replaces the rules without saving them. */
+	void useRulesForTest(List<HighlightRule> rules) {
+		config.rules = new ArrayList<>(rules);
+		highlightManager.rebuild(config.rules);
+	}
+
+	/** For gametests: the module's rules. */
+	List<HighlightRule> rulesForTest() {
+		return List.copyOf(config.rules);
 	}
 
 	@Override
@@ -366,7 +378,11 @@ public final class MobHighlighterModule implements Module {
 	}
 
 	private AbstractConfigListEntry<?> buildRuleSubCategory(HighlightRule rule, ConfigEntryBuilder entryBuilder) {
-		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(rule.label)).setExpanded(false);
+		String inertReason = highlightManager.inertRules().get(rule.id);
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(RuleWarning.title(rule.label, inertReason)).setExpanded(false);
+		if (inertReason != null) {
+			sub.add(RuleWarning.explanation(entryBuilder, inertReason));
+		}
 		// Filled in right after sub.build() below so the Delete button's own closure can remove
 		// this exact entry instance from the live screen — it can't reference the built entry
 		// before it exists, so it reads through this one-slot holder at click time instead.

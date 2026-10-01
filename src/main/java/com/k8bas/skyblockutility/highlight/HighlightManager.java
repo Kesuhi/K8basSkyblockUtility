@@ -136,9 +136,13 @@ public final class HighlightManager {
 	}
 
 	/** Why a rule cannot be evaluated, or null if it can: an empty CONTAINS or EXACT pattern, an
-	 *  invalid regex, or an entity type that is not a valid, registered id. */
+	 *  invalid regex, an entity type that is not a valid, registered id, or a rule that ignores
+	 *  names without an entity type (it would outline every visible entity, players included). */
 	static String inertReason(HighlightRule rule, Predicate<Identifier> knownType) {
 		NameMatchMode mode = rule.nameMatchMode == null ? NameMatchMode.CONTAINS : rule.nameMatchMode;
+		if (mode == NameMatchMode.NONE && (rule.entityTypeId == null || rule.entityTypeId.isBlank())) {
+			return "a rule that ignores names needs an entity type";
+		}
 		if ((mode == NameMatchMode.CONTAINS || mode == NameMatchMode.EXACT) && (rule.namePattern == null || rule.namePattern.isEmpty())) {
 			return "the name pattern is empty";
 		}

@@ -104,7 +104,13 @@ class HighlightGatesTest {
 	@Test
 	void inertReasons() {
 		assertNull(HighlightManager.inertReason(rule("minecraft:zombie", NameMatchMode.CONTAINS, "Zombie", true), KNOWN));
-		assertNull(HighlightManager.inertReason(rule(null, NameMatchMode.NONE, "", true), KNOWN));
+		// Decision 2026-10-01 (G1, S-6): a rule that ignores names needs an entity type, otherwise it
+		// would outline every visible entity, players included.
+		assertEquals("a rule that ignores names needs an entity type",
+				HighlightManager.inertReason(rule(null, NameMatchMode.NONE, "", true), KNOWN));
+		assertEquals("a rule that ignores names needs an entity type",
+				HighlightManager.inertReason(rule("  ", NameMatchMode.NONE, "Zealot", true), KNOWN));
+		assertNull(HighlightManager.inertReason(rule("minecraft:zombie", NameMatchMode.NONE, "", true), KNOWN));
 		assertNull(HighlightManager.inertReason(rule("zombie", NameMatchMode.REGEX, "^Z", true), KNOWN));
 		assertEquals("the name pattern is empty", HighlightManager.inertReason(rule(null, NameMatchMode.CONTAINS, null, true), KNOWN));
 		assertEquals("the regular expression is empty", HighlightManager.inertReason(rule(null, NameMatchMode.REGEX, "", true), KNOWN));
