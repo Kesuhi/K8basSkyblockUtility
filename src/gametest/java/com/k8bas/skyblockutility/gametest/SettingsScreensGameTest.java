@@ -6,6 +6,7 @@ import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
+import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.mojang.blaze3d.platform.InputConstants;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
@@ -50,8 +51,8 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 			});
 			closeWithEscape(context, null);
 
-			openPickerAndReturn(context, "Mob Database");
-			openPickerAndReturn(context, "NPC Database");
+			openPickerAndReturn(context, "Mob Database", "zealot");
+			openPickerAndReturn(context, "NPC Database", "elizabeth");
 
 			for (Module module : ModuleManager.modules()) {
 				toggleKeyFlipsAndSaves(context, module);
@@ -66,7 +67,7 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 
 	/** Opens a picker from the settings screen; its save button (the picker's way back) returns to
 	 *  the settings screen, and Esc then closes that. */
-	private static void openPickerAndReturn(ClientGameTestContext context, String buttonField) {
+	private static void openPickerAndReturn(ClientGameTestContext context, String buttonField, String query) {
 		context.runOnClient(client -> client.player.connection.sendCommand("ksu"));
 		waitForTitle(context, SETTINGS_TITLE);
 		context.runOnClient(client -> {
@@ -77,6 +78,16 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 		});
 		waitForTitle(context, buttonField);
 		context.takeScreenshot("t1.2-picker-" + buttonField.toLowerCase().replace(' ', '-'));
+		// Typing expands the matching folders, which shows the per-entry buttons (ButtonEntry rows).
+		context.runOnClient(client -> {
+			ClothConfigScreen picker = (ClothConfigScreen) client.gui.screen();
+			// Found first: typing rebuilds the folder entries of the list being searched.
+			LiveTextFieldEntry search = picker.getCategorizedEntries().values().stream().flatMap(List::stream)
+					.filter(LiveTextFieldEntry.class::isInstance).map(LiveTextFieldEntry.class::cast).findFirst().orElseThrow();
+			search.typeForTest(query);
+		});
+		context.waitTicks(2);
+		context.takeScreenshot("t1.2-picker-" + buttonField.toLowerCase().replace(' ', '-') + "-search");
 		context.clickScreenButton("text.cloth-config.save_and_done");
 		waitForTitle(context, SETTINGS_TITLE);
 		closeWithEscape(context, null);
