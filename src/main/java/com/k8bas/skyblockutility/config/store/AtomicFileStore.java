@@ -4,12 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -115,7 +118,15 @@ public final class AtomicFileStore {
 
 	private void write(String content) throws IOException {
 		Files.createDirectories(file.toAbsolutePath().getParent());
-		Files.writeString(temp, content, StandardCharsets.UTF_8);
+		// On disk before the move, so a power loss right after it leaves the new content, not an empty file.
+		try (FileChannel channel = FileChannel.open(temp, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
+				StandardOpenOption.WRITE)) {
+			ByteBuffer bytes = ByteBuffer.wrap(content.getBytes(StandardCharsets.UTF_8));
+			while (bytes.hasRemaining()) {
+				channel.write(bytes);
+			}
+			channel.force(true);
+		}
 		try {
 			moveWithRetries();
 		} finally {
