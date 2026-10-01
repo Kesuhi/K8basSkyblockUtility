@@ -392,7 +392,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 
 *1D Changelog*
 
-- [ ] **T1.14 docs(changelog): start `CHANGELOG.md`** (XS, deps T1.4, T1.9b, T1.11). Keep a Changelog with `## [Unreleased]`: the behaviour changes from T1.4 and T1.8–T1.11, marked as such, every default (P6), and a "Not ported cleanly / behaviour changes" list.
+- [x] **T1.14 docs(changelog): start `CHANGELOG.md`** (XS, deps T1.4, T1.9b, T1.11). Keep a Changelog with `## [Unreleased]`: the behaviour changes from T1.4 and T1.8–T1.11, marked as such, every default (P6), and a "Not ported cleanly / behaviour changes" list.
   - Req: REQ-PORT-09, REQ-GLOW-15, REQ-REL-05
   - Accept: AC-PORT-09 (CHANGELOG part); the CHANGELOG part of AC-GLOW-14 (the four glow changes, no P7 word).
 
