@@ -270,11 +270,11 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Req: REQ-XC-PLAN-01, REQ-XC-LICENSE-01, REQ-XC-LICENSE-05, REQ-XC-PRIVACY-01
   - D-25: right after approval, Claude deletes its scratch wiki/Fandom copies and everything parsed from them (outside the repo).
   - Accept: AC-XC-09 (your approval precedes this commit and the first `src/` commit); AC-XC-08.
-- [ ] **T0.5 docs(release): rules warning on the v1.0.0 and v1.0.1 release notes** (XS). D-13, extended to v1.0.0 by R4. Claude drafts the text, **you approve the exact wording**, then `gh release edit` puts it at the top of both bodies. Assets stay unchanged.
+- [x] **T0.5 docs(release): rules warning on the v1.0.0 and v1.0.1 release notes** (XS). D-13, extended to v1.0.0 by R4. Claude drafts the text, **you approve the exact wording**, then `gh release edit` puts it at the top of both bodies. Assets stay unchanged.
   - Req: REQ-REL-15
   - Content: these versions outline mobs out of line of sight and invisible mobs, which Hypixel's rules forbid; disable Mob Highlighter and NPC Search, or move to the newest 26.2 release.
   - Accept: AC-REL-13.
-- [ ] **T0.6 ci: forbidden-reference check** (S). One CI step (A-10, approved with the spec) runs `scripts/check-forbidden.sh` on every push and PR.
+- [x] **T0.6 ci: forbidden-reference check** (S). One CI step (A-10, approved with the spec) runs `scripts/check-forbidden.sh` on every push and PR.
   - Req: REQ-XC-RULES-01, REQ-XC-RULES-02, REQ-XC-RULES-07, REQ-XC-LICENSE-05, REQ-PORT-12
   - Patterns: `cancellable = true` or `ci.cancel()` in mixins on network/packet targets; `org.lwjgl.opengl`; P7 words in `en_us.json`, README and `fabric.mod.json` ("gambling" only as a search keyword); wiki, Fandom, hypixel.net and reddit hosts in code that could fetch them (`src/main/java`, `src/client/java`, `tools/`). Hosts inside bundled data `sources` records (`src/main/resources/**/data/`) and validator test fixtures (`src/test/resources/**`) are allowed; the T3.0j validator checks those. T1.4 adds Modrinth hosts for `src/main`.
   - Accept: AC-XC-01 (grep part), AC-PORT-12; a seeded violation fails the job, the current tree passes, and a wiki host in a data `sources` record does not fail it.

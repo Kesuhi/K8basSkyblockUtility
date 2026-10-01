@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v6
+      - name: forbidden-reference check
+        run: bash scripts/check-forbidden.sh --self-test && bash scripts/check-forbidden.sh
       - name: validate gradle wrapper
         uses: gradle/actions/wrapper-validation@v6
       - name: setup jdk
