@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. Requirements carry `[decided D-xx]` / `[decided Rn]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
+| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01). Requirements carry `[decided D-xx]` / `[decided Rn]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
 | Date | 2026-10-01 |
 | Inputs | Your original task prompt (verbatim) and the *SkyBlock XP Optimizer* addendum (verbatim), plus the research and decisions recorded in `PLAN.md` |
 | Relationship to PLAN.md | This file says **what** must be true and how we will know. `PLAN.md` says **how and in which order**. Every PLAN task names the requirement ids it implements (§13 Traceability). |
@@ -583,7 +583,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-GLOW-07** With the user's 26.2 mod set (Skyblocker, SkyHanni, NoFrills, EntityCulling, Sodium, Iris and others), the game must boot and play without a crash or a new ERROR from this mod. The order in which the glow providers are consulted is recorded in the Phase 1 report. *(Derived: G4 tier D; PLAN risk table — the glow callback is shared and the first provider wins)*
 - **REQ-GLOW-08** When Mob Highlighter and NPC Search both match the same entity, Mob Highlighter's colour wins, as today. Within one module, the first matching rule in list order wins. *(Derived: read-mob — current behaviour preserved)*
 - **REQ-GLOW-09** Name-tag resolution must skip action-label lines ("CLICK" and the other labels Hypixel puts under NPCs) and empty lines. It should also skip lines whose name is not shown, then take the nearest remaining line. An NPC with a name line plus a "CLICK" line then resolves to its name. *(Brief: Phase 3 item 1, "fix it if needed"; Derived: G5 §3 — with nearest-stand matching the name may resolve to "CLICK"; PLAN T3.1)*
-- **REQ-GLOW-10** A rule that can't be evaluated must be inert and never match everything. That covers an empty pattern in CONTAINS or EXACT mode, an invalid regex, and an unparsable entity type. Each such rule is logged once and flagged in the UI, and it never throws during rendering. *(Derived: read-mob bugs 6–9 — an empty CONTAINS pattern lights up every entity, and a typo'd type becomes "any type")*
+- **REQ-GLOW-10** A rule that can't be evaluated must be inert and never match everything. That covers an empty pattern in CONTAINS or EXACT mode, an invalid regex, an unparsable entity type, and a rule that ignores names (NONE) without an entity type, which would outline every visible entity, players included [decided R18]. Each such rule is logged once and flagged in the UI (in the rule editor: a warning sign in its title and a line saying why), and it never throws during rendering. *(Derived: read-mob bugs 6–9 — an empty CONTAINS pattern lights up every entity, and a typo'd type becomes "any type")*
 - **REQ-GLOW-11** The local player must never be highlighted. Other real players should not be matched by name-tag rules: their own name is never read, so any match comes from a neighbouring name tag and is a false positive. NPCs that are player-type entities (Hypixel NPCs, Shadow Assassin) stay matchable. *(Derived: read-mob/G5 — players standing near a matched NPC, or the local player in F5, glow by mistake)*
 - **REQ-GLOW-12** Inside a Catacombs run (mode `dungeon`), Trinity, Tomioka and Duncan must each glow in their rule's colour once they are in view, when their rule is enabled. That includes the user's existing rules (moving NPC, island "Catacombs", CONTAINS name). *(Brief: Phase 3 item 1; depends on REQ-LOC-03 and REQ-GLOW-09)*
 - **REQ-GLOW-13** [decided R1] The glow for these three NPCs must be switchable on its own:
@@ -634,7 +634,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - a line whose name is hidden → ignored
 
   Given an entity dump at the G1 smoke (Mort in a run, or a Dungeon Hub NPC), then the resolved name is the NPC's name — [A] [E]
-- **AC-GLOW-09** (REQ-GLOW-10) Given a CONTAINS rule with an empty pattern, an invalid-regex rule and a rule with entity type "minecraft:zombi", then none of them matches any entity, each is logged once, and nothing throws — [A]
+- **AC-GLOW-09** (REQ-GLOW-10) Given a CONTAINS rule with an empty pattern, an invalid-regex rule, a rule with entity type "minecraft:zombi" and a NONE rule without an entity type, then none of them matches any entity, each is logged once, and nothing throws — [A]. The rule editor marks the NONE rule and explains why, and leaves a valid rule unmarked — [C]
 - **AC-GLOW-10** (REQ-GLOW-11) Given the local player in third person next to a matched NPC's name tag, and a player entity with a standard player UUID standing there too, then neither glows. Given a player-type NPC with a non-standard UUID, then it still matches — [A] [C]
 - **AC-GLOW-11** (REQ-GLOW-12) Given a gametest with a player-type stand-in entity carrying a "Trinity" name line and a "CLICK" line, the island forced to "Catacombs" and a rule shaped like the user's, then it glows in view and not behind a wall. On Hypixel the check is opportunistic, whenever a rare room appears; if none appears before release, the phase report says so — [C] [E]
 - **AC-GLOW-12** (REQ-GLOW-13) Given a fresh install, then no NPC glows. Given the user's 1.0.1-shaped config, after migration, then the three rules are present and enabled, and switching one off stops only that NPC's glow — [A] [B]
@@ -1284,6 +1284,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - tab and sidebar with a command
   - menus with an "armed" mode, because no command can be typed while a menu is open
 
+  The names of real players, yours included, are replaced in the written lines by placeholders (Self, Player1, Player2, … stable for the session); NPC names and Hypixel's tab-widget entries stay [decided R19].
+
   The capture is read-only and covers only allowlisted menu titles. The capture commands (`/ksu debug dump tab|sidebar`, `/ksu debug dump containers on|off`) must ship in production builds, because the G1 captures are made on Hypixel in the user's Prism copy. Only the simulators `/ksu debug island` and `/ksu debug shaft` are dev-only (REQ-LOC-08). *(Derived: PLAN §5 "formats UNVERIFIED until captured", T0.4 "available in production", D-17)*
 - **REQ-GS-14** Every parser has unit tests on sanitised fixtures. A fixture not yet confirmed by an in-game capture is marked UNVERIFIED, and the phase report lists it until G1 captures replace it. *(Derived: PLAN §5; REQ-XC-VERIFY)*
 - **REQ-GS-15** On disconnect, server switch or world change, the readers clear their cached widget, sidebar and menu state, so nothing from the previous server is reported (e.g. the last shaft's corpses). *(Derived: research G6 timing; location dependency)*
@@ -1350,6 +1352,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - An armed capture disarms after 60 min (fake clock) — [A].
 - **AC-GS-13** (REQ-GS-13)
   - `/ksu debug dump tab|sidebar` writes tagged lines to the log — [B].
+  - Real player names are masked (Self, Player1, …; whole, case-exact names only; NPCs and fake tab profiles kept), and the logged tab line shows the player's own name as Self — [A] [C].
   - While armed, each allowlisted menu the player opens is written once, after its contents are stable — [E].
   - In a production boot of the release jar, `/ksu debug dump tab|sidebar` and `/ksu debug dump containers on|off` exist, while `/ksu debug island` and, from Phase 3 on, `/ksu debug shaft` do not — [D].
 - **AC-GS-14** (REQ-GS-14) Review: every parser test names its fixtures and their provenance, and the phase report lists the UNVERIFIED fixtures — [R].

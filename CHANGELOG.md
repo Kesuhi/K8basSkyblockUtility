@@ -51,9 +51,11 @@ keybinds and your choice for the update check are kept.
   always tried first, which did not match the order you see. *Effect:* where two rules match the
   same mob, the colour can differ from 1.0.1.
 - **Behaviour change: rules that cannot work are inactive.** An empty Contains or Exact pattern, an
-  invalid regular expression or an unknown entity type makes the rule inactive. It stays in your
-  settings and is logged once. *Reason:* an empty pattern used to outline every entity, and a
-  mistyped type matched every type. *Effect:* such a rule outlines nothing until you fix it.
+  invalid regular expression, an unknown entity type, or the match mode None without an entity type
+  makes the rule inactive. The rule editor marks it with ⚠ and says why. It stays in your
+  settings and is logged once. *Reason:* an empty pattern used to outline every entity, a
+  mistyped type matched every type, and None without a type would outline every entity, players
+  included. *Effect:* such a rule outlines nothing until you fix it.
 - **Behaviour change: players are not outlined by name rules.** You are never outlined, also in
   third person. Other players are not matched by rules that read a name, because their own name is
   never read, so a match could only come from a nearby NPC's name tag. Player-type NPCs still match.
@@ -85,7 +87,8 @@ Also changed:
 - Debug commands that write what the game already shows into the log, tagged `[K8BAS-DUMP]`, for
   bug reports: `/ksu debug dump tab`, `/ksu debug dump sidebar`, `/ksu debug dump entities` and
   `/ksu debug dump containers on|off` (container dumps switch themselves off after 60 minutes).
-  Nothing is sent anywhere.
+  Player names in the dumps are replaced by Self, Player1, Player2 and so on. Nothing is sent
+  anywhere.
 - Settings backups and recovery. An unreadable settings file is kept as
   `k8bas_skyblock_utility.json.broken-<date>-<time>.bak` and defaults are used. A broken module section
   resets only that module. A settings file from a newer version is backed up before it is first

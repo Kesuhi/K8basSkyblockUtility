@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1). **Every task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
+| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review). **Every task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
 | Date | 2026-10-01 |
 | Branch | `update/26.2` (from `main` @ `bc0f2f6`, v1.0.1) |
 | Baseline | `./gradlew build` on `main` is green (26.1.2) |
@@ -396,6 +396,15 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Req: REQ-PORT-09, REQ-GLOW-15, REQ-REL-05
   - Accept: AC-PORT-09 (CHANGELOG part); the CHANGELOG part of AC-GLOW-14 (the four glow changes, no P7 word).
 
+*1E Decisions after the G1 review (2026-10-01)*
+
+- [x] **T1.8c fix(highlight): a rule that ignores names needs an entity type** (XS, deps T1.8b). A NONE rule without an entity type is inert and logged once; the rule editors mark it with a warning sign and explain why (R18).
+  - Req: REQ-GLOW-10
+  - Accept: AC-GLOW-09 (the NONE row [A] and the editor marking [C]).
+- [x] **T0.4d fix(debug): mask real player names in captures** (XS, deps T0.4b). Tab, sidebar, entity and container dumps replace real player names with Self / Player1 / … (R19).
+  - Req: REQ-GS-13, REQ-XC-PRIVACY-01
+  - Accept: AC-GS-13 (the masking row).
+
 **Checkpoint G1:**
 - [x] tiers A–D green (AC-XC-06): `build`, `runClient`, `runClientGameTest`, and `prodClientStack` with a copy of your mod set and `-Dmixin.debug.export`. No crash and no new ERROR (AC-PORT-13, AC-GLOW-06 [D]); `/ksu debug island` is absent and the dump commands exist (AC-LOC-09, AC-GS-13 [D])
 - [x] `code-reviewer` review, including the rules review (AC-XC-01), the licence check (AC-XC-03), no GL calls (AC-PORT-12) and T1.8 landing before T1.9 (AC-LOC-10)
@@ -437,7 +446,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - `RELEASING.md`: draft → verify → publish, the REQ-REL-07 contract, the sidecar pitfall, the CHANGELOG extraction command, data-only PATCH releases.
   - Dry run (AC-REL-14) pushes no tag: `gh release create v0.0.0-dryrun.N --draft --target <commit> --title … --notes-file …` (no `--verify-tag`; a draft creates no git tag), the draft checks run on it against a throwaway jar built as version `0.0.0-dryrun.N` (never committed) and a matching notes file, so the selection, name, body and `fabric.mod.json` checks compare like with like, then `gh release delete v0.0.0-dryrun.N --yes`, and `git ls-remote --tags origin` confirms that no such tag exists. The tag push and `--verify-tag` are logged as skipped by design. Creating and deleting the draft each need your OK.
   - Accept: AC-REL-09 [A] on a recorded draft fixture; AC-REL-04 [A] (lint and extraction on the `[1.1.0]` section); AC-REL-14.
-- [ ] **T1.18 chore(release): intermediate PR `update/26.2` → `main` for v1.1.0** (S, deps T1.16, T1.17). The body covers changes since v1.0.1 (`bc0f2f6`), test evidence per tier, G1 field-check results, known issues, and decisions D-1–D-29 and R1–R17. Before opening: the per-commit worktree build since G1 is green (AC-XC-05), `git log --format=%ae main..update/26.2` shows only noreply addresses (AC-XC-12), the T1.17 range and PR-body privacy scan is clean, a `code-reviewer` pass on T1.15–T1.17 is done, and CI is green on the head. Pushing the commits made since G1 and opening the PR each need your OK (not a checkpoint push: REQ-REL-09, SPEC §8). **Then wait for your approval**, and merge with a merge commit (D-10).
+- [ ] **T1.18 chore(release): intermediate PR `update/26.2` → `main` for v1.1.0** (S, deps T1.16, T1.17). The body covers changes since v1.0.1 (`bc0f2f6`), test evidence per tier, G1 field-check results, known issues, and decisions D-1–D-29 and R1–R19. Before opening: the per-commit worktree build since G1 is green (AC-XC-05), `git log --format=%ae main..update/26.2` shows only noreply addresses (AC-XC-12), the T1.17 range and PR-body privacy scan is clean, a `code-reviewer` pass on T1.15–T1.17 is done, and CI is green on the head. Pushing the commits made since G1 and opening the PR each need your OK (not a checkpoint push: REQ-REL-09, SPEC §8). **Then wait for your approval**, and merge with a merge commit (D-10).
   - Req: REQ-REL-14, REQ-REL-08, REQ-REL-09, REQ-XC-GIT-02
   - Accept: AC-REL-06 and AC-REL-07 for this PR; AC-XC-05, AC-XC-12; CI green on its head; a commit added after the approval voids it (EC-REL-12).
 - [ ] **T1.19 chore(release): tag and publish v1.1.0** (S, deps T1.18). Starts only after the merge **and** your "ship" (R4).
@@ -1265,7 +1274,7 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
     - changes since v1.0.1 (`bc0f2f6`) per phase, with v1.1.0 items marked
     - evidence per tier A–E and field-check pass/fail
     - known issues, including open tier E checks (EC-REL-13: release only if you accept)
-    - decisions D-1–D-29 and R1–R17, plus later changes
+    - decisions D-1–D-29 and R1–R19, plus later changes
   - Before opening: per-commit worktree build since G6 green; `git log --format=%ae` shows only noreply addresses; the T7.2b privacy scan is clean; CI is green on the head.
   - Approval: your session message or your approving PR comment. Agent or workflow messages never count. A later commit voids it (EC-REL-01, EC-REL-12). If `main` moved, merge `main` in; no rebase or force-push (EC-REL-02).
   - Accept: AC-REL-06, AC-REL-07, AC-XC-05, AC-XC-12.
