@@ -49,14 +49,19 @@ public final class NpcDatabase {
 					K8basSkyblockUtilityClient.LOGGER.warn("NPC database fetch got HTTP {}", response.statusCode());
 					return;
 				}
-				List<NpcDatabaseEntry> parsed = GSON.fromJson(response.body(), new TypeToken<List<NpcDatabaseEntry>>() {
-				}.getType());
-				entries = parsed != null ? List.copyOf(parsed) : List.of();
+				entries = parse(response.body());
 				K8basSkyblockUtilityClient.LOGGER.info("Loaded {} NPC database entries", entries.size());
 			} catch (Exception e) {
 				K8basSkyblockUtilityClient.LOGGER.warn("NPC database fetch failed", e);
 			}
 		});
+	}
+
+	/** The gist's JSON array as an immutable list; an empty document gives an empty list. */
+	static List<NpcDatabaseEntry> parse(String json) {
+		List<NpcDatabaseEntry> parsed = GSON.fromJson(json, new TypeToken<List<NpcDatabaseEntry>>() {
+		}.getType());
+		return parsed != null ? List.copyOf(parsed) : List.of();
 	}
 
 	/** Grouped by island, entries within each island sorted by display name, islands sorted alphabetically. */

@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public final class CompiledRule {
 	public final HighlightRule rule;
-	private final Pattern pattern;
+	final Pattern pattern;
 
 	public CompiledRule(HighlightRule rule) {
 		this.rule = rule;
@@ -24,11 +24,7 @@ public final class CompiledRule {
 	 *  than one CompiledRule for the same entity in the same tick doesn't repeat the expensive
 	 *  part — no need for this class to also cache/pass the resolved name around itself. */
 	public boolean matchesName(Entity entity) {
-		return switch (rule.nameMatchMode) {
-			case NONE -> true;
-			case CONTAINS -> rule.namePattern != null && HighlightManager.resolveNameTag(entity).contains(rule.namePattern);
-			case EXACT -> rule.namePattern != null && HighlightManager.resolveNameTag(entity).equals(rule.namePattern);
-			case REGEX -> pattern != null && pattern.matcher(HighlightManager.resolveNameTag(entity)).find();
-		};
+		String name = NameMatcher.needsName(this) ? HighlightManager.resolveNameTag(entity) : "";
+		return NameMatcher.matches(this, name);
 	}
 }

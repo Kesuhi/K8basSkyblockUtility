@@ -278,7 +278,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Req: REQ-XC-RULES-01, REQ-XC-RULES-02, REQ-XC-RULES-07, REQ-XC-LICENSE-05, REQ-PORT-12
   - Patterns: `cancellable = true` or `ci.cancel()` in mixins on network/packet targets; `org.lwjgl.opengl`; P7 words in `en_us.json`, README and `fabric.mod.json` ("gambling" only as a search keyword); wiki, Fandom, hypixel.net and reddit hosts in code that could fetch them (`src/main/java`, `src/client/java`, `tools/`). Hosts inside bundled data `sources` records (`src/main/resources/**/data/`) and validator test fixtures (`src/test/resources/**`) are allowed; the T3.0j validator checks those. T1.4 adds Modrinth hosts for `src/main`.
   - Accept: AC-XC-01 (grep part), AC-PORT-12; a seeded violation fails the job, the current tree passes, and a wiki host in a data `sources` record does not fail it.
-- [ ] **T0.2 refactor: test seams, no behaviour change** (M, deps T0.1). Files: `CompiledRule`/new `NameMatcher` (`matches(rule, name)`), `ConfigManager` (`load(Path)`), `MobDatabase`/`NpcDatabase` (`parse(String)`).
+- [x] **T0.2 refactor: test seams, no behaviour change** (M, deps T0.1). Files: `CompiledRule`/new `NameMatcher` (`matches(rule, name)`), `ConfigManager` (`load(Path)`), `MobDatabase`/`NpcDatabase` (`parse(String)`).
   - Req: REQ-XC-VERIFY-02, REQ-GLOW-01, REQ-CFG-03
   - Accept: the diff is a pure extraction; the game behaves identically (B).
 - [ ] **T0.3 test: JUnit 5 + characterization tests** (S, deps T0.2). `build.gradle`, `src/test/java/…`. JUnit is an ask-first dependency (SPEC §8).

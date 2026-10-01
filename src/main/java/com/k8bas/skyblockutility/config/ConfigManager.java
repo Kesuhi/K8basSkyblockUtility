@@ -23,16 +23,32 @@ import java.util.function.Supplier;
 public final class ConfigManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/config");
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("k8bas_skyblock_utility.json");
+	private static final String FILE_NAME = "k8bas_skyblock_utility.json";
 
+	/** Resolved on first use rather than at class load, so tests can point load(Path) at a
+	 *  temporary file without a running Fabric Loader. */
+	private static Path configPath;
 	private static SkyblockUtilityConfig root;
 
 	private ConfigManager() {
 	}
 
+	private static Path configPath() {
+		if (configPath == null) {
+			configPath = FabricLoader.getInstance().getConfigDir().resolve(FILE_NAME);
+		}
+		return configPath;
+	}
+
 	public static void load() {
-		if (Files.exists(CONFIG_PATH)) {
-			try (var reader = Files.newBufferedReader(CONFIG_PATH, StandardCharsets.UTF_8)) {
+		load(configPath());
+	}
+
+	/** Loads (or creates) the config at the given path; later saves go to the same path. */
+	public static void load(Path path) {
+		configPath = path;
+		if (Files.exists(path)) {
+			try (var reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
 				SkyblockUtilityConfig loaded = GSON.fromJson(reader, SkyblockUtilityConfig.class);
 				root = loaded != null ? loaded : new SkyblockUtilityConfig();
 			} catch (IOException | JsonParseException e) {
@@ -47,8 +63,9 @@ public final class ConfigManager {
 
 	public static void save() {
 		try {
-			Files.createDirectories(CONFIG_PATH.getParent());
-			try (var writer = Files.newBufferedWriter(CONFIG_PATH, StandardCharsets.UTF_8)) {
+			Path path = configPath();
+			Files.createDirectories(path.getParent());
+			try (var writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 				GSON.toJson(root, writer);
 			}
 		} catch (IOException e) {

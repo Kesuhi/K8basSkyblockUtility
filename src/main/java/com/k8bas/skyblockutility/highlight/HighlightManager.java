@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -62,8 +61,6 @@ public final class HighlightManager {
 	 *  under concurrent mutation can corrupt its internal state, not just return a stale value. */
 	private static final Map<Entity, CachedName> nameTagCache = Collections.synchronizedMap(new WeakHashMap<>());
 
-	private static final Pattern COLOR_CODES = Pattern.compile("§[0-9a-fk-or]");
-
 	public HighlightManager() {
 		HighlightManager[] current = ACTIVE;
 		HighlightManager[] next = Arrays.copyOf(current, current.length + 1);
@@ -95,9 +92,7 @@ public final class HighlightManager {
 				continue;
 			}
 
-			Identifier typeId = (rule.entityTypeId == null || rule.entityTypeId.isBlank())
-					? null
-					: Identifier.tryParse(rule.entityTypeId);
+			Identifier typeId = typeKey(rule.entityTypeId);
 
 			if (typeId == null) {
 				newAnyType.add(compiled);
@@ -108,6 +103,21 @@ public final class HighlightManager {
 
 		byType = newByType;
 		anyType = newAnyType;
+	}
+
+	/** The entity type a rule is indexed under, or null for "any type" (blank or unparsable id). */
+	static Identifier typeKey(String entityTypeId) {
+		return (entityTypeId == null || entityTypeId.isBlank()) ? null : Identifier.tryParse(entityTypeId);
+	}
+
+	/** Rules indexed under one entity type, for tests. */
+	List<CompiledRule> rulesForType(Identifier typeId) {
+		return byType.getOrDefault(typeId, List.of());
+	}
+
+	/** Rules that apply to every entity type, for tests. */
+	List<CompiledRule> rulesForAnyType() {
+		return anyType;
 	}
 
 	/** Queries every active HighlightManager instance (Mob Highlighter, NPC Search) for this
@@ -166,13 +176,13 @@ public final class HighlightManager {
 					currentIsland = IslandTracker.getCurrentIsland();
 					currentIslandResolved = true;
 				}
-				if (!compiled.rule.island.equals(currentIsland)) {
+				if (!islandAllows(compiled.rule.island, currentIsland)) {
 					continue;
 				}
 			}
 
-			double maxDistance = effectiveMaxDistance(compiled.rule.maxDistance);
-			if (player != null && Double.isFinite(maxDistance) && entity.distanceToSqr(player) > maxDistance * maxDistance) {
+			double maxDistance = effectiveMaxDistance(compiled.rule.maxDistance, ConfigManager.general().mobScanRangeBlocks);
+			if (player != null && outOfRange(entity.distanceToSqr(player), maxDistance)) {
 				continue;
 			}
 			// resolveNameTag is only actually called here, inside matchesName, for match modes
@@ -190,11 +200,20 @@ public final class HighlightManager {
 		return 0;
 	}
 
+	/** A rule restricted to an island applies only there; an unrestricted rule (null) applies everywhere. */
+	static boolean islandAllows(String ruleIsland, String currentIsland) {
+		return ruleIsland == null || ruleIsland.equals(currentIsland);
+	}
+
 	/** The tighter of the rule's own limit (if any) and the General "scan range" cap (if any). */
-	private static double effectiveMaxDistance(double ruleMaxDistance) {
+	static double effectiveMaxDistance(double ruleMaxDistance, double globalLimit) {
 		double ruleLimit = ruleMaxDistance > 0 ? ruleMaxDistance : Double.POSITIVE_INFINITY;
-		double globalLimit = ConfigManager.general().mobScanRangeBlocks;
 		return Math.min(ruleLimit, globalLimit > 0 ? globalLimit : Double.POSITIVE_INFINITY);
+	}
+
+	/** An infinite limit never excludes; otherwise the entity must be within the limit. */
+	static boolean outOfRange(double distanceSq, double maxDistance) {
+		return Double.isFinite(maxDistance) && distanceSq > maxDistance * maxDistance;
 	}
 
 	/** Hypixel Skyblock mobs almost never carry their visible name as their own CustomName —
@@ -214,7 +233,7 @@ public final class HighlightManager {
 		if (name == null && entity.hasCustomName()) {
 			name = entity.getCustomName().getString();
 		}
-		String normalized = name == null ? "" : stripColorCodes(name);
+		String normalized = name == null ? "" : NameMatcher.stripColorCodes(name);
 
 		nameTagCache.put(entity, new CachedName(tick, normalized));
 		return normalized;
@@ -240,18 +259,6 @@ public final class HighlightManager {
 			}
 		}
 		return nearest != null ? nearest.getCustomName().getString() : null;
-	}
-
-	// Hypixel bakes §-formatting codes directly into mob name text; strip them so user patterns
-	// don't have to account for color/level-prefix/health-suffix noise. String#replaceAll
-	// compiles its regex fresh on every call — COLOR_CODES is compiled once instead, and names
-	// with no color codes at all (the common case for a plain nametag ArmorStand) skip the
-	// matcher entirely.
-	private static String stripColorCodes(String raw) {
-		if (raw.indexOf('§') < 0) {
-			return raw;
-		}
-		return COLOR_CODES.matcher(raw).replaceAll("");
 	}
 
 	private record CachedName(long tick, String name) {

@@ -52,14 +52,19 @@ public final class MobDatabase {
 					K8basSkyblockUtilityClient.LOGGER.warn("Mob database fetch got HTTP {}", response.statusCode());
 					return;
 				}
-				List<MobDatabaseEntry> parsed = GSON.fromJson(response.body(), new TypeToken<List<MobDatabaseEntry>>() {
-				}.getType());
-				entries = parsed != null ? List.copyOf(parsed) : List.of();
+				entries = parse(response.body());
 				K8basSkyblockUtilityClient.LOGGER.info("Loaded {} mob database entries", entries.size());
 			} catch (Exception e) {
 				K8basSkyblockUtilityClient.LOGGER.warn("Mob database fetch failed", e);
 			}
 		});
+	}
+
+	/** The gist's JSON array as an immutable list; an empty document gives an empty list. */
+	static List<MobDatabaseEntry> parse(String json) {
+		List<MobDatabaseEntry> parsed = GSON.fromJson(json, new TypeToken<List<MobDatabaseEntry>>() {
+		}.getType());
+		return parsed != null ? List.copyOf(parsed) : List.of();
 	}
 
 	/** Grouped by island, entries within each island sorted by display name, islands sorted alphabetically. */
