@@ -23,7 +23,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public final class UpdateNotifier {
 	static final String REPOSITORY = "https://github.com/Kesuhi/K8basSkyblockUtility";
-	private static final String RELEASES_PATH = "/Kesuhi/K8basSkyblockUtility/releases/";
+	/** One release page: /releases/tag/<tag>, with no "." or ".." segment. */
+	private static final java.util.regex.Pattern RELEASE_PAGE =
+			java.util.regex.Pattern.compile("^/Kesuhi/K8basSkyblockUtility/releases/tag/[0-9A-Za-z_+-][0-9A-Za-z._+-]*$");
 
 	private final String runningVersion;
 	private final Logger logger;
@@ -87,7 +89,8 @@ public final class UpdateNotifier {
 		try {
 			URI uri = URI.create(htmlUrl);
 			if ("https".equals(uri.getScheme()) && "github.com".equals(uri.getHost()) && uri.getPort() == -1
-					&& uri.getRawPath() != null && uri.getRawPath().startsWith(RELEASES_PATH) && uri.getRawQuery() == null) {
+					&& uri.getRawUserInfo() == null && uri.getRawQuery() == null && uri.getRawFragment() == null
+					&& uri.getRawPath() != null && RELEASE_PAGE.matcher(uri.getRawPath()).matches()) {
 				return uri;
 			}
 		} catch (IllegalArgumentException | NullPointerException invalid) {

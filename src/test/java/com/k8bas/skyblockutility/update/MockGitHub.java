@@ -28,17 +28,22 @@ final class MockGitHub implements AutoCloseable {
 		}
 	}
 
-	record Answer(int status, Map<String, String> headers, byte[] body, long delayMs) {
+	/** @param stallMs after sending the headers and half the body, wait this long before the rest */
+	record Answer(int status, Map<String, String> headers, byte[] body, long delayMs, long stallMs) {
 		static Answer json(int status, String body, String... headerPairs) {
 			Map<String, String> headers = new java.util.LinkedHashMap<>();
 			for (int i = 0; i + 1 < headerPairs.length; i += 2) {
 				headers.put(headerPairs[i], headerPairs[i + 1]);
 			}
-			return new Answer(status, headers, body.getBytes(StandardCharsets.UTF_8), 0);
+			return new Answer(status, headers, body.getBytes(StandardCharsets.UTF_8), 0, 0);
 		}
 
 		Answer delayed(long ms) {
-			return new Answer(status, headers, body, ms);
+			return new Answer(status, headers, body, ms, stallMs);
+		}
+
+		Answer stallingMidBody(long ms) {
+			return new Answer(status, headers, body, delayMs, ms);
 		}
 	}
 
@@ -67,7 +72,21 @@ final class MockGitHub implements AutoCloseable {
 			exchange.sendResponseHeaders(answer.status(), noBody ? -1 : answer.body().length);
 			if (!noBody) {
 				try (OutputStream out = exchange.getResponseBody()) {
-					out.write(answer.body());
+					if (answer.stallMs() > 0) {
+						int half = answer.body().length / 2;
+						out.write(answer.body(), 0, half);
+						out.flush();
+						try {
+							Thread.sleep(answer.stallMs());
+						} catch (InterruptedException e) {
+							Thread.currentThread().interrupt();
+						}
+						out.write(answer.body(), half, answer.body().length - half);
+					} else {
+						out.write(answer.body());
+					}
+				} catch (IOException clientGone) {
+					// the client gave up
 				}
 			}
 			exchange.close();

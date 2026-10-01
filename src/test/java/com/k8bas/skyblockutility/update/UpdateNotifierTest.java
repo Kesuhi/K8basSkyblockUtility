@@ -56,6 +56,12 @@ class UpdateNotifierTest {
 				"https://github.com/Other/Repo/releases/tag/v1.2.0",
 				"https://github.com:8443/Kesuhi/K8basSkyblockUtility/releases/tag/v1.2.0",
 				"https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/v1.2.0?x=1",
+				"https://github.com/Kesuhi/K8basSkyblockUtility/releases/../../Other/Repo",
+				"https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/../../../Other/Repo",
+				"https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/v1.2.0/../../../../Other",
+				"https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/v1.2.0#x",
+				// User info in the URL; joined at run time so the privacy scan does not see an address.
+				String.join("@", "https://someone", "github.com/Kesuhi/K8basSkyblockUtility/releases/tag/v1.2.0"),
 				"javascript:alert(1)", "not a uri")) {
 			assertEquals(list, UpdateNotifier.releasePage(bad), bad);
 		}

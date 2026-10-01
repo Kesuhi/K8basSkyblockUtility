@@ -79,6 +79,7 @@ public final class UpdateService {
 			store.save(state);
 			etag = state.etag;
 		}
+		store.flush();
 		GitHubReleaseSource.Result result = source.fetch(etag);
 		synchronized (state) {
 			CheckPolicy.apply(state, result, clock.getAsLong());

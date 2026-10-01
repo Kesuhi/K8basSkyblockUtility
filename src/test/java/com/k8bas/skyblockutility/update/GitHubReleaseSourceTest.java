@@ -136,6 +136,29 @@ class GitHubReleaseSourceTest {
 		}
 	}
 
+	/** Review S-2 (G1): a body that stops halfway ends the request within its timeout. */
+	@Test
+	void aStalledBodyTimesOut() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			github.enqueue(MockGitHub.Answer.json(200, LIST).stallingMidBody(5000));
+			GitHubReleaseSource source = new GitHubReleaseSource(github.releases(), SharedHttpClient.get(), "1.1.0", Duration.ofSeconds(1));
+			long start = System.nanoTime();
+			GitHubReleaseSource.Result result = source.fetch(null);
+			double seconds = (System.nanoTime() - start) / 1e9;
+			assertEquals(GitHubReleaseSource.Kind.NO_RESPONSE, result.kind(), String.valueOf(result.problem()));
+			assertTrue(seconds < 2.5, "ended after " + seconds + " s");
+		}
+	}
+
+	/** Review S-2 (G1): a malformed redirect target is an error, not an exception. */
+	@Test
+	void aMalformedRedirectIsAnError() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			github.enqueue(MockGitHub.Answer.json(301, "", "Location", "http://[not a host/"));
+			assertEquals(GitHubReleaseSource.Kind.BAD_REDIRECT, source(github.releases()).fetch(null).kind());
+		}
+	}
+
 	/** AC-UPD-03 [R] part, tested: the source override is ignored outside the development environment. */
 	@Test
 	void theOverrideWorksOnlyInDevelopment() {

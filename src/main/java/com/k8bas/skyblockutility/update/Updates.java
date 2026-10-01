@@ -21,8 +21,8 @@ public final class Updates {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/update");
 	private static final long RECHECK_TICKS = 20L * 60 * 30;
 
-	private static UpdateService service;
-	private static UpdateNotifier notifier;
+	private static volatile UpdateService service;
+	private static volatile UpdateNotifier notifier;
 	private static long ticks;
 
 	private Updates() {

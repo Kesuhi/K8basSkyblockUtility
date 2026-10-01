@@ -68,7 +68,16 @@ final class GitHubReleaseSource {
 		return developmentEnvironment && override != null && !override.isBlank() ? URI.create(override) : RELEASES;
 	}
 
+	/** Never throws: every failure is a Result, so the back-off always applies (AC-UPD-10). */
 	Result fetch(String etag) {
+		try {
+			return fetchOrThrow(etag);
+		} catch (RuntimeException e) {
+			return Result.failure(Kind.NO_RESPONSE, 0, Map.of(), e.getClass().getSimpleName());
+		}
+	}
+
+	private Result fetchOrThrow(String etag) {
 		URI target = uri;
 		// A 301 (repo renamed) is followed once, and only to the same host (EC-UPD-12).
 		for (int hop = 0; hop < 2; hop++) {
@@ -87,7 +96,7 @@ final class GitHubReleaseSource {
 			int status = response.statusCode();
 			if (status == 301) {
 				close(response);
-				Optional<URI> next = response.headers().firstValue("location").map(target::resolve);
+				Optional<URI> next = resolve(target, response.headers().firstValue("location"));
 				if (next.isEmpty() || !sameOrigin(next.get())) {
 					return Result.failure(Kind.BAD_REDIRECT, status, Map.of(), "redirect to " + next.map(URI::getHost).orElse("nowhere"));
 				}
@@ -105,6 +114,14 @@ final class GitHubReleaseSource {
 			return readBody(response);
 		}
 		return Result.failure(Kind.BAD_REDIRECT, 301, Map.of(), "too many redirects");
+	}
+
+	private static Optional<URI> resolve(URI base, Optional<String> location) {
+		try {
+			return location.map(base::resolve);
+		} catch (IllegalArgumentException malformed) {
+			return Optional.empty();
+		}
 	}
 
 	private HttpRequest request(URI target, String etag) {
@@ -125,12 +142,25 @@ final class GitHubReleaseSource {
 				&& uri.getPort() == next.getPort();
 	}
 
-	private static Result readBody(HttpResponse<InputStream> response) {
+	private Result readBody(HttpResponse<InputStream> response) {
 		byte[] body;
-		try (InputStream in = response.body()) {
+		InputStream in = response.body();
+		// The request timeout ends when the headers arrive; a body that stalls is cut off by
+		// closing the stream after the same time again.
+		Thread watchdog = Thread.ofVirtual().name("k8bas-update-body-timeout").start(() -> {
+			try {
+				Thread.sleep(requestTimeout);
+				in.close();
+			} catch (InterruptedException | IOException finished) {
+				// read in time, or already closed
+			}
+		});
+		try (in) {
 			body = in.readNBytes(MAX_BODY_BYTES + 1);
 		} catch (IOException e) {
-			return Result.failure(Kind.NO_RESPONSE, 200, Map.of(), "body: " + e.getClass().getSimpleName());
+			return Result.failure(Kind.NO_RESPONSE, 200, Map.of(), watchdog.isAlive() ? "body: " + e.getClass().getSimpleName() : "timed out");
+		} finally {
+			watchdog.interrupt();
 		}
 		if (body.length > MAX_BODY_BYTES) {
 			return Result.failure(Kind.MALFORMED, 200, Map.of(), "the release list is larger than 2 MiB");
