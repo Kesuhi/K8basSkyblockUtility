@@ -100,8 +100,10 @@ public final class DebugCommand {
 	}
 
 	private static int report(String what, List<String> lines) {
+		// Real player names never reach the log (decided 2026-10-01).
+		NameMasker.SESSION.learnFrom(Minecraft.getInstance());
 		for (String line : lines) {
-			K8basSkyblockUtilityClient.LOGGER.info("{} {} {}", DUMP_TAG, what, line);
+			K8basSkyblockUtilityClient.LOGGER.info("{} {} {}", DUMP_TAG, what, NameMasker.SESSION.mask(line));
 		}
 		ChatUtils.chat("Wrote " + lines.size() + " " + what + " lines to latest.log");
 		return lines.size();

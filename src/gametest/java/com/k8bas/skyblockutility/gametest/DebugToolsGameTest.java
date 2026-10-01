@@ -90,6 +90,10 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		context.waitTicks(5);
 		String log = latestLog();
 		check(log.contains(DebugCommand.DUMP_TAG + " tab 000 "), "tab lines tagged in latest.log");
+		// Decision 2026-10-01 (S-7): the player's own name is masked in the written dump.
+		String self = context.computeOnClient(client -> client.player.getGameProfile().name());
+		String tabLine = log.lines().filter(line -> line.contains(DebugCommand.DUMP_TAG + " tab 000 ")).findFirst().orElseThrow();
+		check(tabLine.contains("name=Self") && !tabLine.contains(self), "own name masked in the tab dump: " + tabLine);
 		check(log.contains(DebugCommand.DUMP_TAG + " sidebar 00 score=5 | Beta"), "sidebar lines tagged in latest.log");
 		server.runCommand("scoreboard objectives remove k8test");
 	}

@@ -105,20 +105,22 @@ public final class ContainerDump {
 
 	private static void write(int capture, String title, int stateId, List<Slot> slots) {
 		String prefix = DebugCommand.DUMP_TAG + " container " + capture;
-		K8basSkyblockUtilityClient.LOGGER.info("{} title={} slots={} state={}", prefix, title, slots.size(), stateId);
+		NameMasker masker = NameMasker.SESSION;
+		masker.learnFrom(Minecraft.getInstance());
+		K8basSkyblockUtilityClient.LOGGER.info("{} title={} slots={} state={}", prefix, masker.mask(title), slots.size(), stateId);
 		for (int i = 0; i < slots.size(); i++) {
 			ItemStack stack = slots.get(i).getItem();
 			if (stack.isEmpty()) {
 				continue;
 			}
 			K8basSkyblockUtilityClient.LOGGER.info("{} slot {} item={} sbid={} count={} | {}", prefix, i,
-					BuiltInRegistries.ITEM.getKey(stack.getItem()), skyblockId(stack), stack.getCount(), stack.getHoverName().getString());
+					BuiltInRegistries.ITEM.getKey(stack.getItem()), skyblockId(stack), stack.getCount(), masker.mask(stack.getHoverName().getString()));
 			List<String> lore = loreLines(stack);
 			for (int line = 0; line < lore.size(); line++) {
-				K8basSkyblockUtilityClient.LOGGER.info("{} slot {} lore {} | {}", prefix, i, line, lore.get(line));
+				K8basSkyblockUtilityClient.LOGGER.info("{} slot {} lore {} | {}", prefix, i, line, masker.mask(lore.get(line)));
 			}
 		}
-		ChatUtils.chat("Captured \"" + title + "\" to latest.log");
+		ChatUtils.chat("Captured \"" + masker.mask(title) + "\" to latest.log");
 	}
 
 	private static List<String> loreLines(ItemStack stack) {
