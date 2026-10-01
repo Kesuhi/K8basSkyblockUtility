@@ -308,7 +308,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 
 *1A Port*
 
-- [ ] **T1.1 refactor(npcsearch): submit-based waypoint renderer** (S, deps T0.4c). `NpcWaypointRenderer` moves to `COLLECT_SUBMITS` + `submitText(… SEE_THROUGH …)`, which also exists in 26.1.2.
+- [x] **T1.1 refactor(npcsearch): submit-based waypoint renderer** (S, deps T0.4c). `NpcWaypointRenderer` moves to `COLLECT_SUBMITS` + `submitText(… SEE_THROUGH …)`, which also exists in 26.1.2.
   - Req: REQ-PORT-05, REQ-PORT-06, REQ-PORT-12
   - Accept: compiles on 26.1.2; the T0.4c gametest still finds the 1.0.1 label template exactly behind **opaque** blocks (the translucent case is T1.3); no NaN at distance 0 or behind the camera (EC-PORT-06).
 - [ ] **T1.2 build!: target Minecraft 26.2** (M, deps T1.1).
