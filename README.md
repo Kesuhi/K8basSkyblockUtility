@@ -262,6 +262,8 @@ Minecraft 26.1.x is no longer supported. 1.0.1 was the last build for 26.1.
     NPC Search rules for NPCs at a fixed spot on "Catacombs" (such as Croesus) move to
     "Dungeon Hub". Rules for moving NPCs (Trinity, Tomioka, Duncan) and mob rules stay on
     "Catacombs".
+  - NPC waypoint labels are white by default. Switch off "White waypoint labels" in NPC Search to
+    get each NPC's colour back.
   - The update check is notify-only and asks GitHub (`api.github.com`); nothing is downloaded.
 
   The [changelog](CHANGELOG.md) lists every change, each with its reason and the effect you see.

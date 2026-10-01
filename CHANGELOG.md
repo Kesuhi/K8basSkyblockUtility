@@ -33,7 +33,8 @@ longer supported; 1.0.1 was the last build for it.
   visible-only; invisible mobs are never outlined; NPCs are outlined only while in view; the
   "You found \<NPC>" title appears after line of sight, once per run, and only for Trinity,
   Tomioka, Duncan, Xalx and Pete; the dungeon lobby is its own
-  island, "Dungeon Hub", apart from "Catacombs"; the update check is notify-only.
+  island, "Dungeon Hub", apart from "Catacombs"; waypoint labels are white by default; the update
+  check is notify-only.
 
 **Defaults in this version:**
 - Mob Highlighter: ON, with the rules you add.
@@ -109,6 +110,11 @@ longer supported; 1.0.1 was the last build for it.
   fixed NPC Search rules on "Catacombs" (such as Croesus) move to "Dungeon Hub". Rules for moving
   NPCs (Trinity, Tomioka, Duncan) and mob rules stay on "Catacombs" and stay enabled. *Reason:* the
   mod now tells the lobby from a run. *Effect:* lobby waypoints no longer show inside runs.
+- **Behaviour change: waypoint labels are white by default.** The label and its distance line are
+  white; the new option "White waypoint labels" in NPC Search switches back to each NPC's colour.
+  *Reason:* white labels stay readable on any background and match the planned beacon beams, which
+  will carry each NPC's colour. *Effect:*
+  your waypoint labels turn white after the update, until you switch the option off.
 - **Behaviour change: updates are notify-only.** When a newer version for your Minecraft version is
   out, one chat line per session says so, with [Changelog] and [Open release page]. Nothing is
   downloaded or installed. *Reason:* no build may replace the mod's jar without your confirmation
@@ -126,8 +132,6 @@ longer supported; 1.0.1 was the last build for it.
 Also changed:
 - Ported to Minecraft 26.2. Waypoint labels use the new renderer. They stay readable behind
   blocks, glass and water, and keep their 10-block size further away.
-- NPC waypoint labels and their distance line are white by default. To get each NPC's colour back,
-  switch off "White waypoint labels" in NPC Search.
 - The update check asks GitHub (`api.github.com`) instead of Modrinth, at most 4 times a day;
   after a successful check, not again for 6 hours (after a failed one it can retry sooner, with
   back-off when GitHub is busy). Its state is kept in

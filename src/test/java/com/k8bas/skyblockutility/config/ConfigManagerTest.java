@@ -48,6 +48,8 @@ class ConfigManagerTest {
 		assertEquals(5, npcs().rules.size());
 		assertEquals(3, npcs().rules.stream().filter(r -> !r.fixed && "Catacombs".equals(r.island)).count());
 		assertEquals("\\[Lv\\d+\\] Ghoul", mobs().rules.get(4).namePattern);
+		// R21: the 1.0.1 file has no such field, so labels become white without a migration step.
+		assertTrue(npcs().whiteWaypointLabels);
 	}
 
 	@Test
