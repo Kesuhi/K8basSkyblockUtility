@@ -112,5 +112,5 @@ Also changed:
   matching now runs on the game thread.
 - A settings file that cannot be read (for example while another program holds it) is no longer
   replaced by defaults: it is left as it is, and changes are not saved until the next start.
-- A rule with an empty label in a hand-edited settings file no longer crashes the game.
+- A rule without a label in a hand-edited settings file no longer crashes the game.
 - The "You found <NPC>" title also shows when a Mob Highlighter rule outlines the same NPC.

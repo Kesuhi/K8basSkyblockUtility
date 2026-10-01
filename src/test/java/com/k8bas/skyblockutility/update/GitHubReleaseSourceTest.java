@@ -146,6 +146,7 @@ class GitHubReleaseSourceTest {
 			GitHubReleaseSource.Result result = source.fetch(null);
 			double seconds = (System.nanoTime() - start) / 1e9;
 			assertEquals(GitHubReleaseSource.Kind.NO_RESPONSE, result.kind(), String.valueOf(result.problem()));
+			assertEquals("timed out", result.problem());
 			assertTrue(seconds < 2.5, "ended after " + seconds + " s");
 		}
 	}

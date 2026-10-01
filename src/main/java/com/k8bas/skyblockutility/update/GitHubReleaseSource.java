@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Reads this mod's GitHub releases (REQ-UPD-03, REQ-UPD-09, REQ-UPD-20): one unauthenticated GET of
@@ -147,9 +148,11 @@ final class GitHubReleaseSource {
 		InputStream in = response.body();
 		// The request timeout ends when the headers arrive; a body that stalls is cut off by
 		// closing the stream after the same time again.
+		AtomicBoolean timedOut = new AtomicBoolean();
 		Thread watchdog = Thread.ofVirtual().name("k8bas-update-body-timeout").start(() -> {
 			try {
 				Thread.sleep(requestTimeout);
+				timedOut.set(true);
 				in.close();
 			} catch (InterruptedException | IOException finished) {
 				// read in time, or already closed
@@ -158,7 +161,7 @@ final class GitHubReleaseSource {
 		try (in) {
 			body = in.readNBytes(MAX_BODY_BYTES + 1);
 		} catch (IOException e) {
-			return Result.failure(Kind.NO_RESPONSE, 200, Map.of(), watchdog.isAlive() ? "body: " + e.getClass().getSimpleName() : "timed out");
+			return Result.failure(Kind.NO_RESPONSE, 200, Map.of(), timedOut.get() ? "timed out" : "body: " + e.getClass().getSimpleName());
 		} finally {
 			watchdog.interrupt();
 		}
