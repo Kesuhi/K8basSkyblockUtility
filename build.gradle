@@ -71,6 +71,10 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+	// Minecraft's log4j config writes logs/ into the working directory; keep it out of the repo root.
+	def testRunDir = layout.buildDirectory.dir("test-run").get().asFile
+	workingDir = testRunDir
+	doFirst { testRunDir.mkdirs() }
 }
 
 processResources {
