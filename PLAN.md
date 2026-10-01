@@ -327,7 +327,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T1.3 fix(npcsearch): see-through labels after translucent terrain** (S, deps T1.5). Route labels through `submitCustom(SubmitRenderPhases.AFTER_TERRAIN, …)`, a 26.2-only Fabric API.
   - Req: REQ-PORT-07, REQ-PORT-06, REQ-MARK-03 (translucent-terrain part; generalised in T3.0b)
   - Accept: AC-PORT-06 (gametest screenshots from 5 and 30 blocks behind nothing, stone, glass and water; height at 30 = height at 10 ± 2 px), against the 1.0.1 style.
-- [ ] **T1.13 fix(lang): keybind category translation key** (XS, deps T1.5).
+- [x] **T1.13 fix(lang): keybind category translation key** (XS, deps T1.5).
   - Req: REQ-PORT-11, REQ-CFG-13
   - Accept: AC-PORT-11; AC-CFG-12 (keybind names unchanged, so `options.txt` bindings survive).
 

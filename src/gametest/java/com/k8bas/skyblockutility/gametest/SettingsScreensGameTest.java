@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.gametest;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
@@ -14,6 +15,9 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
@@ -53,6 +57,8 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 				toggleKeyFlipsAndSaves(context, module);
 			}
 
+			keybindNamesAreTranslated(context);
+
 			String log = latestLog();
 			check(!log.contains("at com.k8bas") && !log.contains("at knot//com.k8bas"), "no exception from com.k8bas in latest.log");
 		}
@@ -85,6 +91,30 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 			}
 		}
 		return null;
+	}
+
+	/** AC-PORT-11: the keybind category and every key name resolve to a translation (26.x looks up
+	 *  key.category.*), shown on the Controls screen. The key names themselves stay unchanged, so
+	 *  bindings stored in options.txt keep working (AC-CFG-12). */
+	private static void keybindNamesAreTranslated(ClientGameTestContext context) {
+		context.runOnClient(client -> {
+			String category = K8basSkyblockUtilityClient.KEY_CATEGORY.label().getString();
+			check("K8bas Skyblock Utility".equals(category), "keybind category translated: " + category);
+			for (KeyMapping key : List.of(SettingsKeybind.OPEN_SETTINGS_KEY,
+					com.k8bas.skyblockutility.module.mobhighlighter.ModKeybinds.TOGGLE_KEY,
+					com.k8bas.skyblockutility.module.npcsearch.ModKeybinds.TOGGLE_KEY)) {
+				check(key.getName().startsWith("key.k8bas_skyblock_utility."), "unchanged key name " + key.getName());
+				String label = Component.translatable(key.getName()).getString();
+				check(!label.equals(key.getName()), "key name translated: " + key.getName());
+			}
+		});
+		context.setScreen(() -> new KeyBindsScreen(null, Minecraft.getInstance().options));
+		context.waitForScreen(KeyBindsScreen.class);
+		context.getInput().setCursorPos(400, 200);
+		context.getInput().scroll(-500);
+		context.waitTicks(5);
+		context.takeScreenshot("t1.13-key-binds");
+		context.setScreen(() -> null);
 	}
 
 	/** AC-PORT-07: the toggle key flips the module, and the config file has the new value within 2 s. */
