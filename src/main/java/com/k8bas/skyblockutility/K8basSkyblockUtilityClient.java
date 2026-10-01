@@ -10,8 +10,11 @@ import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.update.UpdateChecker;
+import com.k8bas.skyblockutility.util.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,8 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ConfigManager.load();
+		ConfigManager.setSaveFailureNotice(message -> Minecraft.getInstance().execute(() -> ChatUtils.chat(message)));
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.flush());
 		IslandTracker.register();
 
 		ModuleManager.register(new MobHighlighterModule());

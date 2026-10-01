@@ -333,7 +333,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 
 *1B Correctness & compliance (ships with the port; see §1.3)*
 
-- [ ] **T1.7 fix(config): atomic, single-path saving** (M, deps T0.3). `ConfigManager`, the modules' `setEnabled`, new `config/store/*`.
+- [x] **T1.7 fix(config): atomic, single-path saving** (M, deps T0.3). `ConfigManager`, the modules' `setEnabled`, new `config/store/*`.
   - Req: REQ-CFG-04, REQ-CFG-05, REQ-CFG-10, REQ-CFG-12
   - One serialized save path: coalesced, on disk ≤ 2 s after a change, flushed on shutdown; temp file + atomic move with Windows lock retries. The store is reusable for other files (T1.4a state file, T3.0d profiles).
   - Accept: AC-CFG-03, AC-CFG-04, AC-CFG-09, AC-CFG-11; EC-CFG-03, -04, -06; `saveAsync` removed.

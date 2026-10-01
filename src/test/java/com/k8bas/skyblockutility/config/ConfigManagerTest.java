@@ -53,10 +53,12 @@ class ConfigManagerTest {
 		Path file = fixture();
 		ConfigManager.load(file);
 		ConfigManager.save();
+		ConfigManager.flush();
 		String saved = Files.readString(file);
 
 		ConfigManager.load(file);
 		ConfigManager.save();
+		ConfigManager.flush();
 		assertEquals(saved, Files.readString(file));
 		assertEquals(128, ConfigManager.general().mobScanRangeBlocks);
 		assertEquals(5, npcs().rules.size());
@@ -66,6 +68,7 @@ class ConfigManagerTest {
 	void missingFileGivesDefaultsAndCreatesIt() {
 		Path file = dir.resolve("new.json");
 		ConfigManager.load(file);
+		ConfigManager.flush();
 
 		assertTrue(Files.exists(file));
 		assertEquals(64, ConfigManager.general().mobScanRangeBlocks);

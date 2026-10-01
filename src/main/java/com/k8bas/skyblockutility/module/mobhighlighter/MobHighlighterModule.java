@@ -98,7 +98,7 @@ public final class MobHighlighterModule implements Module {
 		config.enabled = enabled;
 		highlightManager.setEnabled(enabled);
 		ConfigManager.putModuleSection(ID, config);
-		ConfigManager.saveAsync();
+		ConfigManager.save();
 	}
 
 	@Override

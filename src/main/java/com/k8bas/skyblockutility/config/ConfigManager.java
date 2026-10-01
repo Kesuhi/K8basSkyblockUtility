@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.k8bas.skyblockutility.config.store.AtomicFileStore;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -19,6 +21,10 @@ import java.util.function.Supplier;
  * time — modules ask for their own typed section and hand back an updated one to persist,
  * which is what keeps each module self-contained instead of this class growing a
  * per-module if-chain as more modules get added.
+ *
+ * Saving goes through one AtomicFileStore (REQ-CFG-04/05): save() serialises the current state on
+ * the calling thread and returns at once; the file is written atomically within 2 s, merged with
+ * any other pending save, and flushed on client shutdown (REQ-CFG-10).
  */
 public final class ConfigManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/config");
@@ -29,6 +35,10 @@ public final class ConfigManager {
 	 *  temporary file without a running Fabric Loader. */
 	private static Path configPath;
 	private static SkyblockUtilityConfig root;
+	private static AtomicFileStore store;
+	/** Shows a save failure to the player; set by the client entrypoint (no-op in tests). */
+	private static Consumer<String> saveFailureNotice = message -> {
+	};
 
 	private ConfigManager() {
 	}
@@ -47,6 +57,10 @@ public final class ConfigManager {
 	/** Loads (or creates) the config at the given path; later saves go to the same path. */
 	public static void load(Path path) {
 		configPath = path;
+		if (store == null || !store.file().equals(path)) {
+			store = new AtomicFileStore(path, e -> saveFailureNotice.accept(
+					"Couldn't save settings (" + e.getMessage() + "). They are kept for now; the next change retries."));
+		}
 		if (Files.exists(path)) {
 			try (var reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
 				SkyblockUtilityConfig loaded = GSON.fromJson(reader, SkyblockUtilityConfig.class);
@@ -61,25 +75,23 @@ public final class ConfigManager {
 		}
 	}
 
+	/** Queues the current state for saving; never blocks on disk I/O, so it is safe on a keypress. */
 	public static void save() {
-		try {
-			Path path = configPath();
-			Files.createDirectories(path.getParent());
-			try (var writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-				GSON.toJson(root, writer);
-			}
-		} catch (IOException e) {
-			LOGGER.error("Failed to save k8bas_skyblock_utility.json", e);
+		if (store == null) {
+			load(configPath());
+		}
+		store.requestSave(GSON.toJson(root));
+	}
+
+	/** Writes any pending save now and waits for it (client shutdown, tests). */
+	public static void flush() {
+		if (store != null) {
+			store.flush();
 		}
 	}
 
-	/** Same write, off the calling thread — for call sites reachable from a keybind's client-tick
-	 *  handler (e.g. a module's setEnabled toggling), where blocking on disk I/O every keypress
-	 *  would be a real (if small) hitch on an action that should feel instant. Not used for the
-	 *  Settings screen's own Save & Done, which should stay synchronous: it's a deliberate,
-	 *  infrequent user action, not something on a hot input path. */
-	public static void saveAsync() {
-		Thread.ofVirtual().name("k8bas-config-save").start(ConfigManager::save);
+	public static void setSaveFailureNotice(Consumer<String> notice) {
+		saveFailureNotice = notice;
 	}
 
 	public static GeneralConfig general() {
