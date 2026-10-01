@@ -53,6 +53,27 @@ class NpcDatabaseParseTest {
 		assertTrue(NpcDatabase.parse("[]").isEmpty());
 	}
 
+	/** AC-NPCDB-04 [A] (T1.12): malformed entries are skipped; the others load. */
+	@Test
+	void malformedEntriesAreSkipped() {
+		List<NpcDatabaseEntry> entries = NpcDatabase.parse("""
+				[
+				  {"id": "no-island", "displayName": "No Island", "island": null, "fixed": false, "matchText": "No Island"},
+				  {"id": "no-coords", "displayName": "No Coords", "island": "Hub", "fixed": true},
+				  {"id": "half-coords", "displayName": "Half Coords", "island": "Hub", "fixed": true, "x": 1, "y": 2},
+				  {"id": "no-match", "displayName": "No Match", "island": "Hub", "fixed": false, "matchText": " "},
+				  {"displayName": "No Id", "island": "Hub", "fixed": false, "matchText": "No Id"},
+				  {"id": "no-name", "island": "Hub", "fixed": false, "matchText": "No Name"},
+				  {"id": "bad-x", "displayName": "Bad X", "island": "Hub", "fixed": true, "x": "far", "y": 2, "z": 3},
+				  null,
+				  "trinity",
+				  {"id": "origin", "displayName": "Origin", "island": "Hub", "fixed": true, "x": 0, "y": 0, "z": 0},
+				  {"id": "trinity", "displayName": "Trinity", "island": "Catacombs", "fixed": false, "matchText": "Trinity"}
+				]
+				""");
+		assertEquals(List.of("origin", "trinity"), entries.stream().map(entry -> entry.id).toList());
+	}
+
 	@Test
 	void malformedJsonThrows() {
 		assertThrows(JsonSyntaxException.class, () -> NpcDatabase.parse("{\"id\": 1}"));

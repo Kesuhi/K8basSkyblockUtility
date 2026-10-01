@@ -372,7 +372,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T1.11 fix(npcsearch): "You found X" only after line of sight, once per run** (S, deps T1.9, T1.10). Gated on `player.hasLineOfSight(entity)` within the scan range on the client tick; once per rule per server, reset on each location change event; own toggle, default ON (D-6).
   - Req: REQ-GLOW-14, REQ-XC-RULES-05, REQ-XC-TOGGLE-01, REQ-XC-TOGGLE-02
   - Accept: AC-GLOW-13 (gate unit tests; gametest: no title behind a wall, one title in view); EC-GLOW-06, -07, -08.
-- [ ] **T1.12 fix(net): HTTP timeouts + DB entry validation** (S). 10 s connect and request timeouts for the gist fetch; malformed entries skipped. Kept because v1.1.0 still reads the gists (R16); T3.8 removes the fetch.
+- [x] **T1.12 fix(net): HTTP timeouts + DB entry validation** (S). 10 s connect and request timeouts for the gist fetch; malformed entries skipped. Kept because v1.1.0 still reads the gists (R16); T3.8 removes the fetch.
   - Req: REQ-NPCDB-05
   - Accept: AC-NPCDB-04.
 

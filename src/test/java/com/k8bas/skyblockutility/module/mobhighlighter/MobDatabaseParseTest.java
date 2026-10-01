@@ -47,6 +47,23 @@ class MobDatabaseParseTest {
 		assertThrows(UnsupportedOperationException.class, () -> entries.add(new MobDatabaseEntry()));
 	}
 
+	/** AC-NPCDB-04 [A] (T1.12): malformed entries are skipped; the others load. */
+	@Test
+	void malformedEntriesAreSkipped() {
+		List<MobDatabaseEntry> entries = MobDatabase.parse("""
+				[
+				  {"id": "no-island", "displayName": "No Island", "matchText": "Zealot"},
+				  {"id": "no-match", "displayName": "No Match", "island": "The End"},
+				  {"id": "no-name", "matchText": "Zealot", "island": "The End"},
+				  {"displayName": "No Id", "matchText": "Zealot", "island": "The End"},
+				  {"id": "array-name", "displayName": ["Zealot"], "matchText": "Zealot", "island": "The End"},
+				  null,
+				  {"id": "zealot", "displayName": "Zealot", "matchText": "Zealot", "island": "The End"}
+				]
+				""");
+		assertEquals(List.of("zealot"), entries.stream().map(entry -> entry.id).toList());
+	}
+
 	@Test
 	void malformedJsonThrows() {
 		assertThrows(JsonSyntaxException.class, () -> MobDatabase.parse("[{\"id\": "));

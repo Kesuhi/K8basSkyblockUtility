@@ -1,13 +1,10 @@
 package com.k8bas.skyblockutility.module.mobhighlighter;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
 import com.k8bas.skyblockutility.net.SharedHttpClient;
+import com.k8bas.skyblockutility.util.JsonEntries;
 
 import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class MobDatabase {
 	private static final String RAW_URL =
 			"https://gist.githubusercontent.com/Kesuhi/f68f11d96e15342f36c2402fde8d5ac1/raw/mob_database.json";
-	private static final Gson GSON = new Gson();
 	private static final AtomicBoolean fetchStarted = new AtomicBoolean(false);
 
 	private static volatile List<MobDatabaseEntry> entries = List.of();
@@ -42,29 +38,32 @@ public final class MobDatabase {
 			return;
 		}
 		Thread.ofVirtual().name("k8bas-mob-database-fetch").start(() -> {
+			String body = SharedHttpClient.fetchText(URI.create(RAW_URL), "Mob database fetch", K8basSkyblockUtilityClient.LOGGER::warn);
+			if (body == null) {
+				return;
+			}
 			try {
-				HttpRequest request = HttpRequest.newBuilder(URI.create(RAW_URL))
-						.header("User-Agent", "Kesuhi/k8bas-skyblock-utility (https://github.com/Kesuhi/K8basSkyblockUtility)")
-						.GET()
-						.build();
-				HttpResponse<String> response = SharedHttpClient.get().send(request, HttpResponse.BodyHandlers.ofString());
-				if (response.statusCode() != 200) {
-					K8basSkyblockUtilityClient.LOGGER.warn("Mob database fetch got HTTP {}", response.statusCode());
-					return;
-				}
-				entries = parse(response.body());
+				entries = parse(body);
 				K8basSkyblockUtilityClient.LOGGER.info("Loaded {} mob database entries", entries.size());
-			} catch (Exception e) {
-				K8basSkyblockUtilityClient.LOGGER.warn("Mob database fetch failed", e);
+			} catch (RuntimeException e) {
+				K8basSkyblockUtilityClient.LOGGER.warn("Mob database is not a list of entries: {}", e.toString());
 			}
 		});
 	}
 
-	/** The gist's JSON array as an immutable list; an empty document gives an empty list. */
+	/** The gist's JSON array as an immutable list; an empty document gives an empty list, and
+	 *  malformed entries are skipped with one warning (REQ-NPCDB-05). */
 	static List<MobDatabaseEntry> parse(String json) {
-		List<MobDatabaseEntry> parsed = GSON.fromJson(json, new TypeToken<List<MobDatabaseEntry>>() {
-		}.getType());
-		return parsed != null ? List.copyOf(parsed) : List.of();
+		JsonEntries.Parsed<MobDatabaseEntry> parsed = JsonEntries.parse(json, MobDatabaseEntry.class, MobDatabase::valid);
+		if (parsed.skipped() > 0) {
+			K8basSkyblockUtilityClient.LOGGER.warn("Skipped {} malformed mob database entries", parsed.skipped());
+		}
+		return parsed.entries();
+	}
+
+	/** An id, a name, an island and a match text. */
+	static boolean valid(MobDatabaseEntry entry) {
+		return entry.id != null && entry.displayName != null && entry.island != null && !JsonEntries.isBlank(entry.matchText);
 	}
 
 	/** Grouped by island, entries within each island sorted by display name, islands sorted alphabetically. */
