@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.module.npcsearch;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
+import com.k8bas.skyblockutility.location.Islands;
 import com.k8bas.skyblockutility.net.SharedHttpClient;
 
 import java.net.URI;
@@ -57,11 +58,21 @@ public final class NpcDatabase {
 		});
 	}
 
-	/** The gist's JSON array as an immutable list; an empty document gives an empty list. */
+	/** The gist's JSON array as an immutable list; an empty document gives an empty list. Fixed NPCs
+	 *  listed on "Catacombs" stand in the dungeon lobby, so they are normalised to "Dungeon Hub"
+	 *  (REQ-LOC-03); moving NPCs keep "Catacombs". */
 	static List<NpcDatabaseEntry> parse(String json) {
 		List<NpcDatabaseEntry> parsed = GSON.fromJson(json, new TypeToken<List<NpcDatabaseEntry>>() {
 		}.getType());
-		return parsed != null ? List.copyOf(parsed) : List.of();
+		if (parsed == null) {
+			return List.of();
+		}
+		for (NpcDatabaseEntry entry : parsed) {
+			if (entry != null && entry.fixed && Islands.CATACOMBS.equals(entry.island)) {
+				entry.island = Islands.DUNGEON_HUB;
+			}
+		}
+		return List.copyOf(parsed);
 	}
 
 	/** Grouped by island, entries within each island sorted by display name, islands sorted alphabetically. */

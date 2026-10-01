@@ -81,12 +81,49 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			int at30 = labels.get("30-nothing").height;
 			check(Math.abs(at30 - at10) <= 2, "height at 30 blocks (" + at30 + ") equals height at 10 blocks (" + at10 + ") +-2 px");
 
+			waypointsFollowTheIsland(context, singleplayer, server);
+
 			context.runOnClient(client -> {
 				setHudHidden(client, false);
 				IslandTracker.forceIsland(null);
 				NpcWaypointRenderer.setActiveWaypoints(List.of());
 			});
 		}
+	}
+
+	/** AC-LOC-04 [B] (T1.9b): a fixed Dungeon Hub waypoint renders in the Dungeon Hub and not in a run. */
+	private static void waypointsFollowTheIsland(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
+		server.runCommand("fill -8 -60 1 8 -50 40 minecraft:air");
+		server.runCommand("tp @a 0.5 -60 0.5 0 0");
+		context.runOnClient(client -> {
+			NpcWaypointRenderer.setActiveWaypoints(List.of());
+			IslandTracker.forceIsland(null);
+		});
+		singleplayer.getConnection().waitForChunksRender();
+		context.waitTicks(10);
+		Path none = context.takeScreenshot("t1.9b-no-waypoint");
+
+		context.runOnClient(client -> {
+			NpcRule croesus = new NpcRule();
+			croesus.label = "Croesus";
+			croesus.island = "Dungeon Hub";
+			croesus.fixed = true;
+			croesus.color = TEXT_COLOR;
+			croesus.x = 0.5;
+			croesus.y = -60;
+			croesus.z = 5.5;
+			NpcWaypointRenderer.setActiveWaypoints(List.of(croesus));
+			IslandTracker.forceIsland("Dungeon Hub");
+		});
+		context.waitTicks(5);
+		Label inLobby = Label.of(context.takeScreenshot("t1.9b-dungeon-hub"), none);
+		context.runOnClient(client -> IslandTracker.forceIsland("Catacombs"));
+		context.waitTicks(5);
+		Label inRun = Label.of(context.takeScreenshot("t1.9b-catacombs"), none);
+		LOGGER.info("Dungeon Hub waypoint: in the lobby {}, in a run {}", inLobby, inRun);
+		check(inLobby.textPixels > 50, "the Dungeon Hub waypoint renders in the Dungeon Hub: " + inLobby);
+		check(inRun.textPixels == 0, "the Dungeon Hub waypoint does not render in a run: " + inRun);
+		context.runOnClient(client -> IslandTracker.forceIsland("Hub"));
 	}
 
 	private static Label measure(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server,

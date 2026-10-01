@@ -30,6 +30,17 @@ class NpcDatabaseParseTest {
 		assertEquals("Trinity", entries.get(1).matchText);
 	}
 
+	/** AC-LOC-03 (T1.9b): fixed NPCs listed on Catacombs stand in the lobby; moving ones stay in runs. */
+	@Test
+	void fixedCatacombsEntriesMoveToTheDungeonHub() {
+		List<NpcDatabaseEntry> entries = NpcDatabase.parse("""
+				[{"id": "croesus", "displayName": "Croesus", "island": "Catacombs", "fixed": true, "x": 1, "y": 2, "z": 3},
+				 {"id": "trinity", "displayName": "Trinity", "island": "Catacombs", "fixed": false, "matchText": "Trinity"}]
+				""");
+		assertEquals("Dungeon Hub", entries.get(0).island);
+		assertEquals("Catacombs", entries.get(1).island);
+	}
+
 	@Test
 	void acceptsAUtf8BomAndCrlf() {
 		assertEquals(2, NpcDatabase.parse("﻿" + JSON.replace("\n", "\r\n")).size());

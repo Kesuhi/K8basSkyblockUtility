@@ -356,7 +356,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Mappings: the REQ-LOC-02 table, with `dungeon` → "Catacombs" and `dungeon_hub` → "Dungeon Hub" (D-2); `catacombs` and `jerry` dropped. Unknown modes logged once. Island names with short descriptions exposed for the UI.
   - "On SkyBlock" comes from the server type, so unmapped SkyBlock modes still count (needed by T3.5–T3.7).
   - Accept: AC-LOC-01, AC-LOC-05, AC-LOC-06, AC-LOC-07, AC-LOC-08 [R], AC-LOC-10, AC-LOC-12, AC-LOC-13; EC-LOC-01, -02, -06.
-- [ ] **T1.9b fix(location): Dungeon Hub migration + NPC data normalisation** (S, deps T1.7b, T1.9). `NpcDatabase`, migration step 1.
+- [x] **T1.9b fix(location): Dungeon Hub migration + NPC data normalisation** (S, deps T1.7b, T1.9). `NpcDatabase`, migration step 1.
   - Req: REQ-LOC-03, REQ-GLOW-13, REQ-CFG-09
   - `NpcDatabase` normalises on load: fixed + "Catacombs" becomes "Dungeon Hub".
   - Migration: your rules with fixed + "Catacombs" move to "Dungeon Hub"; Trinity/Tomioka/Duncan (moving) and mob rules stay, still enabled.

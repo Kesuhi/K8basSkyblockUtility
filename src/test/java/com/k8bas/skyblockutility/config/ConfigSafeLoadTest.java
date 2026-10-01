@@ -51,9 +51,12 @@ class ConfigSafeLoadTest {
 		return file();
 	}
 
+	/** Backups made because something was wrong (not the one-time .v0.bak pre-migration copy). */
 	private List<Path> backups() throws IOException {
 		try (Stream<Path> files = Files.list(dir)) {
-			return files.filter(p -> p.getFileName().toString().endsWith(".bak")).sorted().toList();
+			return files.map(Path::getFileName).map(Path::toString)
+					.filter(name -> name.endsWith(".bak") && !name.endsWith(".v0.bak"))
+					.sorted().map(dir::resolve).toList();
 		}
 	}
 
@@ -83,12 +86,16 @@ class ConfigSafeLoadTest {
 		// same Gson settings, so a real 1.0.1 file has none).
 		JsonObject expected = withoutNulls(original).getAsJsonObject();
 		expected.addProperty(ConfigMigrations.VERSION_FIELD, ConfigMigrations.MIGRATOR.currentVersion());
+		// The documented migrated value: step 1 moves the fixed Croesus rule to the Dungeon Hub.
+		expected.getAsJsonObject("modules").getAsJsonObject("npc_search").getAsJsonArray("rules").get(3)
+				.getAsJsonObject().addProperty("island", "Dungeon Hub");
 		JsonObject saved = json(file);
 		assertEquals(expected.get("general"), saved.get("general"));
 		assertEquals(expected.get("modules"), saved.get("modules"));
 		assertEquals(expected.keySet(), saved.keySet(), "no new top-level key");
 		assertEquals(ConfigMigrations.MIGRATOR.currentVersion(), saved.get("configVersion").getAsInt());
-		assertTrue(backups().isEmpty());
+		assertTrue(backups().isEmpty(), "nothing was wrong");
+		assertTrue(Files.exists(dir.resolve("k8bas_skyblock_utility.json.v0.bak")), "the one-time pre-migration copy");
 	}
 
 	@Test
