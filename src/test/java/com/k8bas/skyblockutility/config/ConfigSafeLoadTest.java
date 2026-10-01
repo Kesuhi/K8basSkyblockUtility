@@ -239,10 +239,14 @@ class ConfigSafeLoadTest {
 				{"general": null,
 				 "modules": {
 				   "mob_highlighter": {"enabled": true, "rules": [
-				     {"label": "no id", "nameMatchMode": "FOO", "namePattern": "Zealot"}]},
+				     {"label": "no id", "nameMatchMode": "FOO", "namePattern": "Zealot"},
+				     {"id": "m2", "label": null, "namePattern": null}]},
 				   "npc_search": {"enabled": true, "rules": null}}}
 				""");
 		ConfigManager.load(file());
+		// Review S-4 (G1): null text fields are repaired instead of crashing the renderer.
+		assertEquals("New Rule", mobs().rules.get(1).label);
+		assertEquals("", mobs().rules.get(1).namePattern);
 
 		assertEquals(64, ConfigManager.general().mobScanRangeBlocks, "general has defaults");
 		HighlightRule rule = mobs().rules.get(0);

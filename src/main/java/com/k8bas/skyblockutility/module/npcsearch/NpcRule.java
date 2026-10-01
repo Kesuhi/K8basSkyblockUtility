@@ -50,6 +50,15 @@ public class NpcRule {
 			id = UUID.randomUUID().toString();
 			changed = true;
 		}
+		// A null label would throw wherever it is drawn (waypoint label, title, settings).
+		if (label == null) {
+			label = "New NPC";
+			changed = true;
+		}
+		if (namePattern == null) {
+			namePattern = "";
+			changed = true;
+		}
 		return changed;
 	}
 }
