@@ -49,7 +49,7 @@ you have to stay on 26.1.x for now, switch off Mob Highlighter and NPC Search th
 ## Upgrading from 1.0.x
 
 - **Move your instance to Minecraft 26.2 first.** 1.0.x runs on Minecraft 26.1, and 1.1.0 needs
-  26.2. Switch your instance (or make a new one) to Minecraft 26.2 with Fabric Loader 0.19.5 or
+  26.2. Switch your instance to Minecraft 26.2 with Fabric Loader 0.19.5 or
   newer, replace Fabric API and Cloth Config with their 26.2 builds, and use Hypixel Mod API 1.0.2
   or newer, as listed under [Installation](#installation). On 26.1, Fabric Loader stops the game
   with a message about incompatible mods.
@@ -63,7 +63,9 @@ you have to stay on 26.1.x for now, switch off Mob Highlighter and NPC Search th
 - **Your settings migrate automatically.** On the first start, the settings file is updated and a
   copy of the old file is kept as `config/k8bas_skyblock_utility.json.v0.bak`. Your rules, your
   keybinds and your choice for the update check are kept. The old "Automatically download updates"
-  option is gone.
+  option is gone. If you make a new instance instead, it starts with no rules: before its first
+  start, copy `config/k8bas_skyblock_utility.json` (your rules) and `options.txt` (your keybinds)
+  from the old instance.
 - **Behaviour changes:**
   - The outline is visible-only: mobs and NPCs are outlined only where you can see them, and blocks
     hide the outline.
@@ -86,7 +88,7 @@ you have to stay on 26.1.x for now, switch off Mob Highlighter and NPC Search th
 | NPC Search | Outlines the moving NPCs your rules match, only while they are in view. Its switch and the "Toggle NPC Search" keybind also turn off the NPC waypoints and the "You found" title. | NPC Search | ON (a fresh install has no rules, so no NPC is outlined) |
 | NPC waypoints | An NPC that stands at a fixed spot gets a floating label with its name and distance at its fixed coordinates, also visible behind blocks, while you are on its island (on every island if the rule has none). | NPC Search: the module's "Enabled" switch, and each NPC's own "Enabled" switch | ON (module), and ON for each NPC you add |
 | NPC Database | A searchable, island-sorted list of NPCs; "Add" creates a waypoint or an outline rule. | NPC Search, "NPC Database: Open" | no switch (the list loads at game start) |
-| "You found" title | Shows "You found \<NPC>" in the rule's colour the first time you have a clear line of sight to a searched NPC, once per run. | NPC Search | ON |
+| "You found" title | Shows "You found \<NPC>" in the rule's colour the first time you have a clear line of sight to a moving NPC your NPC Search rules match (within the mob scan range), once per run. NPCs at a fixed spot get a waypoint instead. | NPC Search | ON |
 | Mob scan range | How far away mobs and moving NPCs are considered for outlines (0 = unlimited, slider 0–128). | General | 64 blocks |
 | Check for updates (notify) | Asks GitHub for new releases at most 4 times a day; after a successful check, not again for 6 hours (after a failed one it can retry sooner). Tells you in chat once per session; nothing is downloaded. | General | ON (channel STABLE, or BETA when you run a pre-release build) |
 | Keybinds | Open Settings, Toggle Mob Highlighter and Toggle NPC Search. | General (also Controls, "K8bas Skyblock Utility") | unbound |
@@ -147,7 +149,7 @@ you. It follows these rules:
    shows it; the mod does not recolour it.
 2. **Invisible entities are never highlighted or announced.** This is built in and has no setting.
 3. **Alerts about entities wait for line of sight.** The "You found" title appears only the first
-   time you have a clear line of sight to a searched NPC.
+   time you have a clear line of sight to a moving NPC your rules match.
 4. **Only fixed coordinates show behind blocks.** NPC waypoint labels sit at fixed, known
    coordinates; they are the only thing drawn behind blocks, and distance is shown only to them.
 5. **Network packets are only read, never cancelled, delayed or changed.** The mod never sends chat

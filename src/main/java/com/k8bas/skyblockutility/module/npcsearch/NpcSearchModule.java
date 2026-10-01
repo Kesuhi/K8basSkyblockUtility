@@ -174,7 +174,7 @@ public final class NpcSearchModule implements Module {
 				.build());
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("\"You found\" title"), config.foundTitleEnabled)
 				.setDefaultValue(true)
-				.setTooltip(Component.literal("Shows \"You found <NPC>\" the first time you have a clear line of sight to a searched NPC, once per run."))
+				.setTooltip(Component.literal("Shows \"You found <NPC>\" the first time you have a clear line of sight to a moving NPC your rules match, once per run."))
 				.setSaveConsumer(value -> config.foundTitleEnabled = value)
 				.build());
 

@@ -90,9 +90,10 @@ longer supported; 1.0.1 was the last build for it.
 - **Behaviour change: rules that cannot work are inactive.** An empty Contains or Exact pattern, an
   invalid regular expression, an unknown entity type, or the match mode None without an entity type
   makes the rule inactive. The rule editor marks it with ⚠ and says why. It stays in your
-  settings and is logged once. *Reason:* an empty pattern used to outline every entity, a
-  mistyped type matched every type, and None without a type would outline every entity, players
-  included. *Effect:* such a rule outlines nothing until you fix it.
+  settings and is logged once. *Reason:* an empty Contains pattern used to outline every entity,
+  a type with invalid characters (such as capitals) matched every type, and None without a type
+  would outline every entity, players included. *Effect:* such a rule outlines nothing until you
+  fix it.
 - **Behaviour change: players are not outlined by name rules.** You are never outlined, also in
   third person. Other players are not matched by rules that read a name; player-type NPCs still
   match. *Reason:* a player's own name is never read, so a name rule could only match a player
