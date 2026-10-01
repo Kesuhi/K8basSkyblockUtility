@@ -318,7 +318,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - One-line API moves (`gui.screen()/setScreen()`, `gui.hud.setTitle/resetTitleTimes`) in `MobHighlighterModule`, `NpcSearchModule`, `SettingsCommand`, `SettingsKeybind` and the T0.4/T0.4b debug code. Mappings: none needed (unobfuscated).
   - Both 1.0.1 mixins re-checked (target, 26.1.2 vs 26.2 descriptor, injection point) for the Phase 1 report; T1.10 deletes them.
   - Accept: AC-PORT-01, AC-PORT-03, AC-PORT-04, AC-PORT-05, AC-PORT-07; AC-PORT-08 [B] (no mixin apply warning in `runClient`).
-- [ ] **T1.5 test(gametest): client gametests on 26.2** (S, deps T1.2). The source set exists since T0.4c; this task makes it run on 26.2.
+- [x] **T1.5 test(gametest): client gametests on 26.2** (S, deps T1.2). The source set exists since T0.4c; this task makes it run on 26.2.
   - Req: REQ-XC-VERIFY-02
   - Accept: `runClientGameTest` passes on 26.2, including `DebugToolsGameTest`; tests can force the island through the T0.4 override. A template that changes because of 26.2 itself (not our renderer) is re-captured with a note in the Phase 1 report.
 - [ ] **T1.6 build: production-boot task** (S, deps T1.2). `prodClientStack` (`ClientProductionRunTask`) with the mod folder passed as `-Pk8bas.prodMods` and `-Dmixin.debug.export`, kept out of `check`.
