@@ -92,11 +92,12 @@ public final class NpcSearchModule implements Module {
 	}
 
 	/** Called on the client tick, from HighlightManager, whenever an unfixed NPC's rule matches a
-	 *  nearby entity. The first time the player can see the NPC on this server, a short vanilla
-	 *  title in the rule's own colour says so (FoundTitleGate). */
+	 *  nearby entity. For the special NPCs only (R20), the first time the player can see the NPC on
+	 *  this server, a short vanilla title in the rule's own colour says so (FoundTitleGate). */
 	private void onNpcMatched(HighlightRule rule, Entity entity) {
 		LocalPlayer player = Minecraft.getInstance().player;
-		if (player != null && foundTitles.allow(rule.id, config.foundTitleEnabled, entity.isInvisible(),
+		if (player != null && FoundTitleGate.isSpecial(rule.sourceId, rule.label)
+				&& foundTitles.allow(rule.id, config.foundTitleEnabled, entity.isInvisible(),
 				() -> player.hasLineOfSight(entity))) {
 			pendingTitle = Component.literal("You found " + rule.label)
 					.withStyle(Style.EMPTY.withColor(TextColor.fromRgb(rule.color)));
@@ -164,6 +165,7 @@ public final class NpcSearchModule implements Module {
 		highlightRule.namePattern = rule.namePattern;
 		highlightRule.color = rule.color;
 		highlightRule.island = rule.island;
+		highlightRule.sourceId = rule.sourceId;
 		return highlightRule;
 	}
 
@@ -174,7 +176,7 @@ public final class NpcSearchModule implements Module {
 				.build());
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("\"You found\" title"), config.foundTitleEnabled)
 				.setDefaultValue(true)
-				.setTooltip(Component.literal("Shows \"You found <NPC>\" the first time you have a clear line of sight to a moving NPC your rules match, once per run."))
+				.setTooltip(Component.literal("Shows \"You found <NPC>\" for Trinity, Tomioka, Duncan, Xalx and Pete the first time you have a clear line of sight to them, once per run."))
 				.setSaveConsumer(value -> config.foundTitleEnabled = value)
 				.build());
 

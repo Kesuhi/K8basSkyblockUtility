@@ -31,13 +31,15 @@ longer supported; 1.0.1 was the last build for it.
   update check are kept.
 - What behaves differently (details, reasons and effects under "Changed"): the outline is
   visible-only; invisible mobs are never outlined; NPCs are outlined only while in view; the
-  "You found \<NPC>" title appears after line of sight, once per run; the dungeon lobby is its own
+  "You found \<NPC>" title appears after line of sight, once per run, and only for Trinity,
+  Tomioka, Duncan, Xalx and Pete; the dungeon lobby is its own
   island, "Dungeon Hub", apart from "Catacombs"; the update check is notify-only.
 
 **Defaults in this version:**
 - Mob Highlighter: ON, with the rules you add.
 - NPC Search: ON, with the rules you add. A fresh install outlines no NPC.
-- "You found" title: ON. It appears after line of sight, once per run.
+- "You found" title: ON, for Trinity, Tomioka, Duncan, Xalx and Pete. It appears after line of
+  sight, once per run.
 - NPC waypoints: ON for each NPC you add (its own Enabled switch); labels show at their fixed
   coordinates, also behind blocks.
 - Mob scan range: 64 blocks (0 = unlimited, slider 0–128).
@@ -78,8 +80,10 @@ longer supported; 1.0.1 was the last build for it.
 - **Behaviour change: the "You found \<NPC>" title appears after line of sight, once per run.** It
   shows the first time you have a clear line of sight to the NPC on each server, so again in the
   next dungeon run, and it has its own toggle. A title that comes up while a menu is open waits
-  until the menu closes. *Reason:* alerts about entities may only fire after line of sight.
-  *Effect:* before, it showed once per game launch, even when the NPC was hidden.
+  until the menu closes. It is now shown only for Trinity, Tomioka, Duncan (Catacombs), Xalx and
+  Pete (Crystal Hollows); other NPCs your rules match are still outlined. *Reason:* alerts about
+  entities may only fire after line of sight, and the title is meant for these rare NPCs.
+  *Effect:* before, it showed once per game launch for every searched NPC, even when it was hidden.
 - **Behaviour change: glow the server sets keeps its colour.** *Reason:* recolouring it would show
   your rule colour behind blocks. *Effect:* a mob that already glows (for example with the Glowing
   effect) keeps the server's colour instead of your rule colour.

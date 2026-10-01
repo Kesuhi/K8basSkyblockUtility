@@ -28,7 +28,7 @@ have their own switch. It includes:
 - **Mob Highlighter:** outlines the mobs your rules match, in each rule's colour, where you can see
   them (within the mob scan range).
 - **NPC Search:** outlines the moving NPCs you search for while they are in view, and shows
-  "You found \<NPC>" the first time you see one in a run.
+  "You found \<NPC>" the first time you see Trinity, Tomioka, Duncan, Xalx or Pete in a run.
 - **NPC Waypoints:** a floating label with name and distance for NPCs that stand at a fixed spot.
 - **Mob and NPC Databases:** searchable, island-sorted lists; a click adds a rule or a waypoint to
   your settings.
@@ -96,8 +96,10 @@ is outlined until you add one.
   switch and the "Toggle NPC Search" keybind also turn off the NPC waypoints and the "You found"
   title.
 - **"You found" title** (category *NPC Search*, default **ON**): shows "You found \<NPC>" in the
-  rule's colour the first time you have a clear line of sight to a moving NPC your NPC Search rules
-  match (within the mob scan range), once per run. NPCs at a fixed spot get a waypoint instead.
+  rule's colour the first time you have a clear line of sight to Trinity, Tomioka or Duncan
+  (Catacombs), or Xalx or Pete (Crystal Hollows), through one of your NPC Search rules (within the
+  mob scan range), once per run. Other NPCs your rules match are outlined but get no title, and
+  NPCs at a fixed spot get a waypoint instead.
 
 > **[Screenshot placeholder: a moving NPC outlined by an NPC Search rule]**
 
@@ -182,7 +184,7 @@ is outlined until you add one.
 |---|---|---|
 | Mob Highlighter | Mob Highlighter | ON, with no rules |
 | NPC Search | NPC Search | ON, with no rules |
-| "You found" title | NPC Search | ON |
+| "You found" title | NPC Search | ON (Trinity, Tomioka, Duncan, Xalx, Pete) |
 | NPC waypoints | NPC Search | ON for each NPC you add |
 | Mob scan range | General | 64 blocks |
 | Check for updates (notify) | General | ON (STABLE, or BETA on a pre-release build) |
@@ -251,7 +253,8 @@ Minecraft 26.1.x is no longer supported. 1.0.1 was the last build for 26.1.
   - The outline is visible-only: mobs and NPCs are outlined only where you can see them, and blocks
     hide the outline.
   - Invisible mobs are never outlined, whatever your rules say.
-  - The "You found \<NPC>" title appears only after you have line of sight to the NPC, once per run.
+  - The "You found \<NPC>" title appears only for Trinity, Tomioka, Duncan, Xalx and Pete, and only
+    after you have line of sight to them, once per run.
   - The dungeon lobby is its own island, "Dungeon Hub", apart from "Catacombs" (inside runs). Your
     NPC Search rules for NPCs at a fixed spot on "Catacombs" (such as Croesus) move to
     "Dungeon Hub". Rules for moving NPCs (Trinity, Tomioka, Duncan) and mob rules stay on
@@ -270,7 +273,7 @@ never plays for you. It follows these rules:
    shows it; the mod does not recolour it.
 2. **Invisible entities are never highlighted or announced.** This is built in and has no setting.
 3. **Alerts about entities wait for line of sight.** The "You found" title appears only the first
-   time you have a clear line of sight to a moving NPC your rules match.
+   time you have a clear line of sight to one of the five NPCs it is for.
 4. **Only fixed coordinates show behind blocks.** NPC waypoint labels sit at fixed, known
    coordinates; they are the only thing drawn behind blocks, and distance is shown only to them.
 5. **Network packets are only read, never cancelled, delayed or changed.** The mod never sends chat
