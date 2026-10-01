@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  * `/ksu debug …`: test and capture helpers (REQ-XC-VERIFY-02).
@@ -45,6 +47,7 @@ public final class DebugCommand {
 			.thenComparing(PlayerScoreEntry::owner, String.CASE_INSENSITIVE_ORDER);
 	private static final int SIDEBAR_MAX_LINES = 15;
 	private static final double ENTITY_RADIUS = 8;
+	private static final AtomicBoolean LOGGED_TREE = new AtomicBoolean();
 
 	private DebugCommand() {
 	}
@@ -78,6 +81,13 @@ public final class DebugCommand {
 									.executes(context -> forceIsland(StringArgumentType.getString(context, "name")))));
 				}
 				dispatcher.register(ClientCommands.literal(root).then(debug));
+			}
+			// Once per launch, the registered tree, so a production log shows the override is absent (AC-LOC-09).
+			if (LOGGED_TREE.compareAndSet(false, true)) {
+				var debugNode = dispatcher.getRoot().getChild(ROOTS[0]).getChild("debug");
+				K8basSkyblockUtilityClient.LOGGER.info("/{} debug subcommands: {}; dump: {}", ROOTS[0],
+						debugNode.getChildren().stream().map(node -> node.getName()).sorted().collect(Collectors.joining(", ")),
+						debugNode.getChild("dump").getChildren().stream().map(node -> node.getName()).sorted().collect(Collectors.joining(", ")));
 			}
 		});
 	}
