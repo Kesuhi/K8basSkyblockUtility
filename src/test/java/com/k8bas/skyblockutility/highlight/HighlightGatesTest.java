@@ -14,6 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class HighlightGatesTest {
 	private static final double INF = Double.POSITIVE_INFINITY;
 
+	/** AC-GLOW-03 [A]: invisible entities are never eligible, also when they wear visible armour. */
+	@Test
+	void invisibleEntitiesAreNeverEligible() {
+		assertFalse(HighlightManager.eligible(true, false), "invisible");
+		assertFalse(HighlightManager.eligible(true, true), "invisible with visible armour");
+		assertTrue(HighlightManager.eligible(false, false), "visible");
+		assertTrue(HighlightManager.eligible(false, true), "visible with armour");
+	}
+
 	@Test
 	void islandGate() {
 		assertTrue(HighlightManager.islandAllows(null, "Hub"));

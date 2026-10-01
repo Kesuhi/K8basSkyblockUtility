@@ -344,7 +344,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Req: REQ-CFG-01, REQ-CFG-03, REQ-CFG-06, REQ-CFG-07, REQ-CFG-08, REQ-CFG-11
   - A broken file or section: byte-exact timestamped backup before any write, defaults for that part only, one chat notice after joining. Null or unknown values normalised, except that an absent `updateChannel` stays absent (no explicit choice; never filled with a default on load, repair or save, REQ-UPD-07); a newer `configVersion` is backed up with a WARN; one-time `.v0.bak` before the first data-changing step; unknown module sections kept.
   - Accept: AC-CFG-01, AC-CFG-05, AC-CFG-06, AC-CFG-07, AC-CFG-08, AC-CFG-10, AC-CFG-13; EC-CFG-01, -02, -07, -10.
-- [ ] **T1.8 fix(highlight)!: never highlight invisible entities** (S, deps T0.3). `HighlightManager.findMatch`: `isInvisible()` means no match and no `onMatch`, also with visible armour.
+- [x] **T1.8 fix(highlight)!: never highlight invisible entities** (S, deps T0.3). `HighlightManager.findMatch`: `isInvisible()` means no match and no `onMatch`, also with visible armour.
   - Req: REQ-GLOW-03, REQ-XC-RULES-04
   - Accept: AC-GLOW-03 [A] (eligibility unit test: invisible, invisible with armour, visible; the gametest is in T1.10). **Lands before T1.9** (AC-LOC-10), because the island fix enables Shadow Assassin and Fels rules.
 - [ ] **T1.8b fix(highlight): inert invalid rules, no player matches** (S, deps T1.8). `NameMatcher`/`CompiledRule`, `HighlightManager`.

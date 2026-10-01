@@ -144,6 +144,12 @@ public final class HighlightManager {
 		if (entity instanceof ArmorStand) {
 			return 0;
 		}
+		// Hypixel bans displaying invisible entities (REQ-GLOW-03, P2): never outline one and never
+		// report it to onMatch, whatever the rules say. Checked every frame, so glow starts as soon
+		// as the entity is visible again.
+		if (!eligible(entity.isInvisible(), false)) {
+			return 0;
+		}
 
 		List<CompiledRule> typeRules = byType.get(EntityType.getKey(entity.getType()));
 		if ((typeRules == null || typeRules.isEmpty()) && anyType.isEmpty()) {
@@ -198,6 +204,12 @@ public final class HighlightManager {
 			}
 		}
 		return 0;
+	}
+
+	/** Whether an entity may be outlined at all. Only the invisibility flag counts: an invisible mob
+	 *  stays ineligible even while its armour is drawn (wearsVisibleArmour is ignored on purpose). */
+	static boolean eligible(boolean invisible, boolean wearsVisibleArmour) {
+		return !invisible;
 	}
 
 	/** A rule restricted to an island applies only there; an unrestricted rule (null) applies everywhere. */
