@@ -6,7 +6,7 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
-## [1.1.0] - 2026-10-01
+## [1.1.0] - 2026-10-02
 
 This release ports the mod to Minecraft 26.2 and makes the outlines follow Hypixel's rules: only
 what you can see is outlined, and invisible mobs never are.
