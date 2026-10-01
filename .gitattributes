@@ -4,6 +4,10 @@
 # Linux start script should use lf
 /gradlew        text eol=lf
 
+# Shell scripts and git hooks run under bash, also on Windows (Git Bash): keep them lf
+*.sh            text eol=lf
+/.githooks/*    text eol=lf
+
 # These are Windows script files and should use crlf
 *.bat           text eol=crlf
 
