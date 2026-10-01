@@ -321,7 +321,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T1.5 test(gametest): client gametests on 26.2** (S, deps T1.2). The source set exists since T0.4c; this task makes it run on 26.2.
   - Req: REQ-XC-VERIFY-02
   - Accept: `runClientGameTest` passes on 26.2, including `DebugToolsGameTest`; tests can force the island through the T0.4 override. A template that changes because of 26.2 itself (not our renderer) is re-captured with a note in the Phase 1 report.
-- [ ] **T1.6 build: production-boot task** (S, deps T1.2). `prodClientStack` (`ClientProductionRunTask`) with the mod folder passed as `-Pk8bas.prodMods` and `-Dmixin.debug.export`, kept out of `check`.
+- [x] **T1.6 build: production-boot task** (S, deps T1.2). `prodClientStack` (`ClientProductionRunTask`) with the mod folder passed as `-Pk8bas.prodMods` and `-Dmixin.debug.export`, kept out of `check`.
   - Req: REQ-XC-VERIFY-02
   - Accept: boots with a copy of your mods; the stack's ERROR lines without our jar are recorded as the "no new ERROR" baseline; the CI build stays green.
 - [ ] **T1.3 fix(npcsearch): see-through labels after translucent terrain** (S, deps T1.5). Route labels through `submitCustom(SubmitRenderPhases.AFTER_TERRAIN, …)`, a 26.2-only Fabric API.

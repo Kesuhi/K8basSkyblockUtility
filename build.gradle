@@ -69,6 +69,26 @@ dependencies {
 	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 
+// Tier D: boots the production client with the built jar plus every *.jar of a mod folder (a copy
+// of a real 26.2 mod set), e.g.
+//   ./gradlew prodClientStack -Pk8bas.prodMods=build/prod-mods
+// -Pk8bas.prodBaseline=true boots the same stack without this mod, to record its own ERROR lines.
+// Opens a game window, so it is not part of check.
+tasks.register("prodClientStack", net.fabricmc.loom.task.prod.ClientProductionRunTask) {
+	def prodMods = providers.gradleProperty("k8bas.prodMods")
+	if (!providers.gradleProperty("k8bas.prodBaseline").map { it.toBoolean() }.getOrElse(false)) {
+		mods.from(tasks.named("jar"))
+	}
+	if (prodMods.isPresent()) {
+		mods.from(fileTree(prodMods.get()) {
+			include "*.jar"
+			exclude "k8bas_skyblock_utility-*"
+		})
+	}
+	jvmArgs.add("-Dmixin.debug.export=true")
+	runDir = layout.buildDirectory.dir("run/prodClientStack")
+}
+
 test {
 	useJUnitPlatform()
 	// Minecraft's log4j config writes logs/ into the working directory; keep it out of the repo root.
