@@ -21,7 +21,7 @@
 #   scripts/privacy-scan.sh --body <file>
 #                                        scan only a text file, such as a PR body or release notes
 #   scripts/privacy-scan.sh --self-test  check that seeded samples are blocked and allowed ones pass
-# Exit codes: 0 clean, 1 something found, 2 usage error.
+# Exit codes: 0 clean, 1 something found, 2 usage error, or a git or file error (nothing was scanned).
 set -euo pipefail
 # Byte-wise matching: GNU grep in a UTF-8 locale would drop lines with invalid UTF-8 from its output.
 export LC_ALL=C
@@ -40,14 +40,22 @@ usage() {
 }
 
 # Reads "path<TAB>line<TAB>text" records on stdin and prints one line per violation to stderr.
-# Line 0 means the text is the file name itself. Returns 1 if anything was found.
+# Line 0 means the text is the file name itself. Returns 1 if anything was found, 2 if the records
+# could not be stored or read (a full temp folder): then nothing was scanned.
 scan_records() {
-	local tmp found=0
-	tmp=$(mktemp)
-	cat > "$tmp"
+	local tmp found=0 failed=0
+	tmp=$(mktemp) || return 2
+	if ! cat > "$tmp"; then
+		rm -f "$tmp"
+		return 2
+	fi
 	check() {
-		local name=$1 re=$2 ok=$3 loc ln text m where
+		local name=$1 re=$2 ok=$3 loc ln text m where lines rc=0
+		# grep exits 1 for no match and 2 for an error, which must not read as "no match".
+		lines=$(grep -aE -- "$re" "$tmp") || rc=$?
+		if [[ $rc -gt 1 ]]; then failed=1; return; fi
 		while IFS=$'\t' read -r loc ln text; do
+			[[ -z $loc ]] && continue
 			if [[ $ln == 0 ]]; then where="the file name $loc"; else where="$loc:$ln"; fi
 			while IFS= read -r m; do
 				[[ -z $m ]] && continue
@@ -55,13 +63,17 @@ scan_records() {
 				echo "privacy-scan: $name at $where: $m" >&2
 				found=1
 			done < <(printf '%s\n' "$text" | grep -aoE -- "$re" || true)
-		done < <(grep -aE -- "$re" "$tmp" || true)
+		done <<< "$lines"
 	}
 	check "e-mail address" "$EMAIL_RE" "$EMAIL_OK"
 	check "local user path" "$PATH_RE" ""
 	check "UUID" "$UUID_RE" "$UUID_OK"
 	check "Hypixel server id" "$SERVER_RE" "$SERVER_OK"
 	rm -f "$tmp"
+	if [[ $failed -ne 0 ]]; then
+		echo "privacy-scan: cannot read the records in $tmp; nothing was scanned" >&2
+		return 2
+	fi
 	return "$found"
 }
 
@@ -130,7 +142,7 @@ range_records() {
 
 # A text file as records, one per line (CR stripped).
 file_records() {
-	local n=0 line cr=$'\r'
+	local n=0 line="" cr=$'\r'
 	while IFS= read -r line || [[ -n $line ]]; do
 		n=$((n + 1))
 		printf '%s\t%d\t%s\n' "$1" "$n" "${line%"$cr"}"
@@ -139,7 +151,7 @@ file_records() {
 
 # --range <base>..<head> and/or --body <file>, in any order.
 range_main() {
-	local range="" body="" base head count=0 rec
+	local range="" body="" base head count=0 rc=0
 	while [[ $# -gt 0 ]]; do
 		case $1 in
 			--range) [[ $# -ge 2 && -z $range ]] || usage; range=$2; shift 2 ;;
@@ -157,35 +169,40 @@ range_main() {
 			echo "privacy-scan: unknown revision in '$range'" >&2
 			exit 2
 		fi
-		count=$(git rev-list --count "$range")
+		if ! count=$(git rev-list --count "$range"); then
+			echo "privacy-scan: git failed while reading $range (see above); nothing was scanned" >&2
+			exit 2
+		fi
 		if [[ $count -eq 0 ]]; then
 			# A clean result for nothing would look like a green gate.
 			echo "privacy-scan: the range $range has no commits (is it reversed? the form is <base>..<head>)" >&2
 			exit 2
 		fi
 	fi
-	if [[ -n $body && ! -r $body ]]; then
-		echo "privacy-scan: cannot read $body" >&2
+	if [[ -n $body && ! ( -f $body && -r $body ) ]]; then
+		echo "privacy-scan: cannot read $body (not a readable file)" >&2
 		exit 2
 	fi
 	# The records go through a file, so that a failing producer is seen rather than masked by the pipe.
-	rec=$(mktemp)
-	if [[ -n $range ]] && ! range_records "$range" > "$rec"; then
-		rm -f "$rec"
+	# It may hold personal data, so it is removed on every exit.
+	REC=$(mktemp) || { echo "privacy-scan: cannot create a temp file; nothing was scanned" >&2; exit 2; }
+	trap 'rm -f "$REC"' EXIT
+	if [[ -n $range ]] && ! range_records "$range" > "$REC"; then
 		echo "privacy-scan: git failed while reading $range (see above); nothing was scanned" >&2
 		exit 2
 	fi
-	if [[ -n $body ]] && ! file_records "$body" >> "$rec"; then
-		rm -f "$rec"
+	if [[ -n $body ]] && ! file_records "$body" >> "$REC"; then
 		echo "privacy-scan: cannot read $body; nothing was scanned" >&2
 		exit 2
 	fi
-	if ! scan_records < "$rec"; then
-		rm -f "$rec"
+	scan_records < "$REC" || rc=$?
+	if [[ $rc -eq 2 ]]; then
+		echo "privacy-scan: the records could not be stored or read (see above); nothing was scanned" >&2
+		exit 2
+	elif [[ $rc -ne 0 ]]; then
 		echo "privacy-scan: personal data found in the lines above. Remove or sanitise it before opening the PR or publishing (RELEASING.md)." >&2
 		exit 1
 	fi
-	rm -f "$rec"
 	echo "privacy-scan: clean (${range:+$count commit(s) in $range}${range:+${body:+, }}${body:+$body})"
 }
 
@@ -342,6 +359,13 @@ repo_self_test() {
 		git rm -q --cached lost.txt
 		rm -f lost.txt ".git/objects/${lost:0:2}/${lost:2}"
 		expect 2 "git failure while reading the range" "git failed while reading" --range "$c9..$c10"
+		# A missing commit object in the middle of the range fails the commit count already.
+		git read-tree "$c9"
+		d1=$(commit "feat: d1" "$c9")
+		d2=$(commit "feat: d2" "$d1")
+		rm -f ".git/objects/${d1:0:2}/${d1:2}"
+		expect 2 "missing commit inside the range" "git failed while reading" --range "$c9..$d2"
+		expect 2 "body that is a directory" "not a readable file" --body caps
 
 		# The staged mode (the pre-commit hook), against HEAD = c5.
 		git update-ref refs/heads/main "$c5"
@@ -372,19 +396,21 @@ repo_self_test() {
 
 # The staged diff, as .githooks/pre-commit runs it.
 staged_main() {
-	local rec
-	rec=$(mktemp)
-	if ! staged_records > "$rec"; then
-		rm -f "$rec"
+	local rc=0
+	REC=$(mktemp) || { echo "privacy-scan: commit blocked: cannot create a temp file, so nothing was scanned." >&2; exit 2; }
+	trap 'rm -f "$REC"' EXIT
+	if ! staged_records > "$REC"; then
 		echo "privacy-scan: commit blocked: git failed while reading the staged diff (see above), so nothing was scanned." >&2
 		exit 2
 	fi
-	if ! scan_records < "$rec"; then
-		rm -f "$rec"
+	scan_records < "$REC" || rc=$?
+	if [[ $rc -eq 2 ]]; then
+		echo "privacy-scan: commit blocked: the staged diff could not be scanned." >&2
+		exit 2
+	elif [[ $rc -ne 0 ]]; then
 		echo "privacy-scan: commit blocked. Remove or sanitise the lines above (fixtures use m000XX and placeholder names)." >&2
 		exit 1
 	fi
-	rm -f "$rec"
 }
 
 main() {

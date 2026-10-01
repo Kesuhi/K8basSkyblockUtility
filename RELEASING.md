@@ -5,9 +5,10 @@ This is the maintainer procedure for a release (REQ-REL-16). Every release goes
 below, and published only when every check passes.
 
 The contract matters because the in-game update check reads part of it. The update check of v1.1.0
-looks only at the tag, the draft and pre-release flags, and the jar's name and upload state. A tag
-that is not SemVer, a wrong pre-release flag or a misnamed jar hides the release: nothing shows in
-game, and at most a line is logged. A wrong sidecar, digest, title or body does not hide it, but
+looks only at the tag, the draft and pre-release flags, the release page link, and the jar's name
+and upload state. A tag that is not SemVer, a misnamed jar, or a stable version flagged as a
+pre-release (on the STABLE channel) hides the release: nothing shows in game, and at most a line
+is logged. A wrong sidecar, digest, title or body does not hide it, but
 breaks the checksum check users do by hand and the one-click updater planned for 2.0.0, which
 would fall back to notify-only.
 
@@ -210,8 +211,8 @@ gh release create v1.1.0 --verify-tag --draft \
 bash scripts/release-check.sh v1.1.0
 ```
 
-The script runs five steps, prints `[ok]`, `[FAIL]` or `[skipped]` for each, and ends with one
-overall `release-check: PASS` or `FAIL` line:
+The script runs five steps. Its summary starts with one overall `release-check: PASS` or `FAIL`
+line, followed by `[ok]`, `[FAIL]` or `[skipped]` for each step:
 
 1. It lints the CHANGELOG and requires the `[1.1.0]` section.
 2. It extracts the expected notes.
