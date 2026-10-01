@@ -337,7 +337,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Req: REQ-CFG-04, REQ-CFG-05, REQ-CFG-10, REQ-CFG-12
   - One serialized save path: coalesced, on disk ≤ 2 s after a change, flushed on shutdown; temp file + atomic move with Windows lock retries. The store is reusable for other files (T1.4a state file, T3.0d profiles).
   - Accept: AC-CFG-03, AC-CFG-04, AC-CFG-09, AC-CFG-11; EC-CFG-03, -04, -06; `saveAsync` removed.
-- [ ] **T1.7c fix(config): `configVersion` + ordered migration runner** (S, deps T1.7). `SkyblockUtilityConfig`, new `config/migration/*`: numbered steps, run in order, reusable for other persisted files.
+- [x] **T1.7c fix(config): `configVersion` + ordered migration runner** (S, deps T1.7). `SkyblockUtilityConfig`, new `config/migration/*`: numbered steps, run in order, reusable for other persisted files.
   - Req: REQ-CFG-02, REQ-CFG-09, REQ-CFG-12
   - Accept: AC-CFG-02.
 - [ ] **T1.7b fix(config): safe load — backups, per-section recovery, clean-up** (M, deps T1.7, T1.7c).

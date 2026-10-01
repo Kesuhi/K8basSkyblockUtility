@@ -2,7 +2,12 @@ package com.k8bas.skyblockutility.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.k8bas.skyblockutility.config.migration.ConfigMigrations;
+import com.k8bas.skyblockutility.config.migration.Migrator;
 import com.k8bas.skyblockutility.config.store.AtomicFileStore;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
@@ -63,8 +68,25 @@ public final class ConfigManager {
 		}
 		if (Files.exists(path)) {
 			try (var reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-				SkyblockUtilityConfig loaded = GSON.fromJson(reader, SkyblockUtilityConfig.class);
-				root = loaded != null ? loaded : new SkyblockUtilityConfig();
+				JsonElement tree = JsonParser.parseReader(reader);
+				if (tree != null && tree.isJsonObject()) {
+					// Migrate the tree before binding it: Gson would give a missing configVersion the
+					// current default, hiding that the file is older.
+					JsonObject object = tree.getAsJsonObject();
+					Migrator.Result migration = ConfigMigrations.MIGRATOR.migrate(object);
+					if (migration.newerThanKnown()) {
+						LOGGER.warn("k8bas_skyblock_utility.json has configVersion {}, newer than this build knows ({})",
+								migration.fromVersion(), ConfigMigrations.MIGRATOR.currentVersion());
+					}
+					SkyblockUtilityConfig loaded = GSON.fromJson(object, SkyblockUtilityConfig.class);
+					root = loaded != null ? loaded : new SkyblockUtilityConfig();
+					if (migration.changed()) {
+						LOGGER.info("Migrated k8bas_skyblock_utility.json from version {} (steps {})", migration.fromVersion(), migration.ran());
+						save();
+					}
+				} else {
+					root = new SkyblockUtilityConfig();
+				}
 			} catch (IOException | JsonParseException e) {
 				LOGGER.warn("Failed to read k8bas_skyblock_utility.json, using defaults", e);
 				root = new SkyblockUtilityConfig();
