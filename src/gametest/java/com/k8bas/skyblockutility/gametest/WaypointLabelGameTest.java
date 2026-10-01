@@ -23,7 +23,8 @@ import java.util.Map;
 /**
  * AC-PORT-06 / REQ-PORT-07: a fixed waypoint label stays fully legible behind nothing, stone, glass
  * and water, at 5 and 30 blocks, and keeps its 10-block size beyond 10 blocks. Each label screenshot
- * is paired with the same view without the label; their difference is the label.
+ * is paired with the same view without the label; their difference is the label. R21: labels are
+ * white by default and take the rule's colour once "White waypoint labels" is off.
  */
 public class WaypointLabelGameTest implements FabricClientGameTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas-gametest");
@@ -82,6 +83,7 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			check(Math.abs(at30 - at10) <= 2, "height at 30 blocks (" + at30 + ") equals height at 10 blocks (" + at10 + ") +-2 px");
 
 			waypointsFollowTheIsland(context, singleplayer, server);
+			labelColourFollowsTheSetting(context, singleplayer, server);
 
 			context.runOnClient(client -> {
 				setHudHidden(client, false);
@@ -126,6 +128,48 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 		context.runOnClient(client -> IslandTracker.forceIsland("Hub"));
 	}
 
+	/** R21: a red rule's label is white by default and red with "White waypoint labels" off. */
+	private static void labelColourFollowsTheSetting(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
+		int red = 0xFF5555;
+		server.runCommand("fill -8 -60 1 8 -50 40 minecraft:air");
+		server.runCommand("tp @a 0.5 -60 0.5 0 0");
+		context.runOnClient(client -> NpcWaypointRenderer.setActiveWaypoints(List.of()));
+		singleplayer.getConnection().waitForChunksRender();
+		context.waitTicks(10);
+		Path none = context.takeScreenshot("r21-no-waypoint");
+		try {
+			context.runOnClient(client -> {
+				NpcRule rule = new NpcRule();
+				rule.label = "Colour Test";
+				rule.island = "Hub";
+				rule.fixed = true;
+				rule.color = red;
+				rule.x = 0.5;
+				rule.y = -60;
+				rule.z = 5.5;
+				NpcWaypointRenderer.setWhiteLabels(true);
+				NpcWaypointRenderer.setActiveWaypoints(List.of(rule));
+			});
+			context.waitTicks(5);
+			Path white = context.takeScreenshot("r21-white-labels");
+			context.runOnClient(client -> NpcWaypointRenderer.setWhiteLabels(false));
+			context.waitTicks(5);
+			Path ruleColour = context.takeScreenshot("r21-rule-colour");
+			Label whiteAsWhite = Label.of(white, none, TEXT_COLOR);
+			Label whiteAsRed = Label.of(white, none, red);
+			Label ruleAsWhite = Label.of(ruleColour, none, TEXT_COLOR);
+			Label ruleAsRed = Label.of(ruleColour, none, red);
+			LOGGER.info("label colour: default white {} / red {}, setting off white {} / red {}", whiteAsWhite, whiteAsRed, ruleAsWhite, ruleAsRed);
+			check(whiteAsWhite.textPixels > 50 && whiteAsRed.textPixels == 0, "labels are white by default (R21)");
+			check(ruleAsRed.textPixels > 50 && ruleAsWhite.textPixels == 0, "with the setting off, labels take the rule's colour");
+		} finally {
+			context.runOnClient(client -> {
+				NpcWaypointRenderer.setWhiteLabels(true);
+				NpcWaypointRenderer.setActiveWaypoints(List.of());
+			});
+		}
+	}
+
 	private static Label measure(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server,
 			int distance, String obstacle, String name) {
 		// In front of the label, also of a label beyond 10 blocks, which is drawn pulled in to 10 blocks.
@@ -164,14 +208,18 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 	 *  not without it: their bounding box and count. Animated water and the sky do not affect it. */
 	private record Label(int width, int height, int textPixels) {
 		static Label of(Path with, Path without) {
+			return of(with, without, TEXT_COLOR);
+		}
+
+		static Label of(Path with, Path without, int textColor) {
 			try {
 				BufferedImage a = ImageIO.read(with.toFile());
 				BufferedImage b = ImageIO.read(without.toFile());
 				int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = -1, maxY = -1, text = 0;
 				for (int y = 0; y < a.getHeight(); y++) {
 					for (int x = 0; x < a.getWidth(); x++) {
-						boolean textWith = (a.getRGB(x, y) & 0xFFFFFF) == TEXT_COLOR;
-						boolean textWithout = (b.getRGB(x, y) & 0xFFFFFF) == TEXT_COLOR;
+						boolean textWith = (a.getRGB(x, y) & 0xFFFFFF) == textColor;
+						boolean textWithout = (b.getRGB(x, y) & 0xFFFFFF) == textColor;
 						if (textWith && !textWithout) {
 							minX = Math.min(minX, x);
 							minY = Math.min(minY, y);

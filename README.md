@@ -115,6 +115,8 @@ is outlined until you add one.
   a floating label with its name and distance at its fixed coordinates. The label is also visible
   behind blocks, glass and water. It shows while you are on the NPC's island, or on every island if
   the rule has none.
+- **White waypoint labels** (category *NPC Search*, default **ON**): labels and their distance line
+  are white. Switch it off to draw each label in its NPC's colour.
 - **Dungeon Hub:** the dungeon lobby is its own island, "Dungeon Hub", apart from "Catacombs"
   (inside runs), so lobby waypoints never show inside a run.
 
@@ -186,6 +188,7 @@ is outlined until you add one.
 | NPC Search | NPC Search | ON, with no rules |
 | "You found" title | NPC Search | ON (Trinity, Tomioka, Duncan, Xalx, Pete) |
 | NPC waypoints | NPC Search | ON for each NPC you add |
+| White waypoint labels | NPC Search | ON |
 | Mob scan range | General | 64 blocks |
 | Check for updates (notify) | General | ON (STABLE, or BETA on a pre-release build) |
 | Keybinds | General | unbound |

@@ -172,13 +172,15 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		return count;
 	}
 
-	/** Baseline for T1.1: the 1.0.1 label in the open and behind an opaque wall. */
+	/** Baseline for T1.1: the 1.0.1 label in the open and behind an opaque wall. The 1.0.1 label had
+	 *  the rule's colour, which is the look with "White waypoint labels" off (R21). */
 	private static void waypointBaselineScreenshots(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
 		server.runCommand("time set noon");
 		server.runCommand("weather clear");
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
 		context.runOnClient(client -> {
 			setHudHidden(client, true);
+			NpcWaypointRenderer.setWhiteLabels(false);
 			NpcRule rule = new NpcRule();
 			rule.label = "Baseline NPC";
 			rule.island = "Hub";
@@ -210,6 +212,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		runClientCommand(context, "ksu debug island clear");
 		context.runOnClient(client -> {
 			setHudHidden(client, false);
+			NpcWaypointRenderer.setWhiteLabels(true);
 			NpcWaypointRenderer.setActiveWaypoints(List.of());
 		});
 	}

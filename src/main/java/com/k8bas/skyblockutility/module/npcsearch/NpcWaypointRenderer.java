@@ -34,8 +34,19 @@ public final class NpcWaypointRenderer {
 	private static final int BACKGROUND_COLOR = 0x70202020;
 
 	private static volatile List<NpcRule> activeWaypoints = List.of();
+	private static volatile boolean whiteLabels = true;
 
 	private NpcWaypointRenderer() {
+	}
+
+	/** The "White waypoint labels" setting (R21); set by NpcSearchModule. */
+	public static void setWhiteLabels(boolean white) {
+		whiteLabels = white;
+	}
+
+	/** The colour of a label and its distance line: white, or the rule's colour drawn opaque. */
+	static int labelColor(int ruleColor, boolean white) {
+		return white ? 0xFFFFFFFF : ARGB.opaque(ruleColor);
 	}
 
 	/** Called by NpcSearchModule whenever its rule set changes — every fixed NpcRule, not
@@ -103,7 +114,7 @@ public final class NpcWaypointRenderer {
 		matrices.mulPose(camera.orientation);
 		matrices.scale(0.025F, -0.025F, 1F);
 
-		int textColor = ARGB.opaque(waypoint.color);
+		int textColor = labelColor(waypoint.color, whiteLabels);
 		submitLabelLine(matrices, submits, Component.literal(waypoint.label), 0, textColor);
 		submitLabelLine(matrices, submits, Component.literal(Math.round(distance) + "m"), 1, textColor);
 

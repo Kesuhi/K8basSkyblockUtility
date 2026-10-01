@@ -42,6 +42,7 @@ longer supported; 1.0.1 was the last build for it.
   sight, once per run.
 - NPC waypoints: ON for each NPC you add (its own Enabled switch); labels show at their fixed
   coordinates, also behind blocks.
+- White waypoint labels: ON (off draws each label in its NPC's colour).
 - Mob scan range: 64 blocks (0 = unlimited, slider 0–128).
 - Check for updates (notify): ON. Channel: STABLE, or BETA when you run a pre-release build.
 - Keybinds (open settings, toggle Mob Highlighter, toggle NPC Search): unbound.
@@ -49,6 +50,7 @@ longer supported; 1.0.1 was the last build for it.
 ### Added
 
 - NPC Search option **"You found" title** (default ON).
+- NPC Search option **White waypoint labels** (default ON).
 - Debug commands that write what the game already shows into the log, tagged `[K8BAS-DUMP]`, for
   bug reports: `/ksu debug dump tab`, `/ksu debug dump sidebar`, `/ksu debug dump entities` and
   `/ksu debug dump containers on|off` (container dumps switch themselves off after 60 minutes).
@@ -124,6 +126,8 @@ longer supported; 1.0.1 was the last build for it.
 Also changed:
 - Ported to Minecraft 26.2. Waypoint labels use the new renderer. They stay readable behind
   blocks, glass and water, and keep their 10-block size further away.
+- NPC waypoint labels and their distance line are white by default. To get each NPC's colour back,
+  switch off "White waypoint labels" in NPC Search.
 - The update check asks GitHub (`api.github.com`) instead of Modrinth, at most 4 times a day;
   after a successful check, not again for 6 hours (after a failed one it can retry sooner, with
   back-off when GitHub is busy). Its state is kept in

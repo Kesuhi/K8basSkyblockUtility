@@ -153,6 +153,7 @@ public final class NpcSearchModule implements Module {
 			}
 		}
 		highlightManager.rebuild(searchRules);
+		NpcWaypointRenderer.setWhiteLabels(config.whiteWaypointLabels);
 		NpcWaypointRenderer.setActiveWaypoints(config.enabled ? waypointRules : List.of());
 	}
 
@@ -178,6 +179,14 @@ public final class NpcSearchModule implements Module {
 				.setDefaultValue(true)
 				.setTooltip(Component.literal("Shows \"You found <NPC>\" for Trinity, Tomioka, Duncan, Xalx and Pete the first time you have a clear line of sight to them, once per run."))
 				.setSaveConsumer(value -> config.foundTitleEnabled = value)
+				.build());
+		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("White waypoint labels"), config.whiteWaypointLabels)
+				.setDefaultValue(true)
+				.setTooltip(Component.literal("Waypoint labels and their distance are white. Off: each NPC's own colour."))
+				.setSaveConsumer(value -> {
+					config.whiteWaypointLabels = value;
+					NpcWaypointRenderer.setWhiteLabels(value);
+				})
 				.build());
 
 		category.addEntry(new ButtonEntry(Component.literal("NPC Database"), Component.literal("Open"), () -> {
