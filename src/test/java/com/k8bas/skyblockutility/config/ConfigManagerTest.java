@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Characterization of 1.0.1 config loading; the baseline the migrations of AC-CFG-01 build on. */
@@ -40,7 +41,8 @@ class ConfigManagerTest {
 		ConfigManager.load(fixture());
 
 		assertTrue(ConfigManager.general().autoUpdateCheckEnabled);
-		assertTrue(ConfigManager.general().autoUpdateDownloadEnabled);
+		// Migration step 2 (T1.4): no channel until the user picks one.
+		assertNull(ConfigManager.general().updateChannel);
 		assertEquals(128, ConfigManager.general().mobScanRangeBlocks);
 		assertEquals(5, mobs().rules.size());
 		assertEquals(5, npcs().rules.size());

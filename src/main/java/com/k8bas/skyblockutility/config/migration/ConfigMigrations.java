@@ -8,7 +8,7 @@ import java.util.List;
  */
 public final class ConfigMigrations {
 	public static final String VERSION_FIELD = "configVersion";
-	public static final Migrator MIGRATOR = new Migrator(VERSION_FIELD, List.of(new DungeonHubSplit()));
+	public static final Migrator MIGRATOR = new Migrator(VERSION_FIELD, List.of(new DungeonHubSplit(), new DropAutoDownload()));
 
 	private ConfigMigrations() {
 	}

@@ -55,6 +55,12 @@ class FabricModJsonTest {
 		assertFalse(accepts("render-chest", "1.0.2+26.2"));
 	}
 
+	/** REQ-UPD-20 (T1.4): Mod Menu must not look this mod up on Modrinth; GitHub is the only source. */
+	@Test
+	void modMenuDoesNotCheckModrinthForThisMod() throws Exception {
+		assertFalse(modJson().getAsJsonObject("custom").getAsJsonObject("modmenu").get("update_checker").getAsBoolean());
+	}
+
 	/** AC-GLOW-05 [R] (T1.10): no mixin forces glowing or visibility; the glow goes through Render Chest. */
 	@Test
 	void theModShipsNoMixins() throws Exception {

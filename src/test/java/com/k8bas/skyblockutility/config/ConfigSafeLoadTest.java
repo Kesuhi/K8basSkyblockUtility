@@ -89,6 +89,8 @@ class ConfigSafeLoadTest {
 		// The documented migrated value: step 1 moves the fixed Croesus rule to the Dungeon Hub.
 		expected.getAsJsonObject("modules").getAsJsonObject("npc_search").getAsJsonArray("rules").get(3)
 				.getAsJsonObject().addProperty("island", "Dungeon Hub");
+		// Step 2 drops the automatic-download flag; the check flag keeps its value.
+		expected.getAsJsonObject("general").remove("autoUpdateDownloadEnabled");
 		JsonObject saved = json(file);
 		assertEquals(expected.get("general"), saved.get("general"));
 		assertEquals(expected.get("modules"), saved.get("modules"));

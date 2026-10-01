@@ -48,7 +48,7 @@ class DungeonHubSplitTest {
 		JsonObject root = JsonParser.parseString(VERSION_0).getAsJsonObject();
 		Migrator.Result result = ConfigMigrations.MIGRATOR.migrate(root);
 
-		assertEquals(List.of(1), result.ran());
+		assertEquals(1, result.ran().getFirst());
 		assertEquals("Dungeon Hub", island(root, "npc_search", 0), "fixed Croesus");
 		for (int moving = 1; moving <= 3; moving++) {
 			assertEquals("Catacombs", island(root, "npc_search", moving), "moving NPCs stay in runs");

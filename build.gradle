@@ -119,6 +119,14 @@ test {
 	def testRunDir = layout.buildDirectory.dir("test-run").get().asFile
 	workingDir = testRunDir
 	doFirst { testRunDir.mkdirs() }
+	// For tests that read the source tree (RuntimeVersionsTest).
+	systemProperty "k8bas.projectDir", projectDir.absolutePath
+}
+
+// Gametests never contact GitHub: the update check goes to a closed local port (one WARN line).
+// The update-notice gametest points the updater at its own local test server.
+tasks.matching { it.name == "runClientGameTest" }.configureEach {
+	jvmArgs "-Dk8bas.update.source=http://127.0.0.1:1/updates-disabled-in-gametests"
 }
 
 processResources {

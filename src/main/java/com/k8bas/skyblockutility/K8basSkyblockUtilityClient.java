@@ -11,7 +11,7 @@ import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
-import com.k8bas.skyblockutility.update.UpdateChecker;
+import com.k8bas.skyblockutility.update.Updates;
 import com.k8bas.skyblockutility.util.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -55,7 +55,7 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		SettingsCommand.register();
 		DebugCommand.register();
 		ContainerDump.register();
-		UpdateChecker.checkInBackgroundIfEnabled();
+		Updates.register();
 
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
 	}

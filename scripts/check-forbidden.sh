@@ -8,6 +8,7 @@
 #   4. wiki, Fandom, hypixel.net and Reddit hosts in code that could fetch them (REQ-XC-LICENSE-05).
 #      api.hypixel.net is the official API and is allowed. Bundled data `sources` records and test
 #      fixtures are not code; the data validator checks those.
+#   5. Modrinth hosts anywhere in src/main: the updater's only source is GitHub (REQ-UPD-03).
 #
 # Usage: scripts/check-forbidden.sh [<root>]     check a source tree (default: the current directory)
 #        scripts/check-forbidden.sh --self-test   check that seeded violations fail and allowed cases pass
@@ -47,6 +48,12 @@ check_tree() {
 		while IFS= read -r line; do hit "scraping-host reference in code: $line"; done \
 			< <(grep -rnoE '([A-Za-z0-9-]+\.)*(fandom\.com|minecraft\.wiki|hypixel\.net|reddit\.com|redd\.it)' "${code[@]}" \
 				| grep -vE ':api\.hypixel\.net$')
+	fi
+
+	# 5. Modrinth hosts in the shipped sources.
+	if [[ -d $root/src/main ]]; then
+		while IFS= read -r line; do hit "Modrinth host in src/main: $line"; done \
+			< <(grep -rnoiE '([A-Za-z0-9-]+\.)*modrinth\.com' "$root/src/main" 2>/dev/null)
 	fi
 	return "$found"
 }
@@ -103,8 +110,16 @@ EOF
 	expect wiki-code fail
 	expect forum-code fail
 	expect api-code pass
+	mk "$tmp/modrinth-code/src/main/java/a/Update.java" <<'EOF'
+String u = "https://api.modrinth.com/v2/project/x/version";
+EOF
+	mk "$tmp/modrinth-name/src/main/resources/fabric.mod.json" <<'EOF'
+{ "description": "Also on Modrinth." }
+EOF
 	expect data-source pass
-	[[ $fails -eq 0 ]] && echo "check-forbidden self-test: 9 cases as expected"
+	expect modrinth-code fail
+	expect modrinth-name pass
+	[[ $fails -eq 0 ]] && echo "check-forbidden self-test: 11 cases as expected"
 	return "$fails"
 }
 
