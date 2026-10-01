@@ -29,11 +29,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * AC-REL-09 [A] (T1.17): a synthetic draft fixture passes the pre-publish checks, and each way a
- * draft breaks the release contract (REQ-REL-07, REQ-REL-11) fails with its own problem. The fixture
- * is hand-written in the shape of GitHub's release object, with placeholder ids; it is not recorded
- * from a real draft. A recorded one is saved during the AC-REL-14 dry run (RELEASING.md). The jar and
- * the sidecar are built here, so the test does not depend on the real build; the fixture's digests
- * and sizes are filled in from them.
+ * draft breaks the release contract (REQ-REL-07, REQ-REL-11) fails with its own problem. The main
+ * fixture is hand-written in the shape of GitHub's release object, with placeholder ids. The draft
+ * recorded in the AC-REL-14 dry run passes too ({@link #theRecordedDryRunDraftPasses}). The jars and
+ * sidecars are built here, so the test does not depend on the real build; the fixtures' digests and
+ * sizes are filled in from them.
  */
 class ReleaseDraftCheckTest {
 	private static final String VERSION = "1.1.0";
@@ -70,6 +70,29 @@ class ReleaseDraftCheckTest {
 	@Test
 	void theSyntheticDraftPasses() throws IOException {
 		assertEquals(List.of(), check(draft(jar, sidecar)));
+	}
+
+	/**
+	 * AC-REL-09 [A] on the draft recorded in the AC-REL-14 dry run (2026-10-01, N = 1): GitHub's own
+	 * release object for a pre-release draft, sanitised (placeholder ids and account). Its digests
+	 * were real; they are replaced with those of a jar built here.
+	 */
+	@Test
+	void theRecordedDryRunDraftPasses() throws IOException {
+		String version = "0.0.0-dryrun.1";
+		String name = "k8bas_skyblock_utility-" + version + "+" + MC + ".jar";
+		JsonObject recorded = fixture("/fixtures/release-draft-recorded.json");
+		for (JsonElement element : recorded.getAsJsonArray("assets")) {
+			JsonObject asset = element.getAsJsonObject();
+			assertEquals("uploaded", asset.get("state").getAsString());
+			assertTrue(asset.get("digest").getAsString().matches("sha256:[0-9a-f]{64}"), "GitHub sets the digest on draft assets");
+			assertTrue(asset.get("browser_download_url").getAsString().contains("%2B"), "the download URL encodes '+'");
+		}
+		Path dryJar = jar(name, modJson("k8bas_skyblock_utility", version + "+" + MC, "~" + MC));
+		Path drySidecar = sidecar(name + ".sha256", sha256(dryJar) + "  " + name + "\n");
+		JsonObject draft = withLocalDigests(recorded, dryJar, drySidecar);
+		assertEquals(List.of(), ReleaseDraftCheck.check(draft.toString(), dryJar, drySidecar,
+				"Dry run of RELEASING.md. This draft is deleted again.\n", version, MC));
 	}
 
 	@Test
@@ -453,10 +476,17 @@ class ReleaseDraftCheckTest {
 
 	/** The synthetic fixture, with the digests and sizes of the given local files. */
 	private static JsonObject draft(Path jar, Path sidecar) throws IOException {
-		JsonObject draft;
-		try (InputStream in = ReleaseDraftCheckTest.class.getResourceAsStream("/fixtures/release-draft-v1.1.0.json")) {
-			draft = JsonParser.parseString(new String(in.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
+		return withLocalDigests(fixture("/fixtures/release-draft-v1.1.0.json"), jar, sidecar);
+	}
+
+	private static JsonObject fixture(String resource) throws IOException {
+		try (InputStream in = ReleaseDraftCheckTest.class.getResourceAsStream(resource)) {
+			return JsonParser.parseString(new String(in.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
 		}
+	}
+
+	/** The draft, with the digests and sizes of the given local files. */
+	private static JsonObject withLocalDigests(JsonObject draft, Path jar, Path sidecar) throws IOException {
 		for (JsonElement element : draft.getAsJsonArray("assets")) {
 			JsonObject asset = element.getAsJsonObject();
 			Path local = asset.get("name").getAsString().endsWith(".sha256") ? sidecar : jar;

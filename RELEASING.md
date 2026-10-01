@@ -402,7 +402,8 @@ OK to open the PR, use that same file with `gh pr create --body-file build/pr-bo
 
 ## Dry run of this procedure (AC-REL-14)
 
-**Status: not run yet.** It is pending the maintainer's OK.
+**Status: run on 2026-10-01 with `N = 1`, PASS** (record at the end of this section). The next dry
+run uses `N = 2`.
 
 **Needs the maintainer's OK each time.** Creating the throwaway draft and deleting it are writes to
 the public repository, so each one needs its own OK.
@@ -476,12 +477,30 @@ Record the following:
   `digest`, and what `html_url` looks like. If a draft asset's `digest` is null, stop: the digest
   check of `ReleaseDraftCheck` has to be revisited before the next release.
 
-Then turn the saved draft JSON into the **recorded fixture** that AC-REL-09 asks for. Until then, the
-fixture in `ReleaseDraftCheckTest` is synthetic (hand-written in the shape of GitHub's release
-object):
+Then turn the saved draft JSON into the **recorded fixture** that AC-REL-09 asks for:
 
 1. Sanitise it: replace the release and asset ids and `node_id`s with placeholders, and replace the
    `author` and `uploader` blocks with a placeholder account.
 2. Run `bash scripts/privacy-scan.sh --body <file>` on it, and read it for names by hand.
 3. Commit it as `src/test/resources/fixtures/release-draft-recorded.json`, with a test that runs it
    through the same checks against a jar built in the test for version `0.0.0-dryrun.N`.
+
+### Record: 2026-10-01, `N = 1`
+
+- The run used a separate clean worktree at `b2e4595` on `update/26.2`. The draft targeted
+  `origin/main` (`bc0f2f6`).
+- Steps 1–2: the throwaway jar `k8bas_skyblock_utility-0.0.0-dryrun.1+26.2.jar` and its sidecar
+  were built, and the notes were extracted (one line). The tree stayed clean.
+- Step 3: `gh release create` made the draft, with `html_url` in the form
+  `…/releases/tag/untagged-<hash>`.
+- Step 4: `release-check.sh v0.0.0-dryrun.1 --commit HEAD --changelog build/dryrun/CHANGELOG.md`
+  printed `release-check: PASS for v0.0.0-dryrun.1`, and all five steps were `[ok]` (lint, extract,
+  checkout, fetch with `gh api`, `releaseDraftCheck`).
+- Draft JSON: both assets had `state: uploaded` and a non-null `digest` (`sha256:<hex>`), equal to
+  the local SHA-256. Each `browser_download_url` encodes the `+` as `%2B`.
+- Step 5: `gh release delete` removed the draft. `git ls-remote --tags origin
+  "refs/tags/v0.0.0-dryrun*"` printed nothing, and the release list showed only v1.0.1 and v1.0.0.
+- Step 6: the worktree, with its throwaway build, was removed.
+- Skipped by design: the tag push, `--verify-tag`, the tier D boot and publishing.
+- The sanitised draft is the recorded fixture `src/test/resources/fixtures/release-draft-recorded.json`.
+  `ReleaseDraftCheckTest.theRecordedDryRunDraftPasses` checks it.
