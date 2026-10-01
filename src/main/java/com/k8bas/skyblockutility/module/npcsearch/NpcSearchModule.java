@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.highlight.HighlightManager;
 import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
+import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
 import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
@@ -19,11 +20,14 @@ import me.shedaniel.clothconfig2.gui.entries.EmptyEntry;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.gui.widget.SearchFieldEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,10 +52,9 @@ public final class NpcSearchModule implements Module {
 	public static final String ID = "npc_search";
 
 	private final HighlightManager highlightManager = new HighlightManager();
-	/** Rule ids that have already shown their "You found X" popup this session — the popup fires
-	 *  once per rule, ever (until the game restarts), not once per sighting; getOutlineColor is
-	 *  called every single frame the NPC is on screen, so without this it would refire constantly. */
-	private final Set<String> alreadyFoundThisSession = new HashSet<>();
+	private final FoundTitleGate foundTitles = new FoundTitleGate();
+	/** A title allowed while a screen was open; shown once the screen closes (EC-GLOW-08). */
+	private Component pendingTitle;
 	private NpcSearchConfig config;
 	/** See MobHighlighterModule.workingRules — same reasoning: Add/Delete mutate this, not
 	 *  config.rules, so Cancel/Escape actually discards them instead of them having already
@@ -72,7 +75,13 @@ public final class NpcSearchModule implements Module {
 	public void onRegister() {
 		config = ConfigManager.getModuleSection(ID, NpcSearchConfig.class, NpcSearchConfig::new);
 		highlightManager.setEnabled(config.enabled);
-		highlightManager.setOnMatchListener(this::onNpcFound);
+		highlightManager.setOnMatchListener(this::onNpcMatched);
+		// Every location change is a new server or mode, so each run shows the titles again.
+		IslandTracker.onChange(snapshot -> {
+			foundTitles.reset();
+			pendingTitle = null;
+		});
+		ClientTickEvents.END_CLIENT_TICK.register(this::showPendingTitle);
 		rebuildDerived();
 		// Fetched at startup rather than lazily on first picker-open, so opening the picker for
 		// the first time doesn't show the "still loading" message / a moment of an empty list.
@@ -81,20 +90,36 @@ public final class NpcSearchModule implements Module {
 		ModKeybinds.register(this);
 	}
 
-	/** Called (on the render thread, from HighlightManager) whenever an unfixed NPC's rule
-	 *  matches a nearby entity. Shows a short vanilla title-card in the rule's own color, the
-	 *  same on-screen mechanism as e.g. "Ironman" mode splash text — cheap, and already visible
-	 *  even if the player isn't looking at chat. Fires once per rule per session: Set#add
-	 *  returns false if the id was already present, which doubles as the "already shown" check. */
-	private void onNpcFound(HighlightRule rule) {
-		if (!alreadyFoundThisSession.add(rule.id)) {
-			return;
+	/** Called on the client tick, from HighlightManager, whenever an unfixed NPC's rule matches a
+	 *  nearby entity. The first time the player can see the NPC on this server, a short vanilla
+	 *  title in the rule's own colour says so (FoundTitleGate). */
+	private void onNpcMatched(HighlightRule rule, Entity entity) {
+		LocalPlayer player = Minecraft.getInstance().player;
+		if (player != null && foundTitles.allow(rule.id, config.foundTitleEnabled, entity.isInvisible(),
+				() -> player.hasLineOfSight(entity))) {
+			pendingTitle = Component.literal("You found " + rule.label)
+					.withStyle(Style.EMPTY.withColor(TextColor.fromRgb(rule.color)));
 		}
+	}
 
-		Minecraft client = Minecraft.getInstance();
-		client.gui.hud.resetTitleTimes();
-		client.gui.hud.setTitle(Component.literal("You found " + rule.label)
-				.withStyle(Style.EMPTY.withColor(TextColor.fromRgb(rule.color))));
+	/** Shows an allowed title once no screen is open, so it is not used up behind a menu. */
+	private void showPendingTitle(Minecraft client) {
+		if (pendingTitle != null && client.gui.screen() == null) {
+			client.gui.hud.resetTitleTimes();
+			client.gui.hud.setTitle(pendingTitle);
+			pendingTitle = null;
+		}
+	}
+
+	/** For gametests: replaces the rules without saving them. */
+	void useRulesForTest(List<NpcRule> rules) {
+		config.rules = new ArrayList<>(rules);
+		rebuildDerived();
+	}
+
+	/** For gametests: the module's rules. */
+	List<NpcRule> rulesForTest() {
+		return List.copyOf(config.rules);
 	}
 
 	@Override
@@ -145,6 +170,11 @@ public final class NpcSearchModule implements Module {
 	public void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
 				.setSaveConsumer(this::setEnabled)
+				.build());
+		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("\"You found\" title"), config.foundTitleEnabled)
+				.setDefaultValue(true)
+				.setTooltip(Component.literal("Shows \"You found <NPC>\" the first time a searched NPC comes into view, once per run."))
+				.setSaveConsumer(value -> config.foundTitleEnabled = value)
 				.build());
 
 		category.addEntry(new ButtonEntry(Component.literal("NPC Database"), Component.literal("Open"), () -> {

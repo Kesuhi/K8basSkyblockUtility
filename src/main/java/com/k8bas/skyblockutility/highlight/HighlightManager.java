@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -74,11 +74,11 @@ public final class HighlightManager {
 	private volatile Map<Identifier, List<CompiledRule>> byType = new HashMap<>();
 	private volatile List<CompiledRule> anyType = new ArrayList<>();
 	private volatile Map<String, String> inertRules = Map.of();
-	/** Optional — fires when a rule owned by this instance matches an entity, once per tick while it
-	 *  matches. NPC Search uses this for its "You found X" popup; Mob Highlighter leaves it unset.
-	 *  Not deduplicated here — that's the listener's job, since only it knows what "a new sighting"
-	 *  should mean for its use case. */
-	private volatile Consumer<HighlightRule> onMatch;
+	/** Optional — fires on the client thread when a rule owned by this instance matches an entity,
+	 *  once per tick while it matches. NPC Search uses this for its "You found X" title; Mob
+	 *  Highlighter leaves it unset. Not deduplicated here — that's the listener's job, since only it
+	 *  knows what "a new sighting" should mean for its use case. */
+	private volatile BiConsumer<HighlightRule, Entity> onMatch;
 
 	public HighlightManager() {
 		HighlightManager[] current = ACTIVE;
@@ -91,7 +91,7 @@ public final class HighlightManager {
 		enabled = value;
 	}
 
-	public void setOnMatchListener(Consumer<HighlightRule> listener) {
+	public void setOnMatchListener(BiConsumer<HighlightRule, Entity> listener) {
 		onMatch = listener;
 	}
 
@@ -275,9 +275,9 @@ public final class HighlightManager {
 		if (match == null) {
 			return 0;
 		}
-		Consumer<HighlightRule> listener = onMatch;
+		BiConsumer<HighlightRule, Entity> listener = onMatch;
 		if (listener != null) {
-			listener.accept(match.rule);
+			listener.accept(match.rule, entity);
 		}
 		return ARGB.opaque(match.rule.color);
 	}

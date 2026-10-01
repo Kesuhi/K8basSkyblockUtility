@@ -8,6 +8,8 @@ import java.util.Objects;
 
 public class NpcSearchConfig implements Normalizable {
 	public boolean enabled = true;
+	/** The "You found <label>" title (REQ-GLOW-14); default ON (D-6). */
+	public boolean foundTitleEnabled = true;
 	public List<NpcRule> rules = new ArrayList<>();
 
 	@Override

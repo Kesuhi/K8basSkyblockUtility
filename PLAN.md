@@ -369,7 +369,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - `build.gradle`: `maven { url = 'https://maven.azureaaron.net/releases'; content { includeGroup 'net.azureaaron' } }`, `include(implementation("net.azureaaron:render-chest:1.0.3+26.2"))` (D-1).
   - New `GlowHandler` (AD-1) on the T1.10a cache; delete both mixins, `k8bas_skyblock_utility.mixins.json` and its `fabric.mod.json` entry; start `THIRD_PARTY_NOTICES.md` with Render Chest (Apache-2.0, LICENSE in the nested jar).
   - Accept (gametest): AC-GLOW-02, AC-GLOW-03 [C], AC-GLOW-04, AC-GLOW-10 [C], AC-GLOW-17, AC-XC-02; review AC-GLOW-05 [R], AC-GLOW-16. Tier D: AC-GLOW-06 [D], no crash next to Skyblocker/SkyHanni, callback order recorded.
-- [ ] **T1.11 fix(npcsearch): "You found X" only after line of sight, once per run** (S, deps T1.9, T1.10). Gated on `player.hasLineOfSight(entity)` within the scan range on the client tick; once per rule per server, reset on each location change event; own toggle, default ON (D-6).
+- [x] **T1.11 fix(npcsearch): "You found X" only after line of sight, once per run** (S, deps T1.9, T1.10). Gated on `player.hasLineOfSight(entity)` within the scan range on the client tick; once per rule per server, reset on each location change event; own toggle, default ON (D-6).
   - Req: REQ-GLOW-14, REQ-XC-RULES-05, REQ-XC-TOGGLE-01, REQ-XC-TOGGLE-02
   - Accept: AC-GLOW-13 (gate unit tests; gametest: no title behind a wall, one title in view); EC-GLOW-06, -07, -08.
 - [ ] **T1.12 fix(net): HTTP timeouts + DB entry validation** (S). 10 s connect and request timeouts for the gist fetch; malformed entries skipped. Kept because v1.1.0 still reads the gists (R16); T3.8 removes the fetch.

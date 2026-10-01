@@ -57,7 +57,7 @@ public class GlowGameTest implements FabricClientGameTest {
 
 			HighlightManager manager = new HighlightManager();
 			AtomicInteger matches = new AtomicInteger();
-			manager.setOnMatchListener(rule -> matches.incrementAndGet());
+			manager.setOnMatchListener((rule, entity) -> matches.incrementAndGet());
 			try {
 				useRule(context, manager, "Glow Target", MAGENTA);
 				inViewAndBehindAWall(context, singleplayer, server, manager);
