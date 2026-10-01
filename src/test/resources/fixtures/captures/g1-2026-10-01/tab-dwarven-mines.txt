@@ -1,0 +1,103 @@
+[K8BAS-DUMP] tab 000 order=0 name=!A-l | [19] Player36 Ⓑ
+[K8BAS-DUMP] tab 001 order=0 name=Player17 | 
+[K8BAS-DUMP] tab 002 order=0 name=!C-j | 
+[K8BAS-DUMP] tab 003 order=0 name=!C-a |                Info
+[K8BAS-DUMP] tab 004 order=0 name=!B-e |  Fairy Souls: 15/15
+[K8BAS-DUMP] tab 005 order=0 name=Player18 | 
+[K8BAS-DUMP] tab 006 order=0 name=!C-e |  3) EMPTY
+[K8BAS-DUMP] tab 007 order=0 name=!A-p | [382] Player30
+[K8BAS-DUMP] tab 008 order=0 name=Self | 
+[K8BAS-DUMP] tab 009 order=0 name=!D-p |  Burrows Dug: 0
+[K8BAS-DUMP] tab 010 order=0 name=!C-p | 
+[K8BAS-DUMP] tab 011 order=0 name=!B-f | 
+[K8BAS-DUMP] tab 012 order=0 name=!D-q | 
+[K8BAS-DUMP] tab 013 order=0 name=!A-q | [80] Player22 ☘♲
+[K8BAS-DUMP] tab 014 order=0 name=Player19 | 
+[K8BAS-DUMP] tab 015 order=0 name=!D-r | Bestiary:
+[K8BAS-DUMP] tab 016 order=0 name=!D-a |                Info
+[K8BAS-DUMP] tab 017 order=0 name=Player20 | 
+[K8BAS-DUMP] tab 018 order=0 name=Player21 | 
+[K8BAS-DUMP] tab 019 order=0 name=!A-r | [60] Player37 ♲
+[K8BAS-DUMP] tab 020 order=0 name=!D-n |  Mythological Kills: 0
+[K8BAS-DUMP] tab 021 order=0 name=!D-e |  Glacite: 381,149
+[K8BAS-DUMP] tab 022 order=0 name=!B-o | 
+[K8BAS-DUMP] tab 023 order=0 name=Player22 | 
+[K8BAS-DUMP] tab 024 order=0 name=!C-r |  Pickobulus: Available
+[K8BAS-DUMP] tab 025 order=0 name=!C-o |  Corpse Looter: 0%
+[K8BAS-DUMP] tab 026 order=0 name=!B-p | Daily Quests:
+[K8BAS-DUMP] tab 027 order=0 name=!B-b | Area: Dwarven Mines
+[K8BAS-DUMP] tab 028 order=0 name=Player23 | 
+[K8BAS-DUMP] tab 029 order=0 name=!D-j |  Combat 60: MAX
+[K8BAS-DUMP] tab 030 order=0 name=!B-n |  MAX LEVEL
+[K8BAS-DUMP] tab 031 order=0 name=!A-h | [247] Player17 ᛝ
+[K8BAS-DUMP] tab 032 order=0 name=!C-d |  2) EMPTY
+[K8BAS-DUMP] tab 033 order=0 name=Player24 | 
+[K8BAS-DUMP] tab 034 order=0 name=!C-q | Pickaxe Ability:
+[K8BAS-DUMP] tab 035 order=0 name=!B-l | Pet:
+[K8BAS-DUMP] tab 036 order=0 name=!D-i |  Mining 60: MAX
+[K8BAS-DUMP] tab 037 order=0 name=!A-b | [535] Self
+[K8BAS-DUMP] tab 038 order=0 name=!B-q |  Fetchur: Available
+[K8BAS-DUMP] tab 039 order=0 name=Player25 | 
+[K8BAS-DUMP] tab 040 order=0 name=!D-g | Skills:
+[K8BAS-DUMP] tab 041 order=0 name=!C-f |  4) EMPTY
+[K8BAS-DUMP] tab 042 order=0 name=Player26 | 
+[K8BAS-DUMP] tab 043 order=0 name=Player27 | 
+[K8BAS-DUMP] tab 044 order=0 name=!C-b | Forges:
+[K8BAS-DUMP] tab 045 order=0 name=!C-g |  5) EMPTY
+[K8BAS-DUMP] tab 046 order=0 name=Player28 | 
+[K8BAS-DUMP] tab 047 order=0 name=Player29 | 
+[K8BAS-DUMP] tab 048 order=0 name=!D-k |  Foraging 53: 100%
+[K8BAS-DUMP] tab 049 order=0 name=Player30 | 
+[K8BAS-DUMP] tab 050 order=0 name=!D-b | Powders:
+[K8BAS-DUMP] tab 051 order=0 name=Player31 | 
+[K8BAS-DUMP] tab 052 order=0 name=Player32 | 
+[K8BAS-DUMP] tab 053 order=0 name=!C-c |  1) EMPTY
+[K8BAS-DUMP] tab 054 order=0 name=!C-s | 
+[K8BAS-DUMP] tab 055 order=0 name=!C-k | Commissions:
+[K8BAS-DUMP] tab 056 order=0 name=!C-t | 
+[K8BAS-DUMP] tab 057 order=0 name=!B-s | 
+[K8BAS-DUMP] tab 058 order=0 name=!A-j | [182] Player34 ♲
+[K8BAS-DUMP] tab 059 order=0 name=!B-r |  Puzzler: Available
+[K8BAS-DUMP] tab 060 order=0 name=!D-t |  Glacite Walker 9: 2,346/3,000
+[K8BAS-DUMP] tab 061 order=0 name=!A-s | [26] Player24 ♲
+[K8BAS-DUMP] tab 062 order=0 name=!A-n | [243] Player26 ᛝ
+[K8BAS-DUMP] tab 063 order=0 name=!D-c |  Mithril: 3,196,526
+[K8BAS-DUMP] tab 064 order=0 name=!B-j |  Interest: 17 Hours (913k)
+[K8BAS-DUMP] tab 065 order=0 name=!D-l | 
+[K8BAS-DUMP] tab 066 order=0 name=!A-c | [493] Player33
+[K8BAS-DUMP] tab 067 order=0 name=Player33 | 
+[K8BAS-DUMP] tab 068 order=0 name=!D-s |  Bal 11: 71/80
+[K8BAS-DUMP] tab 069 order=0 name=Player34 | 
+[K8BAS-DUMP] tab 070 order=0 name=!B-h |  SB Level: [535] 28/100 XP
+[K8BAS-DUMP] tab 071 order=0 name=Player35 | 
+[K8BAS-DUMP] tab 072 order=0 name=!D-m | Event Trackers:
+[K8BAS-DUMP] tab 073 order=0 name=!B-a |                Info
+[K8BAS-DUMP] tab 074 order=0 name=!B-k | 
+[K8BAS-DUMP] tab 075 order=0 name=!A-i | [248] Player38 ᛝ♲
+[K8BAS-DUMP] tab 076 order=0 name=!D-d |  Gemstone: 8,159
+[K8BAS-DUMP] tab 077 order=0 name=Player36 | 
+[K8BAS-DUMP] tab 078 order=0 name=!B-t | 
+[K8BAS-DUMP] tab 079 order=0 name=!D-o |  Inquisitor Kills: 0
+[K8BAS-DUMP] tab 080 order=0 name=!C-l |  Scrap Collector: 0%
+[K8BAS-DUMP] tab 081 order=0 name=!D-f | 
+[K8BAS-DUMP] tab 082 order=0 name=!C-n |  Umber Collector: 68.2%
+[K8BAS-DUMP] tab 083 order=0 name=!A-a |          Players (23)
+[K8BAS-DUMP] tab 084 order=0 name=!B-g | Profile: Raspberry
+[K8BAS-DUMP] tab 085 order=0 name=!B-d |  Gems: 2.6k
+[K8BAS-DUMP] tab 086 order=0 name=!B-m |  [Lvl 100] Glacite Golem
+[K8BAS-DUMP] tab 087 order=0 name=!C-i |  7) EMPTY
+[K8BAS-DUMP] tab 088 order=0 name=Player37 | 
+[K8BAS-DUMP] tab 089 order=0 name=!B-i |  Bank: 1B
+[K8BAS-DUMP] tab 090 order=0 name=!A-g | [240] Player28 ᛝ
+[K8BAS-DUMP] tab 091 order=0 name=!A-e | [480] Player20
+[K8BAS-DUMP] tab 092 order=0 name=!A-f | [276] Player23 ✿
+[K8BAS-DUMP] tab 093 order=0 name=!C-m |  Mineshaft Explorer: 0%
+[K8BAS-DUMP] tab 094 order=0 name=!B-c |  Server: m000XX
+[K8BAS-DUMP] tab 095 order=0 name=!A-k | [108] Player25
+[K8BAS-DUMP] tab 096 order=0 name=!D-h |  Farming 60: MAX
+[K8BAS-DUMP] tab 097 order=0 name=!A-o | [398] Player27
+[K8BAS-DUMP] tab 098 order=0 name=!C-h |  6) EMPTY
+[K8BAS-DUMP] tab 099 order=0 name=Player38 | 
+[K8BAS-DUMP] tab 100 order=0 name=!A-m | [8] Player21 Ⓑ
+[K8BAS-DUMP] tab 101 order=0 name=!A-t | and 5 other players...
+[K8BAS-DUMP] tab 102 order=0 name=!A-d | [310] Player19 ☘

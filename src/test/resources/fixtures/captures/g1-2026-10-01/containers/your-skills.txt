@@ -1,0 +1,185 @@
+[K8BAS-DUMP] container 9 title=Your Skills slots=54 state=65
+[K8BAS-DUMP] container 9 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 4 item=minecraft:diamond_sword sbid=- count=1 | Your Skills
+[K8BAS-DUMP] container 9 slot 4 lore 0 | View your Skill progression and
+[K8BAS-DUMP] container 9 slot 4 lore 1 | rewards.
+[K8BAS-DUMP] container 9 slot 4 lore 2 | 
+[K8BAS-DUMP] container 9 slot 4 lore 3 | 53.1 Skill Avg. (non-cosmetic)
+[K8BAS-DUMP] container 9 slot 4 lore 4 | 
+[K8BAS-DUMP] container 9 slot 4 lore 5 | Also accessible via /skills.
+[K8BAS-DUMP] container 9 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 19 item=minecraft:stone_sword sbid=- count=1 | Combat LX
+[K8BAS-DUMP] container 9 slot 19 lore 0 | Fight mobs and special bosses to
+[K8BAS-DUMP] container 9 slot 19 lore 1 | earn Combat EXP!
+[K8BAS-DUMP] container 9 slot 19 lore 2 | 
+[K8BAS-DUMP] container 9 slot 19 lore 3 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 19 lore 4 |                      330,738,144.7
+[K8BAS-DUMP] container 9 slot 19 lore 5 | 
+[K8BAS-DUMP] container 9 slot 19 lore 6 | Click to view!
+[K8BAS-DUMP] container 9 slot 20 item=minecraft:golden_hoe sbid=- count=1 | Farming LX
+[K8BAS-DUMP] container 9 slot 20 lore 0 | Harvest crops and shear sheep to
+[K8BAS-DUMP] container 9 slot 20 lore 1 | earn Farming EXP!
+[K8BAS-DUMP] container 9 slot 20 lore 2 | 
+[K8BAS-DUMP] container 9 slot 20 lore 3 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 20 lore 4 |                      280,636,814.5
+[K8BAS-DUMP] container 9 slot 20 lore 5 | 
+[K8BAS-DUMP] container 9 slot 20 lore 6 | Click to view!
+[K8BAS-DUMP] container 9 slot 21 item=minecraft:fishing_rod sbid=- count=1 | Fishing L
+[K8BAS-DUMP] container 9 slot 21 lore 0 | Visit your local pond to fish and
+[K8BAS-DUMP] container 9 slot 21 lore 1 | earn Fishing EXP!
+[K8BAS-DUMP] container 9 slot 21 lore 2 | 
+[K8BAS-DUMP] container 9 slot 21 lore 3 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 21 lore 4 |                      115,299,241.5
+[K8BAS-DUMP] container 9 slot 21 lore 5 | 
+[K8BAS-DUMP] container 9 slot 21 lore 6 | Click to view!
+[K8BAS-DUMP] container 9 slot 22 item=minecraft:stone_pickaxe sbid=- count=1 | Mining LX
+[K8BAS-DUMP] container 9 slot 22 lore 0 | Dive into deep caves and find rare
+[K8BAS-DUMP] container 9 slot 22 lore 1 | ores and valuable materials to earn
+[K8BAS-DUMP] container 9 slot 22 lore 2 | Mining EXP!
+[K8BAS-DUMP] container 9 slot 22 lore 3 | 
+[K8BAS-DUMP] container 9 slot 22 lore 4 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 22 lore 5 |                      205,713,112.3
+[K8BAS-DUMP] container 9 slot 22 lore 6 | 
+[K8BAS-DUMP] container 9 slot 22 lore 7 | Click to view!
+[K8BAS-DUMP] container 9 slot 23 item=minecraft:jungle_sapling sbid=- count=1 | Foraging LIII
+[K8BAS-DUMP] container 9 slot 23 lore 0 | Cut trees and forage for other
+[K8BAS-DUMP] container 9 slot 23 lore 1 | plants to earn Foraging EXP!
+[K8BAS-DUMP] container 9 slot 23 lore 2 | 
+[K8BAS-DUMP] container 9 slot 23 lore 3 | Progress to Level LIV: 215.8%
+[K8BAS-DUMP] container 9 slot 23 lore 4 |                           11,219,626.8/5.2M
+[K8BAS-DUMP] container 9 slot 23 lore 5 | 
+[K8BAS-DUMP] container 9 slot 23 lore 6 | Level LIV Rewards:
+[K8BAS-DUMP] container 9 slot 23 lore 7 |   Logger LIV
+[K8BAS-DUMP] container 9 slot 23 lore 8 |     Grants +212➜216  Foraging
+[K8BAS-DUMP] container 9 slot 23 lore 9 |     Fortune, which increases your
+[K8BAS-DUMP] container 9 slot 23 lore 10 |     chance for multiple logs.
+[K8BAS-DUMP] container 9 slot 23 lore 11 |   +2  Strength
+[K8BAS-DUMP] container 9 slot 23 lore 12 |   +1,000,000 Coins
+[K8BAS-DUMP] container 9 slot 23 lore 13 |   +30 SkyBlock XP
+[K8BAS-DUMP] container 9 slot 23 lore 14 | 
+[K8BAS-DUMP] container 9 slot 23 lore 15 | Increase your Foraging level cap
+[K8BAS-DUMP] container 9 slot 23 lore 16 | through your Foraging collections
+[K8BAS-DUMP] container 9 slot 23 lore 17 | and Starlyn Contests!
+[K8BAS-DUMP] container 9 slot 23 lore 18 | 
+[K8BAS-DUMP] container 9 slot 23 lore 19 | Click to view!
+[K8BAS-DUMP] container 9 slot 24 item=minecraft:enchanting_table sbid=- count=1 | Enchanting LX
+[K8BAS-DUMP] container 9 slot 24 lore 0 | Enchant items to earn Enchanting EXP!
+[K8BAS-DUMP] container 9 slot 24 lore 1 | 
+[K8BAS-DUMP] container 9 slot 24 lore 2 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 24 lore 3 |                      167,301,532.8
+[K8BAS-DUMP] container 9 slot 24 lore 4 | 
+[K8BAS-DUMP] container 9 slot 24 lore 5 | Click to view!
+[K8BAS-DUMP] container 9 slot 25 item=minecraft:brewing_stand sbid=- count=1 | Alchemy L
+[K8BAS-DUMP] container 9 slot 25 lore 0 | Brew potions to earn Alchemy EXP!
+[K8BAS-DUMP] container 9 slot 25 lore 1 | 
+[K8BAS-DUMP] container 9 slot 25 lore 2 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 25 lore 3 |                      65,674,690
+[K8BAS-DUMP] container 9 slot 25 lore 4 | 
+[K8BAS-DUMP] container 9 slot 25 lore 5 | Click to view!
+[K8BAS-DUMP] container 9 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 28 item=minecraft:crafting_table sbid=- count=1 | Carpentry L
+[K8BAS-DUMP] container 9 slot 28 lore 0 | Craft items to earn Carpentry EXP!
+[K8BAS-DUMP] container 9 slot 28 lore 1 | 
+[K8BAS-DUMP] container 9 slot 28 lore 2 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 28 lore 3 |                      160,990,782.4
+[K8BAS-DUMP] container 9 slot 28 lore 4 | 
+[K8BAS-DUMP] container 9 slot 28 lore 5 | Click to view!
+[K8BAS-DUMP] container 9 slot 29 item=minecraft:magma_cream sbid=- count=1 | Runecrafting XXV
+[K8BAS-DUMP] container 9 slot 29 lore 0 | Slay bosses and runic mobs, and
+[K8BAS-DUMP] container 9 slot 29 lore 1 | fuse runes to earn Runecrafting EXP!
+[K8BAS-DUMP] container 9 slot 29 lore 2 | 
+[K8BAS-DUMP] container 9 slot 29 lore 3 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 29 lore 4 |                      1,593,125.8
+[K8BAS-DUMP] container 9 slot 29 lore 5 | 
+[K8BAS-DUMP] container 9 slot 29 lore 6 | Level up Runecrafting to activate
+[K8BAS-DUMP] container 9 slot 29 lore 7 | the effects of rune-bearing items!
+[K8BAS-DUMP] container 9 slot 29 lore 8 | 
+[K8BAS-DUMP] container 9 slot 29 lore 9 | Click to view!
+[K8BAS-DUMP] container 9 slot 30 item=minecraft:polar_bear_spawn_egg sbid=- count=1 | Taming LX
+[K8BAS-DUMP] container 9 slot 30 lore 0 | Level up pets to earn Taming EXP!
+[K8BAS-DUMP] container 9 slot 30 lore 1 | 
+[K8BAS-DUMP] container 9 slot 30 lore 2 | Max Skill level reached!
+[K8BAS-DUMP] container 9 slot 30 lore 3 |                      573,671,130.3
+[K8BAS-DUMP] container 9 slot 30 lore 4 | 
+[K8BAS-DUMP] container 9 slot 30 lore 5 | Click to view!
+[K8BAS-DUMP] container 9 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 32 item=minecraft:emerald sbid=- count=1 | Social IV
+[K8BAS-DUMP] container 9 slot 32 lore 0 | Gain Social EXP for every new unique
+[K8BAS-DUMP] container 9 slot 32 lore 1 | guest, hosting guests, and visiting
+[K8BAS-DUMP] container 9 slot 32 lore 2 | islands!
+[K8BAS-DUMP] container 9 slot 32 lore 3 | 
+[K8BAS-DUMP] container 9 slot 32 lore 4 | Progress to Level V: 68%
+[K8BAS-DUMP] container 9 slot 32 lore 5 |                           340/500
+[K8BAS-DUMP] container 9 slot 32 lore 6 | 
+[K8BAS-DUMP] container 9 slot 32 lore 7 | Level V Rewards:
+[K8BAS-DUMP] container 9 slot 32 lore 8 |   Ability to purchase Island NPCs from
+[K8BAS-DUMP] container 9 slot 32 lore 9 |   Amelia
+[K8BAS-DUMP] container 9 slot 32 lore 10 |   +1,000 Coins
+[K8BAS-DUMP] container 9 slot 32 lore 11 | 
+[K8BAS-DUMP] container 9 slot 32 lore 12 | Click to view!
+[K8BAS-DUMP] container 9 slot 33 item=minecraft:lead sbid=- count=1 | Hunting XXVIII
+[K8BAS-DUMP] container 9 slot 33 lore 0 | Hunt various monsters to earn
+[K8BAS-DUMP] container 9 slot 33 lore 1 | Hunting EXP!
+[K8BAS-DUMP] container 9 slot 33 lore 2 | 
+[K8BAS-DUMP] container 9 slot 33 lore 3 | Progress to Level XXIX: 34.9%
+[K8BAS-DUMP] container 9 slot 33 lore 4 |                           384,395.1/1.1M
+[K8BAS-DUMP] container 9 slot 33 lore 5 | 
+[K8BAS-DUMP] container 9 slot 33 lore 6 | Level XXIX Rewards:
+[K8BAS-DUMP] container 9 slot 33 lore 7 |   Charming XXIX
+[K8BAS-DUMP] container 9 slot 33 lore 8 |     Grants +1.12➜1.16 ❣ Charm Chance.
+[K8BAS-DUMP] container 9 slot 33 lore 9 |   +1  Hunting Fortune
+[K8BAS-DUMP] container 9 slot 33 lore 10 |   +325,000 Coins
+[K8BAS-DUMP] container 9 slot 33 lore 11 |   +20 SkyBlock XP
+[K8BAS-DUMP] container 9 slot 33 lore 12 | 
+[K8BAS-DUMP] container 9 slot 33 lore 13 | Click to view!
+[K8BAS-DUMP] container 9 slot 34 item=minecraft:player_head sbid=- count=1 | Dungeoneering
+[K8BAS-DUMP] container 9 slot 34 lore 0 | Complete Dungeons to level up your
+[K8BAS-DUMP] container 9 slot 34 lore 1 | classes! Unlock new gear and class
+[K8BAS-DUMP] container 9 slot 34 lore 2 | upgrades by completing higher tier
+[K8BAS-DUMP] container 9 slot 34 lore 3 | dungeons!
+[K8BAS-DUMP] container 9 slot 34 lore 4 | 
+[K8BAS-DUMP] container 9 slot 34 lore 5 | Requires Combat Level 15 to enter a
+[K8BAS-DUMP] container 9 slot 34 lore 6 | Dungeon.
+[K8BAS-DUMP] container 9 slot 34 lore 7 | 
+[K8BAS-DUMP] container 9 slot 34 lore 8 | Click to view!
+[K8BAS-DUMP] container 9 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 36 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 45 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 47 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 9 slot 48 lore 0 | To Tasks ➜ Core
+[K8BAS-DUMP] container 9 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 9 slot 50 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 51 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 52 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 9 slot 53 item=minecraft:oak_sign sbid=- count=1 | Show Skill Rankings
+[K8BAS-DUMP] container 9 slot 53 lore 0 | Show the rankings display for your
+[K8BAS-DUMP] container 9 slot 53 lore 1 | Skills.
+[K8BAS-DUMP] container 9 slot 53 lore 2 | 
+[K8BAS-DUMP] container 9 slot 53 lore 3 | Click to show!

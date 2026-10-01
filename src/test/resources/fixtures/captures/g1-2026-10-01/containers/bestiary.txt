@@ -1,0 +1,315 @@
+[K8BAS-DUMP] container 217 title=Bestiary slots=54 state=65
+[K8BAS-DUMP] container 217 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 4 item=minecraft:writable_book sbid=- count=1 | Bestiary
+[K8BAS-DUMP] container 217 slot 4 lore 0 | The Bestiary is a compendium of
+[K8BAS-DUMP] container 217 slot 4 lore 1 | mobs in SkyBlock. It contains detailed
+[K8BAS-DUMP] container 217 slot 4 lore 2 | information on loot drops, your mob
+[K8BAS-DUMP] container 217 slot 4 lore 3 | stats, and more!
+[K8BAS-DUMP] container 217 slot 4 lore 4 | 
+[K8BAS-DUMP] container 217 slot 4 lore 5 | Kill mobs within Families to progress
+[K8BAS-DUMP] container 217 slot 4 lore 6 | and earn rewards, including  Magic
+[K8BAS-DUMP] container 217 slot 4 lore 7 | Find bonuses towards mobs in the
+[K8BAS-DUMP] container 217 slot 4 lore 8 | Family.
+[K8BAS-DUMP] container 217 slot 4 lore 9 | 
+[K8BAS-DUMP] container 217 slot 4 lore 10 | Families Found: 89.4%
+[K8BAS-DUMP] container 217 slot 4 lore 11 |                           321/359
+[K8BAS-DUMP] container 217 slot 4 lore 12 | 
+[K8BAS-DUMP] container 217 slot 4 lore 13 | Families Completed: 35.1%
+[K8BAS-DUMP] container 217 slot 4 lore 14 |                           126/359
+[K8BAS-DUMP] container 217 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 10 item=minecraft:player_head sbid=- count=1 | Your Island
+[K8BAS-DUMP] container 217 slot 10 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 10 lore 1 | found and killed on Your Island.
+[K8BAS-DUMP] container 217 slot 10 lore 2 | 
+[K8BAS-DUMP] container 217 slot 10 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 10 lore 4 |                           8/8
+[K8BAS-DUMP] container 217 slot 10 lore 5 | 
+[K8BAS-DUMP] container 217 slot 10 lore 6 | Families Completed: 75%
+[K8BAS-DUMP] container 217 slot 10 lore 7 |                           6/8
+[K8BAS-DUMP] container 217 slot 10 lore 8 | 
+[K8BAS-DUMP] container 217 slot 10 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 11 item=minecraft:player_head sbid=- count=1 | Hub
+[K8BAS-DUMP] container 217 slot 11 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 11 lore 1 | found and killed in the Hub.
+[K8BAS-DUMP] container 217 slot 11 lore 2 | 
+[K8BAS-DUMP] container 217 slot 11 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 11 lore 4 |                           7/7
+[K8BAS-DUMP] container 217 slot 11 lore 5 | 
+[K8BAS-DUMP] container 217 slot 11 lore 6 | Families Completed: 71.4%
+[K8BAS-DUMP] container 217 slot 11 lore 7 |                           5/7
+[K8BAS-DUMP] container 217 slot 11 lore 8 | 
+[K8BAS-DUMP] container 217 slot 11 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 12 item=minecraft:player_head sbid=- count=1 | The Farming Islands
+[K8BAS-DUMP] container 217 slot 12 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 12 lore 1 | found and killed in The Farming
+[K8BAS-DUMP] container 217 slot 12 lore 2 | Islands.
+[K8BAS-DUMP] container 217 slot 12 lore 3 | 
+[K8BAS-DUMP] container 217 slot 12 lore 4 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 12 lore 5 |                           6/6
+[K8BAS-DUMP] container 217 slot 12 lore 6 | 
+[K8BAS-DUMP] container 217 slot 12 lore 7 | Families Completed: 100%
+[K8BAS-DUMP] container 217 slot 12 lore 8 |                           6/6
+[K8BAS-DUMP] container 217 slot 12 lore 9 | 
+[K8BAS-DUMP] container 217 slot 12 lore 10 | Click to view!
+[K8BAS-DUMP] container 217 slot 13 item=minecraft:player_head sbid=- count=1 | The Garden
+[K8BAS-DUMP] container 217 slot 13 lore 0 | View all of the  Pests that you've
+[K8BAS-DUMP] container 217 slot 13 lore 1 | killed on The Garden.
+[K8BAS-DUMP] container 217 slot 13 lore 2 | 
+[K8BAS-DUMP] container 217 slot 13 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 13 lore 4 |                           17/17
+[K8BAS-DUMP] container 217 slot 13 lore 5 | 
+[K8BAS-DUMP] container 217 slot 13 lore 6 | Families Completed: 100%
+[K8BAS-DUMP] container 217 slot 13 lore 7 |                           17/17
+[K8BAS-DUMP] container 217 slot 13 lore 8 | 
+[K8BAS-DUMP] container 217 slot 13 lore 9 | Garden Bonus
+[K8BAS-DUMP] container 217 slot 13 lore 10 | +100 Farming Fortune
+[K8BAS-DUMP] container 217 slot 13 lore 11 | 
+[K8BAS-DUMP] container 217 slot 13 lore 12 | Click to view!
+[K8BAS-DUMP] container 217 slot 14 item=minecraft:player_head sbid=- count=1 | Spider's Den
+[K8BAS-DUMP] container 217 slot 14 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 14 lore 1 | found and killed in the Spider's Den.
+[K8BAS-DUMP] container 217 slot 14 lore 2 | 
+[K8BAS-DUMP] container 217 slot 14 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 14 lore 4 |                           12/12
+[K8BAS-DUMP] container 217 slot 14 lore 5 | 
+[K8BAS-DUMP] container 217 slot 14 lore 6 | Families Completed: 25%
+[K8BAS-DUMP] container 217 slot 14 lore 7 |                           3/12
+[K8BAS-DUMP] container 217 slot 14 lore 8 | 
+[K8BAS-DUMP] container 217 slot 14 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 15 item=minecraft:player_head sbid=- count=1 | The End
+[K8BAS-DUMP] container 217 slot 15 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 15 lore 1 | found and killed in The End.
+[K8BAS-DUMP] container 217 slot 15 lore 2 | 
+[K8BAS-DUMP] container 217 slot 15 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 15 lore 4 |                           9/9
+[K8BAS-DUMP] container 217 slot 15 lore 5 | 
+[K8BAS-DUMP] container 217 slot 15 lore 6 | Families Completed: 55.6%
+[K8BAS-DUMP] container 217 slot 15 lore 7 |                           5/9
+[K8BAS-DUMP] container 217 slot 15 lore 8 | 
+[K8BAS-DUMP] container 217 slot 15 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 16 item=minecraft:player_head sbid=- count=1 | Crimson Isle
+[K8BAS-DUMP] container 217 slot 16 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 16 lore 1 | found and killed in the Crimson Isle.
+[K8BAS-DUMP] container 217 slot 16 lore 2 | 
+[K8BAS-DUMP] container 217 slot 16 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 16 lore 4 |                           20/20
+[K8BAS-DUMP] container 217 slot 16 lore 5 | 
+[K8BAS-DUMP] container 217 slot 16 lore 6 | Families Completed: 20%
+[K8BAS-DUMP] container 217 slot 16 lore 7 |                           4/20
+[K8BAS-DUMP] container 217 slot 16 lore 8 | 
+[K8BAS-DUMP] container 217 slot 16 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 19 item=minecraft:player_head sbid=- count=1 | Deep Caverns
+[K8BAS-DUMP] container 217 slot 19 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 19 lore 1 | found and killed in the Deep Caverns.
+[K8BAS-DUMP] container 217 slot 19 lore 2 | 
+[K8BAS-DUMP] container 217 slot 19 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 19 lore 4 |                           6/6
+[K8BAS-DUMP] container 217 slot 19 lore 5 | 
+[K8BAS-DUMP] container 217 slot 19 lore 6 | Families Completed: 100%
+[K8BAS-DUMP] container 217 slot 19 lore 7 |                           6/6
+[K8BAS-DUMP] container 217 slot 19 lore 8 | 
+[K8BAS-DUMP] container 217 slot 19 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 20 item=minecraft:player_head sbid=- count=1 | Dwarven Mines
+[K8BAS-DUMP] container 217 slot 20 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 20 lore 1 | found and killed in the Dwarven Mines.
+[K8BAS-DUMP] container 217 slot 20 lore 2 | 
+[K8BAS-DUMP] container 217 slot 20 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 20 lore 4 |                           14/14
+[K8BAS-DUMP] container 217 slot 20 lore 5 | 
+[K8BAS-DUMP] container 217 slot 20 lore 6 | Families Completed: 42.9%
+[K8BAS-DUMP] container 217 slot 20 lore 7 |                           6/14
+[K8BAS-DUMP] container 217 slot 20 lore 8 | 
+[K8BAS-DUMP] container 217 slot 20 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 21 item=minecraft:player_head sbid=- count=1 | Crystal Hollows
+[K8BAS-DUMP] container 217 slot 21 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 21 lore 1 | found and killed in the Crystal
+[K8BAS-DUMP] container 217 slot 21 lore 2 | Hollows.
+[K8BAS-DUMP] container 217 slot 21 lore 3 | 
+[K8BAS-DUMP] container 217 slot 21 lore 4 | Families Found: 90%
+[K8BAS-DUMP] container 217 slot 21 lore 5 |                           9/10
+[K8BAS-DUMP] container 217 slot 21 lore 6 | 
+[K8BAS-DUMP] container 217 slot 21 lore 7 | Families Completed: 0%
+[K8BAS-DUMP] container 217 slot 21 lore 8 |                           0/10
+[K8BAS-DUMP] container 217 slot 21 lore 9 | 
+[K8BAS-DUMP] container 217 slot 21 lore 10 | Click to view!
+[K8BAS-DUMP] container 217 slot 22 item=minecraft:player_head sbid=- count=1 | The Park
+[K8BAS-DUMP] container 217 slot 22 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 22 lore 1 | found and killed in The Park.
+[K8BAS-DUMP] container 217 slot 22 lore 2 | 
+[K8BAS-DUMP] container 217 slot 22 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 22 lore 4 |                           3/3
+[K8BAS-DUMP] container 217 slot 22 lore 5 | 
+[K8BAS-DUMP] container 217 slot 22 lore 6 | Families Completed: 0%
+[K8BAS-DUMP] container 217 slot 22 lore 7 |                           0/3
+[K8BAS-DUMP] container 217 slot 22 lore 8 | 
+[K8BAS-DUMP] container 217 slot 22 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 23 item=minecraft:player_head sbid=- count=1 | Moonglade Marsh
+[K8BAS-DUMP] container 217 slot 23 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 23 lore 1 | found and killed in the Moonglade
+[K8BAS-DUMP] container 217 slot 23 lore 2 | Marsh.
+[K8BAS-DUMP] container 217 slot 23 lore 3 | 
+[K8BAS-DUMP] container 217 slot 23 lore 4 | Families Found: 75.8%
+[K8BAS-DUMP] container 217 slot 23 lore 5 |                           25/33
+[K8BAS-DUMP] container 217 slot 23 lore 6 | 
+[K8BAS-DUMP] container 217 slot 23 lore 7 | Families Completed: 57.6%
+[K8BAS-DUMP] container 217 slot 23 lore 8 |                           19/33
+[K8BAS-DUMP] container 217 slot 23 lore 9 | 
+[K8BAS-DUMP] container 217 slot 23 lore 10 | Click to view!
+[K8BAS-DUMP] container 217 slot 24 item=minecraft:player_head sbid=- count=1 | Torrhus Canyon
+[K8BAS-DUMP] container 217 slot 24 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 24 lore 1 | found and killed in the Torrhus
+[K8BAS-DUMP] container 217 slot 24 lore 2 | Canyon.
+[K8BAS-DUMP] container 217 slot 24 lore 3 | 
+[K8BAS-DUMP] container 217 slot 24 lore 4 | Families Found: 46.7%
+[K8BAS-DUMP] container 217 slot 24 lore 5 |                           14/30
+[K8BAS-DUMP] container 217 slot 24 lore 6 | 
+[K8BAS-DUMP] container 217 slot 24 lore 7 | Families Completed: 3.3%
+[K8BAS-DUMP] container 217 slot 24 lore 8 |                           1/30
+[K8BAS-DUMP] container 217 slot 24 lore 9 | 
+[K8BAS-DUMP] container 217 slot 24 lore 10 | Click to view!
+[K8BAS-DUMP] container 217 slot 25 item=minecraft:player_head sbid=- count=1 | Critter Safari
+[K8BAS-DUMP] container 217 slot 25 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 25 lore 1 | found and killed in the Critter Safari.
+[K8BAS-DUMP] container 217 slot 25 lore 2 | 
+[K8BAS-DUMP] container 217 slot 25 lore 3 | Families Found: 81.1%
+[K8BAS-DUMP] container 217 slot 25 lore 4 |                           30/37
+[K8BAS-DUMP] container 217 slot 25 lore 5 | 
+[K8BAS-DUMP] container 217 slot 25 lore 6 | Families Completed: 0%
+[K8BAS-DUMP] container 217 slot 25 lore 7 |                           0/37
+[K8BAS-DUMP] container 217 slot 25 lore 8 | 
+[K8BAS-DUMP] container 217 slot 25 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 28 item=minecraft:jack_o_lantern sbid=- count=1 | Spooky Festival
+[K8BAS-DUMP] container 217 slot 28 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 28 lore 1 | found and killed during the Spooky
+[K8BAS-DUMP] container 217 slot 28 lore 2 | Festival.
+[K8BAS-DUMP] container 217 slot 28 lore 3 | 
+[K8BAS-DUMP] container 217 slot 28 lore 4 | Families Found: 85.7%
+[K8BAS-DUMP] container 217 slot 28 lore 5 |                           6/7
+[K8BAS-DUMP] container 217 slot 28 lore 6 | 
+[K8BAS-DUMP] container 217 slot 28 lore 7 | Families Completed: 0%
+[K8BAS-DUMP] container 217 slot 28 lore 8 |                           0/7
+[K8BAS-DUMP] container 217 slot 28 lore 9 | 
+[K8BAS-DUMP] container 217 slot 28 lore 10 | Click to view!
+[K8BAS-DUMP] container 217 slot 29 item=minecraft:player_head sbid=- count=1 | The Catacombs
+[K8BAS-DUMP] container 217 slot 29 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 29 lore 1 | found and killed in The Catacombs.
+[K8BAS-DUMP] container 217 slot 29 lore 2 | 
+[K8BAS-DUMP] container 217 slot 29 lore 3 | Families Found: 97.1%
+[K8BAS-DUMP] container 217 slot 29 lore 4 |                           34/35
+[K8BAS-DUMP] container 217 slot 29 lore 5 | 
+[K8BAS-DUMP] container 217 slot 29 lore 6 | Families Completed: 0%
+[K8BAS-DUMP] container 217 slot 29 lore 7 |                           0/35
+[K8BAS-DUMP] container 217 slot 29 lore 8 | 
+[K8BAS-DUMP] container 217 slot 29 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 30 item=minecraft:fishing_rod sbid=- count=1 | Fishing
+[K8BAS-DUMP] container 217 slot 30 lore 0 | View all of the Sea Creatures that
+[K8BAS-DUMP] container 217 slot 30 lore 1 | you've killed while fishing.
+[K8BAS-DUMP] container 217 slot 30 lore 2 | 
+[K8BAS-DUMP] container 217 slot 30 lore 3 | Families Found: 96.9%
+[K8BAS-DUMP] container 217 slot 30 lore 4 |                           63/65
+[K8BAS-DUMP] container 217 slot 30 lore 5 | 
+[K8BAS-DUMP] container 217 slot 30 lore 6 | Families Completed: 52.3%
+[K8BAS-DUMP] container 217 slot 30 lore 7 |                           34/65
+[K8BAS-DUMP] container 217 slot 30 lore 8 | 
+[K8BAS-DUMP] container 217 slot 30 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 31 item=minecraft:player_head sbid=- count=1 | Mythological Creatures
+[K8BAS-DUMP] container 217 slot 31 lore 0 | View all of the Mythological
+[K8BAS-DUMP] container 217 slot 31 lore 1 | Creatures that you've killed.
+[K8BAS-DUMP] container 217 slot 31 lore 2 | 
+[K8BAS-DUMP] container 217 slot 31 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 31 lore 4 |                           12/12
+[K8BAS-DUMP] container 217 slot 31 lore 5 | 
+[K8BAS-DUMP] container 217 slot 31 lore 6 | Families Completed: 91.7%
+[K8BAS-DUMP] container 217 slot 31 lore 7 |                           11/12
+[K8BAS-DUMP] container 217 slot 31 lore 8 | 
+[K8BAS-DUMP] container 217 slot 31 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 32 item=minecraft:player_head sbid=- count=1 | Jerry
+[K8BAS-DUMP] container 217 slot 32 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 32 lore 1 | found and killed while fighting Jerry.
+[K8BAS-DUMP] container 217 slot 32 lore 2 | 
+[K8BAS-DUMP] container 217 slot 32 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 32 lore 4 |                           4/4
+[K8BAS-DUMP] container 217 slot 32 lore 5 | 
+[K8BAS-DUMP] container 217 slot 32 lore 6 | Families Completed: 0%
+[K8BAS-DUMP] container 217 slot 32 lore 7 |                           0/4
+[K8BAS-DUMP] container 217 slot 32 lore 8 | 
+[K8BAS-DUMP] container 217 slot 32 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 33 item=minecraft:player_head sbid=- count=1 | Kuudra
+[K8BAS-DUMP] container 217 slot 33 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 33 lore 1 | found and killed while fighting Kuudra.
+[K8BAS-DUMP] container 217 slot 33 lore 2 | 
+[K8BAS-DUMP] container 217 slot 33 lore 3 | Families Found: 84.6%
+[K8BAS-DUMP] container 217 slot 33 lore 4 |                           11/13
+[K8BAS-DUMP] container 217 slot 33 lore 5 | 
+[K8BAS-DUMP] container 217 slot 33 lore 6 | Families Completed: 0%
+[K8BAS-DUMP] container 217 slot 33 lore 7 |                           0/13
+[K8BAS-DUMP] container 217 slot 33 lore 8 | 
+[K8BAS-DUMP] container 217 slot 33 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 34 item=minecraft:player_head sbid=- count=1 | Lotus Atoll
+[K8BAS-DUMP] container 217 slot 34 lore 0 | View all of the mobs that you've
+[K8BAS-DUMP] container 217 slot 34 lore 1 | found and killed on the Lotus Atoll.
+[K8BAS-DUMP] container 217 slot 34 lore 2 | 
+[K8BAS-DUMP] container 217 slot 34 lore 3 | Families Found: 100%
+[K8BAS-DUMP] container 217 slot 34 lore 4 |                           11/11
+[K8BAS-DUMP] container 217 slot 34 lore 5 | 
+[K8BAS-DUMP] container 217 slot 34 lore 6 | Families Completed: 27.3%
+[K8BAS-DUMP] container 217 slot 34 lore 7 |                           3/11
+[K8BAS-DUMP] container 217 slot 34 lore 8 | 
+[K8BAS-DUMP] container 217 slot 34 lore 9 | Click to view!
+[K8BAS-DUMP] container 217 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 36 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 45 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 47 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 217 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 217 slot 48 lore 0 | To Tasks ➜ Slaying
+[K8BAS-DUMP] container 217 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 217 slot 50 item=minecraft:oak_sign sbid=- count=1 | Search Bestiary
+[K8BAS-DUMP] container 217 slot 50 lore 0 | Search through all of the mobs in
+[K8BAS-DUMP] container 217 slot 50 lore 1 | the Bestiary.
+[K8BAS-DUMP] container 217 slot 50 lore 2 | 
+[K8BAS-DUMP] container 217 slot 50 lore 3 | Click to search!
+[K8BAS-DUMP] container 217 slot 51 item=minecraft:player_head sbid=- count=1 | Bestiary Milestone CCCLI
+[K8BAS-DUMP] container 217 slot 51 lore 0 | Reach new Milestones in your
+[K8BAS-DUMP] container 217 slot 51 lore 1 | Bestiary by unlocking unique Family
+[K8BAS-DUMP] container 217 slot 51 lore 2 | tiers.
+[K8BAS-DUMP] container 217 slot 51 lore 3 | 
+[K8BAS-DUMP] container 217 slot 51 lore 4 | Milestone Bonus
+[K8BAS-DUMP] container 217 slot 51 lore 5 | +351  Health
+[K8BAS-DUMP] container 217 slot 51 lore 6 | 
+[K8BAS-DUMP] container 217 slot 51 lore 7 | Total Tiers Unlocked: 3,518
+[K8BAS-DUMP] container 217 slot 51 lore 8 | 
+[K8BAS-DUMP] container 217 slot 51 lore 9 | Progress to Milestone CCCLII: 80%
+[K8BAS-DUMP] container 217 slot 51 lore 10 |                           8/10
+[K8BAS-DUMP] container 217 slot 51 lore 11 | 
+[K8BAS-DUMP] container 217 slot 51 lore 12 | Milestone CCCLII Reward
+[K8BAS-DUMP] container 217 slot 51 lore 13 |   +1  Health
+[K8BAS-DUMP] container 217 slot 51 lore 14 | 
+[K8BAS-DUMP] container 217 slot 51 lore 15 | Click to open Bestiary Milestones!
+[K8BAS-DUMP] container 217 slot 52 item=minecraft:ender_eye sbid=- count=1 | Toggle Families Completed Display
+[K8BAS-DUMP] container 217 slot 52 lore 0 | Toggle the families completed display
+[K8BAS-DUMP] container 217 slot 52 lore 1 | for each Bestiary Family.
+[K8BAS-DUMP] container 217 slot 52 lore 2 | 
+[K8BAS-DUMP] container 217 slot 52 lore 3 | Overall Progress: SHOWN
+[K8BAS-DUMP] container 217 slot 52 lore 4 | 
+[K8BAS-DUMP] container 217 slot 52 lore 5 | Click to toggle visibility!
+[K8BAS-DUMP] container 217 slot 53 item=minecraft:black_stained_glass_pane sbid=- count=1 | 

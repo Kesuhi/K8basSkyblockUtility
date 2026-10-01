@@ -1,0 +1,169 @@
+[K8BAS-DUMP] container 157 title=Essence Shop ➜ Wither Essence S slots=45 state=56
+[K8BAS-DUMP] container 157 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 4 item=minecraft:player_head sbid=- count=1 | Wither Essence Shop
+[K8BAS-DUMP] container 157 slot 4 lore 0 | 7 Tasks
+[K8BAS-DUMP] container 157 slot 4 lore 1 | 
+[K8BAS-DUMP] container 157 slot 4 lore 2 |  ✔ Forbidden Health (5/5)
+[K8BAS-DUMP] container 157 slot 4 lore 3 |  ✔ Forbidden Defense (5/5)
+[K8BAS-DUMP] container 157 slot 4 lore 4 |  ✔ Forbidden Speed (2/2)
+[K8BAS-DUMP] container 157 slot 4 lore 5 |  ✔ Forbidden Intelligence (5/5)
+[K8BAS-DUMP] container 157 slot 4 lore 6 |  ✔ Forbidden Strength (5/5)
+[K8BAS-DUMP] container 157 slot 4 lore 7 |  ✔ Forbidden Blessing (10/10)
+[K8BAS-DUMP] container 157 slot 4 lore 8 |  ✔ Echos of the Lost (5/5)
+[K8BAS-DUMP] container 157 slot 4 lore 9 | 
+[K8BAS-DUMP] container 157 slot 4 lore 10 | Total Progress: 100%
+[K8BAS-DUMP] container 157 slot 4 lore 11 |                           161/161 XP
+[K8BAS-DUMP] container 157 slot 4 lore 12 | 
+[K8BAS-DUMP] container 157 slot 4 lore 13 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 157 slot 4 lore 14 | SkyBlock XP!
+[K8BAS-DUMP] container 157 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 19 item=minecraft:golden_apple sbid=- count=1 | Forbidden Health
+[K8BAS-DUMP] container 157 slot 19 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 157 slot 19 lore 1 | 
+[K8BAS-DUMP] container 157 slot 19 lore 2 |  ✔ Forbidden Health 1
+[K8BAS-DUMP] container 157 slot 19 lore 3 |  ✔ Forbidden Health 2
+[K8BAS-DUMP] container 157 slot 19 lore 4 |  ✔ Forbidden Health 3
+[K8BAS-DUMP] container 157 slot 19 lore 5 |  ✔ Forbidden Health 4
+[K8BAS-DUMP] container 157 slot 19 lore 6 |  ✔ Forbidden Health 5
+[K8BAS-DUMP] container 157 slot 19 lore 7 | 
+[K8BAS-DUMP] container 157 slot 19 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 157 slot 19 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 157 slot 19 lore 10 | 
+[K8BAS-DUMP] container 157 slot 19 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 157 slot 19 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 157 slot 19 lore 13 | 
+[K8BAS-DUMP] container 157 slot 19 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 157 slot 20 item=minecraft:iron_chestplate sbid=- count=1 | Forbidden Defense
+[K8BAS-DUMP] container 157 slot 20 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 157 slot 20 lore 1 | 
+[K8BAS-DUMP] container 157 slot 20 lore 2 |  ✔ Forbidden Defense 1
+[K8BAS-DUMP] container 157 slot 20 lore 3 |  ✔ Forbidden Defense 2
+[K8BAS-DUMP] container 157 slot 20 lore 4 |  ✔ Forbidden Defense 3
+[K8BAS-DUMP] container 157 slot 20 lore 5 |  ✔ Forbidden Defense 4
+[K8BAS-DUMP] container 157 slot 20 lore 6 |  ✔ Forbidden Defense 5
+[K8BAS-DUMP] container 157 slot 20 lore 7 | 
+[K8BAS-DUMP] container 157 slot 20 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 157 slot 20 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 157 slot 20 lore 10 | 
+[K8BAS-DUMP] container 157 slot 20 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 157 slot 20 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 157 slot 20 lore 13 | 
+[K8BAS-DUMP] container 157 slot 20 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 157 slot 21 item=minecraft:sugar sbid=- count=1 | Forbidden Speed
+[K8BAS-DUMP] container 157 slot 21 lore 0 | 2 Tasks
+[K8BAS-DUMP] container 157 slot 21 lore 1 | 
+[K8BAS-DUMP] container 157 slot 21 lore 2 |  ✔ Forbidden Speed 1
+[K8BAS-DUMP] container 157 slot 21 lore 3 |  ✔ Forbidden Speed 2
+[K8BAS-DUMP] container 157 slot 21 lore 4 | 
+[K8BAS-DUMP] container 157 slot 21 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 157 slot 21 lore 6 |                           4/4 XP
+[K8BAS-DUMP] container 157 slot 21 lore 7 | 
+[K8BAS-DUMP] container 157 slot 21 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 157 slot 21 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 157 slot 21 lore 10 | 
+[K8BAS-DUMP] container 157 slot 21 lore 11 | Click to view tasks!
+[K8BAS-DUMP] container 157 slot 22 item=minecraft:enchanted_book sbid=- count=1 | Forbidden Intelligence
+[K8BAS-DUMP] container 157 slot 22 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 157 slot 22 lore 1 | 
+[K8BAS-DUMP] container 157 slot 22 lore 2 |  ✔ Forbidden Intelligence 1
+[K8BAS-DUMP] container 157 slot 22 lore 3 |  ✔ Forbidden Intelligence 2
+[K8BAS-DUMP] container 157 slot 22 lore 4 |  ✔ Forbidden Intelligence 3
+[K8BAS-DUMP] container 157 slot 22 lore 5 |  ✔ Forbidden Intelligence 4
+[K8BAS-DUMP] container 157 slot 22 lore 6 |  ✔ Forbidden Intelligence 5
+[K8BAS-DUMP] container 157 slot 22 lore 7 | 
+[K8BAS-DUMP] container 157 slot 22 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 157 slot 22 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 157 slot 22 lore 10 | 
+[K8BAS-DUMP] container 157 slot 22 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 157 slot 22 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 157 slot 22 lore 13 | 
+[K8BAS-DUMP] container 157 slot 22 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 157 slot 23 item=minecraft:blaze_powder sbid=- count=1 | Forbidden Strength
+[K8BAS-DUMP] container 157 slot 23 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 157 slot 23 lore 1 | 
+[K8BAS-DUMP] container 157 slot 23 lore 2 |  ✔ Forbidden Strength 1
+[K8BAS-DUMP] container 157 slot 23 lore 3 |  ✔ Forbidden Strength 2
+[K8BAS-DUMP] container 157 slot 23 lore 4 |  ✔ Forbidden Strength 3
+[K8BAS-DUMP] container 157 slot 23 lore 5 |  ✔ Forbidden Strength 4
+[K8BAS-DUMP] container 157 slot 23 lore 6 |  ✔ Forbidden Strength 5
+[K8BAS-DUMP] container 157 slot 23 lore 7 | 
+[K8BAS-DUMP] container 157 slot 23 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 157 slot 23 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 157 slot 23 lore 10 | 
+[K8BAS-DUMP] container 157 slot 23 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 157 slot 23 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 157 slot 23 lore 13 | 
+[K8BAS-DUMP] container 157 slot 23 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 157 slot 24 item=minecraft:player_head sbid=- count=1 | Forbidden Blessing
+[K8BAS-DUMP] container 157 slot 24 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 157 slot 24 lore 1 | 
+[K8BAS-DUMP] container 157 slot 24 lore 2 |  ✔ Forbidden Blessing 1
+[K8BAS-DUMP] container 157 slot 24 lore 3 |  ✔ Forbidden Blessing 2
+[K8BAS-DUMP] container 157 slot 24 lore 4 |  ✔ Forbidden Blessing 3
+[K8BAS-DUMP] container 157 slot 24 lore 5 |  ✔ Forbidden Blessing 4
+[K8BAS-DUMP] container 157 slot 24 lore 6 |  ✔ Forbidden Blessing 5
+[K8BAS-DUMP] container 157 slot 24 lore 7 |  ✔ Forbidden Blessing 6
+[K8BAS-DUMP] container 157 slot 24 lore 8 |  ✔ Forbidden Blessing 7
+[K8BAS-DUMP] container 157 slot 24 lore 9 |  ✔ Forbidden Blessing 8
+[K8BAS-DUMP] container 157 slot 24 lore 10 |  ✔ Forbidden Blessing 9
+[K8BAS-DUMP] container 157 slot 24 lore 11 |  ✔ Forbidden Blessing 10
+[K8BAS-DUMP] container 157 slot 24 lore 12 | 
+[K8BAS-DUMP] container 157 slot 24 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 157 slot 24 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 157 slot 24 lore 15 | 
+[K8BAS-DUMP] container 157 slot 24 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 157 slot 24 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 157 slot 24 lore 18 | 
+[K8BAS-DUMP] container 157 slot 24 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 157 slot 25 item=minecraft:golden_pickaxe sbid=- count=1 | Echos of the Lost
+[K8BAS-DUMP] container 157 slot 25 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 157 slot 25 lore 1 | 
+[K8BAS-DUMP] container 157 slot 25 lore 2 |  ✔ Echos of the Lost 1
+[K8BAS-DUMP] container 157 slot 25 lore 3 |  ✔ Echos of the Lost 2
+[K8BAS-DUMP] container 157 slot 25 lore 4 |  ✔ Echos of the Lost 3
+[K8BAS-DUMP] container 157 slot 25 lore 5 |  ✔ Echos of the Lost 4
+[K8BAS-DUMP] container 157 slot 25 lore 6 |  ✔ Echos of the Lost 5
+[K8BAS-DUMP] container 157 slot 25 lore 7 | 
+[K8BAS-DUMP] container 157 slot 25 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 157 slot 25 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 157 slot 25 lore 10 | 
+[K8BAS-DUMP] container 157 slot 25 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 157 slot 25 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 157 slot 25 lore 13 | 
+[K8BAS-DUMP] container 157 slot 25 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 157 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 37 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 38 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 157 slot 39 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 157 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 157 slot 41 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 42 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 43 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 157 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

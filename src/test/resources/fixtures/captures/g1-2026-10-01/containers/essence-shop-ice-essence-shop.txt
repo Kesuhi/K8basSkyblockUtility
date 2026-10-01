@@ -1,0 +1,136 @@
+[K8BAS-DUMP] container 141 title=Essence Shop ➜ Ice Essence Shop slots=45 state=56
+[K8BAS-DUMP] container 141 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 4 item=minecraft:player_head sbid=- count=1 | Ice Essence Shop
+[K8BAS-DUMP] container 141 slot 4 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 141 slot 4 lore 1 | 
+[K8BAS-DUMP] container 141 slot 4 lore 2 |  ✔ Cooled Forges (5/5)
+[K8BAS-DUMP] container 141 slot 4 lore 3 |  ✔ Season of Joy (10/10)
+[K8BAS-DUMP] container 141 slot 4 lore 4 |  ✔ Cold Efficiency (5/5)
+[K8BAS-DUMP] container 141 slot 4 lore 5 |  ✔ Frozen Skin (5/5)
+[K8BAS-DUMP] container 141 slot 4 lore 6 |  ✔ Drake Piper (1/1)
+[K8BAS-DUMP] container 141 slot 4 lore 7 | 
+[K8BAS-DUMP] container 141 slot 4 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 141 slot 4 lore 9 |                           121/121 XP
+[K8BAS-DUMP] container 141 slot 4 lore 10 | 
+[K8BAS-DUMP] container 141 slot 4 lore 11 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 141 slot 4 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 141 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 20 item=minecraft:furnace sbid=- count=1 | Cooled Forges
+[K8BAS-DUMP] container 141 slot 20 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 141 slot 20 lore 1 | 
+[K8BAS-DUMP] container 141 slot 20 lore 2 |  ✔ Cooled Forges 1
+[K8BAS-DUMP] container 141 slot 20 lore 3 |  ✔ Cooled Forges 2
+[K8BAS-DUMP] container 141 slot 20 lore 4 |  ✔ Cooled Forges 3
+[K8BAS-DUMP] container 141 slot 20 lore 5 |  ✔ Cooled Forges 4
+[K8BAS-DUMP] container 141 slot 20 lore 6 |  ✔ Cooled Forges 5
+[K8BAS-DUMP] container 141 slot 20 lore 7 | 
+[K8BAS-DUMP] container 141 slot 20 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 141 slot 20 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 141 slot 20 lore 10 | 
+[K8BAS-DUMP] container 141 slot 20 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 141 slot 20 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 141 slot 20 lore 13 | 
+[K8BAS-DUMP] container 141 slot 20 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 141 slot 21 item=minecraft:player_head sbid=WHITE_GIFT count=1 | Season of Joy
+[K8BAS-DUMP] container 141 slot 21 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 141 slot 21 lore 1 | 
+[K8BAS-DUMP] container 141 slot 21 lore 2 |  ✔ Season of Joy 1
+[K8BAS-DUMP] container 141 slot 21 lore 3 |  ✔ Season of Joy 2
+[K8BAS-DUMP] container 141 slot 21 lore 4 |  ✔ Season of Joy 3
+[K8BAS-DUMP] container 141 slot 21 lore 5 |  ✔ Season of Joy 4
+[K8BAS-DUMP] container 141 slot 21 lore 6 |  ✔ Season of Joy 5
+[K8BAS-DUMP] container 141 slot 21 lore 7 |  ✔ Season of Joy 6
+[K8BAS-DUMP] container 141 slot 21 lore 8 |  ✔ Season of Joy 7
+[K8BAS-DUMP] container 141 slot 21 lore 9 |  ✔ Season of Joy 8
+[K8BAS-DUMP] container 141 slot 21 lore 10 |  ✔ Season of Joy 9
+[K8BAS-DUMP] container 141 slot 21 lore 11 |  ✔ Season of Joy 10
+[K8BAS-DUMP] container 141 slot 21 lore 12 | 
+[K8BAS-DUMP] container 141 slot 21 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 141 slot 21 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 141 slot 21 lore 15 | 
+[K8BAS-DUMP] container 141 slot 21 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 141 slot 21 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 141 slot 21 lore 18 | 
+[K8BAS-DUMP] container 141 slot 21 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 141 slot 22 item=minecraft:light_blue_banner sbid=- count=1 | Cold Efficiency
+[K8BAS-DUMP] container 141 slot 22 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 141 slot 22 lore 1 | 
+[K8BAS-DUMP] container 141 slot 22 lore 2 |  ✔ Cold Efficiency 1
+[K8BAS-DUMP] container 141 slot 22 lore 3 |  ✔ Cold Efficiency 2
+[K8BAS-DUMP] container 141 slot 22 lore 4 |  ✔ Cold Efficiency 3
+[K8BAS-DUMP] container 141 slot 22 lore 5 |  ✔ Cold Efficiency 4
+[K8BAS-DUMP] container 141 slot 22 lore 6 |  ✔ Cold Efficiency 5
+[K8BAS-DUMP] container 141 slot 22 lore 7 | 
+[K8BAS-DUMP] container 141 slot 22 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 141 slot 22 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 141 slot 22 lore 10 | 
+[K8BAS-DUMP] container 141 slot 22 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 141 slot 22 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 141 slot 22 lore 13 | 
+[K8BAS-DUMP] container 141 slot 22 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 141 slot 23 item=minecraft:ice sbid=- count=1 | Frozen Skin
+[K8BAS-DUMP] container 141 slot 23 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 141 slot 23 lore 1 | 
+[K8BAS-DUMP] container 141 slot 23 lore 2 |  ✔ Frozen Skin 1
+[K8BAS-DUMP] container 141 slot 23 lore 3 |  ✔ Frozen Skin 2
+[K8BAS-DUMP] container 141 slot 23 lore 4 |  ✔ Frozen Skin 3
+[K8BAS-DUMP] container 141 slot 23 lore 5 |  ✔ Frozen Skin 4
+[K8BAS-DUMP] container 141 slot 23 lore 6 |  ✔ Frozen Skin 5
+[K8BAS-DUMP] container 141 slot 23 lore 7 | 
+[K8BAS-DUMP] container 141 slot 23 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 141 slot 23 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 141 slot 23 lore 10 | 
+[K8BAS-DUMP] container 141 slot 23 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 141 slot 23 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 141 slot 23 lore 13 | 
+[K8BAS-DUMP] container 141 slot 23 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 141 slot 24 item=minecraft:player_head sbid=- count=1 | Drake Piper
+[K8BAS-DUMP] container 141 slot 24 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 141 slot 24 lore 1 | 
+[K8BAS-DUMP] container 141 slot 24 lore 2 |  ✔ Drake Piper 1
+[K8BAS-DUMP] container 141 slot 24 lore 3 | 
+[K8BAS-DUMP] container 141 slot 24 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 141 slot 24 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 141 slot 24 lore 6 | 
+[K8BAS-DUMP] container 141 slot 24 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 141 slot 24 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 141 slot 24 lore 9 | 
+[K8BAS-DUMP] container 141 slot 24 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 141 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 37 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 38 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 141 slot 39 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 141 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 141 slot 41 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 42 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 43 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 141 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

@@ -1,0 +1,5 @@
+[K8BAS-DUMP] entities 00 type=minecraft:armor_stand invisible=true pos=-61.50,122.75,0.50 below=- dy=- | CLICK
+[K8BAS-DUMP] entities 01 type=minecraft:armor_stand invisible=true pos=-61.50,123.00,0.50 below=- dy=- | Mort
+[K8BAS-DUMP] entities 02 type=minecraft:armor_stand invisible=true pos=-61.50,123.25,0.50 below=minecraft:player dy=0.25 | GATE KEEPER
+[K8BAS-DUMP] entities 03 type=minecraft:armor_stand invisible=true pos=-54.50,119.50,-3.50 below=- dy=- | Adventurer Saul
+[K8BAS-DUMP] entities 04 type=minecraft:armor_stand invisible=true pos=-54.50,119.25,-3.50 below=- dy=- | CLICK

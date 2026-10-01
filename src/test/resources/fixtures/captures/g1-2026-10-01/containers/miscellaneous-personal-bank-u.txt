@@ -1,0 +1,76 @@
+[K8BAS-DUMP] container 404 title=Miscellaneous ➜ Personal Bank U slots=45 state=56
+[K8BAS-DUMP] container 404 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 4 item=minecraft:player_head sbid=- count=1 | Personal Bank Upgrades
+[K8BAS-DUMP] container 404 slot 4 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 404 slot 4 lore 1 | 
+[K8BAS-DUMP] container 404 slot 4 lore 2 |  ✔ Personal Bank II
+[K8BAS-DUMP] container 404 slot 4 lore 3 |  ✔ Personal Bank III
+[K8BAS-DUMP] container 404 slot 4 lore 4 |  ✔ Personal Bank IV
+[K8BAS-DUMP] container 404 slot 4 lore 5 | 
+[K8BAS-DUMP] container 404 slot 4 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 404 slot 4 lore 7 |                           110/110 XP
+[K8BAS-DUMP] container 404 slot 4 lore 8 | 
+[K8BAS-DUMP] container 404 slot 4 lore 9 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 404 slot 4 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 404 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 20 item=minecraft:player_head sbid=- count=1 | Personal Bank II
+[K8BAS-DUMP] container 404 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 404 slot 20 lore 1 | 
+[K8BAS-DUMP] container 404 slot 20 lore 2 | Gain +25 XP by upgrading your
+[K8BAS-DUMP] container 404 slot 20 lore 3 | Personal Bank to this tier!
+[K8BAS-DUMP] container 404 slot 20 lore 4 | 
+[K8BAS-DUMP] container 404 slot 20 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 404 slot 21 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 22 item=minecraft:player_head sbid=- count=1 | Personal Bank III
+[K8BAS-DUMP] container 404 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 404 slot 22 lore 1 | 
+[K8BAS-DUMP] container 404 slot 22 lore 2 | Gain +35 XP by upgrading your
+[K8BAS-DUMP] container 404 slot 22 lore 3 | Personal Bank to this tier!
+[K8BAS-DUMP] container 404 slot 22 lore 4 | 
+[K8BAS-DUMP] container 404 slot 22 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 404 slot 23 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 24 item=minecraft:player_head sbid=- count=1 | Personal Bank IV
+[K8BAS-DUMP] container 404 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 404 slot 24 lore 1 | 
+[K8BAS-DUMP] container 404 slot 24 lore 2 | Gain +50 XP by upgrading your
+[K8BAS-DUMP] container 404 slot 24 lore 3 | Personal Bank to this tier!
+[K8BAS-DUMP] container 404 slot 24 lore 4 | 
+[K8BAS-DUMP] container 404 slot 24 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 404 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 37 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 38 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 404 slot 39 lore 0 | To Tasks ➜ Miscellaneous
+[K8BAS-DUMP] container 404 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 404 slot 41 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 42 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 43 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 404 slot 44 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 

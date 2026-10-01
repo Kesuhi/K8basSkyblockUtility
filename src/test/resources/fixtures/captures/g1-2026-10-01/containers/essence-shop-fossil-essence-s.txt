@@ -1,0 +1,162 @@
+[K8BAS-DUMP] container 185 title=Essence Shop ➜ Fossil Essence S slots=45 state=56
+[K8BAS-DUMP] container 185 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 4 item=minecraft:player_head sbid=- count=1 | Fossil Essence Shop
+[K8BAS-DUMP] container 185 slot 4 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 185 slot 4 lore 1 | 
+[K8BAS-DUMP] container 185 slot 4 lore 2 |  ✔ Prehistorian (10/10)
+[K8BAS-DUMP] container 185 slot 4 lore 3 |  ✔ Dwarven Expertise (10/10)
+[K8BAS-DUMP] container 185 slot 4 lore 4 |  ✔ Chilled To The Bone (10/10)
+[K8BAS-DUMP] container 185 slot 4 lore 5 |  ✔ Cut Loose (5/5)
+[K8BAS-DUMP] container 185 slot 4 lore 6 |  ✔ Sleight Of Hand (1/1)
+[K8BAS-DUMP] container 185 slot 4 lore 7 |  ✔ Resourceful (5/5)
+[K8BAS-DUMP] container 185 slot 4 lore 8 | 
+[K8BAS-DUMP] container 185 slot 4 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 185 slot 4 lore 10 |                           226/226 XP
+[K8BAS-DUMP] container 185 slot 4 lore 11 | 
+[K8BAS-DUMP] container 185 slot 4 lore 12 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 185 slot 4 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 185 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 19 item=minecraft:player_head sbid=DYE_FOSSIL count=1 | Prehistorian
+[K8BAS-DUMP] container 185 slot 19 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 185 slot 19 lore 1 | 
+[K8BAS-DUMP] container 185 slot 19 lore 2 |  ✔ Prehistorian 1
+[K8BAS-DUMP] container 185 slot 19 lore 3 |  ✔ Prehistorian 2
+[K8BAS-DUMP] container 185 slot 19 lore 4 |  ✔ Prehistorian 3
+[K8BAS-DUMP] container 185 slot 19 lore 5 |  ✔ Prehistorian 4
+[K8BAS-DUMP] container 185 slot 19 lore 6 |  ✔ Prehistorian 5
+[K8BAS-DUMP] container 185 slot 19 lore 7 |  ✔ Prehistorian 6
+[K8BAS-DUMP] container 185 slot 19 lore 8 |  ✔ Prehistorian 7
+[K8BAS-DUMP] container 185 slot 19 lore 9 |  ✔ Prehistorian 8
+[K8BAS-DUMP] container 185 slot 19 lore 10 |  ✔ Prehistorian 9
+[K8BAS-DUMP] container 185 slot 19 lore 11 |  ✔ Prehistorian 10
+[K8BAS-DUMP] container 185 slot 19 lore 12 | 
+[K8BAS-DUMP] container 185 slot 19 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 185 slot 19 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 185 slot 19 lore 15 | 
+[K8BAS-DUMP] container 185 slot 19 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 185 slot 19 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 185 slot 19 lore 18 | 
+[K8BAS-DUMP] container 185 slot 19 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 185 slot 20 item=minecraft:paper sbid=TUNGSTEN count=1 | Dwarven Expertise
+[K8BAS-DUMP] container 185 slot 20 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 185 slot 20 lore 1 | 
+[K8BAS-DUMP] container 185 slot 20 lore 2 |  ✔ Dwarven Expertise 1
+[K8BAS-DUMP] container 185 slot 20 lore 3 |  ✔ Dwarven Expertise 2
+[K8BAS-DUMP] container 185 slot 20 lore 4 |  ✔ Dwarven Expertise 3
+[K8BAS-DUMP] container 185 slot 20 lore 5 |  ✔ Dwarven Expertise 4
+[K8BAS-DUMP] container 185 slot 20 lore 6 |  ✔ Dwarven Expertise 5
+[K8BAS-DUMP] container 185 slot 20 lore 7 |  ✔ Dwarven Expertise 6
+[K8BAS-DUMP] container 185 slot 20 lore 8 |  ✔ Dwarven Expertise 7
+[K8BAS-DUMP] container 185 slot 20 lore 9 |  ✔ Dwarven Expertise 8
+[K8BAS-DUMP] container 185 slot 20 lore 10 |  ✔ Dwarven Expertise 9
+[K8BAS-DUMP] container 185 slot 20 lore 11 |  ✔ Dwarven Expertise 10
+[K8BAS-DUMP] container 185 slot 20 lore 12 | 
+[K8BAS-DUMP] container 185 slot 20 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 185 slot 20 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 185 slot 20 lore 15 | 
+[K8BAS-DUMP] container 185 slot 20 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 185 slot 20 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 185 slot 20 lore 18 | 
+[K8BAS-DUMP] container 185 slot 20 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 185 slot 21 item=minecraft:paper sbid=SKELETON_FISH_BRONZE count=1 | Chilled To The Bone
+[K8BAS-DUMP] container 185 slot 21 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 185 slot 21 lore 1 | 
+[K8BAS-DUMP] container 185 slot 21 lore 2 |  ✔ Chilled To The Bone 1
+[K8BAS-DUMP] container 185 slot 21 lore 3 |  ✔ Chilled To The Bone 2
+[K8BAS-DUMP] container 185 slot 21 lore 4 |  ✔ Chilled To The Bone 3
+[K8BAS-DUMP] container 185 slot 21 lore 5 |  ✔ Chilled To The Bone 4
+[K8BAS-DUMP] container 185 slot 21 lore 6 |  ✔ Chilled To The Bone 5
+[K8BAS-DUMP] container 185 slot 21 lore 7 |  ✔ Chilled To The Bone 6
+[K8BAS-DUMP] container 185 slot 21 lore 8 |  ✔ Chilled To The Bone 7
+[K8BAS-DUMP] container 185 slot 21 lore 9 |  ✔ Chilled To The Bone 8
+[K8BAS-DUMP] container 185 slot 21 lore 10 |  ✔ Chilled To The Bone 9
+[K8BAS-DUMP] container 185 slot 21 lore 11 |  ✔ Chilled To The Bone 10
+[K8BAS-DUMP] container 185 slot 21 lore 12 | 
+[K8BAS-DUMP] container 185 slot 21 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 185 slot 21 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 185 slot 21 lore 15 | 
+[K8BAS-DUMP] container 185 slot 21 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 185 slot 21 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 185 slot 21 lore 18 | 
+[K8BAS-DUMP] container 185 slot 21 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 185 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 23 item=minecraft:player_head sbid=- count=1 | Cut Loose
+[K8BAS-DUMP] container 185 slot 23 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 185 slot 23 lore 1 | 
+[K8BAS-DUMP] container 185 slot 23 lore 2 |  ✔ Cut Loose 1
+[K8BAS-DUMP] container 185 slot 23 lore 3 |  ✔ Cut Loose 2
+[K8BAS-DUMP] container 185 slot 23 lore 4 |  ✔ Cut Loose 3
+[K8BAS-DUMP] container 185 slot 23 lore 5 |  ✔ Cut Loose 4
+[K8BAS-DUMP] container 185 slot 23 lore 6 |  ✔ Cut Loose 5
+[K8BAS-DUMP] container 185 slot 23 lore 7 | 
+[K8BAS-DUMP] container 185 slot 23 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 185 slot 23 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 185 slot 23 lore 10 | 
+[K8BAS-DUMP] container 185 slot 23 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 185 slot 23 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 185 slot 23 lore 13 | 
+[K8BAS-DUMP] container 185 slot 23 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 185 slot 24 item=minecraft:player_head sbid=- count=1 | Sleight Of Hand
+[K8BAS-DUMP] container 185 slot 24 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 185 slot 24 lore 1 | 
+[K8BAS-DUMP] container 185 slot 24 lore 2 |  ✔ Sleight Of Hand 1
+[K8BAS-DUMP] container 185 slot 24 lore 3 | 
+[K8BAS-DUMP] container 185 slot 24 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 185 slot 24 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 185 slot 24 lore 6 | 
+[K8BAS-DUMP] container 185 slot 24 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 185 slot 24 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 185 slot 24 lore 9 | 
+[K8BAS-DUMP] container 185 slot 24 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 185 slot 25 item=minecraft:paper sbid=SKELETON_KEY count=1 | Resourceful
+[K8BAS-DUMP] container 185 slot 25 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 185 slot 25 lore 1 | 
+[K8BAS-DUMP] container 185 slot 25 lore 2 |  ✔ Resourceful 1
+[K8BAS-DUMP] container 185 slot 25 lore 3 |  ✔ Resourceful 2
+[K8BAS-DUMP] container 185 slot 25 lore 4 |  ✔ Resourceful 3
+[K8BAS-DUMP] container 185 slot 25 lore 5 |  ✔ Resourceful 4
+[K8BAS-DUMP] container 185 slot 25 lore 6 |  ✔ Resourceful 5
+[K8BAS-DUMP] container 185 slot 25 lore 7 | 
+[K8BAS-DUMP] container 185 slot 25 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 185 slot 25 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 185 slot 25 lore 10 | 
+[K8BAS-DUMP] container 185 slot 25 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 185 slot 25 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 185 slot 25 lore 13 | 
+[K8BAS-DUMP] container 185 slot 25 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 185 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 37 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 38 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 185 slot 39 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 185 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 185 slot 41 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 42 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 43 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 185 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

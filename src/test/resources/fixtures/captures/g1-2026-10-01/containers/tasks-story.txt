@@ -1,0 +1,119 @@
+[K8BAS-DUMP] container 433 title=Tasks ➜ Story slots=45 state=56
+[K8BAS-DUMP] container 433 slot 0 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 1 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 2 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 3 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 4 item=minecraft:writable_book sbid=- count=1 | Story Tasks
+[K8BAS-DUMP] container 433 slot 4 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 433 slot 4 lore 1 | 
+[K8BAS-DUMP] container 433 slot 4 lore 2 | All XP Tasks that are directly
+[K8BAS-DUMP] container 433 slot 4 lore 3 | related with progressing through
+[K8BAS-DUMP] container 433 slot 4 lore 4 | SkyBlock's story!
+[K8BAS-DUMP] container 433 slot 4 lore 5 | 
+[K8BAS-DUMP] container 433 slot 4 lore 6 | ▶ Rift Guide
+[K8BAS-DUMP] container 433 slot 4 lore 7 | ▶ Complete Objectives
+[K8BAS-DUMP] container 433 slot 4 lore 8 | ▶ Chapters
+[K8BAS-DUMP] container 433 slot 4 lore 9 | 
+[K8BAS-DUMP] container 433 slot 4 lore 10 | Progress to Complete Category: 71%
+[K8BAS-DUMP] container 433 slot 4 lore 11 |                           804/1,132 XP
+[K8BAS-DUMP] container 433 slot 5 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 6 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 7 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 8 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 9 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 17 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 18 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 20 item=minecraft:lilac sbid=- count=1 | Rift Guide
+[K8BAS-DUMP] container 433 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 433 slot 20 lore 1 | 
+[K8BAS-DUMP] container 433 slot 20 lore 2 | Gain XP by completing the Rift Guide!
+[K8BAS-DUMP] container 433 slot 20 lore 3 | Per Objective Completed: +3 XP
+[K8BAS-DUMP] container 433 slot 20 lore 4 | 
+[K8BAS-DUMP] container 433 slot 20 lore 5 | Total Progress: 82.5%
+[K8BAS-DUMP] container 433 slot 20 lore 6 |                           297/360 XP
+[K8BAS-DUMP] container 433 slot 20 lore 7 | 
+[K8BAS-DUMP] container 433 slot 20 lore 8 | This task is worth 0.6% of your Total
+[K8BAS-DUMP] container 433 slot 20 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 433 slot 20 lore 10 | 
+[K8BAS-DUMP] container 433 slot 20 lore 11 | Go earn some XP!
+[K8BAS-DUMP] container 433 slot 21 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 22 item=minecraft:writable_book sbid=- count=1 | Complete Objectives
+[K8BAS-DUMP] container 433 slot 22 lore 0 | 44 Tasks
+[K8BAS-DUMP] container 433 slot 22 lore 1 | 
+[K8BAS-DUMP] container 433 slot 22 lore 2 |  ✔ Into the Woods
+[K8BAS-DUMP] container 433 slot 22 lore 3 |  ✔ Staying Informed
+[K8BAS-DUMP] container 433 slot 22 lore 4 |  ✔ Talk to Agatha
+[K8BAS-DUMP] container 433 slot 22 lore 5 |  ✔ The Rebuild
+[K8BAS-DUMP] container 433 slot 22 lore 6 |  ✔ Friendly Farmer 2
+[K8BAS-DUMP] container 433 slot 22 lore 7 |  ✔ Shady Jake
+[K8BAS-DUMP] container 433 slot 22 lore 8 |  ✔ Hub Explorer
+[K8BAS-DUMP] container 433 slot 22 lore 9 |  ✔ Finding the Engine
+[K8BAS-DUMP] container 433 slot 22 lore 10 |  ✔ A Helping Hand
+[K8BAS-DUMP] container 433 slot 22 lore 11 |  ✔ Kill Zombies
+[K8BAS-DUMP] container 433 slot 22 lore 12 |  ✔ The End Race
+[K8BAS-DUMP] container 433 slot 22 lore 13 |  ✔ David's Hunting Lessons
+[K8BAS-DUMP] container 433 slot 22 lore 14 |  ✔ Library Card
+[K8BAS-DUMP] container 433 slot 22 lore 15 |  ✔ Helpful Farmer
+[K8BAS-DUMP] container 433 slot 22 lore 16 | And 29 more...
+[K8BAS-DUMP] container 433 slot 22 lore 17 | 
+[K8BAS-DUMP] container 433 slot 22 lore 18 | Total Progress: 97.6%
+[K8BAS-DUMP] container 433 slot 22 lore 19 |                           207/212 XP
+[K8BAS-DUMP] container 433 slot 22 lore 20 | 
+[K8BAS-DUMP] container 433 slot 22 lore 21 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 433 slot 22 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 433 slot 22 lore 23 | 
+[K8BAS-DUMP] container 433 slot 22 lore 24 | Click to view tasks!
+[K8BAS-DUMP] container 433 slot 23 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 24 item=minecraft:book sbid=- count=1 | Chapters
+[K8BAS-DUMP] container 433 slot 24 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 433 slot 24 lore 1 | 
+[K8BAS-DUMP] container 433 slot 24 lore 2 |  ✖ Moonglade Marsh Chapters
+[K8BAS-DUMP] container 433 slot 24 lore 3 |  ✔ Backwater Bayou Chapters
+[K8BAS-DUMP] container 433 slot 24 lore 4 |  ✖ Torrhus Canyon Chapters
+[K8BAS-DUMP] container 433 slot 24 lore 5 |  ✔ Lotus Atoll Chapters
+[K8BAS-DUMP] container 433 slot 24 lore 6 | 
+[K8BAS-DUMP] container 433 slot 24 lore 7 | Total Progress: 53.6%
+[K8BAS-DUMP] container 433 slot 24 lore 8 |                           300/560 XP
+[K8BAS-DUMP] container 433 slot 24 lore 9 | 
+[K8BAS-DUMP] container 433 slot 24 lore 10 | This task is worth 0.6% of your Total
+[K8BAS-DUMP] container 433 slot 24 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 433 slot 24 lore 12 | 
+[K8BAS-DUMP] container 433 slot 24 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 433 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 26 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 27 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 35 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 36 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 37 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 38 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 433 slot 39 lore 0 | To Ways to Level Up
+[K8BAS-DUMP] container 433 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 433 slot 41 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 433 slot 41 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 433 slot 41 lore 1 | 
+[K8BAS-DUMP] container 433 slot 41 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 433 slot 41 lore 3 |   Earned XP
+[K8BAS-DUMP] container 433 slot 41 lore 4 |   Available XP
+[K8BAS-DUMP] container 433 slot 41 lore 5 |   A to Z
+[K8BAS-DUMP] container 433 slot 41 lore 6 |   Z to A
+[K8BAS-DUMP] container 433 slot 41 lore 7 | 
+[K8BAS-DUMP] container 433 slot 41 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 433 slot 42 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 43 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 433 slot 44 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 

@@ -1,0 +1,197 @@
+[K8BAS-DUMP] container 393 title=Miscellaneous ➜ Abiphone Contac slots=45 state=56
+[K8BAS-DUMP] container 393 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 4 item=minecraft:paper sbid=ABIPHONE_XIV_ENORMOUS_PURPLE count=1 | Abiphone Contacts
+[K8BAS-DUMP] container 393 slot 4 lore 0 | 84 Tasks
+[K8BAS-DUMP] container 393 slot 4 lore 1 | 
+[K8BAS-DUMP] container 393 slot 4 lore 2 |  ✔ Queen Mismyla
+[K8BAS-DUMP] container 393 slot 4 lore 3 |  ✔ Crag
+[K8BAS-DUMP] container 393 slot 4 lore 4 |  ✔ Captain Ahone
+[K8BAS-DUMP] container 393 slot 4 lore 5 |  ✔ Lumber Merchant
+[K8BAS-DUMP] container 393 slot 4 lore 6 |  ✔ Bartender
+[K8BAS-DUMP] container 393 slot 4 lore 7 |  ✔ Clerk Seraphine
+[K8BAS-DUMP] container 393 slot 4 lore 8 |  ✔ Rosemary
+[K8BAS-DUMP] container 393 slot 4 lore 9 |  ✔ Shifty
+[K8BAS-DUMP] container 393 slot 4 lore 10 |  ✔ Elle
+[K8BAS-DUMP] container 393 slot 4 lore 11 |  ✔ Kysha
+[K8BAS-DUMP] container 393 slot 4 lore 12 |  ✔ Zog
+[K8BAS-DUMP] container 393 slot 4 lore 13 |  ✔ Sirius
+[K8BAS-DUMP] container 393 slot 4 lore 14 |  ✔ Kaus
+[K8BAS-DUMP] container 393 slot 4 lore 15 |  ✔ Taylor
+[K8BAS-DUMP] container 393 slot 4 lore 16 | And 69 more...
+[K8BAS-DUMP] container 393 slot 4 lore 17 | 
+[K8BAS-DUMP] container 393 slot 4 lore 18 | Total Progress: 92.9%
+[K8BAS-DUMP] container 393 slot 4 lore 19 |                           780/840 XP
+[K8BAS-DUMP] container 393 slot 4 lore 20 | 
+[K8BAS-DUMP] container 393 slot 4 lore 21 | This task is worth 1.5% of your Total
+[K8BAS-DUMP] container 393 slot 4 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 393 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 10 item=minecraft:player_head sbid=- count=1 | Queen Mismyla
+[K8BAS-DUMP] container 393 slot 10 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 10 lore 1 | 
+[K8BAS-DUMP] container 393 slot 10 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 10 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 10 lore 4 | 
+[K8BAS-DUMP] container 393 slot 10 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 11 item=minecraft:player_head sbid=- count=1 | Crag
+[K8BAS-DUMP] container 393 slot 11 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 11 lore 1 | 
+[K8BAS-DUMP] container 393 slot 11 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 11 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 11 lore 4 | 
+[K8BAS-DUMP] container 393 slot 11 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 12 item=minecraft:player_head sbid=- count=1 | Captain Ahone
+[K8BAS-DUMP] container 393 slot 12 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 12 lore 1 | 
+[K8BAS-DUMP] container 393 slot 12 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 12 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 12 lore 4 | 
+[K8BAS-DUMP] container 393 slot 12 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 13 item=minecraft:player_head sbid=- count=1 | Lumber Merchant
+[K8BAS-DUMP] container 393 slot 13 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 13 lore 1 | 
+[K8BAS-DUMP] container 393 slot 13 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 13 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 13 lore 4 | 
+[K8BAS-DUMP] container 393 slot 13 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 14 item=minecraft:player_head sbid=- count=1 | Bartender
+[K8BAS-DUMP] container 393 slot 14 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 14 lore 1 | 
+[K8BAS-DUMP] container 393 slot 14 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 14 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 14 lore 4 | 
+[K8BAS-DUMP] container 393 slot 14 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 15 item=minecraft:player_head sbid=- count=1 | Clerk Seraphine
+[K8BAS-DUMP] container 393 slot 15 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 15 lore 1 | 
+[K8BAS-DUMP] container 393 slot 15 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 15 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 15 lore 4 | 
+[K8BAS-DUMP] container 393 slot 15 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 16 item=minecraft:player_head sbid=- count=1 | Rosemary
+[K8BAS-DUMP] container 393 slot 16 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 16 lore 1 | 
+[K8BAS-DUMP] container 393 slot 16 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 16 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 16 lore 4 | 
+[K8BAS-DUMP] container 393 slot 16 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 19 item=minecraft:player_head sbid=- count=1 | Shifty
+[K8BAS-DUMP] container 393 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 19 lore 1 | 
+[K8BAS-DUMP] container 393 slot 19 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 19 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 19 lore 4 | 
+[K8BAS-DUMP] container 393 slot 19 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 20 item=minecraft:player_head sbid=- count=1 | Elle
+[K8BAS-DUMP] container 393 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 20 lore 1 | 
+[K8BAS-DUMP] container 393 slot 20 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 20 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 20 lore 4 | 
+[K8BAS-DUMP] container 393 slot 20 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 21 item=minecraft:player_head sbid=- count=1 | Kysha
+[K8BAS-DUMP] container 393 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 21 lore 1 | 
+[K8BAS-DUMP] container 393 slot 21 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 21 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 21 lore 4 | 
+[K8BAS-DUMP] container 393 slot 21 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 22 item=minecraft:player_head sbid=- count=1 | Zog
+[K8BAS-DUMP] container 393 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 22 lore 1 | 
+[K8BAS-DUMP] container 393 slot 22 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 22 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 22 lore 4 | 
+[K8BAS-DUMP] container 393 slot 22 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 23 item=minecraft:player_head sbid=- count=1 | Sirius
+[K8BAS-DUMP] container 393 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 23 lore 1 | 
+[K8BAS-DUMP] container 393 slot 23 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 23 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 23 lore 4 | 
+[K8BAS-DUMP] container 393 slot 23 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 24 item=minecraft:player_head sbid=- count=1 | Kaus
+[K8BAS-DUMP] container 393 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 24 lore 1 | 
+[K8BAS-DUMP] container 393 slot 24 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 24 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 24 lore 4 | 
+[K8BAS-DUMP] container 393 slot 24 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 25 item=minecraft:player_head sbid=- count=1 | Taylor
+[K8BAS-DUMP] container 393 slot 25 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 25 lore 1 | 
+[K8BAS-DUMP] container 393 slot 25 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 25 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 25 lore 4 | 
+[K8BAS-DUMP] container 393 slot 25 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 28 item=minecraft:player_head sbid=- count=1 | St. Jerry
+[K8BAS-DUMP] container 393 slot 28 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 28 lore 1 | 
+[K8BAS-DUMP] container 393 slot 28 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 28 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 28 lore 4 | 
+[K8BAS-DUMP] container 393 slot 28 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 29 item=minecraft:player_head sbid=- count=1 | Anita
+[K8BAS-DUMP] container 393 slot 29 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 29 lore 1 | 
+[K8BAS-DUMP] container 393 slot 29 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 29 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 29 lore 4 | 
+[K8BAS-DUMP] container 393 slot 29 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 30 item=minecraft:player_head sbid=- count=1 | Geo
+[K8BAS-DUMP] container 393 slot 30 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 30 lore 1 | 
+[K8BAS-DUMP] container 393 slot 30 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 30 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 30 lore 4 | 
+[K8BAS-DUMP] container 393 slot 30 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 31 item=minecraft:player_head sbid=- count=1 | Alda
+[K8BAS-DUMP] container 393 slot 31 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 31 lore 1 | 
+[K8BAS-DUMP] container 393 slot 31 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 31 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 31 lore 4 | 
+[K8BAS-DUMP] container 393 slot 31 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 32 item=minecraft:player_head sbid=- count=1 | Dusk
+[K8BAS-DUMP] container 393 slot 32 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 32 lore 1 | 
+[K8BAS-DUMP] container 393 slot 32 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 32 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 32 lore 4 | 
+[K8BAS-DUMP] container 393 slot 32 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 33 item=minecraft:player_head sbid=- count=1 | Vincent
+[K8BAS-DUMP] container 393 slot 33 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 33 lore 1 | 
+[K8BAS-DUMP] container 393 slot 33 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 33 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 33 lore 4 | 
+[K8BAS-DUMP] container 393 slot 33 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 34 item=minecraft:player_head sbid=- count=1 | Wool Weaver
+[K8BAS-DUMP] container 393 slot 34 lore 0 | XP Task
+[K8BAS-DUMP] container 393 slot 34 lore 1 | 
+[K8BAS-DUMP] container 393 slot 34 lore 2 | Gain +10 XP for obtaining this
+[K8BAS-DUMP] container 393 slot 34 lore 3 | Abiphone Contact!
+[K8BAS-DUMP] container 393 slot 34 lore 4 | 
+[K8BAS-DUMP] container 393 slot 34 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 393 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 37 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 38 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 393 slot 39 lore 0 | To Tasks ➜ Miscellaneous
+[K8BAS-DUMP] container 393 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 393 slot 41 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 42 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 43 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 393 slot 44 item=minecraft:arrow sbid=- count=1 | Next Page
+[K8BAS-DUMP] container 393 slot 44 lore 0 | Page 2

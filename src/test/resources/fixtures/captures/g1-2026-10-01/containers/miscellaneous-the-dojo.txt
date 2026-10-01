@@ -1,0 +1,97 @@
+[K8BAS-DUMP] container 384 title=Miscellaneous ➜ The Dojo slots=45 state=56
+[K8BAS-DUMP] container 384 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 4 item=minecraft:player_head sbid=DOJO_BLACK_BELT count=1 | The Dojo
+[K8BAS-DUMP] container 384 slot 4 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 384 slot 4 lore 1 | 
+[K8BAS-DUMP] container 384 slot 4 lore 2 |  ✔ White Belt
+[K8BAS-DUMP] container 384 slot 4 lore 3 |  ✔ Yellow Belt
+[K8BAS-DUMP] container 384 slot 4 lore 4 |  ✔ Green Belt
+[K8BAS-DUMP] container 384 slot 4 lore 5 |  ✔ Blue Belt
+[K8BAS-DUMP] container 384 slot 4 lore 6 |  ✔ Brown Belt
+[K8BAS-DUMP] container 384 slot 4 lore 7 |  ✔ Black Belt
+[K8BAS-DUMP] container 384 slot 4 lore 8 | 
+[K8BAS-DUMP] container 384 slot 4 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 384 slot 4 lore 10 |                           425/425 XP
+[K8BAS-DUMP] container 384 slot 4 lore 11 | 
+[K8BAS-DUMP] container 384 slot 4 lore 12 | This task is worth 0.8% of your Total
+[K8BAS-DUMP] container 384 slot 4 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 384 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 19 item=minecraft:player_head sbid=DOJO_WHITE_BELT count=1 | White Belt
+[K8BAS-DUMP] container 384 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 384 slot 19 lore 1 | 
+[K8BAS-DUMP] container 384 slot 19 lore 2 | Gain +20 XP by obtaining this Dojo
+[K8BAS-DUMP] container 384 slot 19 lore 3 | belt!
+[K8BAS-DUMP] container 384 slot 19 lore 4 | 
+[K8BAS-DUMP] container 384 slot 19 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 384 slot 20 item=minecraft:player_head sbid=DOJO_YELLOW_BELT count=1 | Yellow Belt
+[K8BAS-DUMP] container 384 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 384 slot 20 lore 1 | 
+[K8BAS-DUMP] container 384 slot 20 lore 2 | Gain +30 XP by obtaining this Dojo
+[K8BAS-DUMP] container 384 slot 20 lore 3 | belt!
+[K8BAS-DUMP] container 384 slot 20 lore 4 | 
+[K8BAS-DUMP] container 384 slot 20 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 384 slot 21 item=minecraft:player_head sbid=DOJO_GREEN_BELT count=1 | Green Belt
+[K8BAS-DUMP] container 384 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 384 slot 21 lore 1 | 
+[K8BAS-DUMP] container 384 slot 21 lore 2 | Gain +50 XP by obtaining this Dojo
+[K8BAS-DUMP] container 384 slot 21 lore 3 | belt!
+[K8BAS-DUMP] container 384 slot 21 lore 4 | 
+[K8BAS-DUMP] container 384 slot 21 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 384 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 23 item=minecraft:player_head sbid=DOJO_BLUE_BELT count=1 | Blue Belt
+[K8BAS-DUMP] container 384 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 384 slot 23 lore 1 | 
+[K8BAS-DUMP] container 384 slot 23 lore 2 | Gain +75 XP by obtaining this Dojo
+[K8BAS-DUMP] container 384 slot 23 lore 3 | belt!
+[K8BAS-DUMP] container 384 slot 23 lore 4 | 
+[K8BAS-DUMP] container 384 slot 23 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 384 slot 24 item=minecraft:player_head sbid=DOJO_BROWN_BELT count=1 | Brown Belt
+[K8BAS-DUMP] container 384 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 384 slot 24 lore 1 | 
+[K8BAS-DUMP] container 384 slot 24 lore 2 | Gain +100 XP by obtaining this Dojo
+[K8BAS-DUMP] container 384 slot 24 lore 3 | belt!
+[K8BAS-DUMP] container 384 slot 24 lore 4 | 
+[K8BAS-DUMP] container 384 slot 24 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 384 slot 25 item=minecraft:player_head sbid=DOJO_BLACK_BELT count=1 | Black Belt
+[K8BAS-DUMP] container 384 slot 25 lore 0 | XP Task
+[K8BAS-DUMP] container 384 slot 25 lore 1 | 
+[K8BAS-DUMP] container 384 slot 25 lore 2 | Gain +150 XP by obtaining this Dojo
+[K8BAS-DUMP] container 384 slot 25 lore 3 | belt!
+[K8BAS-DUMP] container 384 slot 25 lore 4 | 
+[K8BAS-DUMP] container 384 slot 25 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 384 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 37 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 38 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 384 slot 39 lore 0 | To Tasks ➜ Miscellaneous
+[K8BAS-DUMP] container 384 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 384 slot 41 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 42 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 43 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 384 slot 44 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 

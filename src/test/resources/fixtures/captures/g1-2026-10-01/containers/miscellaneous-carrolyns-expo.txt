@@ -1,0 +1,128 @@
+[K8BAS-DUMP] container 380 title=Miscellaneous ➜ Carrolyn's Expo slots=54 state=65
+[K8BAS-DUMP] container 380 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 4 item=minecraft:player_head sbid=EXPORTABLE_CARROTS count=1 | Carrolyn's Exportable Crops
+[K8BAS-DUMP] container 380 slot 4 lore 0 | 8 Tasks
+[K8BAS-DUMP] container 380 slot 4 lore 1 | 
+[K8BAS-DUMP] container 380 slot 4 lore 2 |  ✖ Export 3,000x Half-Eaten Mushroom
+[K8BAS-DUMP] container 380 slot 4 lore 3 |  ✔ Export 3,000x Fine Flour
+[K8BAS-DUMP] container 380 slot 4 lore 4 |  ✖ Export 3,000x Potted Cactus
+[K8BAS-DUMP] container 380 slot 4 lore 5 |  ✖ Export 3,000x Prickly Kiss
+[K8BAS-DUMP] container 380 slot 4 lore 6 |  ✖ Export 3,000x Exportable Carrots
+[K8BAS-DUMP] container 380 slot 4 lore 7 |  ✖ Export 3,000x Warty
+[K8BAS-DUMP] container 380 slot 4 lore 8 |  ✖ Export 3,000x Supreme Chocolate Bar
+[K8BAS-DUMP] container 380 slot 4 lore 9 |  ✖ Export 3,000x Expired Pumpkin
+[K8BAS-DUMP] container 380 slot 4 lore 10 | 
+[K8BAS-DUMP] container 380 slot 4 lore 11 | Total Progress: 12.5%
+[K8BAS-DUMP] container 380 slot 4 lore 12 |                           5/40 XP
+[K8BAS-DUMP] container 380 slot 4 lore 13 | 
+[K8BAS-DUMP] container 380 slot 4 lore 14 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 380 slot 4 lore 15 | SkyBlock XP!
+[K8BAS-DUMP] container 380 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 20 item=minecraft:paper sbid=HALF_EATEN_MUSHROOM count=1 | Export 3,000x Half-Eaten Mushroom
+[K8BAS-DUMP] container 380 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 380 slot 20 lore 1 | 
+[K8BAS-DUMP] container 380 slot 20 lore 2 | Bring 3,000 of Half-Eaten Mushroom
+[K8BAS-DUMP] container 380 slot 20 lore 3 | to Carrolyn to gain +5 XP.
+[K8BAS-DUMP] container 380 slot 20 lore 4 |                      0/3k
+[K8BAS-DUMP] container 380 slot 20 lore 5 | 
+[K8BAS-DUMP] container 380 slot 20 lore 6 | This task can only be completed once!
+[K8BAS-DUMP] container 380 slot 21 item=minecraft:paper sbid=FINE_FLOUR count=1 | Export 3,000x Fine Flour
+[K8BAS-DUMP] container 380 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 380 slot 21 lore 1 | 
+[K8BAS-DUMP] container 380 slot 21 lore 2 | Bring 3,000 of Fine Flour to
+[K8BAS-DUMP] container 380 slot 21 lore 3 | Carrolyn to gain +5 XP.
+[K8BAS-DUMP] container 380 slot 21 lore 4 |                      3,000/3k
+[K8BAS-DUMP] container 380 slot 21 lore 5 | 
+[K8BAS-DUMP] container 380 slot 21 lore 6 | You have completed this task!
+[K8BAS-DUMP] container 380 slot 22 item=minecraft:paper sbid=POTTED_CACTUS count=1 | Export 3,000x Potted Cactus
+[K8BAS-DUMP] container 380 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 380 slot 22 lore 1 | 
+[K8BAS-DUMP] container 380 slot 22 lore 2 | Bring 3,000 of Potted Cactus to
+[K8BAS-DUMP] container 380 slot 22 lore 3 | Carrolyn to gain +5 XP.
+[K8BAS-DUMP] container 380 slot 22 lore 4 |                      0/3k
+[K8BAS-DUMP] container 380 slot 22 lore 5 | 
+[K8BAS-DUMP] container 380 slot 22 lore 6 | This task can only be completed once!
+[K8BAS-DUMP] container 380 slot 23 item=minecraft:paper sbid=PRICKLY_KISS count=1 | Export 3,000x Prickly Kiss
+[K8BAS-DUMP] container 380 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 380 slot 23 lore 1 | 
+[K8BAS-DUMP] container 380 slot 23 lore 2 | Bring 3,000 of Prickly Kiss to
+[K8BAS-DUMP] container 380 slot 23 lore 3 | Carrolyn to gain +5 XP.
+[K8BAS-DUMP] container 380 slot 23 lore 4 |                      0/3k
+[K8BAS-DUMP] container 380 slot 23 lore 5 | 
+[K8BAS-DUMP] container 380 slot 23 lore 6 | This task can only be completed once!
+[K8BAS-DUMP] container 380 slot 24 item=minecraft:player_head sbid=EXPORTABLE_CARROTS count=1 | Export 3,000x Exportable Carrots
+[K8BAS-DUMP] container 380 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 380 slot 24 lore 1 | 
+[K8BAS-DUMP] container 380 slot 24 lore 2 | Bring 3,000 of Exportable Carrots to
+[K8BAS-DUMP] container 380 slot 24 lore 3 | Carrolyn to gain +5 XP.
+[K8BAS-DUMP] container 380 slot 24 lore 4 |                      0/3k
+[K8BAS-DUMP] container 380 slot 24 lore 5 | 
+[K8BAS-DUMP] container 380 slot 24 lore 6 | This task can only be completed once!
+[K8BAS-DUMP] container 380 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 30 item=minecraft:paper sbid=WARTY count=1 | Export 3,000x Warty
+[K8BAS-DUMP] container 380 slot 30 lore 0 | XP Task
+[K8BAS-DUMP] container 380 slot 30 lore 1 | 
+[K8BAS-DUMP] container 380 slot 30 lore 2 | Bring 3,000 of Warty to Carrolyn to
+[K8BAS-DUMP] container 380 slot 30 lore 3 | gain +5 XP.
+[K8BAS-DUMP] container 380 slot 30 lore 4 |                      0/3k
+[K8BAS-DUMP] container 380 slot 30 lore 5 | 
+[K8BAS-DUMP] container 380 slot 30 lore 6 | This task can only be completed once!
+[K8BAS-DUMP] container 380 slot 31 item=minecraft:player_head sbid=SUPREME_CHOCOLATE_BAR count=1 | Export 3,000x Supreme Chocolate Bar
+[K8BAS-DUMP] container 380 slot 31 lore 0 | XP Task
+[K8BAS-DUMP] container 380 slot 31 lore 1 | 
+[K8BAS-DUMP] container 380 slot 31 lore 2 | Bring 3,000 of Supreme Chocolate
+[K8BAS-DUMP] container 380 slot 31 lore 3 | Bar to Carrolyn to gain +5 XP.
+[K8BAS-DUMP] container 380 slot 31 lore 4 |                      1,388/3k
+[K8BAS-DUMP] container 380 slot 31 lore 5 | 
+[K8BAS-DUMP] container 380 slot 31 lore 6 | This task can only be completed once!
+[K8BAS-DUMP] container 380 slot 32 item=minecraft:player_head sbid=EXPIRED_PUMPKIN count=1 | Export 3,000x Expired Pumpkin
+[K8BAS-DUMP] container 380 slot 32 lore 0 | XP Task
+[K8BAS-DUMP] container 380 slot 32 lore 1 | 
+[K8BAS-DUMP] container 380 slot 32 lore 2 | Bring 3,000 of Expired Pumpkin to
+[K8BAS-DUMP] container 380 slot 32 lore 3 | Carrolyn to gain +5 XP.
+[K8BAS-DUMP] container 380 slot 32 lore 4 |                      0/3k
+[K8BAS-DUMP] container 380 slot 32 lore 5 | 
+[K8BAS-DUMP] container 380 slot 32 lore 6 | This task can only be completed once!
+[K8BAS-DUMP] container 380 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 44 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 45 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 46 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 47 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 380 slot 48 lore 0 | To Tasks ➜ Miscellaneous
+[K8BAS-DUMP] container 380 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 380 slot 50 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 51 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 52 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 380 slot 53 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 

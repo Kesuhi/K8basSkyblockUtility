@@ -1,0 +1,143 @@
+[K8BAS-DUMP] container 332 title=Tasks ➜ Foraging slots=45 state=56
+[K8BAS-DUMP] container 332 slot 0 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 1 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 2 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 3 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 4 item=minecraft:jungle_sapling sbid=- count=1 | Foraging Tasks
+[K8BAS-DUMP] container 332 slot 4 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 332 slot 4 lore 1 | 
+[K8BAS-DUMP] container 332 slot 4 lore 2 | All Foraging related XP Tasks.
+[K8BAS-DUMP] container 332 slot 4 lore 3 | 
+[K8BAS-DUMP] container 332 slot 4 lore 4 | ▶ Heart of the Forest
+[K8BAS-DUMP] container 332 slot 4 lore 5 | ▶ Center of the Forest
+[K8BAS-DUMP] container 332 slot 4 lore 6 | ▶ Tree Gift Milestones
+[K8BAS-DUMP] container 332 slot 4 lore 7 | ▶ Safari Milestones
+[K8BAS-DUMP] container 332 slot 4 lore 8 | 
+[K8BAS-DUMP] container 332 slot 4 lore 9 | Progress to Complete Category: 60.6%
+[K8BAS-DUMP] container 332 slot 4 lore 10 |                           1,527/2,519 XP
+[K8BAS-DUMP] container 332 slot 5 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 6 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 7 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 8 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 9 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 17 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 18 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 20 item=minecraft:player_head sbid=- count=1 | Heart of the Forest
+[K8BAS-DUMP] container 332 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 332 slot 20 lore 1 | 
+[K8BAS-DUMP] container 332 slot 20 lore 2 | Gain XP by progressing your Heart
+[K8BAS-DUMP] container 332 slot 20 lore 3 | of the Forest:
+[K8BAS-DUMP] container 332 slot 20 lore 4 | Tier 1: +35 XP
+[K8BAS-DUMP] container 332 slot 20 lore 5 | Tier 2: +45 XP
+[K8BAS-DUMP] container 332 slot 20 lore 6 | Tier 3: +60 XP
+[K8BAS-DUMP] container 332 slot 20 lore 7 | Tier 4: +75 XP
+[K8BAS-DUMP] container 332 slot 20 lore 8 | Tier 5: +90 XP
+[K8BAS-DUMP] container 332 slot 20 lore 9 | Tier 6: +110 XP
+[K8BAS-DUMP] container 332 slot 20 lore 10 | Tier 7: +130 XP
+[K8BAS-DUMP] container 332 slot 20 lore 11 | Tier 8: +180 XP
+[K8BAS-DUMP] container 332 slot 20 lore 12 | 
+[K8BAS-DUMP] container 332 slot 20 lore 13 | Forest Whispers: Gain +1 XP per 2,400 Forest Whispers
+[K8BAS-DUMP] container 332 slot 20 lore 14 | until 600,000 Forest Whispers.
+[K8BAS-DUMP] container 332 slot 20 lore 15 | Desert Whispers: Gain +1 XP per 2,400 Desert Whispers
+[K8BAS-DUMP] container 332 slot 20 lore 16 | until 600,000 Desert Whispers.
+[K8BAS-DUMP] container 332 slot 20 lore 17 | Earn an exponentially decreasing
+[K8BAS-DUMP] container 332 slot 20 lore 18 | amount of XP for both Forest
+[K8BAS-DUMP] container 332 slot 20 lore 19 | Whispers and Desert Whispers above
+[K8BAS-DUMP] container 332 slot 20 lore 20 | the cap until 12,500,000 whispers.
+[K8BAS-DUMP] container 332 slot 20 lore 21 | 
+[K8BAS-DUMP] container 332 slot 20 lore 22 | Total Forest Whispers: 6,944,398
+[K8BAS-DUMP] container 332 slot 20 lore 23 | Total Desert Whispers: 221,052
+[K8BAS-DUMP] container 332 slot 20 lore 24 | 
+[K8BAS-DUMP] container 332 slot 20 lore 25 | Total Progress: 61.1%
+[K8BAS-DUMP] container 332 slot 20 lore 26 |                           1,201/1,965 XP
+[K8BAS-DUMP] container 332 slot 20 lore 27 | 
+[K8BAS-DUMP] container 332 slot 20 lore 28 | This task is worth 2.2% of your Total
+[K8BAS-DUMP] container 332 slot 20 lore 29 | SkyBlock XP!
+[K8BAS-DUMP] container 332 slot 20 lore 30 | 
+[K8BAS-DUMP] container 332 slot 20 lore 31 | Click to see Heart of the Forest!
+[K8BAS-DUMP] container 332 slot 21 item=minecraft:paper sbid=- count=1 | Center of the Forest
+[K8BAS-DUMP] container 332 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 332 slot 21 lore 1 | 
+[K8BAS-DUMP] container 332 slot 21 lore 2 | Gain XP by progressing your Center
+[K8BAS-DUMP] container 332 slot 21 lore 3 | of the Forest!
+[K8BAS-DUMP] container 332 slot 21 lore 4 | Tier 1: +25 XP
+[K8BAS-DUMP] container 332 slot 21 lore 5 | Tier 2: +35 XP
+[K8BAS-DUMP] container 332 slot 21 lore 6 | Tier 3: +50 XP
+[K8BAS-DUMP] container 332 slot 21 lore 7 | Tier 4: +65 XP
+[K8BAS-DUMP] container 332 slot 21 lore 8 | Tier 5: +75 XP
+[K8BAS-DUMP] container 332 slot 21 lore 9 | 
+[K8BAS-DUMP] container 332 slot 21 lore 10 | Total Progress: 100%
+[K8BAS-DUMP] container 332 slot 21 lore 11 |                           250/250 XP
+[K8BAS-DUMP] container 332 slot 21 lore 12 | 
+[K8BAS-DUMP] container 332 slot 21 lore 13 | This task is worth 0.5% of your Total
+[K8BAS-DUMP] container 332 slot 21 lore 14 | SkyBlock XP!
+[K8BAS-DUMP] container 332 slot 21 lore 15 | 
+[K8BAS-DUMP] container 332 slot 21 lore 16 | Click to see Center of the Forest!
+[K8BAS-DUMP] container 332 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 23 item=minecraft:oak_sapling sbid=- count=1 | Tree Gift Milestones
+[K8BAS-DUMP] container 332 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 332 slot 23 lore 1 | 
+[K8BAS-DUMP] container 332 slot 23 lore 2 | Gain XP by increasing your Tree Gift
+[K8BAS-DUMP] container 332 slot 23 lore 3 | Milestones!
+[K8BAS-DUMP] container 332 slot 23 lore 4 | Per Milestone: +4 XP
+[K8BAS-DUMP] container 332 slot 23 lore 5 | 
+[K8BAS-DUMP] container 332 slot 23 lore 6 | Total Progress: 76.2%
+[K8BAS-DUMP] container 332 slot 23 lore 7 |                           64/84 XP
+[K8BAS-DUMP] container 332 slot 23 lore 8 | 
+[K8BAS-DUMP] container 332 slot 23 lore 9 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 332 slot 23 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 332 slot 23 lore 11 | 
+[K8BAS-DUMP] container 332 slot 23 lore 12 | Click to see your Tree Gift Milestones!
+[K8BAS-DUMP] container 332 slot 24 item=minecraft:player_head sbid=- count=1 | Safari Milestones
+[K8BAS-DUMP] container 332 slot 24 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 332 slot 24 lore 1 | 
+[K8BAS-DUMP] container 332 slot 24 lore 2 |  ✖ Cavern Biome Milestones (2/10)
+[K8BAS-DUMP] container 332 slot 24 lore 3 |  ✖ Forest Biome Milestones (2/10)
+[K8BAS-DUMP] container 332 slot 24 lore 4 |  ✖ Haunted Biome Milestones (2/10)
+[K8BAS-DUMP] container 332 slot 24 lore 5 |  ✖ Icy Biome Milestones (2/10)
+[K8BAS-DUMP] container 332 slot 24 lore 6 | 
+[K8BAS-DUMP] container 332 slot 24 lore 7 | Total Progress: 5.5%
+[K8BAS-DUMP] container 332 slot 24 lore 8 |                           12/220 XP
+[K8BAS-DUMP] container 332 slot 24 lore 9 | 
+[K8BAS-DUMP] container 332 slot 24 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 332 slot 24 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 332 slot 24 lore 12 | 
+[K8BAS-DUMP] container 332 slot 24 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 332 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 26 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 27 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 35 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 36 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 37 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 38 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 332 slot 39 lore 0 | To Skill Related Tasks
+[K8BAS-DUMP] container 332 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 332 slot 41 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 332 slot 41 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 332 slot 41 lore 1 | 
+[K8BAS-DUMP] container 332 slot 41 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 332 slot 41 lore 3 |   Earned XP
+[K8BAS-DUMP] container 332 slot 41 lore 4 |   Available XP
+[K8BAS-DUMP] container 332 slot 41 lore 5 |   A to Z
+[K8BAS-DUMP] container 332 slot 41 lore 6 |   Z to A
+[K8BAS-DUMP] container 332 slot 41 lore 7 | 
+[K8BAS-DUMP] container 332 slot 41 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 332 slot 42 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 43 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 332 slot 44 item=minecraft:green_stained_glass_pane sbid=- count=1 | 

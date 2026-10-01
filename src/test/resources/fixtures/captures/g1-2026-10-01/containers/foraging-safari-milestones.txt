@@ -1,0 +1,139 @@
+[K8BAS-DUMP] container 348 title=Foraging ➜ Safari Milestones slots=45 state=56
+[K8BAS-DUMP] container 348 slot 0 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 1 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 2 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 3 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 4 item=minecraft:player_head sbid=- count=1 | Safari Milestones
+[K8BAS-DUMP] container 348 slot 4 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 348 slot 4 lore 1 | 
+[K8BAS-DUMP] container 348 slot 4 lore 2 |  ✖ Cavern Biome Milestones (2/10)
+[K8BAS-DUMP] container 348 slot 4 lore 3 |  ✖ Forest Biome Milestones (2/10)
+[K8BAS-DUMP] container 348 slot 4 lore 4 |  ✖ Haunted Biome Milestones (2/10)
+[K8BAS-DUMP] container 348 slot 4 lore 5 |  ✖ Icy Biome Milestones (2/10)
+[K8BAS-DUMP] container 348 slot 4 lore 6 | 
+[K8BAS-DUMP] container 348 slot 4 lore 7 | Total Progress: 5.5%
+[K8BAS-DUMP] container 348 slot 4 lore 8 |                           12/220 XP
+[K8BAS-DUMP] container 348 slot 4 lore 9 | 
+[K8BAS-DUMP] container 348 slot 4 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 348 slot 4 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 348 slot 5 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 6 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 7 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 8 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 9 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 17 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 18 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 20 item=minecraft:player_head sbid=- count=1 | Cavern Biome Milestones
+[K8BAS-DUMP] container 348 slot 20 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 348 slot 20 lore 1 | 
+[K8BAS-DUMP] container 348 slot 20 lore 2 |  ✔ Cavern Biome Milestone I
+[K8BAS-DUMP] container 348 slot 20 lore 3 |  ✔ Cavern Biome Milestone II
+[K8BAS-DUMP] container 348 slot 20 lore 4 |  ✖ Cavern Biome Milestone III
+[K8BAS-DUMP] container 348 slot 20 lore 5 |  ✖ Cavern Biome Milestone IV
+[K8BAS-DUMP] container 348 slot 20 lore 6 |  ✖ Cavern Biome Milestone V
+[K8BAS-DUMP] container 348 slot 20 lore 7 |  ✖ Cavern Biome Milestone VI
+[K8BAS-DUMP] container 348 slot 20 lore 8 |  ✖ Cavern Biome Milestone VII
+[K8BAS-DUMP] container 348 slot 20 lore 9 |  ✖ Cavern Biome Milestone VIII
+[K8BAS-DUMP] container 348 slot 20 lore 10 |  ✖ Cavern Biome Milestone IX
+[K8BAS-DUMP] container 348 slot 20 lore 11 |  ✖ Cavern Biome Milestone X
+[K8BAS-DUMP] container 348 slot 20 lore 12 | 
+[K8BAS-DUMP] container 348 slot 20 lore 13 | Total Progress: 5.5%
+[K8BAS-DUMP] container 348 slot 20 lore 14 |                           3/55 XP
+[K8BAS-DUMP] container 348 slot 20 lore 15 | 
+[K8BAS-DUMP] container 348 slot 20 lore 16 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 348 slot 20 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 348 slot 20 lore 18 | 
+[K8BAS-DUMP] container 348 slot 20 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 348 slot 21 item=minecraft:player_head sbid=- count=1 | Forest Biome Milestones
+[K8BAS-DUMP] container 348 slot 21 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 348 slot 21 lore 1 | 
+[K8BAS-DUMP] container 348 slot 21 lore 2 |  ✔ Forest Biome Milestone I
+[K8BAS-DUMP] container 348 slot 21 lore 3 |  ✔ Forest Biome Milestone II
+[K8BAS-DUMP] container 348 slot 21 lore 4 |  ✖ Forest Biome Milestone III
+[K8BAS-DUMP] container 348 slot 21 lore 5 |  ✖ Forest Biome Milestone IV
+[K8BAS-DUMP] container 348 slot 21 lore 6 |  ✖ Forest Biome Milestone V
+[K8BAS-DUMP] container 348 slot 21 lore 7 |  ✖ Forest Biome Milestone VI
+[K8BAS-DUMP] container 348 slot 21 lore 8 |  ✖ Forest Biome Milestone VII
+[K8BAS-DUMP] container 348 slot 21 lore 9 |  ✖ Forest Biome Milestone VIII
+[K8BAS-DUMP] container 348 slot 21 lore 10 |  ✖ Forest Biome Milestone IX
+[K8BAS-DUMP] container 348 slot 21 lore 11 |  ✖ Forest Biome Milestone X
+[K8BAS-DUMP] container 348 slot 21 lore 12 | 
+[K8BAS-DUMP] container 348 slot 21 lore 13 | Total Progress: 5.5%
+[K8BAS-DUMP] container 348 slot 21 lore 14 |                           3/55 XP
+[K8BAS-DUMP] container 348 slot 21 lore 15 | 
+[K8BAS-DUMP] container 348 slot 21 lore 16 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 348 slot 21 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 348 slot 21 lore 18 | 
+[K8BAS-DUMP] container 348 slot 21 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 348 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 23 item=minecraft:player_head sbid=- count=1 | Haunted Biome Milestones
+[K8BAS-DUMP] container 348 slot 23 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 348 slot 23 lore 1 | 
+[K8BAS-DUMP] container 348 slot 23 lore 2 |  ✔ Haunted Biome Milestone I
+[K8BAS-DUMP] container 348 slot 23 lore 3 |  ✔ Haunted Biome Milestone II
+[K8BAS-DUMP] container 348 slot 23 lore 4 |  ✖ Haunted Biome Milestone III
+[K8BAS-DUMP] container 348 slot 23 lore 5 |  ✖ Haunted Biome Milestone IV
+[K8BAS-DUMP] container 348 slot 23 lore 6 |  ✖ Haunted Biome Milestone V
+[K8BAS-DUMP] container 348 slot 23 lore 7 |  ✖ Haunted Biome Milestone VI
+[K8BAS-DUMP] container 348 slot 23 lore 8 |  ✖ Haunted Biome Milestone VII
+[K8BAS-DUMP] container 348 slot 23 lore 9 |  ✖ Haunted Biome Milestone VIII
+[K8BAS-DUMP] container 348 slot 23 lore 10 |  ✖ Haunted Biome Milestone IX
+[K8BAS-DUMP] container 348 slot 23 lore 11 |  ✖ Haunted Biome Milestone X
+[K8BAS-DUMP] container 348 slot 23 lore 12 | 
+[K8BAS-DUMP] container 348 slot 23 lore 13 | Total Progress: 5.5%
+[K8BAS-DUMP] container 348 slot 23 lore 14 |                           3/55 XP
+[K8BAS-DUMP] container 348 slot 23 lore 15 | 
+[K8BAS-DUMP] container 348 slot 23 lore 16 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 348 slot 23 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 348 slot 23 lore 18 | 
+[K8BAS-DUMP] container 348 slot 23 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 348 slot 24 item=minecraft:player_head sbid=- count=1 | Icy Biome Milestones
+[K8BAS-DUMP] container 348 slot 24 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 348 slot 24 lore 1 | 
+[K8BAS-DUMP] container 348 slot 24 lore 2 |  ✔ Icy Biome Milestone I
+[K8BAS-DUMP] container 348 slot 24 lore 3 |  ✔ Icy Biome Milestone II
+[K8BAS-DUMP] container 348 slot 24 lore 4 |  ✖ Icy Biome Milestone III
+[K8BAS-DUMP] container 348 slot 24 lore 5 |  ✖ Icy Biome Milestone IV
+[K8BAS-DUMP] container 348 slot 24 lore 6 |  ✖ Icy Biome Milestone V
+[K8BAS-DUMP] container 348 slot 24 lore 7 |  ✖ Icy Biome Milestone VI
+[K8BAS-DUMP] container 348 slot 24 lore 8 |  ✖ Icy Biome Milestone VII
+[K8BAS-DUMP] container 348 slot 24 lore 9 |  ✖ Icy Biome Milestone VIII
+[K8BAS-DUMP] container 348 slot 24 lore 10 |  ✖ Icy Biome Milestone IX
+[K8BAS-DUMP] container 348 slot 24 lore 11 |  ✖ Icy Biome Milestone X
+[K8BAS-DUMP] container 348 slot 24 lore 12 | 
+[K8BAS-DUMP] container 348 slot 24 lore 13 | Total Progress: 5.5%
+[K8BAS-DUMP] container 348 slot 24 lore 14 |                           3/55 XP
+[K8BAS-DUMP] container 348 slot 24 lore 15 | 
+[K8BAS-DUMP] container 348 slot 24 lore 16 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 348 slot 24 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 348 slot 24 lore 18 | 
+[K8BAS-DUMP] container 348 slot 24 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 348 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 26 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 27 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 35 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 36 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 37 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 38 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 348 slot 39 lore 0 | To Tasks ➜ Foraging
+[K8BAS-DUMP] container 348 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 348 slot 41 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 42 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 43 item=minecraft:green_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 348 slot 44 item=minecraft:green_stained_glass_pane sbid=- count=1 | 

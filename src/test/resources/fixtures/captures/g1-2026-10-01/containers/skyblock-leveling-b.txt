@@ -1,0 +1,143 @@
+[K8BAS-DUMP] container 448 title=SkyBlock Leveling slots=54 state=65
+[K8BAS-DUMP] container 448 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 4 item=minecraft:painting sbid=- count=1 | Your SkyBlock Level Ranking
+[K8BAS-DUMP] container 448 slot 4 lore 0 | Classic Mode
+[K8BAS-DUMP] container 448 slot 4 lore 1 | 
+[K8BAS-DUMP] container 448 slot 4 lore 2 | Your level: 535
+[K8BAS-DUMP] container 448 slot 4 lore 3 | You have: 53,528 XP
+[K8BAS-DUMP] container 448 slot 4 lore 4 | 
+[K8BAS-DUMP] container 448 slot 4 lore 5 | You have completed 92.2% of the
+[K8BAS-DUMP] container 448 slot 4 lore 6 | total SkyBlock XP Tasks.
+[K8BAS-DUMP] container 448 slot 4 lore 7 | 
+[K8BAS-DUMP] container 448 slot 4 lore 8 | Global Ranking: #1,234
+[K8BAS-DUMP] container 448 slot 4 lore 9 | You are in the top 0.03% of
+[K8BAS-DUMP] container 448 slot 4 lore 10 | 15,204,632 Classic players!
+[K8BAS-DUMP] container 448 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 16 item=minecraft:redstone_torch sbid=- count=1 | Ways to Level Up
+[K8BAS-DUMP] container 448 slot 16 lore 0 | Learn more about the different ways
+[K8BAS-DUMP] container 448 slot 16 lore 1 | to earn SkyBlock XP.
+[K8BAS-DUMP] container 448 slot 16 lore 2 | 
+[K8BAS-DUMP] container 448 slot 16 lore 3 | Also see a specific breakdown of
+[K8BAS-DUMP] container 448 slot 16 lore 4 | where all your XP comes from!
+[K8BAS-DUMP] container 448 slot 16 lore 5 | 
+[K8BAS-DUMP] container 448 slot 16 lore 6 | Click to view!
+[K8BAS-DUMP] container 448 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 19 item=minecraft:lime_stained_glass_pane sbid=- count=1 | Level 535
+[K8BAS-DUMP] container 448 slot 19 lore 0 | Your Level
+[K8BAS-DUMP] container 448 slot 19 lore 1 | 
+[K8BAS-DUMP] container 448 slot 19 lore 2 | Rewards:
+[K8BAS-DUMP] container 448 slot 19 lore 3 |  +1  Strength
+[K8BAS-DUMP] container 448 slot 19 lore 4 |  +5  Health
+[K8BAS-DUMP] container 448 slot 19 lore 5 | 
+[K8BAS-DUMP] container 448 slot 19 lore 6 | UNLOCKED
+[K8BAS-DUMP] container 448 slot 19 lore 7 | 
+[K8BAS-DUMP] container 448 slot 19 lore 8 | Click to view rewards!
+[K8BAS-DUMP] container 448 slot 20 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | Level 536
+[K8BAS-DUMP] container 448 slot 20 lore 0 | Next Level
+[K8BAS-DUMP] container 448 slot 20 lore 1 | 
+[K8BAS-DUMP] container 448 slot 20 lore 2 | Reward:
+[K8BAS-DUMP] container 448 slot 20 lore 3 |  +5  Health
+[K8BAS-DUMP] container 448 slot 20 lore 4 | 
+[K8BAS-DUMP] container 448 slot 20 lore 5 | Progress to Level Up:
+[K8BAS-DUMP] container 448 slot 20 lore 6 |                           28/100 XP
+[K8BAS-DUMP] container 448 slot 20 lore 7 | 
+[K8BAS-DUMP] container 448 slot 20 lore 8 | Click to view rewards!
+[K8BAS-DUMP] container 448 slot 21 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 537
+[K8BAS-DUMP] container 448 slot 21 lore 0 | Reward:
+[K8BAS-DUMP] container 448 slot 21 lore 1 |  +5  Health
+[K8BAS-DUMP] container 448 slot 21 lore 2 | 
+[K8BAS-DUMP] container 448 slot 21 lore 3 | Click to view rewards!
+[K8BAS-DUMP] container 448 slot 22 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 538
+[K8BAS-DUMP] container 448 slot 22 lore 0 | Reward:
+[K8BAS-DUMP] container 448 slot 22 lore 1 |  +5  Health
+[K8BAS-DUMP] container 448 slot 22 lore 2 | 
+[K8BAS-DUMP] container 448 slot 22 lore 3 | Click to view rewards!
+[K8BAS-DUMP] container 448 slot 23 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 539
+[K8BAS-DUMP] container 448 slot 23 lore 0 | Reward:
+[K8BAS-DUMP] container 448 slot 23 lore 1 |  +5  Health
+[K8BAS-DUMP] container 448 slot 23 lore 2 | 
+[K8BAS-DUMP] container 448 slot 23 lore 3 | Click to view rewards!
+[K8BAS-DUMP] container 448 slot 24 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 25 item=minecraft:player_head sbid=- count=1 | ⚑ SkyBlock XP Guide
+[K8BAS-DUMP] container 448 slot 25 lore 0 | Your SkyBlock XP Guide tracks the
+[K8BAS-DUMP] container 448 slot 25 lore 1 | progress you have made through
+[K8BAS-DUMP] container 448 slot 25 lore 2 | SkyBlock.
+[K8BAS-DUMP] container 448 slot 25 lore 3 | 
+[K8BAS-DUMP] container 448 slot 25 lore 4 | Complete tasks within your current
+[K8BAS-DUMP] container 448 slot 25 lore 5 | game stage to increase your
+[K8BAS-DUMP] container 448 slot 25 lore 6 | SkyBlock Level and become a Master
+[K8BAS-DUMP] container 448 slot 25 lore 7 | of SkyBlock!
+[K8BAS-DUMP] container 448 slot 25 lore 8 | 
+[K8BAS-DUMP] container 448 slot 25 lore 9 | Also accessible via /skyblockxp
+[K8BAS-DUMP] container 448 slot 25 lore 10 | 
+[K8BAS-DUMP] container 448 slot 25 lore 11 | Click to view!
+[K8BAS-DUMP] container 448 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 30 item=minecraft:golden_apple sbid=- count=1 | No Milestone!
+[K8BAS-DUMP] container 448 slot 30 lore 0 | Wow! You don't have any more
+[K8BAS-DUMP] container 448 slot 30 lore 1 | SkyBlock Level milestones to reach!
+[K8BAS-DUMP] container 448 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 34 item=minecraft:chest sbid=- count=1 | Leveling Rewards
+[K8BAS-DUMP] container 448 slot 34 lore 0 | View all the rewards you can unlock
+[K8BAS-DUMP] container 448 slot 34 lore 1 | by leveling up your SkyBlock Level.
+[K8BAS-DUMP] container 448 slot 34 lore 2 | 
+[K8BAS-DUMP] container 448 slot 34 lore 3 | Progress to Max: 100%
+[K8BAS-DUMP] container 448 slot 34 lore 4 |                           54/54
+[K8BAS-DUMP] container 448 slot 34 lore 5 | 
+[K8BAS-DUMP] container 448 slot 34 lore 6 | Click to view rewards!
+[K8BAS-DUMP] container 448 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 36 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 43 item=minecraft:name_tag sbid=- count=1 | Prefix Emblems
+[K8BAS-DUMP] container 448 slot 43 lore 0 | Add some spice by having an emblem
+[K8BAS-DUMP] container 448 slot 43 lore 1 | next to your name in chat and in tab!
+[K8BAS-DUMP] container 448 slot 43 lore 2 | 
+[K8BAS-DUMP] container 448 slot 43 lore 3 | Emblems are unlocked through
+[K8BAS-DUMP] container 448 slot 43 lore 4 | various activities such as leveling up
+[K8BAS-DUMP] container 448 slot 43 lore 5 | or completing achievements!
+[K8BAS-DUMP] container 448 slot 43 lore 6 | 
+[K8BAS-DUMP] container 448 slot 43 lore 7 | Emblems also show important data
+[K8BAS-DUMP] container 448 slot 43 lore 8 | associated with them in chat!
+[K8BAS-DUMP] container 448 slot 43 lore 9 | 
+[K8BAS-DUMP] container 448 slot 43 lore 10 | Click to view!
+[K8BAS-DUMP] container 448 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 45 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 47 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 448 slot 48 lore 0 | To SkyBlock Menu
+[K8BAS-DUMP] container 448 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 448 slot 50 item=minecraft:lime_dye sbid=- count=1 | SkyBlock Levels in Chat
+[K8BAS-DUMP] container 448 slot 50 lore 0 | View other players' SkyBlock Level
+[K8BAS-DUMP] container 448 slot 50 lore 1 | and their selected emblem in their
+[K8BAS-DUMP] container 448 slot 50 lore 2 | chat messages.
+[K8BAS-DUMP] container 448 slot 50 lore 3 | 
+[K8BAS-DUMP] container 448 slot 50 lore 4 | ENABLED
+[K8BAS-DUMP] container 448 slot 50 lore 5 | 
+[K8BAS-DUMP] container 448 slot 50 lore 6 | Click to disable!
+[K8BAS-DUMP] container 448 slot 51 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 52 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 448 slot 53 item=minecraft:black_stained_glass_pane sbid=- count=1 | 

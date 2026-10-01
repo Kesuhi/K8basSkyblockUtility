@@ -1,0 +1,207 @@
+[K8BAS-DUMP] container 135 title=Essence Shop ➜ Dragon Essence S slots=54 state=65
+[K8BAS-DUMP] container 135 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 4 item=minecraft:player_head sbid=- count=1 | Dragon Essence Shop
+[K8BAS-DUMP] container 135 slot 4 lore 0 | 9 Tasks
+[K8BAS-DUMP] container 135 slot 4 lore 1 | 
+[K8BAS-DUMP] container 135 slot 4 lore 2 |  ✔ One Punch (5/5)
+[K8BAS-DUMP] container 135 slot 4 lore 3 |  ✔ Recharge (10/10)
+[K8BAS-DUMP] container 135 slot 4 lore 4 |  ✔ Rageborn (5/5)
+[K8BAS-DUMP] container 135 slot 4 lore 5 |  ✔ Zealuck (5/5)
+[K8BAS-DUMP] container 135 slot 4 lore 6 |  ✔ Ender Training (3/3)
+[K8BAS-DUMP] container 135 slot 4 lore 7 |  ✔ Infused Dragon (5/5)
+[K8BAS-DUMP] container 135 slot 4 lore 8 |  ✔ Unbridled Rage (5/5)
+[K8BAS-DUMP] container 135 slot 4 lore 9 |  ✖ Two-Headed Strike (0/5)
+[K8BAS-DUMP] container 135 slot 4 lore 10 |  ✔ Dragon Piper (1/1)
+[K8BAS-DUMP] container 135 slot 4 lore 11 | 
+[K8BAS-DUMP] container 135 slot 4 lore 12 | Total Progress: 89.7%
+[K8BAS-DUMP] container 135 slot 4 lore 13 |                           166/185 XP
+[K8BAS-DUMP] container 135 slot 4 lore 14 | 
+[K8BAS-DUMP] container 135 slot 4 lore 15 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 135 slot 4 lore 16 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 20 item=minecraft:player_head sbid=- count=1 | One Punch
+[K8BAS-DUMP] container 135 slot 20 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 135 slot 20 lore 1 | 
+[K8BAS-DUMP] container 135 slot 20 lore 2 |  ✔ One Punch 1
+[K8BAS-DUMP] container 135 slot 20 lore 3 |  ✔ One Punch 2
+[K8BAS-DUMP] container 135 slot 20 lore 4 |  ✔ One Punch 3
+[K8BAS-DUMP] container 135 slot 20 lore 5 |  ✔ One Punch 4
+[K8BAS-DUMP] container 135 slot 20 lore 6 |  ✔ One Punch 5
+[K8BAS-DUMP] container 135 slot 20 lore 7 | 
+[K8BAS-DUMP] container 135 slot 20 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 135 slot 20 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 135 slot 20 lore 10 | 
+[K8BAS-DUMP] container 135 slot 20 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 135 slot 20 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 20 lore 13 | 
+[K8BAS-DUMP] container 135 slot 20 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 21 item=minecraft:prismarine_crystals sbid=- count=1 | Recharge
+[K8BAS-DUMP] container 135 slot 21 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 135 slot 21 lore 1 | 
+[K8BAS-DUMP] container 135 slot 21 lore 2 |  ✔ Recharge 1
+[K8BAS-DUMP] container 135 slot 21 lore 3 |  ✔ Recharge 2
+[K8BAS-DUMP] container 135 slot 21 lore 4 |  ✔ Recharge 3
+[K8BAS-DUMP] container 135 slot 21 lore 5 |  ✔ Recharge 4
+[K8BAS-DUMP] container 135 slot 21 lore 6 |  ✔ Recharge 5
+[K8BAS-DUMP] container 135 slot 21 lore 7 |  ✔ Recharge 6
+[K8BAS-DUMP] container 135 slot 21 lore 8 |  ✔ Recharge 7
+[K8BAS-DUMP] container 135 slot 21 lore 9 |  ✔ Recharge 8
+[K8BAS-DUMP] container 135 slot 21 lore 10 |  ✔ Recharge 9
+[K8BAS-DUMP] container 135 slot 21 lore 11 |  ✔ Recharge 10
+[K8BAS-DUMP] container 135 slot 21 lore 12 | 
+[K8BAS-DUMP] container 135 slot 21 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 135 slot 21 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 135 slot 21 lore 15 | 
+[K8BAS-DUMP] container 135 slot 21 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 135 slot 21 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 21 lore 18 | 
+[K8BAS-DUMP] container 135 slot 21 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 22 item=minecraft:red_dye sbid=- count=1 | Rageborn
+[K8BAS-DUMP] container 135 slot 22 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 135 slot 22 lore 1 | 
+[K8BAS-DUMP] container 135 slot 22 lore 2 |  ✔ Rageborn 1
+[K8BAS-DUMP] container 135 slot 22 lore 3 |  ✔ Rageborn 2
+[K8BAS-DUMP] container 135 slot 22 lore 4 |  ✔ Rageborn 3
+[K8BAS-DUMP] container 135 slot 22 lore 5 |  ✔ Rageborn 4
+[K8BAS-DUMP] container 135 slot 22 lore 6 |  ✔ Rageborn 5
+[K8BAS-DUMP] container 135 slot 22 lore 7 | 
+[K8BAS-DUMP] container 135 slot 22 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 135 slot 22 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 135 slot 22 lore 10 | 
+[K8BAS-DUMP] container 135 slot 22 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 135 slot 22 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 22 lore 13 | 
+[K8BAS-DUMP] container 135 slot 22 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 23 item=minecraft:player_head sbid=- count=1 | Zealuck
+[K8BAS-DUMP] container 135 slot 23 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 135 slot 23 lore 1 | 
+[K8BAS-DUMP] container 135 slot 23 lore 2 |  ✔ Zealuck 1
+[K8BAS-DUMP] container 135 slot 23 lore 3 |  ✔ Zealuck 2
+[K8BAS-DUMP] container 135 slot 23 lore 4 |  ✔ Zealuck 3
+[K8BAS-DUMP] container 135 slot 23 lore 5 |  ✔ Zealuck 4
+[K8BAS-DUMP] container 135 slot 23 lore 6 |  ✔ Zealuck 5
+[K8BAS-DUMP] container 135 slot 23 lore 7 | 
+[K8BAS-DUMP] container 135 slot 23 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 135 slot 23 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 135 slot 23 lore 10 | 
+[K8BAS-DUMP] container 135 slot 23 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 135 slot 23 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 23 lore 13 | 
+[K8BAS-DUMP] container 135 slot 23 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 24 item=minecraft:diamond_horse_armor sbid=- count=1 | Ender Training
+[K8BAS-DUMP] container 135 slot 24 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 135 slot 24 lore 1 | 
+[K8BAS-DUMP] container 135 slot 24 lore 2 |  ✔ Ender Training 1
+[K8BAS-DUMP] container 135 slot 24 lore 3 |  ✔ Ender Training 2
+[K8BAS-DUMP] container 135 slot 24 lore 4 |  ✔ Ender Training 3
+[K8BAS-DUMP] container 135 slot 24 lore 5 | 
+[K8BAS-DUMP] container 135 slot 24 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 135 slot 24 lore 7 |                           7/7 XP
+[K8BAS-DUMP] container 135 slot 24 lore 8 | 
+[K8BAS-DUMP] container 135 slot 24 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 135 slot 24 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 24 lore 11 | 
+[K8BAS-DUMP] container 135 slot 24 lore 12 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 29 item=minecraft:player_head sbid=- count=1 | Infused Dragon
+[K8BAS-DUMP] container 135 slot 29 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 135 slot 29 lore 1 | 
+[K8BAS-DUMP] container 135 slot 29 lore 2 |  ✔ Infused Dragon 1
+[K8BAS-DUMP] container 135 slot 29 lore 3 |  ✔ Infused Dragon 2
+[K8BAS-DUMP] container 135 slot 29 lore 4 |  ✔ Infused Dragon 3
+[K8BAS-DUMP] container 135 slot 29 lore 5 |  ✔ Infused Dragon 4
+[K8BAS-DUMP] container 135 slot 29 lore 6 |  ✔ Infused Dragon 5
+[K8BAS-DUMP] container 135 slot 29 lore 7 | 
+[K8BAS-DUMP] container 135 slot 29 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 135 slot 29 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 135 slot 29 lore 10 | 
+[K8BAS-DUMP] container 135 slot 29 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 135 slot 29 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 29 lore 13 | 
+[K8BAS-DUMP] container 135 slot 29 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 30 item=minecraft:red_banner sbid=- count=1 | Unbridled Rage
+[K8BAS-DUMP] container 135 slot 30 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 135 slot 30 lore 1 | 
+[K8BAS-DUMP] container 135 slot 30 lore 2 |  ✔ Unbridled Rage 1
+[K8BAS-DUMP] container 135 slot 30 lore 3 |  ✔ Unbridled Rage 2
+[K8BAS-DUMP] container 135 slot 30 lore 4 |  ✔ Unbridled Rage 3
+[K8BAS-DUMP] container 135 slot 30 lore 5 |  ✔ Unbridled Rage 4
+[K8BAS-DUMP] container 135 slot 30 lore 6 |  ✔ Unbridled Rage 5
+[K8BAS-DUMP] container 135 slot 30 lore 7 | 
+[K8BAS-DUMP] container 135 slot 30 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 135 slot 30 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 135 slot 30 lore 10 | 
+[K8BAS-DUMP] container 135 slot 30 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 135 slot 30 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 30 lore 13 | 
+[K8BAS-DUMP] container 135 slot 30 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 32 item=minecraft:player_head sbid=- count=1 | Two-Headed Strike
+[K8BAS-DUMP] container 135 slot 32 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 135 slot 32 lore 1 | 
+[K8BAS-DUMP] container 135 slot 32 lore 2 |  ✖ Two-Headed Strike 1
+[K8BAS-DUMP] container 135 slot 32 lore 3 |  ✖ Two-Headed Strike 2
+[K8BAS-DUMP] container 135 slot 32 lore 4 |  ✖ Two-Headed Strike 3
+[K8BAS-DUMP] container 135 slot 32 lore 5 |  ✖ Two-Headed Strike 4
+[K8BAS-DUMP] container 135 slot 32 lore 6 |  ✖ Two-Headed Strike 5
+[K8BAS-DUMP] container 135 slot 32 lore 7 | 
+[K8BAS-DUMP] container 135 slot 32 lore 8 | Total Progress: 0%
+[K8BAS-DUMP] container 135 slot 32 lore 9 |                           0/19 XP
+[K8BAS-DUMP] container 135 slot 32 lore 10 | 
+[K8BAS-DUMP] container 135 slot 32 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 135 slot 32 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 32 lore 13 | 
+[K8BAS-DUMP] container 135 slot 32 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 33 item=minecraft:player_head sbid=- count=1 | Dragon Piper
+[K8BAS-DUMP] container 135 slot 33 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 135 slot 33 lore 1 | 
+[K8BAS-DUMP] container 135 slot 33 lore 2 |  ✔ Dragon Piper 1
+[K8BAS-DUMP] container 135 slot 33 lore 3 | 
+[K8BAS-DUMP] container 135 slot 33 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 135 slot 33 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 135 slot 33 lore 6 | 
+[K8BAS-DUMP] container 135 slot 33 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 135 slot 33 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 135 slot 33 lore 9 | 
+[K8BAS-DUMP] container 135 slot 33 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 135 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 45 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 46 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 47 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 135 slot 48 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 135 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 135 slot 50 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 51 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 52 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 135 slot 53 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

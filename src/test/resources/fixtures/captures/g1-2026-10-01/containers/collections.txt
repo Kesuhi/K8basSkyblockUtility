@@ -1,0 +1,129 @@
+[K8BAS-DUMP] container 29 title=Collections slots=54 state=65
+[K8BAS-DUMP] container 29 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 4 item=minecraft:painting sbid=- count=1 | Collections
+[K8BAS-DUMP] container 29 slot 4 lore 0 | View all of the items available in
+[K8BAS-DUMP] container 29 slot 4 lore 1 | SkyBlock. Collect more of an item to
+[K8BAS-DUMP] container 29 slot 4 lore 2 | unlock rewards on your way to
+[K8BAS-DUMP] container 29 slot 4 lore 3 | becoming a master of SkyBlock!
+[K8BAS-DUMP] container 29 slot 4 lore 4 | 
+[K8BAS-DUMP] container 29 slot 4 lore 5 | Collections Maxed Out: 88.9%
+[K8BAS-DUMP] container 29 slot 4 lore 6 |                           80/90
+[K8BAS-DUMP] container 29 slot 4 lore 7 | 
+[K8BAS-DUMP] container 29 slot 4 lore 8 | Also accessible via /collection.
+[K8BAS-DUMP] container 29 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 20 item=minecraft:golden_hoe sbid=- count=1 | Farming Collections
+[K8BAS-DUMP] container 29 slot 20 lore 0 | View your Farming Collections!
+[K8BAS-DUMP] container 29 slot 20 lore 1 | 
+[K8BAS-DUMP] container 29 slot 20 lore 2 | Collections Maxed Out: 100%
+[K8BAS-DUMP] container 29 slot 20 lore 3 |                           20/20
+[K8BAS-DUMP] container 29 slot 20 lore 4 | 
+[K8BAS-DUMP] container 29 slot 20 lore 5 | Click to view!
+[K8BAS-DUMP] container 29 slot 21 item=minecraft:stone_pickaxe sbid=- count=1 | Mining Collections
+[K8BAS-DUMP] container 29 slot 21 lore 0 | View your Mining Collections!
+[K8BAS-DUMP] container 29 slot 21 lore 1 | 
+[K8BAS-DUMP] container 29 slot 21 lore 2 | Collections Maxed Out: 100%
+[K8BAS-DUMP] container 29 slot 21 lore 3 |                           25/25
+[K8BAS-DUMP] container 29 slot 21 lore 4 | 
+[K8BAS-DUMP] container 29 slot 21 lore 5 | Click to view!
+[K8BAS-DUMP] container 29 slot 22 item=minecraft:stone_sword sbid=- count=1 | Combat Collections
+[K8BAS-DUMP] container 29 slot 22 lore 0 | View your Combat Collections!
+[K8BAS-DUMP] container 29 slot 22 lore 1 | 
+[K8BAS-DUMP] container 29 slot 22 lore 2 | Collections Maxed Out: 90.9%
+[K8BAS-DUMP] container 29 slot 22 lore 3 |                           10/11
+[K8BAS-DUMP] container 29 slot 22 lore 4 | 
+[K8BAS-DUMP] container 29 slot 22 lore 5 | Click to view!
+[K8BAS-DUMP] container 29 slot 23 item=minecraft:jungle_sapling sbid=- count=1 | Foraging Collections
+[K8BAS-DUMP] container 29 slot 23 lore 0 | View your Foraging Collections!
+[K8BAS-DUMP] container 29 slot 23 lore 1 | 
+[K8BAS-DUMP] container 29 slot 23 lore 2 | Collections Maxed Out: 73.3%
+[K8BAS-DUMP] container 29 slot 23 lore 3 |                           11/15
+[K8BAS-DUMP] container 29 slot 23 lore 4 | 
+[K8BAS-DUMP] container 29 slot 23 lore 5 | Click to view!
+[K8BAS-DUMP] container 29 slot 24 item=minecraft:fishing_rod sbid=- count=1 | Fishing Collections
+[K8BAS-DUMP] container 29 slot 24 lore 0 | View your Fishing Collections!
+[K8BAS-DUMP] container 29 slot 24 lore 1 | 
+[K8BAS-DUMP] container 29 slot 24 lore 2 | Collections Maxed Out: 100%
+[K8BAS-DUMP] container 29 slot 24 lore 3 |                           12/12
+[K8BAS-DUMP] container 29 slot 24 lore 4 | 
+[K8BAS-DUMP] container 29 slot 24 lore 5 | Click to view!
+[K8BAS-DUMP] container 29 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 31 item=minecraft:wither_skeleton_skull sbid=- count=1 | Boss Collections
+[K8BAS-DUMP] container 29 slot 31 lore 0 | View your progress and claim
+[K8BAS-DUMP] container 29 slot 31 lore 1 | rewards you have obtained from
+[K8BAS-DUMP] container 29 slot 31 lore 2 | defeating SkyBlock bosses!
+[K8BAS-DUMP] container 29 slot 31 lore 3 | 
+[K8BAS-DUMP] container 29 slot 31 lore 4 | Boss Collections Maxed Out: 0%
+[K8BAS-DUMP] container 29 slot 31 lore 5 |                           0/8
+[K8BAS-DUMP] container 29 slot 31 lore 6 | 
+[K8BAS-DUMP] container 29 slot 31 lore 7 | Click to view!
+[K8BAS-DUMP] container 29 slot 32 item=minecraft:mycelium sbid=- count=1 | Rift Collections
+[K8BAS-DUMP] container 29 slot 32 lore 0 | View your Rift Collections!
+[K8BAS-DUMP] container 29 slot 32 lore 1 | 
+[K8BAS-DUMP] container 29 slot 32 lore 2 | Collections Maxed Out: 28.6%
+[K8BAS-DUMP] container 29 slot 32 lore 3 |                           2/7
+[K8BAS-DUMP] container 29 slot 32 lore 4 | 
+[K8BAS-DUMP] container 29 slot 32 lore 5 | Click to view!
+[K8BAS-DUMP] container 29 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 36 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 45 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 47 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 29 slot 48 lore 0 | To Tasks ➜ Core
+[K8BAS-DUMP] container 29 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 29 slot 50 item=minecraft:player_head sbid=- count=1 | Crafted Minions
+[K8BAS-DUMP] container 29 slot 50 lore 0 | This menu shows all of the unique
+[K8BAS-DUMP] container 29 slot 50 lore 1 | minions that you have crafted so far.
+[K8BAS-DUMP] container 29 slot 50 lore 2 | 
+[K8BAS-DUMP] container 29 slot 50 lore 3 | Craft minions you have never crafted
+[K8BAS-DUMP] container 29 slot 50 lore 4 | before to increase the minions limit on
+[K8BAS-DUMP] container 29 slot 50 lore 5 | your Private Island! You can also unlock
+[K8BAS-DUMP] container 29 slot 50 lore 6 | 5 bonus slots via the Community Shop in
+[K8BAS-DUMP] container 29 slot 50 lore 7 | the Hub!
+[K8BAS-DUMP] container 29 slot 50 lore 8 | 
+[K8BAS-DUMP] container 29 slot 50 lore 9 | Crafted minions: 704/719
+[K8BAS-DUMP] container 29 slot 50 lore 10 | Minion limit: 32/32
+[K8BAS-DUMP] container 29 slot 50 lore 11 | 
+[K8BAS-DUMP] container 29 slot 50 lore 12 | Craft 46 more unique minions to unlock
+[K8BAS-DUMP] container 29 slot 50 lore 13 | your 33rd slot.
+[K8BAS-DUMP] container 29 slot 50 lore 14 | 
+[K8BAS-DUMP] container 29 slot 50 lore 15 | Click to view!
+[K8BAS-DUMP] container 29 slot 51 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 52 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 29 slot 53 item=minecraft:oak_sign sbid=- count=1 | Show Collection Rankings
+[K8BAS-DUMP] container 29 slot 53 lore 0 | Show the rankings display for your
+[K8BAS-DUMP] container 29 slot 53 lore 1 | Collections.
+[K8BAS-DUMP] container 29 slot 53 lore 2 | 
+[K8BAS-DUMP] container 29 slot 53 lore 3 | Click to show!

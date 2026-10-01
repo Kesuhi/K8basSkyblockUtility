@@ -1,0 +1,365 @@
+[K8BAS-DUMP] container 335 title=Heart of the Forest slots=54 state=65
+[K8BAS-DUMP] container 335 slot 0 item=minecraft:lime_stained_glass_pane sbid=- count=5 | Tier 5
+[K8BAS-DUMP] container 335 slot 0 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 335 slot 0 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 335 slot 0 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 335 slot 0 lore 3 | the Forest.
+[K8BAS-DUMP] container 335 slot 0 lore 4 | 
+[K8BAS-DUMP] container 335 slot 0 lore 5 | Rewards
+[K8BAS-DUMP] container 335 slot 0 lore 6 | +2 Token of the Forest
+[K8BAS-DUMP] container 335 slot 0 lore 7 | +90 SkyBlock XP
+[K8BAS-DUMP] container 335 slot 0 lore 8 | +Foraging Clover Emblem ☘
+[K8BAS-DUMP] container 335 slot 0 lore 9 | 
+[K8BAS-DUMP] container 335 slot 0 lore 10 | UNLOCKED
+[K8BAS-DUMP] container 335 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 2 item=minecraft:paper sbid=- count=1 | Tree Whisperer
+[K8BAS-DUMP] container 335 slot 2 lore 0 | Fig and Mangrove Tree Gifts give
+[K8BAS-DUMP] container 335 slot 2 lore 1 | +200 Forest Whispers and Helix Tree
+[K8BAS-DUMP] container 335 slot 2 lore 2 | Gifts give +200 Desert Whispers.
+[K8BAS-DUMP] container 335 slot 2 lore 3 | 
+[K8BAS-DUMP] container 335 slot 2 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 2 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 2 lore 6 | 
+[K8BAS-DUMP] container 335 slot 2 lore 7 | Requires Foraging Madness
+[K8BAS-DUMP] container 335 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 4 item=minecraft:paper sbid=- count=1 | Center of the Forest
+[K8BAS-DUMP] container 335 slot 4 lore 0 | Level 5
+[K8BAS-DUMP] container 335 slot 4 lore 1 | 
+[K8BAS-DUMP] container 335 slot 4 lore 2 | +1 Axe Ability Level
+[K8BAS-DUMP] container 335 slot 4 lore 3 | +20 Forest Whispers per Fig and
+[K8BAS-DUMP] container 335 slot 4 lore 4 | Mangrove Tree Gift.
+[K8BAS-DUMP] container 335 slot 4 lore 5 | +2 Forest Whispers per Fig and
+[K8BAS-DUMP] container 335 slot 4 lore 6 | Mangrove log cut.
+[K8BAS-DUMP] container 335 slot 4 lore 7 | +20 Desert Whispers per Helix Tree
+[K8BAS-DUMP] container 335 slot 4 lore 8 | Gift.
+[K8BAS-DUMP] container 335 slot 4 lore 9 | +2 Desert Whispers per Helix log cut.
+[K8BAS-DUMP] container 335 slot 4 lore 10 | +5 Tracking on Tree Gifts.
+[K8BAS-DUMP] container 335 slot 4 lore 11 | +2 Token of the Forest
+[K8BAS-DUMP] container 335 slot 4 lore 12 | +250 SkyBlock XP
+[K8BAS-DUMP] container 335 slot 4 lore 13 | 
+[K8BAS-DUMP] container 335 slot 4 lore 14 | UNLOCKED
+[K8BAS-DUMP] container 335 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 6 item=minecraft:paper sbid=- count=1 | Free Trial
+[K8BAS-DUMP] container 335 slot 6 lore 0 | The first Tree Gift you obtain every
+[K8BAS-DUMP] container 335 slot 6 lore 1 | day will contain a Basic Safari Ticket.
+[K8BAS-DUMP] container 335 slot 6 lore 2 | 
+[K8BAS-DUMP] container 335 slot 6 lore 3 | Resets in: 6h 39m
+[K8BAS-DUMP] container 335 slot 6 lore 4 | 
+[K8BAS-DUMP] container 335 slot 6 lore 5 | Cost
+[K8BAS-DUMP] container 335 slot 6 lore 6 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 6 lore 7 | 
+[K8BAS-DUMP] container 335 slot 6 lore 8 | Requires Early Bird
+[K8BAS-DUMP] container 335 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 8 item=minecraft:arrow sbid=- count=1 | Scroll Up
+[K8BAS-DUMP] container 335 slot 8 lore 0 | Left-click to scroll up!
+[K8BAS-DUMP] container 335 slot 8 lore 1 | 
+[K8BAS-DUMP] container 335 slot 8 lore 2 | Right-click to go to the top tier!
+[K8BAS-DUMP] container 335 slot 9 item=minecraft:lime_stained_glass_pane sbid=- count=4 | Tier 4
+[K8BAS-DUMP] container 335 slot 9 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 335 slot 9 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 335 slot 9 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 335 slot 9 lore 3 | the Forest.
+[K8BAS-DUMP] container 335 slot 9 lore 4 | 
+[K8BAS-DUMP] container 335 slot 9 lore 5 | Rewards
+[K8BAS-DUMP] container 335 slot 9 lore 6 | +2 Token of the Forest
+[K8BAS-DUMP] container 335 slot 9 lore 7 | +75 SkyBlock XP
+[K8BAS-DUMP] container 335 slot 9 lore 8 | Access to Torrhus Canyon
+[K8BAS-DUMP] container 335 slot 9 lore 9 | 
+[K8BAS-DUMP] container 335 slot 9 lore 10 | UNLOCKED
+[K8BAS-DUMP] container 335 slot 10 item=minecraft:paper sbid=- count=1 | Lottery
+[K8BAS-DUMP] container 335 slot 10 lore 0 | Every SkyBlock day, you receive a
+[K8BAS-DUMP] container 335 slot 10 lore 1 | random effect.
+[K8BAS-DUMP] container 335 slot 10 lore 2 | 
+[K8BAS-DUMP] container 335 slot 10 lore 3 | Possible Buffs
+[K8BAS-DUMP] container 335 slot 10 lore 4 |  ■ Gain +50 Fig Fortune.
+[K8BAS-DUMP] container 335 slot 10 lore 5 |  ■ Gain +50 Mangrove Fortune.
+[K8BAS-DUMP] container 335 slot 10 lore 6 |  ■ Gain +50 Helix Fortune.
+[K8BAS-DUMP] container 335 slot 10 lore 7 |  ■ Gain +10 Sweep.
+[K8BAS-DUMP] container 335 slot 10 lore 8 | 
+[K8BAS-DUMP] container 335 slot 10 lore 9 | Cost
+[K8BAS-DUMP] container 335 slot 10 lore 10 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 10 lore 11 | 
+[K8BAS-DUMP] container 335 slot 10 lore 12 | Requires Foraging Madness
+[K8BAS-DUMP] container 335 slot 11 item=minecraft:paper sbid=- count=1 | Foraging Madness
+[K8BAS-DUMP] container 335 slot 11 lore 0 | Increase  Sweep by 10 and 
+[K8BAS-DUMP] container 335 slot 11 lore 1 | Foraging Fortune by 50.
+[K8BAS-DUMP] container 335 slot 11 lore 2 | 
+[K8BAS-DUMP] container 335 slot 11 lore 3 | Cost
+[K8BAS-DUMP] container 335 slot 11 lore 4 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 11 lore 5 | 
+[K8BAS-DUMP] container 335 slot 11 lore 6 | Requires Deep Waters
+[K8BAS-DUMP] container 335 slot 12 item=minecraft:paper sbid=- count=1 | Iron Lungs
+[K8BAS-DUMP] container 335 slot 12 lore 0 | Level 1/50
+[K8BAS-DUMP] container 335 slot 12 lore 1 | 
+[K8BAS-DUMP] container 335 slot 12 lore 2 | Grants 1 Respiration.
+[K8BAS-DUMP] container 335 slot 12 lore 3 | 
+[K8BAS-DUMP] container 335 slot 12 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 12 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 12 lore 6 | 
+[K8BAS-DUMP] container 335 slot 12 lore 7 | Requires 250 Gifts
+[K8BAS-DUMP] container 335 slot 13 item=minecraft:paper sbid=- count=1 | 250 Gifts
+[K8BAS-DUMP] container 335 slot 13 lore 0 | Level 1/40
+[K8BAS-DUMP] container 335 slot 13 lore 1 | 
+[K8BAS-DUMP] container 335 slot 13 lore 2 | Your first 250 Tree Gifts of the day
+[K8BAS-DUMP] container 335 slot 13 lore 3 | grant 1% more Loot and 20 extra
+[K8BAS-DUMP] container 335 slot 13 lore 4 | Forest or Desert Whispers.
+[K8BAS-DUMP] container 335 slot 13 lore 5 | 
+[K8BAS-DUMP] container 335 slot 13 lore 6 | Gifts Remaining: 250
+[K8BAS-DUMP] container 335 slot 13 lore 7 | 
+[K8BAS-DUMP] container 335 slot 13 lore 8 | Resets in: 6h 39m
+[K8BAS-DUMP] container 335 slot 13 lore 9 | 
+[K8BAS-DUMP] container 335 slot 13 lore 10 | Cost
+[K8BAS-DUMP] container 335 slot 13 lore 11 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 13 lore 12 | 
+[K8BAS-DUMP] container 335 slot 13 lore 13 | Requires Hunter's Luck
+[K8BAS-DUMP] container 335 slot 14 item=minecraft:paper sbid=- count=1 | Daily Wishes
+[K8BAS-DUMP] container 335 slot 14 lore 0 | Level 1/100
+[K8BAS-DUMP] container 335 slot 14 lore 1 | 
+[K8BAS-DUMP] container 335 slot 14 lore 2 | You gain 400-800 Whispers from the
+[K8BAS-DUMP] container 335 slot 14 lore 3 | first type of log you cut on Galatea
+[K8BAS-DUMP] container 335 slot 14 lore 4 | every day.
+[K8BAS-DUMP] container 335 slot 14 lore 5 | 
+[K8BAS-DUMP] container 335 slot 14 lore 6 | Fig Log: +0 Forest Whispers
+[K8BAS-DUMP] container 335 slot 14 lore 7 | Mangrove Log: +0 Forest Whispers
+[K8BAS-DUMP] container 335 slot 14 lore 8 | Helix Log: +0 Desert Whispers
+[K8BAS-DUMP] container 335 slot 14 lore 9 | 
+[K8BAS-DUMP] container 335 slot 14 lore 10 | Resets in: 6h 39m
+[K8BAS-DUMP] container 335 slot 14 lore 11 | 
+[K8BAS-DUMP] container 335 slot 14 lore 12 | Cost
+[K8BAS-DUMP] container 335 slot 14 lore 13 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 14 lore 14 | 
+[K8BAS-DUMP] container 335 slot 14 lore 15 | Requires 250 Gifts
+[K8BAS-DUMP] container 335 slot 15 item=minecraft:paper sbid=- count=1 | Early Bird
+[K8BAS-DUMP] container 335 slot 15 lore 0 | Increase  Sweep by 20 and 
+[K8BAS-DUMP] container 335 slot 15 lore 1 | Foraging Fortune by 100 for the
+[K8BAS-DUMP] container 335 slot 15 lore 2 | first 250 trees cut every day.
+[K8BAS-DUMP] container 335 slot 15 lore 3 | 
+[K8BAS-DUMP] container 335 slot 15 lore 4 | Trees Remaining: 250
+[K8BAS-DUMP] container 335 slot 15 lore 5 | 
+[K8BAS-DUMP] container 335 slot 15 lore 6 | Resets in: 6h 39m
+[K8BAS-DUMP] container 335 slot 15 lore 7 | 
+[K8BAS-DUMP] container 335 slot 15 lore 8 | Cost
+[K8BAS-DUMP] container 335 slot 15 lore 9 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 15 lore 10 | 
+[K8BAS-DUMP] container 335 slot 15 lore 11 | Requires Galatea's Might
+[K8BAS-DUMP] container 335 slot 16 item=minecraft:paper sbid=- count=1 | Precision Cutting
+[K8BAS-DUMP] container 335 slot 16 lore 0 | A particle appears on every nearby
+[K8BAS-DUMP] container 335 slot 16 lore 1 | tree. Cutting the marked log grants
+[K8BAS-DUMP] container 335 slot 16 lore 2 | you a +10  Sweep on that hit.
+[K8BAS-DUMP] container 335 slot 16 lore 3 | 
+[K8BAS-DUMP] container 335 slot 16 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 16 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 16 lore 6 | 
+[K8BAS-DUMP] container 335 slot 16 lore 7 | Requires Early Bird
+[K8BAS-DUMP] container 335 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 18 item=minecraft:lime_stained_glass_pane sbid=- count=3 | Tier 3
+[K8BAS-DUMP] container 335 slot 18 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 335 slot 18 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 335 slot 18 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 335 slot 18 lore 3 | the Forest.
+[K8BAS-DUMP] container 335 slot 18 lore 4 | 
+[K8BAS-DUMP] container 335 slot 18 lore 5 | Rewards
+[K8BAS-DUMP] container 335 slot 18 lore 6 | +2 Token of the Forest
+[K8BAS-DUMP] container 335 slot 18 lore 7 | +60 SkyBlock XP
+[K8BAS-DUMP] container 335 slot 18 lore 8 | 
+[K8BAS-DUMP] container 335 slot 18 lore 9 | UNLOCKED
+[K8BAS-DUMP] container 335 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 20 item=minecraft:paper sbid=- count=1 | Deep Waters
+[K8BAS-DUMP] container 335 slot 20 lore 0 | Level 1/50
+[K8BAS-DUMP] container 335 slot 20 lore 1 | 
+[K8BAS-DUMP] container 335 slot 20 lore 2 | You gain 1  Pressure Resistance.
+[K8BAS-DUMP] container 335 slot 20 lore 3 | 
+[K8BAS-DUMP] container 335 slot 20 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 20 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 20 lore 6 | 
+[K8BAS-DUMP] container 335 slot 20 lore 7 | Requires Damage Boost
+[K8BAS-DUMP] container 335 slot 21 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 22 item=minecraft:paper sbid=- count=1 | Hunter's Luck
+[K8BAS-DUMP] container 335 slot 22 lore 0 | Level 1/50
+[K8BAS-DUMP] container 335 slot 22 lore 1 | 
+[K8BAS-DUMP] container 335 slot 22 lore 2 | You gain 1  Hunting Fortune.
+[K8BAS-DUMP] container 335 slot 22 lore 3 | 
+[K8BAS-DUMP] container 335 slot 22 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 22 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 22 lore 6 | 
+[K8BAS-DUMP] container 335 slot 22 lore 7 | Requires Foraging Fortune
+[K8BAS-DUMP] container 335 slot 23 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 24 item=minecraft:paper sbid=- count=1 | Galatea's Might
+[K8BAS-DUMP] container 335 slot 24 lore 0 | Level 1/50
+[K8BAS-DUMP] container 335 slot 24 lore 1 | 
+[K8BAS-DUMP] container 335 slot 24 lore 2 | Gain +0.5% Combat Stats on Galatea.
+[K8BAS-DUMP] container 335 slot 24 lore 3 | 
+[K8BAS-DUMP] container 335 slot 24 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 24 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 24 lore 6 | 
+[K8BAS-DUMP] container 335 slot 24 lore 7 | Requires Axe Toss
+[K8BAS-DUMP] container 335 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 27 item=minecraft:lime_stained_glass_pane sbid=- count=2 | Tier 2
+[K8BAS-DUMP] container 335 slot 27 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 335 slot 27 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 335 slot 27 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 335 slot 27 lore 3 | the Forest.
+[K8BAS-DUMP] container 335 slot 27 lore 4 | 
+[K8BAS-DUMP] container 335 slot 27 lore 5 | Rewards
+[K8BAS-DUMP] container 335 slot 27 lore 6 | +2 Token of the Forest
+[K8BAS-DUMP] container 335 slot 27 lore 7 | +45 SkyBlock XP
+[K8BAS-DUMP] container 335 slot 27 lore 8 | 
+[K8BAS-DUMP] container 335 slot 27 lore 9 | UNLOCKED
+[K8BAS-DUMP] container 335 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 29 item=minecraft:paper sbid=- count=1 | Damage Boost
+[K8BAS-DUMP] container 335 slot 29 lore 0 | Axe Ability: Damage Boost
+[K8BAS-DUMP] container 335 slot 29 lore 1 | Your axe deals double  Damage to
+[K8BAS-DUMP] container 335 slot 29 lore 2 | creatures on Galatea for 10s.
+[K8BAS-DUMP] container 335 slot 29 lore 3 | Cooldown: 110s
+[K8BAS-DUMP] container 335 slot 29 lore 4 | 
+[K8BAS-DUMP] container 335 slot 29 lore 5 | Axe Abilities apply to all of your
+[K8BAS-DUMP] container 335 slot 29 lore 6 | Axes. You can select an Axe Ability
+[K8BAS-DUMP] container 335 slot 29 lore 7 | from your Heart of the Forest.
+[K8BAS-DUMP] container 335 slot 29 lore 8 | 
+[K8BAS-DUMP] container 335 slot 29 lore 9 | Upgrade your Axe Abilities by
+[K8BAS-DUMP] container 335 slot 29 lore 10 | unlocking Center of the Forest in
+[K8BAS-DUMP] container 335 slot 29 lore 11 | this menu!
+[K8BAS-DUMP] container 335 slot 29 lore 12 | 
+[K8BAS-DUMP] container 335 slot 29 lore 13 | Cost
+[K8BAS-DUMP] container 335 slot 29 lore 14 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 29 lore 15 | 
+[K8BAS-DUMP] container 335 slot 29 lore 16 | Requires Luck of the Forest
+[K8BAS-DUMP] container 335 slot 30 item=minecraft:paper sbid=- count=1 | Luck of the Forest
+[K8BAS-DUMP] container 335 slot 30 lore 0 | Level 1/40
+[K8BAS-DUMP] container 335 slot 30 lore 1 | 
+[K8BAS-DUMP] container 335 slot 30 lore 2 | Tree Gifts grant 0.5% more loot.
+[K8BAS-DUMP] container 335 slot 30 lore 3 | 
+[K8BAS-DUMP] container 335 slot 30 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 30 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 30 lore 6 | 
+[K8BAS-DUMP] container 335 slot 30 lore 7 | Requires Foraging Fortune
+[K8BAS-DUMP] container 335 slot 31 item=minecraft:paper sbid=- count=1 | Foraging Fortune
+[K8BAS-DUMP] container 335 slot 31 lore 0 | Level 1/50
+[K8BAS-DUMP] container 335 slot 31 lore 1 | 
+[K8BAS-DUMP] container 335 slot 31 lore 2 | Increase  Foraging Fortune by 3.
+[K8BAS-DUMP] container 335 slot 31 lore 3 | 
+[K8BAS-DUMP] container 335 slot 31 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 31 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 31 lore 6 | 
+[K8BAS-DUMP] container 335 slot 31 lore 7 | Requires Sweep
+[K8BAS-DUMP] container 335 slot 32 item=minecraft:paper sbid=- count=1 | Collector
+[K8BAS-DUMP] container 335 slot 32 lore 0 | Level 1/50
+[K8BAS-DUMP] container 335 slot 32 lore 1 | 
+[K8BAS-DUMP] container 335 slot 32 lore 2 | Berries and Island Resources have
+[K8BAS-DUMP] container 335 slot 32 lore 3 | a 2% chance to drop double
+[K8BAS-DUMP] container 335 slot 32 lore 4 | resource.
+[K8BAS-DUMP] container 335 slot 32 lore 5 | 
+[K8BAS-DUMP] container 335 slot 32 lore 6 | Cost
+[K8BAS-DUMP] container 335 slot 32 lore 7 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 32 lore 8 | 
+[K8BAS-DUMP] container 335 slot 32 lore 9 | Requires Foraging Fortune
+[K8BAS-DUMP] container 335 slot 33 item=minecraft:paper sbid=- count=1 | Axe Toss
+[K8BAS-DUMP] container 335 slot 33 lore 0 | Axe Ability: Axe Toss
+[K8BAS-DUMP] container 335 slot 33 lore 1 | Throwing your Axe has no  Sweep
+[K8BAS-DUMP] container 335 slot 33 lore 2 | penalty for 10s.
+[K8BAS-DUMP] container 335 slot 33 lore 3 | Cooldown: 112s
+[K8BAS-DUMP] container 335 slot 33 lore 4 | 
+[K8BAS-DUMP] container 335 slot 33 lore 5 | Axe Abilities apply to all of your
+[K8BAS-DUMP] container 335 slot 33 lore 6 | Axes. You can select an Axe Ability
+[K8BAS-DUMP] container 335 slot 33 lore 7 | from your Heart of the Forest.
+[K8BAS-DUMP] container 335 slot 33 lore 8 | 
+[K8BAS-DUMP] container 335 slot 33 lore 9 | Upgrade your Axe Abilities by
+[K8BAS-DUMP] container 335 slot 33 lore 10 | unlocking Center of the Forest in
+[K8BAS-DUMP] container 335 slot 33 lore 11 | this menu!
+[K8BAS-DUMP] container 335 slot 33 lore 12 | 
+[K8BAS-DUMP] container 335 slot 33 lore 13 | Cost
+[K8BAS-DUMP] container 335 slot 33 lore 14 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 33 lore 15 | 
+[K8BAS-DUMP] container 335 slot 33 lore 16 | Requires Collector
+[K8BAS-DUMP] container 335 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 36 item=minecraft:lime_stained_glass_pane sbid=- count=1 | Tier 1
+[K8BAS-DUMP] container 335 slot 36 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 335 slot 36 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 335 slot 36 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 335 slot 36 lore 3 | the Forest.
+[K8BAS-DUMP] container 335 slot 36 lore 4 | 
+[K8BAS-DUMP] container 335 slot 36 lore 5 | Rewards
+[K8BAS-DUMP] container 335 slot 36 lore 6 | +1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 36 lore 7 | +35 SkyBlock XP
+[K8BAS-DUMP] container 335 slot 36 lore 8 | 
+[K8BAS-DUMP] container 335 slot 36 lore 9 | UNLOCKED
+[K8BAS-DUMP] container 335 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 40 item=minecraft:paper sbid=- count=1 | Sweep
+[K8BAS-DUMP] container 335 slot 40 lore 0 | Level 1/50
+[K8BAS-DUMP] container 335 slot 40 lore 1 | 
+[K8BAS-DUMP] container 335 slot 40 lore 2 | Increase  Sweep by 1.
+[K8BAS-DUMP] container 335 slot 40 lore 3 | 
+[K8BAS-DUMP] container 335 slot 40 lore 4 | Cost
+[K8BAS-DUMP] container 335 slot 40 lore 5 | 1 Token of the Forest
+[K8BAS-DUMP] container 335 slot 40 lore 6 | 
+[K8BAS-DUMP] container 335 slot 40 lore 7 | Click to unlock!
+[K8BAS-DUMP] container 335 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 45 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 335 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 47 item=minecraft:chest sbid=- count=1 | Heart of the Forest Slot
+[K8BAS-DUMP] container 335 slot 47 lore 0 | Quickly swap between saved trees.
+[K8BAS-DUMP] container 335 slot 47 lore 1 | 
+[K8BAS-DUMP] container 335 slot 47 lore 2 | Current: Heart of the Forest 2
+[K8BAS-DUMP] container 335 slot 47 lore 3 | 
+[K8BAS-DUMP] container 335 slot 47 lore 4 | Swapping trees has a 10m cooldown!
+[K8BAS-DUMP] container 335 slot 47 lore 5 | 
+[K8BAS-DUMP] container 335 slot 47 lore 6 | Click to view!
+[K8BAS-DUMP] container 335 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 335 slot 48 lore 0 | To Tasks ➜ Foraging
+[K8BAS-DUMP] container 335 slot 49 item=minecraft:player_head sbid=- count=1 | Heart of the Forest
+[K8BAS-DUMP] container 335 slot 49 lore 0 | Tokens of the Forest: 15
+[K8BAS-DUMP] container 335 slot 49 lore 1 | 
+[K8BAS-DUMP] container 335 slot 49 lore 2 | Use Tokens of the Forest to unlock
+[K8BAS-DUMP] container 335 slot 49 lore 3 | perks and abilities, and Whispers to
+[K8BAS-DUMP] container 335 slot 49 lore 4 | upgrade them!
+[K8BAS-DUMP] container 335 slot 49 lore 5 | 
+[K8BAS-DUMP] container 335 slot 49 lore 6 | Forest Whispers
+[K8BAS-DUMP] container 335 slot 49 lore 7 | Forest Whispers are dropped from
+[K8BAS-DUMP] container 335 slot 49 lore 8 | Fig and Mangrove Tree Gifts on the
+[K8BAS-DUMP] container 335 slot 49 lore 9 | Moonglade Marsh.
+[K8BAS-DUMP] container 335 slot 49 lore 10 | 
+[K8BAS-DUMP] container 335 slot 49 lore 11 | Desert Whispers
+[K8BAS-DUMP] container 335 slot 49 lore 12 | Desert Whispers are dropped from
+[K8BAS-DUMP] container 335 slot 49 lore 13 | Helix Tree Gifts on Torrhus Canyon.
+[K8BAS-DUMP] container 335 slot 49 lore 14 | 
+[K8BAS-DUMP] container 335 slot 49 lore 15 | Forest Whispers: 6,944,398
+[K8BAS-DUMP] container 335 slot 49 lore 16 | Desert Whispers: 221,052
+[K8BAS-DUMP] container 335 slot 50 item=minecraft:player_head sbid=- count=1 | Moonglade Marsh
+[K8BAS-DUMP] container 335 slot 50 lore 0 | /chapters moonglade
+[K8BAS-DUMP] container 335 slot 50 lore 1 | 
+[K8BAS-DUMP] container 335 slot 50 lore 2 | Welcome to the Moonglade Marsh, the
+[K8BAS-DUMP] container 335 slot 50 lore 3 | first island of Galatea.
+[K8BAS-DUMP] container 335 slot 50 lore 4 | 
+[K8BAS-DUMP] container 335 slot 50 lore 5 | Here you'll learn about Hunting,
+[K8BAS-DUMP] container 335 slot 50 lore 6 | advanced Foraging, and maybe even
+[K8BAS-DUMP] container 335 slot 50 lore 7 | discover the secrets of the island!
+[K8BAS-DUMP] container 335 slot 50 lore 8 | 
+[K8BAS-DUMP] container 335 slot 50 lore 9 | Total Progress: 69.6%
+[K8BAS-DUMP] container 335 slot 50 lore 10 |                           48/69
+[K8BAS-DUMP] container 335 slot 50 lore 11 | 
+[K8BAS-DUMP] container 335 slot 50 lore 12 | Click to view!
+[K8BAS-DUMP] container 335 slot 51 item=minecraft:player_head sbid=- count=1 | Torrhus Canyon
+[K8BAS-DUMP] container 335 slot 51 lore 0 | /chapters torrhus
+[K8BAS-DUMP] container 335 slot 51 lore 1 | 
+[K8BAS-DUMP] container 335 slot 51 lore 2 | Torrhus Canyon is the second island
+[K8BAS-DUMP] container 335 slot 51 lore 3 | of Galatea.
+[K8BAS-DUMP] container 335 slot 51 lore 4 | 
+[K8BAS-DUMP] container 335 slot 51 lore 5 | Here you'll continue to hone your
+[K8BAS-DUMP] container 335 slot 51 lore 6 | Foraging and Hunting skills as you
+[K8BAS-DUMP] container 335 slot 51 lore 7 | partake in Miria's Contests, explore
+[K8BAS-DUMP] container 335 slot 51 lore 8 | the Critter Safari, and dive deep into
+[K8BAS-DUMP] container 335 slot 51 lore 9 | Torrhus Springs.
+[K8BAS-DUMP] container 335 slot 51 lore 10 | 
+[K8BAS-DUMP] container 335 slot 51 lore 11 | Total Progress: 58.5%
+[K8BAS-DUMP] container 335 slot 51 lore 12 |                           38/65
+[K8BAS-DUMP] container 335 slot 51 lore 13 | 
+[K8BAS-DUMP] container 335 slot 51 lore 14 | Click to view!
+[K8BAS-DUMP] container 335 slot 52 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 335 slot 53 item=minecraft:black_stained_glass_pane sbid=- count=1 | 

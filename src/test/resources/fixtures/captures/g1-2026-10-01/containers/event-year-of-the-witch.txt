@@ -1,0 +1,196 @@
+[K8BAS-DUMP] container 107 title=Event ➜ Year of the Witch slots=45 state=56
+[K8BAS-DUMP] container 107 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 4 item=minecraft:player_head sbid=- count=1 | Year of the Witch
+[K8BAS-DUMP] container 107 slot 4 lore 0 | 21 Tasks
+[K8BAS-DUMP] container 107 slot 4 lore 1 | 
+[K8BAS-DUMP] container 107 slot 4 lore 2 |  ✖ Straight Ice Slushie
+[K8BAS-DUMP] container 107 slot 4 lore 3 |  ✔ Mayfly Stew
+[K8BAS-DUMP] container 107 slot 4 lore 4 |  ✖ Insect Casserole
+[K8BAS-DUMP] container 107 slot 4 lore 5 |  ✖ Bone Broth
+[K8BAS-DUMP] container 107 slot 4 lore 6 |  ✖ Effervescent Bouillon
+[K8BAS-DUMP] container 107 slot 4 lore 7 |  ✔ Flaming Hot Chilli
+[K8BAS-DUMP] container 107 slot 4 lore 8 |  ✖ Withering Purée
+[K8BAS-DUMP] container 107 slot 4 lore 9 |  ✖ Leafy Lentil Soup
+[K8BAS-DUMP] container 107 slot 4 lore 10 |  ✖ Dusty Bisque
+[K8BAS-DUMP] container 107 slot 4 lore 11 |  ✖ Cremated Cereal
+[K8BAS-DUMP] container 107 slot 4 lore 12 |  ✖ Waterlice Liquor
+[K8BAS-DUMP] container 107 slot 4 lore 13 |  ✖ Gemstone Goulash
+[K8BAS-DUMP] container 107 slot 4 lore 14 |  ✖ Aerodynamic Potpourri
+[K8BAS-DUMP] container 107 slot 4 lore 15 |  ✖ Frogspawn Chowder
+[K8BAS-DUMP] container 107 slot 4 lore 16 | And 6 more...
+[K8BAS-DUMP] container 107 slot 4 lore 17 | 
+[K8BAS-DUMP] container 107 slot 4 lore 18 | Total Progress: 19%
+[K8BAS-DUMP] container 107 slot 4 lore 19 |                           20/105 XP
+[K8BAS-DUMP] container 107 slot 4 lore 20 | 
+[K8BAS-DUMP] container 107 slot 4 lore 21 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 107 slot 4 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 107 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 10 item=minecraft:player_head sbid=- count=1 | Straight Ice Slushie
+[K8BAS-DUMP] container 107 slot 10 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 10 lore 1 | 
+[K8BAS-DUMP] container 107 slot 10 lore 2 | Gain +5 XP by consuming a Straight
+[K8BAS-DUMP] container 107 slot 10 lore 3 | Ice Slushie!
+[K8BAS-DUMP] container 107 slot 10 lore 4 | 
+[K8BAS-DUMP] container 107 slot 10 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 11 item=minecraft:player_head sbid=- count=1 | Mayfly Stew
+[K8BAS-DUMP] container 107 slot 11 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 11 lore 1 | 
+[K8BAS-DUMP] container 107 slot 11 lore 2 | Gain +5 XP by consuming a Mayfly
+[K8BAS-DUMP] container 107 slot 11 lore 3 | Stew!
+[K8BAS-DUMP] container 107 slot 11 lore 4 | 
+[K8BAS-DUMP] container 107 slot 11 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 107 slot 12 item=minecraft:player_head sbid=- count=1 | Insect Casserole
+[K8BAS-DUMP] container 107 slot 12 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 12 lore 1 | 
+[K8BAS-DUMP] container 107 slot 12 lore 2 | Gain +5 XP by consuming a Insect
+[K8BAS-DUMP] container 107 slot 12 lore 3 | Casserole!
+[K8BAS-DUMP] container 107 slot 12 lore 4 | 
+[K8BAS-DUMP] container 107 slot 12 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 13 item=minecraft:player_head sbid=- count=1 | Bone Broth
+[K8BAS-DUMP] container 107 slot 13 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 13 lore 1 | 
+[K8BAS-DUMP] container 107 slot 13 lore 2 | Gain +5 XP by consuming a Bone
+[K8BAS-DUMP] container 107 slot 13 lore 3 | Broth!
+[K8BAS-DUMP] container 107 slot 13 lore 4 | 
+[K8BAS-DUMP] container 107 slot 13 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 14 item=minecraft:player_head sbid=- count=1 | Effervescent Bouillon
+[K8BAS-DUMP] container 107 slot 14 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 14 lore 1 | 
+[K8BAS-DUMP] container 107 slot 14 lore 2 | Gain +5 XP by consuming a
+[K8BAS-DUMP] container 107 slot 14 lore 3 | Effervescent Bouillon!
+[K8BAS-DUMP] container 107 slot 14 lore 4 | 
+[K8BAS-DUMP] container 107 slot 14 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 15 item=minecraft:player_head sbid=- count=1 | Flaming Hot Chilli
+[K8BAS-DUMP] container 107 slot 15 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 15 lore 1 | 
+[K8BAS-DUMP] container 107 slot 15 lore 2 | Gain +5 XP by consuming a Flaming
+[K8BAS-DUMP] container 107 slot 15 lore 3 | Hot Chilli!
+[K8BAS-DUMP] container 107 slot 15 lore 4 | 
+[K8BAS-DUMP] container 107 slot 15 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 107 slot 16 item=minecraft:player_head sbid=- count=1 | Withering Purée
+[K8BAS-DUMP] container 107 slot 16 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 16 lore 1 | 
+[K8BAS-DUMP] container 107 slot 16 lore 2 | Gain +5 XP by consuming a Withering
+[K8BAS-DUMP] container 107 slot 16 lore 3 | Purée!
+[K8BAS-DUMP] container 107 slot 16 lore 4 | 
+[K8BAS-DUMP] container 107 slot 16 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 19 item=minecraft:player_head sbid=- count=1 | Leafy Lentil Soup
+[K8BAS-DUMP] container 107 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 19 lore 1 | 
+[K8BAS-DUMP] container 107 slot 19 lore 2 | Gain +5 XP by consuming a Leafy
+[K8BAS-DUMP] container 107 slot 19 lore 3 | Lentil Soup!
+[K8BAS-DUMP] container 107 slot 19 lore 4 | 
+[K8BAS-DUMP] container 107 slot 19 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 20 item=minecraft:player_head sbid=- count=1 | Dusty Bisque
+[K8BAS-DUMP] container 107 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 20 lore 1 | 
+[K8BAS-DUMP] container 107 slot 20 lore 2 | Gain +5 XP by consuming a Dusty
+[K8BAS-DUMP] container 107 slot 20 lore 3 | Bisque!
+[K8BAS-DUMP] container 107 slot 20 lore 4 | 
+[K8BAS-DUMP] container 107 slot 20 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 21 item=minecraft:player_head sbid=- count=1 | Cremated Cereal
+[K8BAS-DUMP] container 107 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 21 lore 1 | 
+[K8BAS-DUMP] container 107 slot 21 lore 2 | Gain +5 XP by consuming a Cremated
+[K8BAS-DUMP] container 107 slot 21 lore 3 | Cereal!
+[K8BAS-DUMP] container 107 slot 21 lore 4 | 
+[K8BAS-DUMP] container 107 slot 21 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 22 item=minecraft:player_head sbid=- count=1 | Waterlice Liquor
+[K8BAS-DUMP] container 107 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 22 lore 1 | 
+[K8BAS-DUMP] container 107 slot 22 lore 2 | Gain +5 XP by consuming a Waterlice
+[K8BAS-DUMP] container 107 slot 22 lore 3 | Liquor!
+[K8BAS-DUMP] container 107 slot 22 lore 4 | 
+[K8BAS-DUMP] container 107 slot 22 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 23 item=minecraft:player_head sbid=- count=1 | Gemstone Goulash
+[K8BAS-DUMP] container 107 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 23 lore 1 | 
+[K8BAS-DUMP] container 107 slot 23 lore 2 | Gain +5 XP by consuming a Gemstone
+[K8BAS-DUMP] container 107 slot 23 lore 3 | Goulash!
+[K8BAS-DUMP] container 107 slot 23 lore 4 | 
+[K8BAS-DUMP] container 107 slot 23 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 24 item=minecraft:player_head sbid=- count=1 | Aerodynamic Potpourri
+[K8BAS-DUMP] container 107 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 24 lore 1 | 
+[K8BAS-DUMP] container 107 slot 24 lore 2 | Gain +5 XP by consuming a
+[K8BAS-DUMP] container 107 slot 24 lore 3 | Aerodynamic Potpourri!
+[K8BAS-DUMP] container 107 slot 24 lore 4 | 
+[K8BAS-DUMP] container 107 slot 24 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 25 item=minecraft:player_head sbid=- count=1 | Frogspawn Chowder
+[K8BAS-DUMP] container 107 slot 25 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 25 lore 1 | 
+[K8BAS-DUMP] container 107 slot 25 lore 2 | Gain +5 XP by consuming a
+[K8BAS-DUMP] container 107 slot 25 lore 3 | Frogspawn Chowder!
+[K8BAS-DUMP] container 107 slot 25 lore 4 | 
+[K8BAS-DUMP] container 107 slot 25 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 28 item=minecraft:player_head sbid=- count=1 | Void Porridge
+[K8BAS-DUMP] container 107 slot 28 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 28 lore 1 | 
+[K8BAS-DUMP] container 107 slot 28 lore 2 | Gain +5 XP by consuming a Void
+[K8BAS-DUMP] container 107 slot 28 lore 3 | Porridge!
+[K8BAS-DUMP] container 107 slot 28 lore 4 | 
+[K8BAS-DUMP] container 107 slot 28 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 29 item=minecraft:player_head sbid=- count=1 | Electronic Elixir
+[K8BAS-DUMP] container 107 slot 29 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 29 lore 1 | 
+[K8BAS-DUMP] container 107 slot 29 lore 2 | Gain +5 XP by consuming a Electronic
+[K8BAS-DUMP] container 107 slot 29 lore 3 | Elixir!
+[K8BAS-DUMP] container 107 slot 29 lore 4 | 
+[K8BAS-DUMP] container 107 slot 29 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 30 item=minecraft:player_head sbid=- count=1 | Knockoff Glacite Gumbo
+[K8BAS-DUMP] container 107 slot 30 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 30 lore 1 | 
+[K8BAS-DUMP] container 107 slot 30 lore 2 | Gain +5 XP by consuming a Knockoff
+[K8BAS-DUMP] container 107 slot 30 lore 3 | Glacite Gumbo!
+[K8BAS-DUMP] container 107 slot 30 lore 4 | 
+[K8BAS-DUMP] container 107 slot 30 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 31 item=minecraft:player_head sbid=- count=1 | Spider Eye Soup
+[K8BAS-DUMP] container 107 slot 31 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 31 lore 1 | 
+[K8BAS-DUMP] container 107 slot 31 lore 2 | Gain +5 XP by consuming a Spider
+[K8BAS-DUMP] container 107 slot 31 lore 3 | Eye Soup!
+[K8BAS-DUMP] container 107 slot 31 lore 4 | 
+[K8BAS-DUMP] container 107 slot 31 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 107 slot 32 item=minecraft:player_head sbid=- count=1 | Hopefully-not-human Hodgepodge
+[K8BAS-DUMP] container 107 slot 32 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 32 lore 1 | 
+[K8BAS-DUMP] container 107 slot 32 lore 2 | Gain +5 XP by consuming a
+[K8BAS-DUMP] container 107 slot 32 lore 3 | Hopefully-not-human Hodgepodge!
+[K8BAS-DUMP] container 107 slot 32 lore 4 | 
+[K8BAS-DUMP] container 107 slot 32 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 33 item=minecraft:player_head sbid=- count=1 | Smelly Jelly
+[K8BAS-DUMP] container 107 slot 33 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 33 lore 1 | 
+[K8BAS-DUMP] container 107 slot 33 lore 2 | Gain +5 XP by consuming a Smelly
+[K8BAS-DUMP] container 107 slot 33 lore 3 | Jelly!
+[K8BAS-DUMP] container 107 slot 33 lore 4 | 
+[K8BAS-DUMP] container 107 slot 33 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 107 slot 34 item=minecraft:player_head sbid=- count=1 | Spellweaver's Soup
+[K8BAS-DUMP] container 107 slot 34 lore 0 | XP Task
+[K8BAS-DUMP] container 107 slot 34 lore 1 | 
+[K8BAS-DUMP] container 107 slot 34 lore 2 | Gain +5 XP by consuming a
+[K8BAS-DUMP] container 107 slot 34 lore 3 | Spellweaver's Soup!
+[K8BAS-DUMP] container 107 slot 34 lore 4 | 
+[K8BAS-DUMP] container 107 slot 34 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 107 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 37 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 38 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 107 slot 39 lore 0 | To Tasks ➜ Event
+[K8BAS-DUMP] container 107 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 107 slot 41 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 42 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 43 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 107 slot 44 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 

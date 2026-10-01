@@ -1,0 +1,187 @@
+[K8BAS-DUMP] container 152 title=Essence Shop ➜ Undead Essence S slots=54 state=65
+[K8BAS-DUMP] container 152 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 4 item=minecraft:player_head sbid=- count=1 | Undead Essence Shop
+[K8BAS-DUMP] container 152 slot 4 lore 0 | 8 Tasks
+[K8BAS-DUMP] container 152 slot 4 lore 1 | 
+[K8BAS-DUMP] container 152 slot 4 lore 2 |  ✖ Boss Luck (2/4)
+[K8BAS-DUMP] container 152 slot 4 lore 3 |  ✖ Looting (1/5)
+[K8BAS-DUMP] container 152 slot 4 lore 4 |  ✖ Health Essence (1/5)
+[K8BAS-DUMP] container 152 slot 4 lore 5 |  ✖ Defense Essence (0/5)
+[K8BAS-DUMP] container 152 slot 4 lore 6 |  ✖ Strength Essence (0/5)
+[K8BAS-DUMP] container 152 slot 4 lore 7 |  ✖ Intelligence Essence (0/5)
+[K8BAS-DUMP] container 152 slot 4 lore 8 |  ✖ Critical Essence (0/5)
+[K8BAS-DUMP] container 152 slot 4 lore 9 |  ✖ Help of the Fairies (0/1)
+[K8BAS-DUMP] container 152 slot 4 lore 10 | 
+[K8BAS-DUMP] container 152 slot 4 lore 11 | Total Progress: 6.2%
+[K8BAS-DUMP] container 152 slot 4 lore 12 |                           8/128 XP
+[K8BAS-DUMP] container 152 slot 4 lore 13 | 
+[K8BAS-DUMP] container 152 slot 4 lore 14 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 4 lore 15 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 20 item=minecraft:chest sbid=- count=1 | Boss Luck
+[K8BAS-DUMP] container 152 slot 20 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 152 slot 20 lore 1 | 
+[K8BAS-DUMP] container 152 slot 20 lore 2 |  ✔ Boss Luck 1
+[K8BAS-DUMP] container 152 slot 20 lore 3 |  ✔ Boss Luck 2
+[K8BAS-DUMP] container 152 slot 20 lore 4 |  ✖ Boss Luck 3
+[K8BAS-DUMP] container 152 slot 20 lore 5 |  ✖ Boss Luck 4
+[K8BAS-DUMP] container 152 slot 20 lore 6 | 
+[K8BAS-DUMP] container 152 slot 20 lore 7 | Total Progress: 33.3%
+[K8BAS-DUMP] container 152 slot 20 lore 8 |                           4/12 XP
+[K8BAS-DUMP] container 152 slot 20 lore 9 | 
+[K8BAS-DUMP] container 152 slot 20 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 20 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 20 lore 12 | 
+[K8BAS-DUMP] container 152 slot 20 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 152 slot 21 item=minecraft:rabbit_foot sbid=- count=1 | Looting
+[K8BAS-DUMP] container 152 slot 21 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 152 slot 21 lore 1 | 
+[K8BAS-DUMP] container 152 slot 21 lore 2 |  ✔ Looting 1
+[K8BAS-DUMP] container 152 slot 21 lore 3 |  ✖ Looting 2
+[K8BAS-DUMP] container 152 slot 21 lore 4 |  ✖ Looting 3
+[K8BAS-DUMP] container 152 slot 21 lore 5 |  ✖ Looting 4
+[K8BAS-DUMP] container 152 slot 21 lore 6 |  ✖ Looting 5
+[K8BAS-DUMP] container 152 slot 21 lore 7 | 
+[K8BAS-DUMP] container 152 slot 21 lore 8 | Total Progress: 10.5%
+[K8BAS-DUMP] container 152 slot 21 lore 9 |                           2/19 XP
+[K8BAS-DUMP] container 152 slot 21 lore 10 | 
+[K8BAS-DUMP] container 152 slot 21 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 21 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 21 lore 13 | 
+[K8BAS-DUMP] container 152 slot 21 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 152 slot 22 item=minecraft:golden_apple sbid=- count=1 | Health Essence
+[K8BAS-DUMP] container 152 slot 22 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 152 slot 22 lore 1 | 
+[K8BAS-DUMP] container 152 slot 22 lore 2 |  ✔ Health Essence 1
+[K8BAS-DUMP] container 152 slot 22 lore 3 |  ✖ Health Essence 2
+[K8BAS-DUMP] container 152 slot 22 lore 4 |  ✖ Health Essence 3
+[K8BAS-DUMP] container 152 slot 22 lore 5 |  ✖ Health Essence 4
+[K8BAS-DUMP] container 152 slot 22 lore 6 |  ✖ Health Essence 5
+[K8BAS-DUMP] container 152 slot 22 lore 7 | 
+[K8BAS-DUMP] container 152 slot 22 lore 8 | Total Progress: 10.5%
+[K8BAS-DUMP] container 152 slot 22 lore 9 |                           2/19 XP
+[K8BAS-DUMP] container 152 slot 22 lore 10 | 
+[K8BAS-DUMP] container 152 slot 22 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 22 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 22 lore 13 | 
+[K8BAS-DUMP] container 152 slot 22 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 152 slot 23 item=minecraft:iron_chestplate sbid=- count=1 | Defense Essence
+[K8BAS-DUMP] container 152 slot 23 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 152 slot 23 lore 1 | 
+[K8BAS-DUMP] container 152 slot 23 lore 2 |  ✖ Defense Essence 1
+[K8BAS-DUMP] container 152 slot 23 lore 3 |  ✖ Defense Essence 2
+[K8BAS-DUMP] container 152 slot 23 lore 4 |  ✖ Defense Essence 3
+[K8BAS-DUMP] container 152 slot 23 lore 5 |  ✖ Defense Essence 4
+[K8BAS-DUMP] container 152 slot 23 lore 6 |  ✖ Defense Essence 5
+[K8BAS-DUMP] container 152 slot 23 lore 7 | 
+[K8BAS-DUMP] container 152 slot 23 lore 8 | Total Progress: 0%
+[K8BAS-DUMP] container 152 slot 23 lore 9 |                           0/19 XP
+[K8BAS-DUMP] container 152 slot 23 lore 10 | 
+[K8BAS-DUMP] container 152 slot 23 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 23 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 23 lore 13 | 
+[K8BAS-DUMP] container 152 slot 23 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 152 slot 24 item=minecraft:blaze_powder sbid=- count=1 | Strength Essence
+[K8BAS-DUMP] container 152 slot 24 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 152 slot 24 lore 1 | 
+[K8BAS-DUMP] container 152 slot 24 lore 2 |  ✖ Strength Essence 1
+[K8BAS-DUMP] container 152 slot 24 lore 3 |  ✖ Strength Essence 2
+[K8BAS-DUMP] container 152 slot 24 lore 4 |  ✖ Strength Essence 3
+[K8BAS-DUMP] container 152 slot 24 lore 5 |  ✖ Strength Essence 4
+[K8BAS-DUMP] container 152 slot 24 lore 6 |  ✖ Strength Essence 5
+[K8BAS-DUMP] container 152 slot 24 lore 7 | 
+[K8BAS-DUMP] container 152 slot 24 lore 8 | Total Progress: 0%
+[K8BAS-DUMP] container 152 slot 24 lore 9 |                           0/19 XP
+[K8BAS-DUMP] container 152 slot 24 lore 10 | 
+[K8BAS-DUMP] container 152 slot 24 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 24 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 24 lore 13 | 
+[K8BAS-DUMP] container 152 slot 24 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 152 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 30 item=minecraft:enchanted_book sbid=- count=1 | Intelligence Essence
+[K8BAS-DUMP] container 152 slot 30 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 152 slot 30 lore 1 | 
+[K8BAS-DUMP] container 152 slot 30 lore 2 |  ✖ Intelligence Essence 1
+[K8BAS-DUMP] container 152 slot 30 lore 3 |  ✖ Intelligence Essence 2
+[K8BAS-DUMP] container 152 slot 30 lore 4 |  ✖ Intelligence Essence 3
+[K8BAS-DUMP] container 152 slot 30 lore 5 |  ✖ Intelligence Essence 4
+[K8BAS-DUMP] container 152 slot 30 lore 6 |  ✖ Intelligence Essence 5
+[K8BAS-DUMP] container 152 slot 30 lore 7 | 
+[K8BAS-DUMP] container 152 slot 30 lore 8 | Total Progress: 0%
+[K8BAS-DUMP] container 152 slot 30 lore 9 |                           0/19 XP
+[K8BAS-DUMP] container 152 slot 30 lore 10 | 
+[K8BAS-DUMP] container 152 slot 30 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 30 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 30 lore 13 | 
+[K8BAS-DUMP] container 152 slot 30 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 152 slot 31 item=minecraft:player_head sbid=- count=1 | Critical Essence
+[K8BAS-DUMP] container 152 slot 31 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 152 slot 31 lore 1 | 
+[K8BAS-DUMP] container 152 slot 31 lore 2 |  ✖ Critical Essence 1
+[K8BAS-DUMP] container 152 slot 31 lore 3 |  ✖ Critical Essence 2
+[K8BAS-DUMP] container 152 slot 31 lore 4 |  ✖ Critical Essence 3
+[K8BAS-DUMP] container 152 slot 31 lore 5 |  ✖ Critical Essence 4
+[K8BAS-DUMP] container 152 slot 31 lore 6 |  ✖ Critical Essence 5
+[K8BAS-DUMP] container 152 slot 31 lore 7 | 
+[K8BAS-DUMP] container 152 slot 31 lore 8 | Total Progress: 0%
+[K8BAS-DUMP] container 152 slot 31 lore 9 |                           0/19 XP
+[K8BAS-DUMP] container 152 slot 31 lore 10 | 
+[K8BAS-DUMP] container 152 slot 31 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 31 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 31 lore 13 | 
+[K8BAS-DUMP] container 152 slot 31 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 152 slot 32 item=minecraft:player_head sbid=REVIVE_STONE count=1 | Help of the Fairies
+[K8BAS-DUMP] container 152 slot 32 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 152 slot 32 lore 1 | 
+[K8BAS-DUMP] container 152 slot 32 lore 2 |  ✖ Help of the Fairies 1
+[K8BAS-DUMP] container 152 slot 32 lore 3 | 
+[K8BAS-DUMP] container 152 slot 32 lore 4 | Total Progress: 0%
+[K8BAS-DUMP] container 152 slot 32 lore 5 |                           0/2 XP
+[K8BAS-DUMP] container 152 slot 32 lore 6 | 
+[K8BAS-DUMP] container 152 slot 32 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 152 slot 32 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 152 slot 32 lore 9 | 
+[K8BAS-DUMP] container 152 slot 32 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 152 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 45 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 46 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 47 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 152 slot 48 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 152 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 152 slot 50 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 51 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 52 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 152 slot 53 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

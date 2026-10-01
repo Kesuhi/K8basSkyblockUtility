@@ -1,0 +1,240 @@
+[K8BAS-DUMP] container 440 title=Story ➜ Complete Objectives slots=45 state=55
+[K8BAS-DUMP] container 440 slot 0 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 1 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 2 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 3 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 4 item=minecraft:writable_book sbid=- count=1 | Complete Objectives
+[K8BAS-DUMP] container 440 slot 4 lore 0 | 44 Tasks
+[K8BAS-DUMP] container 440 slot 4 lore 1 | 
+[K8BAS-DUMP] container 440 slot 4 lore 2 |  ✔ Into the Woods
+[K8BAS-DUMP] container 440 slot 4 lore 3 |  ✔ Staying Informed
+[K8BAS-DUMP] container 440 slot 4 lore 4 |  ✔ Talk to Agatha
+[K8BAS-DUMP] container 440 slot 4 lore 5 |  ✔ The Rebuild
+[K8BAS-DUMP] container 440 slot 4 lore 6 |  ✔ Friendly Farmer 2
+[K8BAS-DUMP] container 440 slot 4 lore 7 |  ✔ Shady Jake
+[K8BAS-DUMP] container 440 slot 4 lore 8 |  ✔ Hub Explorer
+[K8BAS-DUMP] container 440 slot 4 lore 9 |  ✔ Finding the Engine
+[K8BAS-DUMP] container 440 slot 4 lore 10 |  ✔ A Helping Hand
+[K8BAS-DUMP] container 440 slot 4 lore 11 |  ✔ Kill Zombies
+[K8BAS-DUMP] container 440 slot 4 lore 12 |  ✔ The End Race
+[K8BAS-DUMP] container 440 slot 4 lore 13 |  ✔ David's Hunting Lessons
+[K8BAS-DUMP] container 440 slot 4 lore 14 |  ✔ Library Card
+[K8BAS-DUMP] container 440 slot 4 lore 15 |  ✔ Helpful Farmer
+[K8BAS-DUMP] container 440 slot 4 lore 16 | And 29 more...
+[K8BAS-DUMP] container 440 slot 4 lore 17 | 
+[K8BAS-DUMP] container 440 slot 4 lore 18 | Total Progress: 97.6%
+[K8BAS-DUMP] container 440 slot 4 lore 19 |                           207/212 XP
+[K8BAS-DUMP] container 440 slot 4 lore 20 | 
+[K8BAS-DUMP] container 440 slot 4 lore 21 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 440 slot 4 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 440 slot 5 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 6 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 7 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 8 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 9 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 10 item=minecraft:paper sbid=- count=1 | The Redstone Maniac
+[K8BAS-DUMP] container 440 slot 10 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 10 lore 1 | 
+[K8BAS-DUMP] container 440 slot 10 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 10 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 10 lore 4 | 
+[K8BAS-DUMP] container 440 slot 10 lore 5 | Give 1,024 Redstone to the Redstone
+[K8BAS-DUMP] container 440 slot 10 lore 6 | Miner.
+[K8BAS-DUMP] container 440 slot 10 lore 7 | 
+[K8BAS-DUMP] container 440 slot 10 lore 8 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 11 item=minecraft:paper sbid=- count=1 | Prepping the Plot
+[K8BAS-DUMP] container 440 slot 11 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 11 lore 1 | 
+[K8BAS-DUMP] container 440 slot 11 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 11 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 11 lore 4 | 
+[K8BAS-DUMP] container 440 slot 11 lore 5 | Clean your Garden Plot.
+[K8BAS-DUMP] container 440 slot 11 lore 6 | 
+[K8BAS-DUMP] container 440 slot 11 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 12 item=minecraft:paper sbid=- count=1 | Intermediate Farmer
+[K8BAS-DUMP] container 440 slot 12 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 12 lore 1 | 
+[K8BAS-DUMP] container 440 slot 12 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 12 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 12 lore 4 | 
+[K8BAS-DUMP] container 440 slot 12 lore 5 | Reach Farming Level V.
+[K8BAS-DUMP] container 440 slot 12 lore 6 | 
+[K8BAS-DUMP] container 440 slot 12 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 13 item=minecraft:paper sbid=- count=1 | Back at the Barnyard
+[K8BAS-DUMP] container 440 slot 13 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 13 lore 1 | 
+[K8BAS-DUMP] container 440 slot 13 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 13 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 13 lore 4 | 
+[K8BAS-DUMP] container 440 slot 13 lore 5 | Talk to the Farmhand.
+[K8BAS-DUMP] container 440 slot 13 lore 6 | 
+[K8BAS-DUMP] container 440 slot 13 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 14 item=minecraft:paper sbid=- count=1 | Further Investigating Jake
+[K8BAS-DUMP] container 440 slot 14 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 14 lore 1 | 
+[K8BAS-DUMP] container 440 slot 14 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 14 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 14 lore 4 | 
+[K8BAS-DUMP] container 440 slot 14 lore 5 | Pull the lever on the wall.
+[K8BAS-DUMP] container 440 slot 14 lore 6 | 
+[K8BAS-DUMP] container 440 slot 14 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 15 item=minecraft:paper sbid=- count=1 | Time to Mine
+[K8BAS-DUMP] container 440 slot 15 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 15 lore 1 | 
+[K8BAS-DUMP] container 440 slot 15 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 15 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 15 lore 4 | 
+[K8BAS-DUMP] container 440 slot 15 lore 5 | Mine coal.
+[K8BAS-DUMP] container 440 slot 15 lore 6 | 
+[K8BAS-DUMP] container 440 slot 15 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 16 item=minecraft:paper sbid=- count=1 | Hotspotting
+[K8BAS-DUMP] container 440 slot 16 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 16 lore 1 | 
+[K8BAS-DUMP] container 440 slot 16 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 16 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 16 lore 4 | 
+[K8BAS-DUMP] container 440 slot 16 lore 5 | Talk to Hattie.
+[K8BAS-DUMP] container 440 slot 16 lore 6 | 
+[K8BAS-DUMP] container 440 slot 16 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 17 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 18 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 19 item=minecraft:paper sbid=- count=1 | Fishing Tutorial
+[K8BAS-DUMP] container 440 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 19 lore 1 | 
+[K8BAS-DUMP] container 440 slot 19 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 19 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 19 lore 4 | 
+[K8BAS-DUMP] container 440 slot 19 lore 5 | Talk to Fisherwoman Enid.
+[K8BAS-DUMP] container 440 slot 19 lore 6 | 
+[K8BAS-DUMP] container 440 slot 19 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 20 item=minecraft:paper sbid=- count=1 | Chicken Racing
+[K8BAS-DUMP] container 440 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 20 lore 1 | 
+[K8BAS-DUMP] container 440 slot 20 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 20 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 20 lore 4 | 
+[K8BAS-DUMP] container 440 slot 20 lore 5 | Talk to Gulliver.
+[K8BAS-DUMP] container 440 slot 20 lore 6 | 
+[K8BAS-DUMP] container 440 slot 20 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 21 item=minecraft:paper sbid=- count=1 | Mole Problems
+[K8BAS-DUMP] container 440 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 21 lore 1 | 
+[K8BAS-DUMP] container 440 slot 21 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 21 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 21 lore 4 | 
+[K8BAS-DUMP] container 440 slot 21 lore 5 | Talk to Molbert.
+[K8BAS-DUMP] container 440 slot 21 lore 6 | 
+[K8BAS-DUMP] container 440 slot 21 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 22 item=minecraft:paper sbid=- count=1 | Crop 'n Profit
+[K8BAS-DUMP] container 440 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 22 lore 1 | 
+[K8BAS-DUMP] container 440 slot 22 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 22 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 22 lore 4 | 
+[K8BAS-DUMP] container 440 slot 22 lore 5 | Serve your first Customer.
+[K8BAS-DUMP] container 440 slot 22 lore 6 | 
+[K8BAS-DUMP] container 440 slot 22 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 23 item=minecraft:paper sbid=- count=1 | Chicken Racing
+[K8BAS-DUMP] container 440 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 23 lore 1 | 
+[K8BAS-DUMP] container 440 slot 23 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 23 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 23 lore 4 | 
+[K8BAS-DUMP] container 440 slot 23 lore 5 | Reach checkpoint 4.
+[K8BAS-DUMP] container 440 slot 23 lore 6 | 
+[K8BAS-DUMP] container 440 slot 23 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 24 item=minecraft:paper sbid=- count=1 | Learning to Compost
+[K8BAS-DUMP] container 440 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 24 lore 1 | 
+[K8BAS-DUMP] container 440 slot 24 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 24 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 24 lore 4 | 
+[K8BAS-DUMP] container 440 slot 24 lore 5 | Take Compost from the Composter.
+[K8BAS-DUMP] container 440 slot 24 lore 6 | 
+[K8BAS-DUMP] container 440 slot 24 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 25 item=minecraft:paper sbid=- count=1 | Woods Racing
+[K8BAS-DUMP] container 440 slot 25 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 25 lore 1 | 
+[K8BAS-DUMP] container 440 slot 25 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 25 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 25 lore 4 | 
+[K8BAS-DUMP] container 440 slot 25 lore 5 | Talk to Gustave.
+[K8BAS-DUMP] container 440 slot 25 lore 6 | 
+[K8BAS-DUMP] container 440 slot 25 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 26 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 27 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 28 item=minecraft:paper sbid=- count=1 | The Campfire Trials
+[K8BAS-DUMP] container 440 slot 28 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 28 lore 1 | 
+[K8BAS-DUMP] container 440 slot 28 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 28 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 28 lore 4 | 
+[K8BAS-DUMP] container 440 slot 28 lore 5 | Talk to Ryan.
+[K8BAS-DUMP] container 440 slot 28 lore 6 | 
+[K8BAS-DUMP] container 440 slot 28 lore 7 | This task can only be completed once!
+[K8BAS-DUMP] container 440 slot 29 item=minecraft:paper sbid=- count=1 | The End Race
+[K8BAS-DUMP] container 440 slot 29 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 29 lore 1 | 
+[K8BAS-DUMP] container 440 slot 29 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 29 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 29 lore 4 | 
+[K8BAS-DUMP] container 440 slot 29 lore 5 | Run the race in 48s.
+[K8BAS-DUMP] container 440 slot 29 lore 6 | 
+[K8BAS-DUMP] container 440 slot 29 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 30 item=minecraft:paper sbid=- count=1 | Saving Up
+[K8BAS-DUMP] container 440 slot 30 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 30 lore 1 | 
+[K8BAS-DUMP] container 440 slot 30 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 30 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 30 lore 4 | 
+[K8BAS-DUMP] container 440 slot 30 lore 5 | Talk to the Banker.
+[K8BAS-DUMP] container 440 slot 30 lore 6 | 
+[K8BAS-DUMP] container 440 slot 30 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 31 item=minecraft:paper sbid=- count=1 | Analyze a Mutation
+[K8BAS-DUMP] container 440 slot 31 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 31 lore 1 | 
+[K8BAS-DUMP] container 440 slot 31 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 31 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 31 lore 4 | 
+[K8BAS-DUMP] container 440 slot 31 lore 5 | Analyze a Mutation.
+[K8BAS-DUMP] container 440 slot 31 lore 6 | 
+[K8BAS-DUMP] container 440 slot 31 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 32 item=minecraft:paper sbid=- count=1 | Talk to Teddy
+[K8BAS-DUMP] container 440 slot 32 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 32 lore 1 | 
+[K8BAS-DUMP] container 440 slot 32 lore 2 | Gain +1 XP for completing this
+[K8BAS-DUMP] container 440 slot 32 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 32 lore 4 | 
+[K8BAS-DUMP] container 440 slot 32 lore 5 | Talk to Teddy.
+[K8BAS-DUMP] container 440 slot 32 lore 6 | 
+[K8BAS-DUMP] container 440 slot 32 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 33 item=minecraft:paper sbid=- count=1 | The Campfire Cult
+[K8BAS-DUMP] container 440 slot 33 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 33 lore 1 | 
+[K8BAS-DUMP] container 440 slot 33 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 33 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 33 lore 4 | 
+[K8BAS-DUMP] container 440 slot 33 lore 5 | Give Ryan Dark Oak Logs.
+[K8BAS-DUMP] container 440 slot 33 lore 6 | 
+[K8BAS-DUMP] container 440 slot 33 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 34 item=minecraft:paper sbid=- count=1 | One Man's Trash
+[K8BAS-DUMP] container 440 slot 34 lore 0 | XP Task
+[K8BAS-DUMP] container 440 slot 34 lore 1 | 
+[K8BAS-DUMP] container 440 slot 34 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 440 slot 34 lore 3 | objective!
+[K8BAS-DUMP] container 440 slot 34 lore 4 | 
+[K8BAS-DUMP] container 440 slot 34 lore 5 | Apply the Junk Sinker to a Fishing
+[K8BAS-DUMP] container 440 slot 34 lore 6 | Rod.
+[K8BAS-DUMP] container 440 slot 34 lore 7 | 
+[K8BAS-DUMP] container 440 slot 34 lore 8 | You have completed this task!
+[K8BAS-DUMP] container 440 slot 35 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 36 item=minecraft:arrow sbid=- count=1 | Previous Page
+[K8BAS-DUMP] container 440 slot 36 lore 0 | Page 1
+[K8BAS-DUMP] container 440 slot 37 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 38 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 440 slot 39 lore 0 | To Tasks ➜ Story
+[K8BAS-DUMP] container 440 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 440 slot 41 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 42 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 440 slot 43 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 

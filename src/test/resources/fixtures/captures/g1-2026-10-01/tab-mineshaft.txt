@@ -1,0 +1,81 @@
+[K8BAS-DUMP] tab 000 order=0 name=!B-e |  Scrap: 0
+[K8BAS-DUMP] tab 001 order=0 name=!D-r | 
+[K8BAS-DUMP] tab 002 order=0 name=!D-n | 
+[K8BAS-DUMP] tab 003 order=0 name=!D-e |  Peridot: ✖ Not Found
+[K8BAS-DUMP] tab 004 order=0 name=!B-b | Area: Mineshaft
+[K8BAS-DUMP] tab 005 order=0 name=!A-c | 
+[K8BAS-DUMP] tab 006 order=0 name=!D-q | 
+[K8BAS-DUMP] tab 007 order=0 name=!A-s | 
+[K8BAS-DUMP] tab 008 order=0 name=!C-m | Frozen Corpses:
+[K8BAS-DUMP] tab 009 order=0 name=!D-t | 
+[K8BAS-DUMP] tab 010 order=0 name=!D-f |  Citrine: ✖ Not Found
+[K8BAS-DUMP] tab 011 order=0 name=!A-t | 
+[K8BAS-DUMP] tab 012 order=0 name=!D-l |  Glacite Mage 13: 541/750
+[K8BAS-DUMP] tab 013 order=0 name=!D-h | 
+[K8BAS-DUMP] tab 014 order=0 name=!A-f | 
+[K8BAS-DUMP] tab 015 order=0 name=!D-d |  Aquamarine: ✖ Not Found
+[K8BAS-DUMP] tab 016 order=0 name=!A-k | 
+[K8BAS-DUMP] tab 017 order=0 name=!D-p |  Pickobulus: Available
+[K8BAS-DUMP] tab 018 order=0 name=!C-c |  Scrap Collector: 0%
+[K8BAS-DUMP] tab 019 order=0 name=!A-h | 
+[K8BAS-DUMP] tab 020 order=0 name=!D-b | Crystals:
+[K8BAS-DUMP] tab 021 order=0 name=!A-j | 
+[K8BAS-DUMP] tab 022 order=0 name=!B-f | 
+[K8BAS-DUMP] tab 023 order=0 name=!A-q | 
+[K8BAS-DUMP] tab 024 order=0 name=!A-d | 
+[K8BAS-DUMP] tab 025 order=0 name=!C-s | 
+[K8BAS-DUMP] tab 026 order=0 name=!B-j |  Interest: 17 Hours (913k)
+[K8BAS-DUMP] tab 027 order=0 name=!D-j |  Glacite Bowman 12: 497/500
+[K8BAS-DUMP] tab 028 order=0 name=!C-l | 
+[K8BAS-DUMP] tab 029 order=0 name=!A-b | [535] Self
+[K8BAS-DUMP] tab 030 order=0 name=!C-b | Commissions:
+[K8BAS-DUMP] tab 031 order=0 name=!D-o | Pickaxe Ability:
+[K8BAS-DUMP] tab 032 order=0 name=!D-m |  Glacite Mutt 13: 698/750
+[K8BAS-DUMP] tab 033 order=0 name=!D-k |  Glacite Caver 13: 685/750
+[K8BAS-DUMP] tab 034 order=0 name=!A-o | 
+[K8BAS-DUMP] tab 035 order=0 name=!A-a |          Players (1)
+[K8BAS-DUMP] tab 036 order=0 name=!A-p | 
+[K8BAS-DUMP] tab 037 order=0 name=!C-q | 
+[K8BAS-DUMP] tab 038 order=0 name=Self | 
+[K8BAS-DUMP] tab 039 order=0 name=!B-t | 
+[K8BAS-DUMP] tab 040 order=0 name=!B-o | 
+[K8BAS-DUMP] tab 041 order=0 name=!B-n |  MAX LEVEL
+[K8BAS-DUMP] tab 042 order=0 name=!B-l | Pet:
+[K8BAS-DUMP] tab 043 order=0 name=!D-g |  Onyx: ✖ Not Found
+[K8BAS-DUMP] tab 044 order=0 name=!A-e | 
+[K8BAS-DUMP] tab 045 order=0 name=!D-s | 
+[K8BAS-DUMP] tab 046 order=0 name=!C-f |  Corpse Looter: DONE
+[K8BAS-DUMP] tab 047 order=0 name=!B-s |  Cold Resistance: 68
+[K8BAS-DUMP] tab 048 order=0 name=!C-j |  Gemstone: 8,159
+[K8BAS-DUMP] tab 049 order=0 name=!B-i |  Bank: 1B
+[K8BAS-DUMP] tab 050 order=0 name=!C-i |  Mithril: 3,196,526
+[K8BAS-DUMP] tab 051 order=0 name=!B-h |  SB Level: [535] 28/100 XP
+[K8BAS-DUMP] tab 052 order=0 name=!B-r |  Mining Fortune: 2034
+[K8BAS-DUMP] tab 053 order=0 name=!D-i | Bestiary:
+[K8BAS-DUMP] tab 054 order=0 name=!A-n | 
+[K8BAS-DUMP] tab 055 order=0 name=!B-p | Stats:
+[K8BAS-DUMP] tab 056 order=0 name=!C-r | 
+[K8BAS-DUMP] tab 057 order=0 name=!C-d |  Mineshaft Explorer: DONE
+[K8BAS-DUMP] tab 058 order=0 name=!B-m |  [Lvl 100] Mammoth
+[K8BAS-DUMP] tab 059 order=0 name=!C-e |  Glacite Collector: 27.2%
+[K8BAS-DUMP] tab 060 order=0 name=!C-a |                Info
+[K8BAS-DUMP] tab 061 order=0 name=!C-k |  Glacite: 415,186
+[K8BAS-DUMP] tab 062 order=0 name=!C-n |  Lapis: NOT LOOTED
+[K8BAS-DUMP] tab 063 order=0 name=!B-g | Profile: Raspberry
+[K8BAS-DUMP] tab 064 order=0 name=!C-t | 
+[K8BAS-DUMP] tab 065 order=0 name=!C-p |  Lapis: LOOTED
+[K8BAS-DUMP] tab 066 order=0 name=!B-q |  Mining Speed: 8742
+[K8BAS-DUMP] tab 067 order=0 name=!A-r | 
+[K8BAS-DUMP] tab 068 order=0 name=!C-g | 
+[K8BAS-DUMP] tab 069 order=0 name=!A-m | 
+[K8BAS-DUMP] tab 070 order=0 name=!D-a |                Info
+[K8BAS-DUMP] tab 071 order=0 name=!C-h | Powders:
+[K8BAS-DUMP] tab 072 order=0 name=!C-o |  Lapis: LOOTED
+[K8BAS-DUMP] tab 073 order=0 name=!A-l | 
+[K8BAS-DUMP] tab 074 order=0 name=!B-k | 
+[K8BAS-DUMP] tab 075 order=0 name=!B-c |  Server: m000XX
+[K8BAS-DUMP] tab 076 order=0 name=!A-g | 
+[K8BAS-DUMP] tab 077 order=0 name=!A-i | 
+[K8BAS-DUMP] tab 078 order=0 name=!B-a |                Info
+[K8BAS-DUMP] tab 079 order=0 name=!D-c |  Opal: ✖ Not Found
+[K8BAS-DUMP] tab 080 order=0 name=!B-d |  Gems: 2.6k

@@ -1,0 +1,148 @@
+[K8BAS-DUMP] container 209 title=Slaying ➜ Defeat Slayers slots=45 state=56
+[K8BAS-DUMP] container 209 slot 0 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 1 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 2 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 3 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 4 item=minecraft:player_head sbid=AATROX_BATPHONE count=1 | Defeat Slayers
+[K8BAS-DUMP] container 209 slot 4 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 209 slot 4 lore 1 | 
+[K8BAS-DUMP] container 209 slot 4 lore 2 |  ✔ Defeat Revenant Horror (5/5)
+[K8BAS-DUMP] container 209 slot 4 lore 3 |  ✔ Defeat Tarantula Broodfather (5/5)
+[K8BAS-DUMP] container 209 slot 4 lore 4 |  ✔ Defeat Sven Packmaster (4/4)
+[K8BAS-DUMP] container 209 slot 4 lore 5 |  ✔ Defeat Voidgloom Seraph (4/4)
+[K8BAS-DUMP] container 209 slot 4 lore 6 |  ✖ Defeat Riftstalker Bloodfiend (4/5)
+[K8BAS-DUMP] container 209 slot 4 lore 7 |  ✔ Defeat Inferno Demonlord (4/4)
+[K8BAS-DUMP] container 209 slot 4 lore 8 | 
+[K8BAS-DUMP] container 209 slot 4 lore 9 | Total Progress: 93.3%
+[K8BAS-DUMP] container 209 slot 4 lore 10 |                           1,050/1,125 XP
+[K8BAS-DUMP] container 209 slot 4 lore 11 | 
+[K8BAS-DUMP] container 209 slot 4 lore 12 | This task is worth 2% of your Total
+[K8BAS-DUMP] container 209 slot 4 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 209 slot 5 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 6 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 7 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 8 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 9 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 17 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 18 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 19 item=minecraft:rotten_flesh sbid=- count=1 | Defeat Revenant Horror
+[K8BAS-DUMP] container 209 slot 19 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 209 slot 19 lore 1 | 
+[K8BAS-DUMP] container 209 slot 19 lore 2 |  ✔ Defeat Revenant Horror Tier I
+[K8BAS-DUMP] container 209 slot 19 lore 3 |  ✔ Defeat Revenant Horror Tier II
+[K8BAS-DUMP] container 209 slot 19 lore 4 |  ✔ Defeat Revenant Horror Tier III
+[K8BAS-DUMP] container 209 slot 19 lore 5 |  ✔ Defeat Revenant Horror Tier IV
+[K8BAS-DUMP] container 209 slot 19 lore 6 |  ✔ Defeat Revenant Horror Tier V
+[K8BAS-DUMP] container 209 slot 19 lore 7 | 
+[K8BAS-DUMP] container 209 slot 19 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 209 slot 19 lore 9 |                           225/225 XP
+[K8BAS-DUMP] container 209 slot 19 lore 10 | 
+[K8BAS-DUMP] container 209 slot 19 lore 11 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 209 slot 19 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 209 slot 19 lore 13 | 
+[K8BAS-DUMP] container 209 slot 19 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 209 slot 20 item=minecraft:cobweb sbid=- count=1 | Defeat Tarantula Broodfather
+[K8BAS-DUMP] container 209 slot 20 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 209 slot 20 lore 1 | 
+[K8BAS-DUMP] container 209 slot 20 lore 2 |  ✔ Defeat Tarantula Broodfather Tier I
+[K8BAS-DUMP] container 209 slot 20 lore 3 |  ✔ Defeat Tarantula Broodfather Tier II
+[K8BAS-DUMP] container 209 slot 20 lore 4 |  ✔ Defeat Tarantula Broodfather Tier III
+[K8BAS-DUMP] container 209 slot 20 lore 5 |  ✔ Defeat Tarantula Broodfather Tier IV
+[K8BAS-DUMP] container 209 slot 20 lore 6 |  ✔ Defeat Tarantula Broodfather Tier V
+[K8BAS-DUMP] container 209 slot 20 lore 7 | 
+[K8BAS-DUMP] container 209 slot 20 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 209 slot 20 lore 9 |                           225/225 XP
+[K8BAS-DUMP] container 209 slot 20 lore 10 | 
+[K8BAS-DUMP] container 209 slot 20 lore 11 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 209 slot 20 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 209 slot 20 lore 13 | 
+[K8BAS-DUMP] container 209 slot 20 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 209 slot 21 item=minecraft:mutton sbid=- count=1 | Defeat Sven Packmaster
+[K8BAS-DUMP] container 209 slot 21 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 209 slot 21 lore 1 | 
+[K8BAS-DUMP] container 209 slot 21 lore 2 |  ✔ Defeat Sven Packmaster Tier I
+[K8BAS-DUMP] container 209 slot 21 lore 3 |  ✔ Defeat Sven Packmaster Tier II
+[K8BAS-DUMP] container 209 slot 21 lore 4 |  ✔ Defeat Sven Packmaster Tier III
+[K8BAS-DUMP] container 209 slot 21 lore 5 |  ✔ Defeat Sven Packmaster Tier IV
+[K8BAS-DUMP] container 209 slot 21 lore 6 | 
+[K8BAS-DUMP] container 209 slot 21 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 209 slot 21 lore 8 |                           150/150 XP
+[K8BAS-DUMP] container 209 slot 21 lore 9 | 
+[K8BAS-DUMP] container 209 slot 21 lore 10 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 209 slot 21 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 209 slot 21 lore 12 | 
+[K8BAS-DUMP] container 209 slot 21 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 209 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 23 item=minecraft:ender_pearl sbid=- count=1 | Defeat Voidgloom Seraph
+[K8BAS-DUMP] container 209 slot 23 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 209 slot 23 lore 1 | 
+[K8BAS-DUMP] container 209 slot 23 lore 2 |  ✔ Defeat Voidgloom Seraph Tier I
+[K8BAS-DUMP] container 209 slot 23 lore 3 |  ✔ Defeat Voidgloom Seraph Tier II
+[K8BAS-DUMP] container 209 slot 23 lore 4 |  ✔ Defeat Voidgloom Seraph Tier III
+[K8BAS-DUMP] container 209 slot 23 lore 5 |  ✔ Defeat Voidgloom Seraph Tier IV
+[K8BAS-DUMP] container 209 slot 23 lore 6 | 
+[K8BAS-DUMP] container 209 slot 23 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 209 slot 23 lore 8 |                           150/150 XP
+[K8BAS-DUMP] container 209 slot 23 lore 9 | 
+[K8BAS-DUMP] container 209 slot 23 lore 10 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 209 slot 23 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 209 slot 23 lore 12 | 
+[K8BAS-DUMP] container 209 slot 23 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 209 slot 24 item=minecraft:redstone sbid=- count=1 | Defeat Riftstalker Bloodfiend
+[K8BAS-DUMP] container 209 slot 24 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 209 slot 24 lore 1 | 
+[K8BAS-DUMP] container 209 slot 24 lore 2 |  ✔ Defeat Riftstalker Bloodfiend Tier I
+[K8BAS-DUMP] container 209 slot 24 lore 3 |  ✔ Defeat Riftstalker Bloodfiend Tier II
+[K8BAS-DUMP] container 209 slot 24 lore 4 |  ✔ Defeat Riftstalker Bloodfiend Tier III
+[K8BAS-DUMP] container 209 slot 24 lore 5 |  ✔ Defeat Riftstalker Bloodfiend Tier IV
+[K8BAS-DUMP] container 209 slot 24 lore 6 |  ✖ Defeat Riftstalker Bloodfiend Tier V
+[K8BAS-DUMP] container 209 slot 24 lore 7 | 
+[K8BAS-DUMP] container 209 slot 24 lore 8 | Total Progress: 66.7%
+[K8BAS-DUMP] container 209 slot 24 lore 9 |                           150/225 XP
+[K8BAS-DUMP] container 209 slot 24 lore 10 | 
+[K8BAS-DUMP] container 209 slot 24 lore 11 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 209 slot 24 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 209 slot 24 lore 13 | 
+[K8BAS-DUMP] container 209 slot 24 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 209 slot 25 item=minecraft:blaze_powder sbid=- count=1 | Defeat Inferno Demonlord
+[K8BAS-DUMP] container 209 slot 25 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 209 slot 25 lore 1 | 
+[K8BAS-DUMP] container 209 slot 25 lore 2 |  ✔ Defeat Inferno Demonlord Tier I
+[K8BAS-DUMP] container 209 slot 25 lore 3 |  ✔ Defeat Inferno Demonlord Tier II
+[K8BAS-DUMP] container 209 slot 25 lore 4 |  ✔ Defeat Inferno Demonlord Tier III
+[K8BAS-DUMP] container 209 slot 25 lore 5 |  ✔ Defeat Inferno Demonlord Tier IV
+[K8BAS-DUMP] container 209 slot 25 lore 6 | 
+[K8BAS-DUMP] container 209 slot 25 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 209 slot 25 lore 8 |                           150/150 XP
+[K8BAS-DUMP] container 209 slot 25 lore 9 | 
+[K8BAS-DUMP] container 209 slot 25 lore 10 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 209 slot 25 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 209 slot 25 lore 12 | 
+[K8BAS-DUMP] container 209 slot 25 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 209 slot 26 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 27 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 35 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 36 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 37 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 38 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 209 slot 39 lore 0 | To Tasks ➜ Slaying
+[K8BAS-DUMP] container 209 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 209 slot 41 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 42 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 43 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 209 slot 44 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 

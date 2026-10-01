@@ -1,0 +1,256 @@
+[K8BAS-DUMP] container 191 title=Essence Shop ➜ Safari Essence S slots=54 state=65
+[K8BAS-DUMP] container 191 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 4 item=minecraft:player_head sbid=- count=1 | Safari Essence Shop
+[K8BAS-DUMP] container 191 slot 4 lore 0 | 11 Tasks
+[K8BAS-DUMP] container 191 slot 4 lore 1 | 
+[K8BAS-DUMP] container 191 slot 4 lore 2 |  ✔ Fresh Footprints (10/10)
+[K8BAS-DUMP] container 191 slot 4 lore 3 |  ✔ Thawing (10/10)
+[K8BAS-DUMP] container 191 slot 4 lore 4 |  ✔ Deep Diver (10/10)
+[K8BAS-DUMP] container 191 slot 4 lore 5 |  ✔ Quickdraw (10/10)
+[K8BAS-DUMP] container 191 slot 4 lore 6 |  ✔ Amateur Hour (10/10)
+[K8BAS-DUMP] container 191 slot 4 lore 7 |  ✔ Critter Catcher (8/8)
+[K8BAS-DUMP] container 191 slot 4 lore 8 |  ✔ Floortunate (5/5)
+[K8BAS-DUMP] container 191 slot 4 lore 9 |  ✔ Hunting Hotspot (5/5)
+[K8BAS-DUMP] container 191 slot 4 lore 10 |  ✔ Head Start (1/1)
+[K8BAS-DUMP] container 191 slot 4 lore 11 |  ✔ Critter Master (1/1)
+[K8BAS-DUMP] container 191 slot 4 lore 12 |  ✔ Sparkling Specialist (1/1)
+[K8BAS-DUMP] container 191 slot 4 lore 13 | 
+[K8BAS-DUMP] container 191 slot 4 lore 14 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 4 lore 15 |                           395/395 XP
+[K8BAS-DUMP] container 191 slot 4 lore 16 | 
+[K8BAS-DUMP] container 191 slot 4 lore 17 | This task is worth 0.7% of your Total
+[K8BAS-DUMP] container 191 slot 4 lore 18 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 19 item=minecraft:tall_dry_grass sbid=- count=1 | Fresh Footprints
+[K8BAS-DUMP] container 191 slot 19 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 191 slot 19 lore 1 | 
+[K8BAS-DUMP] container 191 slot 19 lore 2 |  ✔ Fresh Footprints 1
+[K8BAS-DUMP] container 191 slot 19 lore 3 |  ✔ Fresh Footprints 2
+[K8BAS-DUMP] container 191 slot 19 lore 4 |  ✔ Fresh Footprints 3
+[K8BAS-DUMP] container 191 slot 19 lore 5 |  ✔ Fresh Footprints 4
+[K8BAS-DUMP] container 191 slot 19 lore 6 |  ✔ Fresh Footprints 5
+[K8BAS-DUMP] container 191 slot 19 lore 7 |  ✔ Fresh Footprints 6
+[K8BAS-DUMP] container 191 slot 19 lore 8 |  ✔ Fresh Footprints 7
+[K8BAS-DUMP] container 191 slot 19 lore 9 |  ✔ Fresh Footprints 8
+[K8BAS-DUMP] container 191 slot 19 lore 10 |  ✔ Fresh Footprints 9
+[K8BAS-DUMP] container 191 slot 19 lore 11 |  ✔ Fresh Footprints 10
+[K8BAS-DUMP] container 191 slot 19 lore 12 | 
+[K8BAS-DUMP] container 191 slot 19 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 19 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 191 slot 19 lore 15 | 
+[K8BAS-DUMP] container 191 slot 19 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 191 slot 19 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 19 lore 18 | 
+[K8BAS-DUMP] container 191 slot 19 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 20 item=minecraft:blue_ice sbid=- count=1 | Thawing
+[K8BAS-DUMP] container 191 slot 20 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 191 slot 20 lore 1 | 
+[K8BAS-DUMP] container 191 slot 20 lore 2 |  ✔ Thawing 1
+[K8BAS-DUMP] container 191 slot 20 lore 3 |  ✔ Thawing 2
+[K8BAS-DUMP] container 191 slot 20 lore 4 |  ✔ Thawing 3
+[K8BAS-DUMP] container 191 slot 20 lore 5 |  ✔ Thawing 4
+[K8BAS-DUMP] container 191 slot 20 lore 6 |  ✔ Thawing 5
+[K8BAS-DUMP] container 191 slot 20 lore 7 |  ✔ Thawing 6
+[K8BAS-DUMP] container 191 slot 20 lore 8 |  ✔ Thawing 7
+[K8BAS-DUMP] container 191 slot 20 lore 9 |  ✔ Thawing 8
+[K8BAS-DUMP] container 191 slot 20 lore 10 |  ✔ Thawing 9
+[K8BAS-DUMP] container 191 slot 20 lore 11 |  ✔ Thawing 10
+[K8BAS-DUMP] container 191 slot 20 lore 12 | 
+[K8BAS-DUMP] container 191 slot 20 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 20 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 191 slot 20 lore 15 | 
+[K8BAS-DUMP] container 191 slot 20 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 191 slot 20 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 20 lore 18 | 
+[K8BAS-DUMP] container 191 slot 20 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 21 item=minecraft:seagrass sbid=- count=1 | Deep Diver
+[K8BAS-DUMP] container 191 slot 21 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 191 slot 21 lore 1 | 
+[K8BAS-DUMP] container 191 slot 21 lore 2 |  ✔ Deep Diver 1
+[K8BAS-DUMP] container 191 slot 21 lore 3 |  ✔ Deep Diver 2
+[K8BAS-DUMP] container 191 slot 21 lore 4 |  ✔ Deep Diver 3
+[K8BAS-DUMP] container 191 slot 21 lore 5 |  ✔ Deep Diver 4
+[K8BAS-DUMP] container 191 slot 21 lore 6 |  ✔ Deep Diver 5
+[K8BAS-DUMP] container 191 slot 21 lore 7 |  ✔ Deep Diver 6
+[K8BAS-DUMP] container 191 slot 21 lore 8 |  ✔ Deep Diver 7
+[K8BAS-DUMP] container 191 slot 21 lore 9 |  ✔ Deep Diver 8
+[K8BAS-DUMP] container 191 slot 21 lore 10 |  ✔ Deep Diver 9
+[K8BAS-DUMP] container 191 slot 21 lore 11 |  ✔ Deep Diver 10
+[K8BAS-DUMP] container 191 slot 21 lore 12 | 
+[K8BAS-DUMP] container 191 slot 21 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 21 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 191 slot 21 lore 15 | 
+[K8BAS-DUMP] container 191 slot 21 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 191 slot 21 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 21 lore 18 | 
+[K8BAS-DUMP] container 191 slot 21 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 23 item=minecraft:sugar sbid=SUGAR count=1 | Quickdraw
+[K8BAS-DUMP] container 191 slot 23 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 191 slot 23 lore 1 | 
+[K8BAS-DUMP] container 191 slot 23 lore 2 |  ✔ Quickdraw 1
+[K8BAS-DUMP] container 191 slot 23 lore 3 |  ✔ Quickdraw 2
+[K8BAS-DUMP] container 191 slot 23 lore 4 |  ✔ Quickdraw 3
+[K8BAS-DUMP] container 191 slot 23 lore 5 |  ✔ Quickdraw 4
+[K8BAS-DUMP] container 191 slot 23 lore 6 |  ✔ Quickdraw 5
+[K8BAS-DUMP] container 191 slot 23 lore 7 |  ✔ Quickdraw 6
+[K8BAS-DUMP] container 191 slot 23 lore 8 |  ✔ Quickdraw 7
+[K8BAS-DUMP] container 191 slot 23 lore 9 |  ✔ Quickdraw 8
+[K8BAS-DUMP] container 191 slot 23 lore 10 |  ✔ Quickdraw 9
+[K8BAS-DUMP] container 191 slot 23 lore 11 |  ✔ Quickdraw 10
+[K8BAS-DUMP] container 191 slot 23 lore 12 | 
+[K8BAS-DUMP] container 191 slot 23 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 23 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 191 slot 23 lore 15 | 
+[K8BAS-DUMP] container 191 slot 23 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 191 slot 23 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 23 lore 18 | 
+[K8BAS-DUMP] container 191 slot 23 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 24 item=minecraft:experience_bottle sbid=- count=1 | Amateur Hour
+[K8BAS-DUMP] container 191 slot 24 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 191 slot 24 lore 1 | 
+[K8BAS-DUMP] container 191 slot 24 lore 2 |  ✔ Amateur Hour 1
+[K8BAS-DUMP] container 191 slot 24 lore 3 |  ✔ Amateur Hour 2
+[K8BAS-DUMP] container 191 slot 24 lore 4 |  ✔ Amateur Hour 3
+[K8BAS-DUMP] container 191 slot 24 lore 5 |  ✔ Amateur Hour 4
+[K8BAS-DUMP] container 191 slot 24 lore 6 |  ✔ Amateur Hour 5
+[K8BAS-DUMP] container 191 slot 24 lore 7 |  ✔ Amateur Hour 6
+[K8BAS-DUMP] container 191 slot 24 lore 8 |  ✔ Amateur Hour 7
+[K8BAS-DUMP] container 191 slot 24 lore 9 |  ✔ Amateur Hour 8
+[K8BAS-DUMP] container 191 slot 24 lore 10 |  ✔ Amateur Hour 9
+[K8BAS-DUMP] container 191 slot 24 lore 11 |  ✔ Amateur Hour 10
+[K8BAS-DUMP] container 191 slot 24 lore 12 | 
+[K8BAS-DUMP] container 191 slot 24 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 24 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 191 slot 24 lore 15 | 
+[K8BAS-DUMP] container 191 slot 24 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 191 slot 24 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 24 lore 18 | 
+[K8BAS-DUMP] container 191 slot 24 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 25 item=minecraft:paper sbid=CRITTER_CAPSULE count=1 | Critter Catcher
+[K8BAS-DUMP] container 191 slot 25 lore 0 | 8 Tasks
+[K8BAS-DUMP] container 191 slot 25 lore 1 | 
+[K8BAS-DUMP] container 191 slot 25 lore 2 |  ✔ Critter Catcher 1
+[K8BAS-DUMP] container 191 slot 25 lore 3 |  ✔ Critter Catcher 2
+[K8BAS-DUMP] container 191 slot 25 lore 4 |  ✔ Critter Catcher 3
+[K8BAS-DUMP] container 191 slot 25 lore 5 |  ✔ Critter Catcher 4
+[K8BAS-DUMP] container 191 slot 25 lore 6 |  ✔ Critter Catcher 5
+[K8BAS-DUMP] container 191 slot 25 lore 7 |  ✔ Critter Catcher 6
+[K8BAS-DUMP] container 191 slot 25 lore 8 |  ✔ Critter Catcher 7
+[K8BAS-DUMP] container 191 slot 25 lore 9 |  ✔ Critter Catcher 8
+[K8BAS-DUMP] container 191 slot 25 lore 10 | 
+[K8BAS-DUMP] container 191 slot 25 lore 11 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 25 lore 12 |                           43/43 XP
+[K8BAS-DUMP] container 191 slot 25 lore 13 | 
+[K8BAS-DUMP] container 191 slot 25 lore 14 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 191 slot 25 lore 15 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 25 lore 16 | 
+[K8BAS-DUMP] container 191 slot 25 lore 17 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 29 item=minecraft:grass_block sbid=- count=1 | Floortunate
+[K8BAS-DUMP] container 191 slot 29 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 191 slot 29 lore 1 | 
+[K8BAS-DUMP] container 191 slot 29 lore 2 |  ✔ Floortunate 1
+[K8BAS-DUMP] container 191 slot 29 lore 3 |  ✔ Floortunate 2
+[K8BAS-DUMP] container 191 slot 29 lore 4 |  ✔ Floortunate 3
+[K8BAS-DUMP] container 191 slot 29 lore 5 |  ✔ Floortunate 4
+[K8BAS-DUMP] container 191 slot 29 lore 6 |  ✔ Floortunate 5
+[K8BAS-DUMP] container 191 slot 29 lore 7 | 
+[K8BAS-DUMP] container 191 slot 29 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 29 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 191 slot 29 lore 10 | 
+[K8BAS-DUMP] container 191 slot 29 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 191 slot 29 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 29 lore 13 | 
+[K8BAS-DUMP] container 191 slot 29 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 30 item=minecraft:beacon sbid=- count=1 | Hunting Hotspot
+[K8BAS-DUMP] container 191 slot 30 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 191 slot 30 lore 1 | 
+[K8BAS-DUMP] container 191 slot 30 lore 2 |  ✔ Hunting Hotspot 1
+[K8BAS-DUMP] container 191 slot 30 lore 3 |  ✔ Hunting Hotspot 2
+[K8BAS-DUMP] container 191 slot 30 lore 4 |  ✔ Hunting Hotspot 3
+[K8BAS-DUMP] container 191 slot 30 lore 5 |  ✔ Hunting Hotspot 4
+[K8BAS-DUMP] container 191 slot 30 lore 6 |  ✔ Hunting Hotspot 5
+[K8BAS-DUMP] container 191 slot 30 lore 7 | 
+[K8BAS-DUMP] container 191 slot 30 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 30 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 191 slot 30 lore 10 | 
+[K8BAS-DUMP] container 191 slot 30 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 191 slot 30 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 30 lore 13 | 
+[K8BAS-DUMP] container 191 slot 30 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 31 item=minecraft:potion sbid=- count=1 | Head Start
+[K8BAS-DUMP] container 191 slot 31 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 191 slot 31 lore 1 | 
+[K8BAS-DUMP] container 191 slot 31 lore 2 |  ✔ Head Start 1
+[K8BAS-DUMP] container 191 slot 31 lore 3 | 
+[K8BAS-DUMP] container 191 slot 31 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 31 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 191 slot 31 lore 6 | 
+[K8BAS-DUMP] container 191 slot 31 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 191 slot 31 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 31 lore 9 | 
+[K8BAS-DUMP] container 191 slot 31 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 32 item=minecraft:paper sbid=MASTERFUL_CRITTER_CAPSULE count=1 | Critter Master
+[K8BAS-DUMP] container 191 slot 32 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 191 slot 32 lore 1 | 
+[K8BAS-DUMP] container 191 slot 32 lore 2 |  ✔ Critter Master 1
+[K8BAS-DUMP] container 191 slot 32 lore 3 | 
+[K8BAS-DUMP] container 191 slot 32 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 191 slot 32 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 191 slot 32 lore 6 | 
+[K8BAS-DUMP] container 191 slot 32 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 191 slot 32 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 32 lore 9 | 
+[K8BAS-DUMP] container 191 slot 32 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 33 item=minecraft:paper sbid=SPARKLING_AMULET count=1 | Sparkling Specialist
+[K8BAS-DUMP] container 191 slot 33 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 191 slot 33 lore 1 | 
+[K8BAS-DUMP] container 191 slot 33 lore 2 |  ✔ Sparkling Specialist 1
+[K8BAS-DUMP] container 191 slot 33 lore 3 | 
+[K8BAS-DUMP] container 191 slot 33 lore 4 | Total Progress: 0%
+[K8BAS-DUMP] container 191 slot 33 lore 5 |                           0/0 XP
+[K8BAS-DUMP] container 191 slot 33 lore 6 | 
+[K8BAS-DUMP] container 191 slot 33 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 191 slot 33 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 191 slot 33 lore 9 | 
+[K8BAS-DUMP] container 191 slot 33 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 191 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 45 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 46 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 47 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 191 slot 48 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 191 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 191 slot 50 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 51 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 52 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 191 slot 53 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

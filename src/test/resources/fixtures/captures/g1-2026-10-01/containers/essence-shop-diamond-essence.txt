@@ -1,0 +1,162 @@
+[K8BAS-DUMP] container 173 title=Essence Shop ➜ Diamond Essence  slots=45 state=56
+[K8BAS-DUMP] container 173 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 4 item=minecraft:player_head sbid=- count=1 | Diamond Essence Shop
+[K8BAS-DUMP] container 173 slot 4 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 173 slot 4 lore 1 | 
+[K8BAS-DUMP] container 173 slot 4 lore 2 |  ✔ Return to Sender (10/10)
+[K8BAS-DUMP] container 173 slot 4 lore 3 |  ✔ Rhinestone Infusion (10/10)
+[K8BAS-DUMP] container 173 slot 4 lore 4 |  ✔ Under Pressure (5/5)
+[K8BAS-DUMP] container 173 slot 4 lore 5 |  ✔ Radiant Fisher (10/10)
+[K8BAS-DUMP] container 173 slot 4 lore 6 |  ✔ Diamond in the Rough (5/5)
+[K8BAS-DUMP] container 173 slot 4 lore 7 |  ✔ High Roller (1/1)
+[K8BAS-DUMP] container 173 slot 4 lore 8 | 
+[K8BAS-DUMP] container 173 slot 4 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 173 slot 4 lore 10 |                           226/226 XP
+[K8BAS-DUMP] container 173 slot 4 lore 11 | 
+[K8BAS-DUMP] container 173 slot 4 lore 12 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 173 slot 4 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 173 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 19 item=minecraft:player_head sbid=- count=1 | Return to Sender
+[K8BAS-DUMP] container 173 slot 19 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 173 slot 19 lore 1 | 
+[K8BAS-DUMP] container 173 slot 19 lore 2 |  ✔ Return to Sender 1
+[K8BAS-DUMP] container 173 slot 19 lore 3 |  ✔ Return to Sender 2
+[K8BAS-DUMP] container 173 slot 19 lore 4 |  ✔ Return to Sender 3
+[K8BAS-DUMP] container 173 slot 19 lore 5 |  ✔ Return to Sender 4
+[K8BAS-DUMP] container 173 slot 19 lore 6 |  ✔ Return to Sender 5
+[K8BAS-DUMP] container 173 slot 19 lore 7 |  ✔ Return to Sender 6
+[K8BAS-DUMP] container 173 slot 19 lore 8 |  ✔ Return to Sender 7
+[K8BAS-DUMP] container 173 slot 19 lore 9 |  ✔ Return to Sender 8
+[K8BAS-DUMP] container 173 slot 19 lore 10 |  ✔ Return to Sender 9
+[K8BAS-DUMP] container 173 slot 19 lore 11 |  ✔ Return to Sender 10
+[K8BAS-DUMP] container 173 slot 19 lore 12 | 
+[K8BAS-DUMP] container 173 slot 19 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 173 slot 19 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 173 slot 19 lore 15 | 
+[K8BAS-DUMP] container 173 slot 19 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 173 slot 19 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 173 slot 19 lore 18 | 
+[K8BAS-DUMP] container 173 slot 19 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 173 slot 20 item=minecraft:player_head sbid=- count=1 | Rhinestone Infusion
+[K8BAS-DUMP] container 173 slot 20 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 173 slot 20 lore 1 | 
+[K8BAS-DUMP] container 173 slot 20 lore 2 |  ✔ Rhinestone Infusion 1
+[K8BAS-DUMP] container 173 slot 20 lore 3 |  ✔ Rhinestone Infusion 2
+[K8BAS-DUMP] container 173 slot 20 lore 4 |  ✔ Rhinestone Infusion 3
+[K8BAS-DUMP] container 173 slot 20 lore 5 |  ✔ Rhinestone Infusion 4
+[K8BAS-DUMP] container 173 slot 20 lore 6 |  ✔ Rhinestone Infusion 5
+[K8BAS-DUMP] container 173 slot 20 lore 7 |  ✔ Rhinestone Infusion 6
+[K8BAS-DUMP] container 173 slot 20 lore 8 |  ✔ Rhinestone Infusion 7
+[K8BAS-DUMP] container 173 slot 20 lore 9 |  ✔ Rhinestone Infusion 8
+[K8BAS-DUMP] container 173 slot 20 lore 10 |  ✔ Rhinestone Infusion 9
+[K8BAS-DUMP] container 173 slot 20 lore 11 |  ✔ Rhinestone Infusion 10
+[K8BAS-DUMP] container 173 slot 20 lore 12 | 
+[K8BAS-DUMP] container 173 slot 20 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 173 slot 20 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 173 slot 20 lore 15 | 
+[K8BAS-DUMP] container 173 slot 20 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 173 slot 20 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 173 slot 20 lore 18 | 
+[K8BAS-DUMP] container 173 slot 20 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 173 slot 21 item=minecraft:blaze_powder sbid=- count=1 | Under Pressure
+[K8BAS-DUMP] container 173 slot 21 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 173 slot 21 lore 1 | 
+[K8BAS-DUMP] container 173 slot 21 lore 2 |  ✔ Under Pressure 1
+[K8BAS-DUMP] container 173 slot 21 lore 3 |  ✔ Under Pressure 2
+[K8BAS-DUMP] container 173 slot 21 lore 4 |  ✔ Under Pressure 3
+[K8BAS-DUMP] container 173 slot 21 lore 5 |  ✔ Under Pressure 4
+[K8BAS-DUMP] container 173 slot 21 lore 6 |  ✔ Under Pressure 5
+[K8BAS-DUMP] container 173 slot 21 lore 7 | 
+[K8BAS-DUMP] container 173 slot 21 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 173 slot 21 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 173 slot 21 lore 10 | 
+[K8BAS-DUMP] container 173 slot 21 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 173 slot 21 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 173 slot 21 lore 13 | 
+[K8BAS-DUMP] container 173 slot 21 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 173 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 23 item=minecraft:player_head sbid=- count=1 | Radiant Fisher
+[K8BAS-DUMP] container 173 slot 23 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 173 slot 23 lore 1 | 
+[K8BAS-DUMP] container 173 slot 23 lore 2 |  ✔ Radiant Fisher 1
+[K8BAS-DUMP] container 173 slot 23 lore 3 |  ✔ Radiant Fisher 2
+[K8BAS-DUMP] container 173 slot 23 lore 4 |  ✔ Radiant Fisher 3
+[K8BAS-DUMP] container 173 slot 23 lore 5 |  ✔ Radiant Fisher 4
+[K8BAS-DUMP] container 173 slot 23 lore 6 |  ✔ Radiant Fisher 5
+[K8BAS-DUMP] container 173 slot 23 lore 7 |  ✔ Radiant Fisher 6
+[K8BAS-DUMP] container 173 slot 23 lore 8 |  ✔ Radiant Fisher 7
+[K8BAS-DUMP] container 173 slot 23 lore 9 |  ✔ Radiant Fisher 8
+[K8BAS-DUMP] container 173 slot 23 lore 10 |  ✔ Radiant Fisher 9
+[K8BAS-DUMP] container 173 slot 23 lore 11 |  ✔ Radiant Fisher 10
+[K8BAS-DUMP] container 173 slot 23 lore 12 | 
+[K8BAS-DUMP] container 173 slot 23 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 173 slot 23 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 173 slot 23 lore 15 | 
+[K8BAS-DUMP] container 173 slot 23 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 173 slot 23 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 173 slot 23 lore 18 | 
+[K8BAS-DUMP] container 173 slot 23 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 173 slot 24 item=minecraft:green_banner sbid=- count=1 | Diamond in the Rough
+[K8BAS-DUMP] container 173 slot 24 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 173 slot 24 lore 1 | 
+[K8BAS-DUMP] container 173 slot 24 lore 2 |  ✔ Diamond in the Rough 1
+[K8BAS-DUMP] container 173 slot 24 lore 3 |  ✔ Diamond in the Rough 2
+[K8BAS-DUMP] container 173 slot 24 lore 4 |  ✔ Diamond in the Rough 3
+[K8BAS-DUMP] container 173 slot 24 lore 5 |  ✔ Diamond in the Rough 4
+[K8BAS-DUMP] container 173 slot 24 lore 6 |  ✔ Diamond in the Rough 5
+[K8BAS-DUMP] container 173 slot 24 lore 7 | 
+[K8BAS-DUMP] container 173 slot 24 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 173 slot 24 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 173 slot 24 lore 10 | 
+[K8BAS-DUMP] container 173 slot 24 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 173 slot 24 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 173 slot 24 lore 13 | 
+[K8BAS-DUMP] container 173 slot 24 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 173 slot 25 item=minecraft:compass sbid=- count=1 | High Roller
+[K8BAS-DUMP] container 173 slot 25 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 173 slot 25 lore 1 | 
+[K8BAS-DUMP] container 173 slot 25 lore 2 |  ✔ High Roller 1
+[K8BAS-DUMP] container 173 slot 25 lore 3 | 
+[K8BAS-DUMP] container 173 slot 25 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 173 slot 25 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 173 slot 25 lore 6 | 
+[K8BAS-DUMP] container 173 slot 25 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 173 slot 25 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 173 slot 25 lore 9 | 
+[K8BAS-DUMP] container 173 slot 25 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 173 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 37 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 38 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 173 slot 39 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 173 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 173 slot 41 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 42 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 43 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 173 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

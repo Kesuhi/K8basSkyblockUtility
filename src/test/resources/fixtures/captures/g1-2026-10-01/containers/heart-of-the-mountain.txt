@@ -1,0 +1,435 @@
+[K8BAS-DUMP] container 248 title=Heart of the Mountain slots=54 state=65
+[K8BAS-DUMP] container 248 slot 0 item=minecraft:lime_stained_glass_pane sbid=- count=5 | Tier 5
+[K8BAS-DUMP] container 248 slot 0 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 248 slot 0 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 248 slot 0 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 248 slot 0 lore 3 | the Mountain.
+[K8BAS-DUMP] container 248 slot 0 lore 4 | 
+[K8BAS-DUMP] container 248 slot 0 lore 5 | Rewards
+[K8BAS-DUMP] container 248 slot 0 lore 6 | +2 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 0 lore 7 | +1 Forge Slot
+[K8BAS-DUMP] container 248 slot 0 lore 8 | +New Forgeable Items
+[K8BAS-DUMP] container 248 slot 0 lore 9 | +Mining Helix Emblem ᛝ
+[K8BAS-DUMP] container 248 slot 0 lore 10 | +90 SkyBlock XP
+[K8BAS-DUMP] container 248 slot 0 lore 11 | 
+[K8BAS-DUMP] container 248 slot 0 lore 12 | UNLOCKED
+[K8BAS-DUMP] container 248 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 2 item=minecraft:coal sbid=- count=1 | Daily Grind
+[K8BAS-DUMP] container 248 slot 2 lore 0 | Your first daily commission on each
+[K8BAS-DUMP] container 248 slot 2 lore 1 | Mining Island grants +500 Powder,
+[K8BAS-DUMP] container 248 slot 2 lore 2 | multiplied by your HOTM level.
+[K8BAS-DUMP] container 248 slot 2 lore 3 | 
+[K8BAS-DUMP] container 248 slot 2 lore 4 | Dwarven Mines: +5,000 Mithril Powder
+[K8BAS-DUMP] container 248 slot 2 lore 5 | Crystal Hollows: +5,000 Gemstone Powder
+[K8BAS-DUMP] container 248 slot 2 lore 6 | Glacite Tunnels: +5,000 Glacite Powder
+[K8BAS-DUMP] container 248 slot 2 lore 7 | 
+[K8BAS-DUMP] container 248 slot 2 lore 8 | Resets in: 6h 39m
+[K8BAS-DUMP] container 248 slot 2 lore 9 | 
+[K8BAS-DUMP] container 248 slot 2 lore 10 | Cost
+[K8BAS-DUMP] container 248 slot 2 lore 11 | 1 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 2 lore 12 | 
+[K8BAS-DUMP] container 248 slot 2 lore 13 | Requires Old-School
+[K8BAS-DUMP] container 248 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 4 item=minecraft:redstone_block sbid=- count=1 | Core of the Mountain
+[K8BAS-DUMP] container 248 slot 4 lore 0 | Level 10
+[K8BAS-DUMP] container 248 slot 4 lore 1 | 
+[K8BAS-DUMP] container 248 slot 4 lore 2 | +1 Pickaxe Ability Level
+[K8BAS-DUMP] container 248 slot 4 lore 3 | +1 Commission Slot
+[K8BAS-DUMP] container 248 slot 4 lore 4 | +1 Base Mithril Powder when mining
+[K8BAS-DUMP] container 248 slot 4 lore 5 | Mithril
+[K8BAS-DUMP] container 248 slot 4 lore 6 | +2 Base Gemstone Powder when
+[K8BAS-DUMP] container 248 slot 4 lore 7 | mining Gemstones
+[K8BAS-DUMP] container 248 slot 4 lore 8 | +3 Base Glacite Powder when mining
+[K8BAS-DUMP] container 248 slot 4 lore 9 | Glacite
+[K8BAS-DUMP] container 248 slot 4 lore 10 | +10% chance for Glacite Mineshafts
+[K8BAS-DUMP] container 248 slot 4 lore 11 | to spawn.
+[K8BAS-DUMP] container 248 slot 4 lore 12 | +5 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 4 lore 13 | +1,000 SkyBlock XP
+[K8BAS-DUMP] container 248 slot 4 lore 14 | 
+[K8BAS-DUMP] container 248 slot 4 lore 15 | UNLOCKED
+[K8BAS-DUMP] container 248 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 6 item=minecraft:coal sbid=- count=1 | Daily Powder
+[K8BAS-DUMP] container 248 slot 6 lore 0 | The first ore you mine each day
+[K8BAS-DUMP] container 248 slot 6 lore 1 | grants +500 Powder, multiplied by
+[K8BAS-DUMP] container 248 slot 6 lore 2 | your HOTM level.
+[K8BAS-DUMP] container 248 slot 6 lore 3 | 
+[K8BAS-DUMP] container 248 slot 6 lore 4 | Mithril: +5,000 Mithril Powder
+[K8BAS-DUMP] container 248 slot 6 lore 5 | Gemstone: +5,000 Gemstone Powder
+[K8BAS-DUMP] container 248 slot 6 lore 6 | Glacite: +5,000 Glacite Powder
+[K8BAS-DUMP] container 248 slot 6 lore 7 | 
+[K8BAS-DUMP] container 248 slot 6 lore 8 | Resets in: 6h 39m
+[K8BAS-DUMP] container 248 slot 6 lore 9 | 
+[K8BAS-DUMP] container 248 slot 6 lore 10 | Cost
+[K8BAS-DUMP] container 248 slot 6 lore 11 | 1 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 6 lore 12 | 
+[K8BAS-DUMP] container 248 slot 6 lore 13 | You don't have enough Token of the
+[K8BAS-DUMP] container 248 slot 6 lore 14 | Mountain!
+[K8BAS-DUMP] container 248 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 8 item=minecraft:arrow sbid=- count=1 | Scroll Up
+[K8BAS-DUMP] container 248 slot 8 lore 0 | Left-click to scroll up!
+[K8BAS-DUMP] container 248 slot 8 lore 1 | 
+[K8BAS-DUMP] container 248 slot 8 lore 2 | Right-click to go to the top tier!
+[K8BAS-DUMP] container 248 slot 9 item=minecraft:lime_stained_glass_pane sbid=- count=4 | Tier 4
+[K8BAS-DUMP] container 248 slot 9 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 248 slot 9 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 248 slot 9 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 248 slot 9 lore 3 | the Mountain.
+[K8BAS-DUMP] container 248 slot 9 lore 4 | 
+[K8BAS-DUMP] container 248 slot 9 lore 5 | Rewards
+[K8BAS-DUMP] container 248 slot 9 lore 6 | +2 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 9 lore 7 | +1 Forge Slot
+[K8BAS-DUMP] container 248 slot 9 lore 8 | +New Forgeable Items
+[K8BAS-DUMP] container 248 slot 9 lore 9 | Access to the Crystal Hollows
+[K8BAS-DUMP] container 248 slot 9 lore 10 | +75 SkyBlock XP
+[K8BAS-DUMP] container 248 slot 9 lore 11 | 
+[K8BAS-DUMP] container 248 slot 9 lore 12 | UNLOCKED
+[K8BAS-DUMP] container 248 slot 10 item=minecraft:coal sbid=- count=1 | Sky Mall
+[K8BAS-DUMP] container 248 slot 10 lore 0 | Every SkyBlock day, you receive a
+[K8BAS-DUMP] container 248 slot 10 lore 1 | random buff while on any Mining
+[K8BAS-DUMP] container 248 slot 10 lore 2 | Island.
+[K8BAS-DUMP] container 248 slot 10 lore 3 | 
+[K8BAS-DUMP] container 248 slot 10 lore 4 | Possible Buffs
+[K8BAS-DUMP] container 248 slot 10 lore 5 |  ■ Gain +100 Mining Speed.
+[K8BAS-DUMP] container 248 slot 10 lore 6 |  ■ Gain +50 Mining Fortune.
+[K8BAS-DUMP] container 248 slot 10 lore 7 |  ■ Gain +15% more Powder while mining.
+[K8BAS-DUMP] container 248 slot 10 lore 8 |  ■ -20% Pickaxe Ability cooldowns.
+[K8BAS-DUMP] container 248 slot 10 lore 9 |  ■ 10x chance to find Golden and
+[K8BAS-DUMP] container 248 slot 10 lore 10 |     Diamond Goblins.
+[K8BAS-DUMP] container 248 slot 10 lore 11 |  ■ Gain 5x Titanium drops.
+[K8BAS-DUMP] container 248 slot 10 lore 12 | 
+[K8BAS-DUMP] container 248 slot 10 lore 13 | Cost
+[K8BAS-DUMP] container 248 slot 10 lore 14 | 1 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 10 lore 15 | 
+[K8BAS-DUMP] container 248 slot 10 lore 16 | Requires Old-School
+[K8BAS-DUMP] container 248 slot 11 item=minecraft:coal sbid=- count=1 | Old-School
+[K8BAS-DUMP] container 248 slot 11 lore 0 | Level 1/20
+[K8BAS-DUMP] container 248 slot 11 lore 1 | 
+[K8BAS-DUMP] container 248 slot 11 lore 2 | Grants +5 Ore Fortune.
+[K8BAS-DUMP] container 248 slot 11 lore 3 | 
+[K8BAS-DUMP] container 248 slot 11 lore 4 | Cost
+[K8BAS-DUMP] container 248 slot 11 lore 5 | 1 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 11 lore 6 | 
+[K8BAS-DUMP] container 248 slot 11 lore 7 | You don't have enough Token of the
+[K8BAS-DUMP] container 248 slot 11 lore 8 | Mountain!
+[K8BAS-DUMP] container 248 slot 12 item=minecraft:diamond sbid=- count=1 | Professional
+[K8BAS-DUMP] container 248 slot 12 lore 0 | Level 141
+[K8BAS-DUMP] container 248 slot 12 lore 1 | 
+[K8BAS-DUMP] container 248 slot 12 lore 2 | Gain +755 Mining Speed when mining
+[K8BAS-DUMP] container 248 slot 12 lore 3 | Gemstones.
+[K8BAS-DUMP] container 248 slot 12 lore 4 | 
+[K8BAS-DUMP] container 248 slot 12 lore 5 | ENABLED
+[K8BAS-DUMP] container 248 slot 12 lore 6 | 
+[K8BAS-DUMP] container 248 slot 12 lore 7 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 13 item=minecraft:emerald sbid=- count=1 | Mole
+[K8BAS-DUMP] container 248 slot 13 lore 0 | Level 160/200
+[K8BAS-DUMP] container 248 slot 13 lore 1 | 
+[K8BAS-DUMP] container 248 slot 13 lore 2 | Grants +329.65 Mining Spread when
+[K8BAS-DUMP] container 248 slot 13 lore 3 | mining Hard Stone.
+[K8BAS-DUMP] container 248 slot 13 lore 4 | 
+[K8BAS-DUMP] container 248 slot 13 lore 5 | =====[ UPGRADE ]=====
+[K8BAS-DUMP] container 248 slot 13 lore 6 | Level 160/200
+[K8BAS-DUMP] container 248 slot 13 lore 7 | 
+[K8BAS-DUMP] container 248 slot 13 lore 8 | Grants +329.65 Mining Spread when
+[K8BAS-DUMP] container 248 slot 13 lore 9 | mining Hard Stone.
+[K8BAS-DUMP] container 248 slot 13 lore 10 | 
+[K8BAS-DUMP] container 248 slot 13 lore 11 | Cost
+[K8BAS-DUMP] container 248 slot 13 lore 12 | 64,312 Gemstone Powder
+[K8BAS-DUMP] container 248 slot 13 lore 13 | 
+[K8BAS-DUMP] container 248 slot 13 lore 14 | ENABLED
+[K8BAS-DUMP] container 248 slot 13 lore 15 | 
+[K8BAS-DUMP] container 248 slot 13 lore 16 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 13 lore 17 | You don't have enough Gemstone
+[K8BAS-DUMP] container 248 slot 13 lore 18 | Powder!
+[K8BAS-DUMP] container 248 slot 14 item=minecraft:diamond sbid=- count=1 | Gem Lover
+[K8BAS-DUMP] container 248 slot 14 lore 0 | Level 21
+[K8BAS-DUMP] container 248 slot 14 lore 1 | 
+[K8BAS-DUMP] container 248 slot 14 lore 2 | Grants +104 Gemstone Fortune.
+[K8BAS-DUMP] container 248 slot 14 lore 3 | 
+[K8BAS-DUMP] container 248 slot 14 lore 4 | ENABLED
+[K8BAS-DUMP] container 248 slot 14 lore 5 | 
+[K8BAS-DUMP] container 248 slot 14 lore 6 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 15 item=minecraft:diamond sbid=- count=1 | Seasoned Mineman
+[K8BAS-DUMP] container 248 slot 15 lore 0 | Level 101
+[K8BAS-DUMP] container 248 slot 15 lore 1 | 
+[K8BAS-DUMP] container 248 slot 15 lore 2 | Grants +15.1☯ Mining Wisdom.
+[K8BAS-DUMP] container 248 slot 15 lore 3 | 
+[K8BAS-DUMP] container 248 slot 15 lore 4 | ENABLED
+[K8BAS-DUMP] container 248 slot 15 lore 5 | 
+[K8BAS-DUMP] container 248 slot 15 lore 6 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 16 item=minecraft:coal sbid=- count=1 | Front Loaded
+[K8BAS-DUMP] container 248 slot 16 lore 0 | Grants the following buffs for the
+[K8BAS-DUMP] container 248 slot 16 lore 1 | first 2,500 Gemstones you mine each
+[K8BAS-DUMP] container 248 slot 16 lore 2 | day.
+[K8BAS-DUMP] container 248 slot 16 lore 3 | 
+[K8BAS-DUMP] container 248 slot 16 lore 4 |  ■ 3x Gemstone Powder
+[K8BAS-DUMP] container 248 slot 16 lore 5 |  ■ +150 Gemstone Fortune
+[K8BAS-DUMP] container 248 slot 16 lore 6 |  ■ +250 Mining Speed
+[K8BAS-DUMP] container 248 slot 16 lore 7 | 
+[K8BAS-DUMP] container 248 slot 16 lore 8 | Blocks remaining: 2,500
+[K8BAS-DUMP] container 248 slot 16 lore 9 | Resets in: 6h 39m
+[K8BAS-DUMP] container 248 slot 16 lore 10 | 
+[K8BAS-DUMP] container 248 slot 16 lore 11 | Cost
+[K8BAS-DUMP] container 248 slot 16 lore 12 | 1 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 16 lore 13 | 
+[K8BAS-DUMP] container 248 slot 16 lore 14 | You don't have enough Token of the
+[K8BAS-DUMP] container 248 slot 16 lore 15 | Mountain!
+[K8BAS-DUMP] container 248 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 18 item=minecraft:lime_stained_glass_pane sbid=- count=3 | Tier 3
+[K8BAS-DUMP] container 248 slot 18 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 248 slot 18 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 248 slot 18 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 248 slot 18 lore 3 | the Mountain.
+[K8BAS-DUMP] container 248 slot 18 lore 4 | 
+[K8BAS-DUMP] container 248 slot 18 lore 5 | Rewards
+[K8BAS-DUMP] container 248 slot 18 lore 6 | +2 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 18 lore 7 | +1 Forge Slot
+[K8BAS-DUMP] container 248 slot 18 lore 8 | +New Forgeable Items
+[K8BAS-DUMP] container 248 slot 18 lore 9 | +60 SkyBlock XP
+[K8BAS-DUMP] container 248 slot 18 lore 10 | 
+[K8BAS-DUMP] container 248 slot 18 lore 11 | UNLOCKED
+[K8BAS-DUMP] container 248 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 20 item=minecraft:coal sbid=- count=1 | Luck of the Cave
+[K8BAS-DUMP] container 248 slot 20 lore 0 | Level 1/45
+[K8BAS-DUMP] container 248 slot 20 lore 1 | 
+[K8BAS-DUMP] container 248 slot 20 lore 2 | Increases the chance for you to
+[K8BAS-DUMP] container 248 slot 20 lore 3 | trigger rare occurrences in the
+[K8BAS-DUMP] container 248 slot 20 lore 4 | Dwarven Mines by 6%.
+[K8BAS-DUMP] container 248 slot 20 lore 5 | 
+[K8BAS-DUMP] container 248 slot 20 lore 6 | Rare occurrences include:
+[K8BAS-DUMP] container 248 slot 20 lore 7 |  • Golden Goblins
+[K8BAS-DUMP] container 248 slot 20 lore 8 |  • Fallen Stars
+[K8BAS-DUMP] container 248 slot 20 lore 9 |  • Powder Ghasts
+[K8BAS-DUMP] container 248 slot 20 lore 10 | 
+[K8BAS-DUMP] container 248 slot 20 lore 11 | Cost
+[K8BAS-DUMP] container 248 slot 20 lore 12 | 1 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 20 lore 13 | 
+[K8BAS-DUMP] container 248 slot 20 lore 14 | You don't have enough Token of the
+[K8BAS-DUMP] container 248 slot 20 lore 15 | Mountain!
+[K8BAS-DUMP] container 248 slot 21 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 22 item=minecraft:diamond sbid=- count=1 | Efficient Miner
+[K8BAS-DUMP] container 248 slot 22 lore 0 | Level 101
+[K8BAS-DUMP] container 248 slot 22 lore 1 | 
+[K8BAS-DUMP] container 248 slot 22 lore 2 | Grants +303 Mining Spread.
+[K8BAS-DUMP] container 248 slot 22 lore 3 | 
+[K8BAS-DUMP] container 248 slot 22 lore 4 | ENABLED
+[K8BAS-DUMP] container 248 slot 22 lore 5 | 
+[K8BAS-DUMP] container 248 slot 22 lore 6 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 23 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 24 item=minecraft:diamond sbid=- count=1 | Quick Forge
+[K8BAS-DUMP] container 248 slot 24 lore 0 | Level 21
+[K8BAS-DUMP] container 248 slot 24 lore 1 | 
+[K8BAS-DUMP] container 248 slot 24 lore 2 | Decreases the time it takes to forge
+[K8BAS-DUMP] container 248 slot 24 lore 3 | by 30%.
+[K8BAS-DUMP] container 248 slot 24 lore 4 | 
+[K8BAS-DUMP] container 248 slot 24 lore 5 | ENABLED
+[K8BAS-DUMP] container 248 slot 24 lore 6 | 
+[K8BAS-DUMP] container 248 slot 24 lore 7 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 27 item=minecraft:lime_stained_glass_pane sbid=- count=2 | Tier 2
+[K8BAS-DUMP] container 248 slot 27 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 248 slot 27 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 248 slot 27 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 248 slot 27 lore 3 | the Mountain.
+[K8BAS-DUMP] container 248 slot 27 lore 4 | 
+[K8BAS-DUMP] container 248 slot 27 lore 5 | Rewards
+[K8BAS-DUMP] container 248 slot 27 lore 6 | +2 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 27 lore 7 | Access to the Forge
+[K8BAS-DUMP] container 248 slot 27 lore 8 | +New Forgeable Items
+[K8BAS-DUMP] container 248 slot 27 lore 9 | +45 SkyBlock XP
+[K8BAS-DUMP] container 248 slot 27 lore 10 | 
+[K8BAS-DUMP] container 248 slot 27 lore 11 | UNLOCKED
+[K8BAS-DUMP] container 248 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 29 item=minecraft:redstone_block sbid=- count=1 | Mining Speed Boost
+[K8BAS-DUMP] container 248 slot 29 lore 0 | Pickaxe Ability: Mining Speed Boost
+[K8BAS-DUMP] container 248 slot 29 lore 1 | Grants +250%  Mining Speed for
+[K8BAS-DUMP] container 248 slot 29 lore 2 | 15s.
+[K8BAS-DUMP] container 248 slot 29 lore 3 | Cooldown: 120s
+[K8BAS-DUMP] container 248 slot 29 lore 4 | 
+[K8BAS-DUMP] container 248 slot 29 lore 5 | Pickaxe Abilities apply to all of your
+[K8BAS-DUMP] container 248 slot 29 lore 6 | Pickaxes. You can select a Pickaxe
+[K8BAS-DUMP] container 248 slot 29 lore 7 | Ability from your Heart of the
+[K8BAS-DUMP] container 248 slot 29 lore 8 | Mountain.
+[K8BAS-DUMP] container 248 slot 29 lore 9 | 
+[K8BAS-DUMP] container 248 slot 29 lore 10 | Upgrade your Pickaxe Abilities by
+[K8BAS-DUMP] container 248 slot 29 lore 11 | unlocking Core of the Mountain in
+[K8BAS-DUMP] container 248 slot 29 lore 12 | this menu!
+[K8BAS-DUMP] container 248 slot 29 lore 13 | 
+[K8BAS-DUMP] container 248 slot 29 lore 14 | Click to select!
+[K8BAS-DUMP] container 248 slot 30 item=minecraft:diamond sbid=- count=1 | Precision Mining
+[K8BAS-DUMP] container 248 slot 30 lore 0 | When Mining Ores or Dwarven Metals,
+[K8BAS-DUMP] container 248 slot 30 lore 1 | a particle target appears on the
+[K8BAS-DUMP] container 248 slot 30 lore 2 | block that increases your  Mining
+[K8BAS-DUMP] container 248 slot 30 lore 3 | Speed by 30% when aiming at it.
+[K8BAS-DUMP] container 248 slot 30 lore 4 | 
+[K8BAS-DUMP] container 248 slot 30 lore 5 | ENABLED
+[K8BAS-DUMP] container 248 slot 30 lore 6 | 
+[K8BAS-DUMP] container 248 slot 30 lore 7 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 31 item=minecraft:diamond sbid=- count=1 | Mining Fortune
+[K8BAS-DUMP] container 248 slot 31 lore 0 | Level 51
+[K8BAS-DUMP] container 248 slot 31 lore 1 | 
+[K8BAS-DUMP] container 248 slot 31 lore 2 | Grants +102 Mining Fortune.
+[K8BAS-DUMP] container 248 slot 31 lore 3 | 
+[K8BAS-DUMP] container 248 slot 31 lore 4 | ENABLED
+[K8BAS-DUMP] container 248 slot 31 lore 5 | 
+[K8BAS-DUMP] container 248 slot 31 lore 6 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 32 item=minecraft:coal sbid=- count=1 | Titanium Insanium
+[K8BAS-DUMP] container 248 slot 32 lore 0 | Level 1/50
+[K8BAS-DUMP] container 248 slot 32 lore 1 | 
+[K8BAS-DUMP] container 248 slot 32 lore 2 | When mining Mithril Ore, you have a
+[K8BAS-DUMP] container 248 slot 32 lore 3 | 2.1% chance to convert the block
+[K8BAS-DUMP] container 248 slot 32 lore 4 | into Titanium Ore.
+[K8BAS-DUMP] container 248 slot 32 lore 5 | 
+[K8BAS-DUMP] container 248 slot 32 lore 6 | Cost
+[K8BAS-DUMP] container 248 slot 32 lore 7 | 1 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 32 lore 8 | 
+[K8BAS-DUMP] container 248 slot 32 lore 9 | You don't have enough Token of the
+[K8BAS-DUMP] container 248 slot 32 lore 10 | Mountain!
+[K8BAS-DUMP] container 248 slot 33 item=minecraft:emerald_block sbid=- count=1 | Pickobulus
+[K8BAS-DUMP] container 248 slot 33 lore 0 | Pickaxe Ability: Pickobulus
+[K8BAS-DUMP] container 248 slot 33 lore 1 | Throw your pickaxe to create an
+[K8BAS-DUMP] container 248 slot 33 lore 2 | explosion mining all ores in a 3 block
+[K8BAS-DUMP] container 248 slot 33 lore 3 | radius.
+[K8BAS-DUMP] container 248 slot 33 lore 4 | Cooldown: 50s
+[K8BAS-DUMP] container 248 slot 33 lore 5 | 
+[K8BAS-DUMP] container 248 slot 33 lore 6 | Pickaxe Abilities apply to all of your
+[K8BAS-DUMP] container 248 slot 33 lore 7 | Pickaxes. You can select a Pickaxe
+[K8BAS-DUMP] container 248 slot 33 lore 8 | Ability from your Heart of the
+[K8BAS-DUMP] container 248 slot 33 lore 9 | Mountain.
+[K8BAS-DUMP] container 248 slot 33 lore 10 | 
+[K8BAS-DUMP] container 248 slot 33 lore 11 | Upgrade your Pickaxe Abilities by
+[K8BAS-DUMP] container 248 slot 33 lore 12 | unlocking Core of the Mountain in
+[K8BAS-DUMP] container 248 slot 33 lore 13 | this menu!
+[K8BAS-DUMP] container 248 slot 33 lore 14 | 
+[K8BAS-DUMP] container 248 slot 33 lore 15 | SELECTED
+[K8BAS-DUMP] container 248 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 36 item=minecraft:lime_stained_glass_pane sbid=- count=1 | Tier 1
+[K8BAS-DUMP] container 248 slot 36 lore 0 | You have unlocked this tier. All
+[K8BAS-DUMP] container 248 slot 36 lore 1 | perks and abilities on this tier are
+[K8BAS-DUMP] container 248 slot 36 lore 2 | available for unlocking with Token of
+[K8BAS-DUMP] container 248 slot 36 lore 3 | the Mountain.
+[K8BAS-DUMP] container 248 slot 36 lore 4 | 
+[K8BAS-DUMP] container 248 slot 36 lore 5 | Rewards
+[K8BAS-DUMP] container 248 slot 36 lore 6 | +1 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 36 lore 7 | +35 SkyBlock XP
+[K8BAS-DUMP] container 248 slot 36 lore 8 | 
+[K8BAS-DUMP] container 248 slot 36 lore 9 | UNLOCKED
+[K8BAS-DUMP] container 248 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 40 item=minecraft:diamond sbid=- count=1 | Mining Speed
+[K8BAS-DUMP] container 248 slot 40 lore 0 | Level 51
+[K8BAS-DUMP] container 248 slot 40 lore 1 | 
+[K8BAS-DUMP] container 248 slot 40 lore 2 | Grants +1,020 Mining Speed.
+[K8BAS-DUMP] container 248 slot 40 lore 3 | 
+[K8BAS-DUMP] container 248 slot 40 lore 4 | ENABLED
+[K8BAS-DUMP] container 248 slot 40 lore 5 | 
+[K8BAS-DUMP] container 248 slot 40 lore 6 | Right-click to disable!
+[K8BAS-DUMP] container 248 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 45 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 248 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 248 slot 47 item=minecraft:chest sbid=- count=1 | Heart of the Mountain Slot
+[K8BAS-DUMP] container 248 slot 47 lore 0 | Quickly swap between saved trees.
+[K8BAS-DUMP] container 248 slot 47 lore 1 | 
+[K8BAS-DUMP] container 248 slot 47 lore 2 | Current: Heart of the Mountain 1
+[K8BAS-DUMP] container 248 slot 47 lore 3 | 
+[K8BAS-DUMP] container 248 slot 47 lore 4 | Swapping trees has a 10m cooldown!
+[K8BAS-DUMP] container 248 slot 47 lore 5 | 
+[K8BAS-DUMP] container 248 slot 47 lore 6 | Click to view!
+[K8BAS-DUMP] container 248 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 248 slot 48 lore 0 | To Tasks ➜ Mining
+[K8BAS-DUMP] container 248 slot 49 item=minecraft:player_head sbid=- count=1 | Heart of the Mountain
+[K8BAS-DUMP] container 248 slot 49 lore 0 | Token of the Mountain: 0
+[K8BAS-DUMP] container 248 slot 49 lore 1 | 
+[K8BAS-DUMP] container 248 slot 49 lore 2 | Unlock more Token of the Mountain
+[K8BAS-DUMP] container 248 slot 49 lore 3 | by leveling up your Heart of the
+[K8BAS-DUMP] container 248 slot 49 lore 4 | Mountain tiers.
+[K8BAS-DUMP] container 248 slot 49 lore 5 | 
+[K8BAS-DUMP] container 248 slot 49 lore 6 | Mithril Powder: 3,196,526
+[K8BAS-DUMP] container 248 slot 49 lore 7 |   (+1 extra base powder)
+[K8BAS-DUMP] container 248 slot 49 lore 8 |   (+60% more powder)
+[K8BAS-DUMP] container 248 slot 49 lore 9 | Gemstone Powder: 8,159
+[K8BAS-DUMP] container 248 slot 49 lore 10 |   (+2 extra base powder)
+[K8BAS-DUMP] container 248 slot 49 lore 11 |   (+60% more powder)
+[K8BAS-DUMP] container 248 slot 49 lore 12 | Glacite Powder: 415,186
+[K8BAS-DUMP] container 248 slot 49 lore 13 |   (+3 extra base powder)
+[K8BAS-DUMP] container 248 slot 49 lore 14 |   (+60% more powder)
+[K8BAS-DUMP] container 248 slot 49 lore 15 | 
+[K8BAS-DUMP] container 248 slot 49 lore 16 | Obtain Mithril Powder by mining and
+[K8BAS-DUMP] container 248 slot 49 lore 17 | taking part in events in the Dwarven
+[K8BAS-DUMP] container 248 slot 49 lore 18 | Mines.
+[K8BAS-DUMP] container 248 slot 49 lore 19 | Obtain Gemstone Powder by mining
+[K8BAS-DUMP] container 248 slot 49 lore 20 | Gemstones and opening Treasure
+[K8BAS-DUMP] container 248 slot 49 lore 21 | Chests in the Crystal Hollows.
+[K8BAS-DUMP] container 248 slot 49 lore 22 | Obtain Glacite Powder by mining
+[K8BAS-DUMP] container 248 slot 49 lore 23 | Glacite and looting Frozen Corpses
+[K8BAS-DUMP] container 248 slot 49 lore 24 | in the Glacite Tunnels.
+[K8BAS-DUMP] container 248 slot 49 lore 25 | 
+[K8BAS-DUMP] container 248 slot 49 lore 26 | Increase your chance to gain extra
+[K8BAS-DUMP] container 248 slot 49 lore 27 | Powder by unlocking perks, equipping
+[K8BAS-DUMP] container 248 slot 49 lore 28 | the Mithril Golem Pet, and more!
+[K8BAS-DUMP] container 248 slot 50 item=minecraft:paper sbid=AMBER_CRYSTAL count=1 | Crystal Hollows Crystals
+[K8BAS-DUMP] container 248 slot 50 lore 0 | Crystals are used to forge Gems
+[K8BAS-DUMP] container 248 slot 50 lore 1 | into Perfect Gems. They can be
+[K8BAS-DUMP] container 248 slot 50 lore 2 | found hidden within the Crystal
+[K8BAS-DUMP] container 248 slot 50 lore 3 | Hollows.
+[K8BAS-DUMP] container 248 slot 50 lore 4 | 
+[K8BAS-DUMP] container 248 slot 50 lore 5 | Find and place the full set of 5
+[K8BAS-DUMP] container 248 slot 50 lore 6 | Crystals in the Crystal Nucleus to
+[K8BAS-DUMP] container 248 slot 50 lore 7 | unlock rare loot chests!
+[K8BAS-DUMP] container 248 slot 50 lore 8 | 
+[K8BAS-DUMP] container 248 slot 50 lore 9 | Your Crystal Nucleus
+[K8BAS-DUMP] container 248 slot 50 lore 10 |   Jade ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 11 |   Amber ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 12 |   Amethyst ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 13 |   Sapphire ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 14 |   Topaz ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 15 | 
+[K8BAS-DUMP] container 248 slot 50 lore 16 | Your Other Crystals
+[K8BAS-DUMP] container 248 slot 50 lore 17 |   Jasper ✔ Found
+[K8BAS-DUMP] container 248 slot 50 lore 18 |   Ruby ✔ Found
+[K8BAS-DUMP] container 248 slot 50 lore 19 |   Opal ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 20 |   Aquamarine ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 21 |   Peridot ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 22 |   Onyx ✖ Not Found
+[K8BAS-DUMP] container 248 slot 50 lore 23 |   Citrine ✖ Not Found
+[K8BAS-DUMP] container 248 slot 51 item=minecraft:paper sbid=RUBY_CRYSTAL count=1 | Crystal Nucleus RNG Meter
+[K8BAS-DUMP] container 248 slot 51 lore 0 | Your Crystal Nucleus RNG Meter fills
+[K8BAS-DUMP] container 248 slot 51 lore 1 | with 1,000 Nucleus XP every time you
+[K8BAS-DUMP] container 248 slot 51 lore 2 | complete the Crystal Nucleus!
+[K8BAS-DUMP] container 248 slot 51 lore 3 | 
+[K8BAS-DUMP] container 248 slot 51 lore 4 | Your selected RNG Drop will be
+[K8BAS-DUMP] container 248 slot 51 lore 5 | guaranteed to appear in a Crystal
+[K8BAS-DUMP] container 248 slot 51 lore 6 | Nucleus Bundle once your RNG Meter
+[K8BAS-DUMP] container 248 slot 51 lore 7 | is full!
+[K8BAS-DUMP] container 248 slot 51 lore 8 | 
+[K8BAS-DUMP] container 248 slot 51 lore 9 | Selected Drop
+[K8BAS-DUMP] container 248 slot 51 lore 10 | Divan's Alloy
+[K8BAS-DUMP] container 248 slot 51 lore 11 | 
+[K8BAS-DUMP] container 248 slot 51 lore 12 | Progress: 2.4%
+[K8BAS-DUMP] container 248 slot 51 lore 13 |                           24,200/1M
+[K8BAS-DUMP] container 248 slot 51 lore 14 | 
+[K8BAS-DUMP] container 248 slot 51 lore 15 | Click to view!
+[K8BAS-DUMP] container 248 slot 52 item=minecraft:player_head sbid=- count=1 | Reset Heart of the Mountain
+[K8BAS-DUMP] container 248 slot 52 lore 0 | Resets the Perks and Abilities of
+[K8BAS-DUMP] container 248 slot 52 lore 1 | your Heart of the Mountain, locking
+[K8BAS-DUMP] container 248 slot 52 lore 2 | them and resetting their levels.
+[K8BAS-DUMP] container 248 slot 52 lore 3 | 
+[K8BAS-DUMP] container 248 slot 52 lore 4 | You will be reimbursed with:
+[K8BAS-DUMP] container 248 slot 52 lore 5 |   - 25 Token of the Mountain
+[K8BAS-DUMP] container 248 slot 52 lore 6 |   - 8,611,585 Mithril Powder
+[K8BAS-DUMP] container 248 slot 52 lore 7 |   - 20,252,274 Gemstone Powder
+[K8BAS-DUMP] container 248 slot 52 lore 8 |   - 9,792,287 Glacite Powder
+[K8BAS-DUMP] container 248 slot 52 lore 9 | 
+[K8BAS-DUMP] container 248 slot 52 lore 10 | You will keep any Tiers and Core of
+[K8BAS-DUMP] container 248 slot 52 lore 11 | the Mountain that you have unlocked.
+[K8BAS-DUMP] container 248 slot 52 lore 12 | 
+[K8BAS-DUMP] container 248 slot 52 lore 13 | WARNING: This is permanent.
+[K8BAS-DUMP] container 248 slot 52 lore 14 | You can not go back after
+[K8BAS-DUMP] container 248 slot 52 lore 15 | resetting your Heart of the
+[K8BAS-DUMP] container 248 slot 52 lore 16 | Mountain!
+[K8BAS-DUMP] container 248 slot 53 item=minecraft:black_stained_glass_pane sbid=- count=1 | 

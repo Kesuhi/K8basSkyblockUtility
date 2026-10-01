@@ -1,0 +1,83 @@
+[K8BAS-DUMP] container 412 title=Miscellaneous ➜ Barbarian Reput slots=45 state=56
+[K8BAS-DUMP] container 412 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 4 item=minecraft:black_banner sbid=- count=1 | Barbarian Reputation
+[K8BAS-DUMP] container 412 slot 4 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 412 slot 4 lore 1 | 
+[K8BAS-DUMP] container 412 slot 4 lore 2 |  ✔ Friendly Status
+[K8BAS-DUMP] container 412 slot 4 lore 3 |  ✔ Trusted Status
+[K8BAS-DUMP] container 412 slot 4 lore 4 |  ✖ Honored Status
+[K8BAS-DUMP] container 412 slot 4 lore 5 |  ✖ Hero Status
+[K8BAS-DUMP] container 412 slot 4 lore 6 | 
+[K8BAS-DUMP] container 412 slot 4 lore 7 | Total Progress: 20%
+[K8BAS-DUMP] container 412 slot 4 lore 8 |                           15/75 XP
+[K8BAS-DUMP] container 412 slot 4 lore 9 | 
+[K8BAS-DUMP] container 412 slot 4 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 412 slot 4 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 412 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 20 item=minecraft:golden_helmet sbid=GOLD_HELMET count=1 | Friendly Status
+[K8BAS-DUMP] container 412 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 412 slot 20 lore 1 | 
+[K8BAS-DUMP] container 412 slot 20 lore 2 | Gain +5 XP by unlocking Friendly
+[K8BAS-DUMP] container 412 slot 20 lore 3 | status at 1,000 Barbarian Reputation.
+[K8BAS-DUMP] container 412 slot 20 lore 4 | 
+[K8BAS-DUMP] container 412 slot 20 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 412 slot 21 item=minecraft:golden_helmet sbid=GOLD_HELMET count=1 | Trusted Status
+[K8BAS-DUMP] container 412 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 412 slot 21 lore 1 | 
+[K8BAS-DUMP] container 412 slot 21 lore 2 | Gain +10 XP by unlocking Trusted
+[K8BAS-DUMP] container 412 slot 21 lore 3 | status at 3,000 Barbarian Reputation.
+[K8BAS-DUMP] container 412 slot 21 lore 4 | 
+[K8BAS-DUMP] container 412 slot 21 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 412 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 23 item=minecraft:golden_helmet sbid=GOLD_HELMET count=1 | Honored Status
+[K8BAS-DUMP] container 412 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 412 slot 23 lore 1 | 
+[K8BAS-DUMP] container 412 slot 23 lore 2 | Gain +20 XP by unlocking Honored
+[K8BAS-DUMP] container 412 slot 23 lore 3 | status at 7,000 Barbarian Reputation.
+[K8BAS-DUMP] container 412 slot 23 lore 4 | 
+[K8BAS-DUMP] container 412 slot 23 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 412 slot 24 item=minecraft:golden_helmet sbid=GOLD_HELMET count=1 | Hero Status
+[K8BAS-DUMP] container 412 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 412 slot 24 lore 1 | 
+[K8BAS-DUMP] container 412 slot 24 lore 2 | Gain +40 XP by unlocking Hero status
+[K8BAS-DUMP] container 412 slot 24 lore 3 | at 12,000 Barbarian Reputation.
+[K8BAS-DUMP] container 412 slot 24 lore 4 | 
+[K8BAS-DUMP] container 412 slot 24 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 412 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 37 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 38 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 412 slot 39 lore 0 | To Tasks ➜ Miscellaneous
+[K8BAS-DUMP] container 412 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 412 slot 41 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 42 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 43 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 412 slot 44 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 

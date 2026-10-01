@@ -1,0 +1,138 @@
+[K8BAS-DUMP] container 146 title=Essence Shop ➜ Spider Essence S slots=45 state=56
+[K8BAS-DUMP] container 146 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 4 item=minecraft:player_head sbid=- count=1 | Spider Essence Shop
+[K8BAS-DUMP] container 146 slot 4 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 146 slot 4 lore 1 | 
+[K8BAS-DUMP] container 146 slot 4 lore 2 |  ✔ Empowered Agility (10/10)
+[K8BAS-DUMP] container 146 slot 4 lore 3 |  ✔ Vermin Control (5/5)
+[K8BAS-DUMP] container 146 slot 4 lore 4 |  ✔ Bane (5/5)
+[K8BAS-DUMP] container 146 slot 4 lore 5 |  ✔ Spider Training (3/3)
+[K8BAS-DUMP] container 146 slot 4 lore 6 |  ✔ Toxophilite (5/5)
+[K8BAS-DUMP] container 146 slot 4 lore 7 | 
+[K8BAS-DUMP] container 146 slot 4 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 146 slot 4 lore 9 |                           126/126 XP
+[K8BAS-DUMP] container 146 slot 4 lore 10 | 
+[K8BAS-DUMP] container 146 slot 4 lore 11 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 146 slot 4 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 146 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 20 item=minecraft:sugar sbid=- count=1 | Empowered Agility
+[K8BAS-DUMP] container 146 slot 20 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 146 slot 20 lore 1 | 
+[K8BAS-DUMP] container 146 slot 20 lore 2 |  ✔ Empowered Agility 1
+[K8BAS-DUMP] container 146 slot 20 lore 3 |  ✔ Empowered Agility 2
+[K8BAS-DUMP] container 146 slot 20 lore 4 |  ✔ Empowered Agility 3
+[K8BAS-DUMP] container 146 slot 20 lore 5 |  ✔ Empowered Agility 4
+[K8BAS-DUMP] container 146 slot 20 lore 6 |  ✔ Empowered Agility 5
+[K8BAS-DUMP] container 146 slot 20 lore 7 |  ✔ Empowered Agility 6
+[K8BAS-DUMP] container 146 slot 20 lore 8 |  ✔ Empowered Agility 7
+[K8BAS-DUMP] container 146 slot 20 lore 9 |  ✔ Empowered Agility 8
+[K8BAS-DUMP] container 146 slot 20 lore 10 |  ✔ Empowered Agility 9
+[K8BAS-DUMP] container 146 slot 20 lore 11 |  ✔ Empowered Agility 10
+[K8BAS-DUMP] container 146 slot 20 lore 12 | 
+[K8BAS-DUMP] container 146 slot 20 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 146 slot 20 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 146 slot 20 lore 15 | 
+[K8BAS-DUMP] container 146 slot 20 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 146 slot 20 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 146 slot 20 lore 18 | 
+[K8BAS-DUMP] container 146 slot 20 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 146 slot 21 item=minecraft:string sbid=- count=1 | Vermin Control
+[K8BAS-DUMP] container 146 slot 21 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 146 slot 21 lore 1 | 
+[K8BAS-DUMP] container 146 slot 21 lore 2 |  ✔ Vermin Control 1
+[K8BAS-DUMP] container 146 slot 21 lore 3 |  ✔ Vermin Control 2
+[K8BAS-DUMP] container 146 slot 21 lore 4 |  ✔ Vermin Control 3
+[K8BAS-DUMP] container 146 slot 21 lore 5 |  ✔ Vermin Control 4
+[K8BAS-DUMP] container 146 slot 21 lore 6 |  ✔ Vermin Control 5
+[K8BAS-DUMP] container 146 slot 21 lore 7 | 
+[K8BAS-DUMP] container 146 slot 21 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 146 slot 21 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 146 slot 21 lore 10 | 
+[K8BAS-DUMP] container 146 slot 21 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 146 slot 21 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 146 slot 21 lore 13 | 
+[K8BAS-DUMP] container 146 slot 21 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 146 slot 22 item=minecraft:spider_eye sbid=- count=1 | Bane
+[K8BAS-DUMP] container 146 slot 22 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 146 slot 22 lore 1 | 
+[K8BAS-DUMP] container 146 slot 22 lore 2 |  ✔ Bane 1
+[K8BAS-DUMP] container 146 slot 22 lore 3 |  ✔ Bane 2
+[K8BAS-DUMP] container 146 slot 22 lore 4 |  ✔ Bane 3
+[K8BAS-DUMP] container 146 slot 22 lore 5 |  ✔ Bane 4
+[K8BAS-DUMP] container 146 slot 22 lore 6 |  ✔ Bane 5
+[K8BAS-DUMP] container 146 slot 22 lore 7 | 
+[K8BAS-DUMP] container 146 slot 22 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 146 slot 22 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 146 slot 22 lore 10 | 
+[K8BAS-DUMP] container 146 slot 22 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 146 slot 22 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 146 slot 22 lore 13 | 
+[K8BAS-DUMP] container 146 slot 22 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 146 slot 23 item=minecraft:experience_bottle sbid=- count=1 | Spider Training
+[K8BAS-DUMP] container 146 slot 23 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 146 slot 23 lore 1 | 
+[K8BAS-DUMP] container 146 slot 23 lore 2 |  ✔ Spider Training 1
+[K8BAS-DUMP] container 146 slot 23 lore 3 |  ✔ Spider Training 2
+[K8BAS-DUMP] container 146 slot 23 lore 4 |  ✔ Spider Training 3
+[K8BAS-DUMP] container 146 slot 23 lore 5 | 
+[K8BAS-DUMP] container 146 slot 23 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 146 slot 23 lore 7 |                           7/7 XP
+[K8BAS-DUMP] container 146 slot 23 lore 8 | 
+[K8BAS-DUMP] container 146 slot 23 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 146 slot 23 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 146 slot 23 lore 11 | 
+[K8BAS-DUMP] container 146 slot 23 lore 12 | Click to view tasks!
+[K8BAS-DUMP] container 146 slot 24 item=minecraft:brown_banner sbid=- count=1 | Toxophilite
+[K8BAS-DUMP] container 146 slot 24 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 146 slot 24 lore 1 | 
+[K8BAS-DUMP] container 146 slot 24 lore 2 |  ✔ Toxophilite 1
+[K8BAS-DUMP] container 146 slot 24 lore 3 |  ✔ Toxophilite 2
+[K8BAS-DUMP] container 146 slot 24 lore 4 |  ✔ Toxophilite 3
+[K8BAS-DUMP] container 146 slot 24 lore 5 |  ✔ Toxophilite 4
+[K8BAS-DUMP] container 146 slot 24 lore 6 |  ✔ Toxophilite 5
+[K8BAS-DUMP] container 146 slot 24 lore 7 | 
+[K8BAS-DUMP] container 146 slot 24 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 146 slot 24 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 146 slot 24 lore 10 | 
+[K8BAS-DUMP] container 146 slot 24 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 146 slot 24 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 146 slot 24 lore 13 | 
+[K8BAS-DUMP] container 146 slot 24 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 146 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 37 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 38 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 146 slot 39 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 146 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 146 slot 41 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 42 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 43 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 146 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
