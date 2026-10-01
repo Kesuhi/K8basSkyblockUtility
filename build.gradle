@@ -86,7 +86,7 @@ dependencies {
 // -Pk8bas.prodBaseline=true boots the same stack without this mod, to record its own ERROR lines.
 // -Pk8bas.quickPlay=<world> loads that world of the run directory's saves after start.
 // -Pk8bas.prodProvision=<dir> copies that folder (config, options.txt, saves) into the run directory
-// first; Gradle empties the run directory before every run.
+// first. The run directory is the task's output, which Gradle may empty before a run.
 // Opens a game window, so it is not part of check.
 tasks.register("prodClientStack", net.fabricmc.loom.task.prod.ClientProductionRunTask) {
 	def prodMods = providers.gradleProperty("k8bas.prodMods")
