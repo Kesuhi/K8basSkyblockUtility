@@ -17,6 +17,13 @@ repositories {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
 	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 dependencies {
@@ -42,6 +49,8 @@ dependencies {
 	// declared via fabric.mod.json's depends, per Hypixel's own documented setup. Bundling a
 	// private copy via include() isn't the supported pattern for this library.
 	implementation "net.hypixel:mod-api:${project.hypixel_modapi_version}"
+	// The Fabric glue players install themselves; only on the dev runtime (runClient, gametests).
+	localRuntime "maven.modrinth:hypixel-mod-api:${project.hypixel_modapi_fabric_version}"
 
 	// Unit tests for pure logic (rule matching, config loading, data parsing); not shipped.
 	testImplementation platform("org.junit:junit-bom:${project.junit_version}")

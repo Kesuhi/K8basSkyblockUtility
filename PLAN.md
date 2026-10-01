@@ -284,10 +284,15 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T0.3 test: JUnit 5 + characterization tests** (S, deps T0.2). `build.gradle`, `src/test/java/…`. JUnit is an ask-first dependency (SPEC §8).
   - Req: REQ-XC-VERIFY-02, REQ-GLOW-01, REQ-CFG-01, REQ-CFG-03
   - Accept: AC-GLOW-01 on 26.1.2 (NONE/CONTAINS/REGEX/EXACT, `§` stripping, island, distance and type gates); a fixture shaped like your config loads (baseline for AC-CFG-01); DB parsing with a UTF-8 BOM (EC-CFG-02). All green **before** the port.
-- [ ] **T0.4 build: dev runtime + `/ksu debug island` + tab/sidebar dumps** (M). `build.gradle`: `localRuntime "maven.modrinth:hypixel-mod-api:1.0.2+build.1+mc26.1"` from the Modrinth maven, verified resolvable; that build also targets 26.1.
+- [x] **T0.4 build: dev runtime + `/ksu debug island` + tab/sidebar dumps** (M). `build.gradle`: `localRuntime "maven.modrinth:hypixel-mod-api:1.0.2+build.1+mc26.1"` from the Modrinth maven, verified resolvable; that build also targets 26.1.
   - Req: REQ-XC-VERIFY-01, REQ-XC-VERIFY-02, REQ-LOC-08, REQ-GS-13, REQ-GS-12
   - New `DebugCommand`: `/ksu debug island <name>` is dev-only. `/ksu debug dump tab|sidebar` ships in production and writes raw lines tagged `[K8BAS-DUMP]` to `latest.log`, read-only and only when you run it.
-  - Accept: `runClient` reaches a world; AC-GS-13 [B]; AC-LOC-09 [B]; baseline screenshots of a 1.0.1 waypoint label captured for T1.1.
+  - The hand-placed glue jar in the ignored `run/mods/` moves to `run/mods.disabled/`, so it does not load twice.
+  - Accept: `runClient` reaches the title screen with the glue loaded from the Modrinth maven; the world-level checks are T0.4c's.
+- [ ] **T0.4c test(gametest): client gametest source set + 1.0.1 label baseline** (S, deps T0.4). Moved here from T1.5 because the waypoint baseline for T1.1 can only be captured reliably by a gametest on 26.1.2. `src/gametest` with `DebugToolsGameTest`, run by `./gradlew runClientGameTest` (not part of `check`, as it opens a game window).
+  - Req: REQ-XC-VERIFY-02, REQ-XC-VERIFY-01, REQ-LOC-08, REQ-GS-13
+  - In a singleplayer world: the debug commands are registered, the island can be forced and cleared, and the tab and sidebar dumps write tagged lines. Screenshots of the 1.0.1 label in the open and behind stone; the label crop is the template `waypoint-label-1.0.1-behind-stone.png`.
+  - Accept: AC-LOC-09 [B], AC-GS-13 [B] (as a gametest); the template matches with the `exact()` comparison, and a one-glyph label change fails the test.
 - [ ] **T0.4b feat(debug): armed container dump + entity name-tag dump** (M, deps T0.4). Both ship in production. Read-only: no clicks, no paging, nothing opened.
   - Req: REQ-GS-13, REQ-GS-12, REQ-XC-VERIFY-02, REQ-XC-RULES-04, REQ-XC-PRIVACY-01
   - `/ksu debug dump containers on|off` **arms** a passive dump, because no command can be typed while a menu is open. While armed, each allowlisted menu *you* open is written once its contents are stable (the content packet, then 2 quiet ticks). It disarms after 60 min.
@@ -303,9 +308,9 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 
 *1A Port*
 
-- [ ] **T1.1 refactor(npcsearch): submit-based waypoint renderer** (S, deps T0.4). `NpcWaypointRenderer` moves to `COLLECT_SUBMITS` + `submitText(… SEE_THROUGH …)`, which also exists in 26.1.2.
+- [ ] **T1.1 refactor(npcsearch): submit-based waypoint renderer** (S, deps T0.4c). `NpcWaypointRenderer` moves to `COLLECT_SUBMITS` + `submitText(… SEE_THROUGH …)`, which also exists in 26.1.2.
   - Req: REQ-PORT-05, REQ-PORT-06, REQ-PORT-12
-  - Accept: compiles on 26.1.2; label identical to the T0.4 baseline behind **opaque** blocks (the translucent case is T1.3); no NaN at distance 0 or behind the camera (EC-PORT-06).
+  - Accept: compiles on 26.1.2; the T0.4c gametest still finds the 1.0.1 label template exactly behind **opaque** blocks (the translucent case is T1.3); no NaN at distance 0 or behind the camera (EC-PORT-06).
 - [ ] **T1.2 build!: target Minecraft 26.2** (M, deps T1.1).
   - Req: REQ-PORT-01, REQ-PORT-02, REQ-PORT-03, REQ-PORT-04, REQ-PORT-05, REQ-PORT-06, REQ-PORT-08
   - `gradle.properties`: MC 26.2, Loader 0.19.5, Fabric API 0.161.0+26.2, Cloth 26.2.155, Mod Menu 20.0.3, Loom pinned to an exact 1.17 release (no `-SNAPSHOT`), Gradle 9.5.1 kept.
@@ -313,9 +318,9 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - One-line API moves (`gui.screen()/setScreen()`, `gui.hud.setTitle/resetTitleTimes`) in `MobHighlighterModule`, `NpcSearchModule`, `SettingsCommand`, `SettingsKeybind` and the T0.4/T0.4b debug code. Mappings: none needed (unobfuscated).
   - Both 1.0.1 mixins re-checked (target, 26.1.2 vs 26.2 descriptor, injection point) for the Phase 1 report; T1.10 deletes them.
   - Accept: AC-PORT-01, AC-PORT-03, AC-PORT-04, AC-PORT-05, AC-PORT-07; AC-PORT-08 [B] (no mixin apply warning in `runClient`).
-- [ ] **T1.5 build(test): client gametest source set** (S, deps T1.2).
+- [ ] **T1.5 test(gametest): client gametests on 26.2** (S, deps T1.2). The source set exists since T0.4c; this task makes it run on 26.2.
   - Req: REQ-XC-VERIFY-02
-  - Accept: `runClientGameTest` (exact task name verified then) runs one test with a screenshot; tests can force the island through the T0.4 override.
+  - Accept: `runClientGameTest` passes on 26.2, including `DebugToolsGameTest`; tests can force the island through the T0.4 override. A template that changes because of 26.2 itself (not our renderer) is re-captured with a note in the Phase 1 report.
 - [ ] **T1.6 build: production-boot task** (S, deps T1.2). `prodClientStack` (`ClientProductionRunTask`) with the mod folder passed as `-Pk8bas.prodMods` and `-Dmixin.debug.export`, kept out of `check`.
   - Req: REQ-XC-VERIFY-02
   - Accept: boots with a copy of your mods; the stack's ERROR lines without our jar are recorded as the "no new ERROR" baseline; the CI build stays green.

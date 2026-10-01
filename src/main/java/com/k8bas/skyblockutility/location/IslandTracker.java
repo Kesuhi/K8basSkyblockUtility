@@ -5,8 +5,10 @@ import net.hypixel.modapi.HypixelModAPI;
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundHelloPacket;
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeSet;
 
 /**
  * Tracks the player's current Skyblock island via the official Hypixel Mod API's
@@ -44,6 +46,8 @@ public final class IslandTracker {
 			Map.entry("safari", "Critter Safari"));
 
 	private static volatile String currentIsland = null;
+	/** Set only by the dev-only `/ksu debug island` command; wins over the server's location. */
+	private static volatile String forcedIsland = null;
 
 	private IslandTracker() {
 	}
@@ -51,7 +55,18 @@ public final class IslandTracker {
 	/** @return the player's current island using the same display names the mob/NPC databases
 	 *  use (e.g. "Hub", "Dwarven Mines"), or null if unknown/not on a mapped island. */
 	public static String getCurrentIsland() {
-		return currentIsland;
+		String forced = forcedIsland;
+		return forced != null ? forced : currentIsland;
+	}
+
+	/** The island names the location packet can produce, for command suggestions. */
+	public static Collection<String> knownIslands() {
+		return new TreeSet<>(MODE_TO_ISLAND.values());
+	}
+
+	/** Dev-only override (REQ-LOC-08): force an island in runClient or a gametest, or clear it with null. */
+	public static void forceIsland(String island) {
+		forcedIsland = island;
 	}
 
 	public static void register() {
