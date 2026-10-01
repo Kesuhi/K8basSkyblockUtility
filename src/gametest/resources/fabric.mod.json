@@ -8,6 +8,7 @@
 		"fabric-client-gametest": [
 			"com.k8bas.skyblockutility.gametest.WaypointLabelGameTest",
 			"com.k8bas.skyblockutility.highlight.HighlightGameTest",
+			"com.k8bas.skyblockutility.highlight.GlowGameTest",
 			"com.k8bas.skyblockutility.gametest.DebugToolsGameTest",
 			"com.k8bas.skyblockutility.gametest.SettingsScreensGameTest"
 		]

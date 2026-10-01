@@ -12,14 +12,19 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** AC-PORT-03: the shipped dependency ranges, evaluated with Fabric Loader's own version parser. */
 class FabricModJsonTest {
-	private static JsonObject depends() throws IOException {
+	private static JsonObject modJson() throws IOException {
 		try (InputStream in = FabricModJsonTest.class.getResourceAsStream("/fabric.mod.json")) {
-			return JsonParser.parseString(new String(in.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonObject().getAsJsonObject("depends");
+			return JsonParser.parseString(new String(in.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
 		}
+	}
+
+	private static JsonObject depends() throws IOException {
+		return modJson().getAsJsonObject("depends");
 	}
 
 	private static boolean accepts(String dependency, String version) throws IOException, VersionParsingException {
@@ -46,5 +51,14 @@ class FabricModJsonTest {
 		assertFalse(accepts("fabricloader", "0.19.4"));
 		assertTrue(accepts("fabric-api", "0.161.0"));
 		assertTrue(accepts("cloth-config", "26.2.155"));
+		assertTrue(accepts("render-chest", "1.0.3+26.2"));
+		assertFalse(accepts("render-chest", "1.0.2+26.2"));
+	}
+
+	/** AC-GLOW-05 [R] (T1.10): no mixin forces glowing or visibility; the glow goes through Render Chest. */
+	@Test
+	void theModShipsNoMixins() throws Exception {
+		assertFalse(modJson().has("mixins"));
+		assertNull(FabricModJsonTest.class.getResource("/k8bas_skyblock_utility.mixins.json"));
 	}
 }

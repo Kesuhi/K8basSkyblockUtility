@@ -18,6 +18,13 @@ repositories {
 		url = "https://maven.terraformersmc.com/"
 	}
 	maven {
+		name = "AzureAaron"
+		url = "https://maven.azureaaron.net/releases"
+		content {
+			includeGroup "net.azureaaron"
+		}
+	}
+	maven {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"
 		content {
@@ -62,6 +69,10 @@ dependencies {
 	implementation "net.hypixel:mod-api:${project.hypixel_modapi_version}"
 	// The Fabric glue players install themselves; only on the dev runtime (runClient, gametests).
 	localRuntime "maven.modrinth:hypixel-mod-api:${project.hypixel_modapi_fabric_version}"
+
+	// Render Chest (Apache-2.0) draws the depth-tested glow. Bundled as a nested jar with its own
+	// LICENSE, as its README asks; none of its code is copied here (THIRD_PARTY_NOTICES.md).
+	include(implementation("net.azureaaron:render-chest:${project.render_chest_version}"))
 
 	// Unit tests for pure logic (rule matching, config loading, data parsing); not shipped.
 	testImplementation platform("org.junit:junit-bom:${project.junit_version}")

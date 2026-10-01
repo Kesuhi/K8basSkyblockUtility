@@ -364,7 +364,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T1.10a refactor(highlight): match on the client tick, render reads a cache** (S, deps T1.8b). `HighlightManager` resolves name tags and matches once per tick; the render path only looks up results.
   - Req: REQ-GLOW-06, REQ-GLOW-08, REQ-GLOW-01
   - Accept: AC-GLOW-07; the thread-assert part of AC-GLOW-05; EC-GLOW-05 (counter test: each name tag resolved at most once per entity per tick).
-- [ ] **T1.10 feat(highlight)!: depth-tested glow via Render Chest** (M, deps T1.5, T1.6, T1.10a).
+- [x] **T1.10 feat(highlight)!: depth-tested glow via Render Chest** (M, deps T1.5, T1.6, T1.10a).
   - Req: REQ-GLOW-02, REQ-GLOW-04, REQ-GLOW-05, REQ-GLOW-07, REQ-GLOW-16, REQ-GLOW-17, REQ-XC-RULES-03, REQ-XC-LICENSE-02, REQ-PORT-08
   - `build.gradle`: `maven { url = 'https://maven.azureaaron.net/releases'; content { includeGroup 'net.azureaaron' } }`, `include(implementation("net.azureaaron:render-chest:1.0.3+26.2"))` (D-1).
   - New `GlowHandler` (AD-1) on the T1.10a cache; delete both mixins, `k8bas_skyblock_utility.mixins.json` and its `fabric.mod.json` entry; start `THIRD_PARTY_NOTICES.md` with Render Chest (Apache-2.0, LICENSE in the nested jar).
