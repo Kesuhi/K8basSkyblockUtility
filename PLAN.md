@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, see SPEC §12.3; R22 drops the possible corpse spots, T3.3a and T3.3). **Every task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
+| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, see SPEC §12.3; R22 drops the possible corpse spots, T3.3a and T3.3). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped T3.3a and T3.3 keep theirs as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
 | Date | 2026-10-01 |
 | Branch | `update/26.2` (from `main` @ `bc0f2f6`, v1.0.1) |
 | Baseline | `./gradlew build` on `main` is green (26.1.2) |
@@ -160,7 +160,7 @@ Authoritative per-feature defaults: `SPEC.md` §12.H.
 - automatic party-chat announcements (SkyOcean)
 - particle-packet cancelling
 - a through-wall glow option
-- filtering static corpse spots by unseen entities (the corpse spots themselves were dropped by R22; the README keeps this line as an exclusion)
+- filtering static corpse spots by unseen entities (the corpse spots themselves were dropped by R22; the README line "filtering possible corpse spots by entities you cannot see" stays as an exclusion, REQ-REL-03)
 - drill (B)
 
 ---
@@ -175,7 +175,7 @@ Authoritative per-feature defaults: `SPEC.md` §12.H.
 | AD-4 | **Custom UI, no UI library, pure Java, vanilla font.** Rounded corners from fills (no private render APIs in v1). `Module` is decoupled from Cloth through a small option model that also feeds search. Cloth Config is removed at the end of Phase 2. | Matches AlpakaAddons, which is fully custom. Avoids fragile mixins and drops an LGPL dependency plus the provenance-doubt files. |
 | AD-5 | **HUD framework on Fabric `HudElementRegistry`**, with anchor-relative positions (9 anchors + offset + scale) and preview data. | No HUD mixin. Layouts survive GUI-scale and window changes. |
 | AD-6 | **Shared SkyBlock data services:** tab widgets, sidebar scoreboard, system chat, inventory counts, location (mode/map/server + change events). | Mineshaft, hotspot, odds and bestiary all need them. Built once and tested against captured lines. |
-| AD-7 | **Data bundled in the jar, versioned with releases. No runtime fetch, with one exception:** the opt-in live Bazaar price feed (D-22). Applies to the NPC/mob DBs, bestiary, odds and SkyBlock XP tables (corpse spots were on this list until R22 dropped them). All of them go through **one shared data registry** (T3.0c): envelope per REQ-DATA-02 (`table`, `schemaVersion`, integer `dataVersion` +1 per change, `gameVersion`, `generatedAt`, `license` ∈ CC0-1.0 | MIT | Apache-2.0, `sources` as a map id → source; MIT/Apache tables under `thirdparty/`), an `index.json` with sha256 per file, and a validator inside `./gradlew check`. The gists are frozen, not deleted, because 1.0.x users still read them. | The data is small (50–72 KB) and unchanged since 2026-08-21. The remote fetch is a single point of failure (no cache, fallback, timeout or validation; NPE on a bad entry). Updates arrive with releases through the updater. Simplest option that meets "keep a fallback if remote is used". |
+| AD-7 | **Data bundled in the jar, versioned with releases. No runtime fetch, with one exception:** the opt-in live Bazaar price feed (D-22). Applies to the NPC/mob DBs, bestiary, odds and SkyBlock XP tables (corpse spots were on this list until R22 dropped them). All of them go through **one shared data registry** (T3.0c): envelope per REQ-DATA-02 (`table`, `schemaVersion`, integer `dataVersion` +1 per change, `gameVersion`, `generatedAt`, `license` ∈ CC0-1.0 \| MIT \| Apache-2.0, `sources` as a map id → source; MIT/Apache tables under `thirdparty/`), an `index.json` with sha256 per file, and a validator inside `./gradlew check`. The gists are frozen, not deleted, because 1.0.x users still read them. | The data is small (50–72 KB) and unchanged since 2026-08-21. The remote fetch is a single point of failure (no cache, fallback, timeout or validation; NPE on a bad entry). Updates arrive with releases through the updater. Simplest option that meets "keep a fallback if remote is used". |
 | AD-8 | **Updater on GitHub Releases** (D-14). `/releases` with ETag and back-off; exact asset-name match for the running MC version; SHA-256 checked against the API `digest`; staged outside `mods/`; a JDK-only helper swaps the jar after the game exits; reconciliation on next launch. **Never installs without a click.** | The only design that works on Windows (jar locked while running), and the one established mods use. API facts verified live: digest field, 302 redirect, 60 req/h, and a 304 still counts when unauthenticated. |
 | AD-9 | **Mixins:** after AD-1 no core mixin remains. Later cosmetic hooks (bobber, drill animation, read-only particle observer) go into one config `k8bas_skyblock_utility.mixins.json`, package `com.k8bas.skyblockutility.mixin`, `required: false`, `defaultRequire: 0`, with skipped injections logged. Prefer `@WrapOperation` / `@ModifyReturnValue`; never `@Redirect` / `@Overwrite`. | Alpaka, NoFrills and Skyblocker hook the same methods; a cosmetic conflict must not crash the game. |
 | AD-10 | **Versioning:** the Gradle `version` + `+<mc>` build metadata, e.g. jar `k8bas_skyblock_utility-2.0.0+26.2.jar`, tag `v2.0.0` (D-9). | The updater picks the right jar per MC version. |
@@ -249,7 +249,7 @@ Phase 6 reuses:
 
 It can only start after Phase 5, but its **calculator core (T6.1)** is pure Java and could be built earlier, once T1.18 has merged, if you want progress sooner.
 
-**Waypoint path first (R23).** After the v1.1.0 merge, the first Phase 3 work is T3.0b → T3.0n → T3.4, so the beacon beams come right after v1.1.0. It is reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used. Whether it ships as an intermediate release is decided then. T3.4 no longer waits for T3.8: until the bundled NPC table lands, the sourceId lookup reads the NPC list that v1.1.0 already loads.
+**Waypoint path first (R23).** After the v1.1.0 merge, the first Phase 3 work is T3.0b → T3.0n → T3.4, so the beacon beams come right after v1.1.0. It is reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used. Whether it ships as an intermediate release is decided then. T3.4 no longer waits for T3.8: until the bundled NPC table lands, the sourceId lookup reads the NPC list that v1.1.0 already loads. If the waypoint path ships as an intermediate release, that release needs its own checkpoint (AC-NPCWP-11 [E]/[D], AC-MARK-08), and the R8 colour migration (REQ-NPCWP-09, AC-NPCWP-02, now in T3.4b) is split out of T3.4b first, so the beams do not ignore 1.0.1 custom colours.
 
 Highest-risk items come first: the port, the glow replacement, the config migration framework.
 
@@ -261,7 +261,7 @@ Rough size: Phase 1 ≈ 1–2 days; Phase 2 is the largest (~4–5.5k lines of J
 
 Sizes: XS 1 file · S 1–2 · M 3–5. `Verify` always includes `./gradlew build` (tier A) unless noted.
 
-Every task names the SPEC requirements it implements (`Req:`) and the acceptance criteria it proves (`Accept:`). Requirements that are met at a checkpoint rather than by a task (reviews, reports) are named in that checkpoint's list. **Every checkpoint report (G1, G1r, G2–G7) follows REQ-XC-REPORT-01**: what changed, what was tested, known issues and decisions (AC-XC-07). It also lists the skills used (REQ-XC-SKILLS-01, AC-XC-10) and flags questionable items instead of building them (REQ-XC-RULES-06, AC-XC-11). Requirements deliberately not built are listed under "Not built in 2.0.0" at the end of this section.
+Every active task names the SPEC requirements it implements (`Req:`) and the acceptance criteria it proves (`Accept:`); the dropped tasks T3.3a and T3.3 show theirs as `Was Req:` / `Was Accept:`, which the traceability (SPEC §13) leaves out. Requirements that are met at a checkpoint rather than by a task (reviews, reports) are named in that checkpoint's list. **Every checkpoint report (G1, G1r, G2–G7) follows REQ-XC-REPORT-01**: what changed, what was tested, known issues and decisions (AC-XC-07). It also lists the skills used (REQ-XC-SKILLS-01, AC-XC-10) and flags questionable items instead of building them (REQ-XC-RULES-06, AC-XC-11). Requirements deliberately not built are listed under "Not built in 2.0.0" at the end of this section.
 
 ### Phase 0 — Setup (still on 26.1.2)
 
@@ -411,23 +411,25 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 
 *1F Decisions after the G1 smoke (2026-10-01; both ship in v1.1.0)*
 
-- [ ] **T1.11b fix(npcsearch): "You found" title only for the five special NPCs** (S, deps T1.11). The title fires only for Trinity, Tomioka, Duncan, Xalx and Pete (R20). A rule qualifies when its NPC data sourceId is `trinity`, `tomioka`, `duncan`, `xalx` or `pete`, or, for a hand-made rule without a sourceId, when its label equals one of those names, ignoring case and surrounding spaces. Other NPC Search rules still outline their NPC and never show the title. The T1.11 rules stay: line of sight, once per rule per server, reset on each location change, own toggle default ON, never for invisible entities.
+- [x] **T1.11b fix(npcsearch): "You found" title only for the five special NPCs** (S, deps T1.11, T1.16). The title fires only for Trinity, Tomioka, Duncan, Xalx and Pete (R20). A rule qualifies when its NPC data sourceId is `trinity`, `tomioka`, `duncan`, `xalx` or `pete`, or, for a hand-made rule without a sourceId, when its label equals one of those names, ignoring case and surrounding spaces. Other NPC Search rules still outline their NPC and never show the title. The T1.11 rules stay: line of sight, once per rule per server, reset on each location change, own toggle default ON, never for invisible entities.
   - Req: REQ-GLOW-14, REQ-GLOW-15
   - The toggle tooltip, the CHANGELOG `[1.1.0]` entry and the README name the five NPCs.
   - Accept: AC-GLOW-13: unit tests of the gate for the new rows (each of the five sourceIds gives a title; a hand-made rule labelled " trinity " without a sourceId gives a title; a rule with another sourceId labelled "Trinity" gives none; a non-special rule never gives one while its NPC still glows), with the existing rows unchanged; `FoundTitleGameTest` uses a qualifying rule and adds a matched non-special NPC in view that shows no title. AC-GLOW-14 (the title wording in the tooltip, CHANGELOG and README).
-- [ ] **T1.3b feat(npcsearch): white waypoint labels by default** (S, deps T1.3). NPC Search gets the setting "White waypoint labels", default ON: both waypoint lines (label and "Nm" distance) are drawn white. OFF draws them in the rule colour, the 1.0.1 look (R21). The dark background, see-through rendering and size stay as in T1.3. When T3.4 adds the beams, the setting stays and the beam carries the colour.
+  - Status (2026-10-01): done in `5ff75cf`. The unit test `FoundTitleGateTest` covers the five ids, label matching for hand-made rules and a database NPC judged by its id; the gametest `FoundTitleGameTest` uses Trinity, and a hand-made "Mort" rule that matches the same NPC outlines it but shows no title.
+- [x] **T1.3b feat(npcsearch): white waypoint labels by default** (S, deps T1.3, T1.16). NPC Search gets the setting "White waypoint labels", default ON: both waypoint lines (label and "Nm" distance) are drawn white, so in v1.1.0 the distance line follows the label. OFF draws them in the rule's own `color` field, the 1.0.1 look (R21). The dark background, see-through rendering and size stay as in T1.3. When T3.4 adds the beams, the setting stays and the beam carries the colour; with the setting ON the distance line then turns yellow (Skyblocker style), and with it OFF both lines keep the rule's `color`, not the resolved beam colour.
   - Req: REQ-NPCWP-02, REQ-NPCWP-08, REQ-PORT-06, REQ-PORT-09, REQ-XC-TOGGLE-02
   - A toggle with a tooltip in the NPC Search settings; the CHANGELOG `[1.1.0]` entry (a visual change from 1.0.1) and the README defaults name it.
   - Accept: unit tests: with the setting ON both lines use white, with it OFF both use the rule colour, and a fresh config and the 1.0.1-shaped fixture both load with it ON. AC-PORT-06 [C]: `WaypointLabelGameTest` passes with the setting ON (white text) and with it OFF (rule colour), with a non-white rule colour; `DebugToolsGameTest` still matches the 1.0.1 label template with the setting OFF. AC-PORT-09 (the CHANGELOG line).
+  - Status (2026-10-02): done in `7b5e773` and `563949f`. `NpcWaypointRendererTest` checks both colours, `WaypointLabelGameTest` and `DebugToolsGameTest` run as above, and `ConfigManagerTest` loads the 1.0.1-shaped fixture with the setting ON. The CHANGELOG entry sits in the "Not ported cleanly / behaviour changes" list with its reason and effect.
 
 **Checkpoint G1:**
 - [x] tiers A–D green (AC-XC-06): `build`, `runClient`, `runClientGameTest`, and `prodClientStack` with a copy of your mod set and `-Dmixin.debug.export`. No crash and no new ERROR (AC-PORT-13, AC-GLOW-06 [D]); `/ksu debug island` is absent and the dump commands exist (AC-LOC-09, AC-GS-13 [D])
 - [x] `code-reviewer` review, including the rules review (AC-XC-01), the licence check (AC-XC-03), no GL calls (AC-PORT-12) and T1.8 landing before T1.9 (AC-LOC-10)
-- [ ] your smoke (E) passes in the Prism copy `26.2 Skyblock K8bas-test` (~30–40 min plus the captures):
-  - **Result (2026-10-01):** done, except the dungeon run, which is being checked separately. Migration OK; islands OK; glow OK, including Iris and the other glow mods; labels legible; EntityCulling stress OK; all dumps done. The two mineshaft checks were partly answered (R24). This box stays open until the dungeon run is checked.
+- [x] your smoke (E) passes in the Prism copy `26.2 Skyblock K8bas-test` (~30–40 min plus the captures):
+  - **Result (2026-10-01, run in the Prism instance `Testing` with jar `1.1.0+26.2`):** all steps done. Migration OK; islands OK, including a dungeon run; glow OK, including Iris and the other glow mods; labels legible; EntityCulling stress OK; all dumps captured. The two mineshaft checks were partly answered (R24).
   - first, turn "Check for updates (notify)" OFF in the Prism copy (EC-UPD-14); it stays OFF for the G3, G5 and G6 checks
   - boot; your 1.0.1 config migrated (`.v0.bak` present, Croesus rule on "Dungeon Hub", the three dungeon NPC rules still on); your three keybinds still bound → migration OK
-  - island log lines with raw mode and server in the Hub, the Dungeon Hub, one dungeon run and one Glacite Mineshaft (AC-LOC-11); hub waypoints show in the Dungeon Hub and never in the run (AC-LOC-04) → islands OK; the dungeon run is being checked separately
+  - island log lines with raw mode and server in the Hub, the Dungeon Hub, one dungeon run and one Glacite Mineshaft (AC-LOC-11); hub waypoints show in the Dungeon Hub and never in the run (AC-LOC-04) → islands OK. The log shows the Dungeon Hub, then mode `dungeon` mapped to Catacombs for the run. AC-LOC-04: the maintainer did the run and reported no problem
   - glow visible-only, with Iris shaders on and off (AC-GLOW-15), and with the Skyblocker/SkyHanni/NoFrills glow options on and off (AC-GLOW-06) → OK, including Iris and the other glow mods
   - label behind a wall and behind water; `/ksu` opens (AC-PORT-14) → labels legible
   - EntityCulling stress: safeMode off, 2 min in a busy area (AC-GLOW-05) → OK
@@ -436,7 +438,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - **menu captures (D-17, all moved to G1):** `/ksu debug dump containers on`, then open `/sblevels` and its category menus (~16 screens, ~5 min) and the component menus Skills, Collections, Museum, Bestiary (plus one "Bestiary ➜" page and one bestiary "Fishing ➜" page), HOTM, HOTF, Pets and Accessory Bag. Optional: the full step-level walk (~15–25 min) and a Croesus or reward-chest menu when passing by. SkyBlockAPI's `chest_dumps` toggle is an alternative (SPEC §12.2) → done
   - **mineshaft check 1:** is the Frozen Corpses widget on by default, and which command and menu path enable it (`/tablist` or `/widgets`)? This fixes the REQ-GS-18 hint string (AC-GS-18 [E], Q-MSA-04) → R24 (a): you believe the widget is on by default and asked for a failsafe that says when it is off; the once-per-launch hint (REQ-MSA-08, REQ-GS-18) is that failsafe. The command and menu path were not given, so the hint wording stays UNVERIFIED and is checked at G3
   - **mineshaft check 2:** does a Tungsten or Umber key held only in the Dwarven Sack open a corpse? This sets the REQ-MSA-05 fallback constant → R24 (b): could not be tested. D-7 (inventory only) stands, the fallback constant stays off, and the check moves to G3
-- [ ] Claude reads `latest.log` and the screenshots and commits the captures as sanitised fixtures (`test(fixtures): …`; player names, server ids and UUIDs removed); the UNVERIFIED list is updated (REQ-GS-14)
+- [x] Claude reads `latest.log` and the screenshots and commits the captures as sanitised fixtures (`test(fixtures): …`; player names, server ids and UUIDs removed); the UNVERIFIED list is updated (REQ-GS-14) → done: the fixtures are committed (`f044e6a`, `218f75d`) under `src/test/resources/fixtures/captures/g1-2026-10-01/`, and the `README.md` there holds the UNVERIFIED table
 - [ ] every commit since the branch point, including the `test(fixtures)` commit, builds in a worktree (AC-XC-05); author check (AC-XC-12)
 - [ ] push `update/26.2` (D-10); CI green on the pushed head
 - [ ] Phase 1 report (AC-XC-07): dependency table (AC-PORT-02), per-mixin record (AC-PORT-08), "Not ported cleanly / behaviour changes" (AC-PORT-09), glow-provider order (REQ-GLOW-07), flagged items (AC-XC-11), skills used (AC-XC-10), per-commit build hashes and results (AC-XC-05), open field checks
@@ -647,7 +649,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* a `/ksu corpses` hold that kept the state running while both features are OFF
   - One widget-hint translation key; it is the failsafe that tells the player a widget is off. The command and menu path were not given at G1, so the wording stays UNVERIFIED and is checked at G3 (Q-MSA-04, R24). T3.2, T5.3 and Phase 6 use it.
   - Dev-only `/ksu debug shaft <code> [Type:STATE…]` simulates a shaft for the T3.2 and T3.9d gametests (T3.3 dropped, R22). It does not exist in production.
-  - Accept: AC-GS-15, AC-GS-16 (first bullet, for the mineshaft state; the second bullet is dropped, R22), AC-GS-17, AC-GS-18 ([R]; the [E] part at the G3 mineshaft check, R24). The [E] part of AC-GS-17 is checked at the G3 mineshaft check, and AC-GS-13 [D] (no `/ksu debug shaft` in production) at the G3 tier D boot.
+  - Accept: AC-GS-15, AC-GS-16 (third bullet; the second is dropped, R22), AC-GS-17, AC-GS-18 ([R]; the [E] part at the G3 mineshaft check, R24). The [E] part of AC-GS-17 is checked at the G3 mineshaft check, and AC-GS-13 [D] (no `/ksu debug shaft` in production) at the G3 tier D boot.
 - [ ] **T3.0d feat(skyblock): profile service + per-profile store** (M, deps T3.0a, T3.0g, T1.7). Used by T3.9, T5.2 and Phase 6.
   - Req: REQ-GS-08, REQ-GS-09, REQ-GS-14
   - Profile identity:
@@ -699,7 +701,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Req: REQ-NPCDB-01, REQ-NPCDB-02
   - One recommendation row per list (bundled, D-12), citing the measured revisions, size and failure modes. It records how each near-duplicate is resolved and lists the coverage gaps; v1 adds no new islands (R5).
   - Accept: AC-NPCDB-01.
-- [ ] **T3.8 feat(data): bundle NPC & mob databases [brief 3.9]** (M, deps T3.0c, T3.0i, T3.0j, T3.8a, T1.9). Both lists become registry tables (AD-7 envelope), converted from the frozen gists. The gist fetch, any cache of it and the T1.12 entry validation are deleted. The T1.12 timeout helper goes with it; the update check has its own REQ-UPD-09 timeouts (T1.4a).
+- [ ] **T3.8 feat(data): bundle NPC & mob databases [brief 3.9]** (M, deps T3.0c, T3.0i, T3.0j, T3.8a, T1.9, T3.4). Both lists become registry tables (AD-7 envelope), converted from the frozen gists. The gist fetch, any cache of it and the T1.12 entry validation are deleted. The T1.12 timeout helper goes with it; the update check has its own REQ-UPD-09 timeouts (T1.4a).
   - Req: REQ-NPCDB-03, REQ-NPCDB-04, REQ-NPCDB-06, REQ-NPCDB-09, REQ-NPCDB-10, REQ-DATA-01, REQ-DATA-13
   - Schemas and data tests check entry validity: unique ids, islands from T1.9's island list or the ungated allowlist, valid fixed coordinates, a matchText on moving entries.
   - Lookup by id follows aliases, so a rule linked to a DB entry resolves to the entry's current values. T3.4's waypoint lookup switches to it here; T3.4 itself comes earlier (R23) and reads the list v1.1.0 loads until then. A missing id keeps the rule's stored values.
@@ -727,25 +729,25 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Message: order Lapis, Tungsten, Umber, Vanguard; "n in inventory" (36 slots + offhand, D-7); ⚠ + red when short; "(n looted)"; the hover says sacks and storage are not counted. The sack-keys fallback is a build constant; the G1 sack check could not be run, so D-7 stands, the constant stays off and the check moves to G3 (Q-MSA-04, R24).
   - Toggles (Mining): "Mineshaft entry alert" ON, "Show corpse key counts" ON; search keywords mineshaft, corpse, key.
   - Accept: AC-MSA-01, AC-MSA-02, AC-MSA-03, AC-MSA-04, AC-MSA-05, AC-MSA-06, AC-MSA-07, AC-MSA-08, AC-MSA-09, AC-MSA-13, AC-MSA-14 (A/R; fixtures stay UNVERIFIED until the G1 captures replace them). AC-MSA-10, AC-MSA-11 and AC-MSA-12 are checked at G3.
-- [ ] **T3.3a feat(data): corpse spot table [brief 3.3]** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)*. Not built; kept as the record, and no other task depends on it. Was: (M, deps T3.0c). A registry table of possible corpse spots per shaft code (D-5), built from SkyHanni-REPO PR #759 @ `e2c8edb932` plus meowdding-repo @ `42d01278a8`. Normalised to Skyblocker's frame: 29 codes and 129 spots; `_C` codes share one list; 5 codes are marked "no spot data"; each spot records its sources.
-  - Req: REQ-CORPSE-01, REQ-CORPSE-09, REQ-CORPSE-10, REQ-XC-LICENSE-03
+- **T3.3a feat(data): corpse spot table [brief 3.3]** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)*. Not built; kept as the record, and no other task depends on it. Was: (M, deps T3.0c). A registry table of possible corpse spots per shaft code (D-5), built from SkyHanni-REPO PR #759 @ `e2c8edb932` plus meowdding-repo @ `42d01278a8`. Normalised to Skyblocker's frame: 29 codes and 129 spots; `_C` codes share one list; 5 codes are marked "no spot data"; each spot records its sources.
+  - Was Req: REQ-CORPSE-01, REQ-CORPSE-09, REQ-CORPSE-10, REQ-XC-LICENSE-03
   - MIT licence files go under `data/thirdparty/<upstream>/`, with THIRD_PARTY_NOTICES entries (hannibal2, meowdding, credit to GrowlingGrizzly). Table-specific validator rules run in `check`.
-  - Accept: AC-CORPSE-01, AC-CORPSE-02 (a sanitised fixture of your 144 logged sightings, code and position only), AC-CORPSE-08.
-- [ ] **T3.3 feat(mining): possible corpse spots [brief 3.3]** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)*. Not built; kept as the record, and no other task depends on it. Was: (M, deps T3.3a, T3.0m, T3.0b, T1.9). Draws a text-only "Possible corpse #n" label at every spot of the current shaft code: fixed coordinates, see-through, no box or beam (R7). Adds `/ksu corpses`. Default OFF, with the tooltip "community data, not detected corpses".
-  - Req: REQ-CORPSE-02, REQ-CORPSE-03, REQ-CORPSE-04, REQ-CORPSE-05, REQ-CORPSE-06, REQ-CORPSE-07, REQ-CORPSE-08
+  - Was Accept: AC-CORPSE-01, AC-CORPSE-02 (a sanitised fixture of your 144 logged sightings, code and position only), AC-CORPSE-08.
+- **T3.3 feat(mining): possible corpse spots [brief 3.3]** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)*. Not built; kept as the record, and no other task depends on it. Was: (M, deps T3.3a, T3.0m, T3.0b, T1.9). Draws a text-only "Possible corpse #n" label at every spot of the current shaft code: fixed coordinates, see-through, no box or beam (R7). Adds `/ksu corpses`. Default OFF, with the tooltip "community data, not detected corpses".
+  - Was Req: REQ-CORPSE-02, REQ-CORPSE-03, REQ-CORPSE-04, REQ-CORPSE-05, REQ-CORPSE-06, REQ-CORPSE-07, REQ-CORPSE-08
   - The marker set depends only on the shaft code and on the widget's all-LOOTED state ("Hide spots when all corpses are looted", ON). It never depends on entities and makes no network call. Codes without data get one note per shaft.
   - `/ksu corpses` sorts spots by distance from the player (rounded half-up) and gives the special replies. It works with the markers and the alert OFF, because it subscribes to the mineshaft state (REQ-GS-16). "corpses" is added to the reserved subcommand list (REQ-UI-10).
-  - Gametests drive T3.0m's dev-only shaft simulation (`/ksu debug shaft`); there is no second hook.
-  - Accept: AC-CORPSE-03, AC-CORPSE-04, AC-CORPSE-05, AC-CORPSE-06, AC-CORPSE-07, AC-CORPSE-09. AC-CORPSE-10 is checked at G3.
+  - Gametests drive T3.0m's dev-only shaft simulation (`/ksu debug shaft`); there is no second hook. (This rule now lives in T3.9d.)
+  - Was Accept: AC-CORPSE-03, AC-CORPSE-04, AC-CORPSE-05, AC-CORPSE-06, AC-CORPSE-07, AC-CORPSE-09. AC-CORPSE-10 is checked at G3.
 - [ ] **T3.4 feat(waypoints): Skyblocker-style NPC waypoints [brief 3.4]** (M, deps T3.0b, T3.0n, T1.9). Third task of the R23 waypoint path, right after the v1.1.0 merge; whether it ships as an intermediate release is decided then. Every enabled fixed NPC rule on the current island gets three parts:
   - a white label: no shadow or plate, centred on x+0.5 / z+0.5, 1.5 blocks above
   - an optional yellow "<d>m" line, measured from the player
   - an opaque beacon beam in its resolved colour
 
-  With "White waypoint labels" OFF (T1.3b, R21), the label and the distance line use the rule's colour; the beam is unchanged. Moving rules keep glow only.
+  This is the "White waypoint labels" ON look (T1.3b, R21): white label, yellow distance line (Skyblocker style). With it OFF, the label and the distance line use the rule's own `color` field (the 1.0.1 look), not the resolved beam colour; the beam is unchanged. Moving rules keep glow only.
   - Req: REQ-NPCWP-01, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-04, REQ-NPCWP-05, REQ-NPCWP-07, REQ-NPCWP-08, REQ-NPCWP-10, REQ-NPCWP-11, REQ-NPCWP-12
   - Position: the NPC DB entry's current coordinates via sourceId, otherwise the stored ones. Until T3.8 bundles the NPC table, the lookup reads the NPC list v1.1.0 already loads; T3.8 swaps the source (R23). Colour (D-15): the rule's `beamColor`, then the island colour (a map with documented defaults), then the global default. The glow colour stays separate.
-  - Toggles: module ON, "Show beacon beams" ON, "Show distance" ON, "White waypoint labels" ON (kept from T1.3b); an AMBER tooltip. Reimplemented from scratch; no Skyblocker code (LGPL-3.0, R23).
+  - Toggles: module ON, "Show beacon beams" ON, "Show distance" ON, "White waypoint labels" ON (kept from T1.3b; T3.4 updates its tooltip: ON gives a white label with a yellow distance line, OFF draws both in the rule's colour); an AMBER tooltip. Reimplemented from scratch; no Skyblocker code (LGPL-3.0, R23).
   - Accept: AC-NPCWP-01, AC-NPCWP-03, AC-NPCWP-04, AC-NPCWP-05, AC-NPCWP-06, AC-NPCWP-08, AC-NPCWP-09, AC-NPCWP-10, AC-NPCWP-12, AC-NPCWP-13. AC-NPCWP-11 is checked at G3.
 - [ ] **T3.4b feat(waypoints): beam colour settings + migration** (M, deps T3.4, T2.5a, T2.3b). The Waypoints category gets per-island colour swatches (picker and hex), a per-rule beam colour with "Use island colour", and the beam and distance toggles. Changes apply within 1 s.
   - Req: REQ-NPCWP-05, REQ-NPCWP-06, REQ-NPCWP-09
@@ -820,6 +822,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Req: REQ-ODDS-05, REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22
   - A parser for "<TYPE> CORPSE LOOT!" blocks ignores lines other mods insert and drops a block that is cut off for 2 s. It posts one line for the items at or below the threshold.
   - The Frostbitten Dye per-roll chance is the Vanguard table's supplied row (T3.9g), with `verified: false`. Per-corpse values carry the "no extra-roll perk" note.
+  - The AC-ODDS-04 gametest drives T3.0m's dev-only shaft simulation (`/ksu debug shaft`); there is no second hook (this rule came from the dropped T3.3).
   - Accept: AC-ODDS-03 (tier D at G3), AC-ODDS-04 (corpse panel), AC-ODDS-06, AC-ODDS-15 (Vanguard), AC-ODDS-16 (parser on all logged blocks).
 - [ ] **T3.9e feat(odds): Lapis / Umber / Tungsten corpse case** (S, deps T3.9d). Adds case 4 to the T3.9d panel and parser. Per-roll chances are `odds.supplied` rows (T3.9g) from pages you supply (no MIT source exists), with `verified: false` and "?". Rolls: Lapis 3–6, Umber and Tungsten 4–7. Without the pages, the items show no number (REQ-ODDS-11).
   - Req: REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22
@@ -1267,7 +1270,7 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
   - Supported version "Minecraft 26.2 (Fabric)": Java 25, minimum Loader, Fabric API, Hypixel Mod API; 26.1.x unsupported, 1.0.1 was the last 26.1 build.
   - Feature table (name, one line, category, default per §12.H; Rare Drop Odds names the Croesus "≈ 1 in N runs (P%, base, no bonuses)" line, R10 = b). Every user-facing command. One placeholder per visible feature, as a committed image or text marker, so nothing renders as a broken image.
   - Compliance (P1–P7 in plain words, the excluded behaviours, the EC-GS-04 limitation), the non-affiliation sentence, network access (GitHub hosts per REQ-UPD-20, plus `api.hypixel.net` only when opted in, each with its toggle), licensing (CC0; MIT data → THIRD_PARTY_NOTICES; Render Chest Apache-2.0; credits).
-  - Upgrade note: 1.0.x and 1.1.0 users install by hand once; settings migrate with a backup; the six behaviour changes; updates need one click, and some cases are notify-only.
+  - Upgrade note: 1.0.x and 1.1.0 users install by hand once; settings migrate with a backup; the behaviour changes of REQ-REL-04; updates need one click, and some cases are notify-only.
   - Accept: AC-REL-01, AC-REL-02, AC-REL-03 (README half), AC-XC-04 (README defaults = code defaults), AC-GLOW-14 (README part).
 - [ ] **T7.1b docs(changelog): 2.0.0 section + THIRD_PARTY_NOTICES final pass** (S, deps T7.1). Turns `[Unreleased]` into a self-contained `## [2.0.0] - YYYY-MM-DD` section that works word for word as the release notes. Checks the notices against the bundled tables.
   - Req: REQ-REL-05, REQ-REL-04, REQ-REL-03, REQ-XC-LICENSE-03, REQ-DATA-05
@@ -1338,7 +1341,7 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
 
 - **REQ-CORPSE-01** to **REQ-CORPSE-10** [dropped R22]: spot table, no runtime fetch, markers, unfiltered set, hide when looted, `/ksu corpses`, lifetime, toggle, attribution, data validation.
 - **AC-CORPSE-01** to **AC-CORPSE-10**, **EC-CORPSE-01** to **EC-CORPSE-10** and **Q-CORPSE-01** to **Q-CORPSE-03** [dropped R22].
-- Parts of other items [dropped R22]: the `/ksu corpses` subscriber in REQ-GS-16 and the second bullet of AC-GS-16; the `corpses` reserved word (REQ-UI-10, T2.5b); the corpse-spot data of D-5 (SkyHanni-REPO PR #759 + meowdding spots); the `/ksu corpses` and corpse-marker points of R7. What stays: the mineshaft entry alert (T3.2), the Frozen Corpses widget reading (T3.0m), the corpse odds (T3.9d, T3.9e), D-5's NEU bestiary and RNG-weight data, and the README's exclusion line about filtering corpse spots by unseen entities (REQ-REL-03).
+- Parts of other items [dropped R22]: the `/ksu corpses` subscriber in REQ-GS-16 and the second bullet of AC-GS-16; the `corpses` reserved word (REQ-UI-10, T2.5b); the corpse-spot data of D-5 (SkyHanni-REPO PR #759 + meowdding spots); the `/ksu corpses` and corpse-marker points of R7. What stays: the mineshaft entry alert (T3.2), the Frozen Corpses widget reading (T3.0m), the corpse odds (T3.9d, T3.9e), D-5's NEU bestiary and RNG-weight data, and the README's exclusion line "filtering possible corpse spots by entities you cannot see", which stays (REQ-REL-03).
 
 **Optional stretch requirements.** Tasks exist (T2.9–T2.9d), but 2.0.0 does not need them and no checkpoint waits for them.
 
@@ -1419,7 +1422,7 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
 
   → *MIT with notices, pinned commit, ship now with credit.*
 - **D-6 Defaults policy (§3):** P1–P7, plus these per-item defaults:
-  - ON: distance line, hotspot ring, hotspot-gone warning, bobber fix, drill animation, the "You found X" title (current behaviour; limited to five NPCs after G1, R20)
+  - ON: distance line, hotspot ring, hotspot-gone warning, bobber fix, drill animation, the "You found X" title (current behaviour; limited to five NPCs after G1, R20), white waypoint labels (added after G1, R21: "White waypoint labels" ON)
   - OFF: corpse spots (dropped after G1, R22), odds HUD, bestiary HUD
   - SkyBlock XP: module and passive `/sblevels` / action-bar reading ON, "next best task" HUD OFF, live Bazaar OFF (D-22)
 
