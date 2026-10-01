@@ -17,7 +17,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,8 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ConfigManager.load();
-		ConfigManager.setSaveFailureNotice(message -> Minecraft.getInstance().execute(() -> ChatUtils.chat(message)));
+		// Queued like the load notices, so a failure before joining a world is still shown.
+		ConfigManager.setSaveFailureNotice(ConfigManager::queueNotice);
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.flush());
 		// Backup notices from loading are shown once the player is in a world (REQ-CFG-06).
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {

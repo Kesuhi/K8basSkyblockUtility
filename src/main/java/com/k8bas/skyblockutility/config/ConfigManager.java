@@ -284,6 +284,11 @@ public final class ConfigManager {
 		}
 	}
 
+	/** Queues a chat notice; it is shown once the player is in a world (see drainNotices). */
+	public static synchronized void queueNotice(String message) {
+		pendingNotices.add(message);
+	}
+
 	public static void setSaveFailureNotice(Consumer<String> notice) {
 		saveFailureNotice = notice;
 	}

@@ -39,8 +39,7 @@ import java.util.Set;
  * (one level of nesting, same depth as General's already-working fields) instead.
  *
  * Add/Delete/Open-Database are real clickable buttons (ButtonEntry — Cloth Config has no
- * built-in button widget, so this hosts a real vanilla Button modeled on Cloth Config's own
- * BooleanListEntry source) that patch the live, already-open screen's entry list directly (see
+ * built-in button widget, so it hosts a vanilla Button with this mod's own layout) that patch the live, already-open screen's entry list directly (see
  * liveAddRuleEntry/liveRemoveRuleEntry) so the rule list reflects add/delete instantly. The
  * picker screen has no separate Return button — Cloth Config's own Cancel/Save & Done footer
  * buttons already navigate back to the parent screen (confirmed: Cloth Config overwrites that

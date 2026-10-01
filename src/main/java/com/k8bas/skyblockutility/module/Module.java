@@ -4,7 +4,7 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 
 /**
- * A self-contained feature. Fabric API events and mixins can't be unregistered once
+ * A self-contained feature. Fabric API events can't be unregistered once
  * registered (verified: net.fabricmc.fabric.api.event.Event exposes only register()),
  * so onRegister() is a one-time bootstrap step, not something re-run per enable/disable —
  * modules gate their own behavior on isEnabled() internally (see HighlightManager) instead
@@ -17,7 +17,7 @@ public interface Module {
 	/** Display name, used as the Cloth Config category title. */
 	String displayName();
 
-	/** Called once at mod bootstrap: load config, register listeners/keybinds/mixin-backed managers. */
+	/** Called once at mod bootstrap: load config, register listeners, keybinds and highlight managers. */
 	void onRegister();
 
 	boolean isEnabled();

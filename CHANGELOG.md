@@ -87,7 +87,7 @@ Also changed:
   `/ksu debug dump containers on|off` (container dumps switch themselves off after 60 minutes).
   Nothing is sent anywhere.
 - Settings backups and recovery. An unreadable settings file is kept as
-  `k8bas_skyblock_utility.json.broken-<time>` and defaults are used. A broken module section
+  `k8bas_skyblock_utility.json.broken-<date>-<time>.bak` and defaults are used. A broken module section
   resets only that module. A settings file from a newer version is backed up before it is first
   saved. In each case a chat message tells you after you join a world.
 - `THIRD_PARTY_NOTICES.md` for the bundled Render Chest (Apache-2.0).
@@ -110,3 +110,7 @@ Also changed:
   longer empties the whole list.
 - A world query from the highlight code could run off the game thread next to EntityCulling; all
   matching now runs on the game thread.
+- A settings file that cannot be read (for example while another program holds it) is no longer
+  replaced by defaults: it is left as it is, and changes are not saved until the next start.
+- A rule with an empty label in a hand-edited settings file no longer crashes the game.
+- The "You found <NPC>" title also shows when a Mob Highlighter rule outlines the same NPC.
