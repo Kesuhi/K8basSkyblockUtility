@@ -340,7 +340,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T1.7c fix(config): `configVersion` + ordered migration runner** (S, deps T1.7). `SkyblockUtilityConfig`, new `config/migration/*`: numbered steps, run in order, reusable for other persisted files.
   - Req: REQ-CFG-02, REQ-CFG-09, REQ-CFG-12
   - Accept: AC-CFG-02.
-- [ ] **T1.7b fix(config): safe load — backups, per-section recovery, clean-up** (M, deps T1.7, T1.7c).
+- [x] **T1.7b fix(config): safe load — backups, per-section recovery, clean-up** (M, deps T1.7, T1.7c).
   - Req: REQ-CFG-01, REQ-CFG-03, REQ-CFG-06, REQ-CFG-07, REQ-CFG-08, REQ-CFG-11
   - A broken file or section: byte-exact timestamped backup before any write, defaults for that part only, one chat notice after joining. Null or unknown values normalised, except that an absent `updateChannel` stays absent (no explicit choice; never filled with a default on load, repair or save, REQ-UPD-07); a newer `configVersion` is backed up with a WARN; one-time `.v0.bak` before the first data-changing step; unknown module sections kept.
   - Accept: AC-CFG-01, AC-CFG-05, AC-CFG-06, AC-CFG-07, AC-CFG-08, AC-CFG-10, AC-CFG-13; EC-CFG-01, -02, -07, -10.

@@ -37,4 +37,19 @@ public class NpcRule {
 	 *  fixed rule is created (there's no coordinate-editing UI), so there's no staleness risk to
 	 *  guard against. transient: not part of the persisted config shape. */
 	public transient Vec3 cachedPos;
+
+	/** Repairs what Gson leaves invalid (REQ-CFG-07): an unknown or missing match mode becomes
+	 *  CONTAINS, and a missing id is generated once. @return true if anything changed. */
+	public boolean normalize() {
+		boolean changed = false;
+		if (nameMatchMode == null) {
+			nameMatchMode = NameMatchMode.CONTAINS;
+			changed = true;
+		}
+		if (id == null || id.isBlank()) {
+			id = UUID.randomUUID().toString();
+			changed = true;
+		}
+		return changed;
+	}
 }

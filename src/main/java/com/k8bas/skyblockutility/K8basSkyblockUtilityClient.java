@@ -13,6 +13,7 @@ import com.k8bas.skyblockutility.update.UpdateChecker;
 import com.k8bas.skyblockutility.util.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
@@ -33,6 +34,12 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		ConfigManager.load();
 		ConfigManager.setSaveFailureNotice(message -> Minecraft.getInstance().execute(() -> ChatUtils.chat(message)));
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.flush());
+		// Backup notices from loading are shown once the player is in a world (REQ-CFG-06).
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			if (client.player != null && ConfigManager.hasNotices()) {
+				ConfigManager.drainNotices().forEach(ChatUtils::chat);
+			}
+		});
 		IslandTracker.register();
 
 		ModuleManager.register(new MobHighlighterModule());
