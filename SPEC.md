@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01). Requirements carry `[decided D-xx]` / `[decided Rn]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
+| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01); all are listed in §12.3. R22 drops the possible corpse spots (module corpse-waypoints). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped R22]` and keep their ids. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
 | Date | 2026-10-01 |
 | Inputs | Your original task prompt (verbatim) and the *SkyBlock XP Optimizer* addendum (verbatim), plus the research and decisions recorded in `PLAN.md` |
 | Relationship to PLAN.md | This file says **what** must be true and how we will know. `PLAN.md` says **how and in which order**. Every PLAN task names the requirement ids it implements (§13 Traceability). |
@@ -16,7 +16,7 @@
 
 Bring **K8bas Skyblock Utility** to **Minecraft 26.2 (Fabric)** and extend it. The work covers:
 - a new AlpakaAddons-style configuration screen and HUD editor
-- nine SkyBlock features
+- nine SkyBlock features from brief Phase 3; item 3 (possible corpse spots) was dropped after G1 [dropped R22], so eight are built
 - a safe GitHub-Releases auto-updater
 - a Bestiary tracker HUD
 - a SkyBlock XP Optimizer that ranks every SkyBlock XP source by XP per effective hour
@@ -63,7 +63,7 @@ The mod is client-side and display-only. Its own code is CC0; bundled third-part
 | `game-state` | Read-only readers: tab list, sidebar, chat and action bar, opened menus, inventory, profile, mineshaft state | port-26-2, config-store, location |
 | `world-markers` | In-world labels, beacon beams, rings | port-26-2 |
 | `mineshaft-alert` | Glacite Mineshaft entry alert (corpse types + key counts) | game-state, location |
-| `corpse-waypoints` | Possible corpse locations with waypoints | world-markers, data-registry, game-state, location |
+| `corpse-waypoints` | Possible corpse locations with waypoints. **[dropped R22]**: the maintainer dropped corpse-spot waypoints after G1; the module text is kept as a record | world-markers, data-registry, game-state, location |
 | `npc-waypoints` | Skyblocker-style NPC waypoints (white label, coloured beam) | world-markers, npc-mob-data, ui-config |
 | `bobber-fix` | Fishing bobber rubber-band fix | port-26-2, location |
 | `fishing-hotspot` | Hotspot highlight + "hotspot gone" warning | world-markers, location |
@@ -255,7 +255,7 @@ These apply to every module. Module sections reference them instead of repeating
 - **REQ-XC-RULES-03** Entities must never be rendered or outlined through walls. Glow the server already applies is left untouched. `[decided D-1]` *(Derived: ground rule 5; Hypixel Allowed Modifications "see around or over objects"; precedent Skyblocker/SkyHanni)*
 - **REQ-XC-RULES-04** Invisible entities must never be highlighted or announced. This is hard-coded, with no toggle. **Scope:** entities whose body and name the player cannot perceive (mobs, NPCs, corpses). A hologram armor stand whose name tag vanilla already displays (e.g. a fishing hotspot) counts as visible information, and markers derived from it are depth-tested. `[decided D-1, R2]` *(Derived: ground rule 5; Hypixel 2021 announcement "Displaying invisible entities")*
 - **REQ-XC-RULES-05** Alerts or markers derived from an entity may fire only after the player has line of sight to it. See-through rendering is allowed only for **fixed coordinates**, and distances are shown only to fixed coordinates. Exceptions [R2]: a depth-tested marker drawn for a hologram whose name tag vanilla displays (the hotspot ring, REQ-HOT-05) needs no separate line-of-sight check, and the "hotspot gone" warning is gated by the 30 s fished window and the 40-block distance (REQ-HOT-08) instead of line of sight. `[decided D-6, R2]` *(Derived: ground rule 5)*
-- **REQ-XC-RULES-06** Any feature or behaviour whose legality is questionable must be **flagged** in the phase report and `PLAN.md` instead of being implemented, unless you approve implementing it. The AMBER items (distance line, corpse spots, bobber fix, NPC waypoints) were approved through D-6. *(Brief: ground rule 5)*
+- **REQ-XC-RULES-06** Any feature or behaviour whose legality is questionable must be **flagged** in the phase report and `PLAN.md` instead of being implemented, unless you approve implementing it. The AMBER items (distance line, corpse spots, bobber fix, NPC waypoints) were approved through D-6; the corpse spots were later dropped [dropped R22]. *(Brief: ground rule 5)*
 - **REQ-XC-RULES-07** Feature names and descriptions must not use "ESP", "x-ray", "through walls", "cheat" or "gambling". The README compliance section may describe excluded behaviour in negative statements, such as "outlines are hidden by blocks", but without these words. "gambling" may appear only as a hidden search keyword for the brief's feature title. *(Derived: Hypixel SkyBlock Rules on gambling wording; Modrinth rules §3)*
 
 ### Licensing (ground rule 4)
@@ -303,7 +303,7 @@ These apply to every module. Module sections reference them instead of repeating
 Each module lists its origin, dependencies, purpose, functional requirements (REQ), out-of-scope items, acceptance criteria (AC, with verification tier), edge cases (EC) and module-level open questions (Q). Each module question points to its decision: `→ decided D-xx` (your approved plan decision) or `→ §12 Rn` (still open). `[decided D-xx]` / `[decided Rn]` mark requirements fixed by your answers (§12); nothing is pending.
 
 ### port-26-2 — Port to Minecraft 26.2
-**Origin:** Brief Phase 1 (all three bullets); Ground rules 2–3 | **Depends on:** none | **Plan tasks:** T0.6, T1.1, T1.2, T1.3, T1.13, T1.10, T1.4, T1.14, T1.16 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Brief Phase 1 (all three bullets); Ground rules 2–3 | **Depends on:** none | **Plan tasks:** T0.6, T1.1, T1.2, T1.3, T1.3b, T1.13, T1.10, T1.4, T1.14, T1.16 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
 **Purpose:** The existing mod must build and run on Minecraft 26.2, and its behaviour must stay the same unless the glow or npc-waypoints module changes it on purpose and documents the change. Existing behaviour means: Mob Highlighter, NPC Search with waypoints, the settings screen, keybinds, commands and the updater stub. The research probe found 15 compile errors from three API changes: screen access, title methods, and the removal of immediate-mode world rendering. Runtime is still unverified.
 
@@ -318,12 +318,13 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - world-space labels are drawn through the 26.2 submit-based world rendering
 
   *(Brief: Phase 1 bullet 2, "rendering, HUD, world rendering")*
-- **REQ-PORT-06** Parity: on 26.2 the following must behave as they do in 1.0.1 on 26.1.2, except where REQ-GLOW-02/03/14 and REQ-NPCWP-02/03 change behaviour on purpose:
+- **REQ-PORT-06** Parity: on 26.2 the following must behave as they do in 1.0.1 on 26.1.2, except where REQ-GLOW-02/03/14, REQ-NPCWP-02/03 and the white-label setting below [decided R21] change behaviour on purpose:
   - `/ksu` and `/kskyblockutility`
   - the "Open Settings" keybind and the two module toggle keybinds
   - the Mod Menu config button
   - rule-based Mob Highlighter and NPC Search matching
-  - NPC Search fixed waypoints: two lines (name in the rule colour, then "Nm" distance) on a dark background, see-through, and a constant on-screen size beyond 10 blocks. This is the 1.0.1 style; from G3 the label style follows REQ-NPCWP-02/03
+  - NPC Search fixed waypoints: two lines (name, then "Nm" distance) on a dark background, see-through, and a constant on-screen size beyond 10 blocks. This is the 1.0.1 style; once T3.4 lands, the label style follows REQ-NPCWP-02/03
+  - label colour [decided R21]: NPC Search has a setting "White waypoint labels", default ON, that draws both lines in white. With it OFF, both lines are drawn in the rule colour, the 1.0.1 look
 
   *(Brief: Phase 1 bullet 2; Derived: read-npc current behaviour)*
 - **REQ-PORT-07** Waypoint labels at fixed coordinates must stay legible behind opaque blocks and behind translucent terrain (water, stained glass, ice). Translucent terrain must never draw over them. *(Derived: G4 risk (b) — see-through text submitted in the normal text phase is overdrawn by translucent terrain; PLAN T1.3; rules policy P4 allows see-through only for fixed coordinates)*
@@ -352,10 +353,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **AC-PORT-04** (REQ-PORT-04) Given `gradle.properties` and the wrapper properties, then `loom_version` contains no `SNAPSHOT`, and the wrapper version is one the pinned Loom release declares compatible — [R]
 - **AC-PORT-05** (REQ-PORT-05, REQ-PORT-06) Given `runClient` on 26.2 in a singleplayer world, when the tester runs `/ksu` and `/kskyblockutility`, presses the bound "Open Settings" key, opens both pickers and closes every screen, then each screen opens and returns to the screen before it, and `latest.log` has no exception from `com.k8bas` — [B]
 - **AC-PORT-06** (REQ-PORT-06, REQ-PORT-07) Given a client gametest with a fixed NPC Search rule at known coordinates and the island forced to the rule's island, when screenshots are taken from 5 and 30 blocks with (a) nothing, (b) stone, (c) glass and (d) water between camera and waypoint, then:
-  - all 8 screenshots show both label lines in the expected colours on a dark background
+  - all 8 screenshots show both label lines in the expected colours on a dark background: white with "White waypoint labels" ON, the rule colour with it OFF [decided R21]
   - the label's on-screen height at 30 blocks equals its height at 10 blocks ± 2 px
 
-  Verified at G1 against the 1.0.1 style; superseded by AC-NPCWP-03/04 from G3 onward — [C]
+  Verified at G1 against the 1.0.1 style; superseded by AC-NPCWP-03/04 once T3.4 lands — [C]
 - **AC-PORT-07** (REQ-PORT-06) Given `runClient`, when a module toggle key is pressed, then that module's enabled state flips, and the new value is in the config file within 2 s — [B]
 - **AC-PORT-08** (REQ-PORT-08) Given the Phase 1 report, then it lists every 1.0.1 mixin with its target, its 26.1.2 and 26.2 descriptors, the injection-point result and its outcome. Given `runClient` and a production boot with `-Dmixin.debug.export`, then no mixin of this mod logs an apply failure or warning — [R] [B] [D]
 - **AC-PORT-09** (REQ-PORT-09) Given the Phase 1 report and `CHANGELOG.md`, then both contain a list titled "Not ported cleanly / behaviour changes" (or the explicit statement "none"), and every entry gives a reason and the effect the user sees — [R]
@@ -363,7 +364,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **AC-PORT-11** (REQ-PORT-11) Given `runClient`, when Options → Controls → Key Binds is opened, then the screenshot shows the category as "K8bas Skyblock Utility" and every key with its translated name — [C]
 - **AC-PORT-12** (REQ-PORT-12) Given the source tree, then no class imports `org.lwjgl.opengl` or calls a raw GL wrapper — [R]
 - **AC-PORT-13** (REQ-PORT-01, REQ-PORT-06) Given the exact release jar and a copy of the user's 26.2 mod set, when the game boots to the title screen and into a singleplayer world, then the log contains the mod's "initialized with N module(s)" line and no new ERROR line from this mod — [D]
-- **AC-PORT-14** (REQ-PORT-06, REQ-PORT-07) Given the user's Prism test copy on Hypixel, when the user stands in the Hub near a fixed NPC waypoint once behind a wall and once behind water, then the label is legible both times and `/ksu` opens the settings. Verified at G1 against the 1.0.1 style; superseded by AC-NPCWP-03/04 from G3 onward — [E]
+- **AC-PORT-14** (REQ-PORT-06, REQ-PORT-07) Given the user's Prism test copy on Hypixel, when the user stands in the Hub near a fixed NPC waypoint once behind a wall and once behind water, then the label is legible both times and `/ksu` opens the settings. Verified at G1 against the 1.0.1 style (result 2026-10-01: labels legible); superseded by AC-NPCWP-03/04 once T3.4 lands — [E]
 
 **Edge cases**
 - **EC-PORT-01** The 2.x jar is put into a 26.1.2 or 26.3 instance → the Loader refuses it with a dependency message naming the Minecraft range. No crash, and no config file is written.
@@ -468,7 +469,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 ---
 
 ### location — Hypixel location & island detection
-**Origin:** Derived. This is the root cause behind Brief Phase 3 item 1: the Trinity/Tomioka/Duncan rules never fire because mode `dungeon` is unmapped (research G5). It is also a prerequisite for items 2, 3, 6 and 7 and for Phases 5–6 (mineshaft, fishing islands, per-run state) | **Depends on:** port-26-2, plus config-store for its migration step | **Plan tasks:** T0.4, T1.9, T1.9b, T2.5a, T3.0m (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Derived. This is the root cause behind Brief Phase 3 item 1: the Trinity/Tomioka/Duncan rules never fire because mode `dungeon` is unmapped (research G5). It is also a prerequisite for items 2, 6 and 7 (and item 3 until R22 dropped it) and for Phases 5–6 (mineshaft, fishing islands, per-run state) | **Depends on:** port-26-2, plus config-store for its migration step | **Plan tasks:** T0.4, T0.4c, T1.9, T1.9b, T2.5a, T3.0m (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
 **Purpose:** Features need to know which SkyBlock island and which server instance the player is on, so they can gate by island and reset per run or per shaft. That knowledge must come only from Hypixel's official Mod API location event. Today the table maps a mode Hypixel never sends (`catacombs`), lumps the Dungeon Hub together with runs, and is missing `dungeon`, `mineshaft` and other modes.
 
@@ -513,7 +514,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-LOC-05** Consumers must be able to subscribe to location changes. An event fires once on the client thread whenever the server name or the mode differs from the previous snapshot, and once on disconnect. Every dungeon run and every mineshaft is a new server. *(Derived: needed by REQ-GLOW-14 (per-run reset), mineshaft-alert, fishing-hotspot and rare-drop-odds; read-core §8; G5 §6)*
 - **REQ-LOC-06** An unmapped mode gives no island, but the raw mode stays in the snapshot. Each distinct unmapped mode is logged once per session. *(Derived: PLAN T1.9, "log unknown modes once")*
 - **REQ-LOC-07** On disconnect, and on a world change before the next location event arrives, the island must be cleared, so no feature gates on the previous server's island. *(Derived: read-core §8 — today the old value stays during transfers; this stops Dungeon Hub waypoints flashing into a new run)*
-- **REQ-LOC-08** A dev-only command must let a tester force a mode or island in `runClient`. It must not exist in production builds. Only the two simulators are dev-only: `/ksu debug island` and `/ksu debug shaft` (a simulated mineshaft for gametests, AC-CORPSE-03). The read-only capture commands ship in production (REQ-GS-13). *(Derived: REQ-XC-VERIFY; PLAN T0.4)*
+- **REQ-LOC-08** A dev-only command must let a tester force a mode or island in `runClient`. It must not exist in production builds. Only the two simulators are dev-only: `/ksu debug island` and `/ksu debug shaft` (a simulated mineshaft for gametests such as the corpse odds panel of AC-ODDS-04; its first user, AC-CORPSE-03, was dropped with R22). The read-only capture commands ship in production (REQ-GS-13). *(Derived: REQ-XC-VERIFY; PLAN T0.4)*
 - **REQ-LOC-09** The list of island names, each with a short description, must be available to the UI, so island fields are picked from a list instead of typed. Examples: "Catacombs — inside dungeon runs", "Dungeon Hub — dungeon lobby". *(Derived: G5 §5; read-mob — free-text island fields allow silent typos)*
 - **REQ-LOC-10** No build may ship the "Catacombs" run mapping (REQ-LOC-03) without the invisible-entity exclusion (REQ-GLOW-03), because the mapping switches on Catacombs rules for invisible mobs such as Shadow Assassin and Fels. *(Brief: Ground rule 5; Derived: G5 §4)*
 
@@ -557,9 +558,9 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 ---
 
 ### glow — Rule-based glow (Mob Highlighter, NPC Search) & Trinity/Tomioka/Duncan
-**Origin:** Brief Phase 3 item 1; Brief Phase 1 (existing features keep working); Ground rules 5 and 6 | **Depends on:** port-26-2, location, config-store | **Plan tasks:** T0.2, T0.3, T1.8, T1.8b, T1.9b, T1.10a, T1.10, T1.11, T1.14, T1.16, T2.1, T2.5a, T3.1, T7.1 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Brief Phase 3 item 1; Brief Phase 1 (existing features keep working); Ground rules 5 and 6 | **Depends on:** port-26-2, location, config-store | **Plan tasks:** T0.2, T0.3, T1.8, T1.8b, T1.8c, T1.9b, T1.10a, T1.10, T1.11, T1.11b, T1.14, T1.16, T2.1, T2.5a, T3.1, T7.1 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
-**Purpose:** Keep the existing rule-based glow working on 26.2 and make it compliant. It glows only what the player can already see, never invisible entities, and never changes glow the server sets. It also makes the three rare dungeon NPCs glow inside runs by fixing the island bug. The "You found X" title then fires only once the NPC is actually in sight, once per run.
+**Purpose:** Keep the existing rule-based glow working on 26.2 and make it compliant. It glows only what the player can already see, never invisible entities, and never changes glow the server sets. It also makes the three rare dungeon NPCs glow inside runs by fixing the island bug. The "You found X" title then fires only once the NPC is actually in sight, once per run, and only for five special moving NPCs [decided R20].
 
 **Functional requirements**
 - **REQ-GLOW-01** Mob Highlighter and NPC Search moving-NPC rules must keep matching as in 1.0.1:
@@ -593,7 +594,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - the user's existing three rules stay enabled after migration
 
   *(Brief: Phase 3 "each behind its own toggle"; Ground rule 6)*
-- **REQ-GLOW-14** [decided D-6] The "You found <label>" title, in the rule colour:
+- **REQ-GLOW-14** [decided D-6, R20] The "You found <label>" title, in the rule colour:
+  - fires only for five special moving NPCs: Trinity, Tomioka and Duncan (Catacombs), and Xalx and Pete (Crystal Hollows) [decided R20]. A rule qualifies when its NPC data sourceId is `trinity`, `tomioka`, `duncan`, `xalx` or `pete`, or, for a hand-made rule without a sourceId, when its label equals one of those five names, ignoring case and surrounding spaces. Every other NPC Search rule still outlines its NPC but never triggers the title
   - appears only after the local player has an unobstructed line of sight to the matched entity, within the scan range
   - appears at most once per rule per server instance, and resets on every location change (REQ-LOC-05), so it can show again in the next run
   - has its own toggle, default ON
@@ -604,7 +606,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - glow is visible-only
   - invisible mobs are never outlined
   - NPCs are outlined only while in view; blocks hide the outline
-  - the title appears after line of sight, once per run
+  - the title appears after line of sight, once per run, and only for Trinity, Tomioka, Duncan, Xalx and Pete [decided R20]
 
   *(Derived: PLAN risk table "reported as a regression"; rules policy P6 tooltips; Brief Phase 1 bullet 3)*
 - **REQ-GLOW-16** With shaders (Iris) on, glow must either render depth-tested or not render at all. It must never show behind blocks that hide the entity. *(Derived: G4 risk (a) — Iris logs a missing entity_outline program with the user's shader pack)*
@@ -645,8 +647,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - after a location change → a title again
   - toggle off → no title
   - an invisible entity → no title
+  - a rule for a non-special NPC (sourceId and label not among the five) → never a title, while its NPC still glows [decided R20]
+  - each of the sourceIds `trinity`, `tomioka`, `duncan`, `xalx` and `pete` → a title; a hand-made rule without a sourceId labelled " trinity " → a title; a rule with another sourceId labelled "Trinity" → no title [decided R20]
 
-  A gametest with the NPC behind a wall shows no title; walking into view shows it — [A] [C]
+  A gametest with the NPC behind a wall shows no title; walking into view shows it. A matched non-special NPC in view shows no title — [A] [C]
 - **AC-GLOW-14** (REQ-GLOW-15) Given `CHANGELOG.md`, the README and the highlight module cards, then each states the four behaviour changes and none uses a P7 word (REQ-XC-RULES-07). The card's tooltip text matches the CHANGELOG wording — [R] [C]
 - **AC-GLOW-15** (REQ-GLOW-16) Given the user's smoke test with Iris shaders on and off, then a matched mob behind a wall never shows glow in either mode — [E]
 - **AC-GLOW-16** (REQ-GLOW-17) Given the release jar, then any bundled glow library sits as a nested jar with its LICENSE, and `THIRD_PARTY_NOTICES.md` lists it — [R]
@@ -668,7 +672,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 **Open questions**
 - **Q-GLOW-01** Accept visible-only glow with no see-through option and a permanent exclusion of invisible entities, even though Trinity/Tomioka/Duncan then glow only once in view? → decided D-1 (yes: depth-tested glow via bundled Render Chest, invisible entities permanently excluded, no see-through option)
 - **Q-GLOW-02** Where does the Trinity/Tomioka/Duncan glow's "own toggle" (Brief Phase 3) live: per-rule switches in NPC Search (recommended; the text is written for this), or a dedicated built-in card? → decided R1
-- **Q-GLOW-03** "You found X" title: default ON, shown after line of sight and reset per run, or default OFF / off automatically when Skyblocker is installed? → decided D-6 (default ON, after line of sight, reset per run; not switched off when Skyblocker is installed)
+- **Q-GLOW-03** "You found X" title: default ON, shown after line of sight and reset per run, or default OFF / off automatically when Skyblocker is installed? → decided D-6 (default ON, after line of sight, reset per run; not switched off when Skyblocker is installed). After the G1 smoke, R20 limits the title to Trinity, Tomioka, Duncan, Xalx and Pete
 
 ---
 
@@ -712,7 +716,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   | General | Interface (accent colour; notice settings, REQ-UI-21), HUD ("Edit HUD layout"), Keybinds, Updates (content per the updater spec) |
   | Highlights | Mob Highlighter, including the mob scan range |
   | Waypoints | NPC Search: fixed NPC waypoints and name-matched NPC glow (including Trinity, Tomioka and Duncan as NPC Search rules [decided R1]), the "You found X" title, beam and label options |
-  | Mining | Glacite Mineshaft alert, possible corpse spots, Drill re-equip fix |
+  | Mining | Glacite Mineshaft alert, Drill re-equip fix (possible corpse spots [dropped R22]) |
   | Fishing | Bobber fix, hotspot highlight, "hotspot gone" warning |
   | Odds & Trackers | Rare Drop Odds, Bestiary Tracker |
   | SkyBlock XP | Optimizer settings |
@@ -755,12 +759,12 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-UI-09** Search should also match rule cards by rule label and name pattern. A matching rule card is shown expanded inside its category. *(Derived: rule cards hold most of the user's configuration; research-alpaka-ui §5 recommendation)*
 - **REQ-UI-10** Entry points:
   - `/ksu` and `/kskyblockutility` (client-side commands) open the screen on the next tick, so the chat's Enter key does not close it.
-  - `/ksu <text>` opens the screen with `<text>` in the search box. The exception is when `<text>` starts with a reserved subcommand word (`hud`, `debug`, `corpses`, `update`, `sbxp`, and any subcommand a later module defines); that runs its own action instead.
+  - `/ksu <text>` opens the screen with `<text>` in the search box. The exception is when `<text>` starts with a reserved subcommand word (`hud`, `debug`, `update`, `sbxp`, and any subcommand a later module defines); that runs its own action instead. (`corpses` was on this list until R22 dropped `/ksu corpses` [dropped R22].)
   - The "Open settings" keybind opens the screen. It is unbound by default.
   - With Mod Menu installed, Mod Menu's configure button opens the screen. Without Mod Menu, the mod must still load and every other entry point must work.
   - Closing the screen returns to whatever screen it was opened from.
 
-  *(Brief: Phase 2; Derived: the 1.0.1 entry points (read-ui), Alpaka's `/aa <term>` (research-alpaka-ui §5), subcommands from PLAN T0.4, T2.8, T3.3, T4.4, T6.8)*
+  *(Brief: Phase 2; Derived: the 1.0.1 entry points (read-ui), Alpaka's `/aa <term>` (research-alpaka-ui §5), subcommands from PLAN T0.4, T2.8, T4.4, T6.8; T3.3 dropped by R22)*
 - **REQ-UI-11** Rule lists.
   - The Mob Highlighter and NPC Search rules must be editable as collapsible rule cards, one per rule.
   - The collapsed header shows the rule's label and a colour dot.
@@ -1123,7 +1127,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
 **Origin:** Addendum (intro line "reuse the internal database from Phase 3.9"; section Data); Brief Phase 3 item 9; Derived (ground rule 4 licensing, PLAN AD-7, §2) | **Depends on:** port-26-2 | **Plan tasks:** T3.0c, T3.0i, T3.0j, T3.0k, T3.8, T6.0, T6.1, T7.1b, T7.2b (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
-**Purpose:** One internal, versioned database of bundled JSON tables. Every data-driven feature loads through it: NPC and mob lists, corpse spots, drop tables, bestiary, and the SkyBlock XP tasks, rates, reference tables and prices. As a result, every table carries its provenance and licence, is validated at build time and fails safe at runtime.
+**Purpose:** One internal, versioned database of bundled JSON tables. Every data-driven feature loads through it: NPC and mob lists, drop tables, bestiary, and the SkyBlock XP tasks, rates, reference tables and prices. As a result, every table carries its provenance and licence, is validated at build time and fails safe at runtime.
 
 **Functional requirements**
 - **REQ-DATA-01** Every table a feature needs must ship inside the mod jar and load with no network access. Table content changes only with a mod release. The only runtime network data allowed is an opt-in overlay that the consuming feature declares (today only the live Bazaar feed, see sbxp-optimizer). Such an overlay may sit on top of a bundled table but must never replace or delete it. *(Brief: Phase 3 item 9; Addendum: Data "internal database"; Derived: AD-7, D-22)* [decided D-12]
@@ -1170,7 +1174,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-DATA-10** The registry should offer layered values: bundled < live cache (only for features with an opt-in feed) < user override. Each value reports which layer won and that layer's timestamp, and a failed live layer falls back silently to bundled. *(Addendum: Prices "fall back to bundled values silently"; UI "per-task rate and time overrides"; Derived: GAP-1 §5)*
 - **REQ-DATA-11** Each loaded table's id, dataVersion and gameVersion should be logged once at startup and be viewable in-game (a debug command or an About card). *(Derived: needed to diagnose reports and to flag stale SBXP overrides, PLAN T6.8)*
 - **REQ-DATA-12** Bundled data should add at most 1 MB to the compressed release jar, and the validator reports each table's size. *(Brief: Phase 3 item 9 "size"; Derived: GAP-1 measured ≈0.15 MB)*
-- **REQ-DATA-13** Every bundled table must load through this registry, and no feature may ship its own resource loader. That covers the NPC DB, mob DB, corpse spots, odds tables, bestiary, and the SBXP tasks, rates, reference tables and prices. *(Addendum: intro "reuse the internal database"; Derived: D-26)*
+- **REQ-DATA-13** Every bundled table must load through this registry, and no feature may ship its own resource loader. That covers the NPC DB, mob DB, odds tables, bestiary, and the SBXP tasks, rates, reference tables and prices. (The corpse-spot table was on this list until R22 dropped it [dropped R22].) *(Addendum: intro "reuse the internal database"; Derived: D-26)*
 
 **Out of scope**
 - Downloading or refreshing bundled tables at runtime from a gist, GitHub raw or third-party repos (meowdding-repo, SkyHanni-REPO, NEU) [decided D-12].
@@ -1216,9 +1220,9 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
 ### game-state — Read-only game-state readers
 
-**Origin:** Derived. Needed by: brief Phase 3 item 2 (corpse list and keys), items 3 and 7, Phase 5 (bestiary), and the addendum's Progress detection. Basis: PLAN AD-6, §3, and research detection §4–7 | **Depends on:** port-26-2, config-store, location | **Plan tasks:** T0.4, T0.4b, T3.0a, T3.0g, T3.0h, T3.0m, T3.0d, T3.0e, T5.3 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Derived. Needed by: brief Phase 3 item 2 (corpse list and keys), item 7 (item 3 was dropped by R22), Phase 5 (bestiary), and the addendum's Progress detection. Basis: PLAN AD-6, §3, and research detection §4–7 | **Depends on:** port-26-2, config-store, location | **Plan tasks:** T0.4, T0.4c, T0.4b, T0.4d, T3.0a, T3.0g, T3.0h, T3.0m, T3.0d, T3.0e, T5.3 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
-**Purpose:** Shared, strictly passive readers for what the server already shows the player: tab-list widgets, the sidebar, chat and action bar, menus the player opens, the player's own inventory, profile identity and the mineshaft state. The mineshaft alert, corpse waypoints, odds, bestiary and SBXP features all build on one tested source, and the readers never interact with the server.
+**Purpose:** Shared, strictly passive readers for what the server already shows the player: tab-list widgets, the sidebar, chat and action bar, menus the player opens, the player's own inventory, profile identity and the mineshaft state. The mineshaft alert, odds, bestiary and SBXP features all build on one tested source, and the readers never interact with the server.
 
 **Functional requirements**
 - **REQ-GS-01** Read-only. The readers must never:
@@ -1236,7 +1240,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Consumers see a change within 500 ms, and parsing never runs more than once per client tick.
 
   *(Derived: Brief Phase 3 item 2 via the Frozen Corpses widget, research G6; Phase 5 Bestiary widget; Addendum: profile and level anchor)*
-- **REQ-GS-03** Sidebar. The reader exposes the sidebar lines top to bottom as displayed (objective title plus each line composed from its team prefix and suffix), with formatting and Hypixel's invisible filler characters removed, and notifies on change. *(Derived: the shaft code for Brief Phase 3 items 2–3, research G6 §5)*
+- **REQ-GS-03** Sidebar. The reader exposes the sidebar lines top to bottom as displayed (objective title plus each line composed from its team prefix and suffix), with formatting and Hypixel's invisible filler characters removed, and notifies on change. *(Derived: the shaft code for Brief Phase 3 item 2 (and item 3 until R22 dropped it), research G6 §5)*
 - **REQ-GS-04** Chat and action bar. Every game (system) message is delivered to subscribers:
   - exactly once
   - with its overlay flag (chat or action bar)
@@ -1289,16 +1293,17 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   The capture is read-only and covers only allowlisted menu titles. The capture commands (`/ksu debug dump tab|sidebar`, `/ksu debug dump containers on|off`) must ship in production builds, because the G1 captures are made on Hypixel in the user's Prism copy. Only the simulators `/ksu debug island` and `/ksu debug shaft` are dev-only (REQ-LOC-08). *(Derived: PLAN §5 "formats UNVERIFIED until captured", T0.4 "available in production", D-17)*
 - **REQ-GS-14** Every parser has unit tests on sanitised fixtures. A fixture not yet confirmed by an in-game capture is marked UNVERIFIED, and the phase report lists it until G1 captures replace it. *(Derived: PLAN §5; REQ-XC-VERIFY)*
 - **REQ-GS-15** On disconnect, server switch or world change, the readers clear their cached widget, sidebar and menu state, so nothing from the previous server is reported (e.g. the last shaft's corpses). *(Derived: research G6 timing; location dependency)*
-- **REQ-GS-16** A reader works only while at least one enabled feature subscribes to it. With every consuming feature disabled, it parses and stores nothing. A `/ksu corpses` request counts as a subscriber to the mineshaft state (REQ-GS-17) for the current shaft: it reads the current sidebar and tab state at once and keeps the mineshaft state running until the player leaves that shaft, so the command works with the mineshaft alert and the corpse markers OFF. *(Brief: Ground rule 6 — a disabled feature must have no effect; Derived: REQ-CORPSE-06)*
-- **REQ-GS-17** Mineshaft state. Game-state owns the shaft identification and the corpse list, and exposes both to mineshaft-alert, corpse-waypoints and rare-drop-odds:
+- **REQ-GS-16** A reader works only while at least one enabled feature subscribes to it. With every consuming feature disabled, it parses and stores nothing. *(Brief: Ground rule 6 — a disabled feature must have no effect)*
+  - [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* This requirement also said: a `/ksu corpses` request counts as a subscriber to the mineshaft state (REQ-GS-17) for the current shaft, reads the current sidebar and tab state at once and keeps the mineshaft state running until the player leaves that shaft, so the command works with the mineshaft alert and the corpse markers OFF *(was derived from REQ-CORPSE-06)*.
+- **REQ-GS-17** Mineshaft state. Game-state owns the shaft identification and the corpse list, and exposes both to mineshaft-alert and rare-drop-odds (corpse-waypoints was the third consumer until R22 dropped it):
   - **Shaft code:** the code `<TYPE>_<VARIANT>` (pattern `[A-Z]{4}_[12CL]`), taken from the sidebar scoreboard data the server sends (REQ-GS-03), not from the rendered sidebar. The search starts on entry into a Glacite Mineshaft (location) and runs for up to 15 s.
   - **Display names:** a table of the 34 current codes maps each code to a display name, e.g. `OPAL_1` → "Opal 1", `RUBY_C` → "Ruby Crystal", `FAIR_1` → "Vanguard", `LITT_L` → "Littlefoot's Den". A code that matches the pattern but is not in the table is exposed raw. No code within 15 s gives "Unknown shaft".
   - **Frozen Corpses list:** the corpse types and per-type state from the server's "Frozen Corpses:" tab widget (REQ-GS-02). Line format `<Type>: NOT LOOTED|LOOTED`; `UNLOOTED` also counts as not looted. The list is ordered as listed and does not depend on tab order.
   - The state never comes from entities: no armor stand or other entity is scanned, classified or counted.
   - The state resets on leaving the shaft, server switch and disconnect (REQ-GS-15).
 
-  *(Brief: Phase 3 items 2, 3 and 7; Derived: one owner for state that three modules need, research domain-mining-rules B2, G6 §1 and §5)*
-- **REQ-GS-18** Widget hint. One shared hint string must name the command and menu path for enabling a Hypixel tab widget. The exact wording is verified in-game at G1 (Q-MSA-04) before release. Every consumer that asks the player to enable a widget (mineshaft-alert, bestiary-hud, sbxp-optimizer) uses this string, and no consumer hard-codes its own widget command. *(Derived: three modules named three different commands; research G6, domain-mining)*
+  *(Brief: Phase 3 items 2 and 7, and item 3 until R22 dropped it; Derived: one owner for state that several modules need, research domain-mining-rules B2, G6 §1 and §5)*
+- **REQ-GS-18** Widget hint. One shared hint string must name the command and menu path for enabling a Hypixel tab widget. The exact wording is verified in-game before release (Q-MSA-04). At G1 the maintainer reported believing that the Frozen Corpses widget is on by default, but gave no command or menu path, so the wording stays UNVERIFIED and is checked at G3 [decided R24]. The hint is the failsafe that tells the player a widget is off. Every consumer that asks the player to enable a widget (mineshaft-alert, bestiary-hud, sbxp-optimizer) uses this string, and no consumer hard-codes its own widget command. *(Derived: three modules named three different commands; research G6, domain-mining)*
 
 **Out of scope**
 - Any active acquisition: sending `/profileid`, `/tablist` or `/widget`, opening, paging or hovering menus (other mods send `/profileid`; excluded by P5).
@@ -1359,7 +1364,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **AC-GS-15** (REQ-GS-15) Given a server switch from a mineshaft to the Dwarven Mines, then Frozen Corpses reports "absent" within 1 s of the switch event — [A].
 - **AC-GS-16** (REQ-GS-16)
   - Given all consumers of the tab reader disabled, then its parse counter stays at 0 over 600 ticks — [A].
-  - Given the mineshaft alert and the corpse markers OFF and a simulated shaft entry with sidebar code `OPAL_1`, when `/ksu corpses` is issued, then the shaft is reported as "Opal 1" and the state is kept until the simulated exit — [A].
+  - [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Given the mineshaft alert and the corpse markers OFF and a simulated shaft entry with sidebar code `OPAL_1`, when `/ksu corpses` is issued, then the shaft is reported as "Opal 1" and the state is kept until the simulated exit — [A].
 - **AC-GS-17** (REQ-GS-17) Given a simulated clock:
   - all 34 known codes inside a sidebar line shaped like `<date> <server> OPAL_1` give their display names, `ABCD_1` gives "ABCD_1", and no code line gives "Unknown shaft" after 15 s
   - a Frozen Corpses fixture with `Umber: NOT LOOTED`, `Tungsten: LOOTED` and `Lapis: UNLOOTED` gives two not-looted types and one looted type
@@ -1368,7 +1373,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   Verified by [A]. In a mineshaft, the reported code and corpse list equal the raw capture — [E].
 - **AC-GS-18** (REQ-GS-18)
   - Review: the widget hint text exists once in the translation file, and mineshaft-alert, bestiary-hud and sbxp-optimizer reference that key — [R].
-  - At G1, the command and menu path in the hint open Hypixel's widget settings — [E].
+  - In-game, the command and menu path in the hint open Hypixel's widget settings — [E]. Planned for G1; not answered there, so checked at G3 [decided R24].
 
 **Edge cases**
 - **EC-GS-01** The tab list has more than 80 entries and a widget is cut off → visible lines are parsed and nothing is inferred for missing lines.
@@ -1395,9 +1400,9 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
 ### world-markers — World marker toolkit (labels, beams, rings)
 
-**Origin:** Derived. Needed by: brief Phase 3 item 3 (corpse waypoints), item 4 (white labels and coloured beams) and item 6 (hotspot highlight); ground rule 5; PLAN AD-2 and P1/P3/P4 | **Depends on:** port-26-2 | **Plan tasks:** T1.3, T3.0b, T3.0n (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Derived. Needed by: brief Phase 3 item 4 (white labels and coloured beams) and item 6 (hotspot highlight), and item 3 (corpse waypoints) until R22 dropped it; ground rule 5; PLAN AD-2 and P1/P3/P4 | **Depends on:** port-26-2 | **Plan tasks:** T1.3, T3.0b, T3.0n (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
-**Purpose:** One shared renderer for in-world text labels, beacon beams and rings, used by NPC waypoints, corpse-spot waypoints and hotspot highlights. It is where the rule is enforced that only fixed coordinates may be drawn through blocks.
+**Purpose:** One shared renderer for in-world text labels, beacon beams and rings, used by NPC waypoints and hotspot highlights (corpse-spot waypoints were dropped by R22). It is where the rule is enforced that only fixed coordinates may be drawn through blocks.
 
 **Functional requirements**
 - **REQ-MARK-01** The toolkit provides three primitives:
@@ -1405,13 +1410,13 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - a beacon beam with a colour per marker
   - a horizontal ring with centre, radius, colour and alpha, drawn as an outline, a filled disc, or both
 
-  *(Brief: Phase 3 item 4 "white text labels with an individually colored beacon beam per waypoint"; item 3 "waypoints"; item 6 "highlight active hotspots")*
+  *(Brief: Phase 3 item 4 "white text labels with an individually colored beacon beam per waypoint"; item 3 "waypoints" (dropped by R22); item 6 "highlight active hotspots")*
 - **REQ-MARK-02** See-through policy:
   - A label may show through blocks only if it is anchored to fixed world coordinates (static data or a fixed point).
   - Any marker anchored to or derived from a live entity is depth-tested. This includes markers derived from Hypixel name-tag holograms, such as hotspot rings [decided R2].
   - Beams and rings are always depth-tested.
   - Callers cannot ask for see-through on a marker anchored to an entity.
-  - Fixed-coordinate labels that may show through blocks are the NPC waypoint labels and the corpse-spot labels. Corpse spots use text labels only, with no beam or box [decided R7].
+  - Fixed-coordinate labels that may show through blocks are the NPC waypoint labels. (The corpse-spot labels, text only under R7, were dropped with R22.)
 
   *(Brief: Ground rule 5; Derived: P1, P3, P4)* [decided D-6]
 - **REQ-MARK-03** Label legibility:
@@ -1428,7 +1433,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   *(Brief: Phase 3 item 4 "individually colored beacon beam per waypoint")*
 - **REQ-MARK-05** If the caller enables it, a fixed-coordinate label shows a line with the distance in whole metres from the player's position (not the camera) to the marker, updated every frame. Markers anchored to entities have no distance line. *(Derived: P4; research read-npc bug 17; the toggle belongs to npc-waypoints)*
-- **REQ-MARK-06** Several features supply markers at once (NPC waypoints, corpse spots, hotspots). Each feature's markers follow its own toggle and island gating, and turning one feature off never hides another's markers. *(Brief: Ground rule 6; Derived: research read-npc §3b — the current single static list blocks reuse)*
+- **REQ-MARK-06** Several features supply markers at once (NPC waypoints, hotspots). Each feature's markers follow its own toggle and island gating, and turning one feature off never hides another's markers. *(Brief: Ground rule 6; Derived: research read-npc §3b — the current single static list blocks reuse)*
 - **REQ-MARK-07** Markers outside the view frustum are not submitted. With 150 label-plus-beam markers active (about every Hub NPC), the marker pass should average at most 1 ms CPU per frame on the dev machine. *(Derived: Hub has 113 NPC entries; research read-npc performance)*
 - **REQ-MARK-08** All markers are dropped on world change, server switch and disconnect. A marker from the previous world is never drawn in the next one. *(Derived: correctness across islands)*
 - **REQ-MARK-09** Markers render correctly with shaders on and off, next to Skyblocker and SkyHanni world rendering. They need no mixin and cause no new ERROR log lines. *(Derived: the user's mod set, research G4; AD-9; REQ-XC-VERIFY)*
@@ -1451,7 +1456,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Gametest: an entity-anchored label behind stone is not visible, while a fixed-coordinate label in the same spot is — [C].
 - **AC-MARK-03** (REQ-MARK-01, REQ-MARK-02) A gametest ring of radius 3 on a water surface is visible in the open and hidden behind a stone wall — [C].
 - **AC-MARK-04** (REQ-MARK-05) Given the player at (0,64,0), the camera in third person 4 blocks behind, and a marker at (0,64,100), then the distance line reads `100m` — [A] and [C].
-- **AC-MARK-05** (REQ-MARK-06) Given NPC and corpse providers both active, when NPC waypoints are turned off, then the corpse markers are still drawn — [A]/[C].
+- **AC-MARK-05** (REQ-MARK-06) Given an NPC waypoint provider and a second provider (a test provider until the hotspot ring exists) both active, when NPC waypoints are turned off, then the second provider's markers are still drawn — [A]/[C]. (The second provider was the corpse-spot provider until R22 dropped it.)
 - **AC-MARK-06** (REQ-MARK-07) A gametest with 150 markers logs an average marker-pass time of at most 1 ms over 600 frames, and markers behind the camera are counted as not submitted — [C].
 - **AC-MARK-07** (REQ-MARK-08) After a world change, the first frame of the new world has 0 markers from the old one — [A]/[C].
 - **AC-MARK-08** (REQ-MARK-09)
@@ -1602,7 +1607,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - A code that matches the pattern but is not known is shown raw.
   - No code within 15 s gives "Unknown shaft".
 
-  *(Derived: corpse data and spots are per shaft; one shared parser for mineshaft-alert, corpse-waypoints and rare-drop-odds; research domain-mining-rules B2, G6 §5)*
+  *(Derived: corpse data is per shaft; one shared parser for mineshaft-alert and rare-drop-odds (corpse-waypoints was dropped by R22); research domain-mining-rules B2, G6 §5)*
 - **REQ-MSA-03** Corpse source.
   - Corpse types and per-type counts must come **only** from the server's "Frozen Corpses:" tab-list widget, as parsed by game-state (REQ-GS-17) from the tab-list entries the server sends, independent of tab order and of how other mods draw the tab list.
   - Line format (parsed in REQ-GS-17): `<Type>: NOT LOOTED|LOOTED`. `UNLOOTED` also counts as not looted.
@@ -1616,7 +1621,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - **Counted:** only the player's own inventory, meaning the 36 hotbar + main slots and the offhand slot, read when the message is built.
   - **Not counted:** sacks (including the Dwarven Sack), ender chest, backpacks, storage, the cursor stack, and slots of any open container.
   - The entry must say the count is "in inventory".
-  - **Fallback if the G1 check fails:** if the G1 check (Q-MSA-04) shows that a Tungsten or Umber key held only in the Dwarven Sack opens a corpse, then for those types the shortage marker of REQ-MSA-06 is not shown, the entry reads "n in inventory (sack keys also work)", and D-7 is put to the user again with "include sacks" recommended. The switch is a build constant set from the G1 result, not a user toggle.
+  - **Fallback if the sack check fails:** if the in-game check (Q-MSA-04) shows that a Tungsten or Umber key held only in the Dwarven Sack opens a corpse, then for those types the shortage marker of REQ-MSA-06 is not shown, the entry reads "n in inventory (sack keys also work)", and D-7 is put to the user again with "include sacks" recommended. The switch is a build constant set from the check's result, not a user toggle.
+  - **G1 result [decided R24]:** the sack check could not be tested at G1. D-7 (inventory only) stands, the fallback constant stays off, and the check stays open for G3.
 
   *(Brief: item 2 "how many of the matching keys the player owns"; Derived: Hypixel 0.20.6 "consumes from inventory", PLAN D-7, research G6 §2; review coverage#4)*
 - **REQ-MSA-06** Shortage marker.
@@ -1634,7 +1640,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   *(Derived: extra corpse appears at +3/+4 s, research G6 §1; PLAN T3.2 "update if a Dead Man's Chest adds one")*
 - **REQ-MSA-08** Missing widget.
   - If no corpse line has appeared 8 s after entry, the mod must post the alert with the shaft name and "corpse list unavailable".
-  - At most once per game launch, it adds a hint: the Frozen Corpses tab widget is not visible, and here is how to enable it in Hypixel's tab-list widget settings. The command and menu path come from the shared widget-hint string of REQ-GS-18 (verified at G1, Q-MSA-04). This module must not hard-code its own command.
+  - At most once per game launch, it adds a hint: the Frozen Corpses tab widget is not visible, and here is how to enable it in Hypixel's tab-list widget settings. The command and menu path come from the shared widget-hint string of REQ-GS-18 (Q-MSA-04; UNVERIFIED after G1, checked at G3 [decided R24]). This module must not hard-code its own command.
+  - This hint is the failsafe the maintainer asked for at G1 [decided R24]: the widget is believed to be on by default, and the hint tells the player when it is off.
   - There is no entity fallback.
   - If corpse lines appear later within the 30 s window, a normal alert follows as a follow-up.
 
@@ -1756,7 +1763,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-MSA-01** Party summon or warp into another player's shaft: the alert fires for the joiner (widget filled 1–2 s after arrival). LOOTED reflects the player's own looting, which is per player since Hypixel's Apr 11 2024 fix.
 - **EC-MSA-02** Dead Man's Chest corpse appears after the first alert: one follow-up line (REQ-MSA-07).
 - **EC-MSA-03** 0 keys of a needed type: "Key: 0 in inventory" plus the warning sign, in red. It is never hidden.
-- **EC-MSA-04** Keys only in the Dwarven Sack: counted as 0 with the warning sign, by design [decided D-7]. The hover text explains why. If the G1 check shows that sack keys work, the REQ-MSA-05 fallback applies instead.
+- **EC-MSA-04** Keys only in the Dwarven Sack: counted as 0 with the warning sign, by design [decided D-7]. The hover text explains why. If the sack check (open after G1, done at G3 [decided R24]) shows that sack keys work, the REQ-MSA-05 fallback applies instead.
 - **EC-MSA-05** Widget disabled, or cut off because the tab list has more than 80 entries (UNVERIFIED): handled by REQ-MSA-08.
 - **EC-MSA-06** Widget header present but no corpse lines after 8 s: "no corpses listed", without the hint (the widget is visible).
 - **EC-MSA-07** Unknown corpse type line (a new type): listed by its raw name after the known types, with no key entry. Logged once per launch.
@@ -1768,22 +1775,24 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-MSA-13** Not on Hypixel SkyBlock (singleplayer or dev run): the feature stays inactive and nothing is logged.
 
 **Open questions**
-- **Q-MSA-01** Should the key count be inventory-only, or include sacks and storage? → decided D-7 (inventory only; asked again only if the G1 sack check triggers the REQ-MSA-05 fallback)
+- **Q-MSA-01** Should the key count be inventory-only, or include sacks and storage? → decided D-7 (inventory only; asked again only if the sack check triggers the REQ-MSA-05 fallback). The check could not be tested at G1, so D-7 stands and the check moves to G3 [decided R24]
 - **Q-MSA-02** Dead Man's Chest corpses that appear after the first alert: a follow-up line, one delayed message, or editing the earlier line? → decided R7
 - **Q-MSA-03** Should a user-clicked "share" button exist, one that only fills the chat box? → decided R7
 - **Q-MSA-04** Will you run two short in-game checks at G1? → decided R17
-  - The widget's default state, and the command and menu path that enable it (`/tablist` vs `/widgets`; becomes the REQ-GS-18 string).
-  - Whether a key held only in the Dwarven Sack opens a corpse (decides the REQ-MSA-05 fallback).
+  - The widget's default state, and the command and menu path that enable it (`/tablist` vs `/widgets`; becomes the REQ-GS-18 string). → G1 answer [decided R24]: the maintainer believes the widget is on by default and asks for a failsafe that says when it is off; the REQ-MSA-08 hint is that failsafe. The command and menu path were not given, so the hint wording stays UNVERIFIED and is checked at G3.
+  - Whether a key held only in the Dwarven Sack opens a corpse (decides the REQ-MSA-05 fallback). → G1 answer [decided R24]: not testable at G1. D-7 stands, the fallback is not triggered, and the question stays open for G3.
 
 ---
 
-### corpse-waypoints — Possible corpse spots (waypoints + list)
-**Origin:** Brief Phase 3 item 3 | **Depends on:** world-markers, data-registry, game-state (shaft code and Frozen Corpses state, REQ-GS-17), location | **Plan tasks:** T3.3a, T3.3, T7.1, T7.1b (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+### corpse-waypoints — Possible corpse spots (waypoints + list) [dropped R22]
+**Origin:** Brief Phase 3 item 3 | **Depends on:** world-markers, data-registry, game-state (shaft code and Frozen Corpses state, REQ-GS-17), location | **Plan tasks:** T3.3a and T3.3, both dropped by R22; none remain (§13.1)
+
+**Status: [dropped R22].** The maintainer dropped corpse-spot waypoints after G1 (2026-10-01). Nothing in this module is built: no spot table, no markers and no `/ksu corpses`. The text below is kept as the record. Every requirement, acceptance criterion, edge case and open question in it carries `[dropped R22]`; no id is reused. The rest of the mineshaft area stays: the entry alert (mineshaft-alert, T3.2), the Frozen Corpses widget reading (game-state REQ-GS-17, T3.0m) and the corpse odds (rare-drop-odds, T3.9d and T3.9e). The README's excluded-behaviour line about filtering corpse spots by unseen entities stays in REQ-REL-03 as an exclusion.
 
 **Purpose:** Inside a Glacite Mineshaft, the mod shows every known possible corpse spawn spot for the current shaft layout. The spots appear as in-world waypoints and as a chat list on request. They come only from bundled static data, so the player can search the shaft systematically without the mod ever revealing live corpse entities.
 
 **Functional requirements**
-- **REQ-CORPSE-01** Bundled spot data [decided D-5].
+- **REQ-CORPSE-01** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Bundled spot data [decided D-5].
   - The mod must ship a table of possible corpse spots per shaft code as a table in the internal data registry, with `dataVersion`, `gameVersion`, sources with pinned commits, and `license`.
   - Every spot should record its source(s).
   - **Content (D-5: MIT with notices, pinned commit, ship now with credit):**
@@ -1793,8 +1802,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Codes without known spots (currently `TOPA_2`, `SAPP_2`, `AMET_2`, `AMBE_2`, `JADE_2`) are listed explicitly as "no spot data".
 
   *(Brief: item 3; Brief ground rule 4; Derived: PLAN D-5, AD-7, research G6 §3–4)*
-- **REQ-CORPSE-02** No runtime fetch. Spot data must never be downloaded from third-party repositories (meowdding, SkyHanni, ShaftUtils) or any other host at runtime. Data updates ship with mod releases. *(Derived: PLAN AD-7, D-12 policy, research G6 §4)*
-- **REQ-CORPSE-03** Markers [decided D-6; decided R7].
+- **REQ-CORPSE-02** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* No runtime fetch. Spot data must never be downloaded from third-party repositories (meowdding, SkyHanni, ShaftUtils) or any other host at runtime. Data updates ship with mod releases. *(Derived: PLAN AD-7, D-12 policy, research G6 §4)*
+- **REQ-CORPSE-03** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Markers [decided D-6; decided R7].
   - Markers show when all of these hold:
     - the feature is ON;
     - the player is in a Glacite Mineshaft;
@@ -1805,19 +1814,19 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Feature and label names must follow naming policy P7 (PLAN §3).
 
   *(Brief: item 3 "with waypoints"; Derived: PLAN §3 P4, P7, research G3 row F)*
-- **REQ-CORPSE-04** Unfiltered.
+- **REQ-CORPSE-04** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Unfiltered.
   - Markers must never be hidden, filtered, recoloured, reordered or added based on any entity data, including corpse armor stands, whether or not they are in line of sight.
   - The displayed set may depend only on the shaft code and on REQ-CORPSE-05.
 
   *(Brief ground rule 5; Derived: PLAN §3 "never filtered by unseen entities", research G3 row F, domain-mining-rules C)*
-- **REQ-CORPSE-05** Hide when all looted.
+- **REQ-CORPSE-05** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Hide when all looted.
   - Applies when the Frozen Corpses widget (as parsed in REQ-GS-17) lists at least one corpse and every listed corpse is LOOTED. All markers must then hide within 1 s.
   - Markers return if the widget later lists a NOT LOOTED corpse.
   - Own toggle "Hide spots when all corpses are looted", default ON.
   - With no widget, markers stay until the player leaves the shaft.
 
   *(Derived: the only allowed pruning is from server UI, research G6 §4; PLAN T3.3)*
-- **REQ-CORPSE-06** List command [decided R7].
+- **REQ-CORPSE-06** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* List command [decided R7].
   - `/ksu corpses` must print a local chat list:
     - a header with the shaft name and spot count;
     - one line per spot, `#n x, y, z · d m`, where d is the 3-D distance from the player's position rounded half-up to whole blocks;
@@ -1830,14 +1839,14 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - The command works whatever the marker toggle says, including while the markers and the mineshaft entry alert are both OFF. A running `/ksu corpses` request counts as a subscriber of the mineshaft state (REQ-GS-16, REQ-GS-17) for the current shaft, so the shaft code is read even when no feature subscribes.
 
   *(Brief: item 3 "show a list of possible corpse locations"; PLAN T3.3; review consistency#5)*
-- **REQ-CORPSE-07** Lifetime. Markers appear within 1 s after the shaft code becomes known. They disappear within 1 s after the player leaves the shaft, switches server or disconnects. *(Derived)*
-- **REQ-CORPSE-08** Toggle and default [decided D-6; decided R7].
+- **REQ-CORPSE-07** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Lifetime. Markers appear within 1 s after the shaft code becomes known. They disappear within 1 s after the player leaves the shaft, switches server or disconnects. *(Derived)*
+- **REQ-CORPSE-08** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Toggle and default [decided D-6; decided R7].
   - The "Possible corpse spots" toggle sits in the Mining category and defaults to OFF.
   - Its tooltip says these are known possible spawn spots from community data, not detected corpses.
 
   *(Brief ground rule 6; REQ-XC-TOGGLE; PLAN D-6, §3 AMBER verdict)*
-- **REQ-CORPSE-09** Attribution. The jar and `THIRD_PARTY_NOTICES.md` must carry the MIT licence text and copyright line of every shipped source, e.g. "Copyright (c) 2022 hannibal2" and "Copyright (c) 2026 meowdding", plus credit to GrowlingGrizzly. The README must say this data file is MIT, not CC0. *(Brief ground rule 4; REQ-XC-LICENSE)*
-- **REQ-CORPSE-10** Data validation (build).
+- **REQ-CORPSE-09** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Attribution. The jar and `THIRD_PARTY_NOTICES.md` must carry the MIT licence text and copyright line of every shipped source, e.g. "Copyright (c) 2022 hannibal2" and "Copyright (c) 2026 meowdding", plus credit to GrowlingGrizzly. The README must say this data file is MIT, not CC0. *(Brief ground rule 4; REQ-XC-LICENSE)*
+- **REQ-CORPSE-10** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Data validation (build).
   - Every key must be a known code matching `[A-Z]{4}_[12CL]`.
   - Every spot must parse as three integers inside the plausibility box x ∈ [−260, −40], y ∈ [−10, 80], z ∈ [−260, −90]. Current data spans x −196…−106, y 1…29, z −198…−154.
   - No code may hold duplicate spots.
@@ -1856,7 +1865,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - Spot data for codes that have no known source yet (`TOPA_2`, `SAPP_2`, `AMET_2`, `AMBE_2`, `JADE_2`).
 
 **Acceptance criteria**
-- **AC-CORPSE-01** (REQ-CORPSE-01, REQ-CORPSE-10)
+- **AC-CORPSE-01** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-01, REQ-CORPSE-10)
   - Given: the shipped table.
   - When: the validator runs.
   - Then:
@@ -1865,22 +1874,22 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
     - all `_C` codes resolve to the shared list.
   - A copy with one unknown code, or one coordinate out of bounds, fails `./gradlew check`.
   - — [A]
-- **AC-CORPSE-02** (REQ-CORPSE-01)
+- **AC-CORPSE-02** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-01)
   - Given: a sanitised fixture of the user's logged sightings: shaft code plus Skyblocker "Found a … Corpse at" position, 144 sightings over 22 codes, with no player names.
   - When: each sighting is matched against the shipped spots of its code.
   - Then: every sighting lies within 1.0 block (Euclidean) of a spot.
   - — [A]
-- **AC-CORPSE-03** (REQ-CORPSE-03, REQ-CORPSE-07)
+- **AC-CORPSE-03** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-03, REQ-CORPSE-07)
   - Given: a dev-only simulated mineshaft with code `OPAL_1` in singleplayer, with the feature ON.
   - When: a client gametest captures screenshots.
   - Then: one "Possible corpse #n" label shows per `OPAL_1` spot, including one behind a stone wall. There are no boxes or beams. With the feature OFF, or after leaving the simulated shaft, no label shows within 1 s.
   - — [C]
-- **AC-CORPSE-04** (REQ-CORPSE-04)
+- **AC-CORPSE-04** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-04)
   - Given: a simulated shaft, run once with no armor stands and once with visible and invisible armor stands placed on, near and away from spots.
   - When: the marker set is computed.
   - Then: count, positions and labels are identical in both runs. Code review confirms that the module reads no entity data.
   - — [A] + [R]
-- **AC-CORPSE-05** (REQ-CORPSE-05). Given widget states and toggles, when markers are computed, then:
+- **AC-CORPSE-05** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-05). Given widget states and toggles, when markers are computed, then:
 
   | Widget | Hide toggle | Markers |
   |---|---|---|
@@ -1891,7 +1900,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   | back to [NOT LOOTED] | ON | shown again |
 
   — [A]
-- **AC-CORPSE-06** (REQ-CORPSE-06)
+- **AC-CORPSE-06** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-06)
   - Given: a simulated `OPAL_1` with the player at a fixed position.
   - When: `/ksu corpses` runs.
   - Then:
@@ -1900,46 +1909,46 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
     - the special replies match the text in REQ-CORPSE-06;
     - the output is the same with the marker toggle OFF, and with the marker toggle and "Mineshaft entry alert" both OFF (no "Shaft not identified yet" once the code is in the sidebar).
   - — [A]
-- **AC-CORPSE-07** (REQ-CORPSE-08)
+- **AC-CORPSE-07** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-08)
   - In a fresh config "Possible corpse spots" is OFF and "Hide spots when all corpses are looted" is ON.
   - The card's tooltip text is present in a config-screen screenshot.
   - — [A] + [C]
-- **AC-CORPSE-08** (REQ-CORPSE-09)
+- **AC-CORPSE-08** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-09)
   - `./gradlew check` fails when the corpse table's notice file is removed.
   - The built jar contains both licence files.
   - THIRD_PARTY_NOTICES names both copyright lines and GrowlingGrizzly.
   - — [A] + [R]
-- **AC-CORPSE-09** (REQ-CORPSE-02)
+- **AC-CORPSE-09** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-02)
   - Given: a gametest with networking to external hosts blocked.
   - Then: the markers still render. Code review finds no network call in this module.
   - — [C] + [R]
-- **AC-CORPSE-10** (REQ-CORPSE-03, REQ-CORPSE-06)
+- **AC-CORPSE-10** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* (REQ-CORPSE-03, REQ-CORPSE-06)
   - Given: a real Glacite Mineshaft with the feature ON.
   - When: Skyblocker reports "Found a … Corpse at x, y, z".
   - Then: that position lies within 1.5 blocks of a displayed marker, and `/ksu corpses` lists the same spots.
   - — [E]
 
 **Edge cases**
-- **EC-CORPSE-01** Code without spot data (`TOPA_2`, …): no markers. With the feature ON, one local note per shaft says "No spot data for <code>".
-- **EC-CORPSE-02** A new code, unknown to the table: treated like EC-CORPSE-01 and logged once per launch.
-- **EC-CORPSE-03** The shaft code arrives late (up to 15 s): markers appear within 1 s of it.
-- **EC-CORPSE-04** The widget is missing or disabled: hide-when-looted is unavailable and markers stay.
-- **EC-CORPSE-05** Hypixel changes a layout: markers are wrong until a data update ships. The AC-CORPSE-10 field check detects it. 51 of the 129 spots are not yet confirmed by the user's logs.
-- **EC-CORPSE-06** Crystal shafts (`*_C`) all use the shared 3-spot list. `LITT_L` uses its own 4 spots.
-- **EC-CORPSE-07** SkyOcean draws its own "Corpse" labels at the same spots: the texts overlap, with no crash and no interference ([D]).
-- **EC-CORPSE-08** Shaders (Iris) on: labels stay readable ([E]).
-- **EC-CORPSE-09** The data file is missing or corrupt at runtime: the feature is disabled with one log line, `/ksu corpses` replies "Corpse spot data unavailable", and the game continues.
-- **EC-CORPSE-10** The player loots every corpse while the widget has not yet updated (it lags 1–4 s): markers hide when the widget shows all LOOTED.
+- **EC-CORPSE-01** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Code without spot data (`TOPA_2`, …): no markers. With the feature ON, one local note per shaft says "No spot data for <code>".
+- **EC-CORPSE-02** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* A new code, unknown to the table: treated like EC-CORPSE-01 and logged once per launch.
+- **EC-CORPSE-03** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* The shaft code arrives late (up to 15 s): markers appear within 1 s of it.
+- **EC-CORPSE-04** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* The widget is missing or disabled: hide-when-looted is unavailable and markers stay.
+- **EC-CORPSE-05** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Hypixel changes a layout: markers are wrong until a data update ships. The AC-CORPSE-10 field check detects it. 51 of the 129 spots are not yet confirmed by the user's logs.
+- **EC-CORPSE-06** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Crystal shafts (`*_C`) all use the shared 3-spot list. `LITT_L` uses its own 4 spots.
+- **EC-CORPSE-07** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* SkyOcean draws its own "Corpse" labels at the same spots: the texts overlap, with no crash and no interference ([D]).
+- **EC-CORPSE-08** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Shaders (Iris) on: labels stay readable ([E]).
+- **EC-CORPSE-09** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* The data file is missing or corrupt at runtime: the feature is disabled with one log line, `/ksu corpses` replies "Corpse spot data unavailable", and the game continues.
+- **EC-CORPSE-10** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* The player loots every corpse while the widget has not yet updated (it lags 1–4 s): markers hide when the widget shows all LOOTED.
 
 **Open questions**
-- **Q-CORPSE-01** Which corpse-spot dataset should ship, and when? → decided D-5 (MIT data with notices, pinned commit, ship now with credit)
-- **Q-CORPSE-02** How should corpse spot markers look, and should they ship at all? → decided R7
-- **Q-CORPSE-03** Should `/ksu corpses` work while the marker toggle is OFF? → decided R7
+- **Q-CORPSE-01** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Which corpse-spot dataset should ship, and when? → decided D-5 (MIT data with notices, pinned commit, ship now with credit)
+- **Q-CORPSE-02** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* How should corpse spot markers look, and should they ship at all? → decided R7
+- **Q-CORPSE-03** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)* Should `/ksu corpses` work while the marker toggle is OFF? → decided R7
 
 ---
 
 ### npc-waypoints — Skyblocker-style NPC waypoints
-**Origin:** Brief Phase 3 item 4 | **Depends on:** world-markers, npc-mob-data, ui-config (also location, config-store) | **Plan tasks:** T3.4, T3.4b (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Brief Phase 3 item 4 | **Depends on:** world-markers, npc-mob-data, ui-config (also location, config-store) | **Plan tasks:** T1.3b, T3.4, T3.4b (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
 **Purpose:** The fixed-position NPC waypoints the player adds in NPC Search should look like Skyblocker's: a white name label plus a beacon beam whose colour can be set per NPC or per category. Several NPCs can then be told apart and found from far away.
 
@@ -1953,13 +1962,14 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   *(Brief: item 4; Derived: existing NPC Search behaviour, PLAN T1.9)*
 - **REQ-NPCWP-02** Label.
   - The rule's label is drawn in white (#FFFFFF), with no drop shadow and no background plate, and always faces the camera.
+  - White is the default of the NPC Search setting "White waypoint labels" (default ON). With it OFF, the label and its distance line are drawn in the rule's colour, the 1.0.1 look [decided R21]. The setting ships in v1.1.0 on the 1.0.1-style label (REQ-PORT-06) and stays when the beams arrive; the beam then carries the colour (REQ-NPCWP-04, REQ-NPCWP-05).
   - It is centred horizontally on the block centre (x + 0.5, z + 0.5), 1.5 blocks above the stored y.
   - It keeps a constant on-screen size from 10 blocks out, and true world size when closer.
   - It is visible through terrain, including behind water, glass and other translucent blocks, because it marks a fixed coordinate.
 
   *(Brief: item 4 "white text labels", "Skyblocker style"; Derived: PLAN §3 P4, T1.3, research Skyblocker (a), read-npc bug 14)*
 - **REQ-NPCWP-03** Distance line [decided D-6].
-  - An optional second line below the label reads `<d>m` in yellow (Skyblocker style).
+  - An optional second line below the label reads `<d>m` in yellow (Skyblocker style). With "White waypoint labels" OFF it is drawn in the rule's colour, like the label [decided R21].
   - d is the distance from the **player's** position (not the camera) to the label anchor, rounded half-up to whole metres.
   - Own toggle "Show distance", default ON.
   - Distance is never shown for live entities.
@@ -1992,6 +2002,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - The existing NPC Search module toggle, default ON.
   - "Show beacon beams", default ON. When OFF, beams are hidden and labels stay.
   - "Show distance" (REQ-NPCWP-03).
+  - "White waypoint labels", default ON (REQ-NPCWP-02) [decided R21].
   - The existing per-rule enabled flag.
   - A per-rule beam on/off may be offered.
 
@@ -2012,7 +2023,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - Labels, beams or distance for moving NPCs (Trinity, Tomioka, Duncan, Pete, Xalx).
 - User-created non-NPC waypoints, editing coordinates, and import or export of Skyblocker waypoint groups.
 - Hide-when-near and a maximum render distance (not requested).
-- Label colours other than white (the brief says white text labels).
+- Label colours other than white and the rule's colour. White stays the default (the brief says white text labels); the rule's colour is the opt-out of REQ-NPCWP-02 [decided R21]. Until R21 this line read "Label colours other than white".
 - A new NPC "type" category field in the NPC data [decided D-15].
 
 **Acceptance criteria**
@@ -2040,7 +2051,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Given: a client gametest with one fixed waypoint.
   - When: screenshots are taken.
   - Then:
-    - the label is white with no background, and the beam is in the island colour;
+    - the label is white with no background, and the beam is in the island colour; with "White waypoint labels" OFF the label is in the rule's colour and the beam is unchanged [decided R21];
     - the label stays visible behind stone, glass and water;
     - the part of the beam behind an opaque wall in front of the camera is hidden.
   - — [C]
@@ -2051,7 +2062,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **AC-NPCWP-05** (REQ-NPCWP-08, REQ-NPCWP-03)
   - "Show beacon beams" OFF: the label is drawn, the beam is not.
   - "Show distance" OFF: only one text line.
-  - A fresh config has the module, beams and distance ON.
+  - A fresh config has the module, beams, distance and white labels ON.
   - — [C] + [A]
 - **AC-NPCWP-06** (REQ-NPCWP-03)
   - Given: the player at (0, 64, 0) and a waypoint at (10, 64, 0), so the anchor is (10.5, 65.5, 0.5).
@@ -2925,7 +2936,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   - A delta above 50, or a decrease, resyncs the baseline without counting.
   - An abbreviated (approximate) value is skipped: it neither counts nor becomes the baseline (REQ-BEST-17).
   - Baselines reset on a world or server change, a profile switch and a disconnect. *(Derived: PLAN T5.2; SkyHanni GhostTracker behaviour, studied only)*
-- **REQ-BEST-12** If the module is ON and no "Bestiary:" widget section has been seen for 10 s, the HUD shows the hint "Bestiary widget off — enable it in <command>" instead of live lines. The command and menu path are the shared widget-hint string verified at G1 (REQ-GS-18); this module hard-codes no command. The hint is never repeated in chat. Any clickable suggestion only fills in the command and never sends it. *(Brief: ground rule 5; Derived: PLAN P5, T5.3)*
+- **REQ-BEST-12** If the module is ON and no "Bestiary:" widget section has been seen for 10 s, the HUD shows the hint "Bestiary widget off — enable it in <command>" instead of live lines. Every area of the game counts as a Bestiary area except the Dungeon Hub [decided R24], so the hint applies on every island except the Dungeon Hub, where a missing section is expected and shows no hint. The command and menu path are the shared widget-hint string (REQ-GS-18; its wording is checked at G3, R24); this module hard-codes no command. The hint is never repeated in chat. Any clickable suggestion only fills in the command and never sends it. *(Brief: ground rule 5; Derived: PLAN P5, T5.3)*
 - **REQ-BEST-13** The feature is read-only. It never opens /be or the widget menu, never clicks or pages a menu, and never uses the Hypixel API, which needs a key. In v1, counts come only from server-shown numbers; there is no estimated counter from mob deaths. If the G1 capture shows that the Bestiary widget gives no usable live kill count, the v1 fallback is menu snapshots and chat only: no live counting (REQ-BEST-11) and no rate or ETA between snapshots, and the HUD shows "live counting unavailable". The estimated counter is revisited after G1. *(Brief: ground rule 5; Derived: PLAN §3 row "Bestiary HUD")* [decided R11]
 - **REQ-BEST-14** The last-known kills and tier per family, and the last milestone state, are stored per SkyBlock profile with a timestamp. After login they are shown with an age label (e.g. "menu, 12 min ago") until a live update replaces them. *(Derived: multiple profiles; PLAN T3.0d/T5.2)*
 - **REQ-BEST-15** The bundled family table holds, per family: a stable slug id, display name, island/category, bracket or bracket-set id, cap, maximum tier count and mob ids. A cap that is not a bracket value is handled by using the thresholds below the cap with the cap as the last tier. The table is the trimmed NEU `bestiary.json`, MIT, with a notice. This module owns the table. The sbxp-optimizer must reference families as `bestiary:<id>` and takes its bestiary data from this table; it bundles no second bestiary table. *(Brief: Phase 5; Addendum: "reuse the internal database"; Derived: D-5, GAP-1 §5)* [decided D-5]
@@ -2962,7 +2973,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   - Milestone lines parse in both Roman and Arabic form.
   - The menu-lore fixture "Progress to Tier XV: 57.1%" parses.
 - **AC-BEST-10** (REQ-BEST-11) The widget sequence 12,449 → 12,452 → 12,600 → 12,590 → 12,592 gives session +3, +0 (resync), +0 (resync), +2, for a total of 5. After a world change, the first value adds 0. Verified by [A].
-- **AC-BEST-11** (REQ-BEST-12) A tab list without a "Bestiary:" section for 10 s shows the hint line, built from the shared REQ-GS-18 string. During the test, nothing is sent to the server through chat or commands. Verified by [A] and [C].
+- **AC-BEST-11** (REQ-BEST-12) A tab list without a "Bestiary:" section for 10 s shows the hint line, built from the shared REQ-GS-18 string, on any island except the Dungeon Hub; with the island set to the Dungeon Hub, the same tab list shows no hint [decided R24]. During the test, nothing is sent to the server through chat or commands. Verified by [A] and [C].
 - **AC-BEST-12** (REQ-BEST-13) Code review finds no screen open, click, command send or API call [R]. A production boot with your mod set shows BESTIARY chat blocks that SkyHanni or Skyblocker hide are still parsed, with no new ERROR [D].
 - **AC-BEST-13** (REQ-BEST-14) After a relogin, the last snapshot shows with its age label. A newer live widget value replaces it. Profile B never shows profile A's values. Verified by [A].
 - **AC-BEST-14** (REQ-BEST-15) `check` validates the shipped table, verified by [A]:
@@ -3401,7 +3412,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
 - **EC-SBXP-04** A live fetch hits offline, 429/503, a timeout, a gzip error or `success: false`. → Silent fallback, back-off up to 60 min, no chat spam. Opening the screen retries only after the back-off ends.
 - **EC-SBXP-05** A menu opens while Hypixel is still filling in lore placeholders. → It is parsed only once the contents are stable; placeholder lore never marks a task done.
 - **EC-SBXP-06** Paginated sub-menus share one truncated title (about 31 characters). → Pages are merged by item identity or the overview item, never by title.
-- **EC-SBXP-07** The tab-list Profile widget is disabled and another mod hides the profile chat lines. → Nothing is written, and one hint names the Profile widget using the shared, G1-verified widget-hint string (REQ-GS-18).
+- **EC-SBXP-07** The tab-list Profile widget is disabled and another mod hides the profile chat lines. → Nothing is written, and one hint names the Profile widget using the shared widget-hint string (REQ-GS-18; its wording is checked at G3, R24).
 - **EC-SBXP-08** Two accounts each have a profile with the same fruit name. → State is kept separate, keyed by player UUID (game-state REQ-GS-09). If a profile is deleted and recreated with the same name, its profile id changes and game-state archives the old state (REQ-GS-09). A manual reset from the optimizer is an extra option, not the mechanism.
 - **EC-SBXP-09** The Rift reverses the profile name. → Handled by game-state (EC-GS-10): the reversed name is ignored and the last identified profile is kept.
 - **EC-SBXP-10** On a co-op profile: → state comes from the current member's menus only and is never summed across members. Families that may be co-op-shared are marked "may be shared".
@@ -3809,7 +3820,7 @@ You approved **all plan decisions D-1–D-29 with the recommended option** ("Pla
 | Area | Decided |
 |---|---|
 | Rules | D-1 visible-only glow (Render Chest), invisible entities never highlighted, no through-wall option · D-6 defaults policy P1–P7 (below) and the defaults table §12.H |
-| Data & licensing | D-5 MIT data with notices (pinned PR #759 commit, credit) · D-12 NPC/mob lists bundled only, gists frozen · D-16 (a) wiki = human cross-check; XP and maxima need a non-wiki source; an unverified rate or drop chance may rest on one page you supplied. This overrides the addendum's "fill XP values from the official wiki", which closed on 2026-07-21. No consent request to Weird Gloop. · D-25 delete wiki copies + parsed data after plan approval · D-26 "Phase 3.9 internal database" = shared data registry (T3.0c) · D-28 (i) Claude reads wiki/forum/reddit pages only when you supply them |
+| Data & licensing | D-5 MIT data with notices (pinned PR #759 commit, credit); its corpse-spot part (SkyHanni-REPO PR #759 + meowdding spots) is dropped by R22, and the NEU bestiary and RNG weights stay · D-12 NPC/mob lists bundled only, gists frozen · D-16 (a) wiki = human cross-check; XP and maxima need a non-wiki source; an unverified rate or drop chance may rest on one page you supplied. This overrides the addendum's "fill XP values from the official wiki", which closed on 2026-07-21. No consent request to Weird Gloop. · D-25 delete wiki copies + parsed data after plan approval · D-26 "Phase 3.9 internal database" = shared data registry (T3.0c) · D-28 (i) Claude reads wiki/forum/reddit pages only when you supply them |
 | Features | D-2 split Catacombs / Dungeon Hub · D-3 numeric "Rare Drop Odds", 5 v1 cases (Scatha, Croesus/dungeon chests = relative rarity, Vanguard, Lapis/Umber/Tungsten, Slayer RNG) · D-4 drill hand re-equip fix only, drills only · D-7 corpse keys counted from inventory · D-15 beam colour = island colour + optional per-NPC override, glow colour separate |
 | UI | D-8 no UI library, vanilla font, corners from fills, accent configurable (default teal `#29B6B2`), live-apply + save on close, Cloth Config removed, toasts, T2.9 items as stretch goals |
 | Updater & release | D-9 final 2.0.0 · D-10 repo-local identity `Kesuhi <…noreply…>`, push at checkpoints, merge commit · D-13 early v1.1.0+26.2 after G1, rules warning on old release notes, no 26.1.2 hotfix · D-14 confirm → staged install |
@@ -3841,7 +3852,7 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 | R4 | Release details (Q-REL-02..05, Q-UPD-01):<ul><li>the rules warning goes on **v1.0.0 and v1.0.1** (same glow), wording approved by you first</li><li>the early release goes through an intermediate PR to `main`</li><li>v1.1.0 replaces the dead Modrinth updater with a notify-only GitHub check shown as a chat line</li><li>your PR approval covers the merge; a separate "ship" authorises tag push + publish</li><li>GitHub immutable releases are enabled before 2.0.0</li></ul> | a) all as described · b) change parts | **a** |
 | R5 | NPC/mob data (Q-NPCDB-02..05):<ul><li>invisible-by-design mobs (Ghost, Fels, Sneaky Creeper, Invisibug) stay in the picker greyed, not addable, labelled "never highlighted (Hypixel rules)"</li><li>no new island coverage in v1 (gaps listed)</li><li>rules created from the database follow corrected coordinates</li><li>**you** remove those 4 mobs from the 1.0.x mob gist</li></ul> | a) all as described · b) change parts | **a** |
 | R6 | Also bundle SkyOcean's `src/repo/vanguard.jsonc` (MIT under its licence) with a notice, replacing its "assumed" dye weight (Q-ODDS-06) | a) yes · b) no (Vanguard odds from your supplied pages only) | **a** |
-| R7 | Mineshaft and corpses (Q-MSA-02/03, Q-CORPSE-02/03):<ul><li>a Dead Man's Chest corpse adds one follow-up line</li><li>no "[Share]" button in v1</li><li>`/ksu corpses` lists spots even with markers OFF</li><li>corpse spot markers are **text labels only** (no beam or box), see-through, default OFF</li></ul> | a) as described · b) corpse markers also get beams · c) list command only, no markers | **a** |
+| R7 | Mineshaft and corpses (Q-MSA-02/03, Q-CORPSE-02/03):<ul><li>a Dead Man's Chest corpse adds one follow-up line</li><li>no "[Share]" button in v1</li><li>`/ksu corpses` lists spots even with markers OFF</li><li>corpse spot markers are **text labels only** (no beam or box), see-through, default OFF</li></ul> | a) as described · b) corpse markers also get beams · c) list command only, no markers | **a**. Since R22 only the first two points apply: `/ksu corpses` and the corpse spot markers are dropped [dropped R22] |
 | R8 | Existing fixed-waypoint colours: a customised colour becomes that rule's beam colour; rules still on the old default green follow the island colour (Q-NPCWP-02) | a) as described · b) all colours stay glow-only · c) every colour becomes a beam colour | **a** |
 | R9 | Fishing (Q-BOB-01, Q-HOT-01): the bobber fix applies to **your own** bobber only, and "the hotspot you're fishing in" means your bobber was inside its area at any time in the last 30 s | a) as described · b) every bobber; "fishing in" = a catch within 30 s | **a** |
 | R10 | Croesus/dungeon chest tooltip (Q-ODDS-03): keep relative rarity only (decided D-3), or add "≈ 1 in N runs (base, no bonuses)" from the same MIT data (N = RNG score / 300, within ~1–2.5 % of the wiki)? | a) relative only · b) + "≈ 1 in N runs" | **Answer: b** |
@@ -3857,14 +3868,28 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.H Defaults table (decided D-6 and R1–R17)
+### 12.3 Decisions after G1 — R18–R24
+
+You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. Requirements written to them carry `[decided Rn]`; the items R22 drops carry `[dropped R22]` and keep their ids.
+
+| # | Decision | Recorded in |
+|---|---|---|
+| R18 | A rule that ignores names (NONE) needs an entity type. Without one it would outline every visible entity, so it is inert, logged once and marked in the rule editors with a warning sign and a line saying why | REQ-GLOW-10, AC-GLOW-09; PLAN T1.8c |
+| R19 | Captures mask real player names, yours included, as Self, Player1, …; NPC names and Hypixel's tab-widget entries stay | REQ-GS-13, AC-GS-13; PLAN T0.4d |
+| R20 | In v1.1.0, the "You found <NPC>" title fires only for five special moving NPCs: Trinity, Tomioka and Duncan (Catacombs), and Xalx and Pete (Crystal Hollows). A rule qualifies when its NPC data sourceId is `trinity`, `tomioka`, `duncan`, `xalx` or `pete`, or, for a hand-made rule without a sourceId, when its label equals one of those five names, ignoring case and surrounding spaces. Other NPC Search rules still outline their NPC but never trigger the title. The other title rules stay: line of sight, once per rule per server, reset on a location change, its own toggle (default ON), never for invisible entities | REQ-GLOW-14, REQ-GLOW-15, AC-GLOW-13, Q-GLOW-03, §12.H; PLAN §3, T1.11b |
+| R21 | In v1.1.0, NPC Search gets the setting "White waypoint labels", default ON: waypoint labels and their distance line are drawn white. OFF draws them in the rule's colour (the 1.0.1 and 1.1.0-dev look). This replaces the npc-waypoints out-of-scope line "Label colours other than white": white stays the default, and the rule's colour becomes an opt-out. When the beacon beams arrive (T3.4), the setting stays and the beam carries the colour | REQ-PORT-06, AC-PORT-06, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-08, npc-waypoints out of scope, AC-NPCWP-03, AC-NPCWP-05, §12.H; PLAN §3, T1.3b |
+| R22 | The possible corpse spots (brief Phase 3 item 3) are dropped from the plan entirely: the corpse-waypoints module, PLAN T3.3a (spot table) and T3.3 (markers and `/ksu corpses`), their defaults row, the `corpses` reserved word, D-5's corpse-spot data (SkyHanni-REPO PR #759 + meowdding spots) and the corpse-spot points of R7. Ids are kept and marked dropped. What stays: the mineshaft entry alert (T3.2), the Frozen Corpses widget reading (T3.0m), the corpse odds (T3.9d, T3.9e) and D-5's NEU bestiary and RNG-weight data. The README may keep its excluded-behaviour line about filtering corpse spots by unseen entities (REQ-REL-03) | corpse-waypoints (all ids), REQ-GS-16, AC-GS-16, REQ-GS-17, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T2.5b, T3.0m, T3.3a, T3.3, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
+| R23 | Order after the v1.1.0 merge: the first Phase 3 work is the waypoint path T3.0b (marker toolkit) → T3.0n (beacon beams) → T3.4 (Skyblocker-style NPC waypoints: white label plus coloured beacon beam), so beams come right after v1.1.0. Reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used (REQ-NPCWP-11). Whether this ships as an intermediate release is decided then | REQ-PORT-06, AC-PORT-06, AC-PORT-14 ("once T3.4 lands"); PLAN §6, Phase 3 intro, T3.0b, T3.4 |
+| R24 | G1 field answers. (a) Q-MSA-04: you believe the Frozen Corpses tab widget is on by default and ask for a failsafe that tells the player when it is off. The once-per-launch widget hint (REQ-MSA-08, REQ-GS-18) is that failsafe. The command and menu path that enable the widget were not given, so the hint wording stays UNVERIFIED and is checked at G3. (b) Whether a Tungsten or Umber key held only in the Dwarven Sack opens a corpse could not be tested: D-7 (inventory only) stands, the REQ-MSA-05 sack fallback is not triggered, and the question stays open for G3. (c) Every area of the game counts as a Bestiary area except the Dungeon Hub | REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-BEST-12, AC-BEST-11; PLAN G1, T3.0m, T3.2, T5.3, G3 |
+
+### 12.H Defaults table (decided D-6, R1–R17 and R20–R22)
 
 | Feature | Default | | Feature | Default |
 |---|---|---|---|---|
 | Mob Highlighter / NPC Search modules | ON (rules user-added) | | Mineshaft entry alert | ON; key counts ON |
-| Trinity/Tomioka/Duncan glow | your rules (fresh install: none) [R1] | | Possible corpse spots | **OFF**; hide when all looted ON [R7] |
-| "You found X" title | ON, after line of sight, once per run | | Bobber fix | ON (own bobber) [R9] |
-| NPC waypoints | ON; beacon beams ON; distance line ON | | Hotspot ring / filled area | ON / ON [R2] |
+| Trinity/Tomioka/Duncan glow | your rules (fresh install: none) [R1] | | Possible corpse spots | [dropped R22]: no toggle (was **OFF**; hide when all looted ON [R7]) |
+| "You found X" title | ON, after line of sight, once per run; only for Trinity, Tomioka, Duncan, Xalx and Pete [R20] | | Bobber fix | ON (own bobber) [R9] |
+| NPC waypoints | ON; beacon beams ON; distance line ON; white labels ON [R21] | | Hotspot ring / filled area | ON / ON [R2] |
 | Fixed-coordinate labels see-through | yes | | Hotspot-gone warning | ON (title + sound + chat) [R2] |
 | Drill re-equip fix | ON (drills only) | | Rare Drop Odds | **OFF**; once enabled all cases ON, chat lines ON, rare threshold 2 % |
 | Bestiary HUD | **OFF**; lines when enabled: tier, kills, to next tier, rate, session kills, milestone (when known) ON; to max, ETA OFF; reset on island change OFF [R11] | | Update check / channel | ON (notify) / STABLE |
@@ -3877,9 +3902,9 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 ## 13. Traceability (final)
 
 Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check script that runs both ways:
-- 384 requirements: 373 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), and 6 not built by decision. **None uncovered.**
-- 146 tasks: each names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing task, and no task larger than M.
-- 342 acceptance criteria (withdrawn ones excluded): each is named by a task or a checkpoint.
+- 384 requirements: 363 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), 6 not built by decision, and 10 dropped after G1 (REQ-CORPSE-01 to REQ-CORPSE-10, R22). **None uncovered.**
+- 151 tasks: 149 active and 2 dropped (T3.3a, T3.3, R22). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. This update (R20–R24) added T1.11b and T1.3b, and also added the rows for T0.4c, T0.4d and T1.8c, which were missing here.
+- 342 acceptance criteria (withdrawn ones excluded): 332 are each named by a task or a checkpoint, and 10 are dropped (AC-CORPSE-01 to AC-CORPSE-10, R22).
 
 ### 13.1 Requirement → PLAN tasks, by module
 
@@ -3892,10 +3917,10 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-PORT-03 | T1.2 |
 | REQ-PORT-04 | T1.2 |
 | REQ-PORT-05 | T1.1, T1.2 |
-| REQ-PORT-06 | T1.1, T1.2, T1.3 |
+| REQ-PORT-06 | T1.1, T1.2, T1.3, T1.3b |
 | REQ-PORT-07 | T1.3 |
 | REQ-PORT-08 | T1.2, T1.10 |
-| REQ-PORT-09 | T1.14, T1.16 |
+| REQ-PORT-09 | T1.14, T1.3b, T1.16 |
 | REQ-PORT-10 | T1.4 |
 | REQ-PORT-11 | T1.13 |
 | REQ-PORT-12 | T0.6, T1.1 |
@@ -3929,7 +3954,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-LOC-05 | T1.9 |
 | REQ-LOC-06 | T1.9 |
 | REQ-LOC-07 | T1.9 |
-| REQ-LOC-08 | T0.4, T1.9, T3.0m |
+| REQ-LOC-08 | T0.4, T0.4c, T1.9, T3.0m |
 | REQ-LOC-09 | T1.9, T2.5a |
 | REQ-LOC-10 | T1.9 |
 
@@ -3946,12 +3971,12 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-GLOW-07 | T1.10 |
 | REQ-GLOW-08 | T1.10a |
 | REQ-GLOW-09 | T3.1 |
-| REQ-GLOW-10 | T1.8b, T2.5a |
+| REQ-GLOW-10 | T1.8b, T1.8c, T2.5a |
 | REQ-GLOW-11 | T1.8b |
 | REQ-GLOW-12 | T3.1 |
 | REQ-GLOW-13 | T1.9b, T3.1 |
-| REQ-GLOW-14 | T1.11 |
-| REQ-GLOW-15 | T1.14, T1.16, T2.1, T7.1 |
+| REQ-GLOW-14 | T1.11, T1.11b |
+| REQ-GLOW-15 | T1.14, T1.11b, T1.16, T2.1, T7.1 |
 | REQ-GLOW-16 | T1.10 |
 | REQ-GLOW-17 | T1.10 |
 
@@ -4038,7 +4063,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-GS-10 | T3.0a |
 | REQ-GS-11 | T3.0a |
 | REQ-GS-12 | T0.4, T0.4b, T3.0a, T3.0e |
-| REQ-GS-13 | T0.4, T0.4b, T3.0m, T3.0e |
+| REQ-GS-13 | T0.4, T0.4c, T0.4b, T0.4d, T3.0m, T3.0e |
 | REQ-GS-14 | T3.0a, T3.0g, T3.0m, T3.0d, T3.0e |
 | REQ-GS-15 | T3.0a, T3.0m, T3.0e |
 | REQ-GS-16 | T3.0a, T3.0m |
@@ -4091,33 +4116,33 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-MSA-11 | T3.2 |
 | REQ-MSA-12 | T3.2 |
 
-**corpse-waypoints** (10)
+**corpse-waypoints** (10, all dropped by R22)
 
 | Requirement | PLAN tasks |
 |---|---|
-| REQ-CORPSE-01 | T3.3a |
-| REQ-CORPSE-02 | T3.3 |
-| REQ-CORPSE-03 | T3.3 |
-| REQ-CORPSE-04 | T3.3 |
-| REQ-CORPSE-05 | T3.3 |
-| REQ-CORPSE-06 | T3.3 |
-| REQ-CORPSE-07 | T3.3 |
-| REQ-CORPSE-08 | T3.3 |
-| REQ-CORPSE-09 | T3.3a, T7.1, T7.1b |
-| REQ-CORPSE-10 | T3.3a |
+| REQ-CORPSE-01 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3a) |
+| REQ-CORPSE-02 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3) |
+| REQ-CORPSE-03 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3) |
+| REQ-CORPSE-04 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3) |
+| REQ-CORPSE-05 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3) |
+| REQ-CORPSE-06 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3) |
+| REQ-CORPSE-07 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3) |
+| REQ-CORPSE-08 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3) |
+| REQ-CORPSE-09 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3a, T7.1, T7.1b) |
+| REQ-CORPSE-10 | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was T3.3a) |
 
 **npc-waypoints** (12)
 
 | Requirement | PLAN tasks |
 |---|---|
 | REQ-NPCWP-01 | T3.4 |
-| REQ-NPCWP-02 | T3.4 |
+| REQ-NPCWP-02 | T1.3b, T3.4 |
 | REQ-NPCWP-03 | T3.4 |
 | REQ-NPCWP-04 | T3.4 |
 | REQ-NPCWP-05 | T3.4, T3.4b |
 | REQ-NPCWP-06 | T3.4b |
 | REQ-NPCWP-07 | T3.4 |
-| REQ-NPCWP-08 | T3.4 |
+| REQ-NPCWP-08 | T1.3b, T3.4 |
 | REQ-NPCWP-09 | T3.4b |
 | REQ-NPCWP-10 | T3.4 |
 | REQ-NPCWP-11 | T3.4 |
@@ -4367,20 +4392,20 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-XC-RULES-07 | T0.6, T2.1, T7.1 |
 | REQ-XC-LICENSE-01 | T0.1 |
 | REQ-XC-LICENSE-02 | T1.10 |
-| REQ-XC-LICENSE-03 | T3.0j, T3.3a, T3.9g, T5.1, T6.2f, T6.11, T7.1b |
+| REQ-XC-LICENSE-03 | T3.0j, T3.9g, T5.1, T6.2f, T6.11, T7.1b |
 | REQ-XC-LICENSE-04 | T2.2 |
 | REQ-XC-LICENSE-05 | T0.1, T0.6, T6.2, T6.2f, T6.3a |
 | REQ-XC-TOGGLE-01 | T1.11, T2.1, T2.4a, T5.3, T6.8 |
-| REQ-XC-TOGGLE-02 | T1.11, T2.1, T4.4b, T5.3, T6.8, T7.1 |
+| REQ-XC-TOGGLE-02 | T1.11, T1.3b, T2.1, T4.4b, T5.3, T6.8, T7.1 |
 | REQ-XC-PLAN-01 | T0.1, T6.0 |
 | REQ-XC-GIT-01 | T0.0, T7.3 |
 | REQ-XC-GIT-02 | T0.0, T1.18, T6.10, T7.3, T7.4 |
 | REQ-XC-BUILD-01 | T0.0, T6.2b, T7.3 |
-| REQ-XC-VERIFY-01 | T0.4 |
-| REQ-XC-VERIFY-02 | T0.2, T0.3, T0.4, T0.4b, T1.5, T1.6, T3.0m |
+| REQ-XC-VERIFY-01 | T0.4, T0.4c |
+| REQ-XC-VERIFY-02 | T0.2, T0.3, T0.4, T0.4c, T0.4b, T1.5, T1.6, T3.0m |
 | REQ-XC-SKILLS-01 | every checkpoint report, G7 (checkpoint) |
 | REQ-XC-REPORT-01 | every checkpoint report, G6, G7 (checkpoint) |
-| REQ-XC-PRIVACY-01 | T0.0, T0.1, T0.4b, T1.17, T3.0a, T6.2c, T6.3a, T7.2b, T7.3 |
+| REQ-XC-PRIVACY-01 | T0.0, T0.1, T0.4b, T0.4d, T1.17, T3.0a, T6.2c, T6.3a, T7.2b, T7.3 |
 
 ### 13.2 PLAN task → requirements
 
@@ -4393,6 +4418,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T0.2 | refactor: test seams, no behaviour change | REQ-XC-VERIFY-02, REQ-GLOW-01, REQ-CFG-03 |
 | T0.3 | test: JUnit 5 + characterization tests | REQ-XC-VERIFY-02, REQ-GLOW-01, REQ-CFG-03, REQ-CFG-01 |
 | T0.4 | build: dev runtime + /ksu debug island + tab/sidebar dumps | REQ-XC-VERIFY-02, REQ-XC-VERIFY-01, REQ-LOC-08, REQ-GS-13, REQ-GS-12 |
+| T0.4c | test(gametest): client gametest source set + 1.0.1 label baseline | REQ-XC-VERIFY-02, REQ-XC-VERIFY-01, REQ-LOC-08, REQ-GS-13 |
 | T0.4b | feat(debug): armed container dump + entity name-tag dump | REQ-XC-PRIVACY-01, REQ-XC-VERIFY-02, REQ-GS-13, REQ-GS-12, REQ-XC-RULES-04 |
 | T1.1 | refactor(npcsearch): submit-based waypoint renderer | REQ-PORT-12, REQ-PORT-05, REQ-PORT-06 |
 | T1.2 | build!: target Minecraft 26.2 | REQ-PORT-05, REQ-PORT-06, REQ-PORT-01, REQ-PORT-02, REQ-PORT-03, REQ-PORT-04, REQ-PORT-08 |
@@ -4415,6 +4441,10 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T1.4b | feat(update): SemVer compare + asset selection | REQ-UPD-05, REQ-UPD-06, REQ-UPD-07 |
 | T1.4 | feat(update)!: notify-only GitHub check replaces the Modrinth updater | REQ-XC-RULES-01, REQ-UPD-19, REQ-UPD-01, REQ-UPD-08, REQ-UPD-10, REQ-PORT-10 |
 | T1.14 | docs(changelog): start CHANGELOG.md | REQ-PORT-09, REQ-GLOW-15, REQ-REL-05 |
+| T1.8c | fix(highlight): a rule that ignores names needs an entity type | REQ-GLOW-10 |
+| T0.4d | fix(debug): mask real player names in captures | REQ-GS-13, REQ-XC-PRIVACY-01 |
+| T1.11b | fix(npcsearch): "You found" title only for the five special NPCs | REQ-GLOW-14, REQ-GLOW-15 |
+| T1.3b | feat(npcsearch): white waypoint labels by default | REQ-NPCWP-02, REQ-NPCWP-08, REQ-PORT-06, REQ-PORT-09, REQ-XC-TOGGLE-02 |
 | T1.15 | build(release): version 1.1.0 + <version>+<mc> jar naming + sidecar | REQ-REL-06, REQ-REL-07, REQ-REL-14 |
 | T1.16 | docs(release): README, CHANGELOG and mod description for v1.1.0 | REQ-PORT-09, REQ-GLOW-15, REQ-REL-05, REQ-REL-14, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04 |
 | T1.17 | build(release): release check + RELEASING.md | REQ-XC-PRIVACY-01, REQ-REL-05, REQ-REL-07, REQ-REL-11, REQ-REL-16 |
@@ -4461,8 +4491,8 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T3.8c | feat(ui): invisible-by-design mobs greyed in the picker | REQ-XC-RULES-04, REQ-UI-11, REQ-NPCDB-09, REQ-NPCDB-08 |
 | T3.1 | fix(highlight): verify Trinity/Tomioka/Duncan glow [brief 3.1] | REQ-GLOW-13, REQ-GLOW-09, REQ-GLOW-12 |
 | T3.2 | feat(mining): mineshaft entry alert [brief 3.2] | REQ-MSA-01, REQ-MSA-02, REQ-MSA-03, REQ-MSA-04, REQ-MSA-05, REQ-MSA-06, REQ-MSA-07, REQ-MSA-08, REQ-MSA-09, REQ-MSA-10, REQ-MSA-11, REQ-MSA-12 |
-| T3.3a | feat(data): corpse spot table [brief 3.3] | REQ-XC-LICENSE-03, REQ-CORPSE-01, REQ-CORPSE-09, REQ-CORPSE-10 |
-| T3.3 | feat(mining): possible corpse spots [brief 3.3] | REQ-CORPSE-02, REQ-CORPSE-03, REQ-CORPSE-04, REQ-CORPSE-05, REQ-CORPSE-06, REQ-CORPSE-07, REQ-CORPSE-08 |
+| T3.3a | feat(data): corpse spot table [brief 3.3] [dropped R22] | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was REQ-XC-LICENSE-03, REQ-CORPSE-01, REQ-CORPSE-09, REQ-CORPSE-10) |
+| T3.3 | feat(mining): possible corpse spots [brief 3.3] [dropped R22] | *dropped R22:* the maintainer dropped corpse-spot waypoints after G1 (was REQ-CORPSE-02, REQ-CORPSE-03, REQ-CORPSE-04, REQ-CORPSE-05, REQ-CORPSE-06, REQ-CORPSE-07, REQ-CORPSE-08) |
 | T3.4 | feat(waypoints): Skyblocker-style NPC waypoints [brief 3.4] | REQ-NPCWP-01, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-04, REQ-NPCWP-05, REQ-NPCWP-07, REQ-NPCWP-08, REQ-NPCWP-10, REQ-NPCWP-11, REQ-NPCWP-12 |
 | T3.4b | feat(waypoints): beam colour settings + migration | REQ-NPCWP-05, REQ-NPCWP-06, REQ-NPCWP-09 |
 | T3.5 | feat(fishing): bobber rubber-band fix [brief 3.5] | REQ-BOB-08, REQ-BOB-01, REQ-BOB-02, REQ-BOB-03, REQ-BOB-04, REQ-BOB-05, REQ-BOB-06, REQ-BOB-07 |
@@ -4524,8 +4554,8 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T6.10 | feat(skill): .claude/skills/update-sbxp-table/ | REQ-XC-GIT-02, REQ-SKILL-14, REQ-SKILL-04, REQ-SKILL-05, REQ-SKILL-08, REQ-SKILL-13, REQ-SKILL-01, REQ-SKILL-02, REQ-SKILL-03, REQ-SKILL-06, REQ-SKILL-07, REQ-SKILL-09, REQ-SKILL-10, REQ-SKILL-12, REQ-SKILL-15 |
 | T6.10b | test(skill): recorded fixtures, dry run, eval loop, one real run | REQ-SKILL-11, REQ-SKILL-13, REQ-SKILL-01, REQ-SKILL-10 |
 | T6.11 | docs(sbxp): README, CHANGELOG, THIRD_PARTY_NOTICES | REQ-REL-05, REQ-REL-01, REQ-XC-LICENSE-03, REQ-SBXP-57 |
-| T7.1 | docs(readme): README for 2.0.0 | REQ-XC-RULES-07, REQ-XC-TOGGLE-02, REQ-GLOW-15, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-CORPSE-09 |
-| T7.1b | docs(changelog): 2.0.0 section + THIRD_PARTY_NOTICES final pass | REQ-REL-05, REQ-REL-03, REQ-REL-04, REQ-DATA-05, REQ-XC-LICENSE-03, REQ-CORPSE-09 |
+| T7.1 | docs(readme): README for 2.0.0 | REQ-XC-RULES-07, REQ-XC-TOGGLE-02, REQ-GLOW-15, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04 |
+| T7.1b | docs(changelog): 2.0.0 section + THIRD_PARTY_NOTICES final pass | REQ-REL-05, REQ-REL-03, REQ-REL-04, REQ-DATA-05, REQ-XC-LICENSE-03 |
 | T7.2 | chore(release): version 2.0.0 | REQ-REL-06, REQ-REL-07, REQ-REL-02 |
 | T7.2b | build(release): pre-publish checks through the updater's own code | REQ-XC-PRIVACY-01, REQ-UPD-03, REQ-REL-05, REQ-REL-07, REQ-REL-11, REQ-DATA-05 |
 | T7.2c | docs(release): extend RELEASING.md (from T1.17) for 2.0.0 | REQ-REL-06, REQ-REL-16, REQ-REL-13 |
@@ -4535,7 +4565,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 
 ### 13.3 Comparison record: SPEC.md against the earlier PLAN.md
 
-The first comparison of this spec with the earlier plan found 111 requirements without a task, 60 contradictions and 26 tasks that no requirement justified. The PLAN update resolved them as follows; each item was re-checked against the current files.
+The first comparison of this spec with the earlier plan found 111 requirements without a task, 60 contradictions and 26 tasks that no requirement justified. The PLAN update resolved them as follows; each item was re-checked against the current files. This record predates G1: the items below that name T3.3, T3.3a, corpse spots or `/ksu corpses` are kept as history, and R22 has since dropped those tasks (§12.3).
 
 **Gaps (111): all now have a task.** The task(s) are given per requirement:
 
