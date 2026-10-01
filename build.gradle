@@ -42,6 +42,15 @@ dependencies {
 	// declared via fabric.mod.json's depends, per Hypixel's own documented setup. Bundling a
 	// private copy via include() isn't the supported pattern for this library.
 	implementation "net.hypixel:mod-api:${project.hypixel_modapi_version}"
+
+	// Unit tests for pure logic (rule matching, config loading, data parsing); not shipped.
+	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
+	testImplementation "org.junit.jupiter:junit-jupiter"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+	useJUnitPlatform()
 }
 
 processResources {

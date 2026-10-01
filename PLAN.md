@@ -281,7 +281,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T0.2 refactor: test seams, no behaviour change** (M, deps T0.1). Files: `CompiledRule`/new `NameMatcher` (`matches(rule, name)`), `ConfigManager` (`load(Path)`), `MobDatabase`/`NpcDatabase` (`parse(String)`).
   - Req: REQ-XC-VERIFY-02, REQ-GLOW-01, REQ-CFG-03
   - Accept: the diff is a pure extraction; the game behaves identically (B).
-- [ ] **T0.3 test: JUnit 5 + characterization tests** (S, deps T0.2). `build.gradle`, `src/test/java/…`. JUnit is an ask-first dependency (SPEC §8).
+- [x] **T0.3 test: JUnit 5 + characterization tests** (S, deps T0.2). `build.gradle`, `src/test/java/…`. JUnit is an ask-first dependency (SPEC §8).
   - Req: REQ-XC-VERIFY-02, REQ-GLOW-01, REQ-CFG-01, REQ-CFG-03
   - Accept: AC-GLOW-01 on 26.1.2 (NONE/CONTAINS/REGEX/EXACT, `§` stripping, island, distance and type gates); a fixture shaped like your config loads (baseline for AC-CFG-01); DB parsing with a UTF-8 BOM (EC-CFG-02). All green **before** the port.
 - [ ] **T0.4 build: dev runtime + `/ksu debug island` + tab/sidebar dumps** (M). `build.gradle`: `localRuntime "maven.modrinth:hypixel-mod-api:1.0.2+build.1+mc26.1"` from the Modrinth maven, verified resolvable; that build also targets 26.1.

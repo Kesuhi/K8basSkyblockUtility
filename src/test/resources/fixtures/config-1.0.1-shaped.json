@@ -1,0 +1,29 @@
+{
+  "general": {
+    "autoUpdateCheckEnabled": true,
+    "autoUpdateDownloadEnabled": true,
+    "mobScanRangeBlocks": 128
+  },
+  "modules": {
+    "mob_highlighter": {
+      "enabled": true,
+      "rules": [
+        {"id": "mob-1", "label": "Zealot", "enabled": true, "entityTypeId": "minecraft:enderman", "nameMatchMode": "CONTAINS", "namePattern": "Zealot", "color": 16711935, "maxDistance": 0.0, "island": "The End", "sourceId": "zealot"},
+        {"id": "mob-2", "label": "Special Zealot", "enabled": true, "entityTypeId": null, "nameMatchMode": "CONTAINS", "namePattern": "Special Zealot", "color": 16776960, "maxDistance": 0.0, "island": "The End", "sourceId": "special_zealot"},
+        {"id": "mob-3", "label": "Golden Goblin", "enabled": true, "nameMatchMode": "CONTAINS", "namePattern": "Golden Goblin", "color": 16766720, "maxDistance": 48.0, "island": null, "sourceId": null},
+        {"id": "mob-4", "label": "Any zombie", "enabled": false, "entityTypeId": "minecraft:zombie", "nameMatchMode": "NONE", "namePattern": "", "color": 65280, "maxDistance": 0.0},
+        {"id": "mob-5", "label": "Lv regex", "enabled": true, "nameMatchMode": "REGEX", "namePattern": "\\[Lv\\d+\\] Ghoul", "color": 255, "maxDistance": 0.0, "island": "Hub"}
+      ]
+    },
+    "npc_search": {
+      "enabled": true,
+      "rules": [
+        {"id": "npc-1", "label": "Trinity", "enabled": true, "island": "Catacombs", "fixed": false, "sourceId": "trinity", "x": 0.0, "y": 0.0, "z": 0.0, "nameMatchMode": "CONTAINS", "namePattern": "Trinity", "color": 11141290},
+        {"id": "npc-2", "label": "Tomioka", "enabled": true, "island": "Catacombs", "fixed": false, "sourceId": "tomioka", "x": 0.0, "y": 0.0, "z": 0.0, "nameMatchMode": "CONTAINS", "namePattern": "Tomioka", "color": 11141290},
+        {"id": "npc-3", "label": "Duncan", "enabled": true, "island": "Catacombs", "fixed": false, "sourceId": "duncan", "x": 0.0, "y": 0.0, "z": 0.0, "nameMatchMode": "CONTAINS", "namePattern": "Duncan", "color": 11141290},
+        {"id": "npc-4", "label": "Croesus", "enabled": true, "island": "Catacombs", "fixed": true, "sourceId": "croesus", "x": -12.5, "y": 121.0, "z": -43.5, "nameMatchMode": "CONTAINS", "namePattern": "", "color": 698193},
+        {"id": "npc-5", "label": "Elizabeth", "enabled": true, "island": "Hub", "fixed": true, "sourceId": "elizabeth", "x": -3.5, "y": 70.0, "z": -90.5, "nameMatchMode": "CONTAINS", "namePattern": "", "color": 698193}
+      ]
+    }
+  }
+}
