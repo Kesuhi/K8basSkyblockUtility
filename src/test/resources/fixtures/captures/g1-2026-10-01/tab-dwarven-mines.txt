@@ -35,7 +35,7 @@
 [K8BAS-DUMP] tab 034 order=0 name=!C-q | Pickaxe Ability:
 [K8BAS-DUMP] tab 035 order=0 name=!B-l | Pet:
 [K8BAS-DUMP] tab 036 order=0 name=!D-i |  Mining 60: MAX
-[K8BAS-DUMP] tab 037 order=0 name=!A-b | [535] Self
+[K8BAS-DUMP] tab 037 order=0 name=!A-b | [435] Self
 [K8BAS-DUMP] tab 038 order=0 name=!B-q |  Fetchur: Available
 [K8BAS-DUMP] tab 039 order=0 name=Player25 | 
 [K8BAS-DUMP] tab 040 order=0 name=!D-g | Skills:
@@ -68,7 +68,7 @@
 [K8BAS-DUMP] tab 067 order=0 name=Player33 | 
 [K8BAS-DUMP] tab 068 order=0 name=!D-s |  Bal 11: 71/80
 [K8BAS-DUMP] tab 069 order=0 name=Player34 | 
-[K8BAS-DUMP] tab 070 order=0 name=!B-h |  SB Level: [535] 28/100 XP
+[K8BAS-DUMP] tab 070 order=0 name=!B-h |  SB Level: [435] 28/100 XP
 [K8BAS-DUMP] tab 071 order=0 name=Player35 | 
 [K8BAS-DUMP] tab 072 order=0 name=!D-m | Event Trackers:
 [K8BAS-DUMP] tab 073 order=0 name=!B-a |                Info

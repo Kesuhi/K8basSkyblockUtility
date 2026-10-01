@@ -27,7 +27,7 @@
 [K8BAS-DUMP] tab 026 order=0 name=!B-j |  Interest: 17 Hours (913k)
 [K8BAS-DUMP] tab 027 order=0 name=!D-j |  Glacite Bowman 12: 497/500
 [K8BAS-DUMP] tab 028 order=0 name=!C-l | 
-[K8BAS-DUMP] tab 029 order=0 name=!A-b | [535] Self
+[K8BAS-DUMP] tab 029 order=0 name=!A-b | [435] Self
 [K8BAS-DUMP] tab 030 order=0 name=!C-b | Commissions:
 [K8BAS-DUMP] tab 031 order=0 name=!D-o | Pickaxe Ability:
 [K8BAS-DUMP] tab 032 order=0 name=!D-m |  Glacite Mutt 13: 698/750
@@ -49,7 +49,7 @@
 [K8BAS-DUMP] tab 048 order=0 name=!C-j |  Gemstone: 8,159
 [K8BAS-DUMP] tab 049 order=0 name=!B-i |  Bank: 1B
 [K8BAS-DUMP] tab 050 order=0 name=!C-i |  Mithril: 3,196,526
-[K8BAS-DUMP] tab 051 order=0 name=!B-h |  SB Level: [535] 28/100 XP
+[K8BAS-DUMP] tab 051 order=0 name=!B-h |  SB Level: [435] 28/100 XP
 [K8BAS-DUMP] tab 052 order=0 name=!B-r |  Mining Fortune: 2034
 [K8BAS-DUMP] tab 053 order=0 name=!D-i | Bestiary:
 [K8BAS-DUMP] tab 054 order=0 name=!A-n | 

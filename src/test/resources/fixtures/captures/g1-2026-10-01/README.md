@@ -136,10 +136,11 @@ All menus were opened in the Dungeon Hub. Each file starts with the header line 
 | Player names | The mod masked real names when it wrote the lines (REQ-GS-13, T0.4d): `Self` is the player, and `Player17` … `Player38` are that session's placeholders, which is why they do not start at 1. Every line was checked against the player names that appear elsewhere in the log (the account name and chat senders). It was also checked around rank prefixes and around Co-op, Guild, Party, Owner, Friends, Visiting and Profile. No unmasked name was found. NPC, item, mob and island names and Hypixel's fake tab rows (`!A-a` …) are kept. | 0 |
 | Server ids | Every server id becomes `m000XX`, checked on the text with `§` codes stripped. Where Hypixel split the id with `§` codes, the codes stay in place: `§8m000§v§8XX` reads `m000XX` once stripped. | 4 (both sidebar date lines, both tab `Server:` rows) |
 | UUIDs, profile, island and co-op ids | The rule would replace them with `00000000-0000-0000-0000-000000000000`, but the dumps contain none. | 0 |
-| Leaderboard position | The `Global Ranking: #…` lore line of "Your SkyBlock Level Ranking" points at one player, so its number becomes the placeholder `#1,234`. | 2 (`skyblock-leveling-a.txt`, `-b.txt`) |
+| Leaderboard position | The `Global Ranking: #…` lore line of "Your SkyBlock Level Ranking" points at one player, so its number becomes the placeholder `#1,234`. The "top …%" line below it, which gives the same rank together with the player total, becomes `0.01%` to match. | 4 (`skyblock-leveling-a.txt`, `-b.txt`) |
+| SkyBlock level and XP | The exact level and XP total are what the level leaderboards sort by, so they could single out the profile. They are shifted consistently: every level is 100 lower (`Your level`, the `Level …` panes, the tab rows `[…] Self` and `SB Level: […]`) and the XP total is 10,000 lower. The progress within the level (`28/100 XP`) is kept. | 20 (both leveling files, both tab files) |
 | Guild names, Discord tags, e-mail addresses, local paths, IPs | None in the dumps. | 0 |
 
-Some values are kept on purpose: money, stats, levels and progress values, the profile's fruit name, the in-game date, and entity coordinates in the Dungeon Hub. None of these identify the player.
+Some values are kept on purpose: money, stats, skill and collection levels, progress values, the profile's fruit name, the in-game date, and entity coordinates in the Dungeon Hub. They are not leaderboard keys, and without a name, server id or ranking they do not point at one player.
 
 Two checks were run:
 
@@ -155,7 +156,7 @@ Two checks were run:
 | Frozen Corpses tab widget lines (PLAN §5, REQ-GS-17, AC-MSA-01) | **captured:** `tab-mineshaft.txt`. The header is `Frozen Corpses:`, then ` Lapis: NOT LOOTED` and ` Lapis: LOOTED` (twice); each row starts with a space, as in AC-MSA-01. `UNLOOTED` was not seen. Whether the widget is on by default cannot be told from a dump, so Q-MSA-04 and REQ-GS-18 stay open. |
 | Mineshaft shaft-code sidebar line (PLAN §5, REQ-GS-17) | **captured:** `sidebar-mineshaft.txt` line `00`. Date, server id and code share one line: `§710/01/26 §8m000§v§8XX UMBE_1`. |
 | Bestiary tab widget lines (PLAN §5, T5.2, SPEC bestiary "Ghost 15: 12,449/12,500") | **captured:** `tab-dwarven-mines.txt` and `tab-mineshaft.txt`. The shape is ` <Mob> <tier>: <kills>/<next>`, with an Arabic tier and comma groups: ` Glacite Walker 9: 2,346/3,000`, ` Bal 11: 71/80`, ` Glacite Mage 13: 541/750`. The `MAX`, Roman-tier and `12.4k` forms were not seen and stay UNVERIFIED. |
-| Profile widget | **captured:** both tab files. Rows: `Profile: <fruit>`, ` SB Level: [535] 28/100 XP`, ` Bank: 1B`, ` Interest: 17 Hours (913k)`. |
+| Profile widget | **captured:** both tab files. Rows: `Profile: <fruit>`, ` SB Level: [435] 28/100 XP`, ` Bank: 1B`, ` Interest: 17 Hours (913k)`. |
 | Stats widget (AC-ODDS-11) | **captured (format):** `tab-mineshaft.txt`, which shows only Mining Speed, Mining Fortune and Cold Resistance. A private-use icon glyph comes before each value, which the AC-ODDS-11 sample lines lack. `Magic Find` and `Pet Luck` rows were not captured and stay UNVERIFIED. |
 | Skills widget | **captured:** `tab-dwarven-mines.txt` (` Mining 60: MAX`, ` Foraging 53: 100%`). |
 | `/sblevels` layout (PLAN D-17: "the wikis show 9 tabs") | **captured:** `ways-to-level-up-*.txt`. There are 9 categories: Core, Event, Dungeon, Essence Shop, Slaying, Skill Related, Miscellaneous, Story, Consumables. Mining, Farming, Fishing and Foraging sit under `skill-related-tasks.txt`. |

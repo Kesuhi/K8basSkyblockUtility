@@ -6,14 +6,14 @@
 [K8BAS-DUMP] container 448 slot 4 item=minecraft:painting sbid=- count=1 | Your SkyBlock Level Ranking
 [K8BAS-DUMP] container 448 slot 4 lore 0 | Classic Mode
 [K8BAS-DUMP] container 448 slot 4 lore 1 | 
-[K8BAS-DUMP] container 448 slot 4 lore 2 | Your level: 535
-[K8BAS-DUMP] container 448 slot 4 lore 3 | You have: 53,528 XP
+[K8BAS-DUMP] container 448 slot 4 lore 2 | Your level: 435
+[K8BAS-DUMP] container 448 slot 4 lore 3 | You have: 43,528 XP
 [K8BAS-DUMP] container 448 slot 4 lore 4 | 
 [K8BAS-DUMP] container 448 slot 4 lore 5 | You have completed 92.2% of the
 [K8BAS-DUMP] container 448 slot 4 lore 6 | total SkyBlock XP Tasks.
 [K8BAS-DUMP] container 448 slot 4 lore 7 | 
 [K8BAS-DUMP] container 448 slot 4 lore 8 | Global Ranking: #1,234
-[K8BAS-DUMP] container 448 slot 4 lore 9 | You are in the top 0.03% of
+[K8BAS-DUMP] container 448 slot 4 lore 9 | You are in the top 0.01% of
 [K8BAS-DUMP] container 448 slot 4 lore 10 | 15,204,632 Classic players!
 [K8BAS-DUMP] container 448 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
 [K8BAS-DUMP] container 448 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
@@ -36,7 +36,7 @@
 [K8BAS-DUMP] container 448 slot 16 lore 6 | Click to view!
 [K8BAS-DUMP] container 448 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
 [K8BAS-DUMP] container 448 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
-[K8BAS-DUMP] container 448 slot 19 item=minecraft:lime_stained_glass_pane sbid=- count=1 | Level 535
+[K8BAS-DUMP] container 448 slot 19 item=minecraft:lime_stained_glass_pane sbid=- count=1 | Level 435
 [K8BAS-DUMP] container 448 slot 19 lore 0 | Your Level
 [K8BAS-DUMP] container 448 slot 19 lore 1 | 
 [K8BAS-DUMP] container 448 slot 19 lore 2 | Rewards:
@@ -46,7 +46,7 @@
 [K8BAS-DUMP] container 448 slot 19 lore 6 | UNLOCKED
 [K8BAS-DUMP] container 448 slot 19 lore 7 | 
 [K8BAS-DUMP] container 448 slot 19 lore 8 | Click to view rewards!
-[K8BAS-DUMP] container 448 slot 20 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | Level 536
+[K8BAS-DUMP] container 448 slot 20 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | Level 436
 [K8BAS-DUMP] container 448 slot 20 lore 0 | Next Level
 [K8BAS-DUMP] container 448 slot 20 lore 1 | 
 [K8BAS-DUMP] container 448 slot 20 lore 2 | Reward:
@@ -56,17 +56,17 @@
 [K8BAS-DUMP] container 448 slot 20 lore 6 |                           28/100 XP
 [K8BAS-DUMP] container 448 slot 20 lore 7 | 
 [K8BAS-DUMP] container 448 slot 20 lore 8 | Click to view rewards!
-[K8BAS-DUMP] container 448 slot 21 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 537
+[K8BAS-DUMP] container 448 slot 21 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 437
 [K8BAS-DUMP] container 448 slot 21 lore 0 | Reward:
 [K8BAS-DUMP] container 448 slot 21 lore 1 |  +5  Health
 [K8BAS-DUMP] container 448 slot 21 lore 2 | 
 [K8BAS-DUMP] container 448 slot 21 lore 3 | Click to view rewards!
-[K8BAS-DUMP] container 448 slot 22 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 538
+[K8BAS-DUMP] container 448 slot 22 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 438
 [K8BAS-DUMP] container 448 slot 22 lore 0 | Reward:
 [K8BAS-DUMP] container 448 slot 22 lore 1 |  +5  Health
 [K8BAS-DUMP] container 448 slot 22 lore 2 | 
 [K8BAS-DUMP] container 448 slot 22 lore 3 | Click to view rewards!
-[K8BAS-DUMP] container 448 slot 23 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 539
+[K8BAS-DUMP] container 448 slot 23 item=minecraft:red_stained_glass_pane sbid=- count=1 | Level 439
 [K8BAS-DUMP] container 448 slot 23 lore 0 | Reward:
 [K8BAS-DUMP] container 448 slot 23 lore 1 |  +5  Health
 [K8BAS-DUMP] container 448 slot 23 lore 2 | 
