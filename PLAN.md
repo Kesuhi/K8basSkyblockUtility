@@ -397,8 +397,8 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Accept: AC-PORT-09 (CHANGELOG part); the CHANGELOG part of AC-GLOW-14 (the four glow changes, no P7 word).
 
 **Checkpoint G1:**
-- [ ] tiers A–D green (AC-XC-06): `build`, `runClient`, `runClientGameTest`, and `prodClientStack` with a copy of your mod set and `-Dmixin.debug.export`. No crash and no new ERROR (AC-PORT-13, AC-GLOW-06 [D]); `/ksu debug island` is absent and the dump commands exist (AC-LOC-09, AC-GS-13 [D])
-- [ ] `code-reviewer` review, including the rules review (AC-XC-01), the licence check (AC-XC-03), no GL calls (AC-PORT-12) and T1.8 landing before T1.9 (AC-LOC-10)
+- [x] tiers A–D green (AC-XC-06): `build`, `runClient`, `runClientGameTest`, and `prodClientStack` with a copy of your mod set and `-Dmixin.debug.export`. No crash and no new ERROR (AC-PORT-13, AC-GLOW-06 [D]); `/ksu debug island` is absent and the dump commands exist (AC-LOC-09, AC-GS-13 [D])
+- [x] `code-reviewer` review, including the rules review (AC-XC-01), the licence check (AC-XC-03), no GL calls (AC-PORT-12) and T1.8 landing before T1.9 (AC-LOC-10)
 - [ ] your smoke (E) passes in the Prism copy `26.2 Skyblock K8bas-test` (~30–40 min plus the captures):
   - first, turn "Check for updates (notify)" OFF in the Prism copy (EC-UPD-14); it stays OFF for the G3, G5 and G6 checks
   - boot; your 1.0.1 config migrated (`.v0.bak` present, Croesus rule on "Dungeon Hub", the three dungeon NPC rules still on); your three keybinds still bound
