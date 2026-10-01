@@ -1,13 +1,214 @@
+<div align="center">
+
+<img src="src/main/resources/assets/k8bas_skyblock_utility/icon.png" alt="K8bas Skyblock Utility" width="128">
+
 # K8bas Skyblock Utility
 
-A client-side Fabric mod for Hypixel SkyBlock. It only changes what your own game displays: it
-outlines the mobs and NPCs you search for, shows waypoints for NPCs that stand at a fixed spot, and
-tells you in chat when a new version is out. Its in-game settings screen has a switch for each
-feature that shows something in game.
+**A client-side Fabric mod for Hypixel SkyBlock: outlines for the mobs and NPCs you are looking for,
+waypoints for NPCs at fixed spots, and searchable mob and NPC lists.**
+
+[![Latest release](https://img.shields.io/github/v/release/Kesuhi/K8basSkyblockUtility?label=release&color=29B6B2)](https://github.com/Kesuhi/K8basSkyblockUtility/releases/latest)
+![Minecraft 26.2](https://img.shields.io/badge/Minecraft-26.2-62B47A)
+![Fabric](https://img.shields.io/badge/loader-Fabric-DBB47E)
+![Client-side](https://img.shields.io/badge/client--side-only-4C9A2A)
+[![License CC0-1.0](https://img.shields.io/badge/license-CC0--1.0-lightgrey)](LICENSE)
+
+</div>
 
 K8bas Skyblock Utility is not affiliated with or endorsed by Hypixel.
 
 This README describes version **1.1.0**.
+
+## About
+
+K8bas Skyblock Utility helps you find things in Hypixel SkyBlock. It only changes what your own
+game displays. The outlines, the NPC waypoints, the "You found" title and the update check each
+have their own switch. It includes:
+
+- **Mob Highlighter:** outlines the mobs your rules match, in each rule's colour, where you can see
+  them (within the mob scan range).
+- **NPC Search:** outlines the moving NPCs you search for while they are in view, and shows
+  "You found \<NPC>" the first time you see one in a run.
+- **NPC Waypoints:** a floating label with name and distance for NPCs that stand at a fixed spot.
+- **Mob and NPC Databases:** searchable, island-sorted lists; a click adds a rule or a waypoint to
+  your settings.
+- **Update Notices:** one chat line when a new version is out. Nothing is downloaded.
+- **Bug Report Tools:** debug dumps that write what the game already shows into the game log.
+
+## Getting Started
+
+1. **Install:** set up Minecraft 26.2 with [Fabric Loader](https://fabricmc.net/use/installer/)
+   0.19.5 or newer and Java 25, and put these mods into your `mods` folder (see
+   [Supported version](#supported-version) for the minimum versions):
+   [Fabric API](https://modrinth.com/mod/fabric-api),
+   [Cloth Config](https://modrinth.com/mod/cloth-config) (the Fabric build) and
+   [Hypixel Mod API](https://modrinth.com/mod/hypixel-mod-api) (the Fabric build).
+   [Mod Menu](https://modrinth.com/mod/modmenu) is optional. Then download
+   `k8bas_skyblock_utility-1.1.0+26.2.jar` from
+   [Releases](https://github.com/Kesuhi/K8basSkyblockUtility/releases/latest) and put it into your
+   `mods` folder. Render Chest is bundled inside it.
+2. **Check the download (optional):** a `.sha256` file is published next to the jar. In the
+   download folder, `sha256sum -c k8bas_skyblock_utility-1.1.0+26.2.jar.sha256` checks it. On
+   Windows, `certutil -hashfile k8bas_skyblock_utility-1.1.0+26.2.jar SHA256` prints the checksum
+   to compare with the one in that file.
+3. **Open the settings:** type `/ksu` in game. With Mod Menu, the settings also open from the mod
+   list.
+4. **Add your first rule:** in **Mob Highlighter**, open the **Mob Database**, find a mob and press
+   **Add rule**. For an NPC, open the **NPC Database** in **NPC Search** and press **Add**: an NPC
+   at a fixed spot gets a waypoint, a moving NPC gets an outline rule. Then go back to the settings
+   and press **Save & Quit**; the new rule works from then on.
+
+Coming from 1.0.x? Read [Upgrading from 1.0.x](#upgrading-from-10x) first.
+
+## Features
+
+Each feature lists its settings category and its default. A fresh install has no rules, so nothing
+is outlined until you add one.
+
+<details>
+<summary><b>Mob Highlighter</b></summary>
+
+- **Mob Highlighter** (category *Mob Highlighter*, default **ON**): outlines the mobs your rules
+  match, in each rule's colour. A rule matches by entity type, by name (Contains, Exact or Regex)
+  or both, and can be limited to one island. The "Toggle Mob Highlighter" keybind switches it on
+  and off.
+- **Visible-only:** the outline is drawn only where you can see the mob. Blocks hide it, and a
+  partly hidden mob is outlined only on its visible part. Invisible mobs are never outlined, even
+  when a rule matches and even when they wear armour.
+- **Rule order:** where two rules match the same mob, the first one in the list wins. A mob that
+  the server already makes glow (for example with the Glowing effect) keeps the server's colour.
+- **Rule warnings** (categories *Mob Highlighter* and *NPC Search*, always on): a rule in either
+  list that cannot work (an empty Contains or Exact pattern, an invalid regular expression, an
+  unknown entity type, or match mode None without an entity type) is marked with ⚠ and the reason
+  in the rule editor, and stays inactive until you fix it.
+
+> **[Screenshot placeholder: a mob outlined by a Mob Highlighter rule]**
+
+> **[Screenshot placeholder: a rule marked with ⚠ in the rule editor, with its red explanation line]**
+
+</details>
+
+<details>
+<summary><b>NPC Search</b></summary>
+
+- **NPC Search** (category *NPC Search*, default **ON**): outlines the moving NPCs your rules match,
+  such as Trinity, Tomioka or Duncan, only while they are in view; blocks hide the outline. Its
+  switch and the "Toggle NPC Search" keybind also turn off the NPC waypoints and the "You found"
+  title.
+- **"You found" title** (category *NPC Search*, default **ON**): shows "You found \<NPC>" in the
+  rule's colour the first time you have a clear line of sight to a moving NPC your NPC Search rules
+  match (within the mob scan range), once per run. NPCs at a fixed spot get a waypoint instead.
+
+> **[Screenshot placeholder: a moving NPC outlined by an NPC Search rule]**
+
+> **[Screenshot placeholder: the "You found \<NPC>" title]**
+
+</details>
+
+<details>
+<summary><b>NPC Waypoints</b></summary>
+
+- **NPC waypoints** (category *NPC Search*; the module's "Enabled" switch, default **ON**, and each
+  NPC's own "Enabled" switch, **ON** for each NPC you add): an NPC that stands at a fixed spot gets
+  a floating label with its name and distance at its fixed coordinates. The label is also visible
+  behind blocks, glass and water. It shows while you are on the NPC's island, or on every island if
+  the rule has none.
+- **Dungeon Hub:** the dungeon lobby is its own island, "Dungeon Hub", apart from "Catacombs"
+  (inside runs), so lobby waypoints never show inside a run.
+
+> **[Screenshot placeholder: an NPC waypoint label with its name and distance]**
+
+</details>
+
+<details>
+<summary><b>Mob and NPC Databases</b></summary>
+
+- **Mob Database** (category *Mob Highlighter*, "Mob Database: Open"; no switch): a searchable,
+  island-sorted list of mobs. "Add rule" creates a rule for a mob without typing a pattern.
+- **NPC Database** (category *NPC Search*, "NPC Database: Open"; no switch): a searchable,
+  island-sorted list of NPCs. "Add" creates a waypoint or an outline rule.
+- Both lists load once at game start (see [Network access](#network-access)).
+
+> **[Screenshot placeholder: the Mob Database screen, with its search field and "Add rule" buttons]**
+
+> **[Screenshot placeholder: the NPC Database screen, with its search field and "Add" buttons]**
+
+</details>
+
+<details>
+<summary><b>General, updates and settings</b></summary>
+
+- **Mob scan range** (category *General*, default **64 blocks**): how far away mobs and moving NPCs
+  are considered for outlines (0 = unlimited, slider 0–128).
+- **Check for updates (notify)** (category *General*, default **ON**, channel STABLE, or BETA when
+  you run a pre-release build): asks GitHub for new releases at most 4 times a day; after a
+  successful check, not again for 6 hours (after a failed one it can retry sooner). When a newer
+  version is out, one chat line per session says so, with [Changelog] and [Open release page]
+  links. Nothing is downloaded or installed.
+- **Keybinds** (category *General*, also under Options > Controls > Key Binds, "K8bas Skyblock
+  Utility"; default **unbound**): Open Settings, Toggle Mob Highlighter and Toggle NPC Search.
+- **Settings backups** (always on): settings are saved to `config/k8bas_skyblock_utility.json`. A
+  file with invalid content, or one from a newer version, is copied to a `.bak` file first. A file
+  the game cannot open (for example while another program holds it) is left untouched: defaults
+  are used for that session, and changes are not saved until the next start. In each case a chat
+  message tells you after you join a world.
+
+> **[Screenshot placeholder: the settings screen, with the General, Mob Highlighter and NPC Search categories]**
+
+> **[Screenshot placeholder: the update chat line with its [Changelog] and [Open release page] links]**
+
+> **[Screenshot placeholder: the chat message about a settings backup]**
+
+</details>
+
+<details>
+<summary><b>Bug report tools</b></summary>
+
+- **Debug dumps** (no switch; off until you run a command): write what the game already shows (tab
+  list, sidebar, name tags, some menus) into `logs/latest.log` for bug reports. See
+  [Commands](#commands).
+- Each line is tagged `[K8BAS-DUMP]`, and nothing is sent anywhere. Your own name and the names of
+  the players in your tab list or near you are replaced by Self, Player1, Player2 and so on. Other
+  names, for example a player named in menu or sidebar text who is not in your tab list, stay as
+  they are, so check a dump before you share it.
+- The menu dump only reads menus you open; it never clicks, pages or opens anything.
+
+</details>
+
+<details>
+<summary><b>All defaults at a glance</b></summary>
+
+| Setting | Category | Default |
+|---|---|---|
+| Mob Highlighter | Mob Highlighter | ON, with no rules |
+| NPC Search | NPC Search | ON, with no rules |
+| "You found" title | NPC Search | ON |
+| NPC waypoints | NPC Search | ON for each NPC you add |
+| Mob scan range | General | 64 blocks |
+| Check for updates (notify) | General | ON (STABLE, or BETA on a pre-release build) |
+| Keybinds | General | unbound |
+| Rule warnings | Mob Highlighter, NPC Search | always on |
+| Settings backups | none | always on |
+| Debug dumps | none | off until you run a command |
+
+</details>
+
+Later versions are planned to bring more features and a new settings screen; this README covers
+only what 1.1.0 ships.
+
+### Commands
+
+| Command | What it does |
+|---|---|
+| `/ksu` (also `/kskyblockutility`) | Opens the settings screen. |
+| `/ksu debug dump tab` | Writes the tab list to `logs/latest.log`. |
+| `/ksu debug dump sidebar` | Writes the sidebar (scoreboard) to `logs/latest.log`. |
+| `/ksu debug dump entities` | Writes the name tags shown within about 8 blocks of you to `logs/latest.log`. |
+| `/ksu debug dump containers on` | While on, each supported SkyBlock menu you open yourself (such as SkyBlock Leveling, Skills, Collections, Museum or Bestiary) is written to `logs/latest.log`. Switches itself off after 60 minutes. |
+| `/ksu debug dump containers off` | Switches the menu dump off. |
+
+Every `/ksu debug` command also works as `/kskyblockutility debug`. The three keybinds start
+unbound; set them in the General category or in the Key Binds screen (see above).
 
 ## Supported version
 
@@ -17,45 +218,25 @@ This README describes version **1.1.0**.
 |---|---|
 | Java | 25 |
 | Fabric Loader | 0.19.5 or newer |
-| Fabric API | 0.161.0 or newer |
+| Fabric API | 0.161.0 or newer, the build for 26.2 |
 | Hypixel Mod API (the mod) | 1.0.2 or newer (the build labelled `mc26.1` also runs on 26.2) |
-| Cloth Config | 26.2.155 or newer |
+| Cloth Config | 26.2.155 or newer, the Fabric build |
 | Render Chest | 1.0.3, bundled inside the jar, nothing to install |
+| Mod Menu | optional, the build for 26.2 |
 
-Mod Menu is optional. With it, the settings also open from the mod list.
-
-Minecraft 26.1.x is no longer supported. 1.0.1 was the last build for 26.1. Versions 1.0.0 and
-1.0.1 outline mobs behind blocks and outline invisible mobs, which Hypixel's rules do not allow. If
-you have to stay on 26.1.x for now, switch off Mob Highlighter and NPC Search there.
-
-## Installation
-
-1. Install Fabric Loader 0.19.5 or newer for Minecraft 26.2 (see https://fabricmc.net/use/installer/).
-2. Put these mods into your `mods` folder:
-   - [Fabric API](https://modrinth.com/mod/fabric-api) 0.161.0 or newer, the build for 26.2
-   - [Cloth Config](https://modrinth.com/mod/cloth-config) 26.2.155 or newer, the Fabric build
-   - [Hypixel Mod API](https://modrinth.com/mod/hypixel-mod-api) 1.0.2 or newer, the Fabric build;
-     the build labelled `mc26.1` also runs on 26.2
-   - optional: [Mod Menu](https://modrinth.com/mod/modmenu), the build for 26.2
-3. Download `k8bas_skyblock_utility-1.1.0+26.2.jar` from the
-   [releases page](https://github.com/Kesuhi/K8basSkyblockUtility/releases) and put it into your
-   `mods` folder. Render Chest is bundled inside it.
-4. Optional: check the download against the `.sha256` file published next to the jar, for example
-   with `sha256sum -c k8bas_skyblock_utility-1.1.0+26.2.jar.sha256` in the download folder. On
-   Windows, `certutil -hashfile k8bas_skyblock_utility-1.1.0+26.2.jar SHA256` prints the checksum
-   to compare with the one in that file.
-5. Start the game and type `/ksu` to open the settings.
+Minecraft 26.1.x is no longer supported. 1.0.1 was the last build for 26.1.
 
 ## Upgrading from 1.0.x
 
 - **Move your instance to Minecraft 26.2 first.** 1.0.x runs on Minecraft 26.1, and 1.1.0 needs
-  26.2. Switch your instance to Minecraft 26.2 with Fabric Loader 0.19.5 or
-  newer, replace Fabric API and Cloth Config with their 26.2 builds, and use Hypixel Mod API 1.0.2
-  or newer, as listed under [Installation](#installation). On 26.1, Fabric Loader stops the game
-  with a message about incompatible mods.
+  26.2. Switch your instance to Minecraft 26.2 with Fabric Loader 0.19.5 or newer, replace Fabric
+  API and Cloth Config with their 26.2 builds, and use Hypixel Mod API 1.0.2 or newer, as listed
+  under [Supported version](#supported-version). On 26.1, Fabric Loader stops the game with a
+  message about incompatible mods.
 - **Install 1.1.0 by hand once.** The updater in 1.0.x asks a Modrinth project that returns 404
-  (not found), so it never finds this version. Download the jar as described above, put it into
-  the `mods` folder of your 26.2 instance and remove the 1.0.x jar.
+  (not found), so it never finds this version. Download the jar as described in
+  [Getting Started](#getting-started), put it into the `mods` folder of your 26.2 instance and
+  remove the 1.0.x jar.
 - **While you run 1.1.0, updates are installed by hand.** Its update check only notifies: when a
   newer version is out, one chat line per session says so, with [Changelog] and
   [Open release page] links. Nothing is downloaded or installed. To update, download the new jar
@@ -79,70 +260,10 @@ you have to stay on 26.1.x for now, switch off Mob Highlighter and NPC Search th
 
   The [changelog](CHANGELOG.md) lists every change, each with its reason and the effect you see.
 
-## Features
+## Fair play and compliance
 
-| Feature | What it does | Settings category | Default |
-|---|---|---|---|
-| Mob Highlighter | Outlines the mobs your rules match, in each rule's colour; a rule matches by entity type, by name (Contains, Exact, Regex) or both, and can be limited to one island. | Mob Highlighter | ON (a fresh install has no rules, so nothing is outlined until you add one) |
-| Mob Database | A searchable, island-sorted list of mobs; "Add rule" creates a rule for a mob without typing a pattern. | Mob Highlighter, "Mob Database: Open" | no switch (the list loads at game start) |
-| NPC Search | Outlines the moving NPCs your rules match, only while they are in view. Its switch and the "Toggle NPC Search" keybind also turn off the NPC waypoints and the "You found" title. | NPC Search | ON (a fresh install has no rules, so no NPC is outlined) |
-| NPC waypoints | An NPC that stands at a fixed spot gets a floating label with its name and distance at its fixed coordinates, also visible behind blocks, while you are on its island (on every island if the rule has none). | NPC Search: the module's "Enabled" switch, and each NPC's own "Enabled" switch | ON (module), and ON for each NPC you add |
-| NPC Database | A searchable, island-sorted list of NPCs; "Add" creates a waypoint or an outline rule. | NPC Search, "NPC Database: Open" | no switch (the list loads at game start) |
-| "You found" title | Shows "You found \<NPC>" in the rule's colour the first time you have a clear line of sight to a moving NPC your NPC Search rules match (within the mob scan range), once per run. NPCs at a fixed spot get a waypoint instead. | NPC Search | ON |
-| Mob scan range | How far away mobs and moving NPCs are considered for outlines (0 = unlimited, slider 0–128). | General | 64 blocks |
-| Check for updates (notify) | Asks GitHub for new releases at most 4 times a day; after a successful check, not again for 6 hours (after a failed one it can retry sooner). Tells you in chat once per session; nothing is downloaded. | General | ON (channel STABLE, or BETA when you run a pre-release build) |
-| Keybinds | Open Settings, Toggle Mob Highlighter and Toggle NPC Search. | General (also Controls, "K8bas Skyblock Utility") | unbound |
-| Rule warnings | A rule that cannot work (an empty Contains or Exact pattern, an invalid regular expression, an unknown entity type, or match mode None without an entity type) is marked with ⚠ and the reason, and stays inactive until you fix it. | Mob Highlighter, NPC Search | always on |
-| Settings backups | Settings are saved to `config/k8bas_skyblock_utility.json`. A file with invalid content, or one from a newer version, is copied to a `.bak` file first. A file the game cannot open (for example while another program holds it) is left untouched: defaults are used for that session, and changes are not saved until the next start. In each case a chat message tells you after you join a world. | none | always on |
-| Debug dumps | Write what the game already shows (tab list, sidebar, name tags, some menus) into the game log for bug reports. | none, see [Commands](#commands) | off until you run a command |
-
-Later versions are planned to bring more features and a new settings screen; this README covers
-only what 1.1.0 ships.
-
-### Screenshots
-
-> **[Screenshot placeholder: the settings screen, with the General, Mob Highlighter and NPC Search categories]**
-
-> **[Screenshot placeholder: the Mob Database screen, with its search field and "Add rule" buttons]**
-
-> **[Screenshot placeholder: a mob outlined by a Mob Highlighter rule]**
-
-> **[Screenshot placeholder: the NPC Database screen, with its search field and "Add" buttons]**
-
-> **[Screenshot placeholder: a moving NPC outlined by an NPC Search rule]**
-
-> **[Screenshot placeholder: an NPC waypoint label with its name and distance]**
-
-> **[Screenshot placeholder: the "You found \<NPC>" title]**
-
-> **[Screenshot placeholder: a rule marked with ⚠ in the rule editor, with its red explanation line]**
-
-> **[Screenshot placeholder: the update chat line with its [Changelog] and [Open release page] links]**
-
-> **[Screenshot placeholder: the chat message about a settings backup]**
-
-## Commands
-
-| Command | What it does |
-|---|---|
-| `/ksu` or `/kskyblockutility` | Opens the settings screen. |
-| `/ksu debug dump tab` | Writes the tab list to `logs/latest.log`. |
-| `/ksu debug dump sidebar` | Writes the sidebar (scoreboard) to `logs/latest.log`. |
-| `/ksu debug dump entities` | Writes the name tags shown within about 8 blocks of you to `logs/latest.log`. |
-| `/ksu debug dump containers on` | While on, each supported SkyBlock menu you open yourself (such as SkyBlock Leveling, Skills, Collections, Museum or Bestiary) is written to `logs/latest.log`. Switches itself off after 60 minutes. |
-| `/ksu debug dump containers off` | Switches the menu dump off. |
-
-Every `/ksu debug` command also works as `/kskyblockutility debug`. The dumps are for bug reports:
-each line is tagged `[K8BAS-DUMP]`, and nothing is sent anywhere. Your own name and the names of
-the players in your tab list or near you are replaced by Self, Player1, Player2 and so on. Other
-names, for example a player named in menu or sidebar text who is not in your tab list, stay as
-they are, so check a dump before you share it. The menu dump only reads menus you open; it never
-clicks, pages or opens anything.
-
-## Compliance
-
-The mod is client-side and display-only. It changes what your own game shows and never plays for
-you. It follows these rules:
+K8bas Skyblock Utility is client-side and display-only. It changes what your own game shows and
+never plays for you. It follows these rules:
 
 1. **No hidden entity is outlined.** This mod never outlines an entity behind blocks, and there is
    no option to turn that on. Glow that the server itself puts on an entity is left as the game
@@ -203,14 +324,19 @@ game's "Prompt on Links" chat setting is on (it is by default), the game asks yo
 - Thanks to the Skyblocker and SkyHanni projects, whose visible-only outlines, both drawn with
   Render Chest, showed how to keep highlights within Hypixel's rules. No code from either is used.
 
-## Building from source
+## Feedback and Bugs
 
-With JDK 25, run `./gradlew build`. It runs the unit tests and writes
-`build/libs/k8bas_skyblock_utility-1.1.0+26.2.jar` and its `.sha256` file. For IDE setup, see the
+Something broken, or a feature you would like to see? Open an
+[issue](https://github.com/Kesuhi/K8basSkyblockUtility/issues) or message me on Discord
+(@disable.rx). Say which version of the mod you run, and if the game crashed, attach the crash
+report or `logs/latest.log`. For display problems, a [debug dump](#commands) helps.
+
+## Building
+
+```bash
+./gradlew build
+```
+
+It needs JDK 25, runs the unit tests and writes `build/libs/k8bas_skyblock_utility-1.1.0+26.2.jar`
+and its `.sha256` file. For IDE setup, see the
 [Fabric documentation](https://docs.fabricmc.net/develop/getting-started/creating-a-project#setting-up).
-
-## Feedback
-
-Found a problem or want a feature? Open an issue on
-[GitHub](https://github.com/Kesuhi/K8basSkyblockUtility/issues) or send me a message on Discord
-(@disable.rx). The debug dumps above help with bug reports.
