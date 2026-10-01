@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.debug.ContainerDump;
 import com.k8bas.skyblockutility.debug.DebugCommand;
+import com.k8bas.skyblockutility.highlight.HighlightManager;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
@@ -41,6 +42,8 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 			}
 		});
 		IslandTracker.register();
+		// Rule matching runs once per tick on the client thread; rendering only reads the results.
+		ClientTickEvents.END_CLIENT_TICK.register(HighlightManager::tick);
 
 		ModuleManager.register(new MobHighlighterModule());
 		ModuleManager.register(new NpcSearchModule());

@@ -361,7 +361,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - `NpcDatabase` normalises on load: fixed + "Catacombs" becomes "Dungeon Hub".
   - Migration: your rules with fixed + "Catacombs" move to "Dungeon Hub"; Trinity/Tomioka/Duncan (moving) and mob rules stay, still enabled.
   - Accept: AC-LOC-02, AC-LOC-03, AC-LOC-04 [B], AC-GLOW-12 [A].
-- [ ] **T1.10a refactor(highlight): match on the client tick, render reads a cache** (S, deps T1.8b). `HighlightManager` resolves name tags and matches once per tick; the render path only looks up results.
+- [x] **T1.10a refactor(highlight): match on the client tick, render reads a cache** (S, deps T1.8b). `HighlightManager` resolves name tags and matches once per tick; the render path only looks up results.
   - Req: REQ-GLOW-06, REQ-GLOW-08, REQ-GLOW-01
   - Accept: AC-GLOW-07; the thread-assert part of AC-GLOW-05; EC-GLOW-05 (counter test: each name tag resolved at most once per entity per tick).
 - [ ] **T1.10 feat(highlight)!: depth-tested glow via Render Chest** (M, deps T1.5, T1.6, T1.10a).

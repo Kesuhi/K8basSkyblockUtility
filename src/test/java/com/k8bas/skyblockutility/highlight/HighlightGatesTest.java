@@ -110,6 +110,23 @@ class HighlightGatesTest {
 		assertEquals("the regular expression is empty", HighlightManager.inertReason(rule(null, NameMatchMode.REGEX, "", true), KNOWN));
 	}
 
+	/** AC-GLOW-07 [A] (T1.10a): within a module the first matching rule in list order wins, also
+	 *  when an any-type rule is listed above a type rule. */
+	@Test
+	void theFirstMatchingRuleInListOrderWins() {
+		CompiledRule anyFirst = new CompiledRule(rule(null, NameMatchMode.CONTAINS, "A", true), 0);
+		CompiledRule typeSecond = new CompiledRule(rule("minecraft:zombie", NameMatchMode.CONTAINS, "B", true), 1);
+		CompiledRule anyThird = new CompiledRule(rule(null, NameMatchMode.CONTAINS, "C", true), 2);
+		List<CompiledRule> typeRules = List.of(typeSecond);
+		List<CompiledRule> anyType = List.of(anyFirst, anyThird);
+
+		assertEquals(anyFirst, HighlightManager.firstMatch(typeRules, anyType, c -> true));
+		assertEquals(typeSecond, HighlightManager.firstMatch(typeRules, anyType, c -> c != anyFirst));
+		assertEquals(anyThird, HighlightManager.firstMatch(typeRules, anyType, c -> c == anyThird));
+		assertNull(HighlightManager.firstMatch(typeRules, anyType, c -> false));
+		assertNull(HighlightManager.firstMatch(List.of(), List.of(), c -> true));
+	}
+
 	/** AC-GLOW-10 [A] (T1.8b): real players have random (version 4) UUIDs; Hypixel NPCs do not. */
 	@Test
 	void realPlayersAreRecognisedByTheirUuid() {

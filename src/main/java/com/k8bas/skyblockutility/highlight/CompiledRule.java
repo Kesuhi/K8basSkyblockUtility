@@ -7,9 +7,16 @@ import java.util.regex.Pattern;
 public final class CompiledRule {
 	public final HighlightRule rule;
 	final Pattern pattern;
+	/** The rule's position in its module's list; the first matching rule in list order wins. */
+	final int order;
 
 	public CompiledRule(HighlightRule rule) {
+		this(rule, 0);
+	}
+
+	CompiledRule(HighlightRule rule, int order) {
 		this.rule = rule;
+		this.order = order;
 		if (rule.nameMatchMode == NameMatchMode.REGEX && rule.namePattern != null && !rule.namePattern.isEmpty()) {
 			this.pattern = Pattern.compile(rule.namePattern);
 		} else {

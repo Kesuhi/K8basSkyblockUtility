@@ -2,7 +2,11 @@ package com.k8bas.skyblockutility.highlight;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.location.IslandTracker;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntMaps;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -13,13 +17,11 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,47 +35,50 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
- * Rules are indexed by entity type so per-frame matching (called from the render thread via
- * EntityRendererMixin) is a map lookup plus a handful of string checks, not a linear scan. The
- * index is only rebuilt when rules actually change.
+ * Matches highlight rules against loaded entities. Matching runs once per client tick on the client
+ * thread (REQ-GLOW-06): tick() computes every entity's outline colour and publishes the results as
+ * one immutable map, and the render path only looks a colour up. Rules are indexed by entity type
+ * so matching is a map lookup plus a handful of string checks per entity, not a linear scan; the
+ * index is only rebuilt when rules change.
  *
  * One instance per module (Mob Highlighter, NPC Search's "unfixed" NPCs) rather than a single
  * static singleton, since both modules need the exact same nearby-nametag matching machinery but
- * with independently toggleable enabled state and rule sets. EntityRendererMixin queries every
- * ACTIVE instance for a given entity, using whichever's the first to return a non-zero color.
+ * with independently toggleable enabled state and rule sets. Instances are asked in registration
+ * order, so Mob Highlighter's colour wins when both match (REQ-GLOW-08).
  */
 public final class HighlightManager {
+	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/highlight");
+
 	/** An array, not a List, and rebuilt (not mutated) on registration — instances only ever get
-	 *  added (once per module, at most a handful ever), so getOutlineColorFromAny (called ~twice
-	 *  per rendered entity per frame) can iterate it directly instead of allocating an Iterator
-	 *  every call. Volatile publishes the reference safely across threads without needing a lock
-	 *  on the read side. */
+	 *  added (once per module, at most a handful ever), so tick() can iterate it directly. Volatile
+	 *  publishes the reference safely across threads without needing a lock on the read side. */
 	private static volatile HighlightManager[] ACTIVE = new HighlightManager[0];
+
+	/** Outline colour (packed ARGB) per entity id from the last tick; entities without one are absent. */
+	private static volatile Int2IntMap colorsByEntityId = Int2IntMaps.EMPTY_MAP;
+
+	/** Rule id + reason pairs already logged, so an inactive rule is logged once, not per rebuild. */
+	private static final Set<String> LOGGED_INERT = ConcurrentHashMap.newKeySet();
+
+	/** Nearby-ArmorStand lookups (see resolveNameTag below) are far more expensive than a plain
+	 *  field read, so the result is cached per entity per game tick: several rules (and both
+	 *  instances) asking about the same entity in one tick resolve it once (EC-GLOW-05). WeakHashMap
+	 *  so despawned entities don't pin cache entries forever. Only the client thread touches it. */
+	private static final Map<Entity, CachedName> nameTagCache = new WeakHashMap<>();
+
+	/** For tests: name-tag world queries made, and how many of them ran off the client thread. */
+	static int nameTagLookups;
+	static int offThreadQueries;
 
 	private volatile boolean enabled = true;
 	private volatile Map<Identifier, List<CompiledRule>> byType = new HashMap<>();
 	private volatile List<CompiledRule> anyType = new ArrayList<>();
-	/** Optional — fires whenever a rule owned by this instance matches an entity. NPC Search uses
-	 *  this for its "You found X" popup; Mob Highlighter leaves it unset. Not deduplicated or
-	 *  throttled here (it fires on every matching frame, same as the render mixin calling this
-	 *  instance) — that's the listener's job, since only it knows what "a new sighting" should
-	 *  mean for its use case. */
-	private volatile Consumer<HighlightRule> onMatch;
-
-	/** Nearby-ArmorStand lookups (see resolveNameTag below) are far more expensive than a plain
-	 *  field read, so the result is cached per entity per game tick — render fires far more often
-	 *  than logic ticks, and the nametag can't change mid-tick anyway. WeakHashMap so despawned
-	 *  entities don't pin cache entries forever. Shared across all instances: the same entity's
-	 *  nametag is the same regardless of which module is asking. Wrapped as synchronized: it's
-	 *  written from wherever EntityRendererMixin/MinecraftMixin's shouldEntityAppearGlowing run,
-	 *  and other mods' entity-culling hooks (the exact reason MinecraftMixin exists at all) aren't
-	 *  guaranteed to always be the same thread as vanilla's own render path — a bare WeakHashMap
-	 *  under concurrent mutation can corrupt its internal state, not just return a stale value. */
-	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/highlight");
-	/** Rule id + reason pairs already logged, so an inactive rule is logged once, not per rebuild. */
-	private static final Set<String> LOGGED_INERT = ConcurrentHashMap.newKeySet();
 	private volatile Map<String, String> inertRules = Map.of();
-	private static final Map<Entity, CachedName> nameTagCache = Collections.synchronizedMap(new WeakHashMap<>());
+	/** Optional — fires when a rule owned by this instance matches an entity, once per tick while it
+	 *  matches. NPC Search uses this for its "You found X" popup; Mob Highlighter leaves it unset.
+	 *  Not deduplicated here — that's the listener's job, since only it knows what "a new sighting"
+	 *  should mean for its use case. */
+	private volatile Consumer<HighlightRule> onMatch;
 
 	public HighlightManager() {
 		HighlightManager[] current = ACTIVE;
@@ -100,7 +105,8 @@ public final class HighlightManager {
 		List<CompiledRule> newAnyType = new ArrayList<>();
 		Map<String, String> newInert = new HashMap<>();
 
-		for (HighlightRule rule : rules) {
+		for (int order = 0; order < rules.size(); order++) {
+			HighlightRule rule = rules.get(order);
 			if (!rule.enabled) {
 				continue;
 			}
@@ -115,9 +121,8 @@ public final class HighlightManager {
 				continue;
 			}
 
-			CompiledRule compiled = new CompiledRule(rule);
+			CompiledRule compiled = new CompiledRule(rule, order);
 			Identifier typeId = typeKey(rule.entityTypeId);
-
 			if (typeId == null) {
 				newAnyType.add(compiled);
 			} else {
@@ -166,7 +171,7 @@ public final class HighlightManager {
 		return uuid.version() == 4;
 	}
 
-	/** The entity type a rule is indexed under, or null for "any type" (blank or unparsable id). */
+	/** The entity type a rule is indexed under, or null for "any type" (blank id). */
 	static Identifier typeKey(String entityTypeId) {
 		return (entityTypeId == null || entityTypeId.isBlank()) ? null : Identifier.tryParse(entityTypeId);
 	}
@@ -181,20 +186,42 @@ public final class HighlightManager {
 		return anyType;
 	}
 
-	/** Queries every active HighlightManager instance (Mob Highlighter, NPC Search) for this
-	 *  entity, returning the first non-zero match. Called from EntityRendererMixin. */
-	public static int getOutlineColorFromAny(Entity entity) {
-		for (HighlightManager manager : ACTIVE) {
-			int color = manager.getOutlineColor(entity);
-			if (color != 0) {
-				return color;
+	private boolean hasRules() {
+		return enabled && (!anyType.isEmpty() || !byType.isEmpty());
+	}
+
+	/** Matches every loaded entity once; registered on the client tick (client thread only). */
+	public static void tick(Minecraft client) {
+		ClientLevel level = client.level;
+		HighlightManager[] managers = ACTIVE;
+		if (level == null || Arrays.stream(managers).noneMatch(HighlightManager::hasRules)) {
+			colorsByEntityId = Int2IntMaps.EMPTY_MAP;
+			return;
+		}
+		Int2IntOpenHashMap colors = new Int2IntOpenHashMap();
+		for (Entity entity : level.entitiesForRendering()) {
+			for (HighlightManager manager : managers) {
+				int color = manager.outlineColor(entity, client.player);
+				if (color != 0) {
+					colors.put(entity.getId(), color);
+					break;
+				}
 			}
 		}
-		return 0;
+		colorsByEntityId = colors;
+	}
+
+	/** The render path: this tick's outline colour for the entity, or 0. Never queries the world.
+	 *  The invisibility check is repeated so an entity that just turned invisible never glows. */
+	public static int getOutlineColorFromAny(Entity entity) {
+		if (entity.isInvisible()) {
+			return 0;
+		}
+		return colorsByEntityId.get(entity.getId());
 	}
 
 	/** @return packed ARGB outline color, or 0 if the entity shouldn't be outlined. */
-	private int getOutlineColor(Entity entity) {
+	private int outlineColor(Entity entity, LocalPlayer player) {
 		if (!enabled) {
 			return 0;
 		}
@@ -206,74 +233,72 @@ public final class HighlightManager {
 			return 0;
 		}
 		// Hypixel bans displaying invisible entities (REQ-GLOW-03, P2): never outline one and never
-		// report it to onMatch, whatever the rules say. Checked every frame, so glow starts as soon
+		// report it to onMatch, whatever the rules say. Checked every tick, so glow starts as soon
 		// as the entity is visible again.
 		if (!eligible(entity.isInvisible(), false)) {
 			return 0;
 		}
-		LocalPlayer player = Minecraft.getInstance().player;
 		// The local player never glows, also in third person (REQ-GLOW-11).
 		if (entity == player) {
 			return 0;
 		}
 
-		List<CompiledRule> typeRules = byType.get(EntityType.getKey(entity.getType()));
-		if ((typeRules == null || typeRules.isEmpty()) && anyType.isEmpty()) {
+		List<CompiledRule> typeRules = byType.getOrDefault(EntityType.getKey(entity.getType()), List.of());
+		if (typeRules.isEmpty() && anyType.isEmpty()) {
 			// Nothing could possibly match this entity — skip the nametag lookup entirely for
 			// entities nobody has a rule for.
 			return 0;
 		}
 
-		if (typeRules != null) {
-			int color = findMatch(typeRules, entity, player);
-			if (color != 0) {
-				return color;
-			}
-		}
-
-		return findMatch(anyType, entity, player);
-	}
-
-	private int findMatch(List<CompiledRule> candidates, Entity entity, LocalPlayer player) {
-		String currentIsland = null;
-		boolean currentIslandResolved = false;
 		// A real player's own name is never read, so a name-tag match on one can only come from a
 		// neighbouring tag (REQ-GLOW-11). Player-type NPCs keep matching.
 		boolean realPlayer = entity instanceof Player && isRealPlayerUuid(entity.getUUID());
-
-		for (CompiledRule compiled : candidates) {
+		String currentIsland = IslandTracker.getCurrentIsland();
+		double scanRange = ConfigManager.general().mobScanRangeBlocks;
+		CompiledRule match = firstMatch(typeRules, anyType, compiled -> {
 			if (realPlayer && NameMatcher.needsName(compiled)) {
-				continue;
+				return false;
 			}
 			// Island gating first, then distance: both are cheap rejects that skip the far more
 			// expensive nametag lookup below for rules that can't possibly apply right now.
-			if (compiled.rule.island != null) {
-				if (!currentIslandResolved) {
-					currentIsland = IslandTracker.getCurrentIsland();
-					currentIslandResolved = true;
-				}
-				if (!islandAllows(compiled.rule.island, currentIsland)) {
-					continue;
-				}
+			if (!islandAllows(compiled.rule.island, currentIsland)) {
+				return false;
 			}
-
-			double maxDistance = effectiveMaxDistance(compiled.rule.maxDistance, ConfigManager.general().mobScanRangeBlocks);
+			double maxDistance = effectiveMaxDistance(compiled.rule.maxDistance, scanRange);
 			if (player != null && outOfRange(entity.distanceToSqr(player), maxDistance)) {
-				continue;
+				return false;
 			}
-			// resolveNameTag is only actually called here, inside matchesName, for match modes
-			// that need it (NONE-mode/entity-type-only rules never touch it) — and its own
-			// per-tick cache means checking it against several rules in the same tick is cheap
-			// after the first, so there's no need for this loop to also cache/share it itself.
-			if (compiled.matchesName(entity)) {
-				Consumer<HighlightRule> listener = onMatch;
-				if (listener != null) {
-					listener.accept(compiled.rule);
-				}
-				return ARGB.opaque(compiled.rule.color);
+			// resolveNameTag is only called inside matchesName, for match modes that need it, and
+			// its per-tick cache makes repeat calls for the same entity cheap.
+			return compiled.matchesName(entity);
+		});
+		if (match == null) {
+			return 0;
+		}
+		Consumer<HighlightRule> listener = onMatch;
+		if (listener != null) {
+			listener.accept(match.rule);
+		}
+		return ARGB.opaque(match.rule.color);
+	}
+
+	/** The first rule, in the module's list order, that applies (REQ-GLOW-08). Both lists are in
+	 *  list order already; this walks them as one, so an any-type rule above a type rule wins. */
+	static CompiledRule firstMatch(List<CompiledRule> typeRules, List<CompiledRule> anyTypeRules, Predicate<CompiledRule> applies) {
+		int i = 0;
+		int j = 0;
+		while (i < typeRules.size() || j < anyTypeRules.size()) {
+			CompiledRule next;
+			if (j >= anyTypeRules.size() || (i < typeRules.size() && typeRules.get(i).order < anyTypeRules.get(j).order)) {
+				next = typeRules.get(i++);
+			} else {
+				next = anyTypeRules.get(j++);
+			}
+			if (applies.test(next)) {
+				return next;
 			}
 		}
-		return 0;
+		return null;
 	}
 
 	/** Whether an entity may be outlined at all. Only the invisibility flag counts: an invisible mob
@@ -322,6 +347,10 @@ public final class HighlightManager {
 	}
 
 	private static String findNearbyArmorStandName(Entity entity) {
+		nameTagLookups++;
+		if (!Minecraft.getInstance().isSameThread()) {
+			offThreadQueries++;
+		}
 		Level level = entity.level();
 		double halfWidth = entity.getBbWidth() / 2.0 + 1.0;
 		AABB searchBox = new AABB(
