@@ -73,6 +73,9 @@ dependencies {
 // of a real 26.2 mod set), e.g.
 //   ./gradlew prodClientStack -Pk8bas.prodMods=build/prod-mods
 // -Pk8bas.prodBaseline=true boots the same stack without this mod, to record its own ERROR lines.
+// -Pk8bas.quickPlay=<world> loads that world of the run directory's saves after start.
+// -Pk8bas.prodProvision=<dir> copies that folder (config, options.txt, saves) into the run directory
+// first; Gradle empties the run directory before every run.
 // Opens a game window, so it is not part of check.
 tasks.register("prodClientStack", net.fabricmc.loom.task.prod.ClientProductionRunTask) {
 	def prodMods = providers.gradleProperty("k8bas.prodMods")
@@ -86,6 +89,16 @@ tasks.register("prodClientStack", net.fabricmc.loom.task.prod.ClientProductionRu
 		})
 	}
 	jvmArgs.add("-Dmixin.debug.export=true")
+	programArgs.addAll(providers.gradleProperty("k8bas.quickPlay").map { ["--quickPlaySingleplayer", it] }.orElse([]))
+	def provision = providers.gradleProperty("k8bas.prodProvision")
+	doFirst {
+		if (provision.isPresent()) {
+			project.copy {
+				from provision.get()
+				into runDir
+			}
+		}
+	}
 	runDir = layout.buildDirectory.dir("run/prodClientStack")
 }
 
