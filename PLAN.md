@@ -351,7 +351,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Req: REQ-GLOW-10, REQ-GLOW-11
   - An empty CONTAINS/EXACT pattern, an invalid regex or an unparsable type makes the rule inert, logged once and kept in the file (UI flag: T2.5a). The local player never matches; real players are skipped by name-tag rules; player-type NPCs still match.
   - Accept: AC-GLOW-09; AC-GLOW-10 [A] (the [C] part is in T1.10); EC-CFG-09.
-- [ ] **T1.9 fix(location): correct mode table + location snapshot + change events** (M, deps T1.8). `IslandTracker` → immutable snapshot (raw mode, map, server name, server type, island, on SkyBlock); change events on the client thread; cleared on disconnect and world change. The T0.4 override goes through it; T3.0a consumes the events.
+- [x] **T1.9 fix(location): correct mode table + location snapshot + change events** (M, deps T1.8). `IslandTracker` → immutable snapshot (raw mode, map, server name, server type, island, on SkyBlock); change events on the client thread; cleared on disconnect and world change. The T0.4 override goes through it; T3.0a consumes the events.
   - Req: REQ-LOC-01, REQ-LOC-02, REQ-LOC-03, REQ-LOC-04, REQ-LOC-05, REQ-LOC-06, REQ-LOC-07, REQ-LOC-08, REQ-LOC-09, REQ-LOC-10
   - Mappings: the REQ-LOC-02 table, with `dungeon` → "Catacombs" and `dungeon_hub` → "Dungeon Hub" (D-2); `catacombs` and `jerry` dropped. Unknown modes logged once. Island names with short descriptions exposed for the UI.
   - "On SkyBlock" comes from the server type, so unmapped SkyBlock modes still count (needed by T3.5–T3.7).

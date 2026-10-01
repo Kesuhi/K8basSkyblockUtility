@@ -72,7 +72,7 @@ public final class DebugCommand {
 							.then(ClientCommands.argument("name", StringArgumentType.greedyString())
 									.suggests((context, builder) -> {
 										builder.suggest("clear");
-										IslandTracker.knownIslands().forEach(builder::suggest);
+										IslandTracker.islands().forEach(island -> builder.suggest(island.name()));
 										return builder.buildFuture();
 									})
 									.executes(context -> forceIsland(StringArgumentType.getString(context, "name")))));
