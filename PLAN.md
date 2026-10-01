@@ -293,7 +293,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
   - Req: REQ-XC-VERIFY-02, REQ-XC-VERIFY-01, REQ-LOC-08, REQ-GS-13
   - In a singleplayer world: the debug commands are registered, the island can be forced and cleared, and the tab and sidebar dumps write tagged lines. Screenshots of the 1.0.1 label in the open and behind stone; the label crop is the template `waypoint-label-1.0.1-behind-stone.png`.
   - Accept: AC-LOC-09 [B], AC-GS-13 [B] (as a gametest); the template matches with the `exact()` comparison, and a one-glyph label change fails the test.
-- [ ] **T0.4b feat(debug): armed container dump + entity name-tag dump** (M, deps T0.4). Both ship in production. Read-only: no clicks, no paging, nothing opened.
+- [x] **T0.4b feat(debug): armed container dump + entity name-tag dump** (M, deps T0.4). Both ship in production. Read-only: no clicks, no paging, nothing opened.
   - Req: REQ-GS-13, REQ-GS-12, REQ-XC-VERIFY-02, REQ-XC-RULES-04, REQ-XC-PRIVACY-01
   - `/ksu debug dump containers on|off` **arms** a passive dump, because no command can be typed while a menu is open. While armed, each allowlisted menu *you* open is written once its contents are stable (the content packet, then 2 quiet ticks). It disarms after 60 min.
   - Allowlist (T3.0e reuses it):

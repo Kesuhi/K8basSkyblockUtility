@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.debug.ContainerDump;
 import com.k8bas.skyblockutility.debug.DebugCommand;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
@@ -36,6 +37,7 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		SettingsKeybind.register();
 		SettingsCommand.register();
 		DebugCommand.register();
+		ContainerDump.register();
 		UpdateChecker.checkInBackgroundIfEnabled();
 
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
