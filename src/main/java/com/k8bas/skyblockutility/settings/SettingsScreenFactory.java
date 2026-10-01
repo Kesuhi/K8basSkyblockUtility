@@ -33,8 +33,9 @@ public final class SettingsScreenFactory {
 		general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Check for updates (notify)"),
 						ConfigManager.general().autoUpdateCheckEnabled)
 				.setDefaultValue(true)
-				.setTooltip(Component.literal("Asks GitHub (api.github.com) for new releases at most every 6 hours and "
-						+ "tells you in chat once per session when a newer version is out. Nothing is downloaded or installed."))
+				.setTooltip(Component.literal("Asks GitHub (api.github.com) for new releases at most 4 times a day; after a "
+						+ "successful check, not again for 6 hours. Tells you in chat once per session when a newer version is "
+						+ "out. Nothing is downloaded or installed."))
 				.setSaveConsumer(value -> ConfigManager.general().autoUpdateCheckEnabled = value)
 				.build());
 		general.addEntry(entryBuilder.startIntSlider(Component.literal("Mob scan range in blocks (0 = unlimited)"),

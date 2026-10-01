@@ -432,7 +432,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 - [x] **T1.15 build(release): version 1.1.0 + `<version>+<mc>` jar naming + sidecar** (S, deps phase 1). Mod version `1.1.0` in `gradle.properties`. `build.gradle` names the jar `k8bas_skyblock_utility-1.1.0+26.2.jar`, sets `fabric.mod.json` `version` to `1.1.0+26.2`, and writes `<jar>.sha256` (64 lowercase hex, two spaces, name, LF, no BOM).
   - Req: REQ-REL-06, REQ-REL-07, REQ-REL-14
   - Accept: AC-REL-05 with 1.1.0; T1.4b's selector accepts the built name and the running version string.
-- [ ] **T1.16 docs(release): README, CHANGELOG and mod description for v1.1.0** (M, deps T1.14, T1.15).
+- [x] **T1.16 docs(release): README, CHANGELOG and mod description for v1.1.0** (M, deps T1.14, T1.15).
   - Req: REQ-REL-14, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-REL-05, REQ-GLOW-15, REQ-PORT-09
   - README, limited to what v1.1.0 ships: "Minecraft 26.2 (Fabric)" with Java 25, Loader ≥ 0.19.5, Fabric API, Hypixel Mod API and Cloth Config; 26.1.x dropped, 1.0.1 was the last 26.1 build; compliance section; non-affiliation statement; network access (GitHub update check and its toggle, the NPC/mob gists until they are bundled); licensing (CC0, Render Chest Apache-2.0).
   - Upgrade note in README and CHANGELOG: 1.0.x users install by hand once; settings migrate with a backup; behaviour changes (visible-only glow, invisible mobs never highlighted, "You found X" after line of sight, Catacombs/Dungeon Hub split, notify-only update check).
