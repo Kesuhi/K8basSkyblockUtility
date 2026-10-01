@@ -25,7 +25,7 @@ public final class SettingsKeybind {
 				// Deferred to next tick: opening a screen synchronously from the same input
 				// event that triggered it (also true for the /ksu command) risks the screen
 				// swallowing a stray leftover keystroke and closing itself immediately.
-				client.execute(() -> client.setScreen(SettingsScreenFactory.build(client.screen)));
+				client.execute(() -> client.gui.setScreen(SettingsScreenFactory.build(client.gui.screen())));
 			}
 		});
 	}

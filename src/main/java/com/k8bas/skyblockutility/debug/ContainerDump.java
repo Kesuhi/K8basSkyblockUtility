@@ -53,7 +53,7 @@ public final class ContainerDump {
 		if (ARM.expiredNow()) {
 			ChatUtils.chat("Container dump disarmed after 60 minutes");
 		}
-		Screen screen = client.screen;
+		Screen screen = client.gui.screen();
 		if (!ARM.isArmed() || !(screen instanceof AbstractContainerScreen<?> containerScreen)) {
 			trackedScreen = null;
 			return;

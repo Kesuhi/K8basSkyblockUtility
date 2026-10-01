@@ -109,7 +109,7 @@ public final class MobHighlighterModule implements Module {
 
 		category.addEntry(new ButtonEntry(Component.literal("Mob Database"), Component.literal("Open"), () -> {
 			Minecraft client = Minecraft.getInstance();
-			client.setScreen(buildMobPickerScreen(client.screen));
+			client.gui.setScreen(buildMobPickerScreen(client.gui.screen()));
 		}));
 
 		workingRules = new ArrayList<>(config.rules);
@@ -177,7 +177,7 @@ public final class MobHighlighterModule implements Module {
 		// rebuilt "Add rule" button needs a way to trigger the *next* rebuild too).
 		Runnable[] refreshPickerRef = new Runnable[1];
 		refreshPickerRef[0] = () -> {
-			Screen active = Minecraft.getInstance().screen;
+			Screen active = Minecraft.getInstance().gui.screen();
 			if (active instanceof ClothConfigScreen clothScreen) {
 				captureExpandedState(currentFolderEntries, expandedState);
 				replaceFolderEntries(clothScreen, currentFolderEntries,
@@ -399,7 +399,7 @@ public final class MobHighlighterModule implements Module {
 		}));
 		sub.add(new ButtonEntry(Component.literal("Delete"), Component.literal("Delete this rule"), () -> {
 			workingRules.remove(rule);
-			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);
+			liveRemoveRuleEntry(Minecraft.getInstance().gui.screen(), selfRef[0]);
 		}));
 
 		AbstractConfigListEntry<?> built = sub.build();

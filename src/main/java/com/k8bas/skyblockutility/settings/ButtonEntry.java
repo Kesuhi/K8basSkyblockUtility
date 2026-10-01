@@ -29,10 +29,18 @@ public class ButtonEntry extends TooltipListEntry<Object> {
 	private final Button buttonWidget;
 	private final List<AbstractWidget> widgets;
 
+	private final Runnable action;
+
 	public ButtonEntry(Component fieldName, Component buttonLabel, Runnable action) {
 		super(fieldName, Optional::empty);
+		this.action = action;
 		this.buttonWidget = Button.builder(buttonLabel, widget -> action.run()).bounds(0, 0, 150, 20).build();
 		this.widgets = Lists.newArrayList(buttonWidget);
+	}
+
+	/** Runs the button's action as a click would (used by the client gametests). */
+	public void press() {
+		action.run();
 	}
 
 	/**

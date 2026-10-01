@@ -311,7 +311,7 @@ Every task names the SPEC requirements it implements (`Req:`) and the acceptance
 - [x] **T1.1 refactor(npcsearch): submit-based waypoint renderer** (S, deps T0.4c). `NpcWaypointRenderer` moves to `COLLECT_SUBMITS` + `submitText(… SEE_THROUGH …)`, which also exists in 26.1.2.
   - Req: REQ-PORT-05, REQ-PORT-06, REQ-PORT-12
   - Accept: compiles on 26.1.2; the T0.4c gametest still finds the 1.0.1 label template exactly behind **opaque** blocks (the translucent case is T1.3); no NaN at distance 0 or behind the camera (EC-PORT-06).
-- [ ] **T1.2 build!: target Minecraft 26.2** (M, deps T1.1).
+- [x] **T1.2 build!: target Minecraft 26.2** (M, deps T1.1).
   - Req: REQ-PORT-01, REQ-PORT-02, REQ-PORT-03, REQ-PORT-04, REQ-PORT-05, REQ-PORT-06, REQ-PORT-08
   - `gradle.properties`: MC 26.2, Loader 0.19.5, Fabric API 0.161.0+26.2, Cloth 26.2.155, Mod Menu 20.0.3, Loom pinned to an exact 1.17 release (no `-SNAPSHOT`), Gradle 9.5.1 kept.
   - `fabric.mod.json`: `minecraft ~26.2`, `fabricloader >=0.19.5`, `fabric-api >=0.161.0`, `cloth-config >=26.2.155`, `hypixel-mod-api >=1.0.2`.

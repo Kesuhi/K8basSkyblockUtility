@@ -92,8 +92,8 @@ public final class NpcSearchModule implements Module {
 		}
 
 		Minecraft client = Minecraft.getInstance();
-		client.gui.resetTitleTimes();
-		client.gui.setTitle(Component.literal("You found " + rule.label)
+		client.gui.hud.resetTitleTimes();
+		client.gui.hud.setTitle(Component.literal("You found " + rule.label)
 				.withStyle(Style.EMPTY.withColor(TextColor.fromRgb(rule.color))));
 	}
 
@@ -149,7 +149,7 @@ public final class NpcSearchModule implements Module {
 
 		category.addEntry(new ButtonEntry(Component.literal("NPC Database"), Component.literal("Open"), () -> {
 			Minecraft client = Minecraft.getInstance();
-			client.setScreen(buildNpcPickerScreen(client.screen));
+			client.gui.setScreen(buildNpcPickerScreen(client.gui.screen()));
 		}));
 
 		workingRules = new ArrayList<>(config.rules);
@@ -210,7 +210,7 @@ public final class NpcSearchModule implements Module {
 		// one-slot holder first since the Runnable's own body needs to refer to itself.
 		Runnable[] refreshPickerRef = new Runnable[1];
 		refreshPickerRef[0] = () -> {
-			Screen active = Minecraft.getInstance().screen;
+			Screen active = Minecraft.getInstance().gui.screen();
 			if (active instanceof ClothConfigScreen clothScreen) {
 				captureExpandedState(currentFolderEntries, expandedState);
 				replaceFolderEntries(clothScreen, currentFolderEntries,
@@ -406,7 +406,7 @@ public final class NpcSearchModule implements Module {
 
 		sub.add(new ButtonEntry(Component.literal("Delete"), Component.literal("Delete this NPC"), () -> {
 			workingRules.remove(rule);
-			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);
+			liveRemoveRuleEntry(Minecraft.getInstance().gui.screen(), selfRef[0]);
 		}));
 
 		AbstractConfigListEntry<?> built = sub.build();

@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContex
 import net.fabricmc.fabric.api.client.gametest.v1.screenshot.TestScreenshotComparisonAlgorithm;
 import net.fabricmc.fabric.api.client.gametest.v1.screenshot.TestScreenshotComparisonOptions;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +31,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
 		try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
-			singleplayer.getClientLevel().waitForChunksRender();
+			singleplayer.getConnection().waitForChunksRender();
 			TestServerContext server = singleplayer.getServer();
 
 			commandsAreRegistered(context);
@@ -153,10 +154,10 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 				player.openMenu(provider);
 			}
 		});
-		context.waitFor(client -> client.screen instanceof AbstractContainerScreen<?>);
+		context.waitFor(client -> client.gui.screen() instanceof AbstractContainerScreen<?>);
 		context.waitTicks(6);
 		context.runOnClient(client -> client.player.closeContainer());
-		context.waitFor(client -> client.screen == null);
+		context.waitFor(client -> client.gui.screen() == null);
 	}
 
 	private static int count(String text, String part) {
@@ -173,7 +174,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		server.runCommand("weather clear");
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
 		context.runOnClient(client -> {
-			client.options.hideGui = true;
+			setHudHidden(client, true);
 			NpcRule rule = new NpcRule();
 			rule.label = "Baseline NPC";
 			rule.island = "Hub";
@@ -184,12 +185,12 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 			NpcWaypointRenderer.setActiveWaypoints(List.of(rule));
 		});
 		runClientCommand(context, "ksu debug island Hub");
-		singleplayer.getClientLevel().waitForChunksRender();
+		singleplayer.getConnection().waitForChunksRender();
 		context.waitTicks(10);
 		context.takeScreenshot("t0.4-waypoint-open");
 
 		server.runCommand("fill -4 -60 3 4 -54 3 minecraft:stone");
-		singleplayer.getClientLevel().waitForChunksRender();
+		singleplayer.getConnection().waitForChunksRender();
 		context.waitTicks(10);
 		context.takeScreenshot("t0.4-waypoint-behind-stone");
 		// The label must stay pixel-identical to the 1.0.1 baseline (T1.1 replaces the renderer).
@@ -204,9 +205,16 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		server.runCommand("fill -4 -60 3 4 -54 3 minecraft:air");
 		runClientCommand(context, "ksu debug island clear");
 		context.runOnClient(client -> {
-			client.options.hideGui = false;
+			setHudHidden(client, false);
 			NpcWaypointRenderer.setActiveWaypoints(List.of());
 		});
+	}
+
+	/** 26.2 replaces Options.hideGui with Hud.toggle(). */
+	private static void setHudHidden(Minecraft client, boolean hidden) {
+		if (client.gui.hud.isHidden() != hidden) {
+			client.gui.hud.toggle();
+		}
 	}
 
 	private static void runClientCommand(ClientGameTestContext context, String command) {

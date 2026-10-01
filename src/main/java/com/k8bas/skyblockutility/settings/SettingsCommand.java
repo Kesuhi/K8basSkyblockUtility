@@ -21,7 +21,7 @@ public final class SettingsCommand {
 					var client = context.getSource().getClient();
 					// Deferred to next tick: the chat input's own Enter keystroke can otherwise
 					// leak into the freshly opened screen and close it again immediately.
-					client.execute(() -> client.setScreen(SettingsScreenFactory.build(client.screen)));
+					client.execute(() -> client.gui.setScreen(SettingsScreenFactory.build(client.gui.screen())));
 					return 1;
 				}));
 			}
