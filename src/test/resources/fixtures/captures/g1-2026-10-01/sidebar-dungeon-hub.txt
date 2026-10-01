@@ -1,0 +1,14 @@
+[K8BAS-DUMP] sidebar title | SKYBLOCK
+[K8BAS-DUMP] sidebar 00 score=13 | §710/01/26 §8m000§y§8XX
+[K8BAS-DUMP] sidebar 01 score=12 |   §x
+[K8BAS-DUMP] sidebar 02 score=11 |  Autumn 10th§w
+[K8BAS-DUMP] sidebar 03 score=10 |  §73:10am §b☽§v
+[K8BAS-DUMP] sidebar 04 score=9 |  §7 §cDungeon H§u§cub
+[K8BAS-DUMP] sidebar 05 score=8 |       §t
+[K8BAS-DUMP] sidebar 06 score=7 | Purse: §6311,732§s§6,284
+[K8BAS-DUMP] sidebar 07 score=6 | Bits: §b880,422§q
+[K8BAS-DUMP] sidebar 08 score=5 |          §p
+[K8BAS-DUMP] sidebar 09 score=4 | Objective§j
+[K8BAS-DUMP] sidebar 10 score=3 | §eRun the race i§i§en 120s
+[K8BAS-DUMP] sidebar 11 score=2 |             §h
+[K8BAS-DUMP] sidebar 12 score=1 | §ewww.hypixel.ne§g§et

@@ -1,0 +1,293 @@
+[K8BAS-DUMP] container 50 title=Tasks ➜ Event slots=54 state=65
+[K8BAS-DUMP] container 50 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 4 item=minecraft:clock sbid=- count=1 | Event Tasks
+[K8BAS-DUMP] container 50 slot 4 lore 0 | 13 Tasks
+[K8BAS-DUMP] container 50 slot 4 lore 1 | 
+[K8BAS-DUMP] container 50 slot 4 lore 2 | All of the XP tasks related to
+[K8BAS-DUMP] container 50 slot 4 lore 3 | different events around SkyBlock!
+[K8BAS-DUMP] container 50 slot 4 lore 4 | 
+[K8BAS-DUMP] container 50 slot 4 lore 5 | ▶ Mining Fiesta
+[K8BAS-DUMP] container 50 slot 4 lore 6 | ▶ Fishing Festival
+[K8BAS-DUMP] container 50 slot 4 lore 7 | ▶ Harvest Feast Seasoning
+[K8BAS-DUMP] container 50 slot 4 lore 8 | ▶ Spooky Festival
+[K8BAS-DUMP] container 50 slot 4 lore 9 | ▶ Hoppity's Hunt
+[K8BAS-DUMP] container 50 slot 4 lore 10 | ▶ Jacob's Farming Contest
+[K8BAS-DUMP] container 50 slot 4 lore 11 | ▶ Fishing Festival Perk Shop
+[K8BAS-DUMP] container 50 slot 4 lore 12 | ▶ Mining Fiesta Perk Shop
+[K8BAS-DUMP] container 50 slot 4 lore 13 | ▶ Mythological Ritual Perk Shop
+[K8BAS-DUMP] container 50 slot 4 lore 14 | ▶ Spooky Festival Perk Shop
+[K8BAS-DUMP] container 50 slot 4 lore 15 | ▶ Season of Jerry Perk Shop
+[K8BAS-DUMP] container 50 slot 4 lore 16 | ▶ Harvest Feast Perk Shop
+[K8BAS-DUMP] container 50 slot 4 lore 17 | ▶ Year of the Witch
+[K8BAS-DUMP] container 50 slot 4 lore 18 | 
+[K8BAS-DUMP] container 50 slot 4 lore 19 | Progress to Complete Category: 72.1%
+[K8BAS-DUMP] container 50 slot 4 lore 20 |                           1,037/1,439 XP
+[K8BAS-DUMP] container 50 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 19 item=minecraft:iron_pickaxe sbid=- count=1 | Mining Fiesta
+[K8BAS-DUMP] container 50 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 50 slot 19 lore 1 | 
+[K8BAS-DUMP] container 50 slot 19 lore 2 | Gain XP by mining blocks during the
+[K8BAS-DUMP] container 50 slot 19 lore 3 | Mining Fiesta event! Blocks contribute
+[K8BAS-DUMP] container 50 slot 19 lore 4 | their  Breaking Power towards this
+[K8BAS-DUMP] container 50 slot 19 lore 5 | task.
+[K8BAS-DUMP] container 50 slot 19 lore 6 | Per 5,000 Blocks Mined: +1 XP
+[K8BAS-DUMP] container 50 slot 19 lore 7 | (Caps at 1,000,000 blocks mined!)
+[K8BAS-DUMP] container 50 slot 19 lore 8 | 
+[K8BAS-DUMP] container 50 slot 19 lore 9 | Blocks Mined: 1,668,281
+[K8BAS-DUMP] container 50 slot 19 lore 10 | 
+[K8BAS-DUMP] container 50 slot 19 lore 11 | Total Progress: 100%
+[K8BAS-DUMP] container 50 slot 19 lore 12 |                           200/200 XP
+[K8BAS-DUMP] container 50 slot 19 lore 13 | 
+[K8BAS-DUMP] container 50 slot 19 lore 14 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 50 slot 19 lore 15 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 19 lore 16 | 
+[K8BAS-DUMP] container 50 slot 19 lore 17 | Mining Fiestas start when Mayor Cole
+[K8BAS-DUMP] container 50 slot 19 lore 18 | is elected!
+[K8BAS-DUMP] container 50 slot 20 item=minecraft:fishing_rod sbid=- count=1 | Fishing Festival
+[K8BAS-DUMP] container 50 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 50 slot 20 lore 1 | 
+[K8BAS-DUMP] container 50 slot 20 lore 2 | Gain XP by killing Sharks during the
+[K8BAS-DUMP] container 50 slot 20 lore 3 | Fishing Festival event!
+[K8BAS-DUMP] container 50 slot 20 lore 4 | Per 50 Sharks Killed: +1 XP
+[K8BAS-DUMP] container 50 slot 20 lore 5 | (Caps at 5,000 Sharks killed!)
+[K8BAS-DUMP] container 50 slot 20 lore 6 | 
+[K8BAS-DUMP] container 50 slot 20 lore 7 | Sharks Killed: 702
+[K8BAS-DUMP] container 50 slot 20 lore 8 | 
+[K8BAS-DUMP] container 50 slot 20 lore 9 | Total Progress: 14%
+[K8BAS-DUMP] container 50 slot 20 lore 10 |                           14/100 XP
+[K8BAS-DUMP] container 50 slot 20 lore 11 | 
+[K8BAS-DUMP] container 50 slot 20 lore 12 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 50 slot 20 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 20 lore 14 | 
+[K8BAS-DUMP] container 50 slot 20 lore 15 | Go Kill some sharks!
+[K8BAS-DUMP] container 50 slot 21 item=minecraft:golden_hoe sbid=- count=1 | Harvest Feast Seasoning
+[K8BAS-DUMP] container 50 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 50 slot 21 lore 1 | 
+[K8BAS-DUMP] container 50 slot 21 lore 2 | Gain +1 XP for every 15 you collect!
+[K8BAS-DUMP] container 50 slot 21 lore 3 | 
+[K8BAS-DUMP] container 50 slot 21 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 50 slot 21 lore 5 |                           100/100 XP
+[K8BAS-DUMP] container 50 slot 21 lore 6 | 
+[K8BAS-DUMP] container 50 slot 21 lore 7 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 50 slot 21 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 21 lore 9 | 
+[K8BAS-DUMP] container 50 slot 21 lore 10 | Go earn some XP!
+[K8BAS-DUMP] container 50 slot 22 item=minecraft:jack_o_lantern sbid=- count=1 | Spooky Festival
+[K8BAS-DUMP] container 50 slot 22 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 50 slot 22 lore 1 | 
+[K8BAS-DUMP] container 50 slot 22 lore 2 |  ✔ Wood Bracket
+[K8BAS-DUMP] container 50 slot 22 lore 3 |  ✔ Stone Bracket
+[K8BAS-DUMP] container 50 slot 22 lore 4 |  ✔ Iron Bracket
+[K8BAS-DUMP] container 50 slot 22 lore 5 |  ✔ Gold Bracket
+[K8BAS-DUMP] container 50 slot 22 lore 6 |  ✔ Diamond Bracket
+[K8BAS-DUMP] container 50 slot 22 lore 7 |  ✔ Emerald Bracket
+[K8BAS-DUMP] container 50 slot 22 lore 8 | 
+[K8BAS-DUMP] container 50 slot 22 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 50 slot 22 lore 10 |                           225/225 XP
+[K8BAS-DUMP] container 50 slot 22 lore 11 | 
+[K8BAS-DUMP] container 50 slot 22 lore 12 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 50 slot 22 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 22 lore 14 | 
+[K8BAS-DUMP] container 50 slot 22 lore 15 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 23 item=minecraft:player_head sbid=- count=1 | Hoppity's Hunt
+[K8BAS-DUMP] container 50 slot 23 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 50 slot 23 lore 1 | 
+[K8BAS-DUMP] container 50 slot 23 lore 2 |  ✔ Chocolate Factory Prestige
+[K8BAS-DUMP] container 50 slot 23 lore 3 |  ✖ Mythic Chocolate Rabbits
+[K8BAS-DUMP] container 50 slot 23 lore 4 |  ✖ Divine Chocolate Rabbits
+[K8BAS-DUMP] container 50 slot 23 lore 5 | 
+[K8BAS-DUMP] container 50 slot 23 lore 6 | Total Progress: 89.5%
+[K8BAS-DUMP] container 50 slot 23 lore 7 |                           255/285 XP
+[K8BAS-DUMP] container 50 slot 23 lore 8 | 
+[K8BAS-DUMP] container 50 slot 23 lore 9 | This task is worth 0.5% of your Total
+[K8BAS-DUMP] container 50 slot 23 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 23 lore 11 | 
+[K8BAS-DUMP] container 50 slot 23 lore 12 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 24 item=minecraft:wheat sbid=- count=1 | Jacob's Farming Contest
+[K8BAS-DUMP] container 50 slot 24 lore 0 | 13 Tasks
+[K8BAS-DUMP] container 50 slot 24 lore 1 | 
+[K8BAS-DUMP] container 50 slot 24 lore 2 |  ✔ Gold Wheat
+[K8BAS-DUMP] container 50 slot 24 lore 3 |  ✔ Gold Carrot
+[K8BAS-DUMP] container 50 slot 24 lore 4 |  ✔ Gold Potato
+[K8BAS-DUMP] container 50 slot 24 lore 5 |  ✔ Gold Pumpkin
+[K8BAS-DUMP] container 50 slot 24 lore 6 |  ✔ Gold Melon Slice
+[K8BAS-DUMP] container 50 slot 24 lore 7 |  ✔ Gold Mushroom
+[K8BAS-DUMP] container 50 slot 24 lore 8 |  ✔ Gold Cactus
+[K8BAS-DUMP] container 50 slot 24 lore 9 |  ✔ Gold Sugar Cane
+[K8BAS-DUMP] container 50 slot 24 lore 10 |  ✔ Gold Nether Wart
+[K8BAS-DUMP] container 50 slot 24 lore 11 |  ✔ Gold Cocoa Beans
+[K8BAS-DUMP] container 50 slot 24 lore 12 |  ✔ Gold Sunflower
+[K8BAS-DUMP] container 50 slot 24 lore 13 |  ✔ Gold Moonflower
+[K8BAS-DUMP] container 50 slot 24 lore 14 |  ✔ Gold Wild Rose
+[K8BAS-DUMP] container 50 slot 24 lore 15 | 
+[K8BAS-DUMP] container 50 slot 24 lore 16 | Total Progress: 100%
+[K8BAS-DUMP] container 50 slot 24 lore 17 |                           130/130 XP
+[K8BAS-DUMP] container 50 slot 24 lore 18 | 
+[K8BAS-DUMP] container 50 slot 24 lore 19 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 50 slot 24 lore 20 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 24 lore 21 | 
+[K8BAS-DUMP] container 50 slot 24 lore 22 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 25 item=minecraft:fishing_rod sbid=- count=1 | Fishing Festival Perk Shop
+[K8BAS-DUMP] container 50 slot 25 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 50 slot 25 lore 1 | 
+[K8BAS-DUMP] container 50 slot 25 lore 2 |  ✖ Fishing Prodigy (0/5)
+[K8BAS-DUMP] container 50 slot 25 lore 3 |  ✖ Shark Sonar (0/5)
+[K8BAS-DUMP] container 50 slot 25 lore 4 |  ✖ Denture Collector (0/3)
+[K8BAS-DUMP] container 50 slot 25 lore 5 |  ✖ Elasmobranchii Affinity (0/2)
+[K8BAS-DUMP] container 50 slot 25 lore 6 | 
+[K8BAS-DUMP] container 50 slot 25 lore 7 | Total Progress: 0%
+[K8BAS-DUMP] container 50 slot 25 lore 8 |                           0/49 XP
+[K8BAS-DUMP] container 50 slot 25 lore 9 | 
+[K8BAS-DUMP] container 50 slot 25 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 50 slot 25 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 25 lore 12 | 
+[K8BAS-DUMP] container 50 slot 25 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 28 item=minecraft:iron_pickaxe sbid=- count=1 | Mining Fiesta Perk Shop
+[K8BAS-DUMP] container 50 slot 28 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 50 slot 28 lore 1 | 
+[K8BAS-DUMP] container 50 slot 28 lore 2 |  ✔ Refined Mind (5/5)
+[K8BAS-DUMP] container 50 slot 28 lore 3 |  ✖ Fortunate Festivity (0/5)
+[K8BAS-DUMP] container 50 slot 28 lore 4 |  ✖ Powder Hoarder (2/3)
+[K8BAS-DUMP] container 50 slot 28 lore 5 |  ✖ Titanium Tenacity (1/2)
+[K8BAS-DUMP] container 50 slot 28 lore 6 | 
+[K8BAS-DUMP] container 50 slot 28 lore 7 | Total Progress: 51%
+[K8BAS-DUMP] container 50 slot 28 lore 8 |                           25/49 XP
+[K8BAS-DUMP] container 50 slot 28 lore 9 | 
+[K8BAS-DUMP] container 50 slot 28 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 50 slot 28 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 28 lore 12 | 
+[K8BAS-DUMP] container 50 slot 28 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 29 item=minecraft:player_head sbid=- count=1 | Mythological Ritual Perk Shop
+[K8BAS-DUMP] container 50 slot 29 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 50 slot 29 lore 1 | 
+[K8BAS-DUMP] container 50 slot 29 lore 2 |  ✖ Storied Stinger (4/5)
+[K8BAS-DUMP] container 50 slot 29 lore 3 |  ✖ Deadly Greed (4/5)
+[K8BAS-DUMP] container 50 slot 29 lore 4 |  ✖ Diana's Favor (1/3)
+[K8BAS-DUMP] container 50 slot 29 lore 5 |  ✔ Elusive Hunter (2/2)
+[K8BAS-DUMP] container 50 slot 29 lore 6 | 
+[K8BAS-DUMP] container 50 slot 29 lore 7 | Total Progress: 61.2%
+[K8BAS-DUMP] container 50 slot 29 lore 8 |                           30/49 XP
+[K8BAS-DUMP] container 50 slot 29 lore 9 | 
+[K8BAS-DUMP] container 50 slot 29 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 50 slot 29 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 29 lore 12 | 
+[K8BAS-DUMP] container 50 slot 29 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 30 item=minecraft:jack_o_lantern sbid=- count=1 | Spooky Festival Perk Shop
+[K8BAS-DUMP] container 50 slot 30 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 50 slot 30 lore 1 | 
+[K8BAS-DUMP] container 50 slot 30 lore 2 |  ✖ Candy Scavenger (0/5)
+[K8BAS-DUMP] container 50 slot 30 lore 3 |  ✔ Spooky Savant (5/5)
+[K8BAS-DUMP] container 50 slot 30 lore 4 |  ✖ Purple Vogue (0/3)
+[K8BAS-DUMP] container 50 slot 30 lore 5 |  ✖ Trick or Treat Enthusiast (0/2)
+[K8BAS-DUMP] container 50 slot 30 lore 6 | 
+[K8BAS-DUMP] container 50 slot 30 lore 7 | Total Progress: 38.8%
+[K8BAS-DUMP] container 50 slot 30 lore 8 |                           19/49 XP
+[K8BAS-DUMP] container 50 slot 30 lore 9 | 
+[K8BAS-DUMP] container 50 slot 30 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 50 slot 30 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 30 lore 12 | 
+[K8BAS-DUMP] container 50 slot 30 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 32 item=minecraft:snowball sbid=- count=1 | Season of Jerry Perk Shop
+[K8BAS-DUMP] container 50 slot 32 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 50 slot 32 lore 1 | 
+[K8BAS-DUMP] container 50 slot 32 lore 2 |  ✔ Icy Hook (5/5)
+[K8BAS-DUMP] container 50 slot 32 lore 3 |  ✖ Present Connoisseur (0/5)
+[K8BAS-DUMP] container 50 slot 32 lore 4 |  ✖ Professional Gifter (0/2)
+[K8BAS-DUMP] container 50 slot 32 lore 5 |  ✖ Red Fad (0/3)
+[K8BAS-DUMP] container 50 slot 32 lore 6 | 
+[K8BAS-DUMP] container 50 slot 32 lore 7 | Total Progress: 38.8%
+[K8BAS-DUMP] container 50 slot 32 lore 8 |                           19/49 XP
+[K8BAS-DUMP] container 50 slot 32 lore 9 | 
+[K8BAS-DUMP] container 50 slot 32 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 50 slot 32 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 32 lore 12 | 
+[K8BAS-DUMP] container 50 slot 32 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 33 item=minecraft:golden_hoe sbid=- count=1 | Harvest Feast Perk Shop
+[K8BAS-DUMP] container 50 slot 33 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 50 slot 33 lore 1 | 
+[K8BAS-DUMP] container 50 slot 33 lore 2 |  ✖ Natural Talent (0/5)
+[K8BAS-DUMP] container 50 slot 33 lore 3 |  ✖ Fortunate Feasting (0/5)
+[K8BAS-DUMP] container 50 slot 33 lore 4 |  ✖ Feast Crashers (0/3)
+[K8BAS-DUMP] container 50 slot 33 lore 5 |  ✖ Leftovers (0/2)
+[K8BAS-DUMP] container 50 slot 33 lore 6 | 
+[K8BAS-DUMP] container 50 slot 33 lore 7 | Total Progress: 0%
+[K8BAS-DUMP] container 50 slot 33 lore 8 |                           0/49 XP
+[K8BAS-DUMP] container 50 slot 33 lore 9 | 
+[K8BAS-DUMP] container 50 slot 33 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 50 slot 33 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 33 lore 12 | 
+[K8BAS-DUMP] container 50 slot 33 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 34 item=minecraft:player_head sbid=- count=1 | Year of the Witch
+[K8BAS-DUMP] container 50 slot 34 lore 0 | 21 Tasks
+[K8BAS-DUMP] container 50 slot 34 lore 1 | 
+[K8BAS-DUMP] container 50 slot 34 lore 2 |  ✖ Straight Ice Slushie
+[K8BAS-DUMP] container 50 slot 34 lore 3 |  ✔ Mayfly Stew
+[K8BAS-DUMP] container 50 slot 34 lore 4 |  ✖ Insect Casserole
+[K8BAS-DUMP] container 50 slot 34 lore 5 |  ✖ Bone Broth
+[K8BAS-DUMP] container 50 slot 34 lore 6 |  ✖ Effervescent Bouillon
+[K8BAS-DUMP] container 50 slot 34 lore 7 |  ✔ Flaming Hot Chilli
+[K8BAS-DUMP] container 50 slot 34 lore 8 |  ✖ Withering Purée
+[K8BAS-DUMP] container 50 slot 34 lore 9 |  ✖ Leafy Lentil Soup
+[K8BAS-DUMP] container 50 slot 34 lore 10 |  ✖ Dusty Bisque
+[K8BAS-DUMP] container 50 slot 34 lore 11 |  ✖ Cremated Cereal
+[K8BAS-DUMP] container 50 slot 34 lore 12 |  ✖ Waterlice Liquor
+[K8BAS-DUMP] container 50 slot 34 lore 13 |  ✖ Gemstone Goulash
+[K8BAS-DUMP] container 50 slot 34 lore 14 |  ✖ Aerodynamic Potpourri
+[K8BAS-DUMP] container 50 slot 34 lore 15 |  ✖ Frogspawn Chowder
+[K8BAS-DUMP] container 50 slot 34 lore 16 | And 6 more...
+[K8BAS-DUMP] container 50 slot 34 lore 17 | 
+[K8BAS-DUMP] container 50 slot 34 lore 18 | Total Progress: 19%
+[K8BAS-DUMP] container 50 slot 34 lore 19 |                           20/105 XP
+[K8BAS-DUMP] container 50 slot 34 lore 20 | 
+[K8BAS-DUMP] container 50 slot 34 lore 21 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 50 slot 34 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 50 slot 34 lore 23 | 
+[K8BAS-DUMP] container 50 slot 34 lore 24 | Click to view tasks!
+[K8BAS-DUMP] container 50 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 44 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 45 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 46 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 47 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 50 slot 48 lore 0 | To Ways to Level Up
+[K8BAS-DUMP] container 50 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 50 slot 50 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 50 slot 50 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 50 slot 50 lore 1 | 
+[K8BAS-DUMP] container 50 slot 50 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 50 slot 50 lore 3 |   Earned XP
+[K8BAS-DUMP] container 50 slot 50 lore 4 |   Available XP
+[K8BAS-DUMP] container 50 slot 50 lore 5 |   A to Z
+[K8BAS-DUMP] container 50 slot 50 lore 6 |   Z to A
+[K8BAS-DUMP] container 50 slot 50 lore 7 | 
+[K8BAS-DUMP] container 50 slot 50 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 50 slot 51 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 52 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 50 slot 53 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 

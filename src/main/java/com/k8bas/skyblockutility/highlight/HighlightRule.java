@@ -26,4 +26,28 @@ public class HighlightRule {
 	 *  a hand-made rule. Lets the picker hide an entry that's already been added instead of
 	 *  letting it be added again as a duplicate. */
 	public String sourceId = null;
+
+	/** Repairs what Gson leaves invalid (REQ-CFG-07): an unknown or missing match mode becomes
+	 *  CONTAINS, and a missing id is generated once. @return true if anything changed. */
+	public boolean normalize() {
+		boolean changed = false;
+		if (nameMatchMode == null) {
+			nameMatchMode = NameMatchMode.CONTAINS;
+			changed = true;
+		}
+		if (id == null || id.isBlank()) {
+			id = UUID.randomUUID().toString();
+			changed = true;
+		}
+		// A null label would throw wherever it is drawn (waypoint label, title, settings).
+		if (label == null) {
+			label = "New Rule";
+			changed = true;
+		}
+		if (namePattern == null) {
+			namePattern = "";
+			changed = true;
+		}
+		return changed;
+	}
 }

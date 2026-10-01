@@ -2,11 +2,13 @@ package com.k8bas.skyblockutility.module.npcsearch;
 
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhases;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.feature.CustomFeatureRenderer;
+import net.minecraft.client.renderer.feature.TextFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.network.chat.Component;
@@ -19,17 +21,32 @@ import java.util.List;
 
 /**
  * Renders a floating, see-through-walls name label (plus live distance) at each active fixed
- * NPC's world position — the "waypoint" for NPC Search's fixed entries. Modeled directly on the
- * technique Firmament (a real mod already built against this exact Minecraft version, which has
- * its own NPC waypoint feature) uses: PoseStack/MultiBufferSource world rendering hasn't moved to
- * the newer split render-state API the way 2D GUI rendering has, camera-relative translation
- * still has to be applied by hand, and Font.DisplayMode.SEE_THROUGH is what gives vanilla text
- * its "visible through walls" look — confirmed against the real jar rather than assumed.
+ * NPC's world position — the "waypoint" for NPC Search's fixed entries. The label is submitted
+ * to the level's submit node collector during COLLECT_SUBMITS (the 26.x render-state pipeline;
+ * 26.2 removes the immediate-mode buffer path), with camera-relative translation applied by hand.
+ * Font.DisplayMode.SEE_THROUGH is what gives vanilla text its "visible through walls" look.
+ * Only fixed coordinates are drawn through walls (P4).
  */
 public final class NpcWaypointRenderer {
+	/** The background quad is submitted in a lower order than the text so the text draws on top. */
+	private static final int BACKGROUND_ORDER = 0;
+	private static final int TEXT_ORDER = 1;
+	private static final int BACKGROUND_COLOR = 0x70202020;
+
 	private static volatile List<NpcRule> activeWaypoints = List.of();
+	private static volatile boolean whiteLabels = true;
 
 	private NpcWaypointRenderer() {
+	}
+
+	/** The "White waypoint labels" setting (R21); set by NpcSearchModule. */
+	public static void setWhiteLabels(boolean white) {
+		whiteLabels = white;
+	}
+
+	/** The colour of a label and its distance line: white, or the rule's colour drawn opaque. */
+	static int labelColor(int ruleColor, boolean white) {
+		return white ? 0xFFFFFFFF : ARGB.opaque(ruleColor);
 	}
 
 	/** Called by NpcSearchModule whenever its rule set changes — every fixed NpcRule, not
@@ -49,14 +66,14 @@ public final class NpcWaypointRenderer {
 	}
 
 	public static void register() {
-		LevelRenderEvents.AFTER_TRANSLUCENT_TERRAIN.register(context -> {
+		LevelRenderEvents.COLLECT_SUBMITS.register(context -> {
 			List<NpcRule> waypoints = activeWaypoints;
 			if (waypoints.isEmpty()) {
 				return;
 			}
 
 			PoseStack matrices = context.poseStack();
-			MultiBufferSource.BufferSource buffers = context.bufferSource();
+			SubmitNodeCollector submits = context.submitNodeCollector();
 			CameraRenderState camera = context.levelState().cameraRenderState;
 
 			String currentIsland = IslandTracker.getCurrentIsland();
@@ -69,15 +86,19 @@ public final class NpcWaypointRenderer {
 				if (waypoint.island != null && !waypoint.island.equals(currentIsland)) {
 					continue;
 				}
-				renderWaypoint(matrices, buffers, camera, waypoint);
+				submitWaypoint(matrices, submits, camera, waypoint);
 			}
 			matrices.popPose();
-			buffers.endBatch();
 		});
 	}
 
-	private static void renderWaypoint(PoseStack matrices, MultiBufferSource.BufferSource buffers,
-			CameraRenderState camera, NpcRule waypoint) {
+	/** How far to pull a label towards the camera so that beyond 10 blocks it keeps its 10-block
+	 *  size instead of shrinking into the distance (0 up to 10 blocks, never NaN). */
+	static double pullFactor(double distance) {
+		return distance < 10 || distance == 0 ? 0.0 : -(distance - 10.0) / distance;
+	}
+
+	private static void submitWaypoint(PoseStack matrices, SubmitNodeCollector submits, CameraRenderState camera, NpcRule waypoint) {
 		Vec3 pos = waypoint.cachedPos;
 		double dx = pos.x - camera.pos.x;
 		double dy = pos.y - camera.pos.y;
@@ -86,24 +107,21 @@ public final class NpcWaypointRenderer {
 
 		matrices.pushPose();
 		matrices.translate(pos.x, pos.y, pos.z);
-		// Billboard towards the camera, and pull the label closer than 10 blocks so it doesn't
-		// visually shrink into the distance the way real world geometry would. Inlined as scalar
-		// math instead of two intermediate Vec3s (subtract + scale) — this runs per waypoint
-		// per frame.
-		double pull = distance < 10 || distance == 0 ? 0.0 : -(distance - 10.0) / distance;
+		// Billboard towards the camera. Inlined as scalar math instead of two intermediate Vec3s
+		// (subtract + scale) — this runs per waypoint per frame.
+		double pull = pullFactor(distance);
 		matrices.translate(dx * pull, dy * pull, dz * pull);
 		matrices.mulPose(camera.orientation);
 		matrices.scale(0.025F, -0.025F, 1F);
 
-		int textColor = ARGB.opaque(waypoint.color);
-		drawLabelLine(matrices, buffers, Component.literal(waypoint.label), 0, textColor);
-		drawLabelLine(matrices, buffers, Component.literal(Math.round(distance) + "m"), 1, textColor);
+		int textColor = labelColor(waypoint.color, whiteLabels);
+		submitLabelLine(matrices, submits, Component.literal(waypoint.label), 0, textColor);
+		submitLabelLine(matrices, submits, Component.literal(Math.round(distance) + "m"), 1, textColor);
 
 		matrices.popPose();
 	}
 
-	private static void drawLabelLine(PoseStack matrices, MultiBufferSource.BufferSource buffers,
-			Component text, int lineIndex, int textColor) {
+	private static void submitLabelLine(PoseStack matrices, SubmitNodeCollector submits, Component text, int lineIndex, int textColor) {
 		Font font = Minecraft.getInstance().font;
 		int width = font.width(text);
 		float lineHeight = font.lineHeight;
@@ -111,17 +129,21 @@ public final class NpcWaypointRenderer {
 		matrices.pushPose();
 		matrices.translate(-width / 2F, lineIndex * (lineHeight + 1), 0F);
 
-		VertexConsumer background = buffers.getBuffer(RenderTypes.textBackgroundSeeThrough());
-		Matrix4f pose = matrices.last().pose();
-		int backgroundColor = 0x70202020;
-		background.addVertex(pose, -1F, -1F, 0F).setColor(backgroundColor).setLight(LightCoordsUtil.FULL_BRIGHT);
-		background.addVertex(pose, -1F, lineHeight, 0F).setColor(backgroundColor).setLight(LightCoordsUtil.FULL_BRIGHT);
-		background.addVertex(pose, width, lineHeight, 0F).setColor(backgroundColor).setLight(LightCoordsUtil.FULL_BRIGHT);
-		background.addVertex(pose, width, -1F, 0F).setColor(backgroundColor).setLight(LightCoordsUtil.FULL_BRIGHT);
+		// Both parts go into the AFTER_TERRAIN phase: in the normal phases translucent terrain (water,
+		// stained glass, ice) is drawn later and would tint the label (REQ-PORT-07).
+		submits.order(BACKGROUND_ORDER).submitCustom(SubmitRenderPhases.AFTER_TERRAIN, new CustomFeatureRenderer.Submit(
+				matrices.last().copy(), RenderTypes.textBackgroundSeeThrough(), (pose, background) -> {
+					Matrix4f matrix = pose.pose();
+					background.addVertex(matrix, -1F, -1F, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
+					background.addVertex(matrix, -1F, lineHeight, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
+					background.addVertex(matrix, width, lineHeight, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
+					background.addVertex(matrix, width, -1F, 0F).setColor(BACKGROUND_COLOR).setLight(LightCoordsUtil.FULL_BRIGHT);
+				}));
 		matrices.translate(0F, 0F, 0.01F);
 
-		font.drawInBatch(text, 0F, 0F, textColor, false, matrices.last().pose(), buffers,
-				Font.DisplayMode.SEE_THROUGH, 0, LightCoordsUtil.FULL_BRIGHT);
+		submits.order(TEXT_ORDER).submitCustom(SubmitRenderPhases.AFTER_TERRAIN, new TextFeatureRenderer.Submit(
+				new Matrix4f(matrices.last().pose()), 0F, 0F, text.getVisualOrderText(), false, Font.DisplayMode.SEE_THROUGH,
+				LightCoordsUtil.FULL_BRIGHT, textColor, 0, 0));
 		matrices.popPose();
 	}
 }

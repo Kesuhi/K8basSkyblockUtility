@@ -1,0 +1,159 @@
+[K8BAS-DUMP] container 167 title=Essence Shop ➜ Gold Essence Shop slots=45 state=56
+[K8BAS-DUMP] container 167 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 4 item=minecraft:player_head sbid=- count=1 | Gold Essence Shop
+[K8BAS-DUMP] container 167 slot 4 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 167 slot 4 lore 1 | 
+[K8BAS-DUMP] container 167 slot 4 lore 2 |  ✔ Eager Miner (10/10)
+[K8BAS-DUMP] container 167 slot 4 lore 3 |  ✔ Treasure of the Earth (5/5)
+[K8BAS-DUMP] container 167 slot 4 lore 4 |  ✔ Unbreaking (5/5)
+[K8BAS-DUMP] container 167 slot 4 lore 5 |  ✔ Midas Lure (10/10)
+[K8BAS-DUMP] container 167 slot 4 lore 6 |  ✔ Dwarven Training (3/3)
+[K8BAS-DUMP] container 167 slot 4 lore 7 |  ✔ Heart of Gold (5/5)
+[K8BAS-DUMP] container 167 slot 4 lore 8 | 
+[K8BAS-DUMP] container 167 slot 4 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 167 slot 4 lore 10 |                           188/188 XP
+[K8BAS-DUMP] container 167 slot 4 lore 11 | 
+[K8BAS-DUMP] container 167 slot 4 lore 12 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 167 slot 4 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 167 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 19 item=minecraft:diamond_pickaxe sbid=- count=1 | Eager Miner
+[K8BAS-DUMP] container 167 slot 19 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 167 slot 19 lore 1 | 
+[K8BAS-DUMP] container 167 slot 19 lore 2 |  ✔ Eager Miner 1
+[K8BAS-DUMP] container 167 slot 19 lore 3 |  ✔ Eager Miner 2
+[K8BAS-DUMP] container 167 slot 19 lore 4 |  ✔ Eager Miner 3
+[K8BAS-DUMP] container 167 slot 19 lore 5 |  ✔ Eager Miner 4
+[K8BAS-DUMP] container 167 slot 19 lore 6 |  ✔ Eager Miner 5
+[K8BAS-DUMP] container 167 slot 19 lore 7 |  ✔ Eager Miner 6
+[K8BAS-DUMP] container 167 slot 19 lore 8 |  ✔ Eager Miner 7
+[K8BAS-DUMP] container 167 slot 19 lore 9 |  ✔ Eager Miner 8
+[K8BAS-DUMP] container 167 slot 19 lore 10 |  ✔ Eager Miner 9
+[K8BAS-DUMP] container 167 slot 19 lore 11 |  ✔ Eager Miner 10
+[K8BAS-DUMP] container 167 slot 19 lore 12 | 
+[K8BAS-DUMP] container 167 slot 19 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 167 slot 19 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 167 slot 19 lore 15 | 
+[K8BAS-DUMP] container 167 slot 19 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 167 slot 19 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 167 slot 19 lore 18 | 
+[K8BAS-DUMP] container 167 slot 19 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 167 slot 20 item=minecraft:player_head sbid=- count=1 | Treasure of the Earth
+[K8BAS-DUMP] container 167 slot 20 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 167 slot 20 lore 1 | 
+[K8BAS-DUMP] container 167 slot 20 lore 2 |  ✔ Treasure of the Earth 1
+[K8BAS-DUMP] container 167 slot 20 lore 3 |  ✔ Treasure of the Earth 2
+[K8BAS-DUMP] container 167 slot 20 lore 4 |  ✔ Treasure of the Earth 3
+[K8BAS-DUMP] container 167 slot 20 lore 5 |  ✔ Treasure of the Earth 4
+[K8BAS-DUMP] container 167 slot 20 lore 6 |  ✔ Treasure of the Earth 5
+[K8BAS-DUMP] container 167 slot 20 lore 7 | 
+[K8BAS-DUMP] container 167 slot 20 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 167 slot 20 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 167 slot 20 lore 10 | 
+[K8BAS-DUMP] container 167 slot 20 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 167 slot 20 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 167 slot 20 lore 13 | 
+[K8BAS-DUMP] container 167 slot 20 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 167 slot 21 item=minecraft:glistering_melon_slice sbid=- count=1 | Unbreaking
+[K8BAS-DUMP] container 167 slot 21 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 167 slot 21 lore 1 | 
+[K8BAS-DUMP] container 167 slot 21 lore 2 |  ✔ Unbreaking 1
+[K8BAS-DUMP] container 167 slot 21 lore 3 |  ✔ Unbreaking 2
+[K8BAS-DUMP] container 167 slot 21 lore 4 |  ✔ Unbreaking 3
+[K8BAS-DUMP] container 167 slot 21 lore 5 |  ✔ Unbreaking 4
+[K8BAS-DUMP] container 167 slot 21 lore 6 |  ✔ Unbreaking 5
+[K8BAS-DUMP] container 167 slot 21 lore 7 | 
+[K8BAS-DUMP] container 167 slot 21 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 167 slot 21 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 167 slot 21 lore 10 | 
+[K8BAS-DUMP] container 167 slot 21 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 167 slot 21 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 167 slot 21 lore 13 | 
+[K8BAS-DUMP] container 167 slot 21 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 167 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 23 item=minecraft:player_head sbid=- count=1 | Midas Lure
+[K8BAS-DUMP] container 167 slot 23 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 167 slot 23 lore 1 | 
+[K8BAS-DUMP] container 167 slot 23 lore 2 |  ✔ Midas Lure 1
+[K8BAS-DUMP] container 167 slot 23 lore 3 |  ✔ Midas Lure 2
+[K8BAS-DUMP] container 167 slot 23 lore 4 |  ✔ Midas Lure 3
+[K8BAS-DUMP] container 167 slot 23 lore 5 |  ✔ Midas Lure 4
+[K8BAS-DUMP] container 167 slot 23 lore 6 |  ✔ Midas Lure 5
+[K8BAS-DUMP] container 167 slot 23 lore 7 |  ✔ Midas Lure 6
+[K8BAS-DUMP] container 167 slot 23 lore 8 |  ✔ Midas Lure 7
+[K8BAS-DUMP] container 167 slot 23 lore 9 |  ✔ Midas Lure 8
+[K8BAS-DUMP] container 167 slot 23 lore 10 |  ✔ Midas Lure 9
+[K8BAS-DUMP] container 167 slot 23 lore 11 |  ✔ Midas Lure 10
+[K8BAS-DUMP] container 167 slot 23 lore 12 | 
+[K8BAS-DUMP] container 167 slot 23 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 167 slot 23 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 167 slot 23 lore 15 | 
+[K8BAS-DUMP] container 167 slot 23 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 167 slot 23 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 167 slot 23 lore 18 | 
+[K8BAS-DUMP] container 167 slot 23 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 167 slot 24 item=minecraft:stone_pickaxe sbid=- count=1 | Dwarven Training
+[K8BAS-DUMP] container 167 slot 24 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 167 slot 24 lore 1 | 
+[K8BAS-DUMP] container 167 slot 24 lore 2 |  ✔ Dwarven Training 1
+[K8BAS-DUMP] container 167 slot 24 lore 3 |  ✔ Dwarven Training 2
+[K8BAS-DUMP] container 167 slot 24 lore 4 |  ✔ Dwarven Training 3
+[K8BAS-DUMP] container 167 slot 24 lore 5 | 
+[K8BAS-DUMP] container 167 slot 24 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 167 slot 24 lore 7 |                           7/7 XP
+[K8BAS-DUMP] container 167 slot 24 lore 8 | 
+[K8BAS-DUMP] container 167 slot 24 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 167 slot 24 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 167 slot 24 lore 11 | 
+[K8BAS-DUMP] container 167 slot 24 lore 12 | Click to view tasks!
+[K8BAS-DUMP] container 167 slot 25 item=minecraft:yellow_banner sbid=- count=1 | Heart of Gold
+[K8BAS-DUMP] container 167 slot 25 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 167 slot 25 lore 1 | 
+[K8BAS-DUMP] container 167 slot 25 lore 2 |  ✔ Heart of Gold 1
+[K8BAS-DUMP] container 167 slot 25 lore 3 |  ✔ Heart of Gold 2
+[K8BAS-DUMP] container 167 slot 25 lore 4 |  ✔ Heart of Gold 3
+[K8BAS-DUMP] container 167 slot 25 lore 5 |  ✔ Heart of Gold 4
+[K8BAS-DUMP] container 167 slot 25 lore 6 |  ✔ Heart of Gold 5
+[K8BAS-DUMP] container 167 slot 25 lore 7 | 
+[K8BAS-DUMP] container 167 slot 25 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 167 slot 25 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 167 slot 25 lore 10 | 
+[K8BAS-DUMP] container 167 slot 25 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 167 slot 25 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 167 slot 25 lore 13 | 
+[K8BAS-DUMP] container 167 slot 25 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 167 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 37 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 38 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 167 slot 39 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 167 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 167 slot 41 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 42 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 43 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 167 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

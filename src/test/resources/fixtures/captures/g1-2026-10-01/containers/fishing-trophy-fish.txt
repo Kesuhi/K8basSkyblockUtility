@@ -1,0 +1,322 @@
+[K8BAS-DUMP] container 306 title=Fishing ➜ Trophy Fish slots=45 state=56
+[K8BAS-DUMP] container 306 slot 0 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 1 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 2 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 3 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 4 item=minecraft:player_head sbid=- count=1 | Trophy Fish
+[K8BAS-DUMP] container 306 slot 4 lore 0 | 18 Tasks
+[K8BAS-DUMP] container 306 slot 4 lore 1 | 
+[K8BAS-DUMP] container 306 slot 4 lore 2 |  ✔ Sulphur Skitter (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 3 |  ✔ Blobfish (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 4 |  ✔ Obfuscated-1 (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 5 |  ✔ Steaming-Hot Flounder (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 6 |  ✔ Gusher (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 7 |  ✔ Obfuscated-2 (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 8 |  ✔ Slugfish (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 9 |  ✔ Flyfish (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 10 |  ✔ Obfuscated-3 (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 11 |  ✔ Vanille (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 12 |  ✔ Lavahorse (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 13 |  ✔ Mana Ray (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 14 |  ✔ Volcanic Stonefish (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 15 |  ✔ Skeleton Fish (4/4)
+[K8BAS-DUMP] container 306 slot 4 lore 16 | And 3 more...
+[K8BAS-DUMP] container 306 slot 4 lore 17 | 
+[K8BAS-DUMP] container 306 slot 4 lore 18 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 4 lore 19 |                           1,080/1,080 XP
+[K8BAS-DUMP] container 306 slot 4 lore 20 | 
+[K8BAS-DUMP] container 306 slot 4 lore 21 | This task is worth 2% of your Total
+[K8BAS-DUMP] container 306 slot 4 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 5 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 6 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 7 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 8 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 9 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 10 item=minecraft:paper sbid=- count=1 | Sulphur Skitter
+[K8BAS-DUMP] container 306 slot 10 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 10 lore 1 | 
+[K8BAS-DUMP] container 306 slot 10 lore 2 |  ✔ Fish Bronze Sulphur Skitter
+[K8BAS-DUMP] container 306 slot 10 lore 3 |  ✔ Fish Silver Sulphur Skitter
+[K8BAS-DUMP] container 306 slot 10 lore 4 |  ✔ Fish Gold Sulphur Skitter
+[K8BAS-DUMP] container 306 slot 10 lore 5 |  ✔ Fish Diamond Sulphur Skitter
+[K8BAS-DUMP] container 306 slot 10 lore 6 | 
+[K8BAS-DUMP] container 306 slot 10 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 10 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 10 lore 9 | 
+[K8BAS-DUMP] container 306 slot 10 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 10 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 10 lore 12 | 
+[K8BAS-DUMP] container 306 slot 10 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 11 item=minecraft:paper sbid=- count=1 | Blobfish
+[K8BAS-DUMP] container 306 slot 11 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 11 lore 1 | 
+[K8BAS-DUMP] container 306 slot 11 lore 2 |  ✔ Fish Bronze Blobfish
+[K8BAS-DUMP] container 306 slot 11 lore 3 |  ✔ Fish Silver Blobfish
+[K8BAS-DUMP] container 306 slot 11 lore 4 |  ✔ Fish Gold Blobfish
+[K8BAS-DUMP] container 306 slot 11 lore 5 |  ✔ Fish Diamond Blobfish
+[K8BAS-DUMP] container 306 slot 11 lore 6 | 
+[K8BAS-DUMP] container 306 slot 11 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 11 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 11 lore 9 | 
+[K8BAS-DUMP] container 306 slot 11 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 11 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 11 lore 12 | 
+[K8BAS-DUMP] container 306 slot 11 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 12 item=minecraft:paper sbid=- count=1 | Obfuscated-1
+[K8BAS-DUMP] container 306 slot 12 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 12 lore 1 | 
+[K8BAS-DUMP] container 306 slot 12 lore 2 |  ✔ Fish Bronze Obfuscated-1
+[K8BAS-DUMP] container 306 slot 12 lore 3 |  ✔ Fish Silver Obfuscated-1
+[K8BAS-DUMP] container 306 slot 12 lore 4 |  ✔ Fish Gold Obfuscated-1
+[K8BAS-DUMP] container 306 slot 12 lore 5 |  ✔ Fish Diamond Obfuscated-1
+[K8BAS-DUMP] container 306 slot 12 lore 6 | 
+[K8BAS-DUMP] container 306 slot 12 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 12 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 12 lore 9 | 
+[K8BAS-DUMP] container 306 slot 12 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 12 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 12 lore 12 | 
+[K8BAS-DUMP] container 306 slot 12 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 14 item=minecraft:paper sbid=- count=1 | Steaming-Hot Flounder
+[K8BAS-DUMP] container 306 slot 14 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 14 lore 1 | 
+[K8BAS-DUMP] container 306 slot 14 lore 2 |  ✔ Fish Bronze Steaming-Hot Flounder
+[K8BAS-DUMP] container 306 slot 14 lore 3 |  ✔ Fish Silver Steaming-Hot Flounder
+[K8BAS-DUMP] container 306 slot 14 lore 4 |  ✔ Fish Gold Steaming-Hot Flounder
+[K8BAS-DUMP] container 306 slot 14 lore 5 |  ✔ Fish Diamond Steaming-Hot Flounder
+[K8BAS-DUMP] container 306 slot 14 lore 6 | 
+[K8BAS-DUMP] container 306 slot 14 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 14 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 14 lore 9 | 
+[K8BAS-DUMP] container 306 slot 14 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 14 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 14 lore 12 | 
+[K8BAS-DUMP] container 306 slot 14 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 15 item=minecraft:paper sbid=- count=1 | Gusher
+[K8BAS-DUMP] container 306 slot 15 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 15 lore 1 | 
+[K8BAS-DUMP] container 306 slot 15 lore 2 |  ✔ Fish Bronze Gusher
+[K8BAS-DUMP] container 306 slot 15 lore 3 |  ✔ Fish Silver Gusher
+[K8BAS-DUMP] container 306 slot 15 lore 4 |  ✔ Fish Gold Gusher
+[K8BAS-DUMP] container 306 slot 15 lore 5 |  ✔ Fish Diamond Gusher
+[K8BAS-DUMP] container 306 slot 15 lore 6 | 
+[K8BAS-DUMP] container 306 slot 15 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 15 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 15 lore 9 | 
+[K8BAS-DUMP] container 306 slot 15 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 15 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 15 lore 12 | 
+[K8BAS-DUMP] container 306 slot 15 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 16 item=minecraft:paper sbid=- count=1 | Obfuscated-2
+[K8BAS-DUMP] container 306 slot 16 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 16 lore 1 | 
+[K8BAS-DUMP] container 306 slot 16 lore 2 |  ✔ Fish Bronze Obfuscated-2
+[K8BAS-DUMP] container 306 slot 16 lore 3 |  ✔ Fish Silver Obfuscated-2
+[K8BAS-DUMP] container 306 slot 16 lore 4 |  ✔ Fish Gold Obfuscated-2
+[K8BAS-DUMP] container 306 slot 16 lore 5 |  ✔ Fish Diamond Obfuscated-2
+[K8BAS-DUMP] container 306 slot 16 lore 6 | 
+[K8BAS-DUMP] container 306 slot 16 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 16 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 16 lore 9 | 
+[K8BAS-DUMP] container 306 slot 16 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 16 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 16 lore 12 | 
+[K8BAS-DUMP] container 306 slot 16 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 17 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 18 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 19 item=minecraft:paper sbid=- count=1 | Slugfish
+[K8BAS-DUMP] container 306 slot 19 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 19 lore 1 | 
+[K8BAS-DUMP] container 306 slot 19 lore 2 |  ✔ Fish Bronze Slugfish
+[K8BAS-DUMP] container 306 slot 19 lore 3 |  ✔ Fish Silver Slugfish
+[K8BAS-DUMP] container 306 slot 19 lore 4 |  ✔ Fish Gold Slugfish
+[K8BAS-DUMP] container 306 slot 19 lore 5 |  ✔ Fish Diamond Slugfish
+[K8BAS-DUMP] container 306 slot 19 lore 6 | 
+[K8BAS-DUMP] container 306 slot 19 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 19 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 19 lore 9 | 
+[K8BAS-DUMP] container 306 slot 19 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 19 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 19 lore 12 | 
+[K8BAS-DUMP] container 306 slot 19 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 20 item=minecraft:paper sbid=- count=1 | Flyfish
+[K8BAS-DUMP] container 306 slot 20 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 20 lore 1 | 
+[K8BAS-DUMP] container 306 slot 20 lore 2 |  ✔ Fish Bronze Flyfish
+[K8BAS-DUMP] container 306 slot 20 lore 3 |  ✔ Fish Silver Flyfish
+[K8BAS-DUMP] container 306 slot 20 lore 4 |  ✔ Fish Gold Flyfish
+[K8BAS-DUMP] container 306 slot 20 lore 5 |  ✔ Fish Diamond Flyfish
+[K8BAS-DUMP] container 306 slot 20 lore 6 | 
+[K8BAS-DUMP] container 306 slot 20 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 20 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 20 lore 9 | 
+[K8BAS-DUMP] container 306 slot 20 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 20 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 20 lore 12 | 
+[K8BAS-DUMP] container 306 slot 20 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 21 item=minecraft:paper sbid=- count=1 | Obfuscated-3
+[K8BAS-DUMP] container 306 slot 21 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 21 lore 1 | 
+[K8BAS-DUMP] container 306 slot 21 lore 2 |  ✔ Fish Bronze Obfuscated-3
+[K8BAS-DUMP] container 306 slot 21 lore 3 |  ✔ Fish Silver Obfuscated-3
+[K8BAS-DUMP] container 306 slot 21 lore 4 |  ✔ Fish Gold Obfuscated-3
+[K8BAS-DUMP] container 306 slot 21 lore 5 |  ✔ Fish Diamond Obfuscated-3
+[K8BAS-DUMP] container 306 slot 21 lore 6 | 
+[K8BAS-DUMP] container 306 slot 21 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 21 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 21 lore 9 | 
+[K8BAS-DUMP] container 306 slot 21 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 21 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 21 lore 12 | 
+[K8BAS-DUMP] container 306 slot 21 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 22 item=minecraft:paper sbid=- count=1 | Vanille
+[K8BAS-DUMP] container 306 slot 22 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 22 lore 1 | 
+[K8BAS-DUMP] container 306 slot 22 lore 2 |  ✔ Fish Bronze Vanille
+[K8BAS-DUMP] container 306 slot 22 lore 3 |  ✔ Fish Silver Vanille
+[K8BAS-DUMP] container 306 slot 22 lore 4 |  ✔ Fish Gold Vanille
+[K8BAS-DUMP] container 306 slot 22 lore 5 |  ✔ Fish Diamond Vanille
+[K8BAS-DUMP] container 306 slot 22 lore 6 | 
+[K8BAS-DUMP] container 306 slot 22 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 22 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 22 lore 9 | 
+[K8BAS-DUMP] container 306 slot 22 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 22 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 22 lore 12 | 
+[K8BAS-DUMP] container 306 slot 22 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 23 item=minecraft:paper sbid=- count=1 | Lavahorse
+[K8BAS-DUMP] container 306 slot 23 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 23 lore 1 | 
+[K8BAS-DUMP] container 306 slot 23 lore 2 |  ✔ Fish Bronze Lavahorse
+[K8BAS-DUMP] container 306 slot 23 lore 3 |  ✔ Fish Silver Lavahorse
+[K8BAS-DUMP] container 306 slot 23 lore 4 |  ✔ Fish Gold Lavahorse
+[K8BAS-DUMP] container 306 slot 23 lore 5 |  ✔ Fish Diamond Lavahorse
+[K8BAS-DUMP] container 306 slot 23 lore 6 | 
+[K8BAS-DUMP] container 306 slot 23 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 23 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 23 lore 9 | 
+[K8BAS-DUMP] container 306 slot 23 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 23 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 23 lore 12 | 
+[K8BAS-DUMP] container 306 slot 23 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 24 item=minecraft:paper sbid=- count=1 | Mana Ray
+[K8BAS-DUMP] container 306 slot 24 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 24 lore 1 | 
+[K8BAS-DUMP] container 306 slot 24 lore 2 |  ✔ Fish Bronze Mana Ray
+[K8BAS-DUMP] container 306 slot 24 lore 3 |  ✔ Fish Silver Mana Ray
+[K8BAS-DUMP] container 306 slot 24 lore 4 |  ✔ Fish Gold Mana Ray
+[K8BAS-DUMP] container 306 slot 24 lore 5 |  ✔ Fish Diamond Mana Ray
+[K8BAS-DUMP] container 306 slot 24 lore 6 | 
+[K8BAS-DUMP] container 306 slot 24 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 24 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 24 lore 9 | 
+[K8BAS-DUMP] container 306 slot 24 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 24 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 24 lore 12 | 
+[K8BAS-DUMP] container 306 slot 24 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 25 item=minecraft:paper sbid=- count=1 | Volcanic Stonefish
+[K8BAS-DUMP] container 306 slot 25 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 25 lore 1 | 
+[K8BAS-DUMP] container 306 slot 25 lore 2 |  ✔ Fish Bronze Volcanic Stonefish
+[K8BAS-DUMP] container 306 slot 25 lore 3 |  ✔ Fish Silver Volcanic Stonefish
+[K8BAS-DUMP] container 306 slot 25 lore 4 |  ✔ Fish Gold Volcanic Stonefish
+[K8BAS-DUMP] container 306 slot 25 lore 5 |  ✔ Fish Diamond Volcanic Stonefish
+[K8BAS-DUMP] container 306 slot 25 lore 6 | 
+[K8BAS-DUMP] container 306 slot 25 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 25 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 25 lore 9 | 
+[K8BAS-DUMP] container 306 slot 25 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 25 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 25 lore 12 | 
+[K8BAS-DUMP] container 306 slot 25 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 26 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 27 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 29 item=minecraft:paper sbid=- count=1 | Skeleton Fish
+[K8BAS-DUMP] container 306 slot 29 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 29 lore 1 | 
+[K8BAS-DUMP] container 306 slot 29 lore 2 |  ✔ Fish Bronze Skeleton Fish
+[K8BAS-DUMP] container 306 slot 29 lore 3 |  ✔ Fish Silver Skeleton Fish
+[K8BAS-DUMP] container 306 slot 29 lore 4 |  ✔ Fish Gold Skeleton Fish
+[K8BAS-DUMP] container 306 slot 29 lore 5 |  ✔ Fish Diamond Skeleton Fish
+[K8BAS-DUMP] container 306 slot 29 lore 6 | 
+[K8BAS-DUMP] container 306 slot 29 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 29 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 29 lore 9 | 
+[K8BAS-DUMP] container 306 slot 29 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 29 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 29 lore 12 | 
+[K8BAS-DUMP] container 306 slot 29 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 30 item=minecraft:paper sbid=- count=1 | Moldfin
+[K8BAS-DUMP] container 306 slot 30 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 30 lore 1 | 
+[K8BAS-DUMP] container 306 slot 30 lore 2 |  ✔ Fish Bronze Moldfin
+[K8BAS-DUMP] container 306 slot 30 lore 3 |  ✔ Fish Silver Moldfin
+[K8BAS-DUMP] container 306 slot 30 lore 4 |  ✔ Fish Gold Moldfin
+[K8BAS-DUMP] container 306 slot 30 lore 5 |  ✔ Fish Diamond Moldfin
+[K8BAS-DUMP] container 306 slot 30 lore 6 | 
+[K8BAS-DUMP] container 306 slot 30 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 30 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 30 lore 9 | 
+[K8BAS-DUMP] container 306 slot 30 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 30 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 30 lore 12 | 
+[K8BAS-DUMP] container 306 slot 30 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 31 item=minecraft:paper sbid=- count=1 | Soul Fish
+[K8BAS-DUMP] container 306 slot 31 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 31 lore 1 | 
+[K8BAS-DUMP] container 306 slot 31 lore 2 |  ✔ Fish Bronze Soul Fish
+[K8BAS-DUMP] container 306 slot 31 lore 3 |  ✔ Fish Silver Soul Fish
+[K8BAS-DUMP] container 306 slot 31 lore 4 |  ✔ Fish Gold Soul Fish
+[K8BAS-DUMP] container 306 slot 31 lore 5 |  ✔ Fish Diamond Soul Fish
+[K8BAS-DUMP] container 306 slot 31 lore 6 | 
+[K8BAS-DUMP] container 306 slot 31 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 31 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 31 lore 9 | 
+[K8BAS-DUMP] container 306 slot 31 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 31 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 31 lore 12 | 
+[K8BAS-DUMP] container 306 slot 31 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 32 item=minecraft:paper sbid=- count=1 | Karate Fish
+[K8BAS-DUMP] container 306 slot 32 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 32 lore 1 | 
+[K8BAS-DUMP] container 306 slot 32 lore 2 |  ✔ Fish Bronze Karate Fish
+[K8BAS-DUMP] container 306 slot 32 lore 3 |  ✔ Fish Silver Karate Fish
+[K8BAS-DUMP] container 306 slot 32 lore 4 |  ✔ Fish Gold Karate Fish
+[K8BAS-DUMP] container 306 slot 32 lore 5 |  ✔ Fish Diamond Karate Fish
+[K8BAS-DUMP] container 306 slot 32 lore 6 | 
+[K8BAS-DUMP] container 306 slot 32 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 32 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 32 lore 9 | 
+[K8BAS-DUMP] container 306 slot 32 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 32 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 32 lore 12 | 
+[K8BAS-DUMP] container 306 slot 32 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 33 item=minecraft:paper sbid=- count=1 | Golden Fish
+[K8BAS-DUMP] container 306 slot 33 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 306 slot 33 lore 1 | 
+[K8BAS-DUMP] container 306 slot 33 lore 2 |  ✔ Fish Bronze Golden Fish
+[K8BAS-DUMP] container 306 slot 33 lore 3 |  ✔ Fish Silver Golden Fish
+[K8BAS-DUMP] container 306 slot 33 lore 4 |  ✔ Fish Gold Golden Fish
+[K8BAS-DUMP] container 306 slot 33 lore 5 |  ✔ Fish Diamond Golden Fish
+[K8BAS-DUMP] container 306 slot 33 lore 6 | 
+[K8BAS-DUMP] container 306 slot 33 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 306 slot 33 lore 8 |                           60/60 XP
+[K8BAS-DUMP] container 306 slot 33 lore 9 | 
+[K8BAS-DUMP] container 306 slot 33 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 306 slot 33 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 306 slot 33 lore 12 | 
+[K8BAS-DUMP] container 306 slot 33 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 306 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 35 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 36 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 37 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 38 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 306 slot 39 lore 0 | To Tasks ➜ Fishing
+[K8BAS-DUMP] container 306 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 306 slot 41 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 42 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 43 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 306 slot 44 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 

@@ -1,0 +1,348 @@
+[K8BAS-DUMP] container 359 title=Tasks ➜ Miscellaneous slots=45 state=56
+[K8BAS-DUMP] container 359 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 4 item=minecraft:filled_map sbid=- count=1 | Miscellaneous Tasks
+[K8BAS-DUMP] container 359 slot 4 lore 0 | 18 Tasks
+[K8BAS-DUMP] container 359 slot 4 lore 1 | 
+[K8BAS-DUMP] container 359 slot 4 lore 2 | A random assortment of XP tasks
+[K8BAS-DUMP] container 359 slot 4 lore 3 | that do not fit other categories!
+[K8BAS-DUMP] container 359 slot 4 lore 4 | 
+[K8BAS-DUMP] container 359 slot 4 lore 5 | ▶ Accessory Bag Upgrades
+[K8BAS-DUMP] container 359 slot 4 lore 6 | ▶ Timecharms
+[K8BAS-DUMP] container 359 slot 4 lore 7 | ▶ Unlocking Powers
+[K8BAS-DUMP] container 359 slot 4 lore 8 | ▶ Upgraded Relays
+[K8BAS-DUMP] container 359 slot 4 lore 9 | ▶ Taming Cap Increases
+[K8BAS-DUMP] container 359 slot 4 lore 10 | ▶ Hootie Upgrades
+[K8BAS-DUMP] container 359 slot 4 lore 11 | ▶ Starlyn Sister Levels
+[K8BAS-DUMP] container 359 slot 4 lore 12 | ▶ Beacon Tiers
+[K8BAS-DUMP] container 359 slot 4 lore 13 | ▶ Attribute Levels
+[K8BAS-DUMP] container 359 slot 4 lore 14 | ▶ Fish Family
+[K8BAS-DUMP] container 359 slot 4 lore 15 | ▶ Carrolyn's Exportable Crops
+[K8BAS-DUMP] container 359 slot 4 lore 16 | ▶ The Dojo
+[K8BAS-DUMP] container 359 slot 4 lore 17 | ▶ Harp Songs
+[K8BAS-DUMP] container 359 slot 4 lore 18 | ▶ Abiphone Contacts
+[K8BAS-DUMP] container 359 slot 4 lore 19 | ▶ Community Shop Upgrades
+[K8BAS-DUMP] container 359 slot 4 lore 20 | ▶ Personal Bank Upgrades
+[K8BAS-DUMP] container 359 slot 4 lore 21 | ▶ Mage Reputation
+[K8BAS-DUMP] container 359 slot 4 lore 22 | ▶ Barbarian Reputation
+[K8BAS-DUMP] container 359 slot 4 lore 23 | 
+[K8BAS-DUMP] container 359 slot 4 lore 24 | Progress to Complete Category: 92.4%
+[K8BAS-DUMP] container 359 slot 4 lore 25 |                           5,791/6,266 XP
+[K8BAS-DUMP] container 359 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 10 item=minecraft:player_head sbid=- count=1 | Accessory Bag Upgrades
+[K8BAS-DUMP] container 359 slot 10 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 10 lore 1 | 
+[K8BAS-DUMP] container 359 slot 10 lore 2 | Gain XP by upgrading your
+[K8BAS-DUMP] container 359 slot 10 lore 3 | Accessory Bag!
+[K8BAS-DUMP] container 359 slot 10 lore 4 | Per Upgrade: +2 XP
+[K8BAS-DUMP] container 359 slot 10 lore 5 | 
+[K8BAS-DUMP] container 359 slot 10 lore 6 | XP Gained from Task: 74 XP
+[K8BAS-DUMP] container 359 slot 10 lore 7 | 
+[K8BAS-DUMP] container 359 slot 10 lore 8 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 359 slot 10 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 10 lore 10 | 
+[K8BAS-DUMP] container 359 slot 10 lore 11 | Visit Jacobus at the Thaumaturgist to
+[K8BAS-DUMP] container 359 slot 10 lore 12 | view Accessory Bag Upgrades!
+[K8BAS-DUMP] container 359 slot 11 item=minecraft:lilac sbid=- count=1 | Timecharms
+[K8BAS-DUMP] container 359 slot 11 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 11 lore 1 | 
+[K8BAS-DUMP] container 359 slot 11 lore 2 | Gain +100 XP per secured Timecharm
+[K8BAS-DUMP] container 359 slot 11 lore 3 | in the Rift.
+[K8BAS-DUMP] container 359 slot 11 lore 4 | 
+[K8BAS-DUMP] container 359 slot 11 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 11 lore 6 |                           800/800 XP
+[K8BAS-DUMP] container 359 slot 11 lore 7 | 
+[K8BAS-DUMP] container 359 slot 11 lore 8 | This task is worth 1.5% of your Total
+[K8BAS-DUMP] container 359 slot 11 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 11 lore 10 | 
+[K8BAS-DUMP] container 359 slot 11 lore 11 | You have completed this task!
+[K8BAS-DUMP] container 359 slot 12 item=minecraft:player_head sbid=- count=1 | Unlocking Powers
+[K8BAS-DUMP] container 359 slot 12 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 12 lore 1 | 
+[K8BAS-DUMP] container 359 slot 12 lore 2 | Gain +15 XP per power unlocked
+[K8BAS-DUMP] container 359 slot 12 lore 3 | through Power Stones at the
+[K8BAS-DUMP] container 359 slot 12 lore 4 | Thaumaturgist!
+[K8BAS-DUMP] container 359 slot 12 lore 5 | 
+[K8BAS-DUMP] container 359 slot 12 lore 6 | XP Gained from Task: 285 XP
+[K8BAS-DUMP] container 359 slot 12 lore 7 | 
+[K8BAS-DUMP] container 359 slot 12 lore 8 | This task is worth 0.5% of your Total
+[K8BAS-DUMP] container 359 slot 12 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 12 lore 10 | 
+[K8BAS-DUMP] container 359 slot 12 lore 11 | Go earn some XP!
+[K8BAS-DUMP] container 359 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 14 item=minecraft:player_head sbid=- count=1 | Upgraded Relays
+[K8BAS-DUMP] container 359 slot 14 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 14 lore 1 | 
+[K8BAS-DUMP] container 359 slot 14 lore 2 | Gain +5 XP by repairing a 9f™ Relay
+[K8BAS-DUMP] container 359 slot 14 lore 3 | Tower!
+[K8BAS-DUMP] container 359 slot 14 lore 4 | 
+[K8BAS-DUMP] container 359 slot 14 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 14 lore 6 |                           45/45 XP
+[K8BAS-DUMP] container 359 slot 14 lore 7 | 
+[K8BAS-DUMP] container 359 slot 14 lore 8 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 359 slot 14 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 14 lore 10 | 
+[K8BAS-DUMP] container 359 slot 14 lore 11 | You have completed this task!
+[K8BAS-DUMP] container 359 slot 15 item=minecraft:player_head sbid=- count=1 | Taming Cap Increases
+[K8BAS-DUMP] container 359 slot 15 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 15 lore 1 | 
+[K8BAS-DUMP] container 359 slot 15 lore 2 | Gain XP by increasing your Taming
+[K8BAS-DUMP] container 359 slot 15 lore 3 | Skill Cap at George!
+[K8BAS-DUMP] container 359 slot 15 lore 4 | Per Increase: +10 XP
+[K8BAS-DUMP] container 359 slot 15 lore 5 | 
+[K8BAS-DUMP] container 359 slot 15 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 15 lore 7 |                           100/100 XP
+[K8BAS-DUMP] container 359 slot 15 lore 8 | 
+[K8BAS-DUMP] container 359 slot 15 lore 9 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 359 slot 15 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 15 lore 11 | 
+[K8BAS-DUMP] container 359 slot 15 lore 12 | Visit George in the Hub to unlock
+[K8BAS-DUMP] container 359 slot 15 lore 13 | these upgrades!
+[K8BAS-DUMP] container 359 slot 16 item=minecraft:player_head sbid=- count=1 | Hootie Upgrades
+[K8BAS-DUMP] container 359 slot 16 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 16 lore 1 | 
+[K8BAS-DUMP] container 359 slot 16 lore 2 | Gain XP by upgrading Hootie the Owl!
+[K8BAS-DUMP] container 359 slot 16 lore 3 | Per Candy 2nd Slot: +5 XP
+[K8BAS-DUMP] container 359 slot 16 lore 4 | For 3rd Slot: +15 XP
+[K8BAS-DUMP] container 359 slot 16 lore 5 | Per Coin Milestone: +5 XP
+[K8BAS-DUMP] container 359 slot 16 lore 6 | 
+[K8BAS-DUMP] container 359 slot 16 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 16 lore 8 |                           65/65 XP
+[K8BAS-DUMP] container 359 slot 16 lore 9 | 
+[K8BAS-DUMP] container 359 slot 16 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 359 slot 16 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 16 lore 12 | 
+[K8BAS-DUMP] container 359 slot 16 lore 13 | Visit Pet Care in the Hub to unlock
+[K8BAS-DUMP] container 359 slot 16 lore 14 | these upgrades!
+[K8BAS-DUMP] container 359 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 19 item=minecraft:player_head sbid=- count=1 | Starlyn Sister Levels
+[K8BAS-DUMP] container 359 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 19 lore 1 | 
+[K8BAS-DUMP] container 359 slot 19 lore 2 | Gain XP by increasing your Starlyn
+[K8BAS-DUMP] container 359 slot 19 lore 3 | Sister Levels!
+[K8BAS-DUMP] container 359 slot 19 lore 4 | Per Level: +5 XP
+[K8BAS-DUMP] container 359 slot 19 lore 5 | 
+[K8BAS-DUMP] container 359 slot 19 lore 6 | Total Progress: 50%
+[K8BAS-DUMP] container 359 slot 19 lore 7 |                           20/40 XP
+[K8BAS-DUMP] container 359 slot 19 lore 8 | 
+[K8BAS-DUMP] container 359 slot 19 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 359 slot 19 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 19 lore 11 | 
+[K8BAS-DUMP] container 359 slot 19 lore 12 | Go earn some XP!
+[K8BAS-DUMP] container 359 slot 20 item=minecraft:beacon sbid=- count=1 | Beacon Tiers
+[K8BAS-DUMP] container 359 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 20 lore 1 | 
+[K8BAS-DUMP] container 359 slot 20 lore 2 | Gain XP by upgrading the Signal
+[K8BAS-DUMP] container 359 slot 20 lore 3 | Strength of your Beacon!
+[K8BAS-DUMP] container 359 slot 20 lore 4 | Per Upgrade: +2 XP
+[K8BAS-DUMP] container 359 slot 20 lore 5 | 
+[K8BAS-DUMP] container 359 slot 20 lore 6 | Total Progress: 50%
+[K8BAS-DUMP] container 359 slot 20 lore 7 |                           20/40 XP
+[K8BAS-DUMP] container 359 slot 20 lore 8 | 
+[K8BAS-DUMP] container 359 slot 20 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 359 slot 20 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 20 lore 11 | 
+[K8BAS-DUMP] container 359 slot 20 lore 12 | Go earn some XP!
+[K8BAS-DUMP] container 359 slot 21 item=minecraft:prismarine_shard sbid=- count=1 | Attribute Levels
+[K8BAS-DUMP] container 359 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 21 lore 1 | 
+[K8BAS-DUMP] container 359 slot 21 lore 2 | Gain XP by increasing your Attribute
+[K8BAS-DUMP] container 359 slot 21 lore 3 | Levels!
+[K8BAS-DUMP] container 359 slot 21 lore 4 | Per Level: +1 XP
+[K8BAS-DUMP] container 359 slot 21 lore 5 | 
+[K8BAS-DUMP] container 359 slot 21 lore 6 | Total Progress: 91.3%
+[K8BAS-DUMP] container 359 slot 21 lore 7 |                           2,930/3,210 XP
+[K8BAS-DUMP] container 359 slot 21 lore 8 | 
+[K8BAS-DUMP] container 359 slot 21 lore 9 | This task is worth 5.5% of your Total
+[K8BAS-DUMP] container 359 slot 21 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 21 lore 11 | 
+[K8BAS-DUMP] container 359 slot 21 lore 12 | Click to see your Attributes!
+[K8BAS-DUMP] container 359 slot 22 item=minecraft:cod sbid=SHRIMP_THE_FISH count=1 | Fish Family
+[K8BAS-DUMP] container 359 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 359 slot 22 lore 1 | 
+[K8BAS-DUMP] container 359 slot 22 lore 2 | Gain +3 XP each time you show Coral
+[K8BAS-DUMP] container 359 slot 22 lore 3 | a Fish Family member!
+[K8BAS-DUMP] container 359 slot 22 lore 4 | 
+[K8BAS-DUMP] container 359 slot 22 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 22 lore 6 |                           45/45 XP
+[K8BAS-DUMP] container 359 slot 22 lore 7 | 
+[K8BAS-DUMP] container 359 slot 22 lore 8 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 359 slot 22 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 22 lore 10 | 
+[K8BAS-DUMP] container 359 slot 22 lore 11 | Go earn some XP!
+[K8BAS-DUMP] container 359 slot 23 item=minecraft:player_head sbid=EXPORTABLE_CARROTS count=1 | Carrolyn's Exportable Crops
+[K8BAS-DUMP] container 359 slot 23 lore 0 | 8 Tasks
+[K8BAS-DUMP] container 359 slot 23 lore 1 | 
+[K8BAS-DUMP] container 359 slot 23 lore 2 |  ✖ Export 3,000x Half-Eaten Mushroom
+[K8BAS-DUMP] container 359 slot 23 lore 3 |  ✔ Export 3,000x Fine Flour
+[K8BAS-DUMP] container 359 slot 23 lore 4 |  ✖ Export 3,000x Potted Cactus
+[K8BAS-DUMP] container 359 slot 23 lore 5 |  ✖ Export 3,000x Prickly Kiss
+[K8BAS-DUMP] container 359 slot 23 lore 6 |  ✖ Export 3,000x Exportable Carrots
+[K8BAS-DUMP] container 359 slot 23 lore 7 |  ✖ Export 3,000x Warty
+[K8BAS-DUMP] container 359 slot 23 lore 8 |  ✖ Export 3,000x Supreme Chocolate Bar
+[K8BAS-DUMP] container 359 slot 23 lore 9 |  ✖ Export 3,000x Expired Pumpkin
+[K8BAS-DUMP] container 359 slot 23 lore 10 | 
+[K8BAS-DUMP] container 359 slot 23 lore 11 | Total Progress: 12.5%
+[K8BAS-DUMP] container 359 slot 23 lore 12 |                           5/40 XP
+[K8BAS-DUMP] container 359 slot 23 lore 13 | 
+[K8BAS-DUMP] container 359 slot 23 lore 14 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 359 slot 23 lore 15 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 23 lore 16 | 
+[K8BAS-DUMP] container 359 slot 23 lore 17 | Click to view tasks!
+[K8BAS-DUMP] container 359 slot 24 item=minecraft:player_head sbid=DOJO_BLACK_BELT count=1 | The Dojo
+[K8BAS-DUMP] container 359 slot 24 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 359 slot 24 lore 1 | 
+[K8BAS-DUMP] container 359 slot 24 lore 2 |  ✔ White Belt
+[K8BAS-DUMP] container 359 slot 24 lore 3 |  ✔ Yellow Belt
+[K8BAS-DUMP] container 359 slot 24 lore 4 |  ✔ Green Belt
+[K8BAS-DUMP] container 359 slot 24 lore 5 |  ✔ Blue Belt
+[K8BAS-DUMP] container 359 slot 24 lore 6 |  ✔ Brown Belt
+[K8BAS-DUMP] container 359 slot 24 lore 7 |  ✔ Black Belt
+[K8BAS-DUMP] container 359 slot 24 lore 8 | 
+[K8BAS-DUMP] container 359 slot 24 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 24 lore 10 |                           425/425 XP
+[K8BAS-DUMP] container 359 slot 24 lore 11 | 
+[K8BAS-DUMP] container 359 slot 24 lore 12 | This task is worth 0.8% of your Total
+[K8BAS-DUMP] container 359 slot 24 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 24 lore 14 | 
+[K8BAS-DUMP] container 359 slot 24 lore 15 | Click to view tasks!
+[K8BAS-DUMP] container 359 slot 25 item=minecraft:book sbid=- count=1 | Harp Songs
+[K8BAS-DUMP] container 359 slot 25 lore 0 | 13 Tasks
+[K8BAS-DUMP] container 359 slot 25 lore 1 | 
+[K8BAS-DUMP] container 359 slot 25 lore 2 |  ✔ Hymn to the Joy (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 3 |  ✔ Frère Jacques (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 4 |  ✔ Amazing Grace (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 5 |  ✔ Brahms' Lullaby (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 6 |  ✔ Happy Birthday to You (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 7 |  ✔ Greensleeves (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 8 |  ✔ Geothermy? (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 9 |  ✔ Minuet (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 10 |  ✔ Joy to the World (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 11 |  ✔ Godly Imagination (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 12 |  ✔ La Vie en Rose (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 13 |  ✔ Through the Campfire (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 14 |  ✔ Pachelbel (4/4)
+[K8BAS-DUMP] container 359 slot 25 lore 15 | 
+[K8BAS-DUMP] container 359 slot 25 lore 16 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 25 lore 17 |                           236/236 XP
+[K8BAS-DUMP] container 359 slot 25 lore 18 | 
+[K8BAS-DUMP] container 359 slot 25 lore 19 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 359 slot 25 lore 20 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 25 lore 21 | 
+[K8BAS-DUMP] container 359 slot 25 lore 22 | Click to view tasks!
+[K8BAS-DUMP] container 359 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 29 item=minecraft:paper sbid=ABIPHONE_XIV_ENORMOUS_PURPLE count=1 | Abiphone Contacts
+[K8BAS-DUMP] container 359 slot 29 lore 0 | 84 Tasks
+[K8BAS-DUMP] container 359 slot 29 lore 1 | 
+[K8BAS-DUMP] container 359 slot 29 lore 2 |  ✔ Queen Mismyla
+[K8BAS-DUMP] container 359 slot 29 lore 3 |  ✔ Crag
+[K8BAS-DUMP] container 359 slot 29 lore 4 |  ✔ Captain Ahone
+[K8BAS-DUMP] container 359 slot 29 lore 5 |  ✔ Lumber Merchant
+[K8BAS-DUMP] container 359 slot 29 lore 6 |  ✔ Bartender
+[K8BAS-DUMP] container 359 slot 29 lore 7 |  ✔ Clerk Seraphine
+[K8BAS-DUMP] container 359 slot 29 lore 8 |  ✔ Rosemary
+[K8BAS-DUMP] container 359 slot 29 lore 9 |  ✔ Shifty
+[K8BAS-DUMP] container 359 slot 29 lore 10 |  ✔ Elle
+[K8BAS-DUMP] container 359 slot 29 lore 11 |  ✔ Kysha
+[K8BAS-DUMP] container 359 slot 29 lore 12 |  ✔ Zog
+[K8BAS-DUMP] container 359 slot 29 lore 13 |  ✔ Sirius
+[K8BAS-DUMP] container 359 slot 29 lore 14 |  ✔ Kaus
+[K8BAS-DUMP] container 359 slot 29 lore 15 |  ✔ Taylor
+[K8BAS-DUMP] container 359 slot 29 lore 16 | And 69 more...
+[K8BAS-DUMP] container 359 slot 29 lore 17 | 
+[K8BAS-DUMP] container 359 slot 29 lore 18 | Total Progress: 92.9%
+[K8BAS-DUMP] container 359 slot 29 lore 19 |                           780/840 XP
+[K8BAS-DUMP] container 359 slot 29 lore 20 | 
+[K8BAS-DUMP] container 359 slot 29 lore 21 | This task is worth 1.5% of your Total
+[K8BAS-DUMP] container 359 slot 29 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 29 lore 23 | 
+[K8BAS-DUMP] container 359 slot 29 lore 24 | Click to view tasks!
+[K8BAS-DUMP] container 359 slot 30 item=minecraft:player_head sbid=- count=1 | Community Shop Upgrades
+[K8BAS-DUMP] container 359 slot 30 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 359 slot 30 lore 1 | 
+[K8BAS-DUMP] container 359 slot 30 lore 2 |  ✔ Island Size (1/1)
+[K8BAS-DUMP] container 359 slot 30 lore 3 |  ✔ Minion Slots (5/5)
+[K8BAS-DUMP] container 359 slot 30 lore 4 |  ✔ Guests Limit (1/1)
+[K8BAS-DUMP] container 359 slot 30 lore 5 |  ✔ Coins Allowance (5/5)
+[K8BAS-DUMP] container 359 slot 30 lore 6 | 
+[K8BAS-DUMP] container 359 slot 30 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 30 lore 8 |                           120/120 XP
+[K8BAS-DUMP] container 359 slot 30 lore 9 | 
+[K8BAS-DUMP] container 359 slot 30 lore 10 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 359 slot 30 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 30 lore 12 | 
+[K8BAS-DUMP] container 359 slot 30 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 359 slot 31 item=minecraft:player_head sbid=- count=1 | Personal Bank Upgrades
+[K8BAS-DUMP] container 359 slot 31 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 359 slot 31 lore 1 | 
+[K8BAS-DUMP] container 359 slot 31 lore 2 |  ✔ Personal Bank II
+[K8BAS-DUMP] container 359 slot 31 lore 3 |  ✔ Personal Bank III
+[K8BAS-DUMP] container 359 slot 31 lore 4 |  ✔ Personal Bank IV
+[K8BAS-DUMP] container 359 slot 31 lore 5 | 
+[K8BAS-DUMP] container 359 slot 31 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 31 lore 7 |                           110/110 XP
+[K8BAS-DUMP] container 359 slot 31 lore 8 | 
+[K8BAS-DUMP] container 359 slot 31 lore 9 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 359 slot 31 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 31 lore 11 | 
+[K8BAS-DUMP] container 359 slot 31 lore 12 | Click to view tasks!
+[K8BAS-DUMP] container 359 slot 32 item=minecraft:magenta_banner sbid=- count=1 | Mage Reputation
+[K8BAS-DUMP] container 359 slot 32 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 359 slot 32 lore 1 | 
+[K8BAS-DUMP] container 359 slot 32 lore 2 |  ✔ Friendly Status
+[K8BAS-DUMP] container 359 slot 32 lore 3 |  ✔ Trusted Status
+[K8BAS-DUMP] container 359 slot 32 lore 4 |  ✔ Honored Status
+[K8BAS-DUMP] container 359 slot 32 lore 5 |  ✔ Hero Status
+[K8BAS-DUMP] container 359 slot 32 lore 6 | 
+[K8BAS-DUMP] container 359 slot 32 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 359 slot 32 lore 8 |                           75/75 XP
+[K8BAS-DUMP] container 359 slot 32 lore 9 | 
+[K8BAS-DUMP] container 359 slot 32 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 359 slot 32 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 32 lore 12 | 
+[K8BAS-DUMP] container 359 slot 32 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 359 slot 33 item=minecraft:black_banner sbid=- count=1 | Barbarian Reputation
+[K8BAS-DUMP] container 359 slot 33 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 359 slot 33 lore 1 | 
+[K8BAS-DUMP] container 359 slot 33 lore 2 |  ✔ Friendly Status
+[K8BAS-DUMP] container 359 slot 33 lore 3 |  ✔ Trusted Status
+[K8BAS-DUMP] container 359 slot 33 lore 4 |  ✖ Honored Status
+[K8BAS-DUMP] container 359 slot 33 lore 5 |  ✖ Hero Status
+[K8BAS-DUMP] container 359 slot 33 lore 6 | 
+[K8BAS-DUMP] container 359 slot 33 lore 7 | Total Progress: 20%
+[K8BAS-DUMP] container 359 slot 33 lore 8 |                           15/75 XP
+[K8BAS-DUMP] container 359 slot 33 lore 9 | 
+[K8BAS-DUMP] container 359 slot 33 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 359 slot 33 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 359 slot 33 lore 12 | 
+[K8BAS-DUMP] container 359 slot 33 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 359 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 37 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 38 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 359 slot 39 lore 0 | To Ways to Level Up
+[K8BAS-DUMP] container 359 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 359 slot 41 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 359 slot 41 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 359 slot 41 lore 1 | 
+[K8BAS-DUMP] container 359 slot 41 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 359 slot 41 lore 3 |   Earned XP
+[K8BAS-DUMP] container 359 slot 41 lore 4 |   Available XP
+[K8BAS-DUMP] container 359 slot 41 lore 5 |   A to Z
+[K8BAS-DUMP] container 359 slot 41 lore 6 |   Z to A
+[K8BAS-DUMP] container 359 slot 41 lore 7 | 
+[K8BAS-DUMP] container 359 slot 41 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 359 slot 42 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 43 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 359 slot 44 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 

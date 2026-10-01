@@ -1,0 +1,155 @@
+[K8BAS-DUMP] container 179 title=Essence Shop ➜ Forest Essence S slots=45 state=56
+[K8BAS-DUMP] container 179 slot 0 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 1 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 2 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 3 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 4 item=minecraft:player_head sbid=- count=1 | Forest Essence Shop
+[K8BAS-DUMP] container 179 slot 4 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 179 slot 4 lore 1 | 
+[K8BAS-DUMP] container 179 slot 4 lore 2 |  ✔ Trapped (5/5)
+[K8BAS-DUMP] container 179 slot 4 lore 3 |  ✔ Extreme Pressure (10/10)
+[K8BAS-DUMP] container 179 slot 4 lore 4 |  ✔ Lumberjack (10/10)
+[K8BAS-DUMP] container 179 slot 4 lore 5 |  ✔ Tasty (5/5)
+[K8BAS-DUMP] container 179 slot 4 lore 6 |  ✔ Forest Training (3/3)
+[K8BAS-DUMP] container 179 slot 4 lore 7 |  ✔ Axed (1/1)
+[K8BAS-DUMP] container 179 slot 4 lore 8 | 
+[K8BAS-DUMP] container 179 slot 4 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 179 slot 4 lore 10 |                           171/171 XP
+[K8BAS-DUMP] container 179 slot 4 lore 11 | 
+[K8BAS-DUMP] container 179 slot 4 lore 12 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 179 slot 4 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 179 slot 5 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 6 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 7 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 8 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 9 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 17 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 18 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 19 item=minecraft:player_head sbid=- count=1 | Trapped
+[K8BAS-DUMP] container 179 slot 19 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 179 slot 19 lore 1 | 
+[K8BAS-DUMP] container 179 slot 19 lore 2 |  ✔ Trapped 1
+[K8BAS-DUMP] container 179 slot 19 lore 3 |  ✔ Trapped 2
+[K8BAS-DUMP] container 179 slot 19 lore 4 |  ✔ Trapped 3
+[K8BAS-DUMP] container 179 slot 19 lore 5 |  ✔ Trapped 4
+[K8BAS-DUMP] container 179 slot 19 lore 6 |  ✔ Trapped 5
+[K8BAS-DUMP] container 179 slot 19 lore 7 | 
+[K8BAS-DUMP] container 179 slot 19 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 179 slot 19 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 179 slot 19 lore 10 | 
+[K8BAS-DUMP] container 179 slot 19 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 179 slot 19 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 179 slot 19 lore 13 | 
+[K8BAS-DUMP] container 179 slot 19 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 179 slot 20 item=minecraft:player_head sbid=- count=1 | Extreme Pressure
+[K8BAS-DUMP] container 179 slot 20 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 179 slot 20 lore 1 | 
+[K8BAS-DUMP] container 179 slot 20 lore 2 |  ✔ Extreme Pressure 1
+[K8BAS-DUMP] container 179 slot 20 lore 3 |  ✔ Extreme Pressure 2
+[K8BAS-DUMP] container 179 slot 20 lore 4 |  ✔ Extreme Pressure 3
+[K8BAS-DUMP] container 179 slot 20 lore 5 |  ✔ Extreme Pressure 4
+[K8BAS-DUMP] container 179 slot 20 lore 6 |  ✔ Extreme Pressure 5
+[K8BAS-DUMP] container 179 slot 20 lore 7 |  ✔ Extreme Pressure 6
+[K8BAS-DUMP] container 179 slot 20 lore 8 |  ✔ Extreme Pressure 7
+[K8BAS-DUMP] container 179 slot 20 lore 9 |  ✔ Extreme Pressure 8
+[K8BAS-DUMP] container 179 slot 20 lore 10 |  ✔ Extreme Pressure 9
+[K8BAS-DUMP] container 179 slot 20 lore 11 |  ✔ Extreme Pressure 10
+[K8BAS-DUMP] container 179 slot 20 lore 12 | 
+[K8BAS-DUMP] container 179 slot 20 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 179 slot 20 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 179 slot 20 lore 15 | 
+[K8BAS-DUMP] container 179 slot 20 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 179 slot 20 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 179 slot 20 lore 18 | 
+[K8BAS-DUMP] container 179 slot 20 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 179 slot 21 item=minecraft:fern sbid=- count=1 | Lumberjack
+[K8BAS-DUMP] container 179 slot 21 lore 0 | 10 Tasks
+[K8BAS-DUMP] container 179 slot 21 lore 1 | 
+[K8BAS-DUMP] container 179 slot 21 lore 2 |  ✔ Lumberjack 1
+[K8BAS-DUMP] container 179 slot 21 lore 3 |  ✔ Lumberjack 2
+[K8BAS-DUMP] container 179 slot 21 lore 4 |  ✔ Lumberjack 3
+[K8BAS-DUMP] container 179 slot 21 lore 5 |  ✔ Lumberjack 4
+[K8BAS-DUMP] container 179 slot 21 lore 6 |  ✔ Lumberjack 5
+[K8BAS-DUMP] container 179 slot 21 lore 7 |  ✔ Lumberjack 6
+[K8BAS-DUMP] container 179 slot 21 lore 8 |  ✔ Lumberjack 7
+[K8BAS-DUMP] container 179 slot 21 lore 9 |  ✔ Lumberjack 8
+[K8BAS-DUMP] container 179 slot 21 lore 10 |  ✔ Lumberjack 9
+[K8BAS-DUMP] container 179 slot 21 lore 11 |  ✔ Lumberjack 10
+[K8BAS-DUMP] container 179 slot 21 lore 12 | 
+[K8BAS-DUMP] container 179 slot 21 lore 13 | Total Progress: 100%
+[K8BAS-DUMP] container 179 slot 21 lore 14 |                           62/62 XP
+[K8BAS-DUMP] container 179 slot 21 lore 15 | 
+[K8BAS-DUMP] container 179 slot 21 lore 16 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 179 slot 21 lore 17 | SkyBlock XP!
+[K8BAS-DUMP] container 179 slot 21 lore 18 | 
+[K8BAS-DUMP] container 179 slot 21 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 179 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 23 item=minecraft:player_head sbid=- count=1 | Tasty
+[K8BAS-DUMP] container 179 slot 23 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 179 slot 23 lore 1 | 
+[K8BAS-DUMP] container 179 slot 23 lore 2 |  ✔ Tasty 1
+[K8BAS-DUMP] container 179 slot 23 lore 3 |  ✔ Tasty 2
+[K8BAS-DUMP] container 179 slot 23 lore 4 |  ✔ Tasty 3
+[K8BAS-DUMP] container 179 slot 23 lore 5 |  ✔ Tasty 4
+[K8BAS-DUMP] container 179 slot 23 lore 6 |  ✔ Tasty 5
+[K8BAS-DUMP] container 179 slot 23 lore 7 | 
+[K8BAS-DUMP] container 179 slot 23 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 179 slot 23 lore 9 |                           19/19 XP
+[K8BAS-DUMP] container 179 slot 23 lore 10 | 
+[K8BAS-DUMP] container 179 slot 23 lore 11 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 179 slot 23 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 179 slot 23 lore 13 | 
+[K8BAS-DUMP] container 179 slot 23 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 179 slot 24 item=minecraft:player_head sbid=- count=1 | Forest Training
+[K8BAS-DUMP] container 179 slot 24 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 179 slot 24 lore 1 | 
+[K8BAS-DUMP] container 179 slot 24 lore 2 |  ✔ Forest Training 1
+[K8BAS-DUMP] container 179 slot 24 lore 3 |  ✔ Forest Training 2
+[K8BAS-DUMP] container 179 slot 24 lore 4 |  ✔ Forest Training 3
+[K8BAS-DUMP] container 179 slot 24 lore 5 | 
+[K8BAS-DUMP] container 179 slot 24 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 179 slot 24 lore 7 |                           7/7 XP
+[K8BAS-DUMP] container 179 slot 24 lore 8 | 
+[K8BAS-DUMP] container 179 slot 24 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 179 slot 24 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 179 slot 24 lore 11 | 
+[K8BAS-DUMP] container 179 slot 24 lore 12 | Click to view tasks!
+[K8BAS-DUMP] container 179 slot 25 item=minecraft:iron_axe sbid=- count=1 | Axed
+[K8BAS-DUMP] container 179 slot 25 lore 0 | 1 Tasks
+[K8BAS-DUMP] container 179 slot 25 lore 1 | 
+[K8BAS-DUMP] container 179 slot 25 lore 2 |  ✔ Axed 1
+[K8BAS-DUMP] container 179 slot 25 lore 3 | 
+[K8BAS-DUMP] container 179 slot 25 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 179 slot 25 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 179 slot 25 lore 6 | 
+[K8BAS-DUMP] container 179 slot 25 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 179 slot 25 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 179 slot 25 lore 9 | 
+[K8BAS-DUMP] container 179 slot 25 lore 10 | Click to view tasks!
+[K8BAS-DUMP] container 179 slot 26 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 27 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 35 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 36 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 37 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 38 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 179 slot 39 lore 0 | To Tasks ➜ Essence Shop
+[K8BAS-DUMP] container 179 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 179 slot 41 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 42 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 43 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 179 slot 44 item=minecraft:brown_stained_glass_pane sbid=- count=1 | 

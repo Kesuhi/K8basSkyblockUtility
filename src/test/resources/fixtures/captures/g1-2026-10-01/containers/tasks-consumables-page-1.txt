@@ -1,0 +1,352 @@
+[K8BAS-DUMP] container 454 title=Tasks ➜ Consumables slots=45 state=55
+[K8BAS-DUMP] container 454 slot 0 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 1 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 2 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 3 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 4 item=minecraft:apple sbid=- count=1 | Consumables Tasks
+[K8BAS-DUMP] container 454 slot 4 lore 0 | 23 Tasks
+[K8BAS-DUMP] container 454 slot 4 lore 1 | 
+[K8BAS-DUMP] container 454 slot 4 lore 2 | All XP Tasks that are related to
+[K8BAS-DUMP] container 454 slot 4 lore 3 | consuming items!
+[K8BAS-DUMP] container 454 slot 4 lore 4 | 
+[K8BAS-DUMP] container 454 slot 4 lore 5 | ▶ Metaphysical Serum
+[K8BAS-DUMP] container 454 slot 4 lore 6 | ▶ Reaper Peppers
+[K8BAS-DUMP] container 454 slot 4 lore 7 | ▶ McGrubber's Burger
+[K8BAS-DUMP] container 454 slot 4 lore 8 | ▶ Wriggling Larva
+[K8BAS-DUMP] container 454 slot 4 lore 9 | ▶ Vial Of Venom
+[K8BAS-DUMP] container 454 slot 4 lore 10 | ▶ Festering Maggot
+[K8BAS-DUMP] container 454 slot 4 lore 11 | ▶ Refined Jyrre
+[K8BAS-DUMP] container 454 slot 4 lore 12 | ▶ Refined Dark Cacao
+[K8BAS-DUMP] container 454 slot 4 lore 13 | ▶ Spotlite
+[K8BAS-DUMP] container 454 slot 4 lore 14 | ▶ Dwarven O's Ore Oats
+[K8BAS-DUMP] container 454 slot 4 lore 15 | ▶ Dwarven O's Block Bran
+[K8BAS-DUMP] container 454 slot 4 lore 16 | ▶ Dwarven O's Gemstone Grahams
+[K8BAS-DUMP] container 454 slot 4 lore 17 | ▶ Dwarven O's Metallic Minis
+[K8BAS-DUMP] container 454 slot 4 lore 18 | ▶ Moby-Duck
+[K8BAS-DUMP] container 454 slot 4 lore 19 | ▶ Brain Food
+[K8BAS-DUMP] container 454 slot 4 lore 20 | ▶ Filled Rosewater Flask
+[K8BAS-DUMP] container 454 slot 4 lore 21 | ▶ Very Moldy Bread
+[K8BAS-DUMP] container 454 slot 4 lore 22 | ▶ Feast Burger with a Side of Deepfries
+[K8BAS-DUMP] container 454 slot 4 lore 23 | ▶ Mound of Seagrass
+[K8BAS-DUMP] container 454 slot 4 lore 24 | ▶ Hunting Toolkit
+[K8BAS-DUMP] container 454 slot 4 lore 25 | ▶ Farming Toolkit
+[K8BAS-DUMP] container 454 slot 4 lore 26 | ▶ Isopod Husk
+[K8BAS-DUMP] container 454 slot 4 lore 27 | ▶ Bee Saliva
+[K8BAS-DUMP] container 454 slot 4 lore 28 | 
+[K8BAS-DUMP] container 454 slot 4 lore 29 | Progress to Complete Category: 81.6%
+[K8BAS-DUMP] container 454 slot 4 lore 30 |                           244/299 XP
+[K8BAS-DUMP] container 454 slot 5 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 6 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 7 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 8 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 9 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 10 item=minecraft:player_head sbid=METAPHYSICAL_SERUM count=1 | Metaphysical Serum
+[K8BAS-DUMP] container 454 slot 10 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 10 lore 1 | 
+[K8BAS-DUMP] container 454 slot 10 lore 2 | Gain +5 XP by drinking a Metaphysical
+[K8BAS-DUMP] container 454 slot 10 lore 3 | Serum!
+[K8BAS-DUMP] container 454 slot 10 lore 4 | (Caps at 3 serums!)
+[K8BAS-DUMP] container 454 slot 10 lore 5 | 
+[K8BAS-DUMP] container 454 slot 10 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 10 lore 7 |                           15/15 XP
+[K8BAS-DUMP] container 454 slot 10 lore 8 | 
+[K8BAS-DUMP] container 454 slot 10 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 10 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 10 lore 11 | 
+[K8BAS-DUMP] container 454 slot 10 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 11 item=minecraft:player_head sbid=REAPER_PEPPER count=1 | Reaper Peppers
+[K8BAS-DUMP] container 454 slot 11 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 11 lore 1 | 
+[K8BAS-DUMP] container 454 slot 11 lore 2 | Gain +10 XP by eating a Reaper
+[K8BAS-DUMP] container 454 slot 11 lore 3 | Pepper!
+[K8BAS-DUMP] container 454 slot 11 lore 4 | (Caps at 5 peppers!)
+[K8BAS-DUMP] container 454 slot 11 lore 5 | 
+[K8BAS-DUMP] container 454 slot 11 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 11 lore 7 |                           50/50 XP
+[K8BAS-DUMP] container 454 slot 11 lore 8 | 
+[K8BAS-DUMP] container 454 slot 11 lore 9 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 454 slot 11 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 11 lore 11 | 
+[K8BAS-DUMP] container 454 slot 11 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 12 item=minecraft:player_head sbid=MCGRUBBER_BURGER count=1 | McGrubber's Burger
+[K8BAS-DUMP] container 454 slot 12 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 12 lore 1 | 
+[K8BAS-DUMP] container 454 slot 12 lore 2 | Gain +5 XP by eating a McGrubber's
+[K8BAS-DUMP] container 454 slot 12 lore 3 | Burger!
+[K8BAS-DUMP] container 454 slot 12 lore 4 | (Caps at 5 burgers!)
+[K8BAS-DUMP] container 454 slot 12 lore 5 | 
+[K8BAS-DUMP] container 454 slot 12 lore 6 | Total Progress: 0%
+[K8BAS-DUMP] container 454 slot 12 lore 7 |                           0/25 XP
+[K8BAS-DUMP] container 454 slot 12 lore 8 | 
+[K8BAS-DUMP] container 454 slot 12 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 12 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 12 lore 11 | 
+[K8BAS-DUMP] container 454 slot 12 lore 12 | This task can be completed 5 times!
+[K8BAS-DUMP] container 454 slot 13 item=minecraft:paper sbid=WRIGGLING_LARVA count=1 | Wriggling Larva
+[K8BAS-DUMP] container 454 slot 13 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 13 lore 1 | 
+[K8BAS-DUMP] container 454 slot 13 lore 2 | Gain +5 XP by eating Wriggling Larva!
+[K8BAS-DUMP] container 454 slot 13 lore 3 | (Caps at 5 larvae!)
+[K8BAS-DUMP] container 454 slot 13 lore 4 | 
+[K8BAS-DUMP] container 454 slot 13 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 13 lore 6 |                           25/25 XP
+[K8BAS-DUMP] container 454 slot 13 lore 7 | 
+[K8BAS-DUMP] container 454 slot 13 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 13 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 13 lore 10 | 
+[K8BAS-DUMP] container 454 slot 13 lore 11 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 14 item=minecraft:player_head sbid=VIAL_OF_VENOM count=1 | Vial Of Venom
+[K8BAS-DUMP] container 454 slot 14 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 14 lore 1 | 
+[K8BAS-DUMP] container 454 slot 14 lore 2 | Gain +2 XP by drinking a Vial of
+[K8BAS-DUMP] container 454 slot 14 lore 3 | Venom!
+[K8BAS-DUMP] container 454 slot 14 lore 4 | (Caps at 5 vials!)
+[K8BAS-DUMP] container 454 slot 14 lore 5 | 
+[K8BAS-DUMP] container 454 slot 14 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 14 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 14 lore 8 | 
+[K8BAS-DUMP] container 454 slot 14 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 14 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 14 lore 11 | 
+[K8BAS-DUMP] container 454 slot 14 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 15 item=minecraft:player_head sbid=FESTERING_MAGGOT count=1 | Festering Maggot
+[K8BAS-DUMP] container 454 slot 15 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 15 lore 1 | 
+[K8BAS-DUMP] container 454 slot 15 lore 2 | Gain +2 XP by eating Festering
+[K8BAS-DUMP] container 454 slot 15 lore 3 | Maggot!
+[K8BAS-DUMP] container 454 slot 15 lore 4 | (Caps at 5 maggots!)
+[K8BAS-DUMP] container 454 slot 15 lore 5 | 
+[K8BAS-DUMP] container 454 slot 15 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 15 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 15 lore 8 | 
+[K8BAS-DUMP] container 454 slot 15 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 15 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 15 lore 11 | 
+[K8BAS-DUMP] container 454 slot 15 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 16 item=minecraft:potion sbid=REFINED_BOTTLE_OF_JYRRE count=1 | Refined Jyrre
+[K8BAS-DUMP] container 454 slot 16 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 16 lore 1 | 
+[K8BAS-DUMP] container 454 slot 16 lore 2 | Gain +2 XP per Refined Bottle of
+[K8BAS-DUMP] container 454 slot 16 lore 3 | Jyrre drunk.
+[K8BAS-DUMP] container 454 slot 16 lore 4 | (Caps at 5 bottles!)
+[K8BAS-DUMP] container 454 slot 16 lore 5 | 
+[K8BAS-DUMP] container 454 slot 16 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 16 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 16 lore 8 | 
+[K8BAS-DUMP] container 454 slot 16 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 16 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 16 lore 11 | 
+[K8BAS-DUMP] container 454 slot 16 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 17 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 18 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 19 item=minecraft:player_head sbid=REFINED_DARK_CACAO_TRUFFLE count=1 | Refined Dark Cacao
+[K8BAS-DUMP] container 454 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 19 lore 1 | 
+[K8BAS-DUMP] container 454 slot 19 lore 2 | Gain +2 XP per Refined Dark Cacao
+[K8BAS-DUMP] container 454 slot 19 lore 3 | Truffle consumed.
+[K8BAS-DUMP] container 454 slot 19 lore 4 | (Caps at 5 truffles!)
+[K8BAS-DUMP] container 454 slot 19 lore 5 | 
+[K8BAS-DUMP] container 454 slot 19 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 19 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 19 lore 8 | 
+[K8BAS-DUMP] container 454 slot 19 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 19 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 19 lore 11 | 
+[K8BAS-DUMP] container 454 slot 19 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 20 item=minecraft:player_head sbid=SPOTLITE count=1 | Spotlite
+[K8BAS-DUMP] container 454 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 20 lore 1 | 
+[K8BAS-DUMP] container 454 slot 20 lore 2 | Gain +2 XP per Spotlite consumed.
+[K8BAS-DUMP] container 454 slot 20 lore 3 | (Caps at 5 consumed!)
+[K8BAS-DUMP] container 454 slot 20 lore 4 | 
+[K8BAS-DUMP] container 454 slot 20 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 20 lore 6 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 20 lore 7 | 
+[K8BAS-DUMP] container 454 slot 20 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 20 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 20 lore 10 | 
+[K8BAS-DUMP] container 454 slot 20 lore 11 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 21 item=minecraft:player_head sbid=DWARVEN_OS_ORE_OATS count=1 | Dwarven O's Ore Oats
+[K8BAS-DUMP] container 454 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 21 lore 1 | 
+[K8BAS-DUMP] container 454 slot 21 lore 2 | Gain +2 XP per Dwarven O's Ore Oats
+[K8BAS-DUMP] container 454 slot 21 lore 3 | consumed.
+[K8BAS-DUMP] container 454 slot 21 lore 4 | (Caps at 5 boxes!)
+[K8BAS-DUMP] container 454 slot 21 lore 5 | 
+[K8BAS-DUMP] container 454 slot 21 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 21 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 21 lore 8 | 
+[K8BAS-DUMP] container 454 slot 21 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 21 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 21 lore 11 | 
+[K8BAS-DUMP] container 454 slot 21 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 22 item=minecraft:player_head sbid=DWARVEN_OS_BLOCK_BRAN count=1 | Dwarven O's Block Bran
+[K8BAS-DUMP] container 454 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 22 lore 1 | 
+[K8BAS-DUMP] container 454 slot 22 lore 2 | Gain +2 XP per Dwarven O's Block
+[K8BAS-DUMP] container 454 slot 22 lore 3 | Bran consumed.
+[K8BAS-DUMP] container 454 slot 22 lore 4 | (Caps at 5 boxes!)
+[K8BAS-DUMP] container 454 slot 22 lore 5 | 
+[K8BAS-DUMP] container 454 slot 22 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 22 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 22 lore 8 | 
+[K8BAS-DUMP] container 454 slot 22 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 22 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 22 lore 11 | 
+[K8BAS-DUMP] container 454 slot 22 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 23 item=minecraft:player_head sbid=DWARVEN_OS_GEMSTONE_GRAHAMS count=1 | Dwarven O's Gemstone Grahams
+[K8BAS-DUMP] container 454 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 23 lore 1 | 
+[K8BAS-DUMP] container 454 slot 23 lore 2 | Gain +2 XP per Dwarven O's
+[K8BAS-DUMP] container 454 slot 23 lore 3 | Gemstone Grahams consumed.
+[K8BAS-DUMP] container 454 slot 23 lore 4 | (Caps at 5 boxes!)
+[K8BAS-DUMP] container 454 slot 23 lore 5 | 
+[K8BAS-DUMP] container 454 slot 23 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 23 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 23 lore 8 | 
+[K8BAS-DUMP] container 454 slot 23 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 23 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 23 lore 11 | 
+[K8BAS-DUMP] container 454 slot 23 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 24 item=minecraft:player_head sbid=DWARVEN_OS_METALLIC_MINIS count=1 | Dwarven O's Metallic Minis
+[K8BAS-DUMP] container 454 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 24 lore 1 | 
+[K8BAS-DUMP] container 454 slot 24 lore 2 | Gain +2 XP per Dwarven O's Metallic
+[K8BAS-DUMP] container 454 slot 24 lore 3 | Minis consumed.
+[K8BAS-DUMP] container 454 slot 24 lore 4 | (Caps at 5 boxes!)
+[K8BAS-DUMP] container 454 slot 24 lore 5 | 
+[K8BAS-DUMP] container 454 slot 24 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 24 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 24 lore 8 | 
+[K8BAS-DUMP] container 454 slot 24 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 24 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 24 lore 11 | 
+[K8BAS-DUMP] container 454 slot 24 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 25 item=minecraft:book sbid=MOBY_DUCK_COLLECTOR_EDITION count=1 | Moby-Duck
+[K8BAS-DUMP] container 454 slot 25 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 25 lore 1 | 
+[K8BAS-DUMP] container 454 slot 25 lore 2 | Gain +5 XP for consuming Moby-Duck:
+[K8BAS-DUMP] container 454 slot 25 lore 3 | Collector's Edition.
+[K8BAS-DUMP] container 454 slot 25 lore 4 | 
+[K8BAS-DUMP] container 454 slot 25 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 25 lore 6 |                           5/5 XP
+[K8BAS-DUMP] container 454 slot 25 lore 7 | 
+[K8BAS-DUMP] container 454 slot 25 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 25 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 25 lore 10 | 
+[K8BAS-DUMP] container 454 slot 25 lore 11 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 26 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 27 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 28 item=minecraft:player_head sbid=BRAIN_FOOD count=1 | Brain Food
+[K8BAS-DUMP] container 454 slot 28 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 28 lore 1 | 
+[K8BAS-DUMP] container 454 slot 28 lore 2 | Gain +5 XP per Brain Food consumed.
+[K8BAS-DUMP] container 454 slot 28 lore 3 | (Caps at 5!).
+[K8BAS-DUMP] container 454 slot 28 lore 4 | 
+[K8BAS-DUMP] container 454 slot 28 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 28 lore 6 |                           25/25 XP
+[K8BAS-DUMP] container 454 slot 28 lore 7 | 
+[K8BAS-DUMP] container 454 slot 28 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 28 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 28 lore 10 | 
+[K8BAS-DUMP] container 454 slot 28 lore 11 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 29 item=minecraft:paper sbid=FILLED_ROSEWATER_FLASK count=1 | Filled Rosewater Flask
+[K8BAS-DUMP] container 454 slot 29 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 29 lore 1 | 
+[K8BAS-DUMP] container 454 slot 29 lore 2 | Gain +2 XP per Filled Rosewater
+[K8BAS-DUMP] container 454 slot 29 lore 3 | Flask consumed.
+[K8BAS-DUMP] container 454 slot 29 lore 4 | (Caps at 5 consumed!)
+[K8BAS-DUMP] container 454 slot 29 lore 5 | 
+[K8BAS-DUMP] container 454 slot 29 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 29 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 29 lore 8 | 
+[K8BAS-DUMP] container 454 slot 29 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 29 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 29 lore 11 | 
+[K8BAS-DUMP] container 454 slot 29 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 30 item=minecraft:bread sbid=VERY_MOLDY_BREAD count=1 | Very Moldy Bread
+[K8BAS-DUMP] container 454 slot 30 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 30 lore 1 | 
+[K8BAS-DUMP] container 454 slot 30 lore 2 | Gain +2 XP for consuming the Very
+[K8BAS-DUMP] container 454 slot 30 lore 3 | Moldy Bread.
+[K8BAS-DUMP] container 454 slot 30 lore 4 | 
+[K8BAS-DUMP] container 454 slot 30 lore 5 | Total Progress: 0%
+[K8BAS-DUMP] container 454 slot 30 lore 6 |                           0/10 XP
+[K8BAS-DUMP] container 454 slot 30 lore 7 | 
+[K8BAS-DUMP] container 454 slot 30 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 30 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 30 lore 10 | 
+[K8BAS-DUMP] container 454 slot 30 lore 11 | This task can be completed 5 times!
+[K8BAS-DUMP] container 454 slot 31 item=minecraft:paper sbid=FEAST_BURGER count=1 | Feast Burger with a Side of Deepfries
+[K8BAS-DUMP] container 454 slot 31 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 31 lore 1 | 
+[K8BAS-DUMP] container 454 slot 31 lore 2 | Gain +2 XP by consuming a Feast
+[K8BAS-DUMP] container 454 slot 31 lore 3 | Burger with a Side of Deepfries!
+[K8BAS-DUMP] container 454 slot 31 lore 4 | (Caps at 5 burgers!)
+[K8BAS-DUMP] container 454 slot 31 lore 5 | 
+[K8BAS-DUMP] container 454 slot 31 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 31 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 31 lore 8 | 
+[K8BAS-DUMP] container 454 slot 31 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 31 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 31 lore 11 | 
+[K8BAS-DUMP] container 454 slot 31 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 32 item=minecraft:player_head sbid=MOUND_OF_SEAGRASS count=1 | Mound of Seagrass
+[K8BAS-DUMP] container 454 slot 32 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 32 lore 1 | 
+[K8BAS-DUMP] container 454 slot 32 lore 2 | Gain +2 XP by consuming a Mound of
+[K8BAS-DUMP] container 454 slot 32 lore 3 | Seagrass!
+[K8BAS-DUMP] container 454 slot 32 lore 4 | (Caps at 5 seagrass!)
+[K8BAS-DUMP] container 454 slot 32 lore 5 | 
+[K8BAS-DUMP] container 454 slot 32 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 32 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 454 slot 32 lore 8 | 
+[K8BAS-DUMP] container 454 slot 32 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 32 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 32 lore 11 | 
+[K8BAS-DUMP] container 454 slot 32 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 33 item=minecraft:paper sbid=HUNTING_TOOLKIT count=1 | Hunting Toolkit
+[K8BAS-DUMP] container 454 slot 33 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 33 lore 1 | 
+[K8BAS-DUMP] container 454 slot 33 lore 2 | Gain +2 XP for unlocking this Toolkit!
+[K8BAS-DUMP] container 454 slot 33 lore 3 | 
+[K8BAS-DUMP] container 454 slot 33 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 33 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 454 slot 33 lore 6 | 
+[K8BAS-DUMP] container 454 slot 33 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 33 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 33 lore 9 | 
+[K8BAS-DUMP] container 454 slot 33 lore 10 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 34 item=minecraft:player_head sbid=FARMING_TOOLKIT count=1 | Farming Toolkit
+[K8BAS-DUMP] container 454 slot 34 lore 0 | XP Task
+[K8BAS-DUMP] container 454 slot 34 lore 1 | 
+[K8BAS-DUMP] container 454 slot 34 lore 2 | Gain +2 XP for unlocking this Toolkit!
+[K8BAS-DUMP] container 454 slot 34 lore 3 | 
+[K8BAS-DUMP] container 454 slot 34 lore 4 | Total Progress: 100%
+[K8BAS-DUMP] container 454 slot 34 lore 5 |                           2/2 XP
+[K8BAS-DUMP] container 454 slot 34 lore 6 | 
+[K8BAS-DUMP] container 454 slot 34 lore 7 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 454 slot 34 lore 8 | SkyBlock XP!
+[K8BAS-DUMP] container 454 slot 34 lore 9 | 
+[K8BAS-DUMP] container 454 slot 34 lore 10 | You have completed this task!
+[K8BAS-DUMP] container 454 slot 35 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 36 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 37 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 38 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 454 slot 39 lore 0 | To Ways to Level Up
+[K8BAS-DUMP] container 454 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 454 slot 41 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 454 slot 41 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 454 slot 41 lore 1 | 
+[K8BAS-DUMP] container 454 slot 41 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 454 slot 41 lore 3 |   Earned XP
+[K8BAS-DUMP] container 454 slot 41 lore 4 |   Available XP
+[K8BAS-DUMP] container 454 slot 41 lore 5 |   A to Z
+[K8BAS-DUMP] container 454 slot 41 lore 6 |   Z to A
+[K8BAS-DUMP] container 454 slot 41 lore 7 | 
+[K8BAS-DUMP] container 454 slot 41 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 454 slot 42 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 43 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 454 slot 44 item=minecraft:arrow sbid=- count=1 | Next Page
+[K8BAS-DUMP] container 454 slot 44 lore 0 | Page 2

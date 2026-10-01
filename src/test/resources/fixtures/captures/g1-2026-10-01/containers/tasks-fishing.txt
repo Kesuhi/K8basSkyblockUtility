@@ -1,0 +1,155 @@
+[K8BAS-DUMP] container 304 title=Tasks ➜ Fishing slots=45 state=56
+[K8BAS-DUMP] container 304 slot 0 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 1 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 2 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 3 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 4 item=minecraft:fishing_rod sbid=- count=1 | Fishing Tasks
+[K8BAS-DUMP] container 304 slot 4 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 304 slot 4 lore 1 | 
+[K8BAS-DUMP] container 304 slot 4 lore 2 | All Fishing related XP Tasks.
+[K8BAS-DUMP] container 304 slot 4 lore 3 | 
+[K8BAS-DUMP] container 304 slot 4 lore 4 | ▶ Trophy Fish
+[K8BAS-DUMP] container 304 slot 4 lore 5 | ▶ Trophy Frogs
+[K8BAS-DUMP] container 304 slot 4 lore 6 | ▶ Dolphin Milestones
+[K8BAS-DUMP] container 304 slot 4 lore 7 | ▶ Ship Parts
+[K8BAS-DUMP] container 304 slot 4 lore 8 | ▶ Ship Crew
+[K8BAS-DUMP] container 304 slot 4 lore 9 | 
+[K8BAS-DUMP] container 304 slot 4 lore 10 | Progress to Complete Category: 100%
+[K8BAS-DUMP] container 304 slot 4 lore 11 |                           1,755/1,755 XP
+[K8BAS-DUMP] container 304 slot 5 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 6 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 7 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 8 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 9 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 17 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 18 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 20 item=minecraft:player_head sbid=- count=1 | Trophy Fish
+[K8BAS-DUMP] container 304 slot 20 lore 0 | 18 Tasks
+[K8BAS-DUMP] container 304 slot 20 lore 1 | 
+[K8BAS-DUMP] container 304 slot 20 lore 2 |  ✔ Sulphur Skitter (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 3 |  ✔ Blobfish (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 4 |  ✔ Obfuscated-1 (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 5 |  ✔ Steaming-Hot Flounder (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 6 |  ✔ Gusher (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 7 |  ✔ Obfuscated-2 (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 8 |  ✔ Slugfish (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 9 |  ✔ Flyfish (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 10 |  ✔ Obfuscated-3 (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 11 |  ✔ Vanille (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 12 |  ✔ Lavahorse (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 13 |  ✔ Mana Ray (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 14 |  ✔ Volcanic Stonefish (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 15 |  ✔ Skeleton Fish (4/4)
+[K8BAS-DUMP] container 304 slot 20 lore 16 | And 3 more...
+[K8BAS-DUMP] container 304 slot 20 lore 17 | 
+[K8BAS-DUMP] container 304 slot 20 lore 18 | Total Progress: 100%
+[K8BAS-DUMP] container 304 slot 20 lore 19 |                           1,080/1,080 XP
+[K8BAS-DUMP] container 304 slot 20 lore 20 | 
+[K8BAS-DUMP] container 304 slot 20 lore 21 | This task is worth 2% of your Total
+[K8BAS-DUMP] container 304 slot 20 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 304 slot 20 lore 23 | 
+[K8BAS-DUMP] container 304 slot 20 lore 24 | Click to view tasks!
+[K8BAS-DUMP] container 304 slot 21 item=minecraft:player_head sbid=- count=1 | Trophy Frogs
+[K8BAS-DUMP] container 304 slot 21 lore 0 | 12 Tasks
+[K8BAS-DUMP] container 304 slot 21 lore 1 | 
+[K8BAS-DUMP] container 304 slot 21 lore 2 |  ✔ Common Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 3 |  ✔ Leap Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 4 |  ✔ Wetlands Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 5 |  ✔ Reality Hopper (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 6 |  ✔ Exploding Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 7 |  ✔ Blessed Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 8 |  ✔ Sea Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 9 |  ✔ Bullfrog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 10 |  ✔ Tree Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 11 |  ✔ Cave Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 12 |  ✔ Highlands Frog (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 13 |  ✔ Puddle Jumper (4/4)
+[K8BAS-DUMP] container 304 slot 21 lore 14 | 
+[K8BAS-DUMP] container 304 slot 21 lore 15 | Total Progress: 100%
+[K8BAS-DUMP] container 304 slot 21 lore 16 |                           540/540 XP
+[K8BAS-DUMP] container 304 slot 21 lore 17 | 
+[K8BAS-DUMP] container 304 slot 21 lore 18 | This task is worth 1% of your Total
+[K8BAS-DUMP] container 304 slot 21 lore 19 | SkyBlock XP!
+[K8BAS-DUMP] container 304 slot 21 lore 20 | 
+[K8BAS-DUMP] container 304 slot 21 lore 21 | Click to view tasks!
+[K8BAS-DUMP] container 304 slot 22 item=minecraft:player_head sbid=- count=1 | Dolphin Milestones
+[K8BAS-DUMP] container 304 slot 22 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 304 slot 22 lore 1 | 
+[K8BAS-DUMP] container 304 slot 22 lore 2 |  ✔ Common Dolphin Pet
+[K8BAS-DUMP] container 304 slot 22 lore 3 |  ✔ Uncommon Dolphin Pet
+[K8BAS-DUMP] container 304 slot 22 lore 4 |  ✔ Rare Dolphin Pet
+[K8BAS-DUMP] container 304 slot 22 lore 5 |  ✔ Epic Dolphin Pet
+[K8BAS-DUMP] container 304 slot 22 lore 6 |  ✔ Legendary Dolphin Pet
+[K8BAS-DUMP] container 304 slot 22 lore 7 | 
+[K8BAS-DUMP] container 304 slot 22 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 304 slot 22 lore 9 |                           100/100 XP
+[K8BAS-DUMP] container 304 slot 22 lore 10 | 
+[K8BAS-DUMP] container 304 slot 22 lore 11 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 304 slot 22 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 304 slot 22 lore 13 | 
+[K8BAS-DUMP] container 304 slot 22 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 304 slot 23 item=minecraft:player_head sbid=- count=1 | Ship Parts
+[K8BAS-DUMP] container 304 slot 23 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 304 slot 23 lore 1 | 
+[K8BAS-DUMP] container 304 slot 23 lore 2 |  ✔ Bronze Ship Helm
+[K8BAS-DUMP] container 304 slot 23 lore 3 |  ✔ Bronze Ship Engine
+[K8BAS-DUMP] container 304 slot 23 lore 4 |  ✔ Bronze Ship Hull
+[K8BAS-DUMP] container 304 slot 23 lore 5 | 
+[K8BAS-DUMP] container 304 slot 23 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 304 slot 23 lore 7 |                           15/15 XP
+[K8BAS-DUMP] container 304 slot 23 lore 8 | 
+[K8BAS-DUMP] container 304 slot 23 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 304 slot 23 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 304 slot 23 lore 11 | 
+[K8BAS-DUMP] container 304 slot 23 lore 12 | Click to view tasks!
+[K8BAS-DUMP] container 304 slot 24 item=minecraft:oak_boat sbid=- count=1 | Ship Crew
+[K8BAS-DUMP] container 304 slot 24 lore 0 | 2 Tasks
+[K8BAS-DUMP] container 304 slot 24 lore 1 | 
+[K8BAS-DUMP] container 304 slot 24 lore 2 |  ✔ Captain Baha
+[K8BAS-DUMP] container 304 slot 24 lore 3 |  ✔ Researcher Gilbert
+[K8BAS-DUMP] container 304 slot 24 lore 4 | 
+[K8BAS-DUMP] container 304 slot 24 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 304 slot 24 lore 6 |                           20/20 XP
+[K8BAS-DUMP] container 304 slot 24 lore 7 | 
+[K8BAS-DUMP] container 304 slot 24 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 304 slot 24 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 304 slot 24 lore 10 | 
+[K8BAS-DUMP] container 304 slot 24 lore 11 | Click to view tasks!
+[K8BAS-DUMP] container 304 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 26 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 27 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 35 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 36 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 37 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 38 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 304 slot 39 lore 0 | To Skill Related Tasks
+[K8BAS-DUMP] container 304 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 304 slot 41 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 304 slot 41 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 304 slot 41 lore 1 | 
+[K8BAS-DUMP] container 304 slot 41 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 304 slot 41 lore 3 |   Earned XP
+[K8BAS-DUMP] container 304 slot 41 lore 4 |   Available XP
+[K8BAS-DUMP] container 304 slot 41 lore 5 |   A to Z
+[K8BAS-DUMP] container 304 slot 41 lore 6 |   Z to A
+[K8BAS-DUMP] container 304 slot 41 lore 7 | 
+[K8BAS-DUMP] container 304 slot 41 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 304 slot 42 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 43 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 304 slot 44 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 

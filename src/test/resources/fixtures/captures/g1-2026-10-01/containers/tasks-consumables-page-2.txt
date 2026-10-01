@@ -1,0 +1,113 @@
+[K8BAS-DUMP] container 456 title=Tasks ➜ Consumables slots=45 state=55
+[K8BAS-DUMP] container 456 slot 0 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 1 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 2 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 3 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 4 item=minecraft:apple sbid=- count=1 | Consumables Tasks
+[K8BAS-DUMP] container 456 slot 4 lore 0 | 23 Tasks
+[K8BAS-DUMP] container 456 slot 4 lore 1 | 
+[K8BAS-DUMP] container 456 slot 4 lore 2 | All XP Tasks that are related to
+[K8BAS-DUMP] container 456 slot 4 lore 3 | consuming items!
+[K8BAS-DUMP] container 456 slot 4 lore 4 | 
+[K8BAS-DUMP] container 456 slot 4 lore 5 | ▶ Metaphysical Serum
+[K8BAS-DUMP] container 456 slot 4 lore 6 | ▶ Reaper Peppers
+[K8BAS-DUMP] container 456 slot 4 lore 7 | ▶ McGrubber's Burger
+[K8BAS-DUMP] container 456 slot 4 lore 8 | ▶ Wriggling Larva
+[K8BAS-DUMP] container 456 slot 4 lore 9 | ▶ Vial Of Venom
+[K8BAS-DUMP] container 456 slot 4 lore 10 | ▶ Festering Maggot
+[K8BAS-DUMP] container 456 slot 4 lore 11 | ▶ Refined Jyrre
+[K8BAS-DUMP] container 456 slot 4 lore 12 | ▶ Refined Dark Cacao
+[K8BAS-DUMP] container 456 slot 4 lore 13 | ▶ Spotlite
+[K8BAS-DUMP] container 456 slot 4 lore 14 | ▶ Dwarven O's Ore Oats
+[K8BAS-DUMP] container 456 slot 4 lore 15 | ▶ Dwarven O's Block Bran
+[K8BAS-DUMP] container 456 slot 4 lore 16 | ▶ Dwarven O's Gemstone Grahams
+[K8BAS-DUMP] container 456 slot 4 lore 17 | ▶ Dwarven O's Metallic Minis
+[K8BAS-DUMP] container 456 slot 4 lore 18 | ▶ Moby-Duck
+[K8BAS-DUMP] container 456 slot 4 lore 19 | ▶ Brain Food
+[K8BAS-DUMP] container 456 slot 4 lore 20 | ▶ Filled Rosewater Flask
+[K8BAS-DUMP] container 456 slot 4 lore 21 | ▶ Very Moldy Bread
+[K8BAS-DUMP] container 456 slot 4 lore 22 | ▶ Feast Burger with a Side of Deepfries
+[K8BAS-DUMP] container 456 slot 4 lore 23 | ▶ Mound of Seagrass
+[K8BAS-DUMP] container 456 slot 4 lore 24 | ▶ Hunting Toolkit
+[K8BAS-DUMP] container 456 slot 4 lore 25 | ▶ Farming Toolkit
+[K8BAS-DUMP] container 456 slot 4 lore 26 | ▶ Isopod Husk
+[K8BAS-DUMP] container 456 slot 4 lore 27 | ▶ Bee Saliva
+[K8BAS-DUMP] container 456 slot 4 lore 28 | 
+[K8BAS-DUMP] container 456 slot 4 lore 29 | Progress to Complete Category: 81.6%
+[K8BAS-DUMP] container 456 slot 4 lore 30 |                           244/299 XP
+[K8BAS-DUMP] container 456 slot 5 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 6 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 7 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 8 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 9 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 17 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 18 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 20 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 21 item=minecraft:paper sbid=ISOPOD_HUSK count=1 | Isopod Husk
+[K8BAS-DUMP] container 456 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 456 slot 21 lore 1 | 
+[K8BAS-DUMP] container 456 slot 21 lore 2 | Gain +2 XP per Isopod Husk
+[K8BAS-DUMP] container 456 slot 21 lore 3 | consumed.
+[K8BAS-DUMP] container 456 slot 21 lore 4 | (Caps at 5!).
+[K8BAS-DUMP] container 456 slot 21 lore 5 | 
+[K8BAS-DUMP] container 456 slot 21 lore 6 | Total Progress: 0%
+[K8BAS-DUMP] container 456 slot 21 lore 7 |                           0/10 XP
+[K8BAS-DUMP] container 456 slot 21 lore 8 | 
+[K8BAS-DUMP] container 456 slot 21 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 456 slot 21 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 456 slot 21 lore 11 | 
+[K8BAS-DUMP] container 456 slot 21 lore 12 | This task can be completed 5 times!
+[K8BAS-DUMP] container 456 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 23 item=minecraft:paper sbid=BEE_SALIVA count=1 | Bee Saliva
+[K8BAS-DUMP] container 456 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 456 slot 23 lore 1 | 
+[K8BAS-DUMP] container 456 slot 23 lore 2 | Gain +2 XP per Bee Saliva consumed.
+[K8BAS-DUMP] container 456 slot 23 lore 3 | (Caps at 5!).
+[K8BAS-DUMP] container 456 slot 23 lore 4 | 
+[K8BAS-DUMP] container 456 slot 23 lore 5 | Total Progress: 0%
+[K8BAS-DUMP] container 456 slot 23 lore 6 |                           0/10 XP
+[K8BAS-DUMP] container 456 slot 23 lore 7 | 
+[K8BAS-DUMP] container 456 slot 23 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 456 slot 23 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 456 slot 23 lore 10 | 
+[K8BAS-DUMP] container 456 slot 23 lore 11 | This task can be completed 5 times!
+[K8BAS-DUMP] container 456 slot 24 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 26 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 27 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 35 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 36 item=minecraft:arrow sbid=- count=1 | Previous Page
+[K8BAS-DUMP] container 456 slot 36 lore 0 | Page 1
+[K8BAS-DUMP] container 456 slot 37 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 38 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 456 slot 39 lore 0 | To Ways to Level Up
+[K8BAS-DUMP] container 456 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 456 slot 41 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 456 slot 41 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 456 slot 41 lore 1 | 
+[K8BAS-DUMP] container 456 slot 41 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 456 slot 41 lore 3 |   Earned XP
+[K8BAS-DUMP] container 456 slot 41 lore 4 |   Available XP
+[K8BAS-DUMP] container 456 slot 41 lore 5 |   A to Z
+[K8BAS-DUMP] container 456 slot 41 lore 6 |   Z to A
+[K8BAS-DUMP] container 456 slot 41 lore 7 | 
+[K8BAS-DUMP] container 456 slot 41 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 456 slot 42 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 43 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 456 slot 44 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 

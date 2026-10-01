@@ -1,0 +1,69 @@
+[K8BAS-DUMP] container 234 title=Slaying ➜ Defeat Arachne slots=45 state=56
+[K8BAS-DUMP] container 234 slot 0 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 1 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 2 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 3 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 4 item=minecraft:player_head sbid=ARACHNE_CRYSTAL count=1 | Defeat Arachne
+[K8BAS-DUMP] container 234 slot 4 lore 0 | 2 Tasks
+[K8BAS-DUMP] container 234 slot 4 lore 1 | 
+[K8BAS-DUMP] container 234 slot 4 lore 2 |  ✔ Defeat Arachne Tier 1
+[K8BAS-DUMP] container 234 slot 4 lore 3 |  ✔ Defeat Arachne Tier 2
+[K8BAS-DUMP] container 234 slot 4 lore 4 | 
+[K8BAS-DUMP] container 234 slot 4 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 234 slot 4 lore 6 |                           60/60 XP
+[K8BAS-DUMP] container 234 slot 4 lore 7 | 
+[K8BAS-DUMP] container 234 slot 4 lore 8 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 234 slot 4 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 234 slot 5 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 6 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 7 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 8 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 9 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 17 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 18 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 20 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 21 item=minecraft:player_head sbid=- count=1 | Defeat Arachne Tier 1
+[K8BAS-DUMP] container 234 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 234 slot 21 lore 1 | 
+[K8BAS-DUMP] container 234 slot 21 lore 2 | Defeat this Arachne tier for the
+[K8BAS-DUMP] container 234 slot 21 lore 3 | first time to gain +20 XP.
+[K8BAS-DUMP] container 234 slot 21 lore 4 | 
+[K8BAS-DUMP] container 234 slot 21 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 234 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 23 item=minecraft:player_head sbid=- count=1 | Defeat Arachne Tier 2
+[K8BAS-DUMP] container 234 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 234 slot 23 lore 1 | 
+[K8BAS-DUMP] container 234 slot 23 lore 2 | Defeat this Arachne tier for the
+[K8BAS-DUMP] container 234 slot 23 lore 3 | first time to gain +40 XP.
+[K8BAS-DUMP] container 234 slot 23 lore 4 | 
+[K8BAS-DUMP] container 234 slot 23 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 234 slot 24 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 26 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 27 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 35 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 36 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 37 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 38 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 234 slot 39 lore 0 | To Tasks ➜ Slaying
+[K8BAS-DUMP] container 234 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 234 slot 41 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 42 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 43 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 234 slot 44 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 

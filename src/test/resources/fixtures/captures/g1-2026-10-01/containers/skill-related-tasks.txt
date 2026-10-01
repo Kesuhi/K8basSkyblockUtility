@@ -1,0 +1,125 @@
+[K8BAS-DUMP] container 242 title=Skill Related Tasks slots=54 state=65
+[K8BAS-DUMP] container 242 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 4 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 20 item=minecraft:stone_pickaxe sbid=- count=1 | Mining Tasks
+[K8BAS-DUMP] container 242 slot 20 lore 0 | 7 Tasks
+[K8BAS-DUMP] container 242 slot 20 lore 1 | 
+[K8BAS-DUMP] container 242 slot 20 lore 2 | All Mining related XP Tasks.
+[K8BAS-DUMP] container 242 slot 20 lore 3 | 
+[K8BAS-DUMP] container 242 slot 20 lore 4 | ▶ Heart of the Mountain
+[K8BAS-DUMP] container 242 slot 20 lore 5 | ▶ Commission Milestones
+[K8BAS-DUMP] container 242 slot 20 lore 6 | ▶ Crystal Nucleus Runs
+[K8BAS-DUMP] container 242 slot 20 lore 7 | ▶ Core of the Mountain
+[K8BAS-DUMP] container 242 slot 20 lore 8 | ▶ Fossil Research
+[K8BAS-DUMP] container 242 slot 20 lore 9 | ▶ Frozen Corpse Milestones
+[K8BAS-DUMP] container 242 slot 20 lore 10 | ▶ Rock Milestones
+[K8BAS-DUMP] container 242 slot 20 lore 11 | 
+[K8BAS-DUMP] container 242 slot 20 lore 12 | Progress to Complete Category: 96.6%
+[K8BAS-DUMP] container 242 slot 20 lore 13 |                           4,726/4,892 XP
+[K8BAS-DUMP] container 242 slot 20 lore 14 | 
+[K8BAS-DUMP] container 242 slot 20 lore 15 | Click to view tasks!
+[K8BAS-DUMP] container 242 slot 21 item=minecraft:golden_hoe sbid=- count=1 | Farming Tasks
+[K8BAS-DUMP] container 242 slot 21 lore 0 | 12 Tasks
+[K8BAS-DUMP] container 242 slot 21 lore 1 | 
+[K8BAS-DUMP] container 242 slot 21 lore 2 | All Farming related XP Tasks.
+[K8BAS-DUMP] container 242 slot 21 lore 3 | 
+[K8BAS-DUMP] container 242 slot 21 lore 4 | ▶ Anita's Shop Upgrades
+[K8BAS-DUMP] container 242 slot 21 lore 5 | ▶ Garden Level
+[K8BAS-DUMP] container 242 slot 21 lore 6 | ▶ Garden Visitors Served
+[K8BAS-DUMP] container 242 slot 21 lore 7 | ▶ Offers Accepted
+[K8BAS-DUMP] container 242 slot 21 lore 8 | ▶ Crop Upgrades
+[K8BAS-DUMP] container 242 slot 21 lore 9 | ▶ Garden Crop Milestones Reached
+[K8BAS-DUMP] container 242 slot 21 lore 10 | ▶ Garden Unlocked Plots
+[K8BAS-DUMP] container 242 slot 21 lore 11 | ▶ Composter Upgrades
+[K8BAS-DUMP] container 242 slot 21 lore 12 | ▶ Greenhouse Upgrades
+[K8BAS-DUMP] container 242 slot 21 lore 13 | ▶ DNA Analysis Milestones
+[K8BAS-DUMP] container 242 slot 21 lore 14 | ▶ Farming Chips
+[K8BAS-DUMP] container 242 slot 21 lore 15 | ▶ Sowdust
+[K8BAS-DUMP] container 242 slot 21 lore 16 | 
+[K8BAS-DUMP] container 242 slot 21 lore 17 | Progress to Complete Category: 87.5%
+[K8BAS-DUMP] container 242 slot 21 lore 18 |                           2,246/2,566 XP
+[K8BAS-DUMP] container 242 slot 21 lore 19 | 
+[K8BAS-DUMP] container 242 slot 21 lore 20 | Click to view tasks!
+[K8BAS-DUMP] container 242 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 23 item=minecraft:fishing_rod sbid=- count=1 | Fishing Tasks
+[K8BAS-DUMP] container 242 slot 23 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 242 slot 23 lore 1 | 
+[K8BAS-DUMP] container 242 slot 23 lore 2 | All Fishing related XP Tasks.
+[K8BAS-DUMP] container 242 slot 23 lore 3 | 
+[K8BAS-DUMP] container 242 slot 23 lore 4 | ▶ Trophy Fish
+[K8BAS-DUMP] container 242 slot 23 lore 5 | ▶ Trophy Frogs
+[K8BAS-DUMP] container 242 slot 23 lore 6 | ▶ Dolphin Milestones
+[K8BAS-DUMP] container 242 slot 23 lore 7 | ▶ Ship Parts
+[K8BAS-DUMP] container 242 slot 23 lore 8 | ▶ Ship Crew
+[K8BAS-DUMP] container 242 slot 23 lore 9 | 
+[K8BAS-DUMP] container 242 slot 23 lore 10 | Progress to Complete Category: 100%
+[K8BAS-DUMP] container 242 slot 23 lore 11 |                           1,755/1,755 XP
+[K8BAS-DUMP] container 242 slot 23 lore 12 | 
+[K8BAS-DUMP] container 242 slot 23 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 242 slot 24 item=minecraft:jungle_sapling sbid=- count=1 | Foraging Tasks
+[K8BAS-DUMP] container 242 slot 24 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 242 slot 24 lore 1 | 
+[K8BAS-DUMP] container 242 slot 24 lore 2 | All Foraging related XP Tasks.
+[K8BAS-DUMP] container 242 slot 24 lore 3 | 
+[K8BAS-DUMP] container 242 slot 24 lore 4 | ▶ Heart of the Forest
+[K8BAS-DUMP] container 242 slot 24 lore 5 | ▶ Center of the Forest
+[K8BAS-DUMP] container 242 slot 24 lore 6 | ▶ Tree Gift Milestones
+[K8BAS-DUMP] container 242 slot 24 lore 7 | ▶ Safari Milestones
+[K8BAS-DUMP] container 242 slot 24 lore 8 | 
+[K8BAS-DUMP] container 242 slot 24 lore 9 | Progress to Complete Category: 60.6%
+[K8BAS-DUMP] container 242 slot 24 lore 10 |                           1,527/2,519 XP
+[K8BAS-DUMP] container 242 slot 24 lore 11 | 
+[K8BAS-DUMP] container 242 slot 24 lore 12 | Click to view tasks!
+[K8BAS-DUMP] container 242 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 36 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 45 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 47 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 242 slot 48 lore 0 | To Ways to Level Up
+[K8BAS-DUMP] container 242 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 242 slot 50 item=minecraft:gray_dye sbid=- count=1 | Show Progress Bars
+[K8BAS-DUMP] container 242 slot 50 lore 0 | Toggle whether to display more
+[K8BAS-DUMP] container 242 slot 50 lore 1 | detailed task progress in each
+[K8BAS-DUMP] container 242 slot 50 lore 2 | category.
+[K8BAS-DUMP] container 242 slot 50 lore 3 | 
+[K8BAS-DUMP] container 242 slot 50 lore 4 | Click to show!
+[K8BAS-DUMP] container 242 slot 51 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 52 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 242 slot 53 item=minecraft:black_stained_glass_pane sbid=- count=1 | 

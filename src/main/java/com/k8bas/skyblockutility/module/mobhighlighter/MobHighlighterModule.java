@@ -6,6 +6,7 @@ import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
+import com.k8bas.skyblockutility.settings.RuleWarning;
 import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
 import com.k8bas.skyblockutility.settings.ColorWheelFieldEntry;
 import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
@@ -39,8 +40,7 @@ import java.util.Set;
  * (one level of nesting, same depth as General's already-working fields) instead.
  *
  * Add/Delete/Open-Database are real clickable buttons (ButtonEntry — Cloth Config has no
- * built-in button widget, so this hosts a real vanilla Button modeled on Cloth Config's own
- * BooleanListEntry source) that patch the live, already-open screen's entry list directly (see
+ * built-in button widget, so it hosts a vanilla Button with this mod's own layout) that patch the live, already-open screen's entry list directly (see
  * liveAddRuleEntry/liveRemoveRuleEntry) so the rule list reflects add/delete instantly. The
  * picker screen has no separate Return button — Cloth Config's own Cancel/Save & Done footer
  * buttons already navigate back to the parent screen (confirmed: Cloth Config overwrites that
@@ -98,7 +98,7 @@ public final class MobHighlighterModule implements Module {
 		config.enabled = enabled;
 		highlightManager.setEnabled(enabled);
 		ConfigManager.putModuleSection(ID, config);
-		ConfigManager.saveAsync();
+		ConfigManager.save();
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public final class MobHighlighterModule implements Module {
 
 		category.addEntry(new ButtonEntry(Component.literal("Mob Database"), Component.literal("Open"), () -> {
 			Minecraft client = Minecraft.getInstance();
-			client.setScreen(buildMobPickerScreen(client.screen));
+			client.gui.setScreen(buildMobPickerScreen(client.gui.screen()));
 		}));
 
 		workingRules = new ArrayList<>(config.rules);
@@ -117,6 +117,17 @@ public final class MobHighlighterModule implements Module {
 		for (HighlightRule rule : workingRules) {
 			category.addEntry(buildRuleSubCategory(rule, entryBuilder));
 		}
+	}
+
+	/** For gametests: replaces the rules without saving them. */
+	void useRulesForTest(List<HighlightRule> rules) {
+		config.rules = new ArrayList<>(rules);
+		highlightManager.rebuild(config.rules);
+	}
+
+	/** For gametests: the module's rules. */
+	List<HighlightRule> rulesForTest() {
+		return List.copyOf(config.rules);
 	}
 
 	@Override
@@ -177,7 +188,7 @@ public final class MobHighlighterModule implements Module {
 		// rebuilt "Add rule" button needs a way to trigger the *next* rebuild too).
 		Runnable[] refreshPickerRef = new Runnable[1];
 		refreshPickerRef[0] = () -> {
-			Screen active = Minecraft.getInstance().screen;
+			Screen active = Minecraft.getInstance().gui.screen();
 			if (active instanceof ClothConfigScreen clothScreen) {
 				captureExpandedState(currentFolderEntries, expandedState);
 				replaceFolderEntries(clothScreen, currentFolderEntries,
@@ -367,7 +378,11 @@ public final class MobHighlighterModule implements Module {
 	}
 
 	private AbstractConfigListEntry<?> buildRuleSubCategory(HighlightRule rule, ConfigEntryBuilder entryBuilder) {
-		SubCategoryBuilder sub = entryBuilder.startSubCategory(Component.literal(rule.label)).setExpanded(false);
+		String inertReason = highlightManager.inertRules().get(rule.id);
+		SubCategoryBuilder sub = entryBuilder.startSubCategory(RuleWarning.title(rule.label, inertReason)).setExpanded(false);
+		if (inertReason != null) {
+			sub.add(RuleWarning.explanation(entryBuilder, inertReason));
+		}
 		// Filled in right after sub.build() below so the Delete button's own closure can remove
 		// this exact entry instance from the live screen — it can't reference the built entry
 		// before it exists, so it reads through this one-slot holder at click time instead.
@@ -399,7 +414,7 @@ public final class MobHighlighterModule implements Module {
 		}));
 		sub.add(new ButtonEntry(Component.literal("Delete"), Component.literal("Delete this rule"), () -> {
 			workingRules.remove(rule);
-			liveRemoveRuleEntry(Minecraft.getInstance().screen, selfRef[0]);
+			liveRemoveRuleEntry(Minecraft.getInstance().gui.screen(), selfRef[0]);
 		}));
 
 		AbstractConfigListEntry<?> built = sub.build();

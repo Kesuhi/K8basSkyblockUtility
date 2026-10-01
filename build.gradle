@@ -3,6 +3,10 @@ plugins {
 	id 'maven-publish'
 }
 
+// One version string everywhere (REQ-REL-06): the jar name, fabric.mod.json and the running
+// version the updater compares, e.g. 1.1.0+26.2. The tag and the CHANGELOG use mod_version.
+version = "${project.mod_version}+${project.minecraft_version}"
+
 repositories {
 	mavenCentral()
 	maven {
@@ -16,6 +20,31 @@ repositories {
 	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
+	}
+	maven {
+		name = "AzureAaron"
+		url = "https://maven.azureaaron.net/releases"
+		content {
+			includeGroup "net.azureaaron"
+		}
+	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+}
+
+fabricApi {
+	// Client gametests (src/gametest) run with `./gradlew runClientGameTest`. They open a game
+	// window, so they are not part of `check`.
+	configureTests {
+		createSourceSet = true
+		modId = "k8bas_skyblock_utility_gametest"
+		enableGameTests = false
+		enableClientGameTests = true
 	}
 }
 
@@ -42,6 +71,118 @@ dependencies {
 	// declared via fabric.mod.json's depends, per Hypixel's own documented setup. Bundling a
 	// private copy via include() isn't the supported pattern for this library.
 	implementation "net.hypixel:mod-api:${project.hypixel_modapi_version}"
+	// The Fabric glue players install themselves; only on the dev runtime (runClient, gametests).
+	localRuntime "maven.modrinth:hypixel-mod-api:${project.hypixel_modapi_fabric_version}"
+
+	// Render Chest (Apache-2.0) draws the depth-tested glow. Bundled as a nested jar with its own
+	// LICENSE, as its README asks; none of its code is copied here (THIRD_PARTY_NOTICES.md).
+	include(implementation("net.azureaaron:render-chest:${project.render_chest_version}"))
+
+	// Unit tests for pure logic (rule matching, config loading, data parsing); not shipped.
+	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
+	testImplementation "org.junit.jupiter:junit-jupiter"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+// Tier D: boots the production client with the built jar plus every *.jar of a mod folder (a copy
+// of a real 26.2 mod set), e.g.
+//   ./gradlew prodClientStack -Pk8bas.prodMods=build/prod-mods
+// -Pk8bas.prodBaseline=true boots the same stack without this mod, to record its own ERROR lines.
+// -Pk8bas.quickPlay=<world> loads that world of the run directory's saves after start.
+// -Pk8bas.prodProvision=<dir> copies that folder (config, options.txt, saves) into the run directory
+// first. The run directory is the task's output, which Gradle may empty before a run.
+// Opens a game window, so it is not part of check.
+tasks.register("prodClientStack", net.fabricmc.loom.task.prod.ClientProductionRunTask) {
+	def prodMods = providers.gradleProperty("k8bas.prodMods")
+	if (!providers.gradleProperty("k8bas.prodBaseline").map { it.toBoolean() }.getOrElse(false)) {
+		mods.from(tasks.named("jar"))
+	}
+	if (prodMods.isPresent()) {
+		mods.from(fileTree(prodMods.get()) {
+			include "*.jar"
+			exclude "k8bas_skyblock_utility-*"
+		})
+	}
+	jvmArgs.add("-Dmixin.debug.export=true")
+	programArgs.addAll(providers.gradleProperty("k8bas.quickPlay").map { ["--quickPlaySingleplayer", it] }.orElse([]))
+	def provision = providers.gradleProperty("k8bas.prodProvision")
+	doFirst {
+		if (provision.isPresent()) {
+			project.copy {
+				from provision.get()
+				into runDir
+			}
+		}
+	}
+	runDir = layout.buildDirectory.dir("run/prodClientStack")
+}
+
+test {
+	useJUnitPlatform()
+	// Minecraft's log4j config writes logs/ into the working directory; keep it out of the repo root.
+	def testRunDir = layout.buildDirectory.dir("test-run").get().asFile
+	workingDir = testRunDir
+	doFirst { testRunDir.mkdirs() }
+	// For tests that read the source tree (RuntimeVersionsTest).
+	systemProperty "k8bas.projectDir", projectDir.absolutePath
+	// ReleaseArtifactTest checks the built jar and its sidecar against the release contract.
+	dependsOn "sha256Sidecar"
+	systemProperty "k8bas.releaseJar", tasks.named("jar").flatMap { it.archiveFile }.get().asFile.absolutePath
+	systemProperty "k8bas.modVersion", project.mod_version
+	systemProperty "k8bas.minecraftVersion", project.minecraft_version
+}
+
+// Gametests never contact GitHub: the update check goes to a closed local port (one WARN line).
+// The update-notice gametest points the updater at its own local test server.
+tasks.matching { it.name == "runClientGameTest" }.configureEach {
+	jvmArgs "-Dk8bas.update.source=http://127.0.0.1:1/updates-disabled-in-gametests"
+}
+
+// The release sidecar (REQ-REL-07): "<64 lowercase hex>  <jar name>" and LF, UTF-8 without a BOM.
+def sha256Sidecar = tasks.register("sha256Sidecar") {
+	def jarFile = tasks.named("jar").flatMap { it.archiveFile }
+	def sidecar = jarFile.map { it.asFile.toPath().resolveSibling(it.asFile.name + ".sha256").toFile() }
+	inputs.file(jarFile)
+	outputs.file(sidecar)
+	doLast {
+		def file = jarFile.get().asFile
+		def hex = java.security.MessageDigest.getInstance("SHA-256").digest(file.bytes).encodeHex().toString()
+		sidecar.get().setText("${hex}  ${file.name}" + "\n", "UTF-8")
+	}
+}
+tasks.named("jar") { finalizedBy sha256Sidecar }
+
+// Checks a release draft before it is published (REQ-REL-11, T1.17) with the updater's own parser
+// and selector (ReleaseDraftCheck in the test sources, so it never ships). scripts/release-check.sh
+// runs it on the JSON that `gh api` saved, so Gradle never holds a token:
+//   ./gradlew releaseDraftCheck -Pk8bas.draftJson=<file> -Pk8bas.notes=<file>
+// The jar, its sidecar and the versions default to this build's; -Pk8bas.releaseJar,
+// -Pk8bas.releaseSidecar, -Pk8bas.releaseVersion and -Pk8bas.releaseMinecraft override them. It never
+// builds the jar: it checks the file that was uploaded. Fails with one line per problem.
+tasks.register("releaseDraftCheck", JavaExec) {
+	group = "verification"
+	description = "Checks a release draft's JSON against the local jar, sidecar and release notes (REQ-REL-11)."
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = "com.k8bas.skyblockutility.update.ReleaseDraftCheck"
+	// Gradle reads the forked JVM's output as UTF-8; without these, Windows writes the native code
+	// page and a body mismatch on an en dash or curly quote comes out as U+FFFD.
+	jvmArgs "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8"
+	def draftJson = providers.gradleProperty("k8bas.draftJson")
+	def notes = providers.gradleProperty("k8bas.notes")
+	def jarOverride = providers.gradleProperty("k8bas.releaseJar")
+	def sidecarOverride = providers.gradleProperty("k8bas.releaseSidecar")
+	def releaseVersion = providers.gradleProperty("k8bas.releaseVersion").orElse(project.mod_version)
+	def releaseMinecraft = providers.gradleProperty("k8bas.releaseMinecraft").orElse(project.minecraft_version)
+	def defaultJar = tasks.named("jar").flatMap { it.archiveFile }
+	doFirst {
+		if (!draftJson.isPresent() || !notes.isPresent()) {
+			throw new GradleException("usage: ./gradlew releaseDraftCheck -Pk8bas.draftJson=<file> -Pk8bas.notes=<file>")
+		}
+		def jarFile = jarOverride.isPresent() ? file(jarOverride.get()) : defaultJar.get().asFile
+		def sidecarFile = sidecarOverride.isPresent() ? file(sidecarOverride.get()) : new File(jarFile.path + ".sha256")
+		args(file(draftJson.get()).absolutePath, jarFile.absolutePath, sidecarFile.absolutePath, file(notes.get()).absolutePath,
+				releaseVersion.get(), releaseMinecraft.get())
+	}
 }
 
 processResources {

@@ -1,0 +1,92 @@
+[K8BAS-DUMP] container 123 title=Dungeon ➜ Complete Dungeons slots=45 state=56
+[K8BAS-DUMP] container 123 slot 0 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 1 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 2 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 3 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 4 item=minecraft:player_head sbid=- count=1 | Complete Dungeons
+[K8BAS-DUMP] container 123 slot 4 lore 0 | 2 Tasks
+[K8BAS-DUMP] container 123 slot 4 lore 1 | 
+[K8BAS-DUMP] container 123 slot 4 lore 2 |  ✔ Complete The Catacombs (8/8)
+[K8BAS-DUMP] container 123 slot 4 lore 3 |  ✔ Complete Master Mode The Catacombs (7/7)
+[K8BAS-DUMP] container 123 slot 4 lore 4 | 
+[K8BAS-DUMP] container 123 slot 4 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 123 slot 4 lore 6 |                           540/540 XP
+[K8BAS-DUMP] container 123 slot 4 lore 7 | 
+[K8BAS-DUMP] container 123 slot 4 lore 8 | This task is worth 1% of your Total
+[K8BAS-DUMP] container 123 slot 4 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 123 slot 5 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 6 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 7 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 8 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 9 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 17 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 18 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 20 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 21 item=minecraft:player_head sbid=- count=1 | Complete The Catacombs
+[K8BAS-DUMP] container 123 slot 21 lore 0 | 8 Tasks
+[K8BAS-DUMP] container 123 slot 21 lore 1 | 
+[K8BAS-DUMP] container 123 slot 21 lore 2 |  ✔ Complete Catacombs Entrance
+[K8BAS-DUMP] container 123 slot 21 lore 3 |  ✔ Complete Catacombs Floor I
+[K8BAS-DUMP] container 123 slot 21 lore 4 |  ✔ Complete Catacombs Floor II
+[K8BAS-DUMP] container 123 slot 21 lore 5 |  ✔ Complete Catacombs Floor III
+[K8BAS-DUMP] container 123 slot 21 lore 6 |  ✔ Complete Catacombs Floor IV
+[K8BAS-DUMP] container 123 slot 21 lore 7 |  ✔ Complete Catacombs Floor V
+[K8BAS-DUMP] container 123 slot 21 lore 8 |  ✔ Complete Catacombs Floor VI
+[K8BAS-DUMP] container 123 slot 21 lore 9 |  ✔ Complete Catacombs Floor VII
+[K8BAS-DUMP] container 123 slot 21 lore 10 | 
+[K8BAS-DUMP] container 123 slot 21 lore 11 | Total Progress: 100%
+[K8BAS-DUMP] container 123 slot 21 lore 12 |                           190/190 XP
+[K8BAS-DUMP] container 123 slot 21 lore 13 | 
+[K8BAS-DUMP] container 123 slot 21 lore 14 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 123 slot 21 lore 15 | SkyBlock XP!
+[K8BAS-DUMP] container 123 slot 21 lore 16 | 
+[K8BAS-DUMP] container 123 slot 21 lore 17 | Click to view tasks!
+[K8BAS-DUMP] container 123 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 23 item=minecraft:player_head sbid=- count=1 | Complete Master Mode The Catacombs
+[K8BAS-DUMP] container 123 slot 23 lore 0 | 7 Tasks
+[K8BAS-DUMP] container 123 slot 23 lore 1 | 
+[K8BAS-DUMP] container 123 slot 23 lore 2 |  ✔ Complete Catacombs Floor I
+[K8BAS-DUMP] container 123 slot 23 lore 3 |  ✔ Complete Catacombs Floor II
+[K8BAS-DUMP] container 123 slot 23 lore 4 |  ✔ Complete Catacombs Floor III
+[K8BAS-DUMP] container 123 slot 23 lore 5 |  ✔ Complete Catacombs Floor IV
+[K8BAS-DUMP] container 123 slot 23 lore 6 |  ✔ Complete Catacombs Floor V
+[K8BAS-DUMP] container 123 slot 23 lore 7 |  ✔ Complete Catacombs Floor VI
+[K8BAS-DUMP] container 123 slot 23 lore 8 |  ✔ Complete Catacombs Floor VII
+[K8BAS-DUMP] container 123 slot 23 lore 9 | 
+[K8BAS-DUMP] container 123 slot 23 lore 10 | Total Progress: 100%
+[K8BAS-DUMP] container 123 slot 23 lore 11 |                           350/350 XP
+[K8BAS-DUMP] container 123 slot 23 lore 12 | 
+[K8BAS-DUMP] container 123 slot 23 lore 13 | This task is worth 0.7% of your Total
+[K8BAS-DUMP] container 123 slot 23 lore 14 | SkyBlock XP!
+[K8BAS-DUMP] container 123 slot 23 lore 15 | 
+[K8BAS-DUMP] container 123 slot 23 lore 16 | Click to view tasks!
+[K8BAS-DUMP] container 123 slot 24 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 26 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 27 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 35 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 36 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 37 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 38 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 123 slot 39 lore 0 | To Tasks ➜ Dungeon
+[K8BAS-DUMP] container 123 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 123 slot 41 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 42 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 43 item=minecraft:red_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 123 slot 44 item=minecraft:red_stained_glass_pane sbid=- count=1 | 

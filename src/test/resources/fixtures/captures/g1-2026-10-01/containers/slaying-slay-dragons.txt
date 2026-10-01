@@ -1,0 +1,104 @@
+[K8BAS-DUMP] container 205 title=Slaying ➜ Slay Dragons slots=45 state=56
+[K8BAS-DUMP] container 205 slot 0 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 1 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 2 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 3 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 4 item=minecraft:dragon_egg sbid=- count=1 | Slay Dragons
+[K8BAS-DUMP] container 205 slot 4 lore 0 | 7 Tasks
+[K8BAS-DUMP] container 205 slot 4 lore 1 | 
+[K8BAS-DUMP] container 205 slot 4 lore 2 |  ✔ Slay Superior Dragon
+[K8BAS-DUMP] container 205 slot 4 lore 3 |  ✔ Slay Old Dragon
+[K8BAS-DUMP] container 205 slot 4 lore 4 |  ✔ Slay Young Dragon
+[K8BAS-DUMP] container 205 slot 4 lore 5 |  ✔ Slay Wise Dragon
+[K8BAS-DUMP] container 205 slot 4 lore 6 |  ✔ Slay Protector Dragon
+[K8BAS-DUMP] container 205 slot 4 lore 7 |  ✔ Slay Unstable Dragon
+[K8BAS-DUMP] container 205 slot 4 lore 8 |  ✔ Slay Strong Dragon
+[K8BAS-DUMP] container 205 slot 4 lore 9 | 
+[K8BAS-DUMP] container 205 slot 4 lore 10 | Total Progress: 100%
+[K8BAS-DUMP] container 205 slot 4 lore 11 |                           200/200 XP
+[K8BAS-DUMP] container 205 slot 4 lore 12 | 
+[K8BAS-DUMP] container 205 slot 4 lore 13 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 205 slot 4 lore 14 | SkyBlock XP!
+[K8BAS-DUMP] container 205 slot 5 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 6 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 7 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 8 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 9 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 17 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 18 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 19 item=minecraft:player_head sbid=- count=1 | Slay Superior Dragon
+[K8BAS-DUMP] container 205 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 205 slot 19 lore 1 | 
+[K8BAS-DUMP] container 205 slot 19 lore 2 | Slay this dragon for the first time to
+[K8BAS-DUMP] container 205 slot 19 lore 3 | gain +50 XP.
+[K8BAS-DUMP] container 205 slot 19 lore 4 | 
+[K8BAS-DUMP] container 205 slot 19 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 205 slot 20 item=minecraft:player_head sbid=- count=1 | Slay Old Dragon
+[K8BAS-DUMP] container 205 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 205 slot 20 lore 1 | 
+[K8BAS-DUMP] container 205 slot 20 lore 2 | Slay this dragon for the first time to
+[K8BAS-DUMP] container 205 slot 20 lore 3 | gain +25 XP.
+[K8BAS-DUMP] container 205 slot 20 lore 4 | 
+[K8BAS-DUMP] container 205 slot 20 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 205 slot 21 item=minecraft:player_head sbid=- count=1 | Slay Young Dragon
+[K8BAS-DUMP] container 205 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 205 slot 21 lore 1 | 
+[K8BAS-DUMP] container 205 slot 21 lore 2 | Slay this dragon for the first time to
+[K8BAS-DUMP] container 205 slot 21 lore 3 | gain +25 XP.
+[K8BAS-DUMP] container 205 slot 21 lore 4 | 
+[K8BAS-DUMP] container 205 slot 21 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 205 slot 22 item=minecraft:player_head sbid=- count=1 | Slay Wise Dragon
+[K8BAS-DUMP] container 205 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 205 slot 22 lore 1 | 
+[K8BAS-DUMP] container 205 slot 22 lore 2 | Slay this dragon for the first time to
+[K8BAS-DUMP] container 205 slot 22 lore 3 | gain +25 XP.
+[K8BAS-DUMP] container 205 slot 22 lore 4 | 
+[K8BAS-DUMP] container 205 slot 22 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 205 slot 23 item=minecraft:player_head sbid=- count=1 | Slay Protector Dragon
+[K8BAS-DUMP] container 205 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 205 slot 23 lore 1 | 
+[K8BAS-DUMP] container 205 slot 23 lore 2 | Slay this dragon for the first time to
+[K8BAS-DUMP] container 205 slot 23 lore 3 | gain +25 XP.
+[K8BAS-DUMP] container 205 slot 23 lore 4 | 
+[K8BAS-DUMP] container 205 slot 23 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 205 slot 24 item=minecraft:player_head sbid=- count=1 | Slay Unstable Dragon
+[K8BAS-DUMP] container 205 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 205 slot 24 lore 1 | 
+[K8BAS-DUMP] container 205 slot 24 lore 2 | Slay this dragon for the first time to
+[K8BAS-DUMP] container 205 slot 24 lore 3 | gain +25 XP.
+[K8BAS-DUMP] container 205 slot 24 lore 4 | 
+[K8BAS-DUMP] container 205 slot 24 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 205 slot 25 item=minecraft:player_head sbid=- count=1 | Slay Strong Dragon
+[K8BAS-DUMP] container 205 slot 25 lore 0 | XP Task
+[K8BAS-DUMP] container 205 slot 25 lore 1 | 
+[K8BAS-DUMP] container 205 slot 25 lore 2 | Slay this dragon for the first time to
+[K8BAS-DUMP] container 205 slot 25 lore 3 | gain +25 XP.
+[K8BAS-DUMP] container 205 slot 25 lore 4 | 
+[K8BAS-DUMP] container 205 slot 25 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 205 slot 26 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 27 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 35 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 36 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 37 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 38 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 205 slot 39 lore 0 | To Tasks ➜ Slaying
+[K8BAS-DUMP] container 205 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 205 slot 41 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 42 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 43 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 205 slot 44 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 

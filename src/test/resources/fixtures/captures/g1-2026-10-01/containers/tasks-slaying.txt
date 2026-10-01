@@ -1,0 +1,222 @@
+[K8BAS-DUMP] container 200 title=Tasks ➜ Slaying slots=54 state=65
+[K8BAS-DUMP] container 200 slot 0 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 1 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 2 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 3 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 4 item=minecraft:golden_sword sbid=- count=1 | Slaying Tasks
+[K8BAS-DUMP] container 200 slot 4 lore 0 | 9 Tasks
+[K8BAS-DUMP] container 200 slot 4 lore 1 | 
+[K8BAS-DUMP] container 200 slot 4 lore 2 | All XP Tasks that require you to do
+[K8BAS-DUMP] container 200 slot 4 lore 3 | some killing!
+[K8BAS-DUMP] container 200 slot 4 lore 4 | 
+[K8BAS-DUMP] container 200 slot 4 lore 5 | ▶ Slayer Level Up
+[K8BAS-DUMP] container 200 slot 4 lore 6 | ▶ Boss Collections
+[K8BAS-DUMP] container 200 slot 4 lore 7 | ▶ Bestiary Progress
+[K8BAS-DUMP] container 200 slot 4 lore 8 | ▶ Mythological Kills
+[K8BAS-DUMP] container 200 slot 4 lore 9 | ▶ Collect Mob Types
+[K8BAS-DUMP] container 200 slot 4 lore 10 | ▶ Slay Dragons
+[K8BAS-DUMP] container 200 slot 4 lore 11 | ▶ Defeat Slayers
+[K8BAS-DUMP] container 200 slot 4 lore 12 | ▶ Defeat Kuudra
+[K8BAS-DUMP] container 200 slot 4 lore 13 | ▶ Defeat Arachne
+[K8BAS-DUMP] container 200 slot 4 lore 14 | 
+[K8BAS-DUMP] container 200 slot 4 lore 15 | Progress to Complete Category: 78.1%
+[K8BAS-DUMP] container 200 slot 4 lore 16 |                           9,618/12,315 XP
+[K8BAS-DUMP] container 200 slot 5 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 6 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 7 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 8 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 9 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 17 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 18 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 20 item=minecraft:experience_bottle sbid=- count=1 | Slayer Level Up
+[K8BAS-DUMP] container 200 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 200 slot 20 lore 1 | 
+[K8BAS-DUMP] container 200 slot 20 lore 2 | Gain XP by leveling up your Slayer
+[K8BAS-DUMP] container 200 slot 20 lore 3 | Boss Progress!
+[K8BAS-DUMP] container 200 slot 20 lore 4 | Level 1: +15 XP
+[K8BAS-DUMP] container 200 slot 20 lore 5 | Level 2: +25 XP
+[K8BAS-DUMP] container 200 slot 20 lore 6 | Level 3: +35 XP
+[K8BAS-DUMP] container 200 slot 20 lore 7 | Level 4: +50 XP
+[K8BAS-DUMP] container 200 slot 20 lore 8 | Level 5: +75 XP
+[K8BAS-DUMP] container 200 slot 20 lore 9 | Level 6: +100 XP
+[K8BAS-DUMP] container 200 slot 20 lore 10 | Level 7: +125 XP
+[K8BAS-DUMP] container 200 slot 20 lore 11 | Level 8: +150 XP
+[K8BAS-DUMP] container 200 slot 20 lore 12 | Level 9: +150 XP
+[K8BAS-DUMP] container 200 slot 20 lore 13 | 
+[K8BAS-DUMP] container 200 slot 20 lore 14 | Total Progress: 100%
+[K8BAS-DUMP] container 200 slot 20 lore 15 |                           3,825/3,825 XP
+[K8BAS-DUMP] container 200 slot 20 lore 16 | 
+[K8BAS-DUMP] container 200 slot 20 lore 17 | This task is worth 7.1% of your Total
+[K8BAS-DUMP] container 200 slot 20 lore 18 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 20 lore 19 | 
+[K8BAS-DUMP] container 200 slot 20 lore 20 | Visit Maddox the Slayer in the Hub to
+[K8BAS-DUMP] container 200 slot 20 lore 21 | view Slayer Levels.
+[K8BAS-DUMP] container 200 slot 21 item=minecraft:player_head sbid=- count=1 | Boss Collections
+[K8BAS-DUMP] container 200 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 200 slot 21 lore 1 | 
+[K8BAS-DUMP] container 200 slot 21 lore 2 | Gain XP by completing your Boss
+[K8BAS-DUMP] container 200 slot 21 lore 3 | Collections!
+[K8BAS-DUMP] container 200 slot 21 lore 4 | 
+[K8BAS-DUMP] container 200 slot 21 lore 5 | Total Progress: 17.7%
+[K8BAS-DUMP] container 200 slot 21 lore 6 |                           180/1,015 XP
+[K8BAS-DUMP] container 200 slot 21 lore 7 | 
+[K8BAS-DUMP] container 200 slot 21 lore 8 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 200 slot 21 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 21 lore 10 | 
+[K8BAS-DUMP] container 200 slot 21 lore 11 | Click to see Boss Collections!
+[K8BAS-DUMP] container 200 slot 22 item=minecraft:player_head sbid=- count=1 | Bestiary Progress
+[K8BAS-DUMP] container 200 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 200 slot 22 lore 1 | 
+[K8BAS-DUMP] container 200 slot 22 lore 2 | Gain XP by progressing in your
+[K8BAS-DUMP] container 200 slot 22 lore 3 | Bestiary!
+[K8BAS-DUMP] container 200 slot 22 lore 4 | Each Family Tier: +1 XP
+[K8BAS-DUMP] container 200 slot 22 lore 5 | Every 10 Milestones: +10 XP
+[K8BAS-DUMP] container 200 slot 22 lore 6 | 
+[K8BAS-DUMP] container 200 slot 22 lore 7 | Total Progress: 68.4%
+[K8BAS-DUMP] container 200 slot 22 lore 8 |                           3,868/5,655 XP
+[K8BAS-DUMP] container 200 slot 22 lore 9 | 
+[K8BAS-DUMP] container 200 slot 22 lore 10 | This task is worth 7.2% of your Total
+[K8BAS-DUMP] container 200 slot 22 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 22 lore 12 | 
+[K8BAS-DUMP] container 200 slot 22 lore 13 | Click to see Bestiary!
+[K8BAS-DUMP] container 200 slot 23 item=minecraft:player_head sbid=BEASTMASTER_CREST_LEGENDARY count=1 | Mythological Kills
+[K8BAS-DUMP] container 200 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 200 slot 23 lore 1 | 
+[K8BAS-DUMP] container 200 slot 23 lore 2 | Gain XP by killing Mythological
+[K8BAS-DUMP] container 200 slot 23 lore 3 | Creatures and Minos!
+[K8BAS-DUMP] container 200 slot 23 lore 4 | Per 100 Kills: +1 XP
+[K8BAS-DUMP] container 200 slot 23 lore 5 | (Caps at 10,000 kills!)
+[K8BAS-DUMP] container 200 slot 23 lore 6 | 
+[K8BAS-DUMP] container 200 slot 23 lore 7 | Mythological Kills: 14,206
+[K8BAS-DUMP] container 200 slot 23 lore 8 | 
+[K8BAS-DUMP] container 200 slot 23 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 200 slot 23 lore 10 |                           100/100 XP
+[K8BAS-DUMP] container 200 slot 23 lore 11 | 
+[K8BAS-DUMP] container 200 slot 23 lore 12 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 200 slot 23 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 23 lore 14 | 
+[K8BAS-DUMP] container 200 slot 23 lore 15 | Kill Mythological Creatures!
+[K8BAS-DUMP] container 200 slot 24 item=minecraft:spawner sbid=- count=1 | Collect Mob Types
+[K8BAS-DUMP] container 200 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 200 slot 24 lore 1 | 
+[K8BAS-DUMP] container 200 slot 24 lore 2 | Gain XP by collecting all of the Mob
+[K8BAS-DUMP] container 200 slot 24 lore 3 | Types!
+[K8BAS-DUMP] container 200 slot 24 lore 4 | Each unique Mob Type collected will
+[K8BAS-DUMP] container 200 slot 24 lore 5 | grant you +1 XP.
+[K8BAS-DUMP] container 200 slot 24 lore 6 | Collecting all Mob Types will grant an
+[K8BAS-DUMP] container 200 slot 24 lore 7 | additional +10 XP.
+[K8BAS-DUMP] container 200 slot 24 lore 8 | 
+[K8BAS-DUMP] container 200 slot 24 lore 9 | Total Progress: 100%
+[K8BAS-DUMP] container 200 slot 24 lore 10 |                           35/35 XP
+[K8BAS-DUMP] container 200 slot 24 lore 11 | 
+[K8BAS-DUMP] container 200 slot 24 lore 12 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 200 slot 24 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 24 lore 14 | 
+[K8BAS-DUMP] container 200 slot 24 lore 15 | Click to view your progress!!
+[K8BAS-DUMP] container 200 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 26 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 27 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 29 item=minecraft:dragon_egg sbid=- count=1 | Slay Dragons
+[K8BAS-DUMP] container 200 slot 29 lore 0 | 7 Tasks
+[K8BAS-DUMP] container 200 slot 29 lore 1 | 
+[K8BAS-DUMP] container 200 slot 29 lore 2 |  ✔ Slay Superior Dragon
+[K8BAS-DUMP] container 200 slot 29 lore 3 |  ✔ Slay Old Dragon
+[K8BAS-DUMP] container 200 slot 29 lore 4 |  ✔ Slay Young Dragon
+[K8BAS-DUMP] container 200 slot 29 lore 5 |  ✔ Slay Wise Dragon
+[K8BAS-DUMP] container 200 slot 29 lore 6 |  ✔ Slay Protector Dragon
+[K8BAS-DUMP] container 200 slot 29 lore 7 |  ✔ Slay Unstable Dragon
+[K8BAS-DUMP] container 200 slot 29 lore 8 |  ✔ Slay Strong Dragon
+[K8BAS-DUMP] container 200 slot 29 lore 9 | 
+[K8BAS-DUMP] container 200 slot 29 lore 10 | Total Progress: 100%
+[K8BAS-DUMP] container 200 slot 29 lore 11 |                           200/200 XP
+[K8BAS-DUMP] container 200 slot 29 lore 12 | 
+[K8BAS-DUMP] container 200 slot 29 lore 13 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 200 slot 29 lore 14 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 29 lore 15 | 
+[K8BAS-DUMP] container 200 slot 29 lore 16 | Click to view tasks!
+[K8BAS-DUMP] container 200 slot 30 item=minecraft:player_head sbid=AATROX_BATPHONE count=1 | Defeat Slayers
+[K8BAS-DUMP] container 200 slot 30 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 200 slot 30 lore 1 | 
+[K8BAS-DUMP] container 200 slot 30 lore 2 |  ✔ Defeat Revenant Horror (5/5)
+[K8BAS-DUMP] container 200 slot 30 lore 3 |  ✔ Defeat Tarantula Broodfather (5/5)
+[K8BAS-DUMP] container 200 slot 30 lore 4 |  ✔ Defeat Sven Packmaster (4/4)
+[K8BAS-DUMP] container 200 slot 30 lore 5 |  ✔ Defeat Voidgloom Seraph (4/4)
+[K8BAS-DUMP] container 200 slot 30 lore 6 |  ✖ Defeat Riftstalker Bloodfiend (4/5)
+[K8BAS-DUMP] container 200 slot 30 lore 7 |  ✔ Defeat Inferno Demonlord (4/4)
+[K8BAS-DUMP] container 200 slot 30 lore 8 | 
+[K8BAS-DUMP] container 200 slot 30 lore 9 | Total Progress: 93.3%
+[K8BAS-DUMP] container 200 slot 30 lore 10 |                           1,050/1,125 XP
+[K8BAS-DUMP] container 200 slot 30 lore 11 | 
+[K8BAS-DUMP] container 200 slot 30 lore 12 | This task is worth 2% of your Total
+[K8BAS-DUMP] container 200 slot 30 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 30 lore 14 | 
+[K8BAS-DUMP] container 200 slot 30 lore 15 | Click to view tasks!
+[K8BAS-DUMP] container 200 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 32 item=minecraft:player_head sbid=KUUDRA_TIER_KEY count=1 | Defeat Kuudra
+[K8BAS-DUMP] container 200 slot 32 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 200 slot 32 lore 1 | 
+[K8BAS-DUMP] container 200 slot 32 lore 2 |  ✔ Defeat Kuudra Basic Tier
+[K8BAS-DUMP] container 200 slot 32 lore 3 |  ✔ Defeat Kuudra Hot Tier
+[K8BAS-DUMP] container 200 slot 32 lore 4 |  ✔ Defeat Kuudra Burning Tier
+[K8BAS-DUMP] container 200 slot 32 lore 5 |  ✔ Defeat Kuudra Fiery Tier
+[K8BAS-DUMP] container 200 slot 32 lore 6 |  ✔ Defeat Kuudra Infernal Tier
+[K8BAS-DUMP] container 200 slot 32 lore 7 | 
+[K8BAS-DUMP] container 200 slot 32 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 200 slot 32 lore 9 |                           300/300 XP
+[K8BAS-DUMP] container 200 slot 32 lore 10 | 
+[K8BAS-DUMP] container 200 slot 32 lore 11 | This task is worth 0.6% of your Total
+[K8BAS-DUMP] container 200 slot 32 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 32 lore 13 | 
+[K8BAS-DUMP] container 200 slot 32 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 200 slot 33 item=minecraft:player_head sbid=ARACHNE_CRYSTAL count=1 | Defeat Arachne
+[K8BAS-DUMP] container 200 slot 33 lore 0 | 2 Tasks
+[K8BAS-DUMP] container 200 slot 33 lore 1 | 
+[K8BAS-DUMP] container 200 slot 33 lore 2 |  ✔ Defeat Arachne Tier 1
+[K8BAS-DUMP] container 200 slot 33 lore 3 |  ✔ Defeat Arachne Tier 2
+[K8BAS-DUMP] container 200 slot 33 lore 4 | 
+[K8BAS-DUMP] container 200 slot 33 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 200 slot 33 lore 6 |                           60/60 XP
+[K8BAS-DUMP] container 200 slot 33 lore 7 | 
+[K8BAS-DUMP] container 200 slot 33 lore 8 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 200 slot 33 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 200 slot 33 lore 10 | 
+[K8BAS-DUMP] container 200 slot 33 lore 11 | Click to view tasks!
+[K8BAS-DUMP] container 200 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 35 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 36 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 44 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 45 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 46 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 47 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 200 slot 48 lore 0 | To Ways to Level Up
+[K8BAS-DUMP] container 200 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 200 slot 50 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 200 slot 50 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 200 slot 50 lore 1 | 
+[K8BAS-DUMP] container 200 slot 50 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 200 slot 50 lore 3 |   Earned XP
+[K8BAS-DUMP] container 200 slot 50 lore 4 |   Available XP
+[K8BAS-DUMP] container 200 slot 50 lore 5 |   A to Z
+[K8BAS-DUMP] container 200 slot 50 lore 6 |   Z to A
+[K8BAS-DUMP] container 200 slot 50 lore 7 | 
+[K8BAS-DUMP] container 200 slot 50 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 200 slot 51 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 52 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 200 slot 53 item=minecraft:orange_stained_glass_pane sbid=- count=1 | 

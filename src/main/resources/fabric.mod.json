@@ -3,7 +3,7 @@
 	"id": "k8bas_skyblock_utility",
 	"version": "${version}",
 	"name": "K8bas Skyblock Utility",
-	"description": "A modular client-side toolkit for Hypixel Skyblock: rule-based mob/NPC outline highlighting, searchable mob and NPC databases with island-aware waypoints, and self-updating via Modrinth. Purely visual/client-side — no automation, no server-side reads or writes.",
+	"description": "A modular client-side toolkit for Hypixel SkyBlock: rule-based outlines for the mobs and NPCs you can see, searchable mob and NPC lists, island-aware waypoints for NPCs at fixed spots, and a notify-only update check on GitHub. Display only: no automation, and no packet is cancelled or changed. Not affiliated with or endorsed by Hypixel.",
 	"authors": [
 		"Kesuhi"
 	],
@@ -21,15 +21,18 @@
 			"com.k8bas.skyblockutility.settings.ModMenuIntegration"
 		]
 	},
-	"mixins": [
-		"k8bas_skyblock_utility.mixins.json"
-	],
 	"depends": {
-		"fabricloader": ">=0.19.3",
-		"minecraft": "~26.1",
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.2",
 		"java": ">=25",
-		"fabric-api": "*",
-		"cloth-config": "*",
-		"hypixel-mod-api": ">=1.0"
+		"fabric-api": ">=0.161.0",
+		"cloth-config": ">=26.2.155",
+		"hypixel-mod-api": ">=1.0.2",
+		"render-chest": ">=1.0.3"
+	},
+	"custom": {
+		"modmenu": {
+			"update_checker": false
+		}
 	}
 }

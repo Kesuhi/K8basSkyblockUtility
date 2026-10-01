@@ -1,0 +1,87 @@
+[K8BAS-DUMP] container 441 title=Story ➜ Complete Objectives slots=45 state=56
+[K8BAS-DUMP] container 441 slot 0 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 1 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 2 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 3 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 4 item=minecraft:writable_book sbid=- count=1 | Complete Objectives
+[K8BAS-DUMP] container 441 slot 4 lore 0 | 44 Tasks
+[K8BAS-DUMP] container 441 slot 4 lore 1 | 
+[K8BAS-DUMP] container 441 slot 4 lore 2 |  ✔ Into the Woods
+[K8BAS-DUMP] container 441 slot 4 lore 3 |  ✔ Staying Informed
+[K8BAS-DUMP] container 441 slot 4 lore 4 |  ✔ Talk to Agatha
+[K8BAS-DUMP] container 441 slot 4 lore 5 |  ✔ The Rebuild
+[K8BAS-DUMP] container 441 slot 4 lore 6 |  ✔ Friendly Farmer 2
+[K8BAS-DUMP] container 441 slot 4 lore 7 |  ✔ Shady Jake
+[K8BAS-DUMP] container 441 slot 4 lore 8 |  ✔ Hub Explorer
+[K8BAS-DUMP] container 441 slot 4 lore 9 |  ✔ Finding the Engine
+[K8BAS-DUMP] container 441 slot 4 lore 10 |  ✔ A Helping Hand
+[K8BAS-DUMP] container 441 slot 4 lore 11 |  ✔ Kill Zombies
+[K8BAS-DUMP] container 441 slot 4 lore 12 |  ✔ The End Race
+[K8BAS-DUMP] container 441 slot 4 lore 13 |  ✔ David's Hunting Lessons
+[K8BAS-DUMP] container 441 slot 4 lore 14 |  ✔ Library Card
+[K8BAS-DUMP] container 441 slot 4 lore 15 |  ✔ Helpful Farmer
+[K8BAS-DUMP] container 441 slot 4 lore 16 | And 29 more...
+[K8BAS-DUMP] container 441 slot 4 lore 17 | 
+[K8BAS-DUMP] container 441 slot 4 lore 18 | Total Progress: 97.6%
+[K8BAS-DUMP] container 441 slot 4 lore 19 |                           207/212 XP
+[K8BAS-DUMP] container 441 slot 4 lore 20 | 
+[K8BAS-DUMP] container 441 slot 4 lore 21 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 441 slot 4 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 441 slot 5 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 6 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 7 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 8 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 9 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 17 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 18 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 20 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 21 item=minecraft:paper sbid=- count=1 | Beyond the Wall
+[K8BAS-DUMP] container 441 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 441 slot 21 lore 1 | 
+[K8BAS-DUMP] container 441 slot 21 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 441 slot 21 lore 3 | objective!
+[K8BAS-DUMP] container 441 slot 21 lore 4 | 
+[K8BAS-DUMP] container 441 slot 21 lore 5 | Ride a minecart to the Base Camp.
+[K8BAS-DUMP] container 441 slot 21 lore 6 | 
+[K8BAS-DUMP] container 441 slot 21 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 441 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 23 item=minecraft:paper sbid=- count=1 | Offer to Help Elle
+[K8BAS-DUMP] container 441 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 441 slot 23 lore 1 | 
+[K8BAS-DUMP] container 441 slot 23 lore 2 | Gain +5 XP for completing this
+[K8BAS-DUMP] container 441 slot 23 lore 3 | objective!
+[K8BAS-DUMP] container 441 slot 23 lore 4 | 
+[K8BAS-DUMP] container 441 slot 23 lore 5 | Offer to Help Elle.
+[K8BAS-DUMP] container 441 slot 23 lore 6 | 
+[K8BAS-DUMP] container 441 slot 23 lore 7 | You have completed this task!
+[K8BAS-DUMP] container 441 slot 24 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 26 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 27 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 35 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 36 item=minecraft:arrow sbid=- count=1 | Previous Page
+[K8BAS-DUMP] container 441 slot 36 lore 0 | Page 2
+[K8BAS-DUMP] container 441 slot 37 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 38 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 441 slot 39 lore 0 | To Tasks ➜ Story
+[K8BAS-DUMP] container 441 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 441 slot 41 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 42 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 43 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 441 slot 44 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 

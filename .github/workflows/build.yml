@@ -12,6 +12,10 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v6
+      - name: forbidden-reference check
+        run: bash scripts/check-forbidden.sh --self-test && bash scripts/check-forbidden.sh
+      - name: changelog lint and privacy-scan self-tests
+        run: bash scripts/changelog-lint.sh --self-test && bash scripts/changelog-lint.sh && bash scripts/privacy-scan.sh --self-test
       - name: validate gradle wrapper
         uses: gradle/actions/wrapper-validation@v6
       - name: setup jdk

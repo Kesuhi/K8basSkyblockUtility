@@ -1,0 +1,244 @@
+[K8BAS-DUMP] container 311 title=Fishing ➜ Trophy Frogs slots=54 state=65
+[K8BAS-DUMP] container 311 slot 0 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 1 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 2 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 3 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 4 item=minecraft:player_head sbid=- count=1 | Trophy Frogs
+[K8BAS-DUMP] container 311 slot 4 lore 0 | 12 Tasks
+[K8BAS-DUMP] container 311 slot 4 lore 1 | 
+[K8BAS-DUMP] container 311 slot 4 lore 2 |  ✔ Common Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 3 |  ✔ Leap Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 4 |  ✔ Wetlands Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 5 |  ✔ Reality Hopper (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 6 |  ✔ Exploding Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 7 |  ✔ Blessed Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 8 |  ✔ Sea Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 9 |  ✔ Bullfrog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 10 |  ✔ Tree Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 11 |  ✔ Cave Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 12 |  ✔ Highlands Frog (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 13 |  ✔ Puddle Jumper (4/4)
+[K8BAS-DUMP] container 311 slot 4 lore 14 | 
+[K8BAS-DUMP] container 311 slot 4 lore 15 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 4 lore 16 |                           540/540 XP
+[K8BAS-DUMP] container 311 slot 4 lore 17 | 
+[K8BAS-DUMP] container 311 slot 4 lore 18 | This task is worth 1% of your Total
+[K8BAS-DUMP] container 311 slot 4 lore 19 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 5 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 6 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 7 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 8 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 9 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 17 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 18 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 19 item=minecraft:paper sbid=- count=1 | Common Frog
+[K8BAS-DUMP] container 311 slot 19 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 19 lore 1 | 
+[K8BAS-DUMP] container 311 slot 19 lore 2 |  ✔ Fish Bronze Common Frog
+[K8BAS-DUMP] container 311 slot 19 lore 3 |  ✔ Fish Silver Common Frog
+[K8BAS-DUMP] container 311 slot 19 lore 4 |  ✔ Fish Gold Common Frog
+[K8BAS-DUMP] container 311 slot 19 lore 5 |  ✔ Fish Diamond Common Frog
+[K8BAS-DUMP] container 311 slot 19 lore 6 | 
+[K8BAS-DUMP] container 311 slot 19 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 19 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 19 lore 9 | 
+[K8BAS-DUMP] container 311 slot 19 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 19 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 19 lore 12 | 
+[K8BAS-DUMP] container 311 slot 19 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 20 item=minecraft:paper sbid=- count=1 | Leap Frog
+[K8BAS-DUMP] container 311 slot 20 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 20 lore 1 | 
+[K8BAS-DUMP] container 311 slot 20 lore 2 |  ✔ Fish Bronze Leap Frog
+[K8BAS-DUMP] container 311 slot 20 lore 3 |  ✔ Fish Silver Leap Frog
+[K8BAS-DUMP] container 311 slot 20 lore 4 |  ✔ Fish Gold Leap Frog
+[K8BAS-DUMP] container 311 slot 20 lore 5 |  ✔ Fish Diamond Leap Frog
+[K8BAS-DUMP] container 311 slot 20 lore 6 | 
+[K8BAS-DUMP] container 311 slot 20 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 20 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 20 lore 9 | 
+[K8BAS-DUMP] container 311 slot 20 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 20 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 20 lore 12 | 
+[K8BAS-DUMP] container 311 slot 20 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 21 item=minecraft:paper sbid=- count=1 | Wetlands Frog
+[K8BAS-DUMP] container 311 slot 21 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 21 lore 1 | 
+[K8BAS-DUMP] container 311 slot 21 lore 2 |  ✔ Fish Bronze Wetlands Frog
+[K8BAS-DUMP] container 311 slot 21 lore 3 |  ✔ Fish Silver Wetlands Frog
+[K8BAS-DUMP] container 311 slot 21 lore 4 |  ✔ Fish Gold Wetlands Frog
+[K8BAS-DUMP] container 311 slot 21 lore 5 |  ✔ Fish Diamond Wetlands Frog
+[K8BAS-DUMP] container 311 slot 21 lore 6 | 
+[K8BAS-DUMP] container 311 slot 21 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 21 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 21 lore 9 | 
+[K8BAS-DUMP] container 311 slot 21 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 21 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 21 lore 12 | 
+[K8BAS-DUMP] container 311 slot 21 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 22 item=minecraft:paper sbid=- count=1 | Reality Hopper
+[K8BAS-DUMP] container 311 slot 22 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 22 lore 1 | 
+[K8BAS-DUMP] container 311 slot 22 lore 2 |  ✔ Fish Bronze Reality Hopper
+[K8BAS-DUMP] container 311 slot 22 lore 3 |  ✔ Fish Silver Reality Hopper
+[K8BAS-DUMP] container 311 slot 22 lore 4 |  ✔ Fish Gold Reality Hopper
+[K8BAS-DUMP] container 311 slot 22 lore 5 |  ✔ Fish Diamond Reality Hopper
+[K8BAS-DUMP] container 311 slot 22 lore 6 | 
+[K8BAS-DUMP] container 311 slot 22 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 22 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 22 lore 9 | 
+[K8BAS-DUMP] container 311 slot 22 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 22 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 22 lore 12 | 
+[K8BAS-DUMP] container 311 slot 22 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 23 item=minecraft:paper sbid=- count=1 | Exploding Frog
+[K8BAS-DUMP] container 311 slot 23 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 23 lore 1 | 
+[K8BAS-DUMP] container 311 slot 23 lore 2 |  ✔ Fish Bronze Exploding Frog
+[K8BAS-DUMP] container 311 slot 23 lore 3 |  ✔ Fish Silver Exploding Frog
+[K8BAS-DUMP] container 311 slot 23 lore 4 |  ✔ Fish Gold Exploding Frog
+[K8BAS-DUMP] container 311 slot 23 lore 5 |  ✔ Fish Diamond Exploding Frog
+[K8BAS-DUMP] container 311 slot 23 lore 6 | 
+[K8BAS-DUMP] container 311 slot 23 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 23 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 23 lore 9 | 
+[K8BAS-DUMP] container 311 slot 23 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 23 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 23 lore 12 | 
+[K8BAS-DUMP] container 311 slot 23 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 24 item=minecraft:paper sbid=- count=1 | Blessed Frog
+[K8BAS-DUMP] container 311 slot 24 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 24 lore 1 | 
+[K8BAS-DUMP] container 311 slot 24 lore 2 |  ✔ Fish Bronze Blessed Frog
+[K8BAS-DUMP] container 311 slot 24 lore 3 |  ✔ Fish Silver Blessed Frog
+[K8BAS-DUMP] container 311 slot 24 lore 4 |  ✔ Fish Gold Blessed Frog
+[K8BAS-DUMP] container 311 slot 24 lore 5 |  ✔ Fish Diamond Blessed Frog
+[K8BAS-DUMP] container 311 slot 24 lore 6 | 
+[K8BAS-DUMP] container 311 slot 24 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 24 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 24 lore 9 | 
+[K8BAS-DUMP] container 311 slot 24 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 24 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 24 lore 12 | 
+[K8BAS-DUMP] container 311 slot 24 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 25 item=minecraft:paper sbid=- count=1 | Sea Frog
+[K8BAS-DUMP] container 311 slot 25 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 25 lore 1 | 
+[K8BAS-DUMP] container 311 slot 25 lore 2 |  ✔ Fish Bronze Sea Frog
+[K8BAS-DUMP] container 311 slot 25 lore 3 |  ✔ Fish Silver Sea Frog
+[K8BAS-DUMP] container 311 slot 25 lore 4 |  ✔ Fish Gold Sea Frog
+[K8BAS-DUMP] container 311 slot 25 lore 5 |  ✔ Fish Diamond Sea Frog
+[K8BAS-DUMP] container 311 slot 25 lore 6 | 
+[K8BAS-DUMP] container 311 slot 25 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 25 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 25 lore 9 | 
+[K8BAS-DUMP] container 311 slot 25 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 25 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 25 lore 12 | 
+[K8BAS-DUMP] container 311 slot 25 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 26 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 27 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 29 item=minecraft:paper sbid=- count=1 | Bullfrog
+[K8BAS-DUMP] container 311 slot 29 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 29 lore 1 | 
+[K8BAS-DUMP] container 311 slot 29 lore 2 |  ✔ Fish Bronze Bullfrog
+[K8BAS-DUMP] container 311 slot 29 lore 3 |  ✔ Fish Silver Bullfrog
+[K8BAS-DUMP] container 311 slot 29 lore 4 |  ✔ Fish Gold Bullfrog
+[K8BAS-DUMP] container 311 slot 29 lore 5 |  ✔ Fish Diamond Bullfrog
+[K8BAS-DUMP] container 311 slot 29 lore 6 | 
+[K8BAS-DUMP] container 311 slot 29 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 29 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 29 lore 9 | 
+[K8BAS-DUMP] container 311 slot 29 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 29 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 29 lore 12 | 
+[K8BAS-DUMP] container 311 slot 29 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 30 item=minecraft:paper sbid=- count=1 | Tree Frog
+[K8BAS-DUMP] container 311 slot 30 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 30 lore 1 | 
+[K8BAS-DUMP] container 311 slot 30 lore 2 |  ✔ Fish Bronze Tree Frog
+[K8BAS-DUMP] container 311 slot 30 lore 3 |  ✔ Fish Silver Tree Frog
+[K8BAS-DUMP] container 311 slot 30 lore 4 |  ✔ Fish Gold Tree Frog
+[K8BAS-DUMP] container 311 slot 30 lore 5 |  ✔ Fish Diamond Tree Frog
+[K8BAS-DUMP] container 311 slot 30 lore 6 | 
+[K8BAS-DUMP] container 311 slot 30 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 30 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 30 lore 9 | 
+[K8BAS-DUMP] container 311 slot 30 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 30 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 30 lore 12 | 
+[K8BAS-DUMP] container 311 slot 30 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 31 item=minecraft:paper sbid=- count=1 | Cave Frog
+[K8BAS-DUMP] container 311 slot 31 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 31 lore 1 | 
+[K8BAS-DUMP] container 311 slot 31 lore 2 |  ✔ Fish Bronze Cave Frog
+[K8BAS-DUMP] container 311 slot 31 lore 3 |  ✔ Fish Silver Cave Frog
+[K8BAS-DUMP] container 311 slot 31 lore 4 |  ✔ Fish Gold Cave Frog
+[K8BAS-DUMP] container 311 slot 31 lore 5 |  ✔ Fish Diamond Cave Frog
+[K8BAS-DUMP] container 311 slot 31 lore 6 | 
+[K8BAS-DUMP] container 311 slot 31 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 31 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 31 lore 9 | 
+[K8BAS-DUMP] container 311 slot 31 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 31 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 31 lore 12 | 
+[K8BAS-DUMP] container 311 slot 31 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 32 item=minecraft:paper sbid=- count=1 | Highlands Frog
+[K8BAS-DUMP] container 311 slot 32 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 32 lore 1 | 
+[K8BAS-DUMP] container 311 slot 32 lore 2 |  ✔ Fish Bronze Highlands Frog
+[K8BAS-DUMP] container 311 slot 32 lore 3 |  ✔ Fish Silver Highlands Frog
+[K8BAS-DUMP] container 311 slot 32 lore 4 |  ✔ Fish Gold Highlands Frog
+[K8BAS-DUMP] container 311 slot 32 lore 5 |  ✔ Fish Diamond Highlands Frog
+[K8BAS-DUMP] container 311 slot 32 lore 6 | 
+[K8BAS-DUMP] container 311 slot 32 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 32 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 32 lore 9 | 
+[K8BAS-DUMP] container 311 slot 32 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 32 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 32 lore 12 | 
+[K8BAS-DUMP] container 311 slot 32 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 33 item=minecraft:paper sbid=- count=1 | Puddle Jumper
+[K8BAS-DUMP] container 311 slot 33 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 311 slot 33 lore 1 | 
+[K8BAS-DUMP] container 311 slot 33 lore 2 |  ✔ Fish Bronze Puddle Jumper
+[K8BAS-DUMP] container 311 slot 33 lore 3 |  ✔ Fish Silver Puddle Jumper
+[K8BAS-DUMP] container 311 slot 33 lore 4 |  ✔ Fish Gold Puddle Jumper
+[K8BAS-DUMP] container 311 slot 33 lore 5 |  ✔ Fish Diamond Puddle Jumper
+[K8BAS-DUMP] container 311 slot 33 lore 6 | 
+[K8BAS-DUMP] container 311 slot 33 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 311 slot 33 lore 8 |                           45/45 XP
+[K8BAS-DUMP] container 311 slot 33 lore 9 | 
+[K8BAS-DUMP] container 311 slot 33 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 311 slot 33 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 311 slot 33 lore 12 | 
+[K8BAS-DUMP] container 311 slot 33 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 311 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 35 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 36 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 44 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 45 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 46 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 47 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 311 slot 48 lore 0 | To Tasks ➜ Fishing
+[K8BAS-DUMP] container 311 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 311 slot 50 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 51 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 52 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 311 slot 53 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 

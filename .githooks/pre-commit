@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Pre-commit checks (REQ-XC-GIT-02, REQ-XC-PRIVACY-01). Enabled per clone with
+#   git config --local core.hooksPath .githooks
+# Never skip this hook with --no-verify.
+set -euo pipefail
+
+# Commits must use a public noreply identity, never a personal or work address.
+email=$(git var GIT_AUTHOR_IDENT | sed -E 's/.*<([^>]*)>.*/\1/')
+if [[ ! $email =~ @users\.noreply\.github\.com$ ]]; then
+	echo "pre-commit: author e-mail '$email' is not a GitHub noreply address; set it with git config --local user.email" >&2
+	exit 1
+fi
+
+exec "$(git rev-parse --show-toplevel)/scripts/privacy-scan.sh"

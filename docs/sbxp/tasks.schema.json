@@ -1,0 +1,1916 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Kesuhi/K8basSkyblockUtility/docs/sbxp/tasks.schema.json",
+  "title": "SkyBlock XP task table (sbxp_tasks)",
+  "description": "DRAFT v1 for review. Bundled, versioned table of every SkyBlock XP source. Runtime math (PLAN.md AD-13): time_h = sum(effort); effective_h = time_h + coin_cost / coins_per_hour; efficiency = xp / effective_h. Derived values (sums, maxima, confidence, quantiles, coin-only class) are never stored; code computes them. Missing data is never treated as free: an absent effort/cost array, or a null number inside one, means 'not researched' and the row shows 'no estimate'. Rules that need code (source independence, id uniqueness after expansion, recomputed maxima) are listed in PLAN.md section 10.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "table",
+    "schemaVersion",
+    "dataVersion",
+    "gameVersion",
+    "generatedAt",
+    "license",
+    "sources",
+    "constants",
+    "stages",
+    "currencies",
+    "rates",
+    "families"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "table": {
+      "const": "sbxp_tasks"
+    },
+    "schemaVersion": {
+      "const": 1,
+      "description": "Shape version of this file; bumped only together with a loader migration."
+    },
+    "dataVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "+1 on every data change (update-sbxp-table skill)."
+    },
+    "gameVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+      "description": "Live SkyBlock version as named in the update post, e.g. '0.27.1'. Exact upstream builds (Hypixel resources '0.27.1.17', NEU commit) go into sources[].revision."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "license": {
+      "enum": [
+        "CC0-1.0",
+        "MIT"
+      ],
+      "description": "Licence of this file (registry envelope, AD-7). The task table is CC0-1.0 and takes only single facts from MIT sources, each with a THIRD_PARTY_NOTICES entry."
+    },
+    "sources": {
+      "type": "object",
+      "description": "Source registry; every number points here via sourceRefs.",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "constants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "xpPerLevel",
+        "maxTotalXp"
+      ],
+      "properties": {
+        "xpPerLevel": {
+          "const": 100
+        },
+        "maxTotalXp": {
+          "$ref": "#/$defs/xpValue",
+          "description": "Max obtainable SkyBlock XP; null until confirmed. The in-game /sblevels totals override it at runtime."
+        }
+      }
+    },
+    "stages": {
+      "type": "object",
+      "description": "Player-stage definitions for the 'player stage' setting (stored per profile).",
+      "additionalProperties": false,
+      "required": [
+        "early",
+        "mid",
+        "late"
+      ],
+      "properties": {
+        "early": {
+          "$ref": "#/$defs/stageDef"
+        },
+        "mid": {
+          "$ref": "#/$defs/stageDef"
+        },
+        "late": {
+          "$ref": "#/$defs/stageDef"
+        }
+      }
+    },
+    "currencies": {
+      "type": "object",
+      "description": "Non-coin currencies used in cost lines and how (if at all) they become coins or time.",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/currency"
+      }
+    },
+    "rates": {
+      "type": "object",
+      "description": "Researched rates, kept separate from tasks so that one rate change recalculates every dependent task.",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/rate"
+      }
+    },
+    "prereqProducers": {
+      "type": "object",
+      "description": "Which task step produces a level-type prerequisite, for 'what unlocks it' and chain efficiency. Template placeholders ${id} and ${level}, e.g. skill: 'core.skill_level_up.${id}#${level}'.",
+      "propertyNames": {
+        "enum": [
+          "skill",
+          "slayer",
+          "catacombs",
+          "dungeon_class",
+          "collection",
+          "hotm",
+          "hotf",
+          "garden"
+        ]
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "families": {
+      "type": "array",
+      "description": "One entry per task family as shown in the SkyBlock Leveling menu.",
+      "items": {
+        "$ref": "#/$defs/family"
+      }
+    },
+    "idAliases": {
+      "type": "object",
+      "description": "Renamed ids: old -> new. Keys may be task ids or '<taskId>#<stepId>', so per-profile progress and overrides survive renames.",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)*(#[a-z0-9_]+)?$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)*(#[a-z0-9_]+)?$"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)*$",
+      "maxLength": 96
+    },
+    "itemId": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_:;.-]+$",
+      "description": "SkyBlock item id exactly as in ExtraAttributes, e.g. ENCHANTED_COBBLESTONE. Generated task ids lowercase it and replace [^a-z0-9_] with _."
+    },
+    "shortText": {
+      "type": "string",
+      "maxLength": 160,
+      "description": "Names and short notes only - never copied wiki prose or lore, no colour codes."
+    },
+    "sourceRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "high = several consistent sources; medium = one source; low = extrapolated."
+    },
+    "probability": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "title",
+        "license",
+        "access"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "official_api",
+            "patch_notes",
+            "menu_capture",
+            "user_log",
+            "neu_repo",
+            "skyhanni_repo",
+            "wiki_crosscheck",
+            "forum",
+            "reddit",
+            "tool",
+            "own_measurement"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/shortText"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "revision": {
+          "type": "string",
+          "description": "Wiki revid, git commit SHA, or API version/lastUpdated."
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Publication or capture date (used for staleness checks against patches)."
+        },
+        "gameVersion": {
+          "type": "string"
+        },
+        "license": {
+          "enum": [
+            "facts",
+            "official_api",
+            "MIT",
+            "CC0-1.0",
+            "personal"
+          ],
+          "description": "MIT requires a THIRD_PARTY_NOTICES entry. NC/SA content is never shipped."
+        },
+        "notice": {
+          "type": "string",
+          "description": "Notice id for MIT sources, e.g. 'neu-repo'."
+        },
+        "access": {
+          "enum": [
+            "api",
+            "git",
+            "user_supplied",
+            "own_capture",
+            "search_snippet"
+          ],
+          "description": "How the content was obtained (D-28): api = keyless official endpoint; git = clone of a licensed repo; user_supplied = a page you pasted or saved; own_capture = your menu/log capture; search_snippet = lead only, never the sole source of a value."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "license": {
+                "const": "MIT"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "notice",
+              "revision"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "wiki_crosscheck"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "license": {
+                "const": "facts"
+              },
+              "access": {
+                "enum": [
+                  "user_supplied",
+                  "search_snippet"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "forum",
+                  "reddit"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "access": {
+                "enum": [
+                  "user_supplied",
+                  "search_snippet"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verified",
+        "lastVerifiedGameVersion"
+      ],
+      "properties": {
+        "verified": {
+          "type": "boolean",
+          "description": "true only with >=2 independent agreeing sources (all wiki_crosscheck sources count as one origin) or an in-game capture."
+        },
+        "lastVerifiedGameVersion": {
+          "type": "string"
+        },
+        "lastVerifiedDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "notes": {
+          "$ref": "#/$defs/shortText"
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shortText"
+          }
+        }
+      }
+    },
+    "xpValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "verified",
+        "sourceRefs"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "null = unknown; never invented."
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "then": {
+            "properties": {
+              "sourceRefs": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "verified": {
+                "const": true
+              }
+            },
+            "required": [
+              "verified"
+            ]
+          },
+          "then": {
+            "properties": {
+              "sourceRefs": {
+                "type": "array",
+                "minItems": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stageDef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "description"
+      ],
+      "properties": {
+        "label": {
+          "$ref": "#/$defs/shortText"
+        },
+        "description": {
+          "$ref": "#/$defs/shortText"
+        },
+        "guideStages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "In-game SkyBlock Guide stages mapped to this stage (default stage suggestion per profile)."
+        },
+        "sbLevelRange": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    },
+    "currency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "convert"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/shortText"
+        },
+        "convert": {
+          "description": "How one unit becomes coins or time.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "itemId",
+                "unitsPerItem"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "via_item"
+                },
+                "itemId": {
+                  "$ref": "#/$defs/itemId"
+                },
+                "unitsPerItem": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "rateRef"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "via_rate"
+                },
+                "rateRef": {
+                  "$ref": "#/$defs/id"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "real_money"
+                }
+              },
+              "description": "e.g. SkyBlock Gems: never converted; options needing it are skipped unless the user opts in."
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "none"
+                }
+              },
+              "description": "Not convertible; the row shows 'needs <currency>' and no efficiency."
+            }
+          ]
+        }
+      }
+    },
+    "rate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "what",
+        "byStage"
+      ],
+      "properties": {
+        "unit": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+/(h|day)$",
+          "description": "e.g. kills/h, skill_xp/h, t4_bosses/h, visitors/day. /day rates feed wall-clock waits only, never play time."
+        },
+        "what": {
+          "$ref": "#/$defs/shortText"
+        },
+        "byStage": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "description": "Lookup for stage S: byStage[S] if present and its value is not null; else byStage.all; else the nearest stage, ties to the lower (early: mid, late; mid: early, late; late: mid, early) with confidence forced to low; if every candidate is null: no estimate.",
+          "properties": {
+            "all": {
+              "$ref": "#/$defs/rateValue"
+            },
+            "early": {
+              "$ref": "#/$defs/rateValue"
+            },
+            "mid": {
+              "$ref": "#/$defs/rateValue"
+            },
+            "late": {
+              "$ref": "#/$defs/rateValue"
+            }
+          }
+        }
+      }
+    },
+    "rateValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "assumes",
+        "sourceRefs",
+        "confidence",
+        "verified"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "description": "null = not yet researched."
+        },
+        "assumes": {
+          "$ref": "#/$defs/shortText"
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "p10",
+            "p90"
+          ],
+          "properties": {
+            "p10": {
+              "type": "number"
+            },
+            "p90": {
+              "type": "number"
+            }
+          }
+        },
+        "coinsPerHour": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Running cost of this grind at this stage (slayer fees, keys, bait); cost += hours spent on this rate x coinsPerHour."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "then": {
+            "properties": {
+              "sourceRefs": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "confidence": {
+                "const": "high"
+              }
+            },
+            "required": [
+              "confidence"
+            ]
+          },
+          "then": {
+            "properties": {
+              "sourceRefs": {
+                "type": "array",
+                "minItems": 2
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "verified": {
+                "const": true
+              }
+            },
+            "required": [
+              "verified"
+            ]
+          },
+          "then": {
+            "properties": {
+              "sourceRefs": {
+                "type": "array",
+                "minItems": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "effort": {
+      "description": "One time component; time is derived, never stored. throughput: amount / rate. drop: E[attempts] / attempt rate, E = (1-(1-p)^N)/p with pity N (P90 from the inverse CDF capped at N). fixed: minutes / 60. Any null = not researched.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "amount",
+            "unit",
+            "rateRef"
+          ],
+          "properties": {
+            "kind": {
+              "const": "throughput"
+            },
+            "amount": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "unit": {
+              "type": "string",
+              "description": "Must equal the numerator of rates[rateRef].unit (validator rule)."
+            },
+            "rateRef": {
+              "$ref": "#/$defs/id"
+            },
+            "verified": {
+              "type": "boolean",
+              "default": false
+            },
+            "sourceRefs": {
+              "$ref": "#/$defs/sourceRefs"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "chance",
+            "attemptRateRef"
+          ],
+          "properties": {
+            "kind": {
+              "const": "drop"
+            },
+            "chance": {
+              "description": "Per-attempt probability: one value, per stage (same lookup as rates; a fallback forces low confidence), or null = not researched.",
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/probability"
+                },
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "minProperties": 1,
+                  "properties": {
+                    "all": {
+                      "$ref": "#/$defs/probability"
+                    },
+                    "early": {
+                      "$ref": "#/$defs/probability"
+                    },
+                    "mid": {
+                      "$ref": "#/$defs/probability"
+                    },
+                    "late": {
+                      "$ref": "#/$defs/probability"
+                    }
+                  }
+                }
+              ]
+            },
+            "pity": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1,
+              "description": "Guaranteed on attempt N, if any."
+            },
+            "attemptRateRef": {
+              "$ref": "#/$defs/id"
+            },
+            "verified": {
+              "type": "boolean",
+              "default": false
+            },
+            "sourceRefs": {
+              "$ref": "#/$defs/sourceRefs"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "minutes"
+          ],
+          "properties": {
+            "kind": {
+              "const": "fixed"
+            },
+            "minutes": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "assumes": {
+              "$ref": "#/$defs/shortText"
+            },
+            "verified": {
+              "type": "boolean",
+              "default": false
+            },
+            "sourceRefs": {
+              "$ref": "#/$defs/sourceRefs"
+            }
+          }
+        }
+      ]
+    },
+    "costLine": {
+      "description": "Coins are summed gross (v1, D-19). Any null = not researched.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "amount"
+          ],
+          "properties": {
+            "kind": {
+              "const": "coins"
+            },
+            "amount": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "sourceRefs": {
+              "$ref": "#/$defs/sourceRefs"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "itemId",
+            "qty",
+            "consumed"
+          ],
+          "properties": {
+            "kind": {
+              "const": "item"
+            },
+            "itemId": {
+              "$ref": "#/$defs/itemId"
+            },
+            "qty": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "consumed": {
+              "type": "boolean",
+              "description": "false = item is kept; still costed gross in v1."
+            },
+            "sourceRefs": {
+              "$ref": "#/$defs/sourceRefs"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "currency",
+            "amount"
+          ],
+          "properties": {
+            "kind": {
+              "const": "currency"
+            },
+            "currency": {
+              "$ref": "#/$defs/id"
+            },
+            "amount": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "sourceRefs": {
+              "$ref": "#/$defs/sourceRefs"
+            }
+          }
+        }
+      ]
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "description": "One alternative way to do a task or step (buy / grind / wait / gems). The calculator uses the option with the lowest effective hours at the current coins/h and stage, skipping real-money options unless allowed, and shows which one it chose.",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "$ref": "#/$defs/shortText"
+        },
+        "effort": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effort"
+          }
+        },
+        "cost": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/costLine"
+          }
+        },
+        "availability": {
+          "$ref": "#/$defs/availability"
+        }
+      }
+    },
+    "prereq": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "task",
+            "skill",
+            "slayer",
+            "catacombs",
+            "dungeon_class",
+            "collection",
+            "hotm",
+            "hotf",
+            "garden",
+            "sb_level",
+            "item",
+            "island",
+            "quest",
+            "any",
+            "other"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "description": "Task id, skill/slayer/collection/class id, item id, island id or quest id depending on kind."
+        },
+        "step": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "kind=task: this step must be done; absent = the whole task."
+        },
+        "level": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "null = threshold unknown (task stays locked with 'requirement unknown')."
+        },
+        "of": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/prereq"
+          },
+          "description": "kind=any: met if any entry is met."
+        },
+        "note": {
+          "$ref": "#/$defs/shortText"
+        },
+        "verified": {
+          "type": "boolean",
+          "default": false
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "skill",
+                  "slayer",
+                  "catacombs",
+                  "dungeon_class",
+                  "collection",
+                  "hotm",
+                  "hotf",
+                  "garden",
+                  "sb_level"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "level"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "task",
+                  "skill",
+                  "slayer",
+                  "dungeon_class",
+                  "collection",
+                  "item",
+                  "island",
+                  "quest"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "item"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/itemId"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "any"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "of"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "other"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "note"
+            ]
+          }
+        }
+      ]
+    },
+    "availability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "description": "When the task can be done. Waiting time is shown and totalled separately and never converted at coins/hour. Outside its window a calendar task stays ranked with 'next window in X'; a mayor-gated task shows 'wait unknown'.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "always",
+            "calendar",
+            "mayor",
+            "event",
+            "wall_clock"
+          ]
+        },
+        "detail": {
+          "$ref": "#/$defs/shortText"
+        },
+        "wallClockHours": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "periodHours": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "windowHours": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "anchorEpochMs": {
+          "type": "integer",
+          "description": "Start of one known window (UTC ms)."
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      }
+    },
+    "actionBarPattern": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "regex",
+        "group",
+        "field"
+      ],
+      "properties": {
+        "regex": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string",
+          "description": "Named group to read."
+        },
+        "field": {
+          "type": "string",
+          "description": "Instance/step field the captured group must equal; no match = unmapped label."
+        }
+      }
+    },
+    "detect": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How progress is recognised (read-only). Menu snapshot = source of truth; action bar/chat = live hints between snapshots; manual marks are a fallback.",
+      "properties": {
+        "menuPath": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Navigation hint only. Matching uses menuItemName of the slot-4 overview item or the parent item opened before: titles are cut to ~31 chars and shared across pages."
+        },
+        "menuItemName": {
+          "type": "string"
+        },
+        "menuAliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "componentMenu": {
+          "type": "string",
+          "description": "Other menu that shows per-instance progress (e.g. 'skills', 'collection', 'museum', 'bestiary', 'hotm', 'pets', 'accessory_bag'); parsed read-only when you open it (D-27)."
+        },
+        "actionBarLabels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Exact label inside '+N SkyBlock XP (<label>) (x/100)', colour codes stripped."
+        },
+        "actionBarPatterns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/actionBarPattern"
+          },
+          "description": "Tried only after every family's exact labels failed."
+        },
+        "chatPatterns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "description": "Ids of chat patterns defined in code."
+        },
+        "hypixelTaskIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "manualOnly": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "n",
+        "id",
+        "xp"
+      ],
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Order; may be renumbered. Contiguous 1..k (validator)."
+        },
+        "id": {
+          "$ref": "#/$defs/id",
+          "description": "Stable key, unique in the task; progress and overrides key on <taskId>#<id>."
+        },
+        "name": {
+          "$ref": "#/$defs/shortText"
+        },
+        "menuName": {
+          "type": "string",
+          "description": "Exact part text in the menu."
+        },
+        "xp": {
+          "$ref": "#/$defs/xpValue"
+        },
+        "effort": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effort"
+          },
+          "description": "Replaces the task-level effort for this step."
+        },
+        "cost": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/costLine"
+          },
+          "description": "Replaces the task-level cost for this step."
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/option"
+          }
+        },
+        "availability": {
+          "$ref": "#/$defs/availability"
+        },
+        "requires": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/prereq"
+          },
+          "description": "Extra prerequisites; the previous step is always implied."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "options"
+            ]
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "effort"
+                  ]
+                },
+                {
+                  "required": [
+                    "cost"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "type",
+        "idTemplate",
+        "nameTemplate",
+        "xp",
+        "verification"
+      ],
+      "description": "Expands a reference table into one task per instance at load time, so 12k+ steps are not hand-written. Placeholders: ${id} (lowercased, [^a-z0-9_] -> _), ${name}, ${n}, ${roman}; idTemplate must not contain ${n} (steps are addressed <taskId>#<n>). *From fields name instance fields; they may hold a scalar (every step) or a per-step array.",
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/id",
+          "description": "Reference table id in the data registry."
+        },
+        "where": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          },
+          "description": "Expand only instances whose fields equal these values."
+        },
+        "type": {
+          "enum": [
+            "one_time",
+            "ladder"
+          ],
+          "description": "ladder requires stepsFrom."
+        },
+        "idTemplate": {
+          "type": "string",
+          "not": {
+            "pattern": "\\$\\{n\\}"
+          }
+        },
+        "nameTemplate": {
+          "type": "string"
+        },
+        "stepsFrom": {
+          "type": "string"
+        },
+        "xp": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "list"
+              ],
+              "properties": {
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "bands"
+              ],
+              "properties": {
+                "bands": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "from",
+                      "to",
+                      "xp"
+                    ],
+                    "properties": {
+                      "from": {
+                        "type": "integer"
+                      },
+                      "to": {
+                        "type": "integer"
+                      },
+                      "xp": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "field"
+              ],
+              "properties": {
+                "field": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "xpVerified": {
+          "type": "boolean"
+        },
+        "xpSourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "verifiedFrom": {
+          "type": "string",
+          "description": "Instance boolean overriding xpVerified per instance (e.g. a single item that changed in a patch)."
+        },
+        "amountFrom": {
+          "type": "string"
+        },
+        "amountUnit": {
+          "type": "string"
+        },
+        "rateRefTemplate": {
+          "type": "string",
+          "description": "e.g. 'skill_xp.${id}'."
+        },
+        "effortFrom": {
+          "type": "string",
+          "description": "Instance field holding effort[] (any kind, including drop)."
+        },
+        "costFrom": {
+          "type": "string"
+        },
+        "optionsFrom": {
+          "type": "string"
+        },
+        "requiresFrom": {
+          "type": "string"
+        },
+        "fixedMinutesPerStep": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fixedMinutesSourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "groupTemplate": {
+          "type": "string",
+          "description": "Puts each generated task into a 'best member counts' group, e.g. 'core.pet_score.${species}'."
+        },
+        "availability": {
+          "$ref": "#/$defs/availability"
+        },
+        "detect": {
+          "$ref": "#/$defs/detect"
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "ladder"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "stepsFrom"
+            ]
+          }
+        }
+      ]
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "type",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/shortText"
+        },
+        "type": {
+          "enum": [
+            "one_time",
+            "ladder",
+            "repeatable",
+            "capped"
+          ],
+          "description": "one_time: xp once. ladder: ordered steps, each once. repeatable: discrete menu-counted actions ('can be completed N times'), xp per completion, finite maxCompletions (SkyBlock XP is never unlimited). capped: continuous counter shown as earned/max XP, xpPerStep per unitsPerStep units up to maxXp."
+        },
+        "xp": {
+          "$ref": "#/$defs/xpValue"
+        },
+        "maxCompletions": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/step"
+          }
+        },
+        "capped": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "unit",
+            "unitsPerStep",
+            "xpPerStep",
+            "maxXp"
+          ],
+          "properties": {
+            "unit": {
+              "type": "string"
+            },
+            "unitsPerStep": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "xpPerStep": {
+              "$ref": "#/$defs/xpValue"
+            },
+            "maxXp": {
+              "$ref": "#/$defs/xpValue"
+            },
+            "bands": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "upToXp",
+                  "unitsPerStep"
+                ],
+                "properties": {
+                  "upToXp": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "unitsPerStep": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "description": "null = not researched (steps in this band show no estimate)."
+                  }
+                }
+              },
+              "description": "Piecewise (decaying) counters such as powder and whispers: unitsPerStep applies until cumulative XP reaches upToXp; the last band runs to maxXp."
+            },
+            "unitsFromTasks": {
+              "$ref": "#/$defs/id",
+              "description": "Derived XP (e.g. bestiary milestones): units are steps completed by tasks with this id prefix. No own effort/cost; never ranked itself; its XP is added to each matching step (xpPerStep / unitsPerStep)."
+            }
+          }
+        },
+        "group": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "mode"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/id"
+            },
+            "mode": {
+              "const": "max"
+            }
+          },
+          "description": "Only the best completed member counts (one pet per species, highest accessory of a family, museum parent sets): XP of doing member m = max(0, xp(m) - max xp of done members)."
+        },
+        "effort": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effort"
+          },
+          "description": "Absent = not researched (no estimate, never ranked). [] = known to need no play time. Basis: one_time = whole task; repeatable = one completion; ladder = each step without its own effort; capped = ONE unit (multiplied by the units to the next step)."
+        },
+        "cost": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/costLine"
+          },
+          "description": "Same basis and absent/[] rule as effort."
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/option"
+          }
+        },
+        "requires": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/prereq"
+          }
+        },
+        "availability": {
+          "$ref": "#/$defs/availability"
+        },
+        "detect": {
+          "$ref": "#/$defs/detect"
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs",
+          "description": "Covers task-level numbers such as maxCompletions and unitsPerStep."
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "one_time"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "xp"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "steps"
+                  ]
+                },
+                {
+                  "required": [
+                    "capped"
+                  ]
+                },
+                {
+                  "required": [
+                    "maxCompletions"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "ladder"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "steps"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "xp"
+                  ]
+                },
+                {
+                  "required": [
+                    "capped"
+                  ]
+                },
+                {
+                  "required": [
+                    "maxCompletions"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "repeatable"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "xp",
+              "maxCompletions"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "steps"
+                  ]
+                },
+                {
+                  "required": [
+                    "capped"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "capped"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "capped"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "steps"
+                  ]
+                },
+                {
+                  "required": [
+                    "xp"
+                  ]
+                },
+                {
+                  "required": [
+                    "maxCompletions"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "options"
+            ]
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "effort"
+                  ]
+                },
+                {
+                  "required": [
+                    "cost"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "category",
+        "maxXp",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/shortText"
+        },
+        "category": {
+          "type": "string",
+          "description": "Known: core, event, dungeon, essence_shop, slaying, skill_related, miscellaneous, story (open string; the real list comes from the menu capture)."
+        },
+        "subcategory": {
+          "type": "string",
+          "description": "e.g. mining, farming, fishing, foraging, consumable_items."
+        },
+        "maxXp": {
+          "$ref": "#/$defs/xpValue"
+        },
+        "xpBasis": {
+          "enum": [
+            "permanent",
+            "high_water_mark",
+            "current_state",
+            "consumed",
+            "unknown"
+          ],
+          "default": "unknown",
+          "description": "Whether earned XP survives selling/removing the item. Informational in v1 (costs are gross)."
+        },
+        "coopScope": {
+          "enum": [
+            "member",
+            "island",
+            "unknown"
+          ],
+          "default": "unknown"
+        },
+        "availability": {
+          "$ref": "#/$defs/availability",
+          "description": "Default for all tasks and generators of the family."
+        },
+        "detect": {
+          "$ref": "#/$defs/detect"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/task"
+          }
+        },
+        "generators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/generator"
+          }
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "gameVersion",
+              "summary",
+              "sourceRefs"
+            ],
+            "properties": {
+              "gameVersion": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "live",
+                  "release_candidate"
+                ],
+                "default": "live"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "summary": {
+                "$ref": "#/$defs/shortText"
+              },
+              "sourceRefs": {
+                "$ref": "#/$defs/sourceRefs"
+              }
+            }
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "tasks"
+          ]
+        },
+        {
+          "required": [
+            "generators"
+          ]
+        }
+      ]
+    }
+  }
+}

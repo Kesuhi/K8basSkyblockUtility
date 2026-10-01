@@ -20,12 +20,16 @@ public final class ChatUtils {
 	 *  A caller on a background thread (e.g. a virtual thread doing network I/O) needs to hop
 	 *  back via Minecraft.getInstance().execute(...) first. */
 	public static void chat(String message) {
+		chat(Component.literal(message).withStyle(ChatFormatting.YELLOW));
+	}
+
+	/** The same, for a message with its own styling (e.g. clickable links). Local only. */
+	public static void chat(Component message) {
 		Minecraft client = Minecraft.getInstance();
 		if (client.player == null) {
 			return;
 		}
-		MutableComponent text = Component.literal(PREFIX).withStyle(ChatFormatting.GOLD)
-				.append(Component.literal(message).withStyle(ChatFormatting.YELLOW));
+		MutableComponent text = Component.literal(PREFIX).withStyle(ChatFormatting.GOLD).append(message);
 		client.player.sendSystemMessage(text);
 	}
 }

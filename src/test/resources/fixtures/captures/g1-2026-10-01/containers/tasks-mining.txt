@@ -1,0 +1,214 @@
+[K8BAS-DUMP] container 245 title=Tasks ➜ Mining slots=45 state=56
+[K8BAS-DUMP] container 245 slot 0 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 1 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 2 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 3 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 4 item=minecraft:stone_pickaxe sbid=- count=1 | Mining Tasks
+[K8BAS-DUMP] container 245 slot 4 lore 0 | 7 Tasks
+[K8BAS-DUMP] container 245 slot 4 lore 1 | 
+[K8BAS-DUMP] container 245 slot 4 lore 2 | All Mining related XP Tasks.
+[K8BAS-DUMP] container 245 slot 4 lore 3 | 
+[K8BAS-DUMP] container 245 slot 4 lore 4 | ▶ Heart of the Mountain
+[K8BAS-DUMP] container 245 slot 4 lore 5 | ▶ Commission Milestones
+[K8BAS-DUMP] container 245 slot 4 lore 6 | ▶ Crystal Nucleus Runs
+[K8BAS-DUMP] container 245 slot 4 lore 7 | ▶ Core of the Mountain
+[K8BAS-DUMP] container 245 slot 4 lore 8 | ▶ Fossil Research
+[K8BAS-DUMP] container 245 slot 4 lore 9 | ▶ Frozen Corpse Milestones
+[K8BAS-DUMP] container 245 slot 4 lore 10 | ▶ Rock Milestones
+[K8BAS-DUMP] container 245 slot 4 lore 11 | 
+[K8BAS-DUMP] container 245 slot 4 lore 12 | Progress to Complete Category: 96.6%
+[K8BAS-DUMP] container 245 slot 4 lore 13 |                           4,726/4,892 XP
+[K8BAS-DUMP] container 245 slot 5 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 6 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 7 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 8 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 9 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 17 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 18 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 19 item=minecraft:player_head sbid=- count=1 | Heart of the Mountain
+[K8BAS-DUMP] container 245 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 245 slot 19 lore 1 | 
+[K8BAS-DUMP] container 245 slot 19 lore 2 | Gain XP by progressing your Heart
+[K8BAS-DUMP] container 245 slot 19 lore 3 | of the Mountain:
+[K8BAS-DUMP] container 245 slot 19 lore 4 | Tier 1: +35 XP
+[K8BAS-DUMP] container 245 slot 19 lore 5 | Tier 2: +45 XP
+[K8BAS-DUMP] container 245 slot 19 lore 6 | Tier 3: +60 XP
+[K8BAS-DUMP] container 245 slot 19 lore 7 | Tier 4: +75 XP
+[K8BAS-DUMP] container 245 slot 19 lore 8 | Tier 5: +90 XP
+[K8BAS-DUMP] container 245 slot 19 lore 9 | Tier 6: +110 XP
+[K8BAS-DUMP] container 245 slot 19 lore 10 | Tier 7: +130 XP
+[K8BAS-DUMP] container 245 slot 19 lore 11 | Tier 8: +180 XP
+[K8BAS-DUMP] container 245 slot 19 lore 12 | Tier 9: +210 XP
+[K8BAS-DUMP] container 245 slot 19 lore 13 | Tier 10: +240 XP
+[K8BAS-DUMP] container 245 slot 19 lore 14 | 
+[K8BAS-DUMP] container 245 slot 19 lore 15 | Mithril Powder: Gain +1 XP per 2,400 powder until
+[K8BAS-DUMP] container 245 slot 19 lore 16 | 600,000 powder.
+[K8BAS-DUMP] container 245 slot 19 lore 17 | Earn an exponentially decreasing
+[K8BAS-DUMP] container 245 slot 19 lore 18 | amount of XP for powder above the
+[K8BAS-DUMP] container 245 slot 19 lore 19 | cap until 12,500,000 powder.
+[K8BAS-DUMP] container 245 slot 19 lore 20 | 
+[K8BAS-DUMP] container 245 slot 19 lore 21 | Gemstone Powder: Gain +1 XP per 2,500 powder until
+[K8BAS-DUMP] container 245 slot 19 lore 22 | 600,000 powder.
+[K8BAS-DUMP] container 245 slot 19 lore 23 | Earn an exponentially decreasing
+[K8BAS-DUMP] container 245 slot 19 lore 24 | amount of XP for powder above the
+[K8BAS-DUMP] container 245 slot 19 lore 25 | cap until 20,000,000 powder.
+[K8BAS-DUMP] container 245 slot 19 lore 26 | 
+[K8BAS-DUMP] container 245 slot 19 lore 27 | Glacite Powder: Gain +1 XP per 2,500 powder until
+[K8BAS-DUMP] container 245 slot 19 lore 28 | 600,000 powder.
+[K8BAS-DUMP] container 245 slot 19 lore 29 | Earn an exponentially decreasing
+[K8BAS-DUMP] container 245 slot 19 lore 30 | amount of XP for powder above the
+[K8BAS-DUMP] container 245 slot 19 lore 31 | cap until 20,000,000 powder.
+[K8BAS-DUMP] container 245 slot 19 lore 32 | 
+[K8BAS-DUMP] container 245 slot 19 lore 33 | Total Mithril Powder: 11,808,111
+[K8BAS-DUMP] container 245 slot 19 lore 34 | Total Gemstone Powder: 20,260,433
+[K8BAS-DUMP] container 245 slot 19 lore 35 | Total Glacite Powder: 10,207,473
+[K8BAS-DUMP] container 245 slot 19 lore 36 | 
+[K8BAS-DUMP] container 245 slot 19 lore 37 | Total Progress: 97.6%
+[K8BAS-DUMP] container 245 slot 19 lore 38 |                           3,041/3,117 XP
+[K8BAS-DUMP] container 245 slot 19 lore 39 | 
+[K8BAS-DUMP] container 245 slot 19 lore 40 | This task is worth 5.7% of your Total
+[K8BAS-DUMP] container 245 slot 19 lore 41 | SkyBlock XP!
+[K8BAS-DUMP] container 245 slot 19 lore 42 | 
+[K8BAS-DUMP] container 245 slot 19 lore 43 | Click to see Heart of the Mountain!
+[K8BAS-DUMP] container 245 slot 20 item=minecraft:player_head sbid=ROYAL_PIGEON count=1 | Commission Milestones
+[K8BAS-DUMP] container 245 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 245 slot 20 lore 1 | 
+[K8BAS-DUMP] container 245 slot 20 lore 2 | Gain XP for each of your Commission
+[K8BAS-DUMP] container 245 slot 20 lore 3 | Milestones!
+[K8BAS-DUMP] container 245 slot 20 lore 4 | Tier 1: +20 XP
+[K8BAS-DUMP] container 245 slot 20 lore 5 | Tier 2: +30 XP
+[K8BAS-DUMP] container 245 slot 20 lore 6 | Tier 3: +30 XP
+[K8BAS-DUMP] container 245 slot 20 lore 7 | Tier 4: +50 XP
+[K8BAS-DUMP] container 245 slot 20 lore 8 | Tier 5: +50 XP
+[K8BAS-DUMP] container 245 slot 20 lore 9 | Tier 6: +75 XP
+[K8BAS-DUMP] container 245 slot 20 lore 10 | 
+[K8BAS-DUMP] container 245 slot 20 lore 11 | Total Progress: 100%
+[K8BAS-DUMP] container 245 slot 20 lore 12 |                           255/255 XP
+[K8BAS-DUMP] container 245 slot 20 lore 13 | 
+[K8BAS-DUMP] container 245 slot 20 lore 14 | This task is worth 0.5% of your Total
+[K8BAS-DUMP] container 245 slot 20 lore 15 | SkyBlock XP!
+[K8BAS-DUMP] container 245 slot 20 lore 16 | 
+[K8BAS-DUMP] container 245 slot 20 lore 17 | Click to see Commission Milestones!
+[K8BAS-DUMP] container 245 slot 21 item=minecraft:nether_star sbid=- count=1 | Crystal Nucleus Runs
+[K8BAS-DUMP] container 245 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 245 slot 21 lore 1 | 
+[K8BAS-DUMP] container 245 slot 21 lore 2 | Gain +4 XP for completing a Crystal
+[K8BAS-DUMP] container 245 slot 21 lore 3 | Nucleus run!
+[K8BAS-DUMP] container 245 slot 21 lore 4 | (Caps at 50 runs!)
+[K8BAS-DUMP] container 245 slot 21 lore 5 | 
+[K8BAS-DUMP] container 245 slot 21 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 245 slot 21 lore 7 |                           200/200 XP
+[K8BAS-DUMP] container 245 slot 21 lore 8 | 
+[K8BAS-DUMP] container 245 slot 21 lore 9 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 245 slot 21 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 245 slot 21 lore 11 | 
+[K8BAS-DUMP] container 245 slot 21 lore 12 | You have completed this task!
+[K8BAS-DUMP] container 245 slot 22 item=minecraft:redstone_block sbid=- count=1 | Core of the Mountain
+[K8BAS-DUMP] container 245 slot 22 lore 0 | XP Task
+[K8BAS-DUMP] container 245 slot 22 lore 1 | 
+[K8BAS-DUMP] container 245 slot 22 lore 2 | Gain XP by progressing your Core
+[K8BAS-DUMP] container 245 slot 22 lore 3 | of the Mountain!
+[K8BAS-DUMP] container 245 slot 22 lore 4 | Tier 1: +25 XP
+[K8BAS-DUMP] container 245 slot 22 lore 5 | Tier 2: +35 XP
+[K8BAS-DUMP] container 245 slot 22 lore 6 | Tier 3: +50 XP
+[K8BAS-DUMP] container 245 slot 22 lore 7 | Tier 4: +65 XP
+[K8BAS-DUMP] container 245 slot 22 lore 8 | Tier 5: +75 XP
+[K8BAS-DUMP] container 245 slot 22 lore 9 | Tier 6: +100 XP
+[K8BAS-DUMP] container 245 slot 22 lore 10 | Tier 7: +125 XP
+[K8BAS-DUMP] container 245 slot 22 lore 11 | Tier 8: +150 XP
+[K8BAS-DUMP] container 245 slot 22 lore 12 | Tier 9: +175 XP
+[K8BAS-DUMP] container 245 slot 22 lore 13 | Tier 10: +200 XP
+[K8BAS-DUMP] container 245 slot 22 lore 14 | 
+[K8BAS-DUMP] container 245 slot 22 lore 15 | Total Progress: 100%
+[K8BAS-DUMP] container 245 slot 22 lore 16 |                           1,000/1,000 XP
+[K8BAS-DUMP] container 245 slot 22 lore 17 | 
+[K8BAS-DUMP] container 245 slot 22 lore 18 | This task is worth 1.9% of your Total
+[K8BAS-DUMP] container 245 slot 22 lore 19 | SkyBlock XP!
+[K8BAS-DUMP] container 245 slot 22 lore 20 | 
+[K8BAS-DUMP] container 245 slot 22 lore 21 | Click to see Core of the Mountain!
+[K8BAS-DUMP] container 245 slot 23 item=minecraft:paper sbid=SUSPICIOUS_SCRAP count=1 | Fossil Research
+[K8BAS-DUMP] container 245 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 245 slot 23 lore 1 | 
+[K8BAS-DUMP] container 245 slot 23 lore 2 | Gain +10 XP per unique fossil
+[K8BAS-DUMP] container 245 slot 23 lore 3 | donated to the Research Center!
+[K8BAS-DUMP] container 245 slot 23 lore 4 | 
+[K8BAS-DUMP] container 245 slot 23 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 245 slot 23 lore 6 |                           80/80 XP
+[K8BAS-DUMP] container 245 slot 23 lore 7 | 
+[K8BAS-DUMP] container 245 slot 23 lore 8 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 245 slot 23 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 245 slot 23 lore 10 | 
+[K8BAS-DUMP] container 245 slot 23 lore 11 | You have completed this task!
+[K8BAS-DUMP] container 245 slot 24 item=minecraft:player_head sbid=VANGUARD_HELMET count=1 | Frozen Corpse Milestones
+[K8BAS-DUMP] container 245 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 245 slot 24 lore 1 | 
+[K8BAS-DUMP] container 245 slot 24 lore 2 | Gain XP by increasing your Frozen
+[K8BAS-DUMP] container 245 slot 24 lore 3 | Corpse Milestones!
+[K8BAS-DUMP] container 245 slot 24 lore 4 | Tier I: +5 XP
+[K8BAS-DUMP] container 245 slot 24 lore 5 | Tier II: +10 XP
+[K8BAS-DUMP] container 245 slot 24 lore 6 | Tier III: +15 XP
+[K8BAS-DUMP] container 245 slot 24 lore 7 | Tier IV: +20 XP
+[K8BAS-DUMP] container 245 slot 24 lore 8 | Tier V: +25 XP
+[K8BAS-DUMP] container 245 slot 24 lore 9 | Tier VI: +30 XP
+[K8BAS-DUMP] container 245 slot 24 lore 10 | Tier VII: +35 XP
+[K8BAS-DUMP] container 245 slot 24 lore 11 | 
+[K8BAS-DUMP] container 245 slot 24 lore 12 | Total Progress: 35.7%
+[K8BAS-DUMP] container 245 slot 24 lore 13 |                           50/140 XP
+[K8BAS-DUMP] container 245 slot 24 lore 14 | 
+[K8BAS-DUMP] container 245 slot 24 lore 15 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 245 slot 24 lore 16 | SkyBlock XP!
+[K8BAS-DUMP] container 245 slot 24 lore 17 | 
+[K8BAS-DUMP] container 245 slot 24 lore 18 | Click to see Frozen Corpse
+[K8BAS-DUMP] container 245 slot 24 lore 19 | Milestones!
+[K8BAS-DUMP] container 245 slot 25 item=minecraft:player_head sbid=- count=1 | Rock Milestones
+[K8BAS-DUMP] container 245 slot 25 lore 0 | 5 Tasks
+[K8BAS-DUMP] container 245 slot 25 lore 1 | 
+[K8BAS-DUMP] container 245 slot 25 lore 2 |  ✔ Common Rock Pet
+[K8BAS-DUMP] container 245 slot 25 lore 3 |  ✔ Uncommon Rock Pet
+[K8BAS-DUMP] container 245 slot 25 lore 4 |  ✔ Rare Rock Pet
+[K8BAS-DUMP] container 245 slot 25 lore 5 |  ✔ Epic Rock Pet
+[K8BAS-DUMP] container 245 slot 25 lore 6 |  ✔ Legendary Rock Pet
+[K8BAS-DUMP] container 245 slot 25 lore 7 | 
+[K8BAS-DUMP] container 245 slot 25 lore 8 | Total Progress: 100%
+[K8BAS-DUMP] container 245 slot 25 lore 9 |                           100/100 XP
+[K8BAS-DUMP] container 245 slot 25 lore 10 | 
+[K8BAS-DUMP] container 245 slot 25 lore 11 | This task is worth 0.2% of your Total
+[K8BAS-DUMP] container 245 slot 25 lore 12 | SkyBlock XP!
+[K8BAS-DUMP] container 245 slot 25 lore 13 | 
+[K8BAS-DUMP] container 245 slot 25 lore 14 | Click to view tasks!
+[K8BAS-DUMP] container 245 slot 26 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 27 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 35 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 36 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 37 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 38 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 245 slot 39 lore 0 | To Skill Related Tasks
+[K8BAS-DUMP] container 245 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 245 slot 41 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 245 slot 41 lore 0 | Change how Tasks are sorted.
+[K8BAS-DUMP] container 245 slot 41 lore 1 | 
+[K8BAS-DUMP] container 245 slot 41 lore 2 | ▶ Unlocked
+[K8BAS-DUMP] container 245 slot 41 lore 3 |   Earned XP
+[K8BAS-DUMP] container 245 slot 41 lore 4 |   Available XP
+[K8BAS-DUMP] container 245 slot 41 lore 5 |   A to Z
+[K8BAS-DUMP] container 245 slot 41 lore 6 |   Z to A
+[K8BAS-DUMP] container 245 slot 41 lore 7 | 
+[K8BAS-DUMP] container 245 slot 41 lore 8 | Click to switch sort!
+[K8BAS-DUMP] container 245 slot 42 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 43 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 245 slot 44 item=minecraft:gray_stained_glass_pane sbid=- count=1 | 

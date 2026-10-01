@@ -1,14 +1,21 @@
 package com.k8bas.skyblockutility;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.debug.ContainerDump;
+import com.k8bas.skyblockutility.debug.DebugCommand;
+import com.k8bas.skyblockutility.highlight.GlowHandler;
+import com.k8bas.skyblockutility.highlight.HighlightManager;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
-import com.k8bas.skyblockutility.update.UpdateChecker;
+import com.k8bas.skyblockutility.update.Updates;
+import com.k8bas.skyblockutility.util.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -26,7 +33,19 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ConfigManager.load();
+		// Queued like the load notices, so a failure before joining a world is still shown.
+		ConfigManager.setSaveFailureNotice(ConfigManager::queueNotice);
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.flush());
+		// Backup notices from loading are shown once the player is in a world (REQ-CFG-06).
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			if (client.player != null && ConfigManager.hasNotices()) {
+				ConfigManager.drainNotices().forEach(ChatUtils::chat);
+			}
+		});
 		IslandTracker.register();
+		// Rule matching runs once per tick on the client thread; rendering only reads the results.
+		ClientTickEvents.END_CLIENT_TICK.register(HighlightManager::tick);
+		GlowHandler.register();
 
 		ModuleManager.register(new MobHighlighterModule());
 		ModuleManager.register(new NpcSearchModule());
@@ -34,7 +53,9 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 
 		SettingsKeybind.register();
 		SettingsCommand.register();
-		UpdateChecker.checkInBackgroundIfEnabled();
+		DebugCommand.register();
+		ContainerDump.register();
+		Updates.register();
 
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
 	}

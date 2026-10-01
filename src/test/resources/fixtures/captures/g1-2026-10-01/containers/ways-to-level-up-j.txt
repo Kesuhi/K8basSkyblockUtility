@@ -1,0 +1,363 @@
+[K8BAS-DUMP] container 451 title=Ways to Level Up slots=54 state=64
+[K8BAS-DUMP] container 451 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 4 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 11 item=minecraft:nether_star sbid=- count=1 | Core Tasks
+[K8BAS-DUMP] container 451 slot 11 lore 0 | 9 Tasks
+[K8BAS-DUMP] container 451 slot 11 lore 1 | 
+[K8BAS-DUMP] container 451 slot 11 lore 2 | All of the core XP tasks that are
+[K8BAS-DUMP] container 451 slot 11 lore 3 | integral to your general
+[K8BAS-DUMP] container 451 slot 11 lore 4 | progression in SkyBlock!
+[K8BAS-DUMP] container 451 slot 11 lore 5 | 
+[K8BAS-DUMP] container 451 slot 11 lore 6 | ▶ Skill Level Up
+[K8BAS-DUMP] container 451 slot 11 lore 7 | ▶ Museum Donations
+[K8BAS-DUMP] container 451 slot 11 lore 8 | ▶ Fairy Souls
+[K8BAS-DUMP] container 451 slot 11 lore 9 | ▶ Accessory Bag
+[K8BAS-DUMP] container 451 slot 11 lore 10 | ▶ Pet Score
+[K8BAS-DUMP] container 451 slot 11 lore 11 | ▶ Collections
+[K8BAS-DUMP] container 451 slot 11 lore 12 | ▶ Craft Minions
+[K8BAS-DUMP] container 451 slot 11 lore 13 | ▶ Bank Upgrades
+[K8BAS-DUMP] container 451 slot 11 lore 14 | ▶ Fast Travels Unlocked
+[K8BAS-DUMP] container 451 slot 11 lore 15 | 
+[K8BAS-DUMP] container 451 slot 11 lore 16 | Progress to Complete Category: 91.7%
+[K8BAS-DUMP] container 451 slot 11 lore 17 |                           18,172/19,810 XP
+[K8BAS-DUMP] container 451 slot 11 lore 18 | 
+[K8BAS-DUMP] container 451 slot 11 lore 19 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 12 item=minecraft:clock sbid=- count=1 | Event Tasks
+[K8BAS-DUMP] container 451 slot 12 lore 0 | 13 Tasks
+[K8BAS-DUMP] container 451 slot 12 lore 1 | 
+[K8BAS-DUMP] container 451 slot 12 lore 2 | All of the XP tasks related to
+[K8BAS-DUMP] container 451 slot 12 lore 3 | different events around SkyBlock!
+[K8BAS-DUMP] container 451 slot 12 lore 4 | 
+[K8BAS-DUMP] container 451 slot 12 lore 5 | ▶ Mining Fiesta
+[K8BAS-DUMP] container 451 slot 12 lore 6 | ▶ Fishing Festival
+[K8BAS-DUMP] container 451 slot 12 lore 7 | ▶ Harvest Feast Seasoning
+[K8BAS-DUMP] container 451 slot 12 lore 8 | ▶ Spooky Festival
+[K8BAS-DUMP] container 451 slot 12 lore 9 | ▶ Hoppity's Hunt
+[K8BAS-DUMP] container 451 slot 12 lore 10 | ▶ Jacob's Farming Contest
+[K8BAS-DUMP] container 451 slot 12 lore 11 | ▶ Fishing Festival Perk Shop
+[K8BAS-DUMP] container 451 slot 12 lore 12 | ▶ Mining Fiesta Perk Shop
+[K8BAS-DUMP] container 451 slot 12 lore 13 | ▶ Mythological Ritual Perk Shop
+[K8BAS-DUMP] container 451 slot 12 lore 14 | ▶ Spooky Festival Perk Shop
+[K8BAS-DUMP] container 451 slot 12 lore 15 | ▶ Season of Jerry Perk Shop
+[K8BAS-DUMP] container 451 slot 12 lore 16 | ▶ Harvest Feast Perk Shop
+[K8BAS-DUMP] container 451 slot 12 lore 17 | ▶ Year of the Witch
+[K8BAS-DUMP] container 451 slot 12 lore 18 | 
+[K8BAS-DUMP] container 451 slot 12 lore 19 | Progress to Complete Category: 72.1%
+[K8BAS-DUMP] container 451 slot 12 lore 20 |                           1,037/1,439 XP
+[K8BAS-DUMP] container 451 slot 12 lore 21 | 
+[K8BAS-DUMP] container 451 slot 12 lore 22 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 13 item=minecraft:player_head sbid=- count=1 | Dungeon Tasks
+[K8BAS-DUMP] container 451 slot 13 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 451 slot 13 lore 1 | 
+[K8BAS-DUMP] container 451 slot 13 lore 2 | All Dungeon related XP Tasks.
+[K8BAS-DUMP] container 451 slot 13 lore 3 | 
+[K8BAS-DUMP] container 451 slot 13 lore 4 | ▶ Catacombs Level Up
+[K8BAS-DUMP] container 451 slot 13 lore 5 | ▶ Class Level Up
+[K8BAS-DUMP] container 451 slot 13 lore 6 | ▶ Complete Dungeons
+[K8BAS-DUMP] container 451 slot 13 lore 7 | 
+[K8BAS-DUMP] container 451 slot 13 lore 8 | Progress to Complete Category: 67.7%
+[K8BAS-DUMP] container 451 slot 13 lore 9 |                           1,868/2,760 XP
+[K8BAS-DUMP] container 451 slot 13 lore 10 | 
+[K8BAS-DUMP] container 451 slot 13 lore 11 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 14 item=minecraft:player_head sbid=- count=1 | Essence Shop Tasks
+[K8BAS-DUMP] container 451 slot 14 lore 0 | 11 Tasks
+[K8BAS-DUMP] container 451 slot 14 lore 1 | 
+[K8BAS-DUMP] container 451 slot 14 lore 2 | All XP Tasks that have to do with the
+[K8BAS-DUMP] container 451 slot 14 lore 3 | various Essence Shops in SkyBlock!
+[K8BAS-DUMP] container 451 slot 14 lore 4 | 
+[K8BAS-DUMP] container 451 slot 14 lore 5 | ▶ Dragon Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 6 | ▶ Ice Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 7 | ▶ Spider Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 8 | ▶ Undead Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 9 | ▶ Wither Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 10 | ▶ Crimson Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 11 | ▶ Gold Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 12 | ▶ Diamond Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 13 | ▶ Forest Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 14 | ▶ Fossil Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 15 | ▶ Safari Essence Shop
+[K8BAS-DUMP] container 451 slot 14 lore 16 | 
+[K8BAS-DUMP] container 451 slot 14 lore 17 | Progress to Complete Category: 93.4%
+[K8BAS-DUMP] container 451 slot 14 lore 18 |                           1,982/2,121 XP
+[K8BAS-DUMP] container 451 slot 14 lore 19 | 
+[K8BAS-DUMP] container 451 slot 14 lore 20 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 15 item=minecraft:golden_sword sbid=- count=1 | Slaying Tasks
+[K8BAS-DUMP] container 451 slot 15 lore 0 | 9 Tasks
+[K8BAS-DUMP] container 451 slot 15 lore 1 | 
+[K8BAS-DUMP] container 451 slot 15 lore 2 | All XP Tasks that require you to do
+[K8BAS-DUMP] container 451 slot 15 lore 3 | some killing!
+[K8BAS-DUMP] container 451 slot 15 lore 4 | 
+[K8BAS-DUMP] container 451 slot 15 lore 5 | ▶ Slayer Level Up
+[K8BAS-DUMP] container 451 slot 15 lore 6 | ▶ Boss Collections
+[K8BAS-DUMP] container 451 slot 15 lore 7 | ▶ Bestiary Progress
+[K8BAS-DUMP] container 451 slot 15 lore 8 | ▶ Mythological Kills
+[K8BAS-DUMP] container 451 slot 15 lore 9 | ▶ Collect Mob Types
+[K8BAS-DUMP] container 451 slot 15 lore 10 | ▶ Slay Dragons
+[K8BAS-DUMP] container 451 slot 15 lore 11 | ▶ Defeat Slayers
+[K8BAS-DUMP] container 451 slot 15 lore 12 | ▶ Defeat Kuudra
+[K8BAS-DUMP] container 451 slot 15 lore 13 | ▶ Defeat Arachne
+[K8BAS-DUMP] container 451 slot 15 lore 14 | 
+[K8BAS-DUMP] container 451 slot 15 lore 15 | Progress to Complete Category: 78.1%
+[K8BAS-DUMP] container 451 slot 15 lore 16 |                           9,618/12,315 XP
+[K8BAS-DUMP] container 451 slot 15 lore 17 | 
+[K8BAS-DUMP] container 451 slot 15 lore 18 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 20 item=minecraft:diamond_sword sbid=- count=1 | Skill Related Tasks
+[K8BAS-DUMP] container 451 slot 20 lore 0 | 28 Tasks
+[K8BAS-DUMP] container 451 slot 20 lore 1 | 
+[K8BAS-DUMP] container 451 slot 20 lore 2 | All XP Tasks that are related to a
+[K8BAS-DUMP] container 451 slot 20 lore 3 | player-specific skill!
+[K8BAS-DUMP] container 451 slot 20 lore 4 | 
+[K8BAS-DUMP] container 451 slot 20 lore 5 | ▶ Heart of the Mountain
+[K8BAS-DUMP] container 451 slot 20 lore 6 | ▶ Heart of the Forest
+[K8BAS-DUMP] container 451 slot 20 lore 7 | ▶ Commission Milestones
+[K8BAS-DUMP] container 451 slot 20 lore 8 | ▶ Crystal Nucleus Runs
+[K8BAS-DUMP] container 451 slot 20 lore 9 | ▶ Anita's Shop Upgrades
+[K8BAS-DUMP] container 451 slot 20 lore 10 | ▶ Core of the Mountain
+[K8BAS-DUMP] container 451 slot 20 lore 11 | ▶ Center of the Forest
+[K8BAS-DUMP] container 451 slot 20 lore 12 | ▶ Garden Level
+[K8BAS-DUMP] container 451 slot 20 lore 13 | ▶ Garden Visitors Served
+[K8BAS-DUMP] container 451 slot 20 lore 14 | ▶ Offers Accepted
+[K8BAS-DUMP] container 451 slot 20 lore 15 | ▶ Crop Upgrades
+[K8BAS-DUMP] container 451 slot 20 lore 16 | ▶ Garden Crop Milestones Reached
+[K8BAS-DUMP] container 451 slot 20 lore 17 | ▶ Garden Unlocked Plots
+[K8BAS-DUMP] container 451 slot 20 lore 18 | ▶ Composter Upgrades
+[K8BAS-DUMP] container 451 slot 20 lore 19 | ▶ Greenhouse Upgrades
+[K8BAS-DUMP] container 451 slot 20 lore 20 | ▶ DNA Analysis Milestones
+[K8BAS-DUMP] container 451 slot 20 lore 21 | ▶ Farming Chips
+[K8BAS-DUMP] container 451 slot 20 lore 22 | ▶ Sowdust
+[K8BAS-DUMP] container 451 slot 20 lore 23 | ▶ Fossil Research
+[K8BAS-DUMP] container 451 slot 20 lore 24 | ▶ Tree Gift Milestones
+[K8BAS-DUMP] container 451 slot 20 lore 25 | ▶ Frozen Corpse Milestones
+[K8BAS-DUMP] container 451 slot 20 lore 26 | ▶ Trophy Fish
+[K8BAS-DUMP] container 451 slot 20 lore 27 | ▶ Trophy Frogs
+[K8BAS-DUMP] container 451 slot 20 lore 28 | ▶ Rock Milestones
+[K8BAS-DUMP] container 451 slot 20 lore 29 | ▶ Dolphin Milestones
+[K8BAS-DUMP] container 451 slot 20 lore 30 | ▶ Ship Parts
+[K8BAS-DUMP] container 451 slot 20 lore 31 | ▶ Ship Crew
+[K8BAS-DUMP] container 451 slot 20 lore 32 | ▶ Safari Milestones
+[K8BAS-DUMP] container 451 slot 20 lore 33 | 
+[K8BAS-DUMP] container 451 slot 20 lore 34 | Progress to Complete Category: 87.4%
+[K8BAS-DUMP] container 451 slot 20 lore 35 |                           10,254/11,732 XP
+[K8BAS-DUMP] container 451 slot 20 lore 36 | 
+[K8BAS-DUMP] container 451 slot 20 lore 37 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 21 item=minecraft:filled_map sbid=- count=1 | Miscellaneous Tasks
+[K8BAS-DUMP] container 451 slot 21 lore 0 | 18 Tasks
+[K8BAS-DUMP] container 451 slot 21 lore 1 | 
+[K8BAS-DUMP] container 451 slot 21 lore 2 | A random assortment of XP tasks
+[K8BAS-DUMP] container 451 slot 21 lore 3 | that do not fit other categories!
+[K8BAS-DUMP] container 451 slot 21 lore 4 | 
+[K8BAS-DUMP] container 451 slot 21 lore 5 | ▶ Accessory Bag Upgrades
+[K8BAS-DUMP] container 451 slot 21 lore 6 | ▶ Timecharms
+[K8BAS-DUMP] container 451 slot 21 lore 7 | ▶ Unlocking Powers
+[K8BAS-DUMP] container 451 slot 21 lore 8 | ▶ Upgraded Relays
+[K8BAS-DUMP] container 451 slot 21 lore 9 | ▶ Taming Cap Increases
+[K8BAS-DUMP] container 451 slot 21 lore 10 | ▶ Hootie Upgrades
+[K8BAS-DUMP] container 451 slot 21 lore 11 | ▶ Starlyn Sister Levels
+[K8BAS-DUMP] container 451 slot 21 lore 12 | ▶ Beacon Tiers
+[K8BAS-DUMP] container 451 slot 21 lore 13 | ▶ Attribute Levels
+[K8BAS-DUMP] container 451 slot 21 lore 14 | ▶ Fish Family
+[K8BAS-DUMP] container 451 slot 21 lore 15 | ▶ Carrolyn's Exportable Crops
+[K8BAS-DUMP] container 451 slot 21 lore 16 | ▶ The Dojo
+[K8BAS-DUMP] container 451 slot 21 lore 17 | ▶ Harp Songs
+[K8BAS-DUMP] container 451 slot 21 lore 18 | ▶ Abiphone Contacts
+[K8BAS-DUMP] container 451 slot 21 lore 19 | ▶ Community Shop Upgrades
+[K8BAS-DUMP] container 451 slot 21 lore 20 | ▶ Personal Bank Upgrades
+[K8BAS-DUMP] container 451 slot 21 lore 21 | ▶ Mage Reputation
+[K8BAS-DUMP] container 451 slot 21 lore 22 | ▶ Barbarian Reputation
+[K8BAS-DUMP] container 451 slot 21 lore 23 | 
+[K8BAS-DUMP] container 451 slot 21 lore 24 | Progress to Complete Category: 92.4%
+[K8BAS-DUMP] container 451 slot 21 lore 25 |                           5,791/6,266 XP
+[K8BAS-DUMP] container 451 slot 21 lore 26 | 
+[K8BAS-DUMP] container 451 slot 21 lore 27 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 23 item=minecraft:writable_book sbid=- count=1 | Story Tasks
+[K8BAS-DUMP] container 451 slot 23 lore 0 | 3 Tasks
+[K8BAS-DUMP] container 451 slot 23 lore 1 | 
+[K8BAS-DUMP] container 451 slot 23 lore 2 | All XP Tasks that are directly
+[K8BAS-DUMP] container 451 slot 23 lore 3 | related with progressing through
+[K8BAS-DUMP] container 451 slot 23 lore 4 | SkyBlock's story!
+[K8BAS-DUMP] container 451 slot 23 lore 5 | 
+[K8BAS-DUMP] container 451 slot 23 lore 6 | ▶ Rift Guide
+[K8BAS-DUMP] container 451 slot 23 lore 7 | ▶ Complete Objectives
+[K8BAS-DUMP] container 451 slot 23 lore 8 | ▶ Chapters
+[K8BAS-DUMP] container 451 slot 23 lore 9 | 
+[K8BAS-DUMP] container 451 slot 23 lore 10 | Progress to Complete Category: 71%
+[K8BAS-DUMP] container 451 slot 23 lore 11 |                           804/1,132 XP
+[K8BAS-DUMP] container 451 slot 23 lore 12 | 
+[K8BAS-DUMP] container 451 slot 23 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 24 item=minecraft:apple sbid=- count=1 | Consumables Tasks
+[K8BAS-DUMP] container 451 slot 24 lore 0 | 23 Tasks
+[K8BAS-DUMP] container 451 slot 24 lore 1 | 
+[K8BAS-DUMP] container 451 slot 24 lore 2 | All XP Tasks that are related to
+[K8BAS-DUMP] container 451 slot 24 lore 3 | consuming items!
+[K8BAS-DUMP] container 451 slot 24 lore 4 | 
+[K8BAS-DUMP] container 451 slot 24 lore 5 | ▶ Metaphysical Serum
+[K8BAS-DUMP] container 451 slot 24 lore 6 | ▶ Reaper Peppers
+[K8BAS-DUMP] container 451 slot 24 lore 7 | ▶ McGrubber's Burger
+[K8BAS-DUMP] container 451 slot 24 lore 8 | ▶ Wriggling Larva
+[K8BAS-DUMP] container 451 slot 24 lore 9 | ▶ Vial Of Venom
+[K8BAS-DUMP] container 451 slot 24 lore 10 | ▶ Festering Maggot
+[K8BAS-DUMP] container 451 slot 24 lore 11 | ▶ Refined Jyrre
+[K8BAS-DUMP] container 451 slot 24 lore 12 | ▶ Refined Dark Cacao
+[K8BAS-DUMP] container 451 slot 24 lore 13 | ▶ Spotlite
+[K8BAS-DUMP] container 451 slot 24 lore 14 | ▶ Dwarven O's Ore Oats
+[K8BAS-DUMP] container 451 slot 24 lore 15 | ▶ Dwarven O's Block Bran
+[K8BAS-DUMP] container 451 slot 24 lore 16 | ▶ Dwarven O's Gemstone Grahams
+[K8BAS-DUMP] container 451 slot 24 lore 17 | ▶ Dwarven O's Metallic Minis
+[K8BAS-DUMP] container 451 slot 24 lore 18 | ▶ Moby-Duck
+[K8BAS-DUMP] container 451 slot 24 lore 19 | ▶ Brain Food
+[K8BAS-DUMP] container 451 slot 24 lore 20 | ▶ Filled Rosewater Flask
+[K8BAS-DUMP] container 451 slot 24 lore 21 | ▶ Very Moldy Bread
+[K8BAS-DUMP] container 451 slot 24 lore 22 | ▶ Feast Burger with a Side of Deepfries
+[K8BAS-DUMP] container 451 slot 24 lore 23 | ▶ Mound of Seagrass
+[K8BAS-DUMP] container 451 slot 24 lore 24 | ▶ Hunting Toolkit
+[K8BAS-DUMP] container 451 slot 24 lore 25 | ▶ Farming Toolkit
+[K8BAS-DUMP] container 451 slot 24 lore 26 | ▶ Isopod Husk
+[K8BAS-DUMP] container 451 slot 24 lore 27 | ▶ Bee Saliva
+[K8BAS-DUMP] container 451 slot 24 lore 28 | 
+[K8BAS-DUMP] container 451 slot 24 lore 29 | Progress to Complete Category: 81.6%
+[K8BAS-DUMP] container 451 slot 24 lore 30 |                           244/299 XP
+[K8BAS-DUMP] container 451 slot 24 lore 31 | 
+[K8BAS-DUMP] container 451 slot 24 lore 32 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 36 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 37 item=minecraft:oak_sign sbid=- count=1 | Recently Viewed ➜
+[K8BAS-DUMP] container 451 slot 37 lore 0 | When you view XP Tasks, they will
+[K8BAS-DUMP] container 451 slot 37 lore 1 | show up here for your convenience!
+[K8BAS-DUMP] container 451 slot 38 item=minecraft:player_head sbid=- count=1 | Lotus Atoll Chapters
+[K8BAS-DUMP] container 451 slot 38 lore 0 | XP Task
+[K8BAS-DUMP] container 451 slot 38 lore 1 | 
+[K8BAS-DUMP] container 451 slot 38 lore 2 | Gain XP each time you complete a
+[K8BAS-DUMP] container 451 slot 38 lore 3 | Chapter on the Lotus Atoll!
+[K8BAS-DUMP] container 451 slot 38 lore 4 | 
+[K8BAS-DUMP] container 451 slot 38 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 451 slot 38 lore 6 |                           140/140 XP
+[K8BAS-DUMP] container 451 slot 38 lore 7 | 
+[K8BAS-DUMP] container 451 slot 38 lore 8 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 451 slot 38 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 451 slot 38 lore 10 | 
+[K8BAS-DUMP] container 451 slot 38 lore 11 | Click to see your Lotus Atoll
+[K8BAS-DUMP] container 451 slot 38 lore 12 | Chapters progress!
+[K8BAS-DUMP] container 451 slot 39 item=minecraft:book sbid=- count=1 | Chapters
+[K8BAS-DUMP] container 451 slot 39 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 451 slot 39 lore 1 | 
+[K8BAS-DUMP] container 451 slot 39 lore 2 |  ✖ Moonglade Marsh Chapters
+[K8BAS-DUMP] container 451 slot 39 lore 3 |  ✔ Backwater Bayou Chapters
+[K8BAS-DUMP] container 451 slot 39 lore 4 |  ✖ Torrhus Canyon Chapters
+[K8BAS-DUMP] container 451 slot 39 lore 5 |  ✔ Lotus Atoll Chapters
+[K8BAS-DUMP] container 451 slot 39 lore 6 | 
+[K8BAS-DUMP] container 451 slot 39 lore 7 | Total Progress: 53.6%
+[K8BAS-DUMP] container 451 slot 39 lore 8 |                           300/560 XP
+[K8BAS-DUMP] container 451 slot 39 lore 9 | 
+[K8BAS-DUMP] container 451 slot 39 lore 10 | This task is worth 0.6% of your Total
+[K8BAS-DUMP] container 451 slot 39 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 451 slot 39 lore 12 | 
+[K8BAS-DUMP] container 451 slot 39 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 40 item=minecraft:writable_book sbid=- count=1 | Complete Objectives
+[K8BAS-DUMP] container 451 slot 40 lore 0 | 44 Tasks
+[K8BAS-DUMP] container 451 slot 40 lore 1 | 
+[K8BAS-DUMP] container 451 slot 40 lore 2 |  ✔ Into the Woods
+[K8BAS-DUMP] container 451 slot 40 lore 3 |  ✔ Staying Informed
+[K8BAS-DUMP] container 451 slot 40 lore 4 |  ✔ Talk to Agatha
+[K8BAS-DUMP] container 451 slot 40 lore 5 |  ✔ The Rebuild
+[K8BAS-DUMP] container 451 slot 40 lore 6 |  ✔ Friendly Farmer 2
+[K8BAS-DUMP] container 451 slot 40 lore 7 |  ✔ Shady Jake
+[K8BAS-DUMP] container 451 slot 40 lore 8 |  ✔ Hub Explorer
+[K8BAS-DUMP] container 451 slot 40 lore 9 |  ✔ Finding the Engine
+[K8BAS-DUMP] container 451 slot 40 lore 10 |  ✔ A Helping Hand
+[K8BAS-DUMP] container 451 slot 40 lore 11 |  ✔ Kill Zombies
+[K8BAS-DUMP] container 451 slot 40 lore 12 |  ✔ The End Race
+[K8BAS-DUMP] container 451 slot 40 lore 13 |  ✔ David's Hunting Lessons
+[K8BAS-DUMP] container 451 slot 40 lore 14 |  ✔ Library Card
+[K8BAS-DUMP] container 451 slot 40 lore 15 |  ✔ Helpful Farmer
+[K8BAS-DUMP] container 451 slot 40 lore 16 | And 29 more...
+[K8BAS-DUMP] container 451 slot 40 lore 17 | 
+[K8BAS-DUMP] container 451 slot 40 lore 18 | Total Progress: 97.6%
+[K8BAS-DUMP] container 451 slot 40 lore 19 |                           207/212 XP
+[K8BAS-DUMP] container 451 slot 40 lore 20 | 
+[K8BAS-DUMP] container 451 slot 40 lore 21 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 451 slot 40 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 451 slot 40 lore 23 | 
+[K8BAS-DUMP] container 451 slot 40 lore 24 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 41 item=minecraft:lilac sbid=- count=1 | Rift Guide
+[K8BAS-DUMP] container 451 slot 41 lore 0 | XP Task
+[K8BAS-DUMP] container 451 slot 41 lore 1 | 
+[K8BAS-DUMP] container 451 slot 41 lore 2 | Gain XP by completing the Rift Guide!
+[K8BAS-DUMP] container 451 slot 41 lore 3 | Per Objective Completed: +3 XP
+[K8BAS-DUMP] container 451 slot 41 lore 4 | 
+[K8BAS-DUMP] container 451 slot 41 lore 5 | Total Progress: 82.5%
+[K8BAS-DUMP] container 451 slot 41 lore 6 |                           297/360 XP
+[K8BAS-DUMP] container 451 slot 41 lore 7 | 
+[K8BAS-DUMP] container 451 slot 41 lore 8 | This task is worth 0.6% of your Total
+[K8BAS-DUMP] container 451 slot 41 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 451 slot 41 lore 10 | 
+[K8BAS-DUMP] container 451 slot 41 lore 11 | Go earn some XP!
+[K8BAS-DUMP] container 451 slot 42 item=minecraft:paper sbid=ABIPHONE_XIV_ENORMOUS_PURPLE count=1 | Abiphone Contacts
+[K8BAS-DUMP] container 451 slot 42 lore 0 | 84 Tasks
+[K8BAS-DUMP] container 451 slot 42 lore 1 | 
+[K8BAS-DUMP] container 451 slot 42 lore 2 |  ✔ Queen Mismyla
+[K8BAS-DUMP] container 451 slot 42 lore 3 |  ✔ Crag
+[K8BAS-DUMP] container 451 slot 42 lore 4 |  ✔ Captain Ahone
+[K8BAS-DUMP] container 451 slot 42 lore 5 |  ✔ Lumber Merchant
+[K8BAS-DUMP] container 451 slot 42 lore 6 |  ✔ Bartender
+[K8BAS-DUMP] container 451 slot 42 lore 7 |  ✔ Clerk Seraphine
+[K8BAS-DUMP] container 451 slot 42 lore 8 |  ✔ Rosemary
+[K8BAS-DUMP] container 451 slot 42 lore 9 |  ✔ Shifty
+[K8BAS-DUMP] container 451 slot 42 lore 10 |  ✔ Elle
+[K8BAS-DUMP] container 451 slot 42 lore 11 |  ✔ Kysha
+[K8BAS-DUMP] container 451 slot 42 lore 12 |  ✔ Zog
+[K8BAS-DUMP] container 451 slot 42 lore 13 |  ✔ Sirius
+[K8BAS-DUMP] container 451 slot 42 lore 14 |  ✔ Kaus
+[K8BAS-DUMP] container 451 slot 42 lore 15 |  ✔ Taylor
+[K8BAS-DUMP] container 451 slot 42 lore 16 | And 69 more...
+[K8BAS-DUMP] container 451 slot 42 lore 17 | 
+[K8BAS-DUMP] container 451 slot 42 lore 18 | Total Progress: 92.9%
+[K8BAS-DUMP] container 451 slot 42 lore 19 |                           780/840 XP
+[K8BAS-DUMP] container 451 slot 42 lore 20 | 
+[K8BAS-DUMP] container 451 slot 42 lore 21 | This task is worth 1.5% of your Total
+[K8BAS-DUMP] container 451 slot 42 lore 22 | SkyBlock XP!
+[K8BAS-DUMP] container 451 slot 42 lore 23 | 
+[K8BAS-DUMP] container 451 slot 42 lore 24 | Click to view tasks!
+[K8BAS-DUMP] container 451 slot 43 item=minecraft:anvil sbid=- count=1 | Clear Last Viewed
+[K8BAS-DUMP] container 451 slot 43 lore 0 | This will empty your last viewed tasks!
+[K8BAS-DUMP] container 451 slot 43 lore 1 | 
+[K8BAS-DUMP] container 451 slot 43 lore 2 | Click to clear!
+[K8BAS-DUMP] container 451 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 45 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 47 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 451 slot 48 lore 0 | To SkyBlock Leveling
+[K8BAS-DUMP] container 451 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 451 slot 50 item=minecraft:gray_dye sbid=- count=1 | Show Progress Bars
+[K8BAS-DUMP] container 451 slot 50 lore 0 | Toggle whether to display more
+[K8BAS-DUMP] container 451 slot 50 lore 1 | detailed task progress in each
+[K8BAS-DUMP] container 451 slot 50 lore 2 | category.
+[K8BAS-DUMP] container 451 slot 50 lore 3 | 
+[K8BAS-DUMP] container 451 slot 50 lore 4 | Click to show!
+[K8BAS-DUMP] container 451 slot 51 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 52 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 451 slot 53 item=minecraft:black_stained_glass_pane sbid=- count=1 | 

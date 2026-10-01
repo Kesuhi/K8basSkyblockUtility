@@ -1,0 +1,52 @@
+{
+  "url": "https://api.github.com/repos/Kesuhi/K8basSkyblockUtility/releases/1000001",
+  "assets_url": "https://api.github.com/repos/Kesuhi/K8basSkyblockUtility/releases/1000001/assets",
+  "upload_url": "https://uploads.github.com/repos/Kesuhi/K8basSkyblockUtility/releases/1000001/assets{?name,label}",
+  "html_url": "https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/untagged-0123456789abcdef0123",
+  "id": 1000001,
+  "node_id": "RE_placeholder0001",
+  "tag_name": "v1.1.0",
+  "target_commitish": "main",
+  "name": "K8bas Skyblock Utility v1.1.0",
+  "draft": true,
+  "immutable": false,
+  "prerelease": false,
+  "created_at": "2026-10-01T12:00:00Z",
+  "updated_at": "2026-10-01T12:05:00Z",
+  "published_at": null,
+  "assets": [
+    {
+      "url": "https://api.github.com/repos/Kesuhi/K8basSkyblockUtility/releases/assets/2000001",
+      "id": 2000001,
+      "node_id": "RA_placeholder0001",
+      "name": "k8bas_skyblock_utility-1.1.0+26.2.jar",
+      "label": "",
+      "content_type": "application/java-archive",
+      "state": "uploaded",
+      "size": 0,
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "download_count": 0,
+      "created_at": "2026-10-01T12:01:00Z",
+      "updated_at": "2026-10-01T12:01:05Z",
+      "browser_download_url": "https://github.com/Kesuhi/K8basSkyblockUtility/releases/download/untagged-0123456789abcdef0123/k8bas_skyblock_utility-1.1.0%2B26.2.jar"
+    },
+    {
+      "url": "https://api.github.com/repos/Kesuhi/K8basSkyblockUtility/releases/assets/2000002",
+      "id": 2000002,
+      "node_id": "RA_placeholder0002",
+      "name": "k8bas_skyblock_utility-1.1.0+26.2.jar.sha256",
+      "label": "",
+      "content_type": "application/octet-stream",
+      "state": "uploaded",
+      "size": 0,
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "download_count": 0,
+      "created_at": "2026-10-01T12:01:06Z",
+      "updated_at": "2026-10-01T12:01:07Z",
+      "browser_download_url": "https://github.com/Kesuhi/K8basSkyblockUtility/releases/download/untagged-0123456789abcdef0123/k8bas_skyblock_utility-1.1.0%2B26.2.jar.sha256"
+    }
+  ],
+  "tarball_url": null,
+  "zipball_url": null,
+  "body": "**Requirements:** Minecraft 26.2 (Fabric) with Java 25.\n\n**Upgrading from 1.0.1:** replace the jar. Settings migrate on the first start.\n\n### Changed\n\n- **Behaviour change: the outline is visible-only.**  \n  Blocks hide the outline.\n\n### Fixed\n\n- A fix."
+}

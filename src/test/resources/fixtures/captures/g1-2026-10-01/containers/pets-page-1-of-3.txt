@@ -1,0 +1,1025 @@
+[K8BAS-DUMP] container 23 title=(1/3) Pets slots=54 state=65
+[K8BAS-DUMP] container 23 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 4 item=minecraft:bone sbid=- count=1 | Pets
+[K8BAS-DUMP] container 23 slot 4 lore 0 | View and manage all of your Pets.
+[K8BAS-DUMP] container 23 slot 4 lore 1 | 
+[K8BAS-DUMP] container 23 slot 4 lore 2 | Level up your pets faster by gaining
+[K8BAS-DUMP] container 23 slot 4 lore 3 | XP in their favorite skill!
+[K8BAS-DUMP] container 23 slot 4 lore 4 | 
+[K8BAS-DUMP] container 23 slot 4 lore 5 | Selected pet: Mammoth
+[K8BAS-DUMP] container 23 slot 4 lore 6 | 
+[K8BAS-DUMP] container 23 slot 4 lore 7 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 4 lore 8 | ▸ 25,782,296 XP
+[K8BAS-DUMP] container 23 slot 4 lore 9 | 
+[K8BAS-DUMP] container 23 slot 4 lore 10 | Also accessible via /pets.
+[K8BAS-DUMP] container 23 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 7 item=minecraft:yellow_dye sbid=- count=1 | Exp Sharing
+[K8BAS-DUMP] container 23 slot 7 lore 0 | Let your pets gain Pet Exp without
+[K8BAS-DUMP] container 23 slot 7 lore 1 | them being actively deployed!
+[K8BAS-DUMP] container 23 slot 7 lore 2 | 
+[K8BAS-DUMP] container 23 slot 7 lore 3 | Click to view!
+[K8BAS-DUMP] container 23 slot 8 item=minecraft:diamond sbid=- count=1 | +28 Pet Slots
+[K8BAS-DUMP] container 23 slot 8 lore 0 | Unlock a new page of pets.
+[K8BAS-DUMP] container 23 slot 8 lore 1 | 
+[K8BAS-DUMP] container 23 slot 8 lore 2 | Current Max Pets: 112
+[K8BAS-DUMP] container 23 slot 8 lore 3 | 
+[K8BAS-DUMP] container 23 slot 8 lore 4 | Cost
+[K8BAS-DUMP] container 23 slot 8 lore 5 | 5,000 Bits
+[K8BAS-DUMP] container 23 slot 8 lore 6 | 
+[K8BAS-DUMP] container 23 slot 8 lore 7 | Click to purchase!
+[K8BAS-DUMP] container 23 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 10 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 100] Griffin
+[K8BAS-DUMP] container 23 slot 10 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 10 lore 1 | 
+[K8BAS-DUMP] container 23 slot 10 lore 2 | Strength: +50
+[K8BAS-DUMP] container 23 slot 10 lore 3 | Crit Chance: +10%
+[K8BAS-DUMP] container 23 slot 10 lore 4 | Crit Damage: +50%
+[K8BAS-DUMP] container 23 slot 10 lore 5 | Attack Speed: +25%
+[K8BAS-DUMP] container 23 slot 10 lore 6 | Magic Find: +13
+[K8BAS-DUMP] container 23 slot 10 lore 7 | Overbloom: +13
+[K8BAS-DUMP] container 23 slot 10 lore 8 | 
+[K8BAS-DUMP] container 23 slot 10 lore 9 | Odyssey
+[K8BAS-DUMP] container 23 slot 10 lore 10 | 12 types of  Mythological mobs can
+[K8BAS-DUMP] container 23 slot 10 lore 11 | spawn from Griffin Burrows. Their
+[K8BAS-DUMP] container 23 slot 10 lore 12 | stats scale with your Griffin’s
+[K8BAS-DUMP] container 23 slot 10 lore 13 | rarity.
+[K8BAS-DUMP] container 23 slot 10 lore 14 | 
+[K8BAS-DUMP] container 23 slot 10 lore 15 | Sacred Strength
+[K8BAS-DUMP] container 23 slot 10 lore 16 | Gain +15%  Strength when above
+[K8BAS-DUMP] container 23 slot 10 lore 17 | 85%  Health.
+[K8BAS-DUMP] container 23 slot 10 lore 18 | 
+[K8BAS-DUMP] container 23 slot 10 lore 19 | King of Kings
+[K8BAS-DUMP] container 23 slot 10 lore 20 | Grants +20 Magic Find on 
+[K8BAS-DUMP] container 23 slot 10 lore 21 | Mythological mobs.
+[K8BAS-DUMP] container 23 slot 10 lore 22 | 
+[K8BAS-DUMP] container 23 slot 10 lore 23 | Ancient Earth
+[K8BAS-DUMP] container 23 slot 10 lore 24 | Grants +1 Tracking on Griffin
+[K8BAS-DUMP] container 23 slot 10 lore 25 | Burrows for each burrow excavated
+[K8BAS-DUMP] container 23 slot 10 lore 26 | in your current chain.
+[K8BAS-DUMP] container 23 slot 10 lore 27 | 
+[K8BAS-DUMP] container 23 slot 10 lore 28 | Held Item: Poignant Lucky Clover
+[K8BAS-DUMP] container 23 slot 10 lore 29 | Grants +13 Magic Find and +13
+[K8BAS-DUMP] container 23 slot 10 lore 30 | Overbloom.
+[K8BAS-DUMP] container 23 slot 10 lore 31 | 
+[K8BAS-DUMP] container 23 slot 10 lore 32 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 10 lore 33 | ▸ 68,060,947 XP
+[K8BAS-DUMP] container 23 slot 10 lore 34 | 
+[K8BAS-DUMP] container 23 slot 10 lore 35 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 10 lore 36 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 10 lore 37 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 11 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 200] Golden Dragon
+[K8BAS-DUMP] container 23 slot 11 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 11 lore 1 | 
+[K8BAS-DUMP] container 23 slot 11 lore 2 | Strength: +300
+[K8BAS-DUMP] container 23 slot 11 lore 3 | Attack Speed: +50%
+[K8BAS-DUMP] container 23 slot 11 lore 4 | Magic Find: +30
+[K8BAS-DUMP] container 23 slot 11 lore 5 | 
+[K8BAS-DUMP] container 23 slot 11 lore 6 | Gold's Power
+[K8BAS-DUMP] container 23 slot 11 lore 7 | Increase the potency of Midas'
+[K8BAS-DUMP] container 23 slot 11 lore 8 | Sword and Midas Staff's Greed Ability
+[K8BAS-DUMP] container 23 slot 11 lore 9 | by 10%.
+[K8BAS-DUMP] container 23 slot 11 lore 10 | 
+[K8BAS-DUMP] container 23 slot 11 lore 11 | Shining Scales
+[K8BAS-DUMP] container 23 slot 11 lore 12 | Grants +11.1 Strength and +2.2
+[K8BAS-DUMP] container 23 slot 11 lore 13 | Magic Find to your pet for each digit
+[K8BAS-DUMP] container 23 slot 11 lore 14 | in your Gold Collection.
+[K8BAS-DUMP] container 23 slot 11 lore 15 | (Max 100M collection)
+[K8BAS-DUMP] container 23 slot 11 lore 16 | 
+[K8BAS-DUMP] container 23 slot 11 lore 17 | Dragon's Greed
+[K8BAS-DUMP] container 23 slot 11 lore 18 | Grants +0.5% Strength per 5
+[K8BAS-DUMP] container 23 slot 11 lore 19 | Magic Find. (Max +5%)
+[K8BAS-DUMP] container 23 slot 11 lore 20 | 
+[K8BAS-DUMP] container 23 slot 11 lore 21 | Legendary Treasure
+[K8BAS-DUMP] container 23 slot 11 lore 22 | Gain 0.25% damage for every million
+[K8BAS-DUMP] container 23 slot 11 lore 23 | coins in your bank. (Max 250%)
+[K8BAS-DUMP] container 23 slot 11 lore 24 | 
+[K8BAS-DUMP] container 23 slot 11 lore 25 | Symbiosis
+[K8BAS-DUMP] container 23 slot 11 lore 26 | If you own a level 200 Golden
+[K8BAS-DUMP] container 23 slot 11 lore 27 | Dragon, gain +5 coins per monster
+[K8BAS-DUMP] container 23 slot 11 lore 28 | kill for every other unique maxed
+[K8BAS-DUMP] container 23 slot 11 lore 29 | Combat Pet that you own.
+[K8BAS-DUMP] container 23 slot 11 lore 30 | 
+[K8BAS-DUMP] container 23 slot 11 lore 31 | Held Item: Hephaestus Remedies
+[K8BAS-DUMP] container 23 slot 11 lore 32 | Increases this pet's  Strength by
+[K8BAS-DUMP] container 23 slot 11 lore 33 | 100%.
+[K8BAS-DUMP] container 23 slot 11 lore 34 | 
+[K8BAS-DUMP] container 23 slot 11 lore 35 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 11 lore 36 | ▸ 234,887,650 XP
+[K8BAS-DUMP] container 23 slot 11 lore 37 | 
+[K8BAS-DUMP] container 23 slot 11 lore 38 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 11 lore 39 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 11 lore 40 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 12 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 200] [221✦] Golden Dragon
+[K8BAS-DUMP] container 23 slot 12 lore 0 | Combat Pet, Ancient Skin
+[K8BAS-DUMP] container 23 slot 12 lore 1 | 
+[K8BAS-DUMP] container 23 slot 12 lore 2 | Strength: +225
+[K8BAS-DUMP] container 23 slot 12 lore 3 | Attack Speed: +75%
+[K8BAS-DUMP] container 23 slot 12 lore 4 | Magic Find: +45
+[K8BAS-DUMP] container 23 slot 12 lore 5 | 
+[K8BAS-DUMP] container 23 slot 12 lore 6 | Gold's Power
+[K8BAS-DUMP] container 23 slot 12 lore 7 | Increase the potency of Midas'
+[K8BAS-DUMP] container 23 slot 12 lore 8 | Sword and Midas Staff's Greed Ability
+[K8BAS-DUMP] container 23 slot 12 lore 9 | by 10%.
+[K8BAS-DUMP] container 23 slot 12 lore 10 | 
+[K8BAS-DUMP] container 23 slot 12 lore 11 | Shining Scales
+[K8BAS-DUMP] container 23 slot 12 lore 12 | Grants +11.1 Strength and +2.2
+[K8BAS-DUMP] container 23 slot 12 lore 13 | Magic Find to your pet for each digit
+[K8BAS-DUMP] container 23 slot 12 lore 14 | in your Gold Collection.
+[K8BAS-DUMP] container 23 slot 12 lore 15 | (Max 100M collection)
+[K8BAS-DUMP] container 23 slot 12 lore 16 | 
+[K8BAS-DUMP] container 23 slot 12 lore 17 | Dragon's Greed
+[K8BAS-DUMP] container 23 slot 12 lore 18 | Grants +0.5% Strength per 5
+[K8BAS-DUMP] container 23 slot 12 lore 19 | Magic Find. (Max +5%)
+[K8BAS-DUMP] container 23 slot 12 lore 20 | 
+[K8BAS-DUMP] container 23 slot 12 lore 21 | Legendary Treasure
+[K8BAS-DUMP] container 23 slot 12 lore 22 | Gain 0.25% damage for every million
+[K8BAS-DUMP] container 23 slot 12 lore 23 | coins in your bank. (Max 250%)
+[K8BAS-DUMP] container 23 slot 12 lore 24 | 
+[K8BAS-DUMP] container 23 slot 12 lore 25 | Symbiosis
+[K8BAS-DUMP] container 23 slot 12 lore 26 | If you own a level 200 Golden
+[K8BAS-DUMP] container 23 slot 12 lore 27 | Dragon, gain +5 coins per monster
+[K8BAS-DUMP] container 23 slot 12 lore 28 | kill for every other unique maxed
+[K8BAS-DUMP] container 23 slot 12 lore 29 | Combat Pet that you own.
+[K8BAS-DUMP] container 23 slot 12 lore 30 | 
+[K8BAS-DUMP] container 23 slot 12 lore 31 | Held Item: Hephaestus Relic
+[K8BAS-DUMP] container 23 slot 12 lore 32 | Increases all pet stats by 50%.
+[K8BAS-DUMP] container 23 slot 12 lore 33 | 
+[K8BAS-DUMP] container 23 slot 12 lore 34 | Left-click in your hand to swap skins!
+[K8BAS-DUMP] container 23 slot 12 lore 35 | 
+[K8BAS-DUMP] container 23 slot 12 lore 36 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 12 lore 37 | ▸ 632,414,167 XP
+[K8BAS-DUMP] container 23 slot 12 lore 38 | ▸ 221 Cosmetic Levels
+[K8BAS-DUMP] container 23 slot 12 lore 39 | 
+[K8BAS-DUMP] container 23 slot 12 lore 40 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 12 lore 41 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 12 lore 42 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 13 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 100] Ender Dragon
+[K8BAS-DUMP] container 23 slot 13 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 13 lore 1 | 
+[K8BAS-DUMP] container 23 slot 13 lore 2 | Strength: +50
+[K8BAS-DUMP] container 23 slot 13 lore 3 | Crit Chance: +15%
+[K8BAS-DUMP] container 23 slot 13 lore 4 | Crit Damage: +90%
+[K8BAS-DUMP] container 23 slot 13 lore 5 | 
+[K8BAS-DUMP] container 23 slot 13 lore 6 | End Strike
+[K8BAS-DUMP] container 23 slot 13 lore 7 | Deal 200% more damage to  Ender
+[K8BAS-DUMP] container 23 slot 13 lore 8 | mobs.
+[K8BAS-DUMP] container 23 slot 13 lore 9 | 
+[K8BAS-DUMP] container 23 slot 13 lore 10 | One With The Dragon
+[K8BAS-DUMP] container 23 slot 13 lore 11 | Buffs the Aspect of the Dragons
+[K8BAS-DUMP] container 23 slot 13 lore 12 | sword by 50  Damage and 30 
+[K8BAS-DUMP] container 23 slot 13 lore 13 | Strength.
+[K8BAS-DUMP] container 23 slot 13 lore 14 | 
+[K8BAS-DUMP] container 23 slot 13 lore 15 | Superior
+[K8BAS-DUMP] container 23 slot 13 lore 16 | Increases all Combat stats and 
+[K8BAS-DUMP] container 23 slot 13 lore 17 | Magic Find by 10%.
+[K8BAS-DUMP] container 23 slot 13 lore 18 | 
+[K8BAS-DUMP] container 23 slot 13 lore 19 | Held Item: Gold Claws
+[K8BAS-DUMP] container 23 slot 13 lore 20 | Increases the pet's  Crit Damage
+[K8BAS-DUMP] container 23 slot 13 lore 21 | by 50% and  Crit Chance by 50%.
+[K8BAS-DUMP] container 23 slot 13 lore 22 | 
+[K8BAS-DUMP] container 23 slot 13 lore 23 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 13 lore 24 | ▸ 104,073,808 XP
+[K8BAS-DUMP] container 23 slot 13 lore 25 | 
+[K8BAS-DUMP] container 23 slot 13 lore 26 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 13 lore 27 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 13 lore 28 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 14 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 200] Rose Dragon
+[K8BAS-DUMP] container 23 slot 14 lore 0 | Farming Pet
+[K8BAS-DUMP] container 23 slot 14 lore 1 | 
+[K8BAS-DUMP] container 23 slot 14 lore 2 | Speed: +100
+[K8BAS-DUMP] container 23 slot 14 lore 3 | Farming Fortune: +100
+[K8BAS-DUMP] container 23 slot 14 lore 4 | 
+[K8BAS-DUMP] container 23 slot 14 lore 5 | Garden Power
+[K8BAS-DUMP] container 23 slot 14 lore 6 | Grants +3 Farming Fortune per
+[K8BAS-DUMP] container 23 slot 14 lore 7 | Farming level.
+[K8BAS-DUMP] container 23 slot 14 lore 8 | 
+[K8BAS-DUMP] container 23 slot 14 lore 9 | Rosy Scales
+[K8BAS-DUMP] container 23 slot 14 lore 10 | Grants +0.15 Farming Fortune and
+[K8BAS-DUMP] container 23 slot 14 lore 11 | +0.1 Speed per Crop Milestone.
+[K8BAS-DUMP] container 23 slot 14 lore 12 | 
+[K8BAS-DUMP] container 23 slot 14 lore 13 | Dragon's Gluttony
+[K8BAS-DUMP] container 23 slot 14 lore 14 | Grants +40 Overbloom.
+[K8BAS-DUMP] container 23 slot 14 lore 15 | 
+[K8BAS-DUMP] container 23 slot 14 lore 16 | Spiritual Perfection
+[K8BAS-DUMP] container 23 slot 14 lore 17 | Gain 20% more Copper from Garden
+[K8BAS-DUMP] container 23 slot 14 lore 18 | Visitors and from analyzing Mutations.
+[K8BAS-DUMP] container 23 slot 14 lore 19 | 
+[K8BAS-DUMP] container 23 slot 14 lore 20 | Symbiosis
+[K8BAS-DUMP] container 23 slot 14 lore 21 | If you own a level 200 Rose Dragon,
+[K8BAS-DUMP] container 23 slot 14 lore 22 | grants +3 Farming Fortune for
+[K8BAS-DUMP] container 23 slot 14 lore 23 | every other unique maxed Farming
+[K8BAS-DUMP] container 23 slot 14 lore 24 | Pet that you own.
+[K8BAS-DUMP] container 23 slot 14 lore 25 | 
+[K8BAS-DUMP] container 23 slot 14 lore 26 | Held Item: Green Bandana
+[K8BAS-DUMP] container 23 slot 14 lore 27 | Grants +4 Farming Fortune for
+[K8BAS-DUMP] container 23 slot 14 lore 28 | each of your Garden Levels.
+[K8BAS-DUMP] container 23 slot 14 lore 29 | 
+[K8BAS-DUMP] container 23 slot 14 lore 30 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 14 lore 31 | ▸ 525,590,009 XP
+[K8BAS-DUMP] container 23 slot 14 lore 32 | 
+[K8BAS-DUMP] container 23 slot 14 lore 33 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 14 lore 34 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 14 lore 35 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 15 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 100] Flying Fish
+[K8BAS-DUMP] container 23 slot 15 lore 0 | Fishing Pet
+[K8BAS-DUMP] container 23 slot 15 lore 1 | 
+[K8BAS-DUMP] container 23 slot 15 lore 2 | Defense: +50
+[K8BAS-DUMP] container 23 slot 15 lore 3 | Strength: +50
+[K8BAS-DUMP] container 23 slot 15 lore 4 | Double Hook Chance: +5%
+[K8BAS-DUMP] container 23 slot 15 lore 5 | 
+[K8BAS-DUMP] container 23 slot 15 lore 6 | Quick Reel
+[K8BAS-DUMP] container 23 slot 15 lore 7 | Grants +80 Fishing Speed.
+[K8BAS-DUMP] container 23 slot 15 lore 8 | 
+[K8BAS-DUMP] container 23 slot 15 lore 9 | Lava Bender
+[K8BAS-DUMP] container 23 slot 15 lore 10 | Gives 100  Strength and 
+[K8BAS-DUMP] container 23 slot 15 lore 11 | Defense when near water or lava
+[K8BAS-DUMP] container 23 slot 15 lore 12 | 
+[K8BAS-DUMP] container 23 slot 15 lore 13 | Magmatic Diver
+[K8BAS-DUMP] container 23 slot 15 lore 14 | Increases the stats of Diver Armor,
+[K8BAS-DUMP] container 23 slot 15 lore 15 | Magma Lord Armor, and Abyssal
+[K8BAS-DUMP] container 23 slot 15 lore 16 | Armor by 20%.
+[K8BAS-DUMP] container 23 slot 15 lore 17 | 
+[K8BAS-DUMP] container 23 slot 15 lore 18 | Rapid Decay
+[K8BAS-DUMP] container 23 slot 15 lore 19 | Increases the chance to activate
+[K8BAS-DUMP] container 23 slot 15 lore 20 | the Flash Enchantment by 50%.
+[K8BAS-DUMP] container 23 slot 15 lore 21 | 
+[K8BAS-DUMP] container 23 slot 15 lore 22 | Held Item: Burnt Texts
+[K8BAS-DUMP] container 23 slot 15 lore 23 | Grants +5 Double Hook Chance, but
+[K8BAS-DUMP] container 23 slot 15 lore 24 | reduces your  Fishing Speed by 50.
+[K8BAS-DUMP] container 23 slot 15 lore 25 | 
+[K8BAS-DUMP] container 23 slot 15 lore 26 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 15 lore 27 | ▸ 167,038,112 XP
+[K8BAS-DUMP] container 23 slot 15 lore 28 | 
+[K8BAS-DUMP] container 23 slot 15 lore 29 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 15 lore 30 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 15 lore 31 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 16 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 100] Megalodon
+[K8BAS-DUMP] container 23 slot 16 lore 0 | Fishing Pet
+[K8BAS-DUMP] container 23 slot 16 lore 1 | 
+[K8BAS-DUMP] container 23 slot 16 lore 2 | Strength: +50
+[K8BAS-DUMP] container 23 slot 16 lore 3 | Ferocity: +10
+[K8BAS-DUMP] container 23 slot 16 lore 4 | Magic Find: +10
+[K8BAS-DUMP] container 23 slot 16 lore 5 | Fishing Speed: +40
+[K8BAS-DUMP] container 23 slot 16 lore 6 | Sea Creature Chance: +15%
+[K8BAS-DUMP] container 23 slot 16 lore 7 | 
+[K8BAS-DUMP] container 23 slot 16 lore 8 | Blood Scent
+[K8BAS-DUMP] container 23 slot 16 lore 9 | Deal up to +150%  Damage based
+[K8BAS-DUMP] container 23 slot 16 lore 10 | on the enemy's missing health
+[K8BAS-DUMP] container 23 slot 16 lore 11 | 
+[K8BAS-DUMP] container 23 slot 16 lore 12 | Enhanced Scales
+[K8BAS-DUMP] container 23 slot 16 lore 13 | Doubles the pet's base stats during
+[K8BAS-DUMP] container 23 slot 16 lore 14 | the Fishing Festival.
+[K8BAS-DUMP] container 23 slot 16 lore 15 | 
+[K8BAS-DUMP] container 23 slot 16 lore 16 | Feeding Frenzy
+[K8BAS-DUMP] container 23 slot 16 lore 17 | Grants a +20% chance to catch
+[K8BAS-DUMP] container 23 slot 16 lore 18 | Sharks during the Fishing Festival.
+[K8BAS-DUMP] container 23 slot 16 lore 19 | 
+[K8BAS-DUMP] container 23 slot 16 lore 20 | Held Item: Washed-up Souvenir
+[K8BAS-DUMP] container 23 slot 16 lore 21 | Grants +5 Sea Creature Chance.
+[K8BAS-DUMP] container 23 slot 16 lore 22 | 
+[K8BAS-DUMP] container 23 slot 16 lore 23 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 16 lore 24 | ▸ 27,532,922 XP
+[K8BAS-DUMP] container 23 slot 16 lore 25 | 
+[K8BAS-DUMP] container 23 slot 16 lore 26 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 16 lore 27 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 16 lore 28 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 19 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 100] Reindeer
+[K8BAS-DUMP] container 23 slot 19 lore 0 | Fishing Pet
+[K8BAS-DUMP] container 23 slot 19 lore 1 | 
+[K8BAS-DUMP] container 23 slot 19 lore 2 | Health: +100
+[K8BAS-DUMP] container 23 slot 19 lore 3 | Fishing Speed: +25
+[K8BAS-DUMP] container 23 slot 19 lore 4 | Sea Creature Chance: +10%
+[K8BAS-DUMP] container 23 slot 19 lore 5 | 
+[K8BAS-DUMP] container 23 slot 19 lore 6 | Winter Sprint
+[K8BAS-DUMP] container 23 slot 19 lore 7 | Gain double pet EXP.
+[K8BAS-DUMP] container 23 slot 19 lore 8 | 
+[K8BAS-DUMP] container 23 slot 19 lore 9 | Infused
+[K8BAS-DUMP] container 23 slot 19 lore 10 | Gives +75 Fishing Speed and +5
+[K8BAS-DUMP] container 23 slot 19 lore 11 | Treasure Chance while on Jerry's
+[K8BAS-DUMP] container 23 slot 19 lore 12 | Workshop.
+[K8BAS-DUMP] container 23 slot 19 lore 13 | 
+[K8BAS-DUMP] container 23 slot 19 lore 14 | Snow Power
+[K8BAS-DUMP] container 23 slot 19 lore 15 | Grants +50% bonus gift chance
+[K8BAS-DUMP] container 23 slot 19 lore 16 | during the Gift Attack event.
+[K8BAS-DUMP] container 23 slot 19 lore 17 | 
+[K8BAS-DUMP] container 23 slot 19 lore 18 | Icy Wind
+[K8BAS-DUMP] container 23 slot 19 lore 19 | Grants +20% chance of getting
+[K8BAS-DUMP] container 23 slot 19 lore 20 | double Ice Essence.
+[K8BAS-DUMP] container 23 slot 19 lore 21 | 
+[K8BAS-DUMP] container 23 slot 19 lore 22 | Held Item: Washed-up Souvenir
+[K8BAS-DUMP] container 23 slot 19 lore 23 | Grants +5 Sea Creature Chance.
+[K8BAS-DUMP] container 23 slot 19 lore 24 | 
+[K8BAS-DUMP] container 23 slot 19 lore 25 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 19 lore 26 | ▸ 69,467,843 XP
+[K8BAS-DUMP] container 23 slot 19 lore 27 | 
+[K8BAS-DUMP] container 23 slot 19 lore 28 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 19 lore 29 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 19 lore 30 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 20 item=minecraft:player_head sbid=PET count=1 | ⭐ [Lvl 200] Jade Dragon
+[K8BAS-DUMP] container 23 slot 20 lore 0 | Foraging Pet
+[K8BAS-DUMP] container 23 slot 20 lore 1 | 
+[K8BAS-DUMP] container 23 slot 20 lore 2 | Strength: +50
+[K8BAS-DUMP] container 23 slot 20 lore 3 | Magic Find: +10
+[K8BAS-DUMP] container 23 slot 20 lore 4 | Foraging Fortune: +50
+[K8BAS-DUMP] container 23 slot 20 lore 5 | 
+[K8BAS-DUMP] container 23 slot 20 lore 6 | Forest Power
+[K8BAS-DUMP] container 23 slot 20 lore 7 | Adds 100 Strength and 50 Speed
+[K8BAS-DUMP] container 23 slot 20 lore 8 | to all your Axes.
+[K8BAS-DUMP] container 23 slot 20 lore 9 | 
+[K8BAS-DUMP] container 23 slot 20 lore 10 | Jade Scale
+[K8BAS-DUMP] container 23 slot 20 lore 11 | Grants 15 Foraging Fortune and
+[K8BAS-DUMP] container 23 slot 20 lore 12 | 4 Sweep for every digit in your
+[K8BAS-DUMP] container 23 slot 20 lore 13 | Mangrove Collection.
+[K8BAS-DUMP] container 23 slot 20 lore 14 | (Max 10M collection)
+[K8BAS-DUMP] container 23 slot 20 lore 15 | 
+[K8BAS-DUMP] container 23 slot 20 lore 16 | Dragon's Pride
+[K8BAS-DUMP] container 23 slot 20 lore 17 | Grants 1 Foraging Fortune per 5
+[K8BAS-DUMP] container 23 slot 20 lore 18 | Sweep.
+[K8BAS-DUMP] container 23 slot 20 lore 19 | 
+[K8BAS-DUMP] container 23 slot 20 lore 20 | Apex Predator
+[K8BAS-DUMP] container 23 slot 20 lore 21 | Increase your total  Sweep by
+[K8BAS-DUMP] container 23 slot 20 lore 22 | 0.1% for every Maxed out Attribute
+[K8BAS-DUMP] container 23 slot 20 lore 23 | you unlocked.
+[K8BAS-DUMP] container 23 slot 20 lore 24 | 
+[K8BAS-DUMP] container 23 slot 20 lore 25 | Symbiosis
+[K8BAS-DUMP] container 23 slot 20 lore 26 | If you own a level 200 Jade Dragon,
+[K8BAS-DUMP] container 23 slot 20 lore 27 | grants +4 Foraging Fortune for
+[K8BAS-DUMP] container 23 slot 20 lore 28 | every other unique maxed Foraging
+[K8BAS-DUMP] container 23 slot 20 lore 29 | Pet that you own.
+[K8BAS-DUMP] container 23 slot 20 lore 30 | 
+[K8BAS-DUMP] container 23 slot 20 lore 31 | Held Item: Foraging Exp Boost
+[K8BAS-DUMP] container 23 slot 20 lore 32 | Gives +50% pet exp for Foraging.
+[K8BAS-DUMP] container 23 slot 20 lore 33 | 
+[K8BAS-DUMP] container 23 slot 20 lore 34 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 20 lore 35 | ▸ 471,486,045 XP
+[K8BAS-DUMP] container 23 slot 20 lore 36 | 
+[K8BAS-DUMP] container 23 slot 20 lore 37 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 20 lore 38 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 20 lore 39 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 21 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Black Cat
+[K8BAS-DUMP] container 23 slot 21 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 21 lore 1 | 
+[K8BAS-DUMP] container 23 slot 21 lore 2 | Intelligence: +100
+[K8BAS-DUMP] container 23 slot 21 lore 3 | Speed: +125
+[K8BAS-DUMP] container 23 slot 21 lore 4 | Magic Find: +22
+[K8BAS-DUMP] container 23 slot 21 lore 5 | Pet Luck: +15
+[K8BAS-DUMP] container 23 slot 21 lore 6 | Overbloom: +7
+[K8BAS-DUMP] container 23 slot 21 lore 7 | 
+[K8BAS-DUMP] container 23 slot 21 lore 8 | Hunter
+[K8BAS-DUMP] container 23 slot 21 lore 9 | Increases your  Speed and speed
+[K8BAS-DUMP] container 23 slot 21 lore 10 | cap by +100.
+[K8BAS-DUMP] container 23 slot 21 lore 11 | 
+[K8BAS-DUMP] container 23 slot 21 lore 12 | Omen
+[K8BAS-DUMP] container 23 slot 21 lore 13 | Grants +15 Pet Luck.
+[K8BAS-DUMP] container 23 slot 21 lore 14 | 
+[K8BAS-DUMP] container 23 slot 21 lore 15 | Supernatural
+[K8BAS-DUMP] container 23 slot 21 lore 16 | Grants +15 Magic Find.
+[K8BAS-DUMP] container 23 slot 21 lore 17 | 
+[K8BAS-DUMP] container 23 slot 21 lore 18 | Looting
+[K8BAS-DUMP] container 23 slot 21 lore 19 | Gain 15% more collection items from
+[K8BAS-DUMP] container 23 slot 21 lore 20 | monsters!
+[K8BAS-DUMP] container 23 slot 21 lore 21 | 
+[K8BAS-DUMP] container 23 slot 21 lore 22 | Held Item: Lucky Clover
+[K8BAS-DUMP] container 23 slot 21 lore 23 | Grants +7 Magic Find and +7
+[K8BAS-DUMP] container 23 slot 21 lore 24 | Overbloom.
+[K8BAS-DUMP] container 23 slot 21 lore 25 | 
+[K8BAS-DUMP] container 23 slot 21 lore 26 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 21 lore 27 | ▸ 31,730,853 XP
+[K8BAS-DUMP] container 23 slot 21 lore 28 | 
+[K8BAS-DUMP] container 23 slot 21 lore 29 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 21 lore 30 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 21 lore 31 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 22 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Enderman
+[K8BAS-DUMP] container 23 slot 22 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 22 lore 1 | 
+[K8BAS-DUMP] container 23 slot 22 lore 2 | Crit Damage: +75%
+[K8BAS-DUMP] container 23 slot 22 lore 3 | Attack Speed: +35%
+[K8BAS-DUMP] container 23 slot 22 lore 4 | 
+[K8BAS-DUMP] container 23 slot 22 lore 5 | Enderian
+[K8BAS-DUMP] container 23 slot 22 lore 6 | Take 30% less damage from  Ender
+[K8BAS-DUMP] container 23 slot 22 lore 7 | mobs
+[K8BAS-DUMP] container 23 slot 22 lore 8 | 
+[K8BAS-DUMP] container 23 slot 22 lore 9 | Teleport Savvy
+[K8BAS-DUMP] container 23 slot 22 lore 10 | Buffs Transmission abilities, granting
+[K8BAS-DUMP] container 23 slot 22 lore 11 | 50 weapon damage for 5s on use
+[K8BAS-DUMP] container 23 slot 22 lore 12 | 
+[K8BAS-DUMP] container 23 slot 22 lore 13 | Zealot Madness
+[K8BAS-DUMP] container 23 slot 22 lore 14 | Increases your odds to find a
+[K8BAS-DUMP] container 23 slot 22 lore 15 | special Zealot by 25%.
+[K8BAS-DUMP] container 23 slot 22 lore 16 | 
+[K8BAS-DUMP] container 23 slot 22 lore 17 | Enderman Slayer
+[K8BAS-DUMP] container 23 slot 22 lore 18 | Gain 1.5x Combat XP against Endermen.
+[K8BAS-DUMP] container 23 slot 22 lore 19 | 
+[K8BAS-DUMP] container 23 slot 22 lore 20 | Held Item: Crochet Tiger Plushie
+[K8BAS-DUMP] container 23 slot 22 lore 21 | Grants +35 Attack Speed.
+[K8BAS-DUMP] container 23 slot 22 lore 22 | 
+[K8BAS-DUMP] container 23 slot 22 lore 23 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 22 lore 24 | ▸ 185,275,241 XP
+[K8BAS-DUMP] container 23 slot 22 lore 25 | 
+[K8BAS-DUMP] container 23 slot 22 lore 26 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 22 lore 27 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 22 lore 28 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 23 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Jerry
+[K8BAS-DUMP] container 23 slot 23 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 23 lore 1 | 
+[K8BAS-DUMP] container 23 slot 23 lore 2 | Intelligence: -100
+[K8BAS-DUMP] container 23 slot 23 lore 3 | 
+[K8BAS-DUMP] container 23 slot 23 lore 4 | Jerry
+[K8BAS-DUMP] container 23 slot 23 lore 5 | Gain 50% chance to deal your
+[K8BAS-DUMP] container 23 slot 23 lore 6 | regular damage
+[K8BAS-DUMP] container 23 slot 23 lore 7 | 
+[K8BAS-DUMP] container 23 slot 23 lore 8 | Jerry
+[K8BAS-DUMP] container 23 slot 23 lore 9 | Gain 100% chance to receive a
+[K8BAS-DUMP] container 23 slot 23 lore 10 | normal amount of drops from mobs
+[K8BAS-DUMP] container 23 slot 23 lore 11 | 
+[K8BAS-DUMP] container 23 slot 23 lore 12 | Jerry
+[K8BAS-DUMP] container 23 slot 23 lore 13 | Actually adds 50 damage to the
+[K8BAS-DUMP] container 23 slot 23 lore 14 | Aspect of the Jerry
+[K8BAS-DUMP] container 23 slot 23 lore 15 | 
+[K8BAS-DUMP] container 23 slot 23 lore 16 | Jerry
+[K8BAS-DUMP] container 23 slot 23 lore 17 | Tiny chance to find Jerry Candies
+[K8BAS-DUMP] container 23 slot 23 lore 18 | when killing mobs
+[K8BAS-DUMP] container 23 slot 23 lore 19 | 
+[K8BAS-DUMP] container 23 slot 23 lore 20 | Held Item: All Skills Exp Boost
+[K8BAS-DUMP] container 23 slot 23 lore 21 | Gives +10% pet exp for all skills.
+[K8BAS-DUMP] container 23 slot 23 lore 22 | 
+[K8BAS-DUMP] container 23 slot 23 lore 23 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 23 lore 24 | ▸ 26,385,196 XP
+[K8BAS-DUMP] container 23 slot 23 lore 25 | 
+[K8BAS-DUMP] container 23 slot 23 lore 26 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 23 lore 27 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 23 lore 28 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 24 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Spider
+[K8BAS-DUMP] container 23 slot 24 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 24 lore 1 | 
+[K8BAS-DUMP] container 23 slot 24 lore 2 | Strength: +50
+[K8BAS-DUMP] container 23 slot 24 lore 3 | Crit Chance: +10%
+[K8BAS-DUMP] container 23 slot 24 lore 4 | Crit Damage: +20%
+[K8BAS-DUMP] container 23 slot 24 lore 5 | 
+[K8BAS-DUMP] container 23 slot 24 lore 6 | One With The Spider
+[K8BAS-DUMP] container 23 slot 24 lore 7 | Applies +15 Strength to all
+[K8BAS-DUMP] container 23 slot 24 lore 8 | Arachnal  weapons, armor, and
+[K8BAS-DUMP] container 23 slot 24 lore 9 | equipment you have equipped.
+[K8BAS-DUMP] container 23 slot 24 lore 10 | 
+[K8BAS-DUMP] container 23 slot 24 lore 11 | Web-weaver
+[K8BAS-DUMP] container 23 slot 24 lore 12 | Upon hitting a monster, it becomes
+[K8BAS-DUMP] container 23 slot 24 lore 13 | slowed by 40%.
+[K8BAS-DUMP] container 23 slot 24 lore 14 | 
+[K8BAS-DUMP] container 23 slot 24 lore 15 | Spider Whisperer
+[K8BAS-DUMP] container 23 slot 24 lore 16 | Spider, Cave Spider and Tarantula
+[K8BAS-DUMP] container 23 slot 24 lore 17 | minions work 30% faster while on
+[K8BAS-DUMP] container 23 slot 24 lore 18 | your island.
+[K8BAS-DUMP] container 23 slot 24 lore 19 | 
+[K8BAS-DUMP] container 23 slot 24 lore 20 | Web Battlefield
+[K8BAS-DUMP] container 23 slot 24 lore 21 | Killing mobs grants +6 Strength
+[K8BAS-DUMP] container 23 slot 24 lore 22 | and +1 Magic Find for 40s to all
+[K8BAS-DUMP] container 23 slot 24 lore 23 | players staying within 20 blocks of
+[K8BAS-DUMP] container 23 slot 24 lore 24 | where they died. Stacks up to 10
+[K8BAS-DUMP] container 23 slot 24 lore 25 | times.
+[K8BAS-DUMP] container 23 slot 24 lore 26 | 
+[K8BAS-DUMP] container 23 slot 24 lore 27 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 24 lore 28 | Gives +30% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 24 lore 29 | 
+[K8BAS-DUMP] container 23 slot 24 lore 30 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 24 lore 31 | ▸ 41,982,522 XP
+[K8BAS-DUMP] container 23 slot 24 lore 32 | 
+[K8BAS-DUMP] container 23 slot 24 lore 33 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 24 lore 34 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 24 lore 35 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 25 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Tarantula
+[K8BAS-DUMP] container 23 slot 25 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 25 lore 1 | 
+[K8BAS-DUMP] container 23 slot 25 lore 2 | True Defense: +10
+[K8BAS-DUMP] container 23 slot 25 lore 3 | Strength: +10
+[K8BAS-DUMP] container 23 slot 25 lore 4 | Crit Chance: +10%
+[K8BAS-DUMP] container 23 slot 25 lore 5 | Crit Damage: +50%
+[K8BAS-DUMP] container 23 slot 25 lore 6 | 
+[K8BAS-DUMP] container 23 slot 25 lore 7 | Webbed Cells
+[K8BAS-DUMP] container 23 slot 25 lore 8 | Tarantula Broodfather's  Vitality
+[K8BAS-DUMP] container 23 slot 25 lore 9 | reduction is 30% less effective
+[K8BAS-DUMP] container 23 slot 25 lore 10 | against you.
+[K8BAS-DUMP] container 23 slot 25 lore 11 | 
+[K8BAS-DUMP] container 23 slot 25 lore 12 | Eight Legs
+[K8BAS-DUMP] container 23 slot 25 lore 13 | Decreases the mana cost of Spider,
+[K8BAS-DUMP] container 23 slot 25 lore 14 | Tarantula, Primordial and Spirit Boots
+[K8BAS-DUMP] container 23 slot 25 lore 15 | by 50%.
+[K8BAS-DUMP] container 23 slot 25 lore 16 | 
+[K8BAS-DUMP] container 23 slot 25 lore 17 | Arachnid Slayer
+[K8BAS-DUMP] container 23 slot 25 lore 18 | Gain 1.5x Combat XP against Spiders.
+[K8BAS-DUMP] container 23 slot 25 lore 19 | 
+[K8BAS-DUMP] container 23 slot 25 lore 20 | Web Battlefield
+[K8BAS-DUMP] container 23 slot 25 lore 21 | Killing mobs grants +6 Strength
+[K8BAS-DUMP] container 23 slot 25 lore 22 | and +1 Magic Find for 40s to all
+[K8BAS-DUMP] container 23 slot 25 lore 23 | players staying within 20 blocks of
+[K8BAS-DUMP] container 23 slot 25 lore 24 | where they died. Stacks up to 10
+[K8BAS-DUMP] container 23 slot 25 lore 25 | times.
+[K8BAS-DUMP] container 23 slot 25 lore 26 | 
+[K8BAS-DUMP] container 23 slot 25 lore 27 | Held Item: Dwarf Turtle Shelmet
+[K8BAS-DUMP] container 23 slot 25 lore 28 | Grants +10 True Defense and
+[K8BAS-DUMP] container 23 slot 25 lore 29 | makes the pet's owner immune to
+[K8BAS-DUMP] container 23 slot 25 lore 30 | knockback.
+[K8BAS-DUMP] container 23 slot 25 lore 31 | 
+[K8BAS-DUMP] container 23 slot 25 lore 32 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 25 lore 33 | ▸ 32,508,782 XP
+[K8BAS-DUMP] container 23 slot 25 lore 34 | 
+[K8BAS-DUMP] container 23 slot 25 lore 35 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 25 lore 36 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 25 lore 37 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 28 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Blaze
+[K8BAS-DUMP] container 23 slot 28 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 28 lore 1 | 
+[K8BAS-DUMP] container 23 slot 28 lore 2 | Defense: +30
+[K8BAS-DUMP] container 23 slot 28 lore 3 | Intelligence: +100
+[K8BAS-DUMP] container 23 slot 28 lore 4 | 
+[K8BAS-DUMP] container 23 slot 28 lore 5 | Nether Embodiment
+[K8BAS-DUMP] container 23 slot 28 lore 6 | Increases Combat and Miscellaneous
+[K8BAS-DUMP] container 23 slot 28 lore 7 | stats by 10% while on the Crimson
+[K8BAS-DUMP] container 23 slot 28 lore 8 | Isle.
+[K8BAS-DUMP] container 23 slot 28 lore 9 | 
+[K8BAS-DUMP] container 23 slot 28 lore 10 | Bling Armor
+[K8BAS-DUMP] container 23 slot 28 lore 11 | Upgrades Blaze Armor stats and
+[K8BAS-DUMP] container 23 slot 28 lore 12 | ability by 40%.
+[K8BAS-DUMP] container 23 slot 28 lore 13 | 
+[K8BAS-DUMP] container 23 slot 28 lore 14 | Fusion-Style Potato
+[K8BAS-DUMP] container 23 slot 28 lore 15 | Double effects of hot potato books
+[K8BAS-DUMP] container 23 slot 28 lore 16 | 
+[K8BAS-DUMP] container 23 slot 28 lore 17 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 28 lore 18 | Gives +40% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 28 lore 19 | 
+[K8BAS-DUMP] container 23 slot 28 lore 20 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 28 lore 21 | ▸ 25,781,203 XP
+[K8BAS-DUMP] container 23 slot 28 lore 22 | 
+[K8BAS-DUMP] container 23 slot 28 lore 23 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 28 lore 24 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 28 lore 25 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 29 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Ghoul
+[K8BAS-DUMP] container 23 slot 29 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 29 lore 1 | 
+[K8BAS-DUMP] container 23 slot 29 lore 2 | Health: +100
+[K8BAS-DUMP] container 23 slot 29 lore 3 | Ferocity: +5
+[K8BAS-DUMP] container 23 slot 29 lore 4 | Intelligence: +75
+[K8BAS-DUMP] container 23 slot 29 lore 5 | Vitality: +15
+[K8BAS-DUMP] container 23 slot 29 lore 6 | Mending: +25
+[K8BAS-DUMP] container 23 slot 29 lore 7 | 
+[K8BAS-DUMP] container 23 slot 29 lore 8 | Undead Slayer
+[K8BAS-DUMP] container 23 slot 29 lore 9 | Gain 1.5x Combat XP against Zombies.
+[K8BAS-DUMP] container 23 slot 29 lore 10 | 
+[K8BAS-DUMP] container 23 slot 29 lore 11 | Army of the Dead
+[K8BAS-DUMP] container 23 slot 29 lore 12 | Increases the amount of souls you
+[K8BAS-DUMP] container 23 slot 29 lore 13 | can store by 2 and the chance of
+[K8BAS-DUMP] container 23 slot 29 lore 14 | getting a mob's soul by 20%.
+[K8BAS-DUMP] container 23 slot 29 lore 15 | 
+[K8BAS-DUMP] container 23 slot 29 lore 16 | Reaper Soul
+[K8BAS-DUMP] container 23 slot 29 lore 17 | Reduces the summoning cost of mobs
+[K8BAS-DUMP] container 23 slot 29 lore 18 | by 30% and increases their damage
+[K8BAS-DUMP] container 23 slot 29 lore 19 | output by 20%. Increases the health
+[K8BAS-DUMP] container 23 slot 29 lore 20 | of all summoned mobs by 100%.
+[K8BAS-DUMP] container 23 slot 29 lore 21 | 
+[K8BAS-DUMP] container 23 slot 29 lore 22 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 29 lore 23 | Gives +40% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 29 lore 24 | 
+[K8BAS-DUMP] container 23 slot 29 lore 25 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 29 lore 26 | ▸ 38,462,511 XP
+[K8BAS-DUMP] container 23 slot 29 lore 27 | 
+[K8BAS-DUMP] container 23 slot 29 lore 28 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 29 lore 29 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 29 lore 30 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 30 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Grandma Wolf
+[K8BAS-DUMP] container 23 slot 30 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 30 lore 1 | 
+[K8BAS-DUMP] container 23 slot 30 lore 2 | Health: +100
+[K8BAS-DUMP] container 23 slot 30 lore 3 | Strength: +25
+[K8BAS-DUMP] container 23 slot 30 lore 4 | 
+[K8BAS-DUMP] container 23 slot 30 lore 5 | Kill Combo
+[K8BAS-DUMP] container 23 slot 30 lore 6 | Gain buffs for combo kills. Effects
+[K8BAS-DUMP] container 23 slot 30 lore 7 | stack as you increase your combo.
+[K8BAS-DUMP] container 23 slot 30 lore 8 | 
+[K8BAS-DUMP] container 23 slot 30 lore 9 | 5 Combo (lasts 10s)
+[K8BAS-DUMP] container 23 slot 30 lore 10 |   +3%  Magic Find
+[K8BAS-DUMP] container 23 slot 30 lore 11 | 10 Combo (lasts 8s)
+[K8BAS-DUMP] container 23 slot 30 lore 12 |   +10 coins per kill
+[K8BAS-DUMP] container 23 slot 30 lore 13 | 15 Combo (lasts 6s)
+[K8BAS-DUMP] container 23 slot 30 lore 14 |   +3%  Magic Find
+[K8BAS-DUMP] container 23 slot 30 lore 15 | 20 Combo (lasts 5s)
+[K8BAS-DUMP] container 23 slot 30 lore 16 |   +15☯ Combat Wisdom
+[K8BAS-DUMP] container 23 slot 30 lore 17 | 25 Combo (lasts 4s)
+[K8BAS-DUMP] container 23 slot 30 lore 18 |   +3%  Magic Find
+[K8BAS-DUMP] container 23 slot 30 lore 19 | 30 Combo (lasts 3s)
+[K8BAS-DUMP] container 23 slot 30 lore 20 |   +10 coins per kill
+[K8BAS-DUMP] container 23 slot 30 lore 21 | 50 Combo (lasts 3s)
+[K8BAS-DUMP] container 23 slot 30 lore 22 |   +5%  Magic Find
+[K8BAS-DUMP] container 23 slot 30 lore 23 | 
+[K8BAS-DUMP] container 23 slot 30 lore 24 | Held Item: Grandma's Knitting Needle
+[K8BAS-DUMP] container 23 slot 30 lore 25 | Can be applied to Grandma Wolf pets.
+[K8BAS-DUMP] container 23 slot 30 lore 26 | Grants +5%  Magic Find when
+[K8BAS-DUMP] container 23 slot 30 lore 27 | getting a combo of 50 or above.
+[K8BAS-DUMP] container 23 slot 30 lore 28 | 
+[K8BAS-DUMP] container 23 slot 30 lore 29 | This pet's perks are active even
+[K8BAS-DUMP] container 23 slot 30 lore 30 | when the pet is not summoned!
+[K8BAS-DUMP] container 23 slot 30 lore 31 | 
+[K8BAS-DUMP] container 23 slot 30 lore 32 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 30 lore 33 | ▸ 25,353,632 XP
+[K8BAS-DUMP] container 23 slot 30 lore 34 | 
+[K8BAS-DUMP] container 23 slot 30 lore 35 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 30 lore 36 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 30 lore 37 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 31 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Horse
+[K8BAS-DUMP] container 23 slot 31 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 31 lore 1 | 
+[K8BAS-DUMP] container 23 slot 31 lore 2 | Intelligence: +50
+[K8BAS-DUMP] container 23 slot 31 lore 3 | Speed: +100
+[K8BAS-DUMP] container 23 slot 31 lore 4 | 
+[K8BAS-DUMP] container 23 slot 31 lore 5 | High Stride
+[K8BAS-DUMP] container 23 slot 31 lore 6 | Grants permanent Jump Boost IV.
+[K8BAS-DUMP] container 23 slot 31 lore 7 | 
+[K8BAS-DUMP] container 23 slot 31 lore 8 | Stampede
+[K8BAS-DUMP] container 23 slot 31 lore 9 | Mob kills grant a stack of +20 
+[K8BAS-DUMP] container 23 slot 31 lore 10 | Speed and +5  Strength for 5s.
+[K8BAS-DUMP] container 23 slot 31 lore 11 | (Max 20 stacks)
+[K8BAS-DUMP] container 23 slot 31 lore 12 | 
+[K8BAS-DUMP] container 23 slot 31 lore 13 | Trample
+[K8BAS-DUMP] container 23 slot 31 lore 14 | After falling 20 or more blocks,
+[K8BAS-DUMP] container 23 slot 31 lore 15 | absorb your fall damage and deal 5%
+[K8BAS-DUMP] container 23 slot 31 lore 16 | of your weapon's  Damage for
+[K8BAS-DUMP] container 23 slot 31 lore 17 | every block fallen to mobs within 3
+[K8BAS-DUMP] container 23 slot 31 lore 18 | blocks.
+[K8BAS-DUMP] container 23 slot 31 lore 19 | 
+[K8BAS-DUMP] container 23 slot 31 lore 20 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 31 lore 21 | ▸ 30,146,725 XP
+[K8BAS-DUMP] container 23 slot 31 lore 22 | 
+[K8BAS-DUMP] container 23 slot 31 lore 23 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 31 lore 24 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 31 lore 25 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 32 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Hound
+[K8BAS-DUMP] container 23 slot 32 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 32 lore 1 | 
+[K8BAS-DUMP] container 23 slot 32 lore 2 | True Defense: +10
+[K8BAS-DUMP] container 23 slot 32 lore 3 | Strength: +40
+[K8BAS-DUMP] container 23 slot 32 lore 4 | Attack Speed: +25%
+[K8BAS-DUMP] container 23 slot 32 lore 5 | Ferocity: +5
+[K8BAS-DUMP] container 23 slot 32 lore 6 | Speed: +10
+[K8BAS-DUMP] container 23 slot 32 lore 7 | 
+[K8BAS-DUMP] container 23 slot 32 lore 8 | Scavenger
+[K8BAS-DUMP] container 23 slot 32 lore 9 | Gain +100 coins per monster kill
+[K8BAS-DUMP] container 23 slot 32 lore 10 | 
+[K8BAS-DUMP] container 23 slot 32 lore 11 | Finder
+[K8BAS-DUMP] container 23 slot 32 lore 12 | Increases the chance for monsters
+[K8BAS-DUMP] container 23 slot 32 lore 13 | to drop their armor by 30%.
+[K8BAS-DUMP] container 23 slot 32 lore 14 | 
+[K8BAS-DUMP] container 23 slot 32 lore 15 | Pack Slayer
+[K8BAS-DUMP] container 23 slot 32 lore 16 | Gain 1.5x Combat XP against Wolves.
+[K8BAS-DUMP] container 23 slot 32 lore 17 | 
+[K8BAS-DUMP] container 23 slot 32 lore 18 | Held Item: Dwarf Turtle Shelmet
+[K8BAS-DUMP] container 23 slot 32 lore 19 | Grants +10 True Defense and
+[K8BAS-DUMP] container 23 slot 32 lore 20 | makes the pet's owner immune to
+[K8BAS-DUMP] container 23 slot 32 lore 21 | knockback.
+[K8BAS-DUMP] container 23 slot 32 lore 22 | 
+[K8BAS-DUMP] container 23 slot 32 lore 23 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 32 lore 24 | ▸ 35,095,224 XP
+[K8BAS-DUMP] container 23 slot 32 lore 25 | 
+[K8BAS-DUMP] container 23 slot 32 lore 26 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 32 lore 27 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 32 lore 28 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 33 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Mammoth
+[K8BAS-DUMP] container 23 slot 33 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 33 lore 1 | 
+[K8BAS-DUMP] container 23 slot 33 lore 2 | Defense: +50
+[K8BAS-DUMP] container 23 slot 33 lore 3 | Cold Resistance: +10
+[K8BAS-DUMP] container 23 slot 33 lore 4 | 
+[K8BAS-DUMP] container 23 slot 33 lore 5 | Wooly Coat
+[K8BAS-DUMP] container 23 slot 33 lore 6 | Gain a 100% chance for mobs to not
+[K8BAS-DUMP] container 23 slot 33 lore 7 | inflict ❄ Cold when damaging you in
+[K8BAS-DUMP] container 23 slot 33 lore 8 | the Glacite Mineshafts.
+[K8BAS-DUMP] container 23 slot 33 lore 9 | 
+[K8BAS-DUMP] container 23 slot 33 lore 10 | Tusk Luck
+[K8BAS-DUMP] container 23 slot 33 lore 11 | Gain +0.5 Magic Find for every 100
+[K8BAS-DUMP] container 23 slot 33 lore 12 |  Mining Fortune, doubled in the
+[K8BAS-DUMP] container 23 slot 33 lore 13 | Glacite Tunnels and Glacite
+[K8BAS-DUMP] container 23 slot 33 lore 14 | Mineshafts.
+[K8BAS-DUMP] container 23 slot 33 lore 15 | 
+[K8BAS-DUMP] container 23 slot 33 lore 16 | Corpse Crusher
+[K8BAS-DUMP] container 23 slot 33 lore 17 | Gain +30 Mining Fortune for each
+[K8BAS-DUMP] container 23 slot 33 lore 18 | Frozen Corpse looted in your
+[K8BAS-DUMP] container 23 slot 33 lore 19 | current Glacite Mineshaft.
+[K8BAS-DUMP] container 23 slot 33 lore 20 | 
+[K8BAS-DUMP] container 23 slot 33 lore 21 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 33 lore 22 | Gives +20% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 33 lore 23 | 
+[K8BAS-DUMP] container 23 slot 33 lore 24 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 33 lore 25 | ▸ 25,782,296 XP
+[K8BAS-DUMP] container 23 slot 33 lore 26 | 
+[K8BAS-DUMP] container 23 slot 33 lore 27 | Click to despawn!
+[K8BAS-DUMP] container 23 slot 33 lore 28 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 33 lore 29 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 34 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Pigman
+[K8BAS-DUMP] container 23 slot 34 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 34 lore 1 | 
+[K8BAS-DUMP] container 23 slot 34 lore 2 | Defense: +50
+[K8BAS-DUMP] container 23 slot 34 lore 3 | Strength: +50
+[K8BAS-DUMP] container 23 slot 34 lore 4 | Ferocity: +5
+[K8BAS-DUMP] container 23 slot 34 lore 5 | 
+[K8BAS-DUMP] container 23 slot 34 lore 6 | Bacon Farmer
+[K8BAS-DUMP] container 23 slot 34 lore 7 | Pig minions work 30% faster while on
+[K8BAS-DUMP] container 23 slot 34 lore 8 | your island
+[K8BAS-DUMP] container 23 slot 34 lore 9 | 
+[K8BAS-DUMP] container 23 slot 34 lore 10 | Pork Master
+[K8BAS-DUMP] container 23 slot 34 lore 11 | Buffs the Pigman Sword by 40 
+[K8BAS-DUMP] container 23 slot 34 lore 12 | Damage and 25  Strength.
+[K8BAS-DUMP] container 23 slot 34 lore 13 | 
+[K8BAS-DUMP] container 23 slot 34 lore 14 | Giant Slayer
+[K8BAS-DUMP] container 23 slot 34 lore 15 | Deal +50% damage to monsters Level
+[K8BAS-DUMP] container 23 slot 34 lore 16 | 50+ and +75% damage to monsters
+[K8BAS-DUMP] container 23 slot 34 lore 17 | Level 100+.
+[K8BAS-DUMP] container 23 slot 34 lore 18 | 
+[K8BAS-DUMP] container 23 slot 34 lore 19 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 34 lore 20 | Gives +30% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 34 lore 21 | 
+[K8BAS-DUMP] container 23 slot 34 lore 22 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 34 lore 23 | ▸ 26,723,311 XP
+[K8BAS-DUMP] container 23 slot 34 lore 24 | 
+[K8BAS-DUMP] container 23 slot 34 lore 25 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 34 lore 26 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 34 lore 27 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 36 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 37 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Rat
+[K8BAS-DUMP] container 23 slot 37 lore 0 | Combat Morph
+[K8BAS-DUMP] container 23 slot 37 lore 1 | 
+[K8BAS-DUMP] container 23 slot 37 lore 2 | Health: +125
+[K8BAS-DUMP] container 23 slot 37 lore 3 | Strength: +60
+[K8BAS-DUMP] container 23 slot 37 lore 4 | Crit Damage: +25%
+[K8BAS-DUMP] container 23 slot 37 lore 5 | 
+[K8BAS-DUMP] container 23 slot 37 lore 6 | Morph
+[K8BAS-DUMP] container 23 slot 37 lore 7 | Right-click your summoned pet to
+[K8BAS-DUMP] container 23 slot 37 lore 8 | morph into it!
+[K8BAS-DUMP] container 23 slot 37 lore 9 | 
+[K8BAS-DUMP] container 23 slot 37 lore 10 | CHEESE!
+[K8BAS-DUMP] container 23 slot 37 lore 11 | As a Rat, you smell CHEESE nearby!
+[K8BAS-DUMP] container 23 slot 37 lore 12 | Yummy!
+[K8BAS-DUMP] container 23 slot 37 lore 13 | 
+[K8BAS-DUMP] container 23 slot 37 lore 14 | Rat's Blessing
+[K8BAS-DUMP] container 23 slot 37 lore 15 | Has a chance to grant a random
+[K8BAS-DUMP] container 23 slot 37 lore 16 | player +7 Magic Find for 60
+[K8BAS-DUMP] container 23 slot 37 lore 17 | seconds after finding a yummy piece
+[K8BAS-DUMP] container 23 slot 37 lore 18 | of Cheese! If the player gets a drop
+[K8BAS-DUMP] container 23 slot 37 lore 19 | during this buff, you have a 20%
+[K8BAS-DUMP] container 23 slot 37 lore 20 | chance to get it too.
+[K8BAS-DUMP] container 23 slot 37 lore 21 | 
+[K8BAS-DUMP] container 23 slot 37 lore 22 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 37 lore 23 | ▸ 25,357,644 XP
+[K8BAS-DUMP] container 23 slot 37 lore 24 | 
+[K8BAS-DUMP] container 23 slot 37 lore 25 | Can be upgraded at Kat in The Hub!
+[K8BAS-DUMP] container 23 slot 37 lore 26 | 
+[K8BAS-DUMP] container 23 slot 37 lore 27 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 37 lore 28 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 37 lore 29 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 38 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Rat
+[K8BAS-DUMP] container 23 slot 38 lore 0 | Combat Morph
+[K8BAS-DUMP] container 23 slot 38 lore 1 | 
+[K8BAS-DUMP] container 23 slot 38 lore 2 | Health: +125
+[K8BAS-DUMP] container 23 slot 38 lore 3 | Strength: +60
+[K8BAS-DUMP] container 23 slot 38 lore 4 | Crit Damage: +25%
+[K8BAS-DUMP] container 23 slot 38 lore 5 | 
+[K8BAS-DUMP] container 23 slot 38 lore 6 | Morph
+[K8BAS-DUMP] container 23 slot 38 lore 7 | Right-click your summoned pet to
+[K8BAS-DUMP] container 23 slot 38 lore 8 | morph into it!
+[K8BAS-DUMP] container 23 slot 38 lore 9 | 
+[K8BAS-DUMP] container 23 slot 38 lore 10 | CHEESE!
+[K8BAS-DUMP] container 23 slot 38 lore 11 | As a Rat, you smell CHEESE nearby!
+[K8BAS-DUMP] container 23 slot 38 lore 12 | Yummy!
+[K8BAS-DUMP] container 23 slot 38 lore 13 | 
+[K8BAS-DUMP] container 23 slot 38 lore 14 | Rat's Blessing
+[K8BAS-DUMP] container 23 slot 38 lore 15 | Has a chance to grant a random
+[K8BAS-DUMP] container 23 slot 38 lore 16 | player +7 Magic Find for 60
+[K8BAS-DUMP] container 23 slot 38 lore 17 | seconds after finding a yummy piece
+[K8BAS-DUMP] container 23 slot 38 lore 18 | of Cheese! If the player gets a drop
+[K8BAS-DUMP] container 23 slot 38 lore 19 | during this buff, you have a 20%
+[K8BAS-DUMP] container 23 slot 38 lore 20 | chance to get it too.
+[K8BAS-DUMP] container 23 slot 38 lore 21 | 
+[K8BAS-DUMP] container 23 slot 38 lore 22 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 38 lore 23 | ▸ 25,353,233 XP
+[K8BAS-DUMP] container 23 slot 38 lore 24 | 
+[K8BAS-DUMP] container 23 slot 38 lore 25 | Can be upgraded at Kat in The Hub!
+[K8BAS-DUMP] container 23 slot 38 lore 26 | 
+[K8BAS-DUMP] container 23 slot 38 lore 27 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 38 lore 28 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 38 lore 29 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 39 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Skeleton
+[K8BAS-DUMP] container 23 slot 39 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 39 lore 1 | 
+[K8BAS-DUMP] container 23 slot 39 lore 2 | Crit Chance: +15%
+[K8BAS-DUMP] container 23 slot 39 lore 3 | Crit Damage: +30%
+[K8BAS-DUMP] container 23 slot 39 lore 4 | 
+[K8BAS-DUMP] container 23 slot 39 lore 5 | Bone Arrows
+[K8BAS-DUMP] container 23 slot 39 lore 6 | Increase arrow damage by 75% which
+[K8BAS-DUMP] container 23 slot 39 lore 7 | is doubled while in dungeons
+[K8BAS-DUMP] container 23 slot 39 lore 8 | 
+[K8BAS-DUMP] container 23 slot 39 lore 9 | Combo
+[K8BAS-DUMP] container 23 slot 39 lore 10 | Gain a combo stack for every bow hit
+[K8BAS-DUMP] container 23 slot 39 lore 11 | granting +3  Strength. Max 20
+[K8BAS-DUMP] container 23 slot 39 lore 12 | stacks, stacks disappear after 8
+[K8BAS-DUMP] container 23 slot 39 lore 13 | seconds.
+[K8BAS-DUMP] container 23 slot 39 lore 14 | 
+[K8BAS-DUMP] container 23 slot 39 lore 15 | Skeletal Defense
+[K8BAS-DUMP] container 23 slot 39 lore 16 | Your skeleton shoots an arrow
+[K8BAS-DUMP] container 23 slot 39 lore 17 | dealing 30x your  Crit Damage
+[K8BAS-DUMP] container 23 slot 39 lore 18 | when a mob gets close to you (5s
+[K8BAS-DUMP] container 23 slot 39 lore 19 | cooldown).
+[K8BAS-DUMP] container 23 slot 39 lore 20 | 
+[K8BAS-DUMP] container 23 slot 39 lore 21 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 39 lore 22 | Gives +30% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 39 lore 23 | 
+[K8BAS-DUMP] container 23 slot 39 lore 24 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 39 lore 25 | ▸ 25,451,655 XP
+[K8BAS-DUMP] container 23 slot 39 lore 26 | 
+[K8BAS-DUMP] container 23 slot 39 lore 27 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 39 lore 28 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 39 lore 29 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 40 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Skeleton Horse
+[K8BAS-DUMP] container 23 slot 40 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 40 lore 1 | 
+[K8BAS-DUMP] container 23 slot 40 lore 2 | Intelligence: +75
+[K8BAS-DUMP] container 23 slot 40 lore 3 | Speed: +150
+[K8BAS-DUMP] container 23 slot 40 lore 4 | 
+[K8BAS-DUMP] container 23 slot 40 lore 5 | High Stride
+[K8BAS-DUMP] container 23 slot 40 lore 6 | Grants permanent Jump Boost IV.
+[K8BAS-DUMP] container 23 slot 40 lore 7 | 
+[K8BAS-DUMP] container 23 slot 40 lore 8 | Stampede
+[K8BAS-DUMP] container 23 slot 40 lore 9 | Mob kills grant a stack of +1 
+[K8BAS-DUMP] container 23 slot 40 lore 10 | Attack Speed and +10  Strength
+[K8BAS-DUMP] container 23 slot 40 lore 11 | for 5s.
+[K8BAS-DUMP] container 23 slot 40 lore 12 | (Max 20 stacks)
+[K8BAS-DUMP] container 23 slot 40 lore 13 | 
+[K8BAS-DUMP] container 23 slot 40 lore 14 | Trample
+[K8BAS-DUMP] container 23 slot 40 lore 15 | After falling 20 or more blocks,
+[K8BAS-DUMP] container 23 slot 40 lore 16 | absorb your fall damage and deal 7%
+[K8BAS-DUMP] container 23 slot 40 lore 17 | of your weapon's  Damage for
+[K8BAS-DUMP] container 23 slot 40 lore 18 | every block fallen to mobs within 3
+[K8BAS-DUMP] container 23 slot 40 lore 19 | blocks.
+[K8BAS-DUMP] container 23 slot 40 lore 20 | 
+[K8BAS-DUMP] container 23 slot 40 lore 21 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 40 lore 22 | Gives +40% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 40 lore 23 | 
+[K8BAS-DUMP] container 23 slot 40 lore 24 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 40 lore 25 | ▸ 28,949,825 XP
+[K8BAS-DUMP] container 23 slot 40 lore 26 | 
+[K8BAS-DUMP] container 23 slot 40 lore 27 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 40 lore 28 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 40 lore 29 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 41 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Spirit
+[K8BAS-DUMP] container 23 slot 41 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 41 lore 1 | 
+[K8BAS-DUMP] container 23 slot 41 lore 2 | Intelligence: +100
+[K8BAS-DUMP] container 23 slot 41 lore 3 | Speed: +30
+[K8BAS-DUMP] container 23 slot 41 lore 4 | 
+[K8BAS-DUMP] container 23 slot 41 lore 5 | Spirit Assistance
+[K8BAS-DUMP] container 23 slot 41 lore 6 | Spawns and assists you when you
+[K8BAS-DUMP] container 23 slot 41 lore 7 | are a ghost in Dungeons.
+[K8BAS-DUMP] container 23 slot 41 lore 8 | 
+[K8BAS-DUMP] container 23 slot 41 lore 9 | Spirit Cooldowns
+[K8BAS-DUMP] container 23 slot 41 lore 10 | Reduces the cooldown of your ghost
+[K8BAS-DUMP] container 23 slot 41 lore 11 | abilities in dungeons by 50%.
+[K8BAS-DUMP] container 23 slot 41 lore 12 | 
+[K8BAS-DUMP] container 23 slot 41 lore 13 | Half Life
+[K8BAS-DUMP] container 23 slot 41 lore 14 | If you are the first player to die in
+[K8BAS-DUMP] container 23 slot 41 lore 15 | a dungeon, the score penalty for
+[K8BAS-DUMP] container 23 slot 41 lore 16 | that death is reduced to 1.
+[K8BAS-DUMP] container 23 slot 41 lore 17 | 
+[K8BAS-DUMP] container 23 slot 41 lore 18 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 41 lore 19 | Gives +20% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 41 lore 20 | 
+[K8BAS-DUMP] container 23 slot 41 lore 21 | This pet's perks are active even
+[K8BAS-DUMP] container 23 slot 41 lore 22 | when the pet is not summoned!
+[K8BAS-DUMP] container 23 slot 41 lore 23 | 
+[K8BAS-DUMP] container 23 slot 41 lore 24 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 41 lore 25 | ▸ 25,915,291 XP
+[K8BAS-DUMP] container 23 slot 41 lore 26 | 
+[K8BAS-DUMP] container 23 slot 41 lore 27 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 41 lore 28 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 41 lore 29 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 42 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] T-Rex
+[K8BAS-DUMP] container 23 slot 42 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 42 lore 1 | 
+[K8BAS-DUMP] container 23 slot 42 lore 2 | Strength: +75
+[K8BAS-DUMP] container 23 slot 42 lore 3 | Crit Chance: +5%
+[K8BAS-DUMP] container 23 slot 42 lore 4 | Ferocity: +25
+[K8BAS-DUMP] container 23 slot 42 lore 5 | 
+[K8BAS-DUMP] container 23 slot 42 lore 6 | Close Combat
+[K8BAS-DUMP] container 23 slot 42 lore 7 | Deal 100% more damage to enemies
+[K8BAS-DUMP] container 23 slot 42 lore 8 | within 1.5 blocks.
+[K8BAS-DUMP] container 23 slot 42 lore 9 | 
+[K8BAS-DUMP] container 23 slot 42 lore 10 | Ferocious Roar
+[K8BAS-DUMP] container 23 slot 42 lore 11 | Attacks have a 10% chance to stun
+[K8BAS-DUMP] container 23 slot 42 lore 12 | the target (10s cooldown).
+[K8BAS-DUMP] container 23 slot 42 lore 13 | 
+[K8BAS-DUMP] container 23 slot 42 lore 14 | Tyrant
+[K8BAS-DUMP] container 23 slot 42 lore 15 | Combat stats granted by pet items on
+[K8BAS-DUMP] container 23 slot 42 lore 16 | this pet are increased by 100%.
+[K8BAS-DUMP] container 23 slot 42 lore 17 | 
+[K8BAS-DUMP] container 23 slot 42 lore 18 | Held Item: Combat Exp Boost
+[K8BAS-DUMP] container 23 slot 42 lore 19 | Gives +40% pet exp for Combat.
+[K8BAS-DUMP] container 23 slot 42 lore 20 | 
+[K8BAS-DUMP] container 23 slot 42 lore 21 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 42 lore 22 | ▸ 27,263,129 XP
+[K8BAS-DUMP] container 23 slot 42 lore 23 | 
+[K8BAS-DUMP] container 23 slot 42 lore 24 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 42 lore 25 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 42 lore 26 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 43 item=minecraft:player_head sbid=PET count=1 | [Lvl 100] Tiger
+[K8BAS-DUMP] container 23 slot 43 lore 0 | Combat Pet
+[K8BAS-DUMP] container 23 slot 43 lore 1 | 
+[K8BAS-DUMP] container 23 slot 43 lore 2 | Strength: +15
+[K8BAS-DUMP] container 23 slot 43 lore 3 | Crit Chance: +5%
+[K8BAS-DUMP] container 23 slot 43 lore 4 | Crit Damage: +50%
+[K8BAS-DUMP] container 23 slot 43 lore 5 | Attack Speed: +35%
+[K8BAS-DUMP] container 23 slot 43 lore 6 | Ferocity: +25
+[K8BAS-DUMP] container 23 slot 43 lore 7 | 
+[K8BAS-DUMP] container 23 slot 43 lore 8 | Merciless Swipe
+[K8BAS-DUMP] container 23 slot 43 lore 9 | Gain +30%  Ferocity.
+[K8BAS-DUMP] container 23 slot 43 lore 10 | 
+[K8BAS-DUMP] container 23 slot 43 lore 11 | Hemorrhage
+[K8BAS-DUMP] container 23 slot 43 lore 12 | Melee attacks reduce healing by 55%
+[K8BAS-DUMP] container 23 slot 43 lore 13 | for 10s.
+[K8BAS-DUMP] container 23 slot 43 lore 14 | 
+[K8BAS-DUMP] container 23 slot 43 lore 15 | Apex Predator
+[K8BAS-DUMP] container 23 slot 43 lore 16 | Deal +100% damage against targets
+[K8BAS-DUMP] container 23 slot 43 lore 17 | with no other mobs within 15 blocks.
+[K8BAS-DUMP] container 23 slot 43 lore 18 | 
+[K8BAS-DUMP] container 23 slot 43 lore 19 | Held Item: Crochet Tiger Plushie
+[K8BAS-DUMP] container 23 slot 43 lore 20 | Grants +35 Attack Speed.
+[K8BAS-DUMP] container 23 slot 43 lore 21 | 
+[K8BAS-DUMP] container 23 slot 43 lore 22 | MAX LEVEL
+[K8BAS-DUMP] container 23 slot 43 lore 23 | ▸ 26,974,832 XP
+[K8BAS-DUMP] container 23 slot 43 lore 24 | 
+[K8BAS-DUMP] container 23 slot 43 lore 25 | Left-click to summon!
+[K8BAS-DUMP] container 23 slot 43 lore 26 | Shift Left-click to toggle as favorite!
+[K8BAS-DUMP] container 23 slot 43 lore 27 | Right-click to convert to an item!
+[K8BAS-DUMP] container 23 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 45 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 23 slot 46 item=minecraft:player_head sbid=- count=1 | Autopet
+[K8BAS-DUMP] container 23 slot 46 lore 0 | Define custom rules to automatically
+[K8BAS-DUMP] container 23 slot 46 lore 1 | equip your pets.
+[K8BAS-DUMP] container 23 slot 46 lore 2 | 
+[K8BAS-DUMP] container 23 slot 46 lore 3 | Rules used: 14/18
+[K8BAS-DUMP] container 23 slot 46 lore 4 | 
+[K8BAS-DUMP] container 23 slot 46 lore 5 | Click to setup autopet!
+[K8BAS-DUMP] container 23 slot 47 item=minecraft:diamond sbid=- count=1 | Pet Score Rewards
+[K8BAS-DUMP] container 23 slot 47 lore 0 | Pet score is calculated based on
+[K8BAS-DUMP] container 23 slot 47 lore 1 | how many unique pets you have and
+[K8BAS-DUMP] container 23 slot 47 lore 2 | the rarity of these pets.
+[K8BAS-DUMP] container 23 slot 47 lore 3 | 
+[K8BAS-DUMP] container 23 slot 47 lore 4 | You gain an additional score for
+[K8BAS-DUMP] container 23 slot 47 lore 5 | each max level pet you have!
+[K8BAS-DUMP] container 23 slot 47 lore 6 | 
+[K8BAS-DUMP] container 23 slot 47 lore 7 | 10 Score: +1 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 8 | 25 Score: +2 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 9 | 50 Score: +3 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 10 | 75 Score: +4 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 11 | 100 Score: +5 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 12 | 130 Score: +6 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 13 | 175 Score: +7 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 14 | 225 Score: +8 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 15 | 275 Score: +9 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 16 | 325 Score: +10 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 17 | 375 Score: +11 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 18 | 450 Score: +12 Magic Find «
+[K8BAS-DUMP] container 23 slot 47 lore 19 | 500 Score: +13 Magic Find
+[K8BAS-DUMP] container 23 slot 47 lore 20 | 
+[K8BAS-DUMP] container 23 slot 47 lore 21 | Your Pet Score: 455
+[K8BAS-DUMP] container 23 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 23 slot 48 lore 0 | To Tasks ➜ Core
+[K8BAS-DUMP] container 23 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 23 slot 50 item=minecraft:oak_sign sbid=- count=1 | Search
+[K8BAS-DUMP] container 23 slot 50 lore 0 | Find pets by name!
+[K8BAS-DUMP] container 23 slot 50 lore 1 | 
+[K8BAS-DUMP] container 23 slot 50 lore 2 | Click to search!
+[K8BAS-DUMP] container 23 slot 51 item=minecraft:stone_button sbid=- count=1 | Pet visibility
+[K8BAS-DUMP] container 23 slot 51 lore 0 | 
+[K8BAS-DUMP] container 23 slot 51 lore 1 |   Show all pets
+[K8BAS-DUMP] container 23 slot 51 lore 2 | ▶ Hide all pets
+[K8BAS-DUMP] container 23 slot 51 lore 3 |   Only your pet
+[K8BAS-DUMP] container 23 slot 51 lore 4 | 
+[K8BAS-DUMP] container 23 slot 51 lore 5 | Pet name tags: Enabled
+[K8BAS-DUMP] container 23 slot 51 lore 6 | 
+[K8BAS-DUMP] container 23 slot 51 lore 7 | Right-click to toggle name tags!
+[K8BAS-DUMP] container 23 slot 51 lore 8 | Left-click to switch visibility!
+[K8BAS-DUMP] container 23 slot 52 item=minecraft:hopper sbid=- count=1 | Sort
+[K8BAS-DUMP] container 23 slot 52 lore 0 | 
+[K8BAS-DUMP] container 23 slot 52 lore 1 |   Rarity
+[K8BAS-DUMP] container 23 slot 52 lore 2 |   A to Z
+[K8BAS-DUMP] container 23 slot 52 lore 3 |   Z to A
+[K8BAS-DUMP] container 23 slot 52 lore 4 |   Pet Exp
+[K8BAS-DUMP] container 23 slot 52 lore 5 | ▶ Skill
+[K8BAS-DUMP] container 23 slot 52 lore 6 | 
+[K8BAS-DUMP] container 23 slot 52 lore 7 | Click to switch sort!
+[K8BAS-DUMP] container 23 slot 52 lore 8 | Right-Click to go backwards!
+[K8BAS-DUMP] container 23 slot 53 item=minecraft:arrow sbid=- count=1 | Next Page
+[K8BAS-DUMP] container 23 slot 53 lore 0 | Page 2

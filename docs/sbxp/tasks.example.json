@@ -1,0 +1,226 @@
+{
+  "$schema": "./tasks.schema.json",
+  "table": "sbxp_tasks",
+  "schemaVersion": 1,
+  "dataVersion": 1,
+  "gameVersion": "0.27.1",
+  "generatedAt": "2026-10-01T12:00:00Z",
+  "license": "CC0-1.0",
+
+  "sources": {
+    "hypixel_res_skills": { "kind": "official_api", "title": "Hypixel API resources: skyblock/skills", "url": "https://api.hypixel.net/v2/resources/skyblock/skills", "revision": "0.27.1.17", "date": "2026-09-30", "license": "official_api", "access": "api" },
+    "neu_repo": { "kind": "neu_repo", "title": "NotEnoughUpdates-REPO", "url": "https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO", "revision": "24564a1ad2", "date": "2026-09-30", "license": "MIT", "notice": "neu-repo", "access": "git" },
+    "user_log": { "kind": "user_log", "title": "Maintainer's game logs (sanitised excerpts)", "date": "2026-09-30", "license": "personal", "access": "own_capture" },
+    "own_estimate": { "kind": "own_measurement", "title": "Maintainer estimate of action time (unverified)", "date": "2026-10-01", "license": "CC0-1.0", "access": "own_capture" },
+    "forum_5786151": { "kind": "forum", "title": "hypixel.net thread 5786151 (trophy fishing rates; version-adjusted)", "url": "https://hypixel.net/threads/5786151/", "date": "2024-10-15", "license": "facts", "access": "user_supplied" },
+    "wiki_cw_tasks": { "kind": "wiki_crosscheck", "title": "Community wiki: SkyBlock Levels/Tasks (human cross-check)", "url": "https://hypixelskyblock.minecraft.wiki/index.php?oldid=844349", "revision": "844349", "date": "2026-09-19", "license": "facts", "access": "user_supplied" },
+    "fandom_trophy_fish": { "kind": "wiki_crosscheck", "title": "Fandom: Trophy Fish (human cross-check)", "url": "https://hypixel-skyblock.fandom.com/wiki/Trophy_Fish", "date": "2026-02-25", "license": "facts", "access": "user_supplied" }
+  },
+
+  "constants": {
+    "xpPerLevel": 100,
+    "maxTotalXp": { "value": null, "verified": false, "sourceRefs": [] }
+  },
+
+  "stages": {
+    "early": { "label": "Early game", "description": "New to mid-progress profiles", "guideStages": ["STARTER", "AMATEUR"] },
+    "mid": { "label": "Mid game", "description": "Established profiles, mid-tier gear", "guideStages": ["INTERMEDIATE", "SKILLED"] },
+    "late": { "label": "Late game", "description": "End-game gear and setups", "guideStages": ["EXPERT", "PROFESSIONAL", "MASTER"] }
+  },
+
+  "currencies": {
+    "gems": { "name": "SkyBlock Gems", "convert": { "kind": "real_money" } },
+    "essence_wither": { "name": "Wither Essence", "convert": { "kind": "via_item", "itemId": "ESSENCE_WITHER", "unitsPerItem": 1 } },
+    "copper": { "name": "Copper", "convert": { "kind": "via_rate", "rateRef": "garden.copper" } }
+  },
+
+  "rates": {
+    "fishing.karate_catches": {
+      "unit": "karate_catches/h",
+      "what": "Karate Fish catches while lava fishing in the Dojo",
+      "byStage": {
+        "early": { "value": 6.0, "assumes": "Fishing Speed 150, no Trophy Fish Chance; catch-time formula", "sourceRefs": ["fandom_trophy_fish"], "confidence": "low", "verified": false },
+        "mid": { "value": 11.1, "assumes": "Fishing Speed 250, Trophy Fish Chance +20; catch-time formula", "sourceRefs": ["fandom_trophy_fish"], "confidence": "low", "verified": false },
+        "late": { "value": 37, "assumes": "Late-game lava setup; 2024 forum rate doubled for the 0.20.9 Karate buff", "sourceRefs": ["forum_5786151", "user_log"], "confidence": "high", "verified": true, "range": { "p10": 31.8, "p90": 41.8 } }
+      }
+    },
+    "skill_xp.farming": {
+      "unit": "skill_xp/h",
+      "what": "Farming skill XP",
+      "byStage": { "all": { "value": null, "assumes": "not yet researched", "sourceRefs": [], "confidence": "low", "verified": false } }
+    },
+    "exploration.fairy_souls": {
+      "unit": "souls/h",
+      "what": "Fairy souls collected with a waypoint guide",
+      "byStage": { "all": { "value": null, "assumes": "not yet researched", "sourceRefs": [], "confidence": "low", "verified": false } }
+    },
+    "garden.copper": {
+      "unit": "copper/h",
+      "what": "Copper from Garden pests and visitors",
+      "byStage": { "all": { "value": null, "assumes": "not yet researched", "sourceRefs": [], "confidence": "low", "verified": false } }
+    }
+  },
+
+  "prereqProducers": {
+    "skill": "core.skill_level_up.${id}#${level}"
+  },
+
+  "families": [
+    {
+      "id": "core.bank_upgrades",
+      "name": "Bank Upgrades",
+      "category": "core",
+      "maxXp": { "value": 200, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] },
+      "xpBasis": "permanent",
+      "detect": { "menuPath": ["Core", "Bank Upgrades"], "menuItemName": "Bank Upgrades", "hypixelTaskIds": ["BANK_UPGRADE_GOLD"] },
+      "tasks": [
+        {
+          "id": "core.bank_upgrades.account",
+          "name": "Bank account upgrades",
+          "type": "ladder",
+          "effort": [],
+          "steps": [
+            { "n": 1, "id": "gold", "name": "Gold", "xp": { "value": 20, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] } },
+            { "n": 2, "id": "deluxe", "name": "Deluxe", "xp": { "value": 25, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] } },
+            { "n": 3, "id": "super_deluxe", "name": "Super Deluxe", "xp": { "value": 30, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] } },
+            { "n": 4, "id": "premier", "name": "Premier", "xp": { "value": 35, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] } },
+            { "n": 5, "id": "luxurious", "name": "Luxurious", "xp": { "value": 40, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] } },
+            { "n": 6, "id": "palatial", "name": "Palatial", "xp": { "value": 50, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] } }
+          ],
+          "verification": { "verified": false, "lastVerifiedGameVersion": "0.27.1", "notes": "XP verified; cost absent = not researched, so every step shows 'no estimate'" }
+        }
+      ],
+      "verification": { "verified": true, "lastVerifiedGameVersion": "0.27.1" }
+    },
+
+    {
+      "id": "core.skill_level_up",
+      "name": "Skill Level Up",
+      "category": "core",
+      "maxXp": { "value": 8710, "verified": true, "sourceRefs": ["hypixel_res_skills", "wiki_cw_tasks"] },
+      "xpBasis": "permanent",
+      "coopScope": "member",
+      "detect": { "menuPath": ["Core", "Skill Level Up"], "menuItemName": "Skill Level Up", "componentMenu": "skills" },
+      "generators": [
+        {
+          "from": "ref.skills",
+          "type": "ladder",
+          "idTemplate": "core.skill_level_up.${id}",
+          "nameTemplate": "${name} ${n}",
+          "stepsFrom": "maxLevel",
+          "xp": { "bands": [ { "from": 1, "to": 10, "xp": 5 }, { "from": 11, "to": 25, "xp": 10 }, { "from": 26, "to": 50, "xp": 20 }, { "from": 51, "to": 60, "xp": 30 } ] },
+          "xpVerified": true,
+          "xpSourceRefs": ["hypixel_res_skills", "neu_repo"],
+          "amountFrom": "xpToNext",
+          "amountUnit": "skill_xp",
+          "rateRefTemplate": "skill_xp.${id}",
+          "verification": { "verified": true, "lastVerifiedGameVersion": "0.27.1", "notes": "Runecrafting and Social excluded (inferred from the 8,710 total)" }
+        }
+      ],
+      "verification": { "verified": true, "lastVerifiedGameVersion": "0.27.1" }
+    },
+
+    {
+      "id": "skill_related.fishing.trophy_fish",
+      "name": "Trophy Fish",
+      "category": "skill_related",
+      "subcategory": "fishing",
+      "maxXp": { "value": 1080, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] },
+      "xpBasis": "permanent",
+      "detect": { "menuPath": ["Fishing", "Trophy Fish"], "chatPatterns": ["trophy.new_discovery"] },
+      "tasks": [
+        {
+          "id": "skill_related.fishing.trophy_fish.karate.diamond",
+          "name": "Karate Fish (Diamond)",
+          "type": "one_time",
+          "xp": { "value": 32, "verified": true, "sourceRefs": ["neu_repo", "user_log"] },
+          "effort": [
+            { "kind": "drop", "chance": { "early": 0.002, "mid": 0.0022, "late": 0.00264 }, "pity": 600, "attemptRateRef": "fishing.karate_catches", "verified": false, "sourceRefs": ["fandom_trophy_fish"] }
+          ],
+          "cost": [],
+          "requires": [ { "kind": "island", "id": "crimson_isle" }, { "kind": "other", "note": "any lava-capable fishing rod" } ],
+          "verification": { "verified": false, "lastVerifiedGameVersion": "0.27.1", "notes": "Late chance 0.264% from a closed-wiki snippet: UNVERIFIED" }
+        }
+      ],
+      "verification": { "verified": true, "lastVerifiedGameVersion": "0.27.1" }
+    },
+
+    {
+      "id": "core.fairy_souls",
+      "name": "Fairy Souls",
+      "category": "core",
+      "maxXp": { "value": 570, "verified": false, "sourceRefs": ["neu_repo"] },
+      "xpBasis": "permanent",
+      "detect": { "menuPath": ["Core", "Fairy Souls"], "actionBarLabels": ["Fairy Souls"] },
+      "tasks": [
+        {
+          "id": "core.fairy_souls.exchange",
+          "name": "Exchange fairy souls at Tia",
+          "type": "capped",
+          "capped": {
+            "unit": "souls",
+            "unitsPerStep": 5,
+            "xpPerStep": { "value": 10, "verified": true, "sourceRefs": ["neu_repo", "user_log"] },
+            "maxXp": { "value": 570, "verified": false, "sourceRefs": ["neu_repo"] }
+          },
+          "effort": [ { "kind": "throughput", "amount": 1, "unit": "souls", "rateRef": "exploration.fairy_souls" } ],
+          "cost": [],
+          "sourceRefs": ["neu_repo"],
+          "verification": { "verified": false, "lastVerifiedGameVersion": "0.27.1", "notes": "Max awaits the in-game /sblevels capture" }
+        }
+      ],
+      "verification": { "verified": false, "lastVerifiedGameVersion": "0.27.1" }
+    },
+
+    {
+      "id": "miscellaneous.consumable_items",
+      "name": "Consumable Items",
+      "category": "miscellaneous",
+      "subcategory": "consumable_items",
+      "maxXp": { "value": null, "verified": false, "sourceRefs": [] },
+      "xpBasis": "permanent",
+      "detect": { "menuPath": ["Miscellaneous", "Consumable Items"], "menuItemName": "Consumable Items" },
+      "tasks": [
+        {
+          "id": "miscellaneous.consumable_items.metaphysical_serum",
+          "name": "Metaphysical Serum",
+          "type": "repeatable",
+          "xp": { "value": 5, "verified": true, "sourceRefs": ["neu_repo", "wiki_cw_tasks"] },
+          "maxCompletions": 3,
+          "sourceRefs": ["neu_repo", "wiki_cw_tasks"],
+          "effort": [ { "kind": "fixed", "minutes": 0.5, "assumes": "buy on the Bazaar and consume", "sourceRefs": ["own_estimate"] } ],
+          "cost": [ { "kind": "item", "itemId": "METAPHYSICAL_SERUM", "qty": 1, "consumed": true, "sourceRefs": ["neu_repo"] } ],
+          "verification": { "verified": true, "lastVerifiedGameVersion": "0.27.1" }
+        }
+      ],
+      "verification": { "verified": false, "lastVerifiedGameVersion": "0.27.1", "notes": "Family max not yet summed" }
+    },
+
+    {
+      "id": "core.craft_minions",
+      "name": "Craft Minions",
+      "category": "core",
+      "maxXp": { "value": null, "verified": false, "sourceRefs": [] },
+      "xpBasis": "permanent",
+      "detect": { "menuPath": ["Core", "Craft Minions"], "actionBarLabels": ["Crafted Minion"] },
+      "generators": [
+        {
+          "from": "ref.minions",
+          "type": "ladder",
+          "idTemplate": "core.craft_minions.${id}",
+          "nameTemplate": "${name} ${roman}",
+          "stepsFrom": "maxTier",
+          "xp": { "list": [1, 1, 1, 1, 1, 1, 2, 3, 4, 6, 12, 24] },
+          "xpVerified": true,
+          "xpSourceRefs": ["neu_repo", "user_log"],
+          "costFrom": "recipe",
+          "requiresFrom": "recipeRequires",
+          "fixedMinutesPerStep": 2,
+          "fixedMinutesSourceRefs": ["own_estimate"],
+          "verification": { "verified": true, "lastVerifiedGameVersion": "0.27.1" }
+        }
+      ],
+      "verification": { "verified": false, "lastVerifiedGameVersion": "0.27.1", "conflicts": ["API generator tiers sum to 3,165, wiki says 3,164"] }
+    }
+  ]
+}

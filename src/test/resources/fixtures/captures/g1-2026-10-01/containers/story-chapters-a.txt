@@ -1,0 +1,111 @@
+[K8BAS-DUMP] container 445 title=Story ➜ Chapters slots=45 state=56
+[K8BAS-DUMP] container 445 slot 0 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 1 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 2 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 3 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 4 item=minecraft:book sbid=- count=1 | Chapters
+[K8BAS-DUMP] container 445 slot 4 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 445 slot 4 lore 1 | 
+[K8BAS-DUMP] container 445 slot 4 lore 2 |  ✖ Moonglade Marsh Chapters
+[K8BAS-DUMP] container 445 slot 4 lore 3 |  ✔ Backwater Bayou Chapters
+[K8BAS-DUMP] container 445 slot 4 lore 4 |  ✖ Torrhus Canyon Chapters
+[K8BAS-DUMP] container 445 slot 4 lore 5 |  ✔ Lotus Atoll Chapters
+[K8BAS-DUMP] container 445 slot 4 lore 6 | 
+[K8BAS-DUMP] container 445 slot 4 lore 7 | Total Progress: 53.6%
+[K8BAS-DUMP] container 445 slot 4 lore 8 |                           300/560 XP
+[K8BAS-DUMP] container 445 slot 4 lore 9 | 
+[K8BAS-DUMP] container 445 slot 4 lore 10 | This task is worth 0.6% of your Total
+[K8BAS-DUMP] container 445 slot 4 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 445 slot 5 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 6 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 7 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 8 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 9 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 17 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 18 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 20 item=minecraft:player_head sbid=- count=1 | Moonglade Marsh Chapters
+[K8BAS-DUMP] container 445 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 445 slot 20 lore 1 | 
+[K8BAS-DUMP] container 445 slot 20 lore 2 | Gain XP each time you complete a
+[K8BAS-DUMP] container 445 slot 20 lore 3 | Chapter on the Moonglade Marsh!
+[K8BAS-DUMP] container 445 slot 20 lore 4 | 
+[K8BAS-DUMP] container 445 slot 20 lore 5 | Total Progress: 10.7%
+[K8BAS-DUMP] container 445 slot 20 lore 6 |                           15/140 XP
+[K8BAS-DUMP] container 445 slot 20 lore 7 | 
+[K8BAS-DUMP] container 445 slot 20 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 445 slot 20 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 445 slot 20 lore 10 | 
+[K8BAS-DUMP] container 445 slot 20 lore 11 | Click to see your Moonglade Marsh
+[K8BAS-DUMP] container 445 slot 20 lore 12 | Chapters progress!
+[K8BAS-DUMP] container 445 slot 21 item=minecraft:player_head sbid=- count=1 | Backwater Bayou Chapters
+[K8BAS-DUMP] container 445 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 445 slot 21 lore 1 | 
+[K8BAS-DUMP] container 445 slot 21 lore 2 | Gain XP each time you complete a
+[K8BAS-DUMP] container 445 slot 21 lore 3 | Chapter on the Backwater Bayou!
+[K8BAS-DUMP] container 445 slot 21 lore 4 | 
+[K8BAS-DUMP] container 445 slot 21 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 445 slot 21 lore 6 |                           140/140 XP
+[K8BAS-DUMP] container 445 slot 21 lore 7 | 
+[K8BAS-DUMP] container 445 slot 21 lore 8 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 445 slot 21 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 445 slot 21 lore 10 | 
+[K8BAS-DUMP] container 445 slot 21 lore 11 | Click to see your Backwater Bayou
+[K8BAS-DUMP] container 445 slot 21 lore 12 | Chapters progress!
+[K8BAS-DUMP] container 445 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 23 item=minecraft:player_head sbid=- count=1 | Torrhus Canyon Chapters
+[K8BAS-DUMP] container 445 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 445 slot 23 lore 1 | 
+[K8BAS-DUMP] container 445 slot 23 lore 2 | Gain XP each time you complete a
+[K8BAS-DUMP] container 445 slot 23 lore 3 | Chapter on the Torrhus Canyon!
+[K8BAS-DUMP] container 445 slot 23 lore 4 | 
+[K8BAS-DUMP] container 445 slot 23 lore 5 | Total Progress: 3.6%
+[K8BAS-DUMP] container 445 slot 23 lore 6 |                           5/140 XP
+[K8BAS-DUMP] container 445 slot 23 lore 7 | 
+[K8BAS-DUMP] container 445 slot 23 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 445 slot 23 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 445 slot 23 lore 10 | 
+[K8BAS-DUMP] container 445 slot 23 lore 11 | Click to see your Torrhus Canyon
+[K8BAS-DUMP] container 445 slot 23 lore 12 | Chapters progress!
+[K8BAS-DUMP] container 445 slot 24 item=minecraft:player_head sbid=- count=1 | Lotus Atoll Chapters
+[K8BAS-DUMP] container 445 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 445 slot 24 lore 1 | 
+[K8BAS-DUMP] container 445 slot 24 lore 2 | Gain XP each time you complete a
+[K8BAS-DUMP] container 445 slot 24 lore 3 | Chapter on the Lotus Atoll!
+[K8BAS-DUMP] container 445 slot 24 lore 4 | 
+[K8BAS-DUMP] container 445 slot 24 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 445 slot 24 lore 6 |                           140/140 XP
+[K8BAS-DUMP] container 445 slot 24 lore 7 | 
+[K8BAS-DUMP] container 445 slot 24 lore 8 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 445 slot 24 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 445 slot 24 lore 10 | 
+[K8BAS-DUMP] container 445 slot 24 lore 11 | Click to see your Lotus Atoll
+[K8BAS-DUMP] container 445 slot 24 lore 12 | Chapters progress!
+[K8BAS-DUMP] container 445 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 26 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 27 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 35 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 36 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 37 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 38 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 445 slot 39 lore 0 | To Tasks ➜ Story
+[K8BAS-DUMP] container 445 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 445 slot 41 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 42 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 43 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 445 slot 44 item=minecraft:purple_stained_glass_pane sbid=- count=1 | 

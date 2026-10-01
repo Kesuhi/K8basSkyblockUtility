@@ -1,0 +1,82 @@
+[K8BAS-DUMP] container 325 title=Fishing ➜ Ship Crew slots=45 state=56
+[K8BAS-DUMP] container 325 slot 0 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 1 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 2 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 3 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 4 item=minecraft:oak_boat sbid=- count=1 | Ship Crew
+[K8BAS-DUMP] container 325 slot 4 lore 0 | 2 Tasks
+[K8BAS-DUMP] container 325 slot 4 lore 1 | 
+[K8BAS-DUMP] container 325 slot 4 lore 2 |  ✔ Captain Baha
+[K8BAS-DUMP] container 325 slot 4 lore 3 |  ✔ Researcher Gilbert
+[K8BAS-DUMP] container 325 slot 4 lore 4 | 
+[K8BAS-DUMP] container 325 slot 4 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 325 slot 4 lore 6 |                           20/20 XP
+[K8BAS-DUMP] container 325 slot 4 lore 7 | 
+[K8BAS-DUMP] container 325 slot 4 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 325 slot 4 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 325 slot 5 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 6 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 7 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 8 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 9 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 17 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 18 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 20 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 21 item=minecraft:player_head sbid=- count=1 | Captain Baha
+[K8BAS-DUMP] container 325 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 325 slot 21 lore 1 | 
+[K8BAS-DUMP] container 325 slot 21 lore 2 | Gain +10 XP for recruiting Captain
+[K8BAS-DUMP] container 325 slot 21 lore 3 | Baha to your Ship Crew!
+[K8BAS-DUMP] container 325 slot 21 lore 4 | 
+[K8BAS-DUMP] container 325 slot 21 lore 5 | Total Progress: 100%
+[K8BAS-DUMP] container 325 slot 21 lore 6 |                           10/10 XP
+[K8BAS-DUMP] container 325 slot 21 lore 7 | 
+[K8BAS-DUMP] container 325 slot 21 lore 8 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 325 slot 21 lore 9 | SkyBlock XP!
+[K8BAS-DUMP] container 325 slot 21 lore 10 | 
+[K8BAS-DUMP] container 325 slot 21 lore 11 | Go earn some XP!
+[K8BAS-DUMP] container 325 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 23 item=minecraft:player_head sbid=- count=1 | Researcher Gilbert
+[K8BAS-DUMP] container 325 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 325 slot 23 lore 1 | 
+[K8BAS-DUMP] container 325 slot 23 lore 2 | Gain +10 XP for recruiting
+[K8BAS-DUMP] container 325 slot 23 lore 3 | Researcher Gilbert to your Ship
+[K8BAS-DUMP] container 325 slot 23 lore 4 | Crew!
+[K8BAS-DUMP] container 325 slot 23 lore 5 | 
+[K8BAS-DUMP] container 325 slot 23 lore 6 | Total Progress: 100%
+[K8BAS-DUMP] container 325 slot 23 lore 7 |                           10/10 XP
+[K8BAS-DUMP] container 325 slot 23 lore 8 | 
+[K8BAS-DUMP] container 325 slot 23 lore 9 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 325 slot 23 lore 10 | SkyBlock XP!
+[K8BAS-DUMP] container 325 slot 23 lore 11 | 
+[K8BAS-DUMP] container 325 slot 23 lore 12 | Go earn some XP!
+[K8BAS-DUMP] container 325 slot 24 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 26 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 27 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 35 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 36 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 37 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 38 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 325 slot 39 lore 0 | To Tasks ➜ Fishing
+[K8BAS-DUMP] container 325 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 325 slot 41 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 42 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 43 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 325 slot 44 item=minecraft:cyan_stained_glass_pane sbid=- count=1 | 

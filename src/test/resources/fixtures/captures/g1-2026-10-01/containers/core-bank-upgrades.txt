@@ -1,0 +1,97 @@
+[K8BAS-DUMP] container 37 title=Core ➜ Bank Upgrades slots=45 state=56
+[K8BAS-DUMP] container 37 slot 0 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 1 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 2 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 3 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 4 item=minecraft:player_head sbid=- count=1 | Bank Upgrades
+[K8BAS-DUMP] container 37 slot 4 lore 0 | 6 Tasks
+[K8BAS-DUMP] container 37 slot 4 lore 1 | 
+[K8BAS-DUMP] container 37 slot 4 lore 2 |  ✔ Gold Bank Upgrade
+[K8BAS-DUMP] container 37 slot 4 lore 3 |  ✔ Deluxe Bank Upgrade
+[K8BAS-DUMP] container 37 slot 4 lore 4 |  ✔ Super Deluxe Bank Upgrade
+[K8BAS-DUMP] container 37 slot 4 lore 5 |  ✔ Premier Bank Upgrade
+[K8BAS-DUMP] container 37 slot 4 lore 6 |  ✔ Luxurious Bank Upgrade
+[K8BAS-DUMP] container 37 slot 4 lore 7 |  ✖ Palatial Bank Upgrade
+[K8BAS-DUMP] container 37 slot 4 lore 8 | 
+[K8BAS-DUMP] container 37 slot 4 lore 9 | Total Progress: 75%
+[K8BAS-DUMP] container 37 slot 4 lore 10 |                           150/200 XP
+[K8BAS-DUMP] container 37 slot 4 lore 11 | 
+[K8BAS-DUMP] container 37 slot 4 lore 12 | This task is worth 0.3% of your Total
+[K8BAS-DUMP] container 37 slot 4 lore 13 | SkyBlock XP!
+[K8BAS-DUMP] container 37 slot 5 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 6 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 7 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 8 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 9 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 17 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 18 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 19 item=minecraft:gold_nugget sbid=- count=1 | Gold Bank Upgrade
+[K8BAS-DUMP] container 37 slot 19 lore 0 | XP Task
+[K8BAS-DUMP] container 37 slot 19 lore 1 | 
+[K8BAS-DUMP] container 37 slot 19 lore 2 | Upgrade your Bank Account to this
+[K8BAS-DUMP] container 37 slot 19 lore 3 | level to gain +20 XP.
+[K8BAS-DUMP] container 37 slot 19 lore 4 | 
+[K8BAS-DUMP] container 37 slot 19 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 37 slot 20 item=minecraft:gold_ingot sbid=- count=1 | Deluxe Bank Upgrade
+[K8BAS-DUMP] container 37 slot 20 lore 0 | XP Task
+[K8BAS-DUMP] container 37 slot 20 lore 1 | 
+[K8BAS-DUMP] container 37 slot 20 lore 2 | Upgrade your Bank Account to this
+[K8BAS-DUMP] container 37 slot 20 lore 3 | level to gain +25 XP.
+[K8BAS-DUMP] container 37 slot 20 lore 4 | 
+[K8BAS-DUMP] container 37 slot 20 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 37 slot 21 item=minecraft:golden_chestplate sbid=- count=1 | Super Deluxe Bank Upgrade
+[K8BAS-DUMP] container 37 slot 21 lore 0 | XP Task
+[K8BAS-DUMP] container 37 slot 21 lore 1 | 
+[K8BAS-DUMP] container 37 slot 21 lore 2 | Upgrade your Bank Account to this
+[K8BAS-DUMP] container 37 slot 21 lore 3 | level to gain +30 XP.
+[K8BAS-DUMP] container 37 slot 21 lore 4 | 
+[K8BAS-DUMP] container 37 slot 21 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 37 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 23 item=minecraft:golden_horse_armor sbid=- count=1 | Premier Bank Upgrade
+[K8BAS-DUMP] container 37 slot 23 lore 0 | XP Task
+[K8BAS-DUMP] container 37 slot 23 lore 1 | 
+[K8BAS-DUMP] container 37 slot 23 lore 2 | Upgrade your Bank Account to this
+[K8BAS-DUMP] container 37 slot 23 lore 3 | level to gain +35 XP.
+[K8BAS-DUMP] container 37 slot 23 lore 4 | 
+[K8BAS-DUMP] container 37 slot 23 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 37 slot 24 item=minecraft:player_head sbid=- count=1 | Luxurious Bank Upgrade
+[K8BAS-DUMP] container 37 slot 24 lore 0 | XP Task
+[K8BAS-DUMP] container 37 slot 24 lore 1 | 
+[K8BAS-DUMP] container 37 slot 24 lore 2 | Upgrade your Bank Account to this
+[K8BAS-DUMP] container 37 slot 24 lore 3 | level to gain +40 XP.
+[K8BAS-DUMP] container 37 slot 24 lore 4 | 
+[K8BAS-DUMP] container 37 slot 24 lore 5 | You have completed this task!
+[K8BAS-DUMP] container 37 slot 25 item=minecraft:player_head sbid=- count=1 | Palatial Bank Upgrade
+[K8BAS-DUMP] container 37 slot 25 lore 0 | XP Task
+[K8BAS-DUMP] container 37 slot 25 lore 1 | 
+[K8BAS-DUMP] container 37 slot 25 lore 2 | Upgrade your Bank Account to this
+[K8BAS-DUMP] container 37 slot 25 lore 3 | level to gain +50 XP.
+[K8BAS-DUMP] container 37 slot 25 lore 4 | 
+[K8BAS-DUMP] container 37 slot 25 lore 5 | This task can only be completed once!
+[K8BAS-DUMP] container 37 slot 26 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 27 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 30 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 32 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 35 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 36 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 37 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 38 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 39 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 37 slot 39 lore 0 | To Tasks ➜ Core
+[K8BAS-DUMP] container 37 slot 40 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 37 slot 41 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 42 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 43 item=minecraft:white_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 37 slot 44 item=minecraft:white_stained_glass_pane sbid=- count=1 | 

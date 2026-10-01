@@ -6,10 +6,17 @@ import java.util.regex.Pattern;
 
 public final class CompiledRule {
 	public final HighlightRule rule;
-	private final Pattern pattern;
+	final Pattern pattern;
+	/** The rule's position in its module's list; the first matching rule in list order wins. */
+	final int order;
 
 	public CompiledRule(HighlightRule rule) {
+		this(rule, 0);
+	}
+
+	CompiledRule(HighlightRule rule, int order) {
 		this.rule = rule;
+		this.order = order;
 		if (rule.nameMatchMode == NameMatchMode.REGEX && rule.namePattern != null && !rule.namePattern.isEmpty()) {
 			this.pattern = Pattern.compile(rule.namePattern);
 		} else {
@@ -24,11 +31,7 @@ public final class CompiledRule {
 	 *  than one CompiledRule for the same entity in the same tick doesn't repeat the expensive
 	 *  part — no need for this class to also cache/pass the resolved name around itself. */
 	public boolean matchesName(Entity entity) {
-		return switch (rule.nameMatchMode) {
-			case NONE -> true;
-			case CONTAINS -> rule.namePattern != null && HighlightManager.resolveNameTag(entity).contains(rule.namePattern);
-			case EXACT -> rule.namePattern != null && HighlightManager.resolveNameTag(entity).equals(rule.namePattern);
-			case REGEX -> pattern != null && pattern.matcher(HighlightManager.resolveNameTag(entity)).find();
-		};
+		String name = NameMatcher.needsName(this) ? HighlightManager.resolveNameTag(entity) : "";
+		return NameMatcher.matches(this, name);
 	}
 }

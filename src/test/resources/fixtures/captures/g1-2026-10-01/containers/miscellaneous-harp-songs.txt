@@ -1,0 +1,259 @@
+[K8BAS-DUMP] container 388 title=Miscellaneous ➜ Harp Songs slots=54 state=65
+[K8BAS-DUMP] container 388 slot 0 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 1 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 2 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 3 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 4 item=minecraft:book sbid=- count=1 | Harp Songs
+[K8BAS-DUMP] container 388 slot 4 lore 0 | 13 Tasks
+[K8BAS-DUMP] container 388 slot 4 lore 1 | 
+[K8BAS-DUMP] container 388 slot 4 lore 2 |  ✔ Hymn to the Joy (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 3 |  ✔ Frère Jacques (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 4 |  ✔ Amazing Grace (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 5 |  ✔ Brahms' Lullaby (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 6 |  ✔ Happy Birthday to You (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 7 |  ✔ Greensleeves (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 8 |  ✔ Geothermy? (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 9 |  ✔ Minuet (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 10 |  ✔ Joy to the World (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 11 |  ✔ Godly Imagination (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 12 |  ✔ La Vie en Rose (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 13 |  ✔ Through the Campfire (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 14 |  ✔ Pachelbel (4/4)
+[K8BAS-DUMP] container 388 slot 4 lore 15 | 
+[K8BAS-DUMP] container 388 slot 4 lore 16 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 4 lore 17 |                           236/236 XP
+[K8BAS-DUMP] container 388 slot 4 lore 18 | 
+[K8BAS-DUMP] container 388 slot 4 lore 19 | This task is worth 0.4% of your Total
+[K8BAS-DUMP] container 388 slot 4 lore 20 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 5 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 6 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 7 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 8 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 9 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 11 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 13 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 15 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 17 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 18 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 19 item=minecraft:book sbid=- count=1 | Hymn to the Joy
+[K8BAS-DUMP] container 388 slot 19 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 19 lore 1 | 
+[K8BAS-DUMP] container 388 slot 19 lore 2 |  ✔ Hymn to the Joy -- 50%
+[K8BAS-DUMP] container 388 slot 19 lore 3 |  ✔ Hymn to the Joy -- 70%
+[K8BAS-DUMP] container 388 slot 19 lore 4 |  ✔ Hymn to the Joy -- 80%
+[K8BAS-DUMP] container 388 slot 19 lore 5 |  ✔ Hymn to the Joy -- 90%
+[K8BAS-DUMP] container 388 slot 19 lore 6 | 
+[K8BAS-DUMP] container 388 slot 19 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 19 lore 8 |                           4/4 XP
+[K8BAS-DUMP] container 388 slot 19 lore 9 | 
+[K8BAS-DUMP] container 388 slot 19 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 19 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 19 lore 12 | 
+[K8BAS-DUMP] container 388 slot 19 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 20 item=minecraft:book sbid=- count=1 | Frère Jacques
+[K8BAS-DUMP] container 388 slot 20 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 20 lore 1 | 
+[K8BAS-DUMP] container 388 slot 20 lore 2 |  ✔ Frère Jacques -- 50%
+[K8BAS-DUMP] container 388 slot 20 lore 3 |  ✔ Frère Jacques -- 70%
+[K8BAS-DUMP] container 388 slot 20 lore 4 |  ✔ Frère Jacques -- 80%
+[K8BAS-DUMP] container 388 slot 20 lore 5 |  ✔ Frère Jacques -- 90%
+[K8BAS-DUMP] container 388 slot 20 lore 6 | 
+[K8BAS-DUMP] container 388 slot 20 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 20 lore 8 |                           4/4 XP
+[K8BAS-DUMP] container 388 slot 20 lore 9 | 
+[K8BAS-DUMP] container 388 slot 20 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 20 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 20 lore 12 | 
+[K8BAS-DUMP] container 388 slot 20 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 21 item=minecraft:book sbid=- count=1 | Amazing Grace
+[K8BAS-DUMP] container 388 slot 21 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 21 lore 1 | 
+[K8BAS-DUMP] container 388 slot 21 lore 2 |  ✔ Amazing Grace -- 50%
+[K8BAS-DUMP] container 388 slot 21 lore 3 |  ✔ Amazing Grace -- 70%
+[K8BAS-DUMP] container 388 slot 21 lore 4 |  ✔ Amazing Grace -- 80%
+[K8BAS-DUMP] container 388 slot 21 lore 5 |  ✔ Amazing Grace -- 90%
+[K8BAS-DUMP] container 388 slot 21 lore 6 | 
+[K8BAS-DUMP] container 388 slot 21 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 21 lore 8 |                           4/4 XP
+[K8BAS-DUMP] container 388 slot 21 lore 9 | 
+[K8BAS-DUMP] container 388 slot 21 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 21 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 21 lore 12 | 
+[K8BAS-DUMP] container 388 slot 21 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 22 item=minecraft:book sbid=- count=1 | Brahms' Lullaby
+[K8BAS-DUMP] container 388 slot 22 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 22 lore 1 | 
+[K8BAS-DUMP] container 388 slot 22 lore 2 |  ✔ Brahms' Lullaby -- 50%
+[K8BAS-DUMP] container 388 slot 22 lore 3 |  ✔ Brahms' Lullaby -- 70%
+[K8BAS-DUMP] container 388 slot 22 lore 4 |  ✔ Brahms' Lullaby -- 80%
+[K8BAS-DUMP] container 388 slot 22 lore 5 |  ✔ Brahms' Lullaby -- 90%
+[K8BAS-DUMP] container 388 slot 22 lore 6 | 
+[K8BAS-DUMP] container 388 slot 22 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 22 lore 8 |                           8/8 XP
+[K8BAS-DUMP] container 388 slot 22 lore 9 | 
+[K8BAS-DUMP] container 388 slot 22 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 22 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 22 lore 12 | 
+[K8BAS-DUMP] container 388 slot 22 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 23 item=minecraft:book sbid=- count=1 | Happy Birthday to You
+[K8BAS-DUMP] container 388 slot 23 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 23 lore 1 | 
+[K8BAS-DUMP] container 388 slot 23 lore 2 |  ✔ Happy Birthday to You -- 50%
+[K8BAS-DUMP] container 388 slot 23 lore 3 |  ✔ Happy Birthday to You -- 70%
+[K8BAS-DUMP] container 388 slot 23 lore 4 |  ✔ Happy Birthday to You -- 80%
+[K8BAS-DUMP] container 388 slot 23 lore 5 |  ✔ Happy Birthday to You -- 90%
+[K8BAS-DUMP] container 388 slot 23 lore 6 | 
+[K8BAS-DUMP] container 388 slot 23 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 23 lore 8 |                           8/8 XP
+[K8BAS-DUMP] container 388 slot 23 lore 9 | 
+[K8BAS-DUMP] container 388 slot 23 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 23 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 23 lore 12 | 
+[K8BAS-DUMP] container 388 slot 23 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 24 item=minecraft:book sbid=- count=1 | Greensleeves
+[K8BAS-DUMP] container 388 slot 24 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 24 lore 1 | 
+[K8BAS-DUMP] container 388 slot 24 lore 2 |  ✔ Greensleeves -- 50%
+[K8BAS-DUMP] container 388 slot 24 lore 3 |  ✔ Greensleeves -- 70%
+[K8BAS-DUMP] container 388 slot 24 lore 4 |  ✔ Greensleeves -- 80%
+[K8BAS-DUMP] container 388 slot 24 lore 5 |  ✔ Greensleeves -- 90%
+[K8BAS-DUMP] container 388 slot 24 lore 6 | 
+[K8BAS-DUMP] container 388 slot 24 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 24 lore 8 |                           8/8 XP
+[K8BAS-DUMP] container 388 slot 24 lore 9 | 
+[K8BAS-DUMP] container 388 slot 24 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 24 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 24 lore 12 | 
+[K8BAS-DUMP] container 388 slot 24 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 25 item=minecraft:book sbid=- count=1 | Geothermy?
+[K8BAS-DUMP] container 388 slot 25 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 25 lore 1 | 
+[K8BAS-DUMP] container 388 slot 25 lore 2 |  ✔ Geothermy? -- 50%
+[K8BAS-DUMP] container 388 slot 25 lore 3 |  ✔ Geothermy? -- 70%
+[K8BAS-DUMP] container 388 slot 25 lore 4 |  ✔ Geothermy? -- 80%
+[K8BAS-DUMP] container 388 slot 25 lore 5 |  ✔ Geothermy? -- 90%
+[K8BAS-DUMP] container 388 slot 25 lore 6 | 
+[K8BAS-DUMP] container 388 slot 25 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 25 lore 8 |                           16/16 XP
+[K8BAS-DUMP] container 388 slot 25 lore 9 | 
+[K8BAS-DUMP] container 388 slot 25 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 25 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 25 lore 12 | 
+[K8BAS-DUMP] container 388 slot 25 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 26 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 27 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 28 item=minecraft:book sbid=- count=1 | Minuet
+[K8BAS-DUMP] container 388 slot 28 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 28 lore 1 | 
+[K8BAS-DUMP] container 388 slot 28 lore 2 |  ✔ Minuet -- 50%
+[K8BAS-DUMP] container 388 slot 28 lore 3 |  ✔ Minuet -- 70%
+[K8BAS-DUMP] container 388 slot 28 lore 4 |  ✔ Minuet -- 80%
+[K8BAS-DUMP] container 388 slot 28 lore 5 |  ✔ Minuet -- 90%
+[K8BAS-DUMP] container 388 slot 28 lore 6 | 
+[K8BAS-DUMP] container 388 slot 28 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 28 lore 8 |                           16/16 XP
+[K8BAS-DUMP] container 388 slot 28 lore 9 | 
+[K8BAS-DUMP] container 388 slot 28 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 28 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 28 lore 12 | 
+[K8BAS-DUMP] container 388 slot 28 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 29 item=minecraft:book sbid=- count=1 | Joy to the World
+[K8BAS-DUMP] container 388 slot 29 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 29 lore 1 | 
+[K8BAS-DUMP] container 388 slot 29 lore 2 |  ✔ Joy to the World -- 50%
+[K8BAS-DUMP] container 388 slot 29 lore 3 |  ✔ Joy to the World -- 70%
+[K8BAS-DUMP] container 388 slot 29 lore 4 |  ✔ Joy to the World -- 80%
+[K8BAS-DUMP] container 388 slot 29 lore 5 |  ✔ Joy to the World -- 90%
+[K8BAS-DUMP] container 388 slot 29 lore 6 | 
+[K8BAS-DUMP] container 388 slot 29 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 29 lore 8 |                           16/16 XP
+[K8BAS-DUMP] container 388 slot 29 lore 9 | 
+[K8BAS-DUMP] container 388 slot 29 lore 10 | This task is worth 0% of your Total
+[K8BAS-DUMP] container 388 slot 29 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 29 lore 12 | 
+[K8BAS-DUMP] container 388 slot 29 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 30 item=minecraft:book sbid=- count=1 | Godly Imagination
+[K8BAS-DUMP] container 388 slot 30 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 30 lore 1 | 
+[K8BAS-DUMP] container 388 slot 30 lore 2 |  ✔ Godly Imagination -- 50%
+[K8BAS-DUMP] container 388 slot 30 lore 3 |  ✔ Godly Imagination -- 70%
+[K8BAS-DUMP] container 388 slot 30 lore 4 |  ✔ Godly Imagination -- 80%
+[K8BAS-DUMP] container 388 slot 30 lore 5 |  ✔ Godly Imagination -- 90%
+[K8BAS-DUMP] container 388 slot 30 lore 6 | 
+[K8BAS-DUMP] container 388 slot 30 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 30 lore 8 |                           28/28 XP
+[K8BAS-DUMP] container 388 slot 30 lore 9 | 
+[K8BAS-DUMP] container 388 slot 30 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 388 slot 30 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 30 lore 12 | 
+[K8BAS-DUMP] container 388 slot 30 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 31 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 32 item=minecraft:book sbid=- count=1 | La Vie en Rose
+[K8BAS-DUMP] container 388 slot 32 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 32 lore 1 | 
+[K8BAS-DUMP] container 388 slot 32 lore 2 |  ✔ La Vie en Rose -- 50%
+[K8BAS-DUMP] container 388 slot 32 lore 3 |  ✔ La Vie en Rose -- 70%
+[K8BAS-DUMP] container 388 slot 32 lore 4 |  ✔ La Vie en Rose -- 80%
+[K8BAS-DUMP] container 388 slot 32 lore 5 |  ✔ La Vie en Rose -- 90%
+[K8BAS-DUMP] container 388 slot 32 lore 6 | 
+[K8BAS-DUMP] container 388 slot 32 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 32 lore 8 |                           28/28 XP
+[K8BAS-DUMP] container 388 slot 32 lore 9 | 
+[K8BAS-DUMP] container 388 slot 32 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 388 slot 32 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 32 lore 12 | 
+[K8BAS-DUMP] container 388 slot 32 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 33 item=minecraft:book sbid=- count=1 | Through the Campfire
+[K8BAS-DUMP] container 388 slot 33 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 33 lore 1 | 
+[K8BAS-DUMP] container 388 slot 33 lore 2 |  ✔ Through the Campfire -- 50%
+[K8BAS-DUMP] container 388 slot 33 lore 3 |  ✔ Through the Campfire -- 70%
+[K8BAS-DUMP] container 388 slot 33 lore 4 |  ✔ Through the Campfire -- 80%
+[K8BAS-DUMP] container 388 slot 33 lore 5 |  ✔ Through the Campfire -- 90%
+[K8BAS-DUMP] container 388 slot 33 lore 6 | 
+[K8BAS-DUMP] container 388 slot 33 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 33 lore 8 |                           48/48 XP
+[K8BAS-DUMP] container 388 slot 33 lore 9 | 
+[K8BAS-DUMP] container 388 slot 33 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 388 slot 33 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 33 lore 12 | 
+[K8BAS-DUMP] container 388 slot 33 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 34 item=minecraft:book sbid=- count=1 | Pachelbel
+[K8BAS-DUMP] container 388 slot 34 lore 0 | 4 Tasks
+[K8BAS-DUMP] container 388 slot 34 lore 1 | 
+[K8BAS-DUMP] container 388 slot 34 lore 2 |  ✔ Pachelbel -- 50%
+[K8BAS-DUMP] container 388 slot 34 lore 3 |  ✔ Pachelbel -- 70%
+[K8BAS-DUMP] container 388 slot 34 lore 4 |  ✔ Pachelbel -- 80%
+[K8BAS-DUMP] container 388 slot 34 lore 5 |  ✔ Pachelbel -- 90%
+[K8BAS-DUMP] container 388 slot 34 lore 6 | 
+[K8BAS-DUMP] container 388 slot 34 lore 7 | Total Progress: 100%
+[K8BAS-DUMP] container 388 slot 34 lore 8 |                           48/48 XP
+[K8BAS-DUMP] container 388 slot 34 lore 9 | 
+[K8BAS-DUMP] container 388 slot 34 lore 10 | This task is worth 0.1% of your Total
+[K8BAS-DUMP] container 388 slot 34 lore 11 | SkyBlock XP!
+[K8BAS-DUMP] container 388 slot 34 lore 12 | 
+[K8BAS-DUMP] container 388 slot 34 lore 13 | Click to view tasks!
+[K8BAS-DUMP] container 388 slot 35 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 36 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 37 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 38 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 39 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 40 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 41 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 42 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 43 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 44 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 45 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 46 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 47 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 48 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 388 slot 48 lore 0 | To Tasks ➜ Miscellaneous
+[K8BAS-DUMP] container 388 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 388 slot 50 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 51 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 52 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 388 slot 53 item=minecraft:yellow_stained_glass_pane sbid=- count=1 | 
