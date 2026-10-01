@@ -13,6 +13,7 @@ import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.highlight.NameMatcher;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -34,6 +36,93 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ConfigSafeLoadTest {
 	@TempDir
 	Path dir;
+
+	private static final ConfigManager.Disk REAL_DISK = ConfigManager.disk;
+
+	@AfterEach
+	void restoreDisk() {
+		ConfigManager.disk = REAL_DISK;
+	}
+
+	private static ConfigManager.Disk disk(int failingReads, boolean backupsFail) {
+		AtomicInteger reads = new AtomicInteger();
+		return new ConfigManager.Disk() {
+			@Override
+			public byte[] read(Path path) throws IOException {
+				if (reads.incrementAndGet() <= failingReads) {
+					throw new IOException("The process cannot access the file because it is being used by another process");
+				}
+				return REAL_DISK.read(path);
+			}
+
+			@Override
+			public void writeBackup(Path path, byte[] bytes) throws IOException {
+				if (backupsFail) {
+					throw new IOException("disk full");
+				}
+				REAL_DISK.writeBackup(path, bytes);
+			}
+		};
+	}
+
+	/** Review I-1 (G1): a locked file is retried, and if it stays unreadable it is never overwritten. */
+	@Test
+	void anUnreadableFileIsNeverOverwritten() throws IOException {
+		byte[] original = Files.readAllBytes(fixture());
+		ConfigManager.disk = disk(Integer.MAX_VALUE, false);
+		ConfigManager.load(file());
+		assertEquals(64, ConfigManager.general().mobScanRangeBlocks, "defaults are used");
+		mobs();
+		npcs();
+		ConfigManager.general().mobScanRangeBlocks = 10;
+		ConfigManager.save();
+		ConfigManager.flush();
+
+		assertArrayEquals(original, Files.readAllBytes(file()), "the file is left as it is");
+		List<String> notices = ConfigManager.drainNotices();
+		assertEquals(1, notices.size(), notices.toString());
+		assertTrue(notices.getFirst().contains("could not be read"), notices.getFirst());
+	}
+
+	@Test
+	void aBrieflyLockedFileIsReadOnARetry() throws IOException {
+		fixture();
+		ConfigManager.disk = disk(ConfigManager.READ_ATTEMPTS - 1, false);
+		ConfigManager.load(file());
+		assertEquals(128, ConfigManager.general().mobScanRangeBlocks);
+		assertTrue(ConfigManager.drainNotices().isEmpty());
+	}
+
+	/** Review I-1 (G1): when the backup a broken file needs cannot be written, the file is kept. */
+	@Test
+	void aBackupThatFailsStopsSaving() throws IOException {
+		byte[] original = "{\"general\": {\"mobScanRangeBlocks\": 128,".getBytes(StandardCharsets.UTF_8);
+		Files.write(file(), original);
+		ConfigManager.disk = disk(0, true);
+		ConfigManager.load(file());
+		mobs();
+		ConfigManager.save();
+		ConfigManager.flush();
+
+		assertArrayEquals(original, Files.readAllBytes(file()));
+		assertTrue(backups().isEmpty());
+		List<String> notices = ConfigManager.drainNotices();
+		assertEquals(1, notices.size(), notices.toString());
+		assertTrue(notices.getFirst().contains("left untouched"), notices.getFirst());
+	}
+
+	/** The same when the one-time copy before the first migration cannot be written. */
+	@Test
+	void aMigrationWithoutItsCopyIsNotSaved() throws IOException {
+		byte[] original = Files.readAllBytes(fixture());
+		ConfigManager.disk = disk(0, true);
+		ConfigManager.load(file());
+		assertEquals("Dungeon Hub", npcs().rules.get(3).island, "migrated in memory");
+		ConfigManager.save();
+		ConfigManager.flush();
+		assertArrayEquals(original, Files.readAllBytes(file()));
+		assertFalse(Files.exists(dir.resolve("k8bas_skyblock_utility.json.v0.bak")));
+	}
 
 	private Path file() {
 		return dir.resolve("k8bas_skyblock_utility.json");

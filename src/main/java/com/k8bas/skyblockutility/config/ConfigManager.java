@@ -40,6 +40,8 @@ import java.util.function.Supplier;
  * byte-exact timestamped backup before anything writes the config path, and only that part falls
  * back to defaults; a file from a newer version is backed up first; the first data-changing
  * migration leaves a one-time .v0.bak copy. Each backup is announced once in chat after joining.
+ * If the file cannot be read, or a backup it needs cannot be written, nothing is saved for the rest
+ * of the session, so the file on disk is never replaced without its copy (REQ-CFG-06, REQ-CFG-08).
  */
 public final class ConfigManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/config");
@@ -59,6 +61,29 @@ public final class ConfigManager {
 	private static final List<String> pendingNotices = new ArrayList<>();
 	/** Shows a save failure to the player; set by the client entrypoint (no-op in tests). */
 	private static Consumer<String> saveFailureNotice = message -> {
+	};
+	/** Set when the file could not be read or backed up: saving would lose the user's file. */
+	private static volatile boolean savesSuspended;
+	static final int READ_ATTEMPTS = 3;
+	static final long READ_RETRY_PAUSE_MS = 150;
+
+	/** Reads and writes the file system; replaceable in tests. */
+	interface Disk {
+		byte[] read(Path path) throws IOException;
+
+		void writeBackup(Path path, byte[] bytes) throws IOException;
+	}
+
+	static Disk disk = new Disk() {
+		@Override
+		public byte[] read(Path path) throws IOException {
+			return Files.readAllBytes(path);
+		}
+
+		@Override
+		public void writeBackup(Path path, byte[] bytes) throws IOException {
+			Files.write(path, bytes);
+		}
 	};
 
 	private ConfigManager() {
@@ -88,17 +113,18 @@ public final class ConfigManager {
 		}
 		originalBytes = null;
 		backupThisSession = null;
+		savesSuspended = false;
 		pendingNotices.clear();
 		if (!Files.exists(path)) {
 			root = new SkyblockUtilityConfig();
 			save();
 			return;
 		}
-		try {
-			originalBytes = Files.readAllBytes(path);
-		} catch (IOException e) {
-			LOGGER.error("Failed to read {}, using defaults", FILE_NAME, e);
+		originalBytes = readWithRetries(path);
+		if (originalBytes == null) {
+			// A locked or unreadable file (antivirus, sync tool, editor) is not a broken one: keep it.
 			root = new SkyblockUtilityConfig();
+			suspendSaves("it could not be read");
 			return;
 		}
 		JsonObject object = parseObject(originalBytes);
@@ -120,8 +146,9 @@ public final class ConfigManager {
 		root = bind(object);
 		if (migration.changed()) {
 			Path preMigration = path.resolveSibling(FILE_NAME + ".v0.bak");
-			if (!Files.exists(preMigration)) {
-				writeBackup(preMigration);
+			if (!Files.exists(preMigration) && !writeBackup(preMigration)) {
+				suspendSaves("the copy made before updating it could not be written");
+				return;
 			}
 			LOGGER.info("Migrated {} from version {} (steps {})", FILE_NAME, migration.fromVersion(), migration.ran());
 			save();
@@ -182,12 +209,44 @@ public final class ConfigManager {
 		if (writeBackup(target)) {
 			backupThisSession = target;
 			pendingNotices.add("Your settings file was copied to " + target.getFileName() + " because " + why + ".");
+		} else {
+			suspendSaves("a backup of it could not be written (" + why + ")");
 		}
+	}
+
+	private static byte[] readWithRetries(Path path) {
+		for (int attempt = 1; ; attempt++) {
+			try {
+				return disk.read(path);
+			} catch (IOException e) {
+				if (attempt == READ_ATTEMPTS) {
+					LOGGER.error("Failed to read {} after {} attempts", FILE_NAME, READ_ATTEMPTS, e);
+					return null;
+				}
+				try {
+					Thread.sleep(READ_RETRY_PAUSE_MS);
+				} catch (InterruptedException interrupted) {
+					Thread.currentThread().interrupt();
+					return null;
+				}
+			}
+		}
+	}
+
+	/** Keeps the file on disk as it is for the rest of the session and tells the player once. */
+	private static void suspendSaves(String why) {
+		if (savesSuspended) {
+			return;
+		}
+		savesSuspended = true;
+		LOGGER.error("Not saving {} this session because {}; the file is left as it is", FILE_NAME, why);
+		pendingNotices.add("Your settings file was left untouched because " + why
+				+ ". Defaults are used where needed, and changes are not saved until the next start.");
 	}
 
 	private static boolean writeBackup(Path target) {
 		try {
-			Files.write(target, originalBytes);
+			disk.writeBackup(target, originalBytes);
 			LOGGER.warn("Backed up {} to {}", FILE_NAME, target.getFileName());
 			return true;
 		} catch (IOException e) {
@@ -211,6 +270,9 @@ public final class ConfigManager {
 	public static void save() {
 		if (store == null) {
 			load(configPath());
+		}
+		if (savesSuspended) {
+			return;
 		}
 		store.requestSave(GSON.toJson(root));
 	}
