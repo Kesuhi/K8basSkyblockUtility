@@ -3,7 +3,8 @@ package com.k8bas.skyblockutility.gametest;
 import com.k8bas.skyblockutility.debug.DebugCommand;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.npcsearch.NpcRule;
-import com.k8bas.skyblockutility.module.npcsearch.NpcWaypointRenderer;
+import com.k8bas.skyblockutility.module.npcsearch.NpcWaypointMarkers;
+import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -179,8 +180,10 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		server.runCommand("weather clear");
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
 		context.runOnClient(client -> {
+			// The screenshots hide the HUD; labels would hide with it, like name tags (EC-MARK-06).
+			WorldMarkers.setHideLabelsWithHud(false);
 			setHudHidden(client, true);
-			NpcWaypointRenderer.setWhiteLabels(false);
+			NpcWaypointMarkers.setWhiteLabels(false);
 			NpcRule rule = new NpcRule();
 			rule.label = "Baseline NPC";
 			rule.island = "Hub";
@@ -188,7 +191,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 			rule.x = 0.5;
 			rule.y = -60;
 			rule.z = 6.5;
-			NpcWaypointRenderer.setActiveWaypoints(List.of(rule));
+			NpcWaypointMarkers.setActiveWaypoints(List.of(rule));
 		});
 		runClientCommand(context, "ksu debug island Hub");
 		singleplayer.getConnection().waitForChunksRender();
@@ -204,7 +207,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 				.withAlgorithm(TestScreenshotComparisonAlgorithm.exact()));
 
 		// The same view without the waypoint, so the label's pixels can be cut out by difference.
-		context.runOnClient(client -> NpcWaypointRenderer.setActiveWaypoints(List.of()));
+		context.runOnClient(client -> NpcWaypointMarkers.setActiveWaypoints(List.of()));
 		context.waitTicks(5);
 		context.takeScreenshot("t0.4-stone-no-waypoint");
 
@@ -212,8 +215,9 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		runClientCommand(context, "ksu debug island clear");
 		context.runOnClient(client -> {
 			setHudHidden(client, false);
-			NpcWaypointRenderer.setWhiteLabels(true);
-			NpcWaypointRenderer.setActiveWaypoints(List.of());
+			WorldMarkers.setHideLabelsWithHud(true);
+			NpcWaypointMarkers.setWhiteLabels(true);
+			NpcWaypointMarkers.setActiveWaypoints(List.of());
 		});
 	}
 

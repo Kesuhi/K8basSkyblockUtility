@@ -2,7 +2,8 @@ package com.k8bas.skyblockutility.gametest;
 
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.npcsearch.NpcRule;
-import com.k8bas.skyblockutility.module.npcsearch.NpcWaypointRenderer;
+import com.k8bas.skyblockutility.module.npcsearch.NpcWaypointMarkers;
+import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
@@ -46,6 +47,8 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			server.runCommand("weather clear");
 			server.runCommand("tp @a 0.5 -60 0.5 0 0");
 			context.runOnClient(client -> {
+				// The screenshots hide the HUD; labels would hide with it, like name tags (EC-MARK-06).
+				WorldMarkers.setHideLabelsWithHud(false);
 				setHudHidden(client, true);
 				client.options.cloudStatus().set(CloudStatus.OFF);
 				IslandTracker.forceIsland("Hub");
@@ -87,8 +90,9 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 
 			context.runOnClient(client -> {
 				setHudHidden(client, false);
+				WorldMarkers.setHideLabelsWithHud(true);
 				IslandTracker.forceIsland(null);
-				NpcWaypointRenderer.setActiveWaypoints(List.of());
+				NpcWaypointMarkers.setActiveWaypoints(List.of());
 			});
 		}
 	}
@@ -98,7 +102,7 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 		server.runCommand("fill -8 -60 1 8 -50 40 minecraft:air");
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
 		context.runOnClient(client -> {
-			NpcWaypointRenderer.setActiveWaypoints(List.of());
+			NpcWaypointMarkers.setActiveWaypoints(List.of());
 			IslandTracker.forceIsland(null);
 		});
 		singleplayer.getConnection().waitForChunksRender();
@@ -114,7 +118,7 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			croesus.x = 0.5;
 			croesus.y = -60;
 			croesus.z = 5.5;
-			NpcWaypointRenderer.setActiveWaypoints(List.of(croesus));
+			NpcWaypointMarkers.setActiveWaypoints(List.of(croesus));
 			IslandTracker.forceIsland("Dungeon Hub");
 		});
 		context.waitTicks(5);
@@ -133,7 +137,7 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 		int red = 0xFF5555;
 		server.runCommand("fill -8 -60 1 8 -50 40 minecraft:air");
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
-		context.runOnClient(client -> NpcWaypointRenderer.setActiveWaypoints(List.of()));
+		context.runOnClient(client -> NpcWaypointMarkers.setActiveWaypoints(List.of()));
 		singleplayer.getConnection().waitForChunksRender();
 		context.waitTicks(10);
 		Path none = context.takeScreenshot("r21-no-waypoint");
@@ -147,12 +151,12 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 				rule.x = 0.5;
 				rule.y = -60;
 				rule.z = 5.5;
-				NpcWaypointRenderer.setWhiteLabels(true);
-				NpcWaypointRenderer.setActiveWaypoints(List.of(rule));
+				NpcWaypointMarkers.setWhiteLabels(true);
+				NpcWaypointMarkers.setActiveWaypoints(List.of(rule));
 			});
 			context.waitTicks(5);
 			Path white = context.takeScreenshot("r21-white-labels");
-			context.runOnClient(client -> NpcWaypointRenderer.setWhiteLabels(false));
+			context.runOnClient(client -> NpcWaypointMarkers.setWhiteLabels(false));
 			context.waitTicks(5);
 			Path ruleColour = context.takeScreenshot("r21-rule-colour");
 			Label whiteAsWhite = Label.of(white, none, TEXT_COLOR);
@@ -164,8 +168,8 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			check(ruleAsRed.textPixels > 50 && ruleAsWhite.textPixels == 0, "with the setting off, labels take the rule's colour");
 		} finally {
 			context.runOnClient(client -> {
-				NpcWaypointRenderer.setWhiteLabels(true);
-				NpcWaypointRenderer.setActiveWaypoints(List.of());
+				NpcWaypointMarkers.setWhiteLabels(true);
+				NpcWaypointMarkers.setActiveWaypoints(List.of());
 			});
 		}
 	}
@@ -183,7 +187,7 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			server.runCommand("fill -8 -60 " + wallZ + " 8 -52 " + wallZ + " " + obstacle);
 		}
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
-		context.runOnClient(client -> NpcWaypointRenderer.setActiveWaypoints(List.of()));
+		context.runOnClient(client -> NpcWaypointMarkers.setActiveWaypoints(List.of()));
 		singleplayer.getConnection().waitForChunksRender();
 		context.waitTicks(10);
 		Path without = context.takeScreenshot("t1.3-" + name + "-without");
@@ -197,7 +201,7 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			rule.x = 0.5;
 			rule.y = -60;
 			rule.z = distance + 0.5;
-			NpcWaypointRenderer.setActiveWaypoints(List.of(rule));
+			NpcWaypointMarkers.setActiveWaypoints(List.of(rule));
 		});
 		context.waitTicks(5);
 		Path with = context.takeScreenshot("t1.3-" + name);

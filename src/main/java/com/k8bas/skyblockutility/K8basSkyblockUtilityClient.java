@@ -9,6 +9,7 @@ import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
+import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.update.Updates;
@@ -46,6 +47,8 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		// Rule matching runs once per tick on the client thread; rendering only reads the results.
 		ClientTickEvents.END_CLIENT_TICK.register(HighlightManager::tick);
 		GlowHandler.register();
+		// The world marker toolkit; features add their marker providers as they register.
+		WorldMarkers.register();
 
 		ModuleManager.register(new MobHighlighterModule());
 		ModuleManager.register(new NpcSearchModule());

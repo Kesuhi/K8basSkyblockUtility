@@ -42,7 +42,7 @@ import java.util.Set;
  * NPC Search: the same rule-list-plus-database-picker concept as Mob Highlighter, applied to
  * NPCs instead of mobs, with two kinds of tracked NPC:
  *  - fixed: NPCs that stand at a known, unmoving spot get a permanent floating name/distance
- *    waypoint drawn at those coordinates (NpcWaypointRenderer) — no entity search needed at all.
+ *    waypoint drawn at those coordinates (NpcWaypointMarkers) — no entity search needed at all.
  *  - unfixed: NPCs without known fixed coordinates get converted into a plain HighlightRule and
  *    fed into this module's own HighlightManager instance — exactly the nearby-nametag search
  *    Mob Highlighter uses, just sourced from NPC data with a green default color.
@@ -87,7 +87,7 @@ public final class NpcSearchModule implements Module {
 		// Fetched at startup rather than lazily on first picker-open, so opening the picker for
 		// the first time doesn't show the "still loading" message / a moment of an empty list.
 		NpcDatabase.fetchIfNeeded();
-		NpcWaypointRenderer.register();
+		NpcWaypointMarkers.register();
 		ModKeybinds.register(this);
 	}
 
@@ -139,7 +139,7 @@ public final class NpcSearchModule implements Module {
 	}
 
 	/** Splits config.rules into the unfixed subset (fed to HighlightManager as ordinary
-	 *  HighlightRules) and the fixed subset (fed to NpcWaypointRenderer directly). Waypoints are
+	 *  HighlightRules) and the fixed subset (fed to NpcWaypointMarkers directly). Waypoints are
 	 *  suppressed entirely (empty list) while the module is disabled, since the renderer itself
 	 *  has no idea whether the owning module is on. */
 	private void rebuildDerived() {
@@ -153,8 +153,8 @@ public final class NpcSearchModule implements Module {
 			}
 		}
 		highlightManager.rebuild(searchRules);
-		NpcWaypointRenderer.setWhiteLabels(config.whiteWaypointLabels);
-		NpcWaypointRenderer.setActiveWaypoints(config.enabled ? waypointRules : List.of());
+		NpcWaypointMarkers.setWhiteLabels(config.whiteWaypointLabels);
+		NpcWaypointMarkers.setActiveWaypoints(config.enabled ? waypointRules : List.of());
 	}
 
 	private HighlightRule toHighlightRule(NpcRule rule) {
@@ -185,7 +185,7 @@ public final class NpcSearchModule implements Module {
 				.setTooltip(Component.literal("Waypoint labels and their distance are white. Off: each NPC's own colour."))
 				.setSaveConsumer(value -> {
 					config.whiteWaypointLabels = value;
-					NpcWaypointRenderer.setWhiteLabels(value);
+					NpcWaypointMarkers.setWhiteLabels(value);
 				})
 				.build());
 

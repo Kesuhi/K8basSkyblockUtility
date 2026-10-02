@@ -7,6 +7,7 @@
 	"entrypoints": {
 		"fabric-client-gametest": [
 			"com.k8bas.skyblockutility.gametest.WaypointLabelGameTest",
+			"com.k8bas.skyblockutility.render.marker.MarkerToolkitGameTest",
 			"com.k8bas.skyblockutility.highlight.HighlightGameTest",
 			"com.k8bas.skyblockutility.highlight.GlowGameTest",
 			"com.k8bas.skyblockutility.module.npcsearch.FoundTitleGameTest",
