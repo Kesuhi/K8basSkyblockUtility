@@ -27,7 +27,8 @@ set -euo pipefail
 export LC_ALL=C
 
 EMAIL_RE='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
-EMAIL_OK='^([A-Za-z0-9._%+-]+@users\.noreply\.github\.com|noreply@anthropic\.com)$'
+# noreply@github.com is the committer GitHub writes on merges made on the website (web flow).
+EMAIL_OK='^([A-Za-z0-9._%+-]+@users\.noreply\.github\.com|noreply@github\.com|noreply@anthropic\.com)$'
 PATH_RE='([A-Za-z]:[\\/]+Users[\\/]+|/[A-Za-z]/Users/|/home/)[A-Za-z0-9._-]'
 UUID_RE='[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
 UUID_OK='^0{8}-0{4}-0{4}-0{4}-0{12}$'
@@ -218,10 +219,12 @@ self_test() {
 		"path /${h}/jane/notes.txt"
 		"uuid 1b2c3d4e-$(printf 9f8e)-4a5b-8c7d-0123456789ab"
 		"server m""183BW and mini""45C"
+		"someone else at github: jane${at}github.com"
 	)
 	local -a allowed=(
 		"author Kesuhi <110562470+Kesuhi${at}users.noreply.github.com>"
 		"trailer noreply${at}anthropic.com"
+		"web-flow committer GitHub <noreply${at}github.com>"
 		'bare mentions `C:\Users`, `/c/Users` and C:/Users'
 		"nil uuid 00000000-0000-0000-0000-000000000000"
 		"fixture line 09/26/26 m000XX RUBY_2"
