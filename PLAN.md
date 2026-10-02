@@ -465,19 +465,21 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Dry run (AC-REL-14) pushes no tag: `gh release create v0.0.0-dryrun.N --draft --target <commit> --title … --notes-file …` (no `--verify-tag`; a draft creates no git tag), the draft checks run on it against a throwaway jar built as version `0.0.0-dryrun.N` (never committed) and a matching notes file, so the selection, name, body and `fabric.mod.json` checks compare like with like, then `gh release delete v0.0.0-dryrun.N --yes`, and `git ls-remote --tags origin` confirms that no such tag exists. The tag push and `--verify-tag` are logged as skipped by design. Creating and deleting the draft each need your OK.
   - Accept: AC-REL-09 [A] on a recorded draft fixture; AC-REL-04 [A] (lint and extraction on the `[1.1.0]` section); AC-REL-14.
   - Status (2026-10-01): done. AC-REL-04 [A] passes on `[1.1.0]`; AC-REL-09 [A] passes on the synthetic fixture and on the draft recorded in the AC-REL-14 dry run (N = 1: PASS, draft deleted, no tag; record in `RELEASING.md`).
-- [ ] **T1.18 chore(release): intermediate PR `update/26.2` → `main` for v1.1.0** (S, deps T1.16, T1.17, T1.11b, T1.3b). The body covers changes since v1.0.1 (`bc0f2f6`), test evidence per tier, G1 field-check results, known issues, and decisions D-1–D-29 and R1–R24. Before opening: the per-commit worktree build since G1 is green (AC-XC-05), `git log --format=%ae main..update/26.2` shows only noreply addresses (AC-XC-12), the T1.17 range and PR-body privacy scan is clean, a `code-reviewer` pass on T1.15–T1.17, T1.11b and T1.3b is done, and CI is green on the head. Pushing the commits made since G1 and opening the PR each need your OK (not a checkpoint push: REQ-REL-09, SPEC §8). **Then wait for your approval**, and merge with a merge commit (D-10).
+- [x] **T1.18 chore(release): intermediate PR `update/26.2` → `main` for v1.1.0** (S, deps T1.16, T1.17, T1.11b, T1.3b). The body covers changes since v1.0.1 (`bc0f2f6`), test evidence per tier, G1 field-check results, known issues, and decisions D-1–D-29 and R1–R24. Before opening: the per-commit worktree build since G1 is green (AC-XC-05), `git log --format=%ae main..update/26.2` shows only noreply addresses (AC-XC-12), the T1.17 range and PR-body privacy scan is clean, a `code-reviewer` pass on T1.15–T1.17, T1.11b and T1.3b is done, and CI is green on the head. Pushing the commits made since G1 and opening the PR each need your OK (not a checkpoint push: REQ-REL-09, SPEC §8). **Then wait for your approval**, and merge with a merge commit (D-10).
   - Req: REQ-REL-14, REQ-REL-08, REQ-REL-09, REQ-XC-GIT-02
   - Accept: AC-REL-06 and AC-REL-07 for this PR; AC-XC-05, AC-XC-12; CI green on its head; a commit added after the approval voids it (EC-REL-12).
-- [ ] **T1.19 chore(release): tag and publish v1.1.0** (S, deps T1.18). Starts only after the merge **and** your "ship" (R4).
+  - Status (2026-10-02): done. PR #1 (63 commits) was approved by the maintainer; the date commit `6044924` came after the first approval and was approved again. It was merged as merge commit `0588945`, and CI was green on its head.
+- [x] **T1.19 chore(release): tag and publish v1.1.0** (S, deps T1.18). Starts only after the merge **and** your "ship" (R4).
   - Req: REQ-REL-14, REQ-REL-10, REQ-REL-11
   - Order: preflight as in T7.4 step 1 (EC-REL-03/-04/-07) → annotated tag `v1.1.0` on the merge commit → `./gradlew clean build` from that clean commit → push the tag → `gh release create v1.1.0 --verify-tag --draft --title "K8bas Skyblock Utility v1.1.0" --notes-file <CHANGELOG section>` with the jar and sidecar → T1.17 checks and a tier D boot of the exact jar → publish as Latest, not as a pre-release. Any failed check stops before publishing and is reported; fixes happen only inside the draft (EC-REL-05), then all checks rerun.
   - Accept: AC-REL-12 (AC-REL-04, -05, -08 and -09 with v1.1.0); a never-published `1.1.0-test.1` build (tier D) names v1.1.0 in exactly one chat line and downloads nothing.
+  - Status (2026-10-02): done; the record is in `RELEASING.md` under "Release records". release-check passed before and after tier D, and tier D added no new ERROR line against a real baseline. It ran on the true baseline: the G1 one had still loaded the mod, which is now fixed in `build.gradle`. Published as Latest. The `1.1.0-test.1` check wrote one chat line, and no jar was downloaded.
 
 **Checkpoint G1r:**
-- [ ] v1.1.0 is public and marked Latest; `main` and its README match the release
-- [ ] the warnings on v1.0.0 and v1.0.1 are in place (AC-REL-13, T0.5)
-- [ ] the per-commit build, author check and `code-reviewer` pass were done before T1.18 opened the PR (results in the report)
-- [ ] G1r report (AC-XC-07): release URL, asset digests, check results, and the `1.1.0-test.1` notify check
+- [x] v1.1.0 is public and marked Latest; `main` and its README match the release (https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/v1.1.0)
+- [x] the warnings on v1.0.0 and v1.0.1 are in place (AC-REL-13, T0.5)
+- [x] the per-commit build, author check and `code-reviewer` pass were done before T1.18 opened the PR (results in the report)
+- [x] G1r report (AC-XC-07): release URL, asset digests, check results, and the `1.1.0-test.1` notify check
 
 ### Phase 2 — New UI (AlpakaAddons-style, UI only)
 
