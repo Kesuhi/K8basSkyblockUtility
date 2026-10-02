@@ -94,8 +94,9 @@ dependencies {
 // Opens a game window, so it is not part of check.
 tasks.register("prodClientStack", net.fabricmc.loom.task.prod.ClientProductionRunTask) {
 	def prodMods = providers.gradleProperty("k8bas.prodMods")
-	if (!providers.gradleProperty("k8bas.prodBaseline").map { it.toBoolean() }.getOrElse(false)) {
-		mods.from(tasks.named("jar"))
+	// Loom adds this project's jar to every production run by default; the baseline removes it.
+	if (providers.gradleProperty("k8bas.prodBaseline").map { it.toBoolean() }.getOrElse(false)) {
+		mods.setFrom()
 	}
 	if (prodMods.isPresent()) {
 		mods.from(fileTree(prodMods.get()) {
