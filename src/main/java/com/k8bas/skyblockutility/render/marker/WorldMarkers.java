@@ -9,7 +9,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.feature.CustomFeatureRenderer;
 import net.minecraft.client.renderer.feature.TextFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -18,6 +20,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -42,9 +45,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *   <li>A depth-tested label is drawn at its true position and grown with the distance instead, so it
  *       has the same on-screen size and every block in front of it hides it (REQ-MARK-02).</li>
  * </ul>
- * Markers outside the view are not submitted (REQ-MARK-07), labels hide with F1 (EC-MARK-06), and
- * every provider is reset on world change, server switch and disconnect; markers on an entity that
- * is gone or in another world are skipped (REQ-MARK-08). No chunk or block data is read (EC-MARK-02).
+ * Beacon beams (T3.0n) go through vanilla's beacon renderer, so they are depth-tested and animated
+ * like a beacon, up to the build height. Rings are translucent, depth-tested quads in AFTER_TERRAIN.
+ * Markers outside the view are not submitted (REQ-MARK-07), labels hide with F1 while beams and rings
+ * stay (EC-MARK-06), and every provider is reset on world change, server switch and disconnect;
+ * markers on an entity that is gone or in another world are skipped (REQ-MARK-08). No chunk or block
+ * data is read (EC-MARK-02).
  */
 public final class WorldMarkers {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/markers");
@@ -61,6 +67,12 @@ public final class WorldMarkers {
 	/** "<n>m" components for whole metres up to this distance are made once. */
 	private static final int CACHED_DISTANCES = 1024;
 	private static final Component[] DISTANCE_LINES = new Component[CACHED_DISTANCES + 1];
+	/** The vanilla beacon's core and glow radii at a radius scale of 1. */
+	private static final float BEAM_SOLID_RADIUS = 0.2F;
+	private static final float BEAM_GLOW_RADIUS = 0.25F;
+	/** How far a ring floats above its anchor, and its outline's width, in blocks. */
+	private static final double RING_LIFT = 0.02;
+	private static final double RING_OUTLINE_WIDTH = 0.08;
 
 	private static final List<MarkerProvider> PROVIDERS = new CopyOnWriteArrayList<>();
 	private static final Set<MarkerProvider> FAILED = ConcurrentHashMap.newKeySet();
@@ -69,13 +81,26 @@ public final class WorldMarkers {
 	private static volatile Frame lastFrame = Frame.EMPTY;
 	private static volatile Frame firstFrameAfterReset = Frame.EMPTY;
 	private static int framesSinceReset;
+	private static volatile Stats stats = new Stats(0, 0);
 
 	/**
-	 * What a frame did, for gametests: labels submitted, labels outside the view, and (only while
-	 * recording) the distance texts drawn.
+	 * What a frame did, for gametests: markers with at least one part submitted, markers whose parts
+	 * were all outside the view, the beams and rings submitted, the CPU time of the marker pass, and
+	 * (only while recording) the distance texts drawn.
 	 */
-	public record Frame(int submitted, int culled, List<String> distanceTexts) {
-		static final Frame EMPTY = new Frame(0, 0, List.of());
+	public record Frame(int submitted, int culled, int beams, int rings, long nanos, List<String> distanceTexts) {
+		static final Frame EMPTY = new Frame(0, 0, 0, 0, 0, List.of());
+	}
+
+	/** Frames counted while recording, and the marker pass's total CPU time over them (AC-MARK-06). */
+	public record Stats(long frames, long nanos) {
+		public double averageMillis() {
+			return frames == 0 ? 0 : nanos / 1e6 / frames;
+		}
+	}
+
+	/** The vertical extent of a beam: from block y {@code start}, {@code height} blocks up. */
+	record BeamSpan(int start, int height) {
 	}
 
 	private WorldMarkers() {
@@ -103,9 +128,14 @@ public final class WorldMarkers {
 		hideLabelsWithHud = hide;
 	}
 
-	/** For gametests: records the distance texts of each frame in {@link #lastFrame()}. */
+	/** For gametests: records the distance texts of each frame in {@link #lastFrame()} and counts {@link #stats()} from zero. */
 	public static void setRecordFrames(boolean record) {
+		stats = new Stats(0, 0);
 		recordFrames = record;
+	}
+
+	public static Stats stats() {
+		return stats;
 	}
 
 	public static Frame lastFrame() {
@@ -164,6 +194,27 @@ public final class WorldMarkers {
 		return seeThrough ? SCALE : (float) (SCALE * Math.max(1.0, distance / CONSTANT_SIZE_DISTANCE));
 	}
 
+	/**
+	 * A beam from the marker block up to the build height, clipped there (REQ-MARK-04, EC-MARK-11): it
+	 * starts at the world's floor for a marker below it, and there is none at or above the top block.
+	 *
+	 * @param maxY the top block's y (inclusive); the beam ends at its top face
+	 * @return the span, or null for no beam
+	 */
+	static BeamSpan beamSpan(double markerY, int minY, int maxY) {
+		int start = (int) Math.floor(markerY);
+		if (start > maxY) {
+			return null;
+		}
+		start = Math.max(start, minY);
+		return new BeamSpan(start, maxY + 1 - start);
+	}
+
+	/** The beam widens with horizontal distance like a vanilla beacon's, so it stays visible far away. */
+	static float beamRadiusScale(double horizontalDistance) {
+		return (float) Math.max(1.0, horizontalDistance / 96.0);
+	}
+
 	/** Whole metres from the player's position (not the camera) to the anchor, rounded half-up (REQ-MARK-05). */
 	static String distanceText(Vec3 player, Vec3 anchor) {
 		return distanceMetres(player, anchor) + "m";
@@ -186,49 +237,171 @@ public final class WorldMarkers {
 	}
 
 	private static void submit(LevelRenderContext context) {
-		Frame frame = submitMarkers(context);
+		long start = System.nanoTime();
+		Frame frame = submitMarkers(context, start);
 		lastFrame = frame;
 		if (++framesSinceReset == 1) {
 			firstFrameAfterReset = frame;
 		}
+		if (recordFrames) {
+			Stats before = stats;
+			stats = new Stats(before.frames() + 1, before.nanos() + frame.nanos());
+		}
 	}
 
-	private static Frame submitMarkers(LevelRenderContext context) {
+	private static Frame submitMarkers(LevelRenderContext context, long start) {
 		List<Marker> markers = collect(PROVIDERS);
-		if (markers.isEmpty()) {
-			return Frame.EMPTY;
-		}
 		Minecraft client = Minecraft.getInstance();
+		ClientLevel level = client.level;
+		if (markers.isEmpty() || level == null) {
+			return new Frame(0, 0, 0, 0, System.nanoTime() - start, List.of());
+		}
 		CameraRenderState camera = context.levelState().cameraRenderState;
+		SubmitNodeCollector submits = context.submitNodeCollector();
 		boolean labelsHidden = hideLabelsWithHud && client.gui.hud.isHidden();
 		float partialTick = client.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+		// The vanilla beacon animation: one turn every 40 ticks.
+		float animationTime = Math.floorMod(level.getGameTime(), 40) + partialTick;
 		Vec3 player = client.player == null ? null : client.player.getPosition(partialTick);
 		boolean record = recordFrames;
 		List<String> distanceTexts = record ? new ArrayList<>() : List.of();
 		int submitted = 0;
 		int culled = 0;
+		int beams = 0;
+		int rings = 0;
 
 		PoseStack matrices = context.poseStack();
 		matrices.pushPose();
 		matrices.translate(-camera.pos.x, -camera.pos.y, -camera.pos.z);
 		for (Marker marker : markers) {
-			MarkerLabel label = marker.label();
-			if (label == null || labelsHidden || !inThisWorld(marker.anchor(), client)) {
+			if (!inThisWorld(marker.anchor(), client)) {
 				continue;
 			}
 			Vec3 pos = marker.anchor().position(partialTick);
-			Component distanceLine = label.distanceLine() && player != null ? distanceLine(distanceMetres(player, pos)) : null;
-			if (submitLabel(matrices, context.submitNodeCollector(), camera, client.font, pos, label, distanceLine)) {
-				submitted++;
-				if (record && distanceLine != null) {
-					distanceTexts.add(distanceLine.getString());
+			boolean drawn = false;
+			boolean outOfView = false;
+			MarkerLabel label = marker.label();
+			if (label != null && !labelsHidden) {
+				Component distanceLine = label.distanceLine() && player != null ? distanceLine(distanceMetres(player, pos)) : null;
+				if (submitLabel(matrices, submits, camera, client.font, pos, label, distanceLine)) {
+					drawn = true;
+					if (record && distanceLine != null) {
+						distanceTexts.add(distanceLine.getString());
+					}
+				} else {
+					outOfView = true;
 				}
-			} else {
+			}
+			// Beams and rings stay with F1 (EC-MARK-06).
+			if (marker.beam() != null) {
+				BeamSpan span = beamSpan(pos.y, level.getMinY(), level.getMaxY());
+				if (span != null) {
+					if (submitBeam(matrices, submits, camera, pos, span, marker.beam(), animationTime)) {
+						beams++;
+						drawn = true;
+					} else {
+						outOfView = true;
+					}
+				}
+			}
+			if (marker.ring() != null) {
+				if (submitRing(matrices, submits, camera, pos, marker.ring())) {
+					rings++;
+					drawn = true;
+				} else {
+					outOfView = true;
+				}
+			}
+			if (drawn) {
+				submitted++;
+			} else if (outOfView) {
 				culled++;
 			}
 		}
 		matrices.popPose();
-		return new Frame(submitted, culled, record ? List.copyOf(distanceTexts) : List.of());
+		return new Frame(submitted, culled, beams, rings, System.nanoTime() - start, record ? List.copyOf(distanceTexts) : List.of());
+	}
+
+	/**
+	 * Submits a beam through vanilla's beacon renderer: its core in the solid phase and its glow with
+	 * the translucent geometry, both depth-tested (REQ-MARK-02). False if it is outside the view.
+	 */
+	private static boolean submitBeam(PoseStack matrices, SubmitNodeCollector submits, CameraRenderState camera, Vec3 pos, BeamSpan span,
+			MarkerBeam beam, float animationTime) {
+		int blockX = Mth.floor(pos.x);
+		int blockZ = Mth.floor(pos.z);
+		double centreX = blockX + 0.5;
+		double centreZ = blockZ + 0.5;
+		double hx = centreX - camera.pos.x;
+		double hz = centreZ - camera.pos.z;
+		float radiusScale = beamRadiusScale(Math.sqrt(hx * hx + hz * hz));
+		double halfWidth = BEAM_GLOW_RADIUS * radiusScale + CULL_MARGIN;
+		if (!camera.cullFrustum.isVisible(new AABB(centreX - halfWidth, span.start(), centreZ - halfWidth,
+				centreX + halfWidth, span.start() + span.height(), centreZ + halfWidth))) {
+			return false;
+		}
+		matrices.pushPose();
+		// The renderer centres the beam on the block itself (it translates by 0.5, 0, 0.5).
+		matrices.translate(blockX, span.start(), blockZ);
+		BeaconRenderer.submitBeaconBeam(matrices, submits, BeaconRenderer.BEAM_LOCATION, 1.0F, animationTime, 0, span.height(), beam.argb(),
+				BEAM_SOLID_RADIUS * radiusScale, BEAM_GLOW_RADIUS * radiusScale);
+		matrices.popPose();
+		return true;
+	}
+
+	/**
+	 * Submits a ring in the AFTER_TERRAIN phase with translucent, depth-tested quads, so terrain hides it
+	 * and water drawn earlier cannot tint it. It sits just above the anchor, so it does not flicker on
+	 * the surface it marks. The outline is opaque; the disc has the ring's alpha. False if out of view.
+	 * The debug quad type blends, is depth-tested, culls nothing and writes no depth, so a ring never hides
+	 * a label behind it.
+	 */
+	private static boolean submitRing(PoseStack matrices, SubmitNodeCollector submits, CameraRenderState camera, Vec3 pos, MarkerRing ring) {
+		double radius = ring.radius();
+		double y = pos.y + RING_LIFT;
+		if (!camera.cullFrustum.isVisible(new AABB(pos.x - radius, y - 0.1, pos.z - radius, pos.x + radius, y + 0.1, pos.z + radius))) {
+			return false;
+		}
+		int segments = ringSegments(radius);
+		float outer = (float) radius;
+		float inner = (float) Math.max(0, radius - RING_OUTLINE_WIDTH);
+		boolean disc = ring.style() != MarkerRing.Style.OUTLINE;
+		boolean outline = ring.style() != MarkerRing.Style.DISC;
+		int discColor = ring.argb();
+		int outlineColor = ARGB.opaque(ring.argb());
+		matrices.pushPose();
+		matrices.translate(pos.x, y, pos.z);
+		submits.order(BACKGROUND_ORDER).submitCustom(SubmitRenderPhases.AFTER_TERRAIN, new CustomFeatureRenderer.Submit(
+				matrices.last().copy(), RenderTypes.debugQuads(), (pose, quads) -> {
+					Matrix4f matrix = pose.pose();
+					for (int i = 0; i < segments; i++) {
+						double a0 = Math.PI * 2 * i / segments;
+						double a1 = Math.PI * 2 * (i + 1) / segments;
+						float c0 = (float) Math.cos(a0), s0 = (float) Math.sin(a0);
+						float c1 = (float) Math.cos(a1), s1 = (float) Math.sin(a1);
+						if (disc) {
+							// A triangle from the centre, as a quad with the centre twice.
+							float r = outline ? inner : outer;
+							quads.addVertex(matrix, 0F, 0F, 0F).setColor(discColor);
+							quads.addVertex(matrix, c0 * r, 0F, s0 * r).setColor(discColor);
+							quads.addVertex(matrix, c1 * r, 0F, s1 * r).setColor(discColor);
+							quads.addVertex(matrix, 0F, 0F, 0F).setColor(discColor);
+						}
+						if (outline) {
+							quads.addVertex(matrix, c0 * inner, 0F, s0 * inner).setColor(outlineColor);
+							quads.addVertex(matrix, c0 * outer, 0F, s0 * outer).setColor(outlineColor);
+							quads.addVertex(matrix, c1 * outer, 0F, s1 * outer).setColor(outlineColor);
+							quads.addVertex(matrix, c1 * inner, 0F, s1 * inner).setColor(outlineColor);
+						}
+					}
+				}));
+		matrices.popPose();
+		return true;
+	}
+
+	/** Enough segments that the ring looks round: about one per quarter block of circumference, 16 to 128. */
+	static int ringSegments(double radius) {
+		return (int) Math.max(16, Math.min(128, Math.ceil(2 * Math.PI * radius / 0.25)));
 	}
 
 	/** False for a marker on an entity that is gone or belongs to another world (REQ-MARK-08). */
