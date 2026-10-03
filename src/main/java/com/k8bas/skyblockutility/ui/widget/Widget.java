@@ -22,6 +22,7 @@ public abstract class Widget {
 	protected boolean dimmed;
 	protected boolean focused;
 	private Animated hoverAnimation;
+	private String tooltip = "";
 
 	public void setBounds(int x, int y, int width, int height) {
 		this.x = x;
@@ -44,6 +45,16 @@ public abstract class Widget {
 
 	public void setDimmed(boolean dimmed) {
 		this.dimmed = dimmed;
+	}
+
+	/** The text shown on hover (REQ-UI-19); "\n" breaks a line, "" for none. */
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip == null ? "" : tooltip;
+	}
+
+	/** The tooltip for the mouse over this widget, asked only while it is the topmost one there. */
+	public String tooltipAt(double mouseX, double mouseY) {
+		return tooltip;
 	}
 
 	public abstract void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY);

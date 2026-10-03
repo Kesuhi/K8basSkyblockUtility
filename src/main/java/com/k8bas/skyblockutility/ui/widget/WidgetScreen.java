@@ -1,6 +1,9 @@
 package com.k8bas.skyblockutility.ui.widget;
 
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.TooltipLayout;
+import com.k8bas.skyblockutility.ui.render.UiText;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -27,6 +30,7 @@ import java.util.Set;
  *   <li>One overlay (a dropdown's list, a modal) can be open; it is drawn over everything and gets all
  *       input. A click outside closes a plain overlay unchanged and is not passed on; a modal stays.
  *       Esc closes it without applying anything.</li>
+ *   <li>The hovered widget's tooltip is drawn last, over everything, inside the window (REQ-UI-19).</li>
  * </ul>
  * The game checks a few keys (the narrator hotkey) before the screen sees them and turns the input
  * method off each tick unless a vanilla text box is focused, so while one of our text fields has the
@@ -48,6 +52,9 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 	private Overlay overlay;
 	/** Scrolling left over from fractional wheel or trackpad events, below one notch. */
 	private double scrollRest;
+	/** Asked for by {@link #drawContent} this frame. */
+	private String requestedTooltip = "";
+	private TooltipLayout.Box lastTooltip;
 
 	protected WidgetScreen(Component title) {
 		super(title);
@@ -184,6 +191,7 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		super.extractRenderState(graphics, mouseX, mouseY, partialTick);
 		layout();
+		requestedTooltip = "";
 		// Under an open overlay nothing shows hover.
 		int underX = overlay != null ? -1 : mouseX;
 		int underY = overlay != null ? -1 : mouseY;
@@ -195,6 +203,7 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 			overlay.layout(width, height);
 			if (!overlay.stillAnchored()) {
 				closeOverlay(true);
+				lastTooltip = null;
 				return;
 			}
 			graphics.nextStratum();
@@ -206,6 +215,57 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 			for (Widget widget : overlay.widgets()) {
 				widget.draw(graphics, font, mouseX, mouseY);
 			}
+		}
+		drawTooltip(graphics, mouseX, mouseY);
+	}
+
+	/**
+	 * Shows a tooltip at the mouse this frame, for something drawn in {@link #drawContent} rather than
+	 * a widget (e.g. a label cut with "..."). A widget's own tooltip under the mouse comes first.
+	 */
+	protected void showTooltip(String text) {
+		requestedTooltip = text == null ? "" : text;
+	}
+
+	/** The tooltip drawn in the last frame, or null. */
+	TooltipLayout.Box lastTooltip() {
+		return lastTooltip;
+	}
+
+	/**
+	 * The topmost widget's tooltip under the mouse, over everything else (REQ-UI-19). With an overlay
+	 * open only its widgets have one. None while a press is held, so a drag is not covered.
+	 */
+	private void drawTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		lastTooltip = null;
+		if (pressed != null) {
+			return;
+		}
+		String text = "";
+		List<Widget> active = activeWidgets();
+		for (int i = active.size() - 1; i >= 0; i--) {
+			Widget widget = active.get(i);
+			if (widget.contains(mouseX, mouseY)) {
+				String own = widget.tooltipAt(mouseX, mouseY);
+				text = own == null ? "" : own;
+				break;
+			}
+		}
+		if (text.isEmpty() && overlay == null) {
+			text = requestedTooltip;
+		}
+		if (text.isEmpty()) {
+			return;
+		}
+		TooltipLayout.Box box = TooltipLayout.layout(text, mouseX, mouseY, width, height, font::width);
+		lastTooltip = box;
+		graphics.nextStratum();
+		Shapes.roundedRect(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SIDEBAR);
+		Shapes.roundedOutline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, 1, Theme.SEPARATOR);
+		int lineY = box.y() + TooltipLayout.PADDING;
+		for (String line : box.lines()) {
+			UiText.draw(graphics, font, line, box.x() + TooltipLayout.PADDING, lineY, Theme.TEXT_PRIMARY);
+			lineY += TooltipLayout.LINE_HEIGHT;
 		}
 	}
 
