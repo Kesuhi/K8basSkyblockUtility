@@ -25,6 +25,12 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 	volatile String longValue = "Entry 1";
 	volatile String bottomValue = "Top";
 	volatile boolean toggled;
+	volatile int ruleColour = 0x0AA351;
+	volatile int ruleCommits;
+	volatile int alphaColour = 0x8029B6B2;
+	volatile int alphaCommits;
+	final ColorSwatch ruleSwatch;
+	final ColorSwatch alphaSwatch;
 	final Dropdown<String> longDropdown;
 	final Dropdown<String> bottomDropdown;
 	final ToggleSwitch toggle;
@@ -57,6 +63,35 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 		liveKeybind = place(new KeybindButton(new KeyMappingTarget(SettingsKeybind.OPEN_SETTINGS_KEY), KeyMappingTarget::allKeys,
 				KeyMappingTarget::displayName, () -> { }), 8, 160, 120, 16);
 		resettable = place(keybind(resettableTarget), 8, 184, 120, 16);
+		ruleSwatch = place(new ColorSwatch(Binding.of(() -> ruleColour, v -> ruleColour = v), false, "Rule colour", this, () -> ruleCommits++, () -> { }),
+				8, 60, 24, 14);
+		alphaSwatch = place(new ColorSwatch(Binding.of(() -> alphaColour, v -> alphaColour = v), true, "Fill colour", this, () -> alphaCommits++,
+				() -> { }), 40, 60, 24, 14);
+	}
+
+	/** The open colour picker. */
+	ColorPickerOverlay picker() {
+		if (!(overlay() instanceof ColorPickerOverlay picker)) {
+			throw new AssertionError("FAILED: no colour picker is open: " + overlay());
+		}
+		return picker;
+	}
+
+	/** A point of a widget, by fractions of its width and height (may lie outside 0..1), in window pixels. */
+	int[] point(Widget widget, double fx, double fy) {
+		return new int[] {windowX(widget.x + (int) Math.round(fx * (widget.width - 1))), windowY(widget.y + (int) Math.round(fy * (widget.height - 1)))};
+	}
+
+	/** A point of the picker wheel's box, by fractions of its width and height, in window pixels. */
+	int[] wheelBoxPoint(double fx, double fy) {
+		Widget wheel = picker().wheel();
+		return new int[] {windowX(wheel.x + (int) (fx * (wheel.width - 1))), windowY(wheel.y + (int) (fy * (wheel.height - 1)))};
+	}
+
+	/** A point inside the picker's wheel, at a fraction of its radius to the right of the centre. */
+	int[] wheelPoint(double fraction) {
+		Widget wheel = picker().wheel();
+		return new int[] {windowX(wheel.x + wheel.width / 2 + (int) (fraction * wheel.width / 2)), windowY(wheel.y + wheel.height / 2)};
 	}
 
 	String resettableBound() {
@@ -93,6 +128,7 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 		UiText.draw(graphics, font, "normal / armed / conflict / unbound", 200, 104, Theme.TEXT_SECONDARY);
 		UiText.draw(graphics, font, "Open settings (live)", 134, 164, Theme.TEXT_SECONDARY);
 		UiText.draw(graphics, font, "default J", 134, 188, Theme.TEXT_SECONDARY);
+		UiText.draw(graphics, font, "rule colour / with alpha", 72, 63, Theme.TEXT_SECONDARY);
 	}
 
 	/** A widget's centre in window pixels. */

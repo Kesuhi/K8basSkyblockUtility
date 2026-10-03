@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.ui.option.Keybind;
+import com.k8bas.skyblockutility.ui.render.Theme;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -49,6 +50,7 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			context.waitTicks(3);
 			dropdowns(context);
 			keybinds(context);
+			colourPicker(context);
 		} finally {
 			context.runOnClient(client -> {
 				SettingsKeybind.OPEN_SETTINGS_KEY.setKey(InputConstants.UNKNOWN);
@@ -176,6 +178,150 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 				+ "E bound with a conflict, F3 bound");
 	}
 
+	/** AC-UI-12 with real input: hex typed and saved, Cancel and Esc discard, an invalid hex is marked, alpha only where stored. */
+	private static void colourPicker(ClientGameTestContext context) {
+		click(context, screen -> screen.centre(screen.ruleSwatch));
+		check(!context.computeOnClient(client -> screen(client).picker().hasAlphaControl()), "a rule colour shows no alpha control");
+		for (int scale : new int[] {4, 2}) {
+			context.runOnClient(client -> client.options.guiScale().set(scale));
+			context.waitTicks(3);
+			Path shot = context.takeScreenshot("t2.3b-picker-rgb-scale-" + scale);
+			// The whole wheel shows: red at the left edge, cyan at the right, the panel in the box's corner.
+			int[] left = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.06, 0.5));
+			int[] right = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.94, 0.5));
+			int[] corner = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.02, 0.02));
+			int l = pixel(shot, left), r = pixel(shot, right), c = pixel(shot, corner);
+			check((l >> 16 & 0xFF) > (l >> 8 & 0xFF) + 40 && (l >> 16 & 0xFF) > (l & 0xFF) + 40, "scale " + scale + ": red at the left: " + Integer.toHexString(l));
+			check((r & 0xFF) > (r >> 16 & 0xFF) + 40 && (r >> 8 & 0xFF) > (r >> 16 & 0xFF) + 40, "scale " + scale + ": cyan at the right: " + Integer.toHexString(r));
+			check(c == (Theme.PANEL & 0xFFFFFF), "scale " + scale + ": outside the circle is the panel: " + Integer.toHexString(c));
+		}
+		// Typed and saved: applies once, with one commit.
+		click(context, screen -> screen.centre(screen.picker().hexField()));
+		context.getInput().holdControl();
+		context.getInput().pressKey(GLFW.GLFW_KEY_A);
+		context.getInput().releaseControl();
+		context.getInput().typeChars("#GG1234");
+		context.waitTick();
+		check(!context.computeOnClient(client -> screen(client).picker().state().hexValid()), "#GG1234 is marked invalid");
+		check(context.computeOnClient(client -> screen(client).picker().state().color()) == 0x0AA351, "and keeps the last valid colour");
+		Path invalidShot = context.takeScreenshot("t2.3b-picker-invalid-hex");
+		int[] fieldTop = context.computeOnClient(client -> screen(client).point(screen(client).picker().hexField(), 0.5, 0));
+		int outline = pixel(invalidShot, fieldTop);
+		check(outline == (Theme.ERROR & 0xFFFFFF), "the invalid field has the error outline: " + Integer.toHexString(outline));
+		context.getInput().holdControl();
+		context.getInput().pressKey(GLFW.GLFW_KEY_A);
+		context.getInput().releaseControl();
+		context.getInput().typeChars("#1A2B3C");
+		context.waitTick();
+		check(context.computeOnClient(client -> screen(client).ruleColour) == 0x0AA351, "nothing is applied before Save");
+		click(context, screen -> screen.centre(screen.picker().saveButton()));
+		int saved = context.computeOnClient(client -> screen(client).ruleColour);
+		int commits = context.computeOnClient(client -> screen(client).ruleCommits);
+		check(saved == 0x1A2B3C && commits == 1, "Save applies #1A2B3C with one commit: " + Integer.toHexString(saved) + ", " + commits);
+		check(!context.computeOnClient(client -> screen(client).listOpen()), "and closes the picker");
+
+		// A pick on the wheel, then Cancel: nothing changes.
+		click(context, screen -> screen.centre(screen.ruleSwatch));
+		click(context, screen -> screen.wheelPoint(0.6));
+		check(context.computeOnClient(client -> screen(client).picker().state().changed()), "the wheel changed the picker's colour");
+		click(context, screen -> screen.centre(screen.picker().cancelButton()));
+		check(context.computeOnClient(client -> screen(client).ruleColour) == 0x1A2B3C, "Cancel leaves the stored colour");
+		check(!context.computeOnClient(client -> screen(client).listOpen()), "Cancel closes the picker");
+		click(context, screen -> screen.centre(screen.ruleSwatch));
+		check(!context.computeOnClient(client -> screen(client).picker().state().changed()), "a picker opened again starts from the stored colour");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
+		// Esc as well, and the screen stays open behind the modal.
+		click(context, screen -> screen.centre(screen.ruleSwatch));
+		click(context, screen -> screen.wheelPoint(-0.6));
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
+		check(!context.computeOnClient(client -> screen(client).listOpen()), "Esc closes the picker");
+		check(context.computeOnClient(client -> screen(client).ruleColour) == 0x1A2B3C, "without applying");
+		check(context.computeOnClient(client -> screen(client).ruleCommits) == 1, "and without a commit");
+
+		// AC-UI-12: brightness dragged to 0 and back keeps the hue and saturation picked in the dialog.
+		click(context, screen -> screen.centre(screen.ruleSwatch));
+		context.runOnClient(client -> screen(client).picker().state().setWheel(200F / 360F, 0.8F));
+		drag(context, screen -> screen.point(screen.picker().brightnessSlider(), 0.5, 0.5),
+				screen -> screen.point(screen.picker().brightnessSlider(), -0.5, 0.5), false);
+		int dark = context.computeOnClient(client -> screen(client).picker().state().color());
+		check(dark == 0, "brightness dragged past the left end gives black: " + Integer.toHexString(dark));
+		move(context, screen -> screen.point(screen.picker().brightnessSlider(), 1.5, 0.5));
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		float hue = context.computeOnClient(client -> screen(client).picker().state().hsv().h());
+		float saturation = context.computeOnClient(client -> screen(client).picker().state().hsv().s());
+		check(Math.abs(hue - 200F / 360F) <= 1F / 360F && Math.abs(saturation - 0.8F) <= 0.01F,
+				"and back to full keeps hue 200 and saturation 0.8: " + hue * 360 + ", " + saturation);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
+
+		// R27: eight digits on a colour without alpha drop the alpha. The click into the field selects all.
+		click(context, screen -> screen.centre(screen.ruleSwatch));
+		click(context, screen -> screen.centre(screen.picker().hexField()));
+		context.getInput().typeChars("#80FF0000");
+		context.waitTick();
+		click(context, screen -> screen.centre(screen.picker().saveButton()));
+		int dropped = context.computeOnClient(client -> screen(client).ruleColour);
+		check(dropped == 0xFF0000, "#80FF0000 on a rule colour saves opaque red: " + Integer.toHexString(dropped));
+
+		// Save with an invalid hex applies the last valid colour.
+		click(context, screen -> screen.centre(screen.ruleSwatch));
+		click(context, screen -> screen.centre(screen.picker().hexField()));
+		context.getInput().typeChars("#GG1234");
+		context.waitTick();
+		click(context, screen -> screen.centre(screen.picker().saveButton()));
+		int kept = context.computeOnClient(client -> screen(client).ruleColour);
+		int commitsAfter = context.computeOnClient(client -> screen(client).ruleCommits);
+		check(kept == 0xFF0000 && commitsAfter == 3, "Save with #GG1234 keeps the last valid colour, with a commit: "
+				+ Integer.toHexString(kept) + ", " + commitsAfter);
+		check(!context.computeOnClient(client -> screen(client).listOpen()), "and closes the picker");
+
+		// A preset sets the colour and the hex text.
+		click(context, screen -> screen.centre(screen.ruleSwatch));
+		click(context, screen -> screen.centre(screen.picker().preset(12)));
+		int preset = context.computeOnClient(client -> screen(client).picker().state().color());
+		String presetHex = context.computeOnClient(client -> screen(client).picker().hexField().model().text());
+		check(preset == 0xFF5555 && "#FF5555".equals(presetHex), "preset 12 picks red: " + Integer.toHexString(preset) + ", " + presetHex);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
+
+		// Alpha: only where stored; dragged to 0 and saved keeps the colour; typed key by key keeps its alpha.
+		click(context, screen -> screen.centre(screen.alphaSwatch));
+		check(context.computeOnClient(client -> screen(client).picker().hasAlphaControl()), "a colour with alpha shows the alpha control");
+		context.takeScreenshot("t2.3b-picker-alpha");
+		drag(context, screen -> screen.point(screen.picker().alphaSlider(), 0.5, 0.5),
+				screen -> screen.point(screen.picker().alphaSlider(), -0.5, 0.5), true);
+		click(context, screen -> screen.centre(screen.picker().saveButton()));
+		int clear = context.computeOnClient(client -> screen(client).alphaColour);
+		int alphaCommits = context.computeOnClient(client -> screen(client).alphaCommits);
+		check(clear >>> 24 == 0 && (clear & 0xFFFFFF) == 0x29B6B2 && alphaCommits == 1,
+				"alpha dragged to 0 saves a clear #29B6B2 with one commit: " + Integer.toHexString(clear) + ", " + alphaCommits);
+		click(context, screen -> screen.centre(screen.alphaSwatch));
+		click(context, screen -> screen.centre(screen.picker().hexField()));
+		context.getInput().typeChars("#4029B6B2");
+		context.waitTick();
+		click(context, screen -> screen.centre(screen.picker().saveButton()));
+		int typed = context.computeOnClient(client -> screen(client).alphaColour);
+		check(typed == 0x4029B6B2, "#4029B6B2 typed key by key saves with its alpha: " + Integer.toHexString(typed));
+		LOGGER.info("colour picker: #GG1234 marked, #1A2B3C saved with one commit, the wheel then Cancel and Esc applied nothing, brightness "
+				+ "to 0 and back kept hue and saturation, #80FF0000 dropped its alpha, an invalid hex saved the last valid colour, a preset "
+				+ "set the hex, alpha only where stored and saved at 0 and typed");
+	}
+
+	/** Presses at one point and moves to another; releases there if asked. */
+	private static void drag(ClientGameTestContext context, Locate from, Locate to, boolean release) {
+		move(context, from);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		move(context, to);
+		if (release) {
+			context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+		}
+	}
+
 	private interface Locate {
 		int[] at(AdvancedWidgetTestScreen screen);
 	}
@@ -203,6 +349,14 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			throw new AssertionError("FAILED: the test screen is not open: " + client.gui.screen());
 		}
 		return screen;
+	}
+
+	private static int pixel(Path screenshot, int[] point) {
+		try {
+			return javax.imageio.ImageIO.read(screenshot.toFile()).getRGB(point[0], point[1]) & 0xFFFFFF;
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + screenshot, e);
+		}
 	}
 
 	private static String optionsFile(ClientGameTestContext context) {

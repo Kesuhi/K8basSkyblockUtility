@@ -10,6 +10,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.function.Consumer;
+import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.ToIntFunction;
 
@@ -32,6 +33,8 @@ public final class TextField extends Widget {
 	private long focusedAt;
 	private boolean selectingWithMouse;
 	private boolean forcedHot;
+	private boolean selectAllOnFocus;
+	private BooleanSupplier invalid = () -> false;
 
 	public TextField(TextEditModel model, String placeholder, Consumer<String> onChange, LongSupplier clock) {
 		this.model = model;
@@ -53,6 +56,11 @@ public final class TextField extends Widget {
 		this.forcedHot = hot;
 	}
 
+	/** Marks the field in the error colour while the condition holds (e.g. an invalid hex colour). */
+	public void markInvalidWhen(BooleanSupplier condition) {
+		this.invalid = condition;
+	}
+
 	/** The text's width measure; set from the font on each draw, or by tests. */
 	void useWidths(ToIntFunction<String> widths) {
 		this.widths = widths;
@@ -71,10 +79,19 @@ public final class TextField extends Widget {
 		return true;
 	}
 
+	/** Selects the whole text when the field gains focus (a hex field: a paste then replaces it). */
+	public void selectAllOnFocus(boolean selectAll) {
+		this.selectAllOnFocus = selectAll;
+	}
+
 	@Override
 	public void setFocused(boolean focused) {
 		if (focused && !this.focused) {
 			focusedAt = clock.getAsLong();
+			if (selectAllOnFocus) {
+				model.selectAll();
+				selectingWithMouse = false;
+			}
 		}
 		super.setFocused(focused);
 	}
@@ -190,10 +207,12 @@ public final class TextField extends Widget {
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		widths = font::width;
 		Theme theme = Theme.current();
-		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(Theme.SIDEBAR));
+		boolean wrong = invalid.getAsBoolean();
+		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(wrong ? Theme.ERROR_BACKGROUND : Theme.SIDEBAR));
 		boolean hot = enabled && (forcedHot || contains(mouseX, mouseY));
 		float hover = forcedHot ? 1F : hoverAmount(hot);
-		int outline = !enabled ? Theme.CARD_HOVER : focused ? theme.accent() : ColorMath.lerp(Theme.SEPARATOR, Theme.TEXT_DISABLED, hover);
+		int outline = !enabled ? Theme.CARD_HOVER : wrong ? Theme.ERROR : focused ? theme.accent()
+				: ColorMath.lerp(Theme.SEPARATOR, Theme.TEXT_DISABLED, hover);
 		Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1, faded(outline));
 		String text = model.text();
 		keepCaretVisible();

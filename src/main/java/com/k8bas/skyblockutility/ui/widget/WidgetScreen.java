@@ -305,6 +305,10 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 
 	@Override
 	public boolean keyPressed(KeyEvent event) {
+		// A held Esc that left a field or closed something must not go on to close what lies behind.
+		if (event.key() == KEY_ESCAPE && keysTaken.contains(keyId(event))) {
+			return true;
+		}
 		if (keyboardFocus != null && keyboardFocus.capturesKeys()) {
 			keysTaken.add(keyId(event));
 			Widget capturing = keyboardFocus;
