@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.ui.render.Easing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 /**
  * Where each notice is drawn (REQ-UI-21), in GUI pixels. The oldest sits at the chosen edge and newer
@@ -14,6 +15,8 @@ import java.util.List;
  */
 public final class NoticeLayout {
 	public static final int WIDTH = 160;
+	/** A notice with longer text (a backup file's name) grows up to this, within the window. */
+	public static final int MAX_WIDTH = 360;
 	public static final int PADDING = 6;
 	public static final int LINE_HEIGHT = 10;
 	public static final int GAP = 4;
@@ -25,17 +28,33 @@ public final class NoticeLayout {
 	public record Placed(NoticeQueue.Entry entry, int x, int y, int width, int height) {
 	}
 
+	/** At least {@link #WIDTH}, more for longer text, at most {@link #MAX_WIDTH} and never wider than the window. */
+	static int width(Notice notice, int screenWidth, ToIntFunction<String> measure) {
+		int text = measure.applyAsInt(notice.title());
+		for (String line : notice.body()) {
+			text = Math.max(text, measure.applyAsInt(line));
+		}
+		int wanted = Math.max(WIDTH, text + 2 * PADDING + 2);
+		return Math.max(1, Math.min(Math.min(wanted, MAX_WIDTH), screenWidth - 2 * MARGIN));
+	}
+
 	public static int height(Notice notice) {
 		return 2 * PADDING + LINE_HEIGHT * (1 + notice.body().size()) - 1;
 	}
 
 	/** Oldest first; draw them in reverse, so a newer notice sliding past an older one passes under it. */
 	public static List<Placed> place(List<NoticeQueue.Entry> entries, NoticePosition position, int screenWidth, int screenHeight, long now) {
+		return place(entries, position, screenWidth, screenHeight, now, text -> 0);
+	}
+
+	/** As above; a notice whose text is wider than {@link #WIDTH} allows grows to fit it, up to {@link #MAX_WIDTH}. */
+	public static List<Placed> place(List<NoticeQueue.Entry> entries, NoticePosition position, int screenWidth, int screenHeight, long now,
+			ToIntFunction<String> measure) {
 		List<Placed> placed = new ArrayList<>();
-		int width = Math.max(1, Math.min(WIDTH, screenWidth - 2 * MARGIN));
 		double offset = MARGIN;
 		for (NoticeQueue.Entry entry : entries) {
 			int height = height(entry.notice());
+			int width = width(entry.notice(), screenWidth, measure);
 			if (offset + height > screenHeight - MARGIN) {
 				break;
 			}

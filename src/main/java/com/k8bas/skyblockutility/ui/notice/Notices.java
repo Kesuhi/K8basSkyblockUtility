@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 /**
  * Posting and drawing notices (REQ-UI-21). The position and duration come from the General settings
@@ -43,14 +44,18 @@ public final class Notices {
 		QUEUE.clear();
 	}
 
-	/** Where each notice is drawn now, for tests. */
+	/** Where each notice is drawn now, for tests (measured with the game's font, as drawn). */
 	public static List<NoticeLayout.Placed> placed(int screenWidth, int screenHeight) {
+		return placed(screenWidth, screenHeight, net.minecraft.client.Minecraft.getInstance().font::width);
+	}
+
+	private static List<NoticeLayout.Placed> placed(int screenWidth, int screenHeight, ToIntFunction<String> measure) {
 		long now = UiClock.MILLIS.getAsLong();
-		return NoticeLayout.place(QUEUE.visible(now), general().noticePosition(), screenWidth, screenHeight, now);
+		return NoticeLayout.place(QUEUE.visible(now), general().noticePosition(), screenWidth, screenHeight, now, measure);
 	}
 
 	public static void draw(GuiGraphicsExtractor graphics, Font font, int screenWidth, int screenHeight) {
-		List<NoticeLayout.Placed> placed = placed(screenWidth, screenHeight);
+		List<NoticeLayout.Placed> placed = placed(screenWidth, screenHeight, font::width);
 		if (placed.isEmpty()) {
 			return;
 		}

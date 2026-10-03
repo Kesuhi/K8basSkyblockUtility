@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.screen;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.ColorOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Option;
 import com.k8bas.skyblockutility.ui.option.Toggle;
@@ -193,7 +194,7 @@ public final class ConfigLayout {
 	}
 
 	/**
-	 * The control on the right of a card: a switch, dropdown or key button, or a slider's track (its
+	 * The control on the right of a card: a switch, dropdown, key button or colour swatch, or a slider's track (its
 	 * value label sits in the {@link #SLIDER_LABEL} px to the track's right, which a press does not reach).
 	 */
 	public static Rect control(Rect card, Option option) {
@@ -209,6 +210,9 @@ public final class ConfigLayout {
 			right -= SLIDER_LABEL;
 		} else if (option instanceof Choice<?>) {
 			width = 120;
+		} else if (option instanceof ColorOption) {
+			width = 24;
+			height = 14;
 		} else {
 			width = 100;
 		}

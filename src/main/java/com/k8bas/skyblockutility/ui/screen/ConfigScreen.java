@@ -5,9 +5,12 @@ import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.settings.OptionCatalog;
+import com.k8bas.skyblockutility.ui.notice.Notice;
+import com.k8bas.skyblockutility.ui.notice.Notices;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.ColorOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
@@ -21,6 +24,7 @@ import com.k8bas.skyblockutility.ui.render.TooltipLayout;
 import com.k8bas.skyblockutility.ui.render.UiSound;
 import com.k8bas.skyblockutility.ui.render.UiText;
 import com.k8bas.skyblockutility.ui.widget.Button;
+import com.k8bas.skyblockutility.ui.widget.ColorSwatch;
 import com.k8bas.skyblockutility.ui.widget.Dropdown;
 import com.k8bas.skyblockutility.ui.widget.GameClipboard;
 import com.k8bas.skyblockutility.ui.widget.KeyMappingTarget;
@@ -341,6 +345,8 @@ public final class ConfigScreen extends WidgetScreen {
 			}
 			case Choice<?> choice -> dropdown(choice);
 			case Keybind keybind -> keybindButton(keybind);
+			// Save in the picker is a discrete commit (REQ-UI-15).
+			case ColorOption colour -> new ColorSwatch(colour.binding(), colour.storesAlpha(), colour.text().title(), this, session::commit, UiSound::click);
 		};
 	}
 
@@ -386,6 +392,11 @@ public final class ConfigScreen extends WidgetScreen {
 	public void added() {
 		super.added();
 		session.open();
+		// The settings file could not be read and was copied aside: say where, once (EC-UI-16).
+		String backup = ConfigManager.takeBackupForScreen();
+		if (backup != null) {
+			Notices.post(new Notice("Settings file backed up", List.of("A copy is in the config folder:", backup)));
+		}
 	}
 
 	/** Every way the screen goes (Esc, replaced by another screen, a disconnect) saves once (REQ-UI-15, EC-UI-02). */

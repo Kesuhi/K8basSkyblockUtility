@@ -17,7 +17,11 @@ public class GeneralConfig implements Normalizable {
 	/** Where notices (toasts) appear (REQ-UI-21). Absent (null, never written) until picked; an unknown name reads as absent. */
 	public NoticePosition noticePosition;
 	public static final NoticePosition DEFAULT_NOTICE_POSITION = NoticePosition.TOP_RIGHT;
-	/** How long a notice stays, 1-15 s (REQ-UI-21). Absent (null, never written) until picked. */
+	/**
+	 * How long a notice stays, 1-15 s (REQ-UI-21). Absent (null, never written) until picked. A hand-edited
+	 * value outside the range is kept as it is until the slider changes it (REQ-UI-16); notices and the
+	 * slider hold it to the range when they use it.
+	 */
 	public Integer noticeSeconds;
 	public static final int DEFAULT_NOTICE_SECONDS = 5;
 
@@ -29,18 +33,13 @@ public class GeneralConfig implements Normalizable {
 		return noticeSeconds == null ? DEFAULT_NOTICE_SECONDS : noticeSeconds;
 	}
 
-	/** A negative scan range means unlimited (0), as the scan treats it. A notice duration outside 1-15 s is held to the range. */
+	/** A negative scan range means unlimited (0), as the scan treats it. */
 	@Override
 	public boolean normalize() {
-		boolean changed = false;
 		if (mobScanRangeBlocks < 0) {
 			mobScanRangeBlocks = 0;
-			changed = true;
+			return true;
 		}
-		if (noticeSeconds != null && (noticeSeconds < 1 || noticeSeconds > 15)) {
-			noticeSeconds = Math.max(1, Math.min(15, noticeSeconds));
-			changed = true;
-		}
-		return changed;
+		return false;
 	}
 }

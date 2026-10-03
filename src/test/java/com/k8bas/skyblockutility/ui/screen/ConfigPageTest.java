@@ -9,6 +9,7 @@ import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.ColorOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
@@ -69,6 +70,8 @@ class ConfigPageTest {
 			case IntSlider slider -> new Slider(SliderModel.ofInt(slider.min(), slider.max(), slider.step()), () -> slider.binding().get(),
 					value -> slider.binding().set((int) value), () -> { }, value -> slider.format((int) value), () -> { });
 			case Choice<?> choice -> dropdown(choice);
+			case ColorOption colour -> new com.k8bas.skyblockutility.ui.widget.ColorSwatch(colour.binding(), colour.storesAlpha(), colour.text().title(), host,
+					() -> { }, () -> { });
 			case Keybind keybind -> new KeybindButton(new StubKey(keybind.keyMappingName()), List::of, name -> name, () -> { });
 		};
 	}
@@ -157,9 +160,15 @@ class ConfigPageTest {
 				((KeybindButton) page.control(option)).captureKey(Keybind.UNBOUND, true);
 				keys.clear();
 			}
+			case ColorOption colour -> {
+				assertEquals(1, opened.size(), colour.id() + " opens the picker");
+				assertEquals(before, state(), colour.id() + ": nothing changes until Save");
+			}
 			case IntSlider slider -> {
-				// A press on the track sets that value; put the default back for the next click.
-				slider.binding().set(slider.defaultValue());
+				// A press on the track sets that value; put back what was there (a setting absent until picked stays absent).
+				GeneralConfig was = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class);
+				general.mobScanRangeBlocks = was.mobScanRangeBlocks;
+				general.noticeSeconds = was.noticeSeconds;
 				assertEquals(before, state(), slider.id() + ": nothing else changed");
 			}
 		}
@@ -199,6 +208,7 @@ class ConfigPageTest {
 					case Toggle t -> assertFalse(before.equals(feature[0] + mode[0] + amount[0] + keys), "flips");
 					case Choice<?> c -> assertEquals(1, opened.size(), "opens its list");
 					case Keybind k -> assertTrue(((KeybindButton) page.control(option)).armed(), "armed");
+					case ColorOption c -> assertEquals(1, opened.size(), "opens the picker");
 					case IntSlider s -> assertTrue(feature[0] && mode[0].equals("Exact") && keys.isEmpty(), "only the amount changes");
 				}
 				feature[0] = true;

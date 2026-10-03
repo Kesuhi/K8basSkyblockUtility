@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -220,6 +221,9 @@ class ConfigSafeLoadTest {
 		assertEquals(1, notices.size());
 		assertTrue(notices.get(0).contains(backups.get(0).getFileName().toString()));
 		assertTrue(ConfigManager.drainNotices().isEmpty(), "the notice is shown once");
+		// EC-UI-16: the settings screen names the backup once, too.
+		assertEquals(backups.get(0).getFileName().toString(), ConfigManager.takeBackupForScreen());
+		assertNull(ConfigManager.takeBackupForScreen(), "named once");
 
 		ConfigManager.save();
 		ConfigManager.flush();

@@ -71,6 +71,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			context.waitTicks(2);
 			search(context);
 			saveModel(context);
+			generalCategory(context);
 		} finally {
 			context.runOnClient(client -> {
 				ModuleManager.modules().forEach(module -> module.setEnabled(true));
@@ -582,6 +583,118 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 
 	private static String configFile(ClientGameTestContext context) {
 		Path file = context.computeOnClient(client -> net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("k8bas_skyblock_utility.json"));
+		try {
+			return java.nio.file.Files.readString(file);
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + file, e);
+		}
+	}
+
+	/** T2.4d: General › Interface and Keybinds with real input (AC-UI-16 [C], AC-UI-13 [C], R28). */
+	private static void generalCategory(ClientGameTestContext context) {
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.runOnClient(client -> screen(client).scrollTo(0));
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> Theme.current().accent() & 0xFFFFFF) == 0x29B6B2, "a fresh config has the teal accent");
+
+		// The accent through the picker: #FF5252, applied at once, written, and the error red stays.
+		click(context, controlCentre(context, "interface.accent"));
+		check(context.computeOnClient(client -> screen(client).overlay()) instanceof com.k8bas.skyblockutility.ui.widget.ColorPickerOverlay,
+				"the swatch opens the picker");
+		int[] hex = context.computeOnClient(client -> {
+			var picker = (com.k8bas.skyblockutility.ui.widget.ColorPickerOverlay) screen(client).overlay();
+			return centreOf(picker.widgets().stream().filter(widget -> widget instanceof com.k8bas.skyblockutility.ui.widget.TextField)
+					.findFirst().orElseThrow());
+		});
+		click(context, hex);
+		context.getInput().typeChars("#FF5252");
+		context.waitTicks(2);
+		int[] save = context.computeOnClient(client -> {
+			var picker = (com.k8bas.skyblockutility.ui.widget.ColorPickerOverlay) screen(client).overlay();
+			List<Widget> buttons = picker.widgets().stream().filter(widget -> widget instanceof com.k8bas.skyblockutility.ui.widget.Button).toList();
+			return centreOf(buttons.get(buttons.size() - 1));
+		});
+		int beforeSave = context.computeOnClient(client -> ConfigManager.saveRequests());
+		click(context, save);
+		check(context.computeOnClient(client -> ConfigManager.general().accentColor) == 0xFF5252, "Save stores #FF5252");
+		check(context.computeOnClient(client -> ConfigManager.saveRequests()) - beforeSave == 1, "and writes it at once (a discrete commit)");
+		context.waitTicks(2);
+		Path shot = context.takeScreenshot("t2.4d-accent-ff5252");
+		ConfigLayout.Frame frame = context.computeOnClient(client -> screen(client).frame());
+		check(pixel(context, shot, frame.header().x() + 300, frame.header().bottom() - 1) == 0xFF5252, "the header line takes it at once");
+		check(Theme.ERROR == 0xFFFF5555 && Theme.DESTRUCTIVE == 0xFFC83737, "error and destructive red are fixed, not the accent");
+		context.runOnClient(client -> ConfigManager.flush());
+		check(configFile(context).replaceAll("\\s", "").contains("\"accentColor\":" + 0xFF5252), "the accent is in the file for the next start");
+
+		// Notices: the position dropdown opens inside the content and moves them; the slider sets how long they stay.
+		click(context, controlCentre(context, "interface.notice_position"));
+		check(context.computeOnClient(client -> screen(client).overlay()) != null, "the position list opens");
+		ConfigLayout.Rect content = frame.content();
+		int[] row = context.computeOnClient(client -> {
+			Widget rows = screen(client).overlay().widgets().get(0);
+			check(rows.x() >= content.x() && rows.y() >= content.y() && rows.x() + rows.width() <= content.right()
+					&& rows.y() + rows.height() <= content.bottom(), "the list stays inside the content: " + rows.y());
+			// The fourth entry: Bottom left.
+			return new int[] {rows.x() + rows.width() / 2, rows.y() + 3 * com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT
+					+ com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT / 2};
+		});
+		click(context, row);
+		check(context.computeOnClient(client -> ConfigManager.general().noticePosition()) == com.k8bas.skyblockutility.ui.notice.NoticePosition.BOTTOM_LEFT,
+				"Bottom left picked");
+		move(context, controlCentre(context, "interface.notice_seconds"));
+		context.getInput().scroll(1.0);
+		context.waitTick();
+		check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == 6, "the wheel adds a second");
+
+		// AC-UI-13: the "Open settings" capture: F7 binds and is in options.txt; Esc unbinds; a right click resets.
+		click(context, controlCentre(context, "keybinds.open_settings"));
+		context.getInput().pressKey(GLFW.GLFW_KEY_F7);
+		context.waitTicks(2);
+		check("key.keyboard.f7".equals(context.computeOnClient(client -> SettingsKeybind.OPEN_SETTINGS_KEY.saveString())), "F7 binds");
+		check(optionsTxt(context).contains("key_" + SettingsKeybind.NAME + ":key.keyboard.f7"), "and is in options.txt");
+		click(context, controlCentre(context, "keybinds.open_settings"));
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		check("key.keyboard.unknown".equals(context.computeOnClient(client -> SettingsKeybind.OPEN_SETTINGS_KEY.saveString())), "Esc unbinds");
+		check(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen, "and keeps the screen");
+		click(context, controlCentre(context, "keybinds.open_settings"));
+		context.getInput().pressKey(GLFW.GLFW_KEY_F7);
+		context.waitTicks(2);
+		int[] key = controlCentre(context, "keybinds.open_settings");
+		move(context, key);
+		context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_RIGHT);
+		context.waitTicks(2);
+		check("key.keyboard.unknown".equals(context.computeOnClient(client -> SettingsKeybind.OPEN_SETTINGS_KEY.saveString())),
+				"a right click resets to the default (unbound)");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		context.runOnClient(client -> {
+			ConfigManager.general().accentColor = null;
+			ConfigManager.general().noticePosition = null;
+			ConfigManager.general().noticeSeconds = null;
+			ConfigManager.save();
+		});
+		LOGGER.info("config screen General: accent #FF5252 applied at once and written; notices moved bottom left, 6 s; Open settings key "
+				+ "bound to F7 in options.txt, unbound by Esc, reset by a right click");
+	}
+
+	private static int[] controlCentre(ClientGameTestContext context, String optionId) {
+		return context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.OptionRow row = optionRow(screen, option -> option.id().equals(optionId));
+			ConfigLayout.Rect control = ConfigLayout.control(ConfigLayout.card(screen.frame(), screen.scrollArea().scroll(), row), row.option());
+			return new int[] {control.x() + control.w() / 2, control.y() + control.h() / 2};
+		});
+	}
+
+	private static int[] centreOf(Widget widget) {
+		return new int[] {widget.x() + widget.width() / 2, widget.y() + widget.height() / 2};
+	}
+
+	private static String optionsTxt(ClientGameTestContext context) {
+		Path file = context.computeOnClient(client -> client.gameDirectory.toPath().resolve("options.txt"));
 		try {
 			return java.nio.file.Files.readString(file);
 		} catch (IOException e) {

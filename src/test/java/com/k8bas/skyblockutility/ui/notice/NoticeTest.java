@@ -177,6 +177,26 @@ class NoticeTest {
 		}
 	}
 
+	/** A long line (a backup file's name) widens its notice, up to a limit and never past the window. */
+	@Test
+	void aLongLineWidensItsNotice() {
+		NoticeQueue queue = new NoticeQueue();
+		queue.post(new Notice("Short", List.of("short")), 0, 5 * SECOND);
+		queue.post(new Notice("Settings file backed up", List.of("A copy is in the config folder:",
+				"k8bas_skyblock_utility.json.broken-20261004-120000.bak")), 0, 5 * SECOND);
+		java.util.function.ToIntFunction<String> sixPixels = text -> text.length() * 6;
+		List<NoticeLayout.Placed> placed = NoticeLayout.place(queue.visible(SECOND), NoticePosition.TOP_RIGHT, 640, 480, SECOND, sixPixels);
+		assertEquals(NoticeLayout.WIDTH, placed.get(0).width(), "short text keeps the usual width");
+		int nameWidth = "k8bas_skyblock_utility.json.broken-20261004-120000.bak".length() * 6;
+		assertEquals(nameWidth + 2 * NoticeLayout.PADDING + 2, placed.get(1).width(), "it grows to fit the long name");
+		queue.post(new Notice("x".repeat(100), List.of()), 0, 5 * SECOND);
+		assertEquals(NoticeLayout.MAX_WIDTH, NoticeLayout.place(queue.visible(SECOND), NoticePosition.TOP_RIGHT, 640, 480, SECOND, sixPixels).get(2).width(),
+				"up to the cap");
+		assertEquals(640 - NoticeLayout.MARGIN, placed.get(1).x() + placed.get(1).width(), "still against the edge");
+		NoticeLayout.Placed narrow = NoticeLayout.place(queue.visible(SECOND), NoticePosition.TOP_RIGHT, 200, 480, SECOND, sixPixels).get(1);
+		assertTrue(narrow.width() <= 200 - 2 * NoticeLayout.MARGIN, "never wider than the window: " + narrow);
+	}
+
 	/** AC-UI-19 [A]: a warning feature's notice channel is OFF on a fresh config. */
 	@Test
 	void theNoticeChannelHelperDefaultsToOff() {
@@ -189,17 +209,30 @@ class NoticeTest {
 	}
 
 	@Test
-	void theConfigHoldsTheNoticeSettingsInRange() {
+	void aNoticeDurationOutsideTheRangeIsKeptAndHeldToItWhenUsed() {
 		GeneralConfig config = new GeneralConfig();
 		assertEquals(NoticePosition.TOP_RIGHT, config.noticePosition());
 		assertEquals(5, config.noticeSeconds());
 		assertFalse(config.normalize(), "absent settings are not written");
+		// REQ-UI-16: a hand-edited value outside the slider's range stays in the file until the slider changes it.
 		config.noticeSeconds = 99;
-		assertTrue(config.normalize());
-		assertEquals(15, config.noticeSeconds());
-		config.noticeSeconds = 0;
-		config.normalize();
-		assertEquals(1, config.noticeSeconds());
-		assertFalse(config.normalize(), "nothing left to fix");
+		assertFalse(config.normalize());
+		assertEquals(99, config.noticeSeconds);
+		NoticeQueue queue = new NoticeQueue();
+		queue.post(notice("a"), 0, Notices.durationMs(config));
+		assertEquals(NoticeQueue.MAX_DURATION_MS, queue.visible(0).get(0).durationMs(), "used as 15 s");
+	}
+
+	/** EC-UI-16: the backup notice shows the whole file name, also with a collision suffix, at a common GUI size. */
+	@Test
+	void theBackupFileNameFitsItsNotice() {
+		java.util.function.ToIntFunction<String> sixPixels = text -> text.length() * 6;
+		for (String name : List.of("k8bas_skyblock_utility.json.broken-20261004-120000.bak", "k8bas_skyblock_utility.json.broken-20261004-120000-1.bak")) {
+			NoticeQueue queue = new NoticeQueue();
+			queue.post(new Notice("Settings file backed up", List.of("A copy is in the config folder:", name)), 0, 5 * SECOND);
+			NoticeLayout.Placed box = NoticeLayout.place(queue.visible(SECOND), NoticePosition.TOP_RIGHT, 640, 360, SECOND, sixPixels).get(0);
+			int textWidth = box.width() - 2 * NoticeLayout.PADDING - 2;
+			assertEquals(name, com.k8bas.skyblockutility.ui.render.Ellipsis.fit(name, textWidth, sixPixels), "not cut: " + box);
+		}
 	}
 }

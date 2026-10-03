@@ -7,11 +7,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.highlight.GlowBehaviourText;
+import com.k8bas.skyblockutility.ui.notice.NoticePosition;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.ColorOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
@@ -67,6 +69,10 @@ class OptionCatalogTest {
 		// §12.H: "Update check ON"; the scan range of REQ-GLOW-01; keybinds unbound (REQ-UI-10).
 		expected.put("general.autoUpdateCheckEnabled", true);
 		expected.put("general.mobScanRangeBlocks", 64);
+		// D-8: teal accent; R28: notices top right for 5 s until picked.
+		expected.put("general.accentColor", 0x29B6B2);
+		expected.put("general.noticePosition", NoticePosition.TOP_RIGHT);
+		expected.put("general.noticeSeconds", 5);
 		expected.put("modules.mob_highlighter.enabled", true);
 		// §12.H: NPC Search ON, NPC waypoints ON, "You found" title ON (R20), white labels ON (R21), beams and distance ON.
 		expected.put("modules.npc_search.enabled", true);
@@ -86,6 +92,7 @@ class OptionCatalogTest {
 				case IntSlider slider -> slider.binding().get();
 				case Choice<?> choice -> choice.binding().get();
 				case Keybind keybind -> keybind.defaultValue();
+				case ColorOption colour -> colour.binding().get();
 			};
 			assertEquals(option.defaultValue(), current, "a fresh config holds the declared default: " + option.id());
 		}
@@ -193,7 +200,13 @@ class OptionCatalogTest {
 				});
 				assertEquals(Set.of(option.storageKey()), changed, option.id());
 				restore(option, original);
-				assertEquals(before, leaves(gson, general, mob, npc), option.id() + " restores");
+				Map<String, String> restored = leaves(gson, general, mob, npc);
+				// A setting absent until picked (R28, the accent) now holds its default: picked, so it is written.
+				if ("null".equals(before.get(option.storageKey()))) {
+					assertEquals(gson.toJson(option.defaultValue()), restored.get(option.storageKey()), option.id() + " holds its default");
+					restored.put(option.storageKey(), "null");
+				}
+				assertEquals(before, restored, option.id() + " restores");
 			}
 		}
 	}
@@ -383,6 +396,7 @@ class OptionCatalogTest {
 			case IntSlider slider -> slider.binding().get();
 			case Choice<?> choice -> choice.binding().get();
 			case Keybind keybind -> keybind.defaultValue();
+			case ColorOption colour -> colour.binding().get();
 		};
 	}
 
@@ -392,6 +406,7 @@ class OptionCatalogTest {
 			case IntSlider slider -> slider.binding().set(slider.binding().get().equals(slider.max()) ? slider.min() : slider.max());
 			case Choice<?> choice -> changeChoice(choice);
 			case Keybind keybind -> { }
+			case ColorOption colour -> colour.binding().set(colour.binding().get() == 0x123456 ? 0x654321 : 0x123456);
 		}
 	}
 
@@ -411,6 +426,7 @@ class OptionCatalogTest {
 			case IntSlider slider -> slider.binding().set((Integer) original);
 			case Choice<?> choice -> ((Choice<Object>) choice).binding().set(original);
 			case Keybind keybind -> { }
+			case ColorOption colour -> colour.binding().set((Integer) original);
 		}
 	}
 

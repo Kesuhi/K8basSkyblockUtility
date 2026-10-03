@@ -59,6 +59,8 @@ public final class ConfigManager {
 	 *  only shows when its module reads it). */
 	private static byte[] originalBytes;
 	private static Path backupThisSession;
+	/** Whether the settings screen has named this session's backup yet (EC-UI-16). */
+	private static boolean backupNamedInScreen;
 	private static final List<String> pendingNotices = new ArrayList<>();
 	/** Shows a save failure to the player; set by the client entrypoint (no-op in tests). */
 	private static Consumer<String> saveFailureNotice = message -> {
@@ -116,6 +118,7 @@ public final class ConfigManager {
 		}
 		originalBytes = null;
 		backupThisSession = null;
+		backupNamedInScreen = false;
 		savesSuspended = false;
 		pendingNotices.clear();
 		if (!Files.exists(path)) {
@@ -259,6 +262,18 @@ public final class ConfigManager {
 			LOGGER.error("Could not write the backup {}", target.getFileName(), e);
 			return false;
 		}
+	}
+
+	/**
+	 * The file name of this session's backup, for the settings screen to name once (EC-UI-16); null
+	 * when there is none or it was named already.
+	 */
+	public static synchronized String takeBackupForScreen() {
+		if (backupThisSession == null || backupNamedInScreen) {
+			return null;
+		}
+		backupNamedInScreen = true;
+		return backupThisSession.getFileName().toString();
 	}
 
 	public static synchronized boolean hasNotices() {
