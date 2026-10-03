@@ -3,7 +3,6 @@ package com.k8bas.skyblockutility.settings;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.module.ModuleManager;
-import com.k8bas.skyblockutility.module.mobhighlighter.ModKeybinds;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -30,24 +29,8 @@ public final class SettingsScreenFactory {
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
 		ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
-		general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Check for updates (notify)"),
-						ConfigManager.general().autoUpdateCheckEnabled)
-				.setDefaultValue(true)
-				.setTooltip(Component.literal("Asks GitHub (api.github.com) for new releases at most 4 times a day; after a "
-						+ "successful check, not again for 6 hours. Tells you in chat once per session when a newer version is "
-						+ "out. Nothing is downloaded or installed."))
-				.setSaveConsumer(value -> ConfigManager.general().autoUpdateCheckEnabled = value)
-				.build());
-		general.addEntry(entryBuilder.startIntSlider(Component.literal("Mob scan range in blocks (0 = unlimited)"),
-						ConfigManager.general().mobScanRangeBlocks, 0, 128)
-				.setSaveConsumer(value -> ConfigManager.general().mobScanRangeBlocks = value)
-				.build());
-		general.addEntry(entryBuilder.fillKeybindingField(Component.literal("Open Settings Key"),
-				SettingsKeybind.OPEN_SETTINGS_KEY).build());
-		general.addEntry(entryBuilder.fillKeybindingField(Component.literal("Toggle Mob Highlighter Key"),
-				ModKeybinds.TOGGLE_KEY).build());
-		general.addEntry(entryBuilder.fillKeybindingField(Component.literal("Toggle NPC Search Key"),
-				com.k8bas.skyblockutility.module.npcsearch.ModKeybinds.TOGGLE_KEY).build());
+		// Declared once in GeneralOptions (T2.1); the mob scan range now sits with Mob Highlighter (REQ-UI-04).
+		ClothOptions.addCards(general, entryBuilder, GeneralOptions.cards(ConfigManager.general()));
 
 		for (Module module : ModuleManager.modules()) {
 			ConfigCategory category = builder.getOrCreateCategory(Component.literal(module.displayName()));

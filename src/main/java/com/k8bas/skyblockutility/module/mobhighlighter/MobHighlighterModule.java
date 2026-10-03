@@ -6,6 +6,8 @@ import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
+import com.k8bas.skyblockutility.settings.ClothOptions;
+import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.settings.RuleWarning;
 import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
 import com.k8bas.skyblockutility.settings.ColorWheelFieldEntry;
@@ -102,10 +104,13 @@ public final class MobHighlighterModule implements Module {
 	}
 
 	@Override
+	public List<Card> cards() {
+		return MobHighlighterOptions.cards(config, ConfigManager.general(), this::setEnabled);
+	}
+
+	@Override
 	public void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
-		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
-				.setSaveConsumer(this::setEnabled)
-				.build());
+		ClothOptions.addCards(category, entryBuilder, cards());
 
 		category.addEntry(new ButtonEntry(Component.literal("Mob Database"), Component.literal("Open"), () -> {
 			Minecraft client = Minecraft.getInstance();

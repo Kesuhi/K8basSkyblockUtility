@@ -7,6 +7,8 @@ import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.settings.ButtonEntry;
+import com.k8bas.skyblockutility.settings.ClothOptions;
+import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.settings.DirtyMarkerEntry;
 import com.k8bas.skyblockutility.settings.ColorWheelFieldEntry;
 import com.k8bas.skyblockutility.settings.LiveTextFieldEntry;
@@ -176,37 +178,14 @@ public final class NpcSearchModule implements Module {
 	}
 
 	@Override
+	public List<Card> cards() {
+		return NpcSearchOptions.cards(config, this::setEnabled);
+	}
+
+	@Override
 	public void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
-		// AMBER feature (PLAN §3, P6): the tooltip states its restriction.
-		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
-				.setDefaultValue(true)
-				.setTooltip(Component.literal("Waypoints mark only the fixed NPC positions from your list: their name and "
-						+ "distance show through blocks, and terrain hides their beams like a beacon's. Moving NPCs are only "
-						+ "outlined while you can see them, never through walls."))
-				.setSaveConsumer(this::setEnabled)
-				.build());
-		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("\"You found\" title"), config.foundTitleEnabled)
-				.setDefaultValue(true)
-				.setTooltip(Component.literal("Shows \"You found <NPC>\" for Trinity, Tomioka, Duncan, Xalx and Pete the first time you have a clear line of sight to them, once per run."))
-				.setSaveConsumer(value -> config.foundTitleEnabled = value)
-				.build());
-		// Waypoint look (REQ-NPCWP-08); onConfigScreenSaved rebuilds the waypoints after these are set.
-		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show beacon beams"), config.showBeams)
-				.setDefaultValue(true)
-				.setTooltip(Component.literal("A beacon beam rises from each waypoint, in its island's colour (green for "
-						+ "waypoints shown on every island). Off: only the label."))
-				.setSaveConsumer(value -> config.showBeams = value)
-				.build());
-		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show distance"), config.showDistance)
-				.setDefaultValue(true)
-				.setTooltip(Component.literal("A second line under each waypoint label with your distance to it in metres."))
-				.setSaveConsumer(value -> config.showDistance = value)
-				.build());
-		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("White waypoint labels"), config.whiteWaypointLabels)
-				.setDefaultValue(true)
-				.setTooltip(Component.literal("On: a white label with a yellow distance line. Off: both in the NPC's own colour."))
-				.setSaveConsumer(value -> config.whiteWaypointLabels = value)
-				.build());
+		// The toggles; onConfigScreenSaved rebuilds the waypoints after they are set.
+		ClothOptions.addCards(category, entryBuilder, cards());
 
 		category.addEntry(new ButtonEntry(Component.literal("NPC Database"), Component.literal("Open"), () -> {
 			Minecraft client = Minecraft.getInstance();

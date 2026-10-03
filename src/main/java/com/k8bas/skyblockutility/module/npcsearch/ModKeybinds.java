@@ -9,8 +9,10 @@ import net.minecraft.client.KeyMapping;
 public final class ModKeybinds {
 	/** Public so it can also be exposed as a rebindable entry in the General Cloth Config
 	 *  category (fillKeybindingField binds to this same KeyMapping instance). */
+	/** The name options.txt stores the binding under; never changes (AC-CFG-12). Also declared as an option (GeneralOptions). */
+	public static final String NAME = "key.k8bas_skyblock_utility.npc_search_toggle";
 	public static final KeyMapping TOGGLE_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.k8bas_skyblock_utility.npc_search_toggle",
+			NAME,
 			InputConstants.Type.KEYSYM,
 			InputConstants.UNKNOWN.getValue(),
 			K8basSkyblockUtilityClient.KEY_CATEGORY));

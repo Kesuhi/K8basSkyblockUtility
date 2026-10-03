@@ -10,8 +10,10 @@ public final class SettingsKeybind {
 	/** Public so it can be exposed as a rebindable entry in the General Cloth Config category
 	 *  too, not just vanilla's Controls screen (Cloth Config's fillKeybindingField binds to the
 	 *  same KeyMapping instance, so both stay in sync automatically). */
+	/** The name options.txt stores the binding under; never changes (AC-CFG-12). Also declared as an option (GeneralOptions). */
+	public static final String NAME = "key.k8bas_skyblock_utility.open_settings";
 	public static final KeyMapping OPEN_SETTINGS_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.k8bas_skyblock_utility.open_settings",
+			NAME,
 			InputConstants.Type.KEYSYM,
 			InputConstants.UNKNOWN.getValue(),
 			K8basSkyblockUtilityClient.KEY_CATEGORY));

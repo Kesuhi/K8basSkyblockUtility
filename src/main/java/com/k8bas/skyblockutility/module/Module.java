@@ -1,7 +1,10 @@
 package com.k8bas.skyblockutility.module;
 
+import com.k8bas.skyblockutility.ui.option.Card;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+
+import java.util.List;
 
 /**
  * A self-contained feature. Fabric API events can't be unregistered once
@@ -23,6 +26,9 @@ public interface Module {
 	boolean isEnabled();
 
 	void setEnabled(boolean enabled);
+
+	/** This module's settings, declared once for the cards and the search index (REQ-UI-07). */
+	List<Card> cards();
 
 	/** Add this module's entries to its own settings category. */
 	void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder);
