@@ -1,22 +1,178 @@
 package com.k8bas.skyblockutility.module.npcsearch;
 
+import com.k8bas.skyblockutility.render.marker.Marker;
+import com.k8bas.skyblockutility.render.marker.MarkerLabel;
+import com.k8bas.skyblockutility.render.marker.WorldMarkers;
+import net.minecraft.world.phys.Vec3;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Map;
+import java.util.function.Function;
 
-/** The NPC waypoint label colours (R21). The label size math moved to WorldMarkersTest (T3.0b). */
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/** The NPC waypoints (T3.4): position, gating, look and toggles (REQ-NPCWP-01/-02/-03/-08). */
 class NpcWaypointMarkersTest {
-	/** R21: labels are white unless the player switches "White waypoint labels" off. */
+	private static final Function<String, NpcDatabaseEntry> NO_DATA = id -> null;
+	private static final NpcWaypointMarkers.Settings DEFAULTS = new NpcWaypointMarkers.Settings(true, true, true, Map.of());
+
+	private static NpcRule fixedRule(double x, double y, double z) {
+		NpcRule rule = new NpcRule();
+		rule.label = "Udel";
+		rule.fixed = true;
+		rule.island = "Crimson Isle";
+		rule.color = 0x0AA351;
+		rule.x = x;
+		rule.y = y;
+		rule.z = z;
+		return rule;
+	}
+
+	private static NpcDatabaseEntry entry(String id, double x, double y, double z) {
+		NpcDatabaseEntry entry = new NpcDatabaseEntry();
+		entry.id = id;
+		entry.displayName = id;
+		entry.island = "Crimson Isle";
+		entry.fixed = true;
+		entry.x = x;
+		entry.y = y;
+		entry.z = z;
+		return entry;
+	}
+
+	/** AC-NPCWP-13: a rule from the NPC data follows that entry's current coordinates. */
+	@Test
+	void aRuleFromTheDataFollowsItsCurrentCoordinates() {
+		Map<String, NpcDatabaseEntry> data = Map.of("udel", entry("udel", 20, 70, 30));
+		NpcRule moved = fixedRule(1, 2, 3);
+		moved.sourceId = "udel";
+		NpcRule own = fixedRule(4, 5, 6);
+		NpcRule gone = fixedRule(7, 8, 9);
+		gone.sourceId = "no_longer_listed";
+		assertEquals(new Vec3(20.5, 70, 30.5), NpcWaypointMarkers.position(moved, data::get), "B: the data's position");
+		assertEquals(new Vec3(4.5, 5, 6.5), NpcWaypointMarkers.position(own, data::get), "C: no sourceId");
+		assertEquals(new Vec3(7.5, 8, 9.5), NpcWaypointMarkers.position(gone, data::get), "D: sourceId not in the data");
+	}
+
+	/** Some 1.0.1 configs stored an NPC's centre (x.5); that stays on the NPC's block instead of moving to its corner. */
+	@Test
+	void aStoredCentreStaysOnItsBlock() {
+		assertEquals(new Vec3(-3.5, 70, -90.5), NpcWaypointMarkers.position(fixedRule(-3.5, 70, -90.5), NO_DATA));
+		assertEquals(new Vec3(12.5, 70, 4.5), NpcWaypointMarkers.position(fixedRule(12.5, 70, 4.5), NO_DATA));
+		assertEquals(new Vec3(-3.5, 70, -90.5), NpcWaypointMarkers.position(fixedRule(-4, 70, -91), NO_DATA), "the block itself");
+	}
+
+	/** AC-NPCWP-09: island gating. */
+	@Test
+	void onlyEnabledFixedRulesOnTheirIslandAreShown() {
+		NpcRule lobby = fixedRule(0, 0, 0);
+		lobby.island = "Dungeon Hub";
+		assertTrue(NpcWaypointMarkers.isShown(lobby, "Dungeon Hub"), "mode dungeon_hub");
+		assertFalse(NpcWaypointMarkers.isShown(lobby, "Catacombs"), "mode dungeon (EC-NPCWP-07)");
+		NpcRule anywhere = fixedRule(0, 0, 0);
+		anywhere.island = null;
+		assertTrue(NpcWaypointMarkers.isShown(anywhere, "Hub"));
+		anywhere.island = " ";
+		assertTrue(NpcWaypointMarkers.isShown(anywhere, "Hub"), "a blank island means any island (EC-NPCWP-01)");
+		assertTrue(NpcWaypointMarkers.isShown(anywhere, null), "also while the island is unknown");
+		NpcRule padded = fixedRule(0, 0, 0);
+		padded.island = "Hub ";
+		assertTrue(NpcWaypointMarkers.isShown(padded, "Hub"), "a typed island with stray spaces still matches");
+		NpcRule disabled = fixedRule(0, 0, 0);
+		disabled.enabled = false;
+		assertFalse(NpcWaypointMarkers.isShown(disabled, "Crimson Isle"));
+		NpcRule moving = fixedRule(0, 0, 0);
+		moving.fixed = false;
+		assertFalse(NpcWaypointMarkers.isShown(moving, "Crimson Isle"), "moving rules keep their glow only");
+	}
+
+	/** AC-NPCWP-06: the label sits 1.5 blocks above the block centre; the distance is taken from the player. */
+	@Test
+	void theDistanceIsMeasuredToTheLabelFromThePlayer() {
+		Marker marker = NpcWaypointMarkers.markerFor(fixedRule(10, 64, 0), DEFAULTS, NO_DATA);
+		Vec3 label = WorldMarkers.labelPosition(marker.anchor().position(0), marker.label());
+		assertEquals(new Vec3(10.5, 65.5, 0.5), label);
+		assertEquals(10.62, new Vec3(0, 64, 0).distanceTo(label), 0.005);
+		assertEquals("11m", WorldMarkers.distanceText(new Vec3(0, 64, 0), label));
+		// A waypoint block 3 below the player: 3 m to the block, 2 m to its label.
+		Marker underfoot = NpcWaypointMarkers.markerFor(fixedRule(0, 61, 0), DEFAULTS, NO_DATA);
+		Vec3 below = WorldMarkers.labelPosition(underfoot.anchor().position(0), underfoot.label());
+		assertEquals("2m", WorldMarkers.distanceText(new Vec3(0.5, 64, 0.5), below));
+	}
+
+	/** REQ-NPCWP-02/-03/-04, AC-NPCWP-05 [A]: the Skyblocker-style look and the toggles. */
+	@Test
+	void theLookFollowsTheSettings() {
+		NpcRule rule = fixedRule(0, 64, 0);
+		rule.color = 0x00AAFF;
+		Marker on = NpcWaypointMarkers.markerFor(rule, DEFAULTS, NO_DATA);
+		MarkerLabel label = on.label();
+		assertEquals(1, label.lines().size());
+		assertEquals(0xFFFFFF, label.lines().get(0).color() & 0xFFFFFF, "a white label");
+		assertEquals(0, label.backgroundColor(), "no background plate");
+		assertTrue(label.seeThrough(), "fixed coordinates show through blocks");
+		assertTrue(label.distanceLine());
+		assertEquals(0xFFFF55, label.distanceColor() & 0xFFFFFF, "a yellow distance line");
+		assertNotNull(on.beam());
+		assertEquals(0xFF000000 | WaypointColors.ISLAND_DEFAULTS.get("Crimson Isle"), on.beam().argb(), "the beam in the island colour");
+
+		// "White waypoint labels" OFF: both lines in the rule's colour, the beam unchanged (R21).
+		Marker off = NpcWaypointMarkers.markerFor(rule, new NpcWaypointMarkers.Settings(false, true, true, Map.of()), NO_DATA);
+		assertEquals(0x00AAFF, off.label().lines().get(0).color() & 0xFFFFFF);
+		assertEquals(0x00AAFF, off.label().distanceColor() & 0xFFFFFF);
+		assertEquals(on.beam(), off.beam());
+
+		Marker noBeam = NpcWaypointMarkers.markerFor(rule, new NpcWaypointMarkers.Settings(true, false, true, Map.of()), NO_DATA);
+		assertNull(noBeam.beam(), "Show beacon beams OFF");
+		assertNotNull(noBeam.label(), "the label stays");
+		Marker noDistance = NpcWaypointMarkers.markerFor(rule, new NpcWaypointMarkers.Settings(true, true, false, Map.of()), NO_DATA);
+		assertFalse(noDistance.label().distanceLine(), "Show distance OFF: one text line");
+	}
+
+	/** AC-NPCWP-05 [A]: a fresh config has the module, beams, distance and white labels ON. */
+	@Test
+	void aFreshConfigHasEverythingOn() {
+		NpcSearchConfig config = new NpcSearchConfig();
+		assertTrue(config.enabled);
+		assertTrue(config.showBeams);
+		assertTrue(config.showDistance);
+		assertTrue(config.whiteWaypointLabels);
+		assertTrue(config.islandBeamColors.isEmpty(), "every island starts at its documented default");
+		assertNull(new NpcRule().beamColor, "a new rule follows its island colour");
+	}
+
+	/** AC-NPCWP-05: each saved toggle reaches the waypoints, and only its own part. */
+	@Test
+	void theSavedTogglesReachTheWaypoints() {
+		NpcSearchConfig config = new NpcSearchConfig();
+		config.showBeams = false;
+		config.islandBeamColors.put("Crimson Isle", 0x123456);
+		Marker noBeam = NpcWaypointMarkers.markerFor(fixedRule(0, 64, 0), NpcSearchModule.waypointSettings(config), NO_DATA);
+		assertNull(noBeam.beam());
+		assertTrue(noBeam.label().distanceLine());
+		assertEquals(0xFFFFFFFF, noBeam.label().lines().get(0).color());
+		config.showBeams = true;
+		config.showDistance = false;
+		Marker noDistance = NpcWaypointMarkers.markerFor(fixedRule(0, 64, 0), NpcSearchModule.waypointSettings(config), NO_DATA);
+		assertFalse(noDistance.label().distanceLine());
+		assertEquals(0xFF123456, noDistance.beam().argb(), "the edited island colour");
+		config.showDistance = true;
+		config.whiteWaypointLabels = false;
+		Marker ruleColour = NpcWaypointMarkers.markerFor(fixedRule(0, 64, 0), NpcSearchModule.waypointSettings(config), NO_DATA);
+		assertEquals(0xFF0AA351, ruleColour.label().lines().get(0).color());
+		assertNotNull(ruleColour.beam());
+	}
+
+	/** R21: the colour of the label and of its distance line with "White waypoint labels" ON or OFF. */
 	@Test
 	void labelsAreWhiteUnlessSwitchedToTheRuleColour() {
 		assertEquals(0xFFFFFFFF, NpcWaypointMarkers.labelColor(0x0AA351, true));
 		assertEquals(0xFF0AA351, NpcWaypointMarkers.labelColor(0x0AA351, false));
 		// A colour stored with an alpha of 0 is still drawn opaque.
 		assertEquals(0xFFFF5555, NpcWaypointMarkers.labelColor(0x00FF5555, false));
-	}
-
-	@Test
-	void whiteLabelsAreTheDefault() {
-		assertEquals(true, new NpcSearchConfig().whiteWaypointLabels);
 	}
 }

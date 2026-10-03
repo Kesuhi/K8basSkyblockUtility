@@ -1,8 +1,7 @@
 package com.k8bas.skyblockutility.render.marker;
 
 import com.k8bas.skyblockutility.location.IslandTracker;
-import com.k8bas.skyblockutility.module.npcsearch.NpcRule;
-import com.k8bas.skyblockutility.module.npcsearch.NpcWaypointMarkers;
+import com.k8bas.skyblockutility.gametest.TestWaypoints;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
@@ -107,7 +106,7 @@ public class MarkerToolkitGameTest implements FabricClientGameTest {
 					WorldMarkers.setRecordFrames(false);
 					setHudHidden(client, false);
 					client.options.setCameraType(CameraType.FIRST_PERSON);
-					NpcWaypointMarkers.setActiveWaypoints(List.of());
+					TestWaypoints.clear();
 					IslandTracker.forceIsland(null);
 				});
 				server.runCommand("kill @e[type=!minecraft:player]");
@@ -239,19 +238,12 @@ public class MarkerToolkitGameTest implements FabricClientGameTest {
 	private static void providersAreIndependentAndCulled(ClientGameTestContext context, TestProvider provider) {
 		context.runOnClient(client -> {
 			IslandTracker.forceIsland("Hub");
-			NpcRule rule = new NpcRule();
-			rule.label = "Npc Waypoint";
-			rule.island = "Hub";
-			rule.fixed = true;
-			rule.x = -2;
-			rule.y = -60;
-			rule.z = 12.5;
-			NpcWaypointMarkers.setActiveWaypoints(List.of(rule));
+			TestWaypoints.show(List.of(TestWaypoints.fixedRule("Npc Waypoint", "Hub", 0x0AA351, -3, -60, 12)), TestWaypoints.DEFAULTS);
 			provider.markers = List.of(whiteLabel(MarkerAnchor.fixed(3, -58.5, 12.5), "Second", true));
 		});
 		context.waitTicks(5);
 		WorldMarkers.Frame both = context.computeOnClient(client -> WorldMarkers.lastFrame());
-		context.runOnClient(client -> NpcWaypointMarkers.setActiveWaypoints(List.of()));
+		context.runOnClient(client -> TestWaypoints.clear());
 		context.waitTicks(5);
 		WorldMarkers.Frame second = context.computeOnClient(client -> WorldMarkers.lastFrame());
 		// Behind the camera: the player looks towards +z.

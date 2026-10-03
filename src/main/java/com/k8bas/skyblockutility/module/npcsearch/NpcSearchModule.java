@@ -29,6 +29,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +42,8 @@ import java.util.Set;
 /**
  * NPC Search: the same rule-list-plus-database-picker concept as Mob Highlighter, applied to
  * NPCs instead of mobs, with two kinds of tracked NPC:
- *  - fixed: NPCs that stand at a known, unmoving spot get a permanent floating name/distance
- *    waypoint drawn at those coordinates (NpcWaypointMarkers) — no entity search needed at all.
+ *  - fixed: NPCs that stand at a known, unmoving spot get a permanent waypoint at those coordinates
+ *    (NpcWaypointMarkers): a beacon beam plus a floating name and distance — no entity search needed.
  *  - unfixed: NPCs without known fixed coordinates get converted into a plain HighlightRule and
  *    fed into this module's own HighlightManager instance — exactly the nearby-nametag search
  *    Mob Highlighter uses, just sourced from NPC data with a green default color.
@@ -153,11 +154,15 @@ public final class NpcSearchModule implements Module {
 			}
 		}
 		highlightManager.rebuild(searchRules);
-		NpcWaypointMarkers.setWhiteLabels(config.whiteWaypointLabels);
-		NpcWaypointMarkers.setActiveWaypoints(config.enabled ? waypointRules : List.of());
+		NpcWaypointMarkers.update(config.enabled ? waypointRules : List.of(), waypointSettings(config));
 	}
 
-	private HighlightRule toHighlightRule(NpcRule rule) {
+	static NpcWaypointMarkers.Settings waypointSettings(NpcSearchConfig config) {
+		return new NpcWaypointMarkers.Settings(config.whiteWaypointLabels, config.showBeams, config.showDistance, config.islandBeamColors);
+	}
+
+	/** A moving NPC's outline rule; its colour is the rule's own, never a beam colour (REQ-NPCWP-07). */
+	static HighlightRule toHighlightRule(NpcRule rule) {
 		HighlightRule highlightRule = new HighlightRule();
 		highlightRule.id = rule.id;
 		highlightRule.label = rule.label;
@@ -172,7 +177,12 @@ public final class NpcSearchModule implements Module {
 
 	@Override
 	public void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
+		// AMBER feature (PLAN §3, P6): the tooltip states its restriction.
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
+				.setDefaultValue(true)
+				.setTooltip(Component.literal("Waypoints mark only the fixed NPC positions from your list: their name and "
+						+ "distance show through blocks, and terrain hides their beams like a beacon's. Moving NPCs are only "
+						+ "outlined while you can see them, never through walls."))
 				.setSaveConsumer(this::setEnabled)
 				.build());
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("\"You found\" title"), config.foundTitleEnabled)
@@ -180,13 +190,22 @@ public final class NpcSearchModule implements Module {
 				.setTooltip(Component.literal("Shows \"You found <NPC>\" for Trinity, Tomioka, Duncan, Xalx and Pete the first time you have a clear line of sight to them, once per run."))
 				.setSaveConsumer(value -> config.foundTitleEnabled = value)
 				.build());
+		// Waypoint look (REQ-NPCWP-08); onConfigScreenSaved rebuilds the waypoints after these are set.
+		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show beacon beams"), config.showBeams)
+				.setDefaultValue(true)
+				.setTooltip(Component.literal("A beacon beam rises from each waypoint, in its island's colour (green for "
+						+ "waypoints shown on every island). Off: only the label."))
+				.setSaveConsumer(value -> config.showBeams = value)
+				.build());
+		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show distance"), config.showDistance)
+				.setDefaultValue(true)
+				.setTooltip(Component.literal("A second line under each waypoint label with your distance to it in metres."))
+				.setSaveConsumer(value -> config.showDistance = value)
+				.build());
 		category.addEntry(entryBuilder.startBooleanToggle(Component.literal("White waypoint labels"), config.whiteWaypointLabels)
 				.setDefaultValue(true)
-				.setTooltip(Component.literal("Waypoint labels and their distance are white. Off: each NPC's own colour."))
-				.setSaveConsumer(value -> {
-					config.whiteWaypointLabels = value;
-					NpcWaypointMarkers.setWhiteLabels(value);
-				})
+				.setTooltip(Component.literal("On: a white label with a yellow distance line. Off: both in the NPC's own colour."))
+				.setSaveConsumer(value -> config.whiteWaypointLabels = value)
 				.build());
 
 		category.addEntry(new ButtonEntry(Component.literal("NPC Database"), Component.literal("Open"), () -> {
@@ -433,8 +452,10 @@ public final class NpcSearchModule implements Module {
 				.build());
 
 		if (rule.fixed) {
+			// The block the waypoint is drawn at: the NPC list's current position when the rule came from it.
+			Vec3 at =NpcWaypointMarkers.position(rule, NpcDatabase::byId);
 			sub.add(entryBuilder.startTextDescription(Component.literal(
-					String.format("Fixed waypoint at %.0f, %.0f, %.0f", rule.x, rule.y, rule.z))).build());
+					String.format("Fixed waypoint at %.0f, %.0f, %.0f", Math.floor(at.x), Math.floor(at.y), Math.floor(at.z)))).build());
 		} else {
 			sub.add(entryBuilder.startEnumSelector(Component.literal("Name Match Mode"), NameMatchMode.class, rule.nameMatchMode)
 					.setSaveConsumer(value -> rule.nameMatchMode = value)

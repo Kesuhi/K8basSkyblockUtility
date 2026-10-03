@@ -6,6 +6,34 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+### Added
+
+- **NPC waypoints get a beacon beam.** Each fixed NPC you add gets a beam from its block up to the
+  top of the world, in its island's colour (each island has its own default, listed in SPEC.md,
+  REQ-NPCWP-05). Like a vanilla beacon's, the beam is animated, terrain in front of it hides it,
+  and it widens with distance so you can find it from far away (not while you look through a
+  spyglass). New NPC Search options **Show beacon beams** and **Show distance** (both default ON).
+
+### Changed
+
+- **Behaviour change: waypoints look like Skyblocker's.** The label has no dark background any
+  more and sits on the centre of the NPC's block, 1.5 blocks up. With "White waypoint labels" ON
+  (the default) the label is white and the distance line below it yellow; OFF draws both in the
+  NPC's colour, as before. *Reason:* the beam now carries the colour, and plain text over a beam
+  reads better. *Effect:* your waypoints look different after the update; their position moves by
+  half a block to the block's centre.
+- **Behaviour change: a waypoint from the NPC list follows its corrected position.** A waypoint you
+  added from the NPC list uses that NPC's current coordinates from the list, so a corrected entry
+  moves it; a waypoint whose NPC is no longer listed keeps its stored position. *Reason:* fixes to
+  the list should reach waypoints you already added. *Effect:* a few waypoints may move to their
+  NPC's corrected spot.
+
+### Fixed
+
+- Waypoint labels behind water, stained glass or ice stay readable with **Improved Transparency**
+  (the Fabulous graphics preset) on; before, water and ice covered them. Waypoint labels are now
+  drawn over clouds and rain as well.
+
 ## [1.1.0] - 2026-10-02
 
 This release ports the mod to Minecraft 26.2 and makes the outlines follow Hypixel's rules: only

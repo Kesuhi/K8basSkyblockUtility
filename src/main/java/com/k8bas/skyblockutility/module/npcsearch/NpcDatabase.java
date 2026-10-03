@@ -6,11 +6,15 @@ import com.k8bas.skyblockutility.net.SharedHttpClient;
 import com.k8bas.skyblockutility.util.JsonEntries;
 
 import java.net.URI;
+import net.minecraft.client.Minecraft;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -26,6 +30,8 @@ public final class NpcDatabase {
 	private static final AtomicBoolean fetchStarted = new AtomicBoolean(false);
 
 	private static volatile List<NpcDatabaseEntry> entries = List.of();
+	private static volatile Map<String, NpcDatabaseEntry> byId = Map.of();
+	private static final List<Runnable> LOADED_LISTENERS = new CopyOnWriteArrayList<>();
 
 	private NpcDatabase() {
 	}
@@ -40,12 +46,17 @@ public final class NpcDatabase {
 			if (body == null) {
 				return;
 			}
+			List<NpcDatabaseEntry> parsed;
 			try {
-				entries = parse(body);
-				K8basSkyblockUtilityClient.LOGGER.info("Loaded {} NPC database entries", entries.size());
+				parsed = parse(body);
 			} catch (RuntimeException e) {
 				K8basSkyblockUtilityClient.LOGGER.warn("NPC database is not a list of entries: {}", e.toString());
+				return;
 			}
+			byId = index(parsed);
+			entries = parsed;
+			K8basSkyblockUtilityClient.LOGGER.info("Loaded {} NPC database entries", parsed.size());
+			Minecraft.getInstance().execute(() -> LOADED_LISTENERS.forEach(Runnable::run));
 		});
 	}
 
@@ -79,6 +90,25 @@ public final class NpcDatabase {
 
 	private static boolean isFinite(Double value) {
 		return value != null && Double.isFinite(value);
+	}
+
+	/** Entries by id; the first wins if an id repeats. */
+	static Map<String, NpcDatabaseEntry> index(List<NpcDatabaseEntry> entries) {
+		Map<String, NpcDatabaseEntry> index = new HashMap<>();
+		for (NpcDatabaseEntry entry : entries) {
+			index.putIfAbsent(entry.id, entry);
+		}
+		return Map.copyOf(index);
+	}
+
+	/** The entry with this id, or null if there is none (also while the list is still loading). */
+	public static NpcDatabaseEntry byId(String id) {
+		return id == null ? null : byId.get(id);
+	}
+
+	/** Runs the listener on the client thread each time the list has loaded. */
+	public static void onLoaded(Runnable listener) {
+		LOADED_LISTENERS.add(listener);
 	}
 
 	/** Grouped by island, entries within each island sorted by display name, islands sorted alphabetically. */

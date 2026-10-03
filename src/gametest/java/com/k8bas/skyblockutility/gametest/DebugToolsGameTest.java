@@ -3,15 +3,12 @@ package com.k8bas.skyblockutility.gametest;
 import com.k8bas.skyblockutility.debug.DebugCommand;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.npcsearch.NpcRule;
-import com.k8bas.skyblockutility.module.npcsearch.NpcWaypointMarkers;
 import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
-import net.fabricmc.fabric.api.client.gametest.v1.screenshot.TestScreenshotComparisonAlgorithm;
-import net.fabricmc.fabric.api.client.gametest.v1.screenshot.TestScreenshotComparisonOptions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -173,8 +170,9 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		return count;
 	}
 
-	/** Baseline for T1.1: the 1.0.1 label in the open and behind an opaque wall. The 1.0.1 label had
-	 *  the rule's colour, which is the look with "White waypoint labels" off (R21). */
+	/** Baseline for T1.1: the label in the open and behind an opaque wall, in the rule's colour ("White
+	 *  waypoint labels" off, R21). T3.4 replaced the 1.0.1 look on purpose (REQ-PORT-06), so the screenshots
+	 *  are kept for comparison but no longer matched against the 1.0.1 template. */
 	private static void waypointBaselineScreenshots(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
 		server.runCommand("time set noon");
 		server.runCommand("weather clear");
@@ -183,15 +181,8 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 			// The screenshots hide the HUD; labels would hide with it, like name tags (EC-MARK-06).
 			WorldMarkers.setHideLabelsWithHud(false);
 			setHudHidden(client, true);
-			NpcWaypointMarkers.setWhiteLabels(false);
-			NpcRule rule = new NpcRule();
-			rule.label = "Baseline NPC";
-			rule.island = "Hub";
-			rule.fixed = true;
-			rule.x = 0.5;
-			rule.y = -60;
-			rule.z = 6.5;
-			NpcWaypointMarkers.setActiveWaypoints(List.of(rule));
+			NpcRule rule = TestWaypoints.fixedRule("Baseline NPC", "Hub", 0x0AA351, 0, -60, 6);
+			TestWaypoints.show(List.of(rule), TestWaypoints.settings(false, false, true));
 		});
 		runClientCommand(context, "ksu debug island Hub");
 		singleplayer.getConnection().waitForChunksRender();
@@ -202,12 +193,9 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		singleplayer.getConnection().waitForChunksRender();
 		context.waitTicks(10);
 		context.takeScreenshot("t0.4-waypoint-behind-stone");
-		// The label must stay pixel-identical to the 1.0.1 baseline (T1.1 replaces the renderer).
-		context.assertScreenshotContains(TestScreenshotComparisonOptions.of("waypoint-label-1.0.1-behind-stone")
-				.withAlgorithm(TestScreenshotComparisonAlgorithm.exact()));
 
 		// The same view without the waypoint, so the label's pixels can be cut out by difference.
-		context.runOnClient(client -> NpcWaypointMarkers.setActiveWaypoints(List.of()));
+		context.runOnClient(client -> TestWaypoints.clear());
 		context.waitTicks(5);
 		context.takeScreenshot("t0.4-stone-no-waypoint");
 
@@ -216,8 +204,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		context.runOnClient(client -> {
 			setHudHidden(client, false);
 			WorldMarkers.setHideLabelsWithHud(true);
-			NpcWaypointMarkers.setWhiteLabels(true);
-			NpcWaypointMarkers.setActiveWaypoints(List.of());
+			TestWaypoints.clear();
 		});
 	}
 

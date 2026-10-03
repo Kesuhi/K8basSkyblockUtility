@@ -1411,7 +1411,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-MARK-01** The toolkit provides three primitives:
   - a text label of 1–3 lines with a colour per line and an optional background
   - a beacon beam with a colour per marker
-  - a horizontal ring with centre, radius, colour and alpha, drawn as an outline, a filled disc, or both
+  - a horizontal ring with centre, radius, colour and alpha, drawn as an outline, a filled disc, or both. The outline is always opaque so it stays readable; the alpha applies to the disc, so a ring with a disc needs an alpha above 0 (an opacity setting of 0% means outline only) [T3.0n review]
 
   *(Brief: Phase 3 item 4 "white text labels with an individually colored beacon beam per waypoint"; item 3 "waypoints" (dropped by R22); item 6 "highlight active hotspots")*
 - **REQ-MARK-02** See-through policy:
@@ -1423,7 +1423,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   *(Brief: Ground rule 5; Derived: P1, P3, P4)* [decided D-6]
 - **REQ-MARK-03** Label legibility:
-  - See-through labels stay fully readable behind opaque blocks, glass, water and ice, with no overdraw or tint from translucent terrain.
+  - See-through labels stay fully readable behind opaque blocks, glass, water and ice, with no overdraw or tint from translucent terrain, with Improved Transparency (the Fabulous graphics preset) on and off.
   - Labels face the camera.
   - Labels have natural size within 10 blocks and a constant on-screen size beyond 10 blocks.
   - The default text colour is white.
@@ -1435,7 +1435,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - No beacon block is needed.
 
   *(Brief: Phase 3 item 4 "individually colored beacon beam per waypoint")*
-- **REQ-MARK-05** If the caller enables it, a fixed-coordinate label shows a line with the distance in whole metres from the player's position (not the camera) to the marker, updated every frame. Markers anchored to entities have no distance line. *(Derived: P4; research read-npc bug 17; the toggle belongs to npc-waypoints)*
+- **REQ-MARK-05** If the caller enables it, a fixed-coordinate label shows a line with the distance in whole metres from the player's position (not the camera) to the label's position (the anchor plus the label's rise above it), updated every frame. Markers anchored to entities have no distance line. *(Derived: P4; research read-npc bug 17; the toggle belongs to npc-waypoints)*
 - **REQ-MARK-06** Several features supply markers at once (NPC waypoints, hotspots). Each feature's markers follow its own toggle and island gating, and turning one feature off never hides another's markers. *(Brief: Ground rule 6; Derived: research read-npc §3b — the current single static list blocks reuse)*
 - **REQ-MARK-07** Markers outside the view frustum are not submitted. With 150 label-plus-beam markers active (about every Hub NPC), the marker pass should average at most 1 ms CPU per frame on the dev machine. *(Derived: Hub has 113 NPC entries; research read-npc performance)*
 - **REQ-MARK-08** All markers are dropped on world change, server switch and disconnect. A marker from the previous world is never drawn in the next one. *(Derived: correctness across islands)*
@@ -1450,17 +1450,17 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 **Acceptance criteria**
 - **AC-MARK-01** (REQ-MARK-01, REQ-MARK-03, REQ-MARK-04)
   - Setup: a superflat gametest with a fixed marker (white label plus red beam) 30 blocks away.
-  - Screenshots behind a stone wall, a glass pane, a 3-block water column and ice show the label fully legible with no tint, and the beam visible above the obstacle.
+  - Screenshots behind a stone wall, a glass pane, a 3-block water column and ice show the label fully legible with no tint, and the beam visible above the obstacle. Behind the water column and ice also with Improved Transparency on.
   - The label's pixel height at 20 m and at 60 m matches within ±10%.
 
   Verified by [C].
 - **AC-MARK-02** (REQ-MARK-02)
   - Unit test: a see-through request for an entity-anchored marker is refused, so it renders depth-tested — [A].
   - Gametest: an entity-anchored label behind stone is not visible, while a fixed-coordinate label in the same spot is — [C].
-- **AC-MARK-03** (REQ-MARK-01, REQ-MARK-02) A gametest ring of radius 3 on a water surface is visible in the open and hidden behind a stone wall — [C].
+- **AC-MARK-03** (REQ-MARK-01, REQ-MARK-02) A gametest ring of radius 3 on a water surface is visible in the open, untinted, and hidden behind a stone wall, with Improved Transparency on and off — [C].
 - **AC-MARK-04** (REQ-MARK-05) Given the player at (0,64,0), the camera in third person 4 blocks behind, and a marker at (0,64,100), then the distance line reads `100m` — [A] and [C].
 - **AC-MARK-05** (REQ-MARK-06) Given an NPC waypoint provider and a second provider (a test provider until the hotspot ring exists) both active, when NPC waypoints are turned off, then the second provider's markers are still drawn — [A]/[C]. (The second provider was the corpse-spot provider until R22 dropped it.)
-- **AC-MARK-06** (REQ-MARK-07) A gametest with 150 markers logs an average marker-pass time of at most 1 ms over 600 frames, and markers behind the camera are counted as not submitted — [C].
+- **AC-MARK-06** (REQ-MARK-07) A gametest with 150 markers logs an average marker-pass time of at most 1 ms over 600 frames, and markers behind the camera are counted as not submitted — [C]. The marker pass is measured both as its submit step and as what the markers add to the CPU frame time (A/B against no markers); the gametest runs one frame per tick, so GPU time is not part of it.
 - **AC-MARK-07** (REQ-MARK-08) After a world change, the first frame of the new world has 0 markers from the old one — [A]/[C].
 - **AC-MARK-08** (REQ-MARK-09)
   - User smoke test: a Hub NPC label and beam, and a hotspot ring, are visible with shaders on and off and next to Skyblocker waypoints — [E].
@@ -1992,6 +1992,22 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
     3. otherwise the global default beam colour (for a blank island or an island without a colour).
   - Every island in the NPC data has an editable colour with a documented default.
   - "Use island colour" clears a rule's override.
+  - Documented defaults (T3.4; chosen by Claude to fill a gap in this spec, so they can be changed before release). Every island name of the location table has one; the global default is `0x0AA351`, the mod's long-standing NPC green:
+
+    | Island | Default | Island | Default |
+    |---|---|---|---|
+    | Hub | `0x55FFFF` | Dwarven Mines | `0x00AAAA` |
+    | Private Island | `0x55FF55` | Crystal Hollows | `0xB266FF` |
+    | Garden | `0x00AA00` | Glacite Mineshafts | `0xAEEBFF` |
+    | The Farming Islands | `0xFFFF55` | Backwater Bayou | `0x3C8DBC` |
+    | The Park | `0x2E8B57` | Lotus Atoll | `0xFF88CC` |
+    | Moonglade Marsh | `0x6B8E23` | Critter Safari | `0xD2B48C` |
+    | Torrhus Canyon | `0xCD853F` | Kuudra | `0xAA0000` |
+    | Spider's Den | `0xAA00AA` | Jerry | `0xFFFFFF` |
+    | The End | `0xFF55FF` | The Rift | `0xBF40BF` |
+    | Crimson Isle | `0xFF5555` | Dark Auction | `0x8B008B` |
+    | Gold Mine | `0xFFAA00` | Dungeon Hub | `0xAAAAAA` |
+    | Deep Caverns | `0x5555FF` | Catacombs | `0x555555` |
 
   *(Brief: item 4 "color configurable per NPC/category"; PLAN D-15)*
 - **REQ-NPCWP-06** Colour settings UI. The Waypoints category of the new config screen must offer:
@@ -2017,7 +2033,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - A fixed rule with the old default follows its island colour.
 
   *(Brief Phase 2 "Migrate existing config values so users don't lose settings"; Derived)*
-- **REQ-NPCWP-10** Performance. With 100 enabled waypoints on one island, the mean frame time should rise by at most 1.0 ms against 0 waypoints. It is measured over 600 frames in a client gametest at 854×480. *(Derived: an island can hold about 100 NPC entries; read-npc performance notes)*
+- **REQ-NPCWP-10** Performance. With 100 enabled waypoints on one island, the mean frame time should rise by at most 1.0 ms against 0 waypoints. It is measured over 600 frames in a client gametest at 854×480, as CPU frame time (the gametest runs one frame per tick, so the GPU never backs up into the frame); GPU cost is judged in the G3 field check. *(Derived: an island can hold about 100 NPC entries; read-npc performance notes)*
 - **REQ-NPCWP-11** Licensing. Skyblocker (LGPL-3.0) is a behaviour reference only: the look is reimplemented from scratch and no code is copied. *(Brief ground rule 4; REQ-XC-LICENSE; PLAN §2)*
 - **REQ-NPCWP-12** Compliance. Labels, beams and distance lines are drawn only at fixed coordinates from NPC rules or NPC data, never at a live entity's position. *(Brief ground rule 5; PLAN §3 P4)*
 
@@ -2107,7 +2123,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-NPCWP-01** Fixed rule with a blank island: drawn on every island at its coordinates, using the global default colour (existing behaviour).
 - **EC-NPCWP-02** Island missing from the colour map (a new Hypixel island or unknown mode): uses the global default. An entry is created when the user edits it.
 - **EC-NPCWP-03** Two rules at the same coordinates (NPC data near-duplicates): both are drawn, labels may overlap, no crash.
-- **EC-NPCWP-04** Player within 1 block: the distance shows "0m" or "1m" and the label sits at its true position.
+- **EC-NPCWP-04** Player within 1 block of the label (which floats 1.5 blocks above the NPC's block, so standing next to the NPC reads about "2m"): the distance shows "0m" or "1m" and the label sits at its true position.
 - **EC-NPCWP-05** Waypoint beyond render distance: the label is still drawn at constant size, and the beam is drawn while its column is in view.
 - **EC-NPCWP-06** Hex colour entered with alpha (e.g. `#80FF0000`): the beam is opaque red and the label stays white (with "White waypoint labels" ON).
 - **EC-NPCWP-07** Dungeon run vs Dungeon Hub: Dungeon Hub waypoints do not appear inside runs [decided D-2].
@@ -2119,6 +2135,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **Q-NPCWP-01** What is a "category" for beam colours? → decided D-15 (category = island, optional per-rule beam override, glow colour separate)
 - **Q-NPCWP-02** How should existing fixed-rule colours migrate? → decided R8
 - **Q-NPCWP-03** Should the waypoint distance line default to ON? → decided D-6 (distance line ON)
+- **Q-NPCWP-04** Are the documented island colour defaults (the table under REQ-NPCWP-05, chosen by Claude in T3.4 to fill a gap) the ones to ship? → open; to be confirmed by you before the waypoint path is released
 
 ---
 
