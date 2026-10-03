@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26 at T2.3b (2026-10-03); all are listed in §12.3. Two field questions stay open for G3: the command and menu path that enable the Frozen Corpses widget (R24 a) and whether a key held only in the Dwarven Sack opens a corpse (R24 b). R22 drops the possible corpse spots (module corpse-waypoints). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped R22]` and keep their ids. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
+| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26–R27 at T2.3b (2026-10-03); all are listed in §12.3. Two field questions stay open for G3: the command and menu path that enable the Frozen Corpses widget (R24 a) and whether a key held only in the Dwarven Sack opens a corpse (R24 b). R22 drops the possible corpse spots (module corpse-waypoints). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped R22]` and keep their ids. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
 | Date | 2026-10-01 |
 | Inputs | Your original task prompt (verbatim) and the *SkyBlock XP Optimizer* addendum (verbatim), plus the research and decisions recorded in `PLAN.md` |
 | Relationship to PLAN.md | This file says **what** must be true and how we will know. `PLAN.md` says **how and in which order**. Every PLAN task names the requirement ids it implements (§13 Traceability). |
@@ -779,13 +779,14 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-UI-12** A REGEX name pattern that does not compile should be marked on its rule card with an error colour and a message, not silently dropped. *(Derived: read-ui bug #17)*
 - **REQ-UI-13** Colour picker. A colour swatch must open a modal over the settings screen containing:
   - a hue/saturation wheel and a brightness slider
-  - a hex field that accepts `#RRGGBB`, plus `#AARRGGBB` where the colour stores alpha
+  - a hex field that accepts `#RRGGBB` and `#AARRGGBB`; for a colour without alpha the alpha part is dropped, so `#80FF0000` gives opaque red (EC-NPCWP-06) [decided R27]
   - preset swatches
   - Cancel and Save buttons
 
   Its behaviour:
   - Alpha controls appear only for colours that store alpha; rule colours are RGB only.
   - Moving brightness to 0 and back must not lose the hue or saturation picked in the dialog.
+  - Nothing is applied before Save; Cancel, Esc and closing the screen discard the change.
   - Invalid hex input is not applied, and the last valid colour stays.
   - Cancel leaves the stored colour unchanged.
 
@@ -793,6 +794,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-UI-14** Keybind capture.
   - Each of the mod's keybinds (Open settings, Toggle Mob Highlighter, Toggle NPC Search, and later ones) has a capture widget that shows the current binding.
   - Click arms the widget and the next key binds. Esc unbinds, and right-click resets to the default.
+  - While armed, a left click cancels without changing the binding (so attack is never bound by accident), a right click resets to the default, and the middle and side mouse buttons bind as mouse keys [decided R27].
+  - The keys bound to Fullscreen, Screenshot and Friends (F11, F2, O by default) cannot be captured: the game acts on them before any screen sees them, as in vanilla Controls.
   - Bindings are written to `options.txt` under the same key names as in 1.0.1, and they stay listed in vanilla Controls under the mod's category.
 
   *(Derived: parity with 1.0.1 (read-ui); Brief Phase 2 "users don't lose settings")*
@@ -3891,7 +3894,7 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.3 Decisions after G1 — R18–R26
+### 12.3 Decisions after G1 — R18–R27
 
 You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 drops carry `[dropped R22]` and keep their ids.
 
@@ -3906,6 +3909,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R24 | G1 field answers. (a) Q-MSA-04: you believe the Frozen Corpses tab widget is on by default and ask for a failsafe that tells the player when it is off. The once-per-launch widget hint (REQ-MSA-08, REQ-GS-18) is that failsafe. The command and menu path that enable the widget were not given, so the hint wording stays UNVERIFIED and is checked at G3. (b) Whether a Tungsten or Umber key held only in the Dwarven Sack opens a corpse could not be tested: D-7 (inventory only) stands, the REQ-MSA-05 sack fallback is not triggered, and the question stays open for G3. (c) Every area of the game counts as a Bestiary area except the Dungeon Hub | Status, §10 intro, REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-BEST-12, AC-BEST-11, §13.3; PLAN G1, T3.0m, T3.2, T5.3, G3 |
 | R25 | After T3.4 (2026-10-03): (a) Q-NPCWP-04, keep the documented island colour defaults under REQ-NPCWP-05 as they are. (b) The waypoint path (T3.0b, T3.0n, T3.4) does not ship as an intermediate release; it ships with the next regular release, so T3.4b (colour settings and the R8 migration) lands first | REQ-NPCWP-05, Q-NPCWP-04; PLAN §6 waypoint path, T3.4 |
 | R26 | T2.3b (2026-10-03): a keybind conflict is marked in yellow, as vanilla 26.2 Controls does, not in the error red (EC-UI-11 had assumed vanilla used red) | EC-UI-11; PLAN T2.3b |
+| R27 | T2.3b (2026-10-03): (a) while a keybind widget is armed, a left click cancels, a right click resets to the default, other mouse buttons bind; (b) the colour hex field accepts 8 digits for colours without alpha and drops the alpha | REQ-UI-13, REQ-UI-14, EC-NPCWP-06; PLAN T2.3b |
 
 ### 12.H Defaults table (decided D-6, R1–R17 and R20–R22)
 
