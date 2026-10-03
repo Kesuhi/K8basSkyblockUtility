@@ -179,7 +179,7 @@ public final class NpcSearchModule implements Module {
 
 	@Override
 	public List<Card> cards() {
-		return NpcSearchOptions.cards(config, this::setEnabled);
+		return NpcSearchOptions.cards(config, this::setEnabled, this::rebuildDerived);
 	}
 
 	@Override
@@ -197,6 +197,13 @@ public final class NpcSearchModule implements Module {
 		for (NpcRule rule : workingRules) {
 			category.addEntry(buildRuleSubCategory(rule, entryBuilder));
 		}
+	}
+
+	@Override
+	public void onSettingsClosed() {
+		// The config file holds a copy of this section; refresh it before the screen's single write.
+		ConfigManager.putModuleSection(ID, config);
+		rebuildDerived();
 	}
 
 	@Override

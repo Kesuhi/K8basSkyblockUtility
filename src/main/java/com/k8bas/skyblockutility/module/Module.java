@@ -33,10 +33,19 @@ public interface Module {
 	/** Add this module's entries to its own settings category. */
 	void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder);
 
-	/** Called once when the settings screen's Save button fires, before ConfigManager.save()
+	/** Called once when the Cloth settings screen's Save button fires (removed in T2.5b), before ConfigManager.save()
 	 *  writes the file — override to reconcile pending add/delete actions collected during
 	 *  buildConfigScreen (so they're included in that write) and rebuild any derived runtime
 	 *  state (e.g. a rule-matching index) from the now-final config. */
 	default void onConfigScreenSaved() {
+	}
+
+	/**
+	 * Called once when the new settings screen closes (REQ-UI-15). Its changes were applied to the
+	 * config as they were made, so this only rebuilds derived runtime state (e.g. a rule-matching index)
+	 * from the config as it is now. Unlike {@link #onConfigScreenSaved}, it never applies the Cloth
+	 * screen's pending edits.
+	 */
+	default void onSettingsClosed() {
 	}
 }

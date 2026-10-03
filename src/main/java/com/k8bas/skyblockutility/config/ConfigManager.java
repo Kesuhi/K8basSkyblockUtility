@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -64,6 +65,8 @@ public final class ConfigManager {
 	};
 	/** Set when the file could not be read or backed up: saving would lose the user's file. */
 	private static volatile boolean savesSuspended;
+	/** Every call of the single save path, for tests that count writes (AC-UI-14). */
+	private static final AtomicInteger SAVE_REQUESTS = new AtomicInteger();
 	static final int READ_ATTEMPTS = 3;
 	static final long READ_RETRY_PAUSE_MS = 150;
 
@@ -271,6 +274,7 @@ public final class ConfigManager {
 
 	/** Queues the current state for saving; never blocks on disk I/O, so it is safe on a keypress. */
 	public static void save() {
+		SAVE_REQUESTS.incrementAndGet();
 		if (store == null) {
 			load(configPath());
 		}
@@ -278,6 +282,11 @@ public final class ConfigManager {
 			return;
 		}
 		store.requestSave(GSON.toJson(root));
+	}
+
+	/** How often the save path has been asked to write since the game started (AC-UI-14). */
+	public static int saveRequests() {
+		return SAVE_REQUESTS.get();
 	}
 
 	/** Writes any pending save now and waits for it (client shutdown, tests). */

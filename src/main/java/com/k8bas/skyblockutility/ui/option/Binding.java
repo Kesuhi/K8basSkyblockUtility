@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 
 /**
  * Where an option's value lives. {@link #set} stores the value and applies it at once (live apply,
- * REQ-UI-15). Writing the file is the screen's job (once per close, T2.4c), though a module switch
- * also saves at once, as its keybind does.
+ * REQ-UI-15). Writing the file is the screen's job (on discrete commits and once per close,
+ * SaveSession), though a module switch also saves at once, as its keybind does.
  */
 public interface Binding<T> {
 	T get();

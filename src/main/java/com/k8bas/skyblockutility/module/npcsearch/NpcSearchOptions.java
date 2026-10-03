@@ -25,10 +25,16 @@ public final class NpcSearchOptions {
 	private NpcSearchOptions() {
 	}
 
-	/**
-	 * @param setEnabled applies the module switch (NpcSearchModule.setEnabled)
-	 */
+	/** The declarations without a running module (tests, the catalog): the display toggles only store their value. */
 	public static List<Card> cards(NpcSearchConfig config, Consumer<Boolean> setEnabled) {
+		return cards(config, setEnabled, () -> { });
+	}
+
+	/**
+	 * @param setEnabled     applies the module switch (NpcSearchModule.setEnabled)
+	 * @param displayChanged applies a changed beam, distance or label setting to the waypoints at once (REQ-UI-15)
+	 */
+	public static List<Card> cards(NpcSearchConfig config, Consumer<Boolean> setEnabled, Runnable displayChanged) {
 		Toggle enabled = Toggle.of("npc_search.enabled", "modules.npc_search.enabled",
 				new OptionText("NPC Search", "Outlines NPCs from your list and marks fixed NPC positions with waypoints.",
 						WAYPOINT_RESTRICTION + "\n" + GlowBehaviourText.tooltip(), List.of("npc", "waypoint", "find", "glow", "outline")),
@@ -45,18 +51,27 @@ public final class NpcSearchOptions {
 								"A beacon beam rises from each waypoint, in its island's colour (green for waypoints shown on every "
 										+ "island). Off: only the label.",
 								List.of("beam", "beacon")),
-						true, Binding.of(() -> config.showBeams, value -> config.showBeams = value)),
+						true, Binding.of(() -> config.showBeams, value -> {
+							config.showBeams = value;
+							displayChanged.run();
+						})),
 				Toggle.of("npc_search.show_distance", "modules.npc_search.showDistance",
 						new OptionText("Show distance", "A second line under each waypoint label with your distance in metres.",
 								"A second line under each waypoint label with your distance to it in metres. Only for waypoints at "
 										+ "fixed NPC positions, never for moving NPCs.",
 								List.of("distance", "metres", "meters")),
-						true, Binding.of(() -> config.showDistance, value -> config.showDistance = value)).asAmber(),
+						true, Binding.of(() -> config.showDistance, value -> {
+							config.showDistance = value;
+							displayChanged.run();
+						})).asAmber(),
 				Toggle.of("npc_search.white_labels", "modules.npc_search.whiteWaypointLabels",
 						new OptionText("White waypoint labels", "White labels with a yellow distance line, or each NPC's own colour.",
 								"On: a white label with a yellow distance line. Off: both in the NPC's own colour.",
 								List.of("label", "colour", "color")),
-						true, Binding.of(() -> config.whiteWaypointLabels, value -> config.whiteWaypointLabels = value)));
+						true, Binding.of(() -> config.whiteWaypointLabels, value -> {
+							config.whiteWaypointLabels = value;
+							displayChanged.run();
+						})));
 		return List.of(new Card("npc_search", Category.WAYPOINTS, "NPC Search", enabled, options));
 	}
 }

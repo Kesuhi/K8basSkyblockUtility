@@ -13,6 +13,7 @@ import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.ui.notice.NoticeHooks;
+import com.k8bas.skyblockutility.ui.screen.ConfigScreen;
 import com.k8bas.skyblockutility.update.Updates;
 import com.k8bas.skyblockutility.util.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
@@ -37,7 +38,13 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		ConfigManager.load();
 		// Queued like the load notices, so a failure before joining a world is still shown.
 		ConfigManager.setSaveFailureNotice(ConfigManager::queueNotice);
-		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.flush());
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+			// The game removes an open screen only after this event: the settings screen saves first.
+			if (client.gui.screen() instanceof ConfigScreen settings) {
+				settings.saveBeforeShutdown();
+			}
+			ConfigManager.flush();
+		});
 		// Backup notices from loading are shown once the player is in a world (REQ-CFG-06).
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player != null && ConfigManager.hasNotices()) {

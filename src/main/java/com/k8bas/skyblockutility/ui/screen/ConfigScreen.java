@@ -2,6 +2,8 @@ package com.k8bas.skyblockutility.ui.screen;
 
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.module.Module;
+import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.settings.OptionCatalog;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
@@ -53,7 +55,8 @@ import java.util.function.Predicate;
  * cards under section headers. The sidebar and the content scroll separately (EC-UI-12). Everything is
  * laid out each frame by {@link ConfigLayout}; the selected category, each category's scroll and the
  * widgets' state survive a resize or GUI-scale change (EC-UI-01). Changes apply at once; the file is
- * written when the screen closes. Opened from a dev command until it replaces the Cloth screen (T2.5b).
+ * written on discrete commits and once when the screen closes, by any route (REQ-UI-15). Opened from a
+ * dev command until it replaces the Cloth screen (T2.5b).
  */
 public final class ConfigScreen extends WidgetScreen {
 	public static final String NAME = "K8bas Skyblock Utility";
@@ -66,6 +69,8 @@ public final class ConfigScreen extends WidgetScreen {
 	private final Map<Category, Integer> scrolls = new EnumMap<>(Category.class);
 	private final String version;
 	private final ScrollArea scrollArea = new ScrollArea();
+	/** Writes on discrete commits and once on close; modules rebuild once on close (REQ-UI-15). */
+	private final SaveSession session = new SaveSession(() -> ModuleManager.modules().forEach(Module::onSettingsClosed), ConfigManager::save);
 	private final VirtualList tabs;
 	private final TextField search;
 	private final ClearButton clear;
@@ -331,7 +336,7 @@ public final class ConfigScreen extends WidgetScreen {
 			case Toggle toggle -> ToggleSwitch.of(toggle.binding());
 			case IntSlider slider -> {
 				SliderModel model = SliderModel.ofInt(slider.min(), slider.max(), slider.step());
-				yield new Slider(model, () -> slider.binding().get(), value -> slider.binding().set((int) value), () -> { },
+				yield new Slider(model, () -> slider.binding().get(), value -> slider.binding().set((int) value), session::commit,
 						value -> slider.format((int) value), UiSound::click);
 			}
 			case Choice<?> choice -> dropdown(choice);
@@ -372,7 +377,29 @@ public final class ConfigScreen extends WidgetScreen {
 
 	@Override
 	public void onClose() {
-		ConfigManager.save();
+		// removed() writes the changes; the same happens when another screen replaces this one.
 		minecraft.gui.setScreen(parent);
+	}
+
+	/** Shown, also again after a screen opened from it returns: the next way it goes saves once. */
+	@Override
+	public void added() {
+		super.added();
+		session.open();
+	}
+
+	/** Every way the screen goes (Esc, replaced by another screen, a disconnect) saves once (REQ-UI-15, EC-UI-02). */
+	@Override
+	public void removed() {
+		super.removed();
+		session.close();
+	}
+
+	/**
+	 * Saves now, for a game that is shutting down with the screen open: the game flushes the config
+	 * before it removes the screen (REQ-CFG-10). The removal that follows then writes nothing more.
+	 */
+	public void saveBeforeShutdown() {
+		session.close();
 	}
 }

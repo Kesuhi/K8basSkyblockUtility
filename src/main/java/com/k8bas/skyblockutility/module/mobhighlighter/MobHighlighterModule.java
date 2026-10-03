@@ -136,6 +136,13 @@ public final class MobHighlighterModule implements Module {
 	}
 
 	@Override
+	public void onSettingsClosed() {
+		// The config file holds a copy of this section; refresh it before the screen's single write.
+		ConfigManager.putModuleSection(ID, config);
+		highlightManager.rebuild(config.rules);
+	}
+
+	@Override
 	public void onConfigScreenSaved() {
 		config.rules = new ArrayList<>(workingRules);
 		ConfigManager.putModuleSection(ID, config);

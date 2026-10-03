@@ -87,6 +87,11 @@ public final class NpcWaypointMarkers {
 		rebuild();
 	}
 
+	/** The display settings the waypoints are drawn with now. */
+	public static Settings settings() {
+		return settings;
+	}
+
 	public static void register() {
 		WorldMarkers.add(PROVIDER);
 		// A rule from the NPC data follows that entry's current coordinates (REQ-NPCWP-01).

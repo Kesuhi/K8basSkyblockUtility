@@ -70,6 +70,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			context.waitForScreen(ConfigScreen.class);
 			context.waitTicks(2);
 			search(context);
+			saveModel(context);
 		} finally {
 			context.runOnClient(client -> {
 				ModuleManager.modules().forEach(module -> module.setEnabled(true));
@@ -470,6 +471,126 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 				});
 			}
 		}
+	}
+
+	/** T2.4c, AC-UI-14 with real input, counted on the config's save path. */
+	private static void saveModel(ClientGameTestContext context) {
+		context.setScreen(() -> new ConfigScreen(Minecraft.getInstance().gui.screen()));
+		context.waitForScreen(ConfigScreen.class);
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(2);
+		// A feature switch applies at once.
+		int[] title = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.Rect card = ConfigLayout.card(screen.frame(), 0, optionRow(screen, option -> option instanceof Toggle));
+			return new int[] {card.x() + 20, card.y() + 10};
+		});
+		click(context, title);
+		check(!context.computeOnClient(client -> mobHighlighterOn()), "the switch turned Mob Highlighter off at once");
+		click(context, title);
+		check(context.computeOnClient(client -> mobHighlighterOn()), "and on again");
+
+		// A drag along the whole track: no write while it moves, one on release.
+		int[][] track = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.OptionRow row = optionRow(screen, option -> option instanceof IntSlider);
+			ConfigLayout.Rect control = ConfigLayout.control(ConfigLayout.card(screen.frame(), 0, row), row.option());
+			return new int[][] {{control.x(), control.y() + control.h() / 2}, {control.right() - 1, control.y() + control.h() / 2}};
+		});
+		move(context, track[0]);
+		int beforeDrag = context.computeOnClient(client -> ConfigManager.saveRequests());
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		java.util.Set<Integer> seen = new java.util.HashSet<>();
+		for (int step = 1; step <= 60; step++) {
+			int x = track[0][0] + (track[1][0] - track[0][0]) * step / 60;
+			move(context, new int[] {x, track[0][1]});
+			seen.add(context.computeOnClient(client -> ConfigManager.general().mobScanRangeBlocks));
+		}
+		int duringDrag = context.computeOnClient(client -> ConfigManager.saveRequests()) - beforeDrag;
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		int afterRelease = context.computeOnClient(client -> ConfigManager.saveRequests()) - beforeDrag;
+		check(seen.size() >= 50, "the drag crossed " + seen.size() + " values");
+		check(duringDrag == 0 && afterRelease == 1, "no write during the drag, one on release: " + duringDrag + ", " + afterRelease);
+
+		// Esc: exactly one write.
+		int beforeClose = context.computeOnClient(client -> ConfigManager.saveRequests());
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		int onEsc = context.computeOnClient(client -> ConfigManager.saveRequests()) - beforeClose;
+		check(onEsc == 1, "Esc writes once: " + onEsc);
+		context.runOnClient(client -> ConfigManager.general().mobScanRangeBlocks = 64);
+
+		// Replaced by another screen (EC-UI-02): exactly one write, as on Esc.
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		int beforeReplace = context.computeOnClient(client -> ConfigManager.saveRequests());
+		context.setScreen(() -> new net.minecraft.client.gui.screens.TitleScreen());
+		context.waitTicks(2);
+		int onReplace = context.computeOnClient(client -> ConfigManager.saveRequests()) - beforeReplace;
+		check(onReplace == 1, "replaced by another screen, it writes once: " + onReplace);
+		LOGGER.info("config screen save model: switch applied at once; drag over {} values wrote {} during and {} on release; Esc wrote {}, "
+				+ "being replaced wrote {}", seen.size(), duringDrag, afterRelease, onEsc, onReplace);
+		moduleOptionReachesTheFile(context);
+	}
+
+	/**
+	 * A module's sub-option changed in the screen applies at once and is in the file after the close
+	 * (REQ-CFG-10); the same screen shown again after another one saves again on its own close.
+	 */
+	private static void moduleOptionReachesTheFile(ClientGameTestContext context) {
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		ConfigScreen opened = context.computeOnClient(client -> screen(client));
+		context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+		context.waitTicks(2);
+		int[] beams = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.OptionRow row = optionRow(screen, option -> option.id().equals("npc_search.show_beams"));
+			ConfigLayout.Rect control = ConfigLayout.control(ConfigLayout.card(screen.frame(), 0, row), row.option());
+			return new int[] {control.x() + control.w() / 2, control.y() + control.h() / 2};
+		});
+		click(context, beams);
+		check(!context.computeOnClient(client -> com.k8bas.skyblockutility.module.npcsearch.NpcWaypointMarkers.settings().showBeams()),
+				"the waypoints drop their beams at once, with the screen still open");
+		// Covered by another screen and shown again: the close after that still saves.
+		context.setScreen(() -> new net.minecraft.client.gui.screens.TitleScreen());
+		context.waitTicks(2);
+		context.setScreen(() -> opened);
+		context.waitForScreen(ConfigScreen.class);
+		int beforeEsc = context.computeOnClient(client -> ConfigManager.saveRequests());
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		int onEsc = context.computeOnClient(client -> ConfigManager.saveRequests()) - beforeEsc;
+		check(onEsc == 1, "shown again, its Esc still writes once: " + onEsc);
+		context.runOnClient(client -> ConfigManager.flush());
+		String file = configFile(context);
+		check(file.replaceAll("\\s", "").contains("\"showBeams\":false"), "\"Show beacon beams\" off is in the file");
+		// Back on, the same way, so later tests start from the defaults.
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+		context.waitTicks(2);
+		click(context, beams);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		context.runOnClient(client -> ConfigManager.flush());
+		check(configFile(context).replaceAll("\\s", "").contains("\"showBeams\":true"), "and back on");
+		LOGGER.info("config screen module option: Show beacon beams applied at once, was written on close, also after being shown again");
+	}
+
+	private static String configFile(ClientGameTestContext context) {
+		Path file = context.computeOnClient(client -> net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("k8bas_skyblock_utility.json"));
+		try {
+			return java.nio.file.Files.readString(file);
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + file, e);
+		}
+	}
+
+	private static boolean mobHighlighterOn() {
+		return ModuleManager.modules().stream().filter(module -> module.id().equals("mob_highlighter")).findFirst().orElseThrow().isEnabled();
 	}
 
 	private static void replaceQuery(ClientGameTestContext context, String query) {
