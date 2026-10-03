@@ -17,6 +17,7 @@ import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
 import com.k8bas.skyblockutility.ui.option.SearchIndex;
 import com.k8bas.skyblockutility.ui.option.Toggle;
+import com.k8bas.skyblockutility.ui.screen.ConfigLayout;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -130,13 +132,25 @@ class OptionCatalogTest {
 		assertEquals(Set.of("npc_search.enabled", "npc_search.show_distance"), amber);
 	}
 
-	/** REQ-UI-07: a card shows at most two wrapped description lines; the full text goes in the tooltip. */
+	/**
+	 * REQ-UI-07: a card shows at most two wrapped description lines; the full text goes in the tooltip.
+	 * Measured on the card of a common size (1920x1080 at GUI scale 2), every description fits uncut.
+	 */
 	@Test
 	void descriptionsFitTwoCardLines() {
-		for (Option option : options()) {
-			String description = option.text().description();
-			assertFalse(description.isBlank(), option.id());
-			assertTrue(description.length() <= 90, "at most 2 card lines (90 characters until T2.4a measures them): " + option.id());
+		ConfigLayout.Frame frame = ConfigLayout.frame(960, 540);
+		ToIntFunction<String> sixPixels = text -> text.length() * 6;
+		for (Card card : catalog()) {
+			ConfigLayout.Page page = ConfigLayout.page(catalog(), card.category(), frame.content().w(), sixPixels);
+			for (ConfigLayout.Row row : page.rows()) {
+				if (row instanceof ConfigLayout.OptionRow optionRow && optionRow.card().id().equals(card.id())) {
+					Option option = optionRow.option();
+					String description = option.text().description();
+					assertFalse(description.isBlank(), option.id());
+					ConfigLayout.Rect text = ConfigLayout.text(ConfigLayout.card(frame, 0, optionRow), option);
+					assertFalse(ConfigLayout.fitLines(description, text.w(), 2, sixPixels).cut(), "fits 2 card lines: " + option.id());
+				}
+			}
 		}
 	}
 

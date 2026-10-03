@@ -22,4 +22,13 @@ public record ClipRect(int x, int y, int width, int height) {
 	public int bottom() {
 		return (int) Math.min(Integer.MAX_VALUE, (long) y + height);
 	}
+
+	public boolean contains(double px, double py) {
+		return px >= x && py >= y && px < right() && py < bottom();
+	}
+
+	/** Whether a rectangle shares at least one pixel with this region. */
+	public boolean overlaps(int ox, int oy, int ow, int oh) {
+		return ow > 0 && oh > 0 && ox < right() && oy < bottom() && (long) ox + ow > x && (long) oy + oh > y;
+	}
 }

@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.render.Animated;
+import com.k8bas.skyblockutility.ui.render.ClipRect;
 import com.k8bas.skyblockutility.ui.render.UiClock;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -23,6 +24,8 @@ public abstract class Widget {
 	protected boolean focused;
 	private Animated hoverAnimation;
 	private String tooltip = "";
+	/** The region it may draw in and be hit in (a scrolled list), or null for anywhere. */
+	private ClipRect clip;
 
 	public void setBounds(int x, int y, int width, int height) {
 		this.x = x;
@@ -31,8 +34,51 @@ public abstract class Widget {
 		this.height = height;
 	}
 
+	public int x() {
+		return x;
+	}
+
+	public int y() {
+		return y;
+	}
+
+	public int width() {
+		return width;
+	}
+
+	public int height() {
+		return height;
+	}
+
 	public boolean contains(double mouseX, double mouseY) {
 		return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+	}
+
+	/**
+	 * Limits drawing and input to a region, e.g. a scrolled list's viewport: the part outside is not
+	 * drawn, and a press, wheel or hover there does not reach the widget (REQ-UI-02, REQ-UI-03).
+	 */
+	public void setClip(ClipRect clip) {
+		this.clip = clip;
+	}
+
+	public ClipRect clip() {
+		return clip;
+	}
+
+	/** Whether a point lies in the clip region (always, without one). */
+	public boolean inClip(double mouseX, double mouseY) {
+		return clip == null || clip.contains(mouseX, mouseY);
+	}
+
+	/** Whether any of it can show: inside its clip region, if it has one. */
+	public boolean showing() {
+		return clip == null || clip.overlaps(x, y, width, height);
+	}
+
+	/** Whether all of it shows: wholly inside its clip region, if it has one. */
+	public boolean fullyShowing() {
+		return clip == null || x >= clip.x() && y >= clip.y() && x + width <= clip.right() && y + height <= clip.bottom();
 	}
 
 	public void setEnabled(boolean enabled) {
@@ -45,6 +91,10 @@ public abstract class Widget {
 
 	public void setDimmed(boolean dimmed) {
 		this.dimmed = dimmed;
+	}
+
+	public boolean isDimmed() {
+		return dimmed;
 	}
 
 	/** The text shown on hover (REQ-UI-19); "\n" breaks a line, "" for none. */

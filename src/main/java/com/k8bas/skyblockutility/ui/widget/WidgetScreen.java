@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget;
 
+import com.k8bas.skyblockutility.ui.render.Clip;
+import com.k8bas.skyblockutility.ui.render.ClipRect;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.TooltipLayout;
@@ -157,6 +159,16 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 		}
 	}
 
+	/**
+	 * A resize or GUI-scale change rebuilds the screen, and the game clears its focused element then;
+	 * the guard for a focused field, armed keybind or open overlay is put back (EC-UI-01).
+	 */
+	@Override
+	protected void init() {
+		super.init();
+		updateFocusGuard();
+	}
+
 	/** Closes the open overlay; {@code cancel} first when it closes without applying. */
 	private void closeOverlay(boolean cancel) {
 		if (overlay == null) {
@@ -197,7 +209,7 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 		int underY = overlay != null ? -1 : mouseY;
 		drawContent(graphics, underX, underY);
 		for (Widget widget : widgets) {
-			widget.draw(graphics, font, underX, underY);
+			drawClipped(graphics, widget, underX, underY);
 		}
 		if (overlay != null) {
 			overlay.layout(width, height);
@@ -213,10 +225,28 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 			}
 			overlay.drawFrame(graphics, font, mouseX, mouseY);
 			for (Widget widget : overlay.widgets()) {
-				widget.draw(graphics, font, mouseX, mouseY);
+				drawClipped(graphics, widget, mouseX, mouseY);
 			}
 		}
 		drawTooltip(graphics, mouseX, mouseY);
+	}
+
+	/** Draws a widget inside its clip region, if it has one; the mouse outside the region is no hover. */
+	private void drawClipped(GuiGraphicsExtractor graphics, Widget widget, int mouseX, int mouseY) {
+		ClipRect region = widget.clip();
+		if (region == null) {
+			widget.draw(graphics, font, mouseX, mouseY);
+			return;
+		}
+		if (!widget.showing()) {
+			return;
+		}
+		boolean inside = region.contains(mouseX, mouseY);
+		try (Clip clip = Clip.push(graphics, region.x(), region.y(), region.width(), region.height())) {
+			if (clip.visible()) {
+				widget.draw(graphics, font, inside ? mouseX : -1, inside ? mouseY : -1);
+			}
+		}
 	}
 
 	/**
@@ -228,13 +258,14 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 	}
 
 	/** The tooltip drawn in the last frame, or null. */
-	TooltipLayout.Box lastTooltip() {
+	protected TooltipLayout.Box lastTooltip() {
 		return lastTooltip;
 	}
 
 	/**
-	 * The topmost widget's tooltip under the mouse, over everything else (REQ-UI-19). With an overlay
-	 * open only its widgets have one. None while a press is held, so a drag is not covered.
+	 * The tooltip of the topmost widget under the mouse that has one, over everything else (REQ-UI-19):
+	 * a control without one shows its card's. With an overlay open only its widgets count. None while a
+	 * press is held, so a drag is not covered.
 	 */
 	private void drawTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		lastTooltip = null;
@@ -245,10 +276,12 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 		List<Widget> active = activeWidgets();
 		for (int i = active.size() - 1; i >= 0; i--) {
 			Widget widget = active.get(i);
-			if (widget.contains(mouseX, mouseY)) {
+			if (widget.contains(mouseX, mouseY) && widget.inClip(mouseX, mouseY)) {
 				String own = widget.tooltipAt(mouseX, mouseY);
-				text = own == null ? "" : own;
-				break;
+				if (own != null && !own.isEmpty()) {
+					text = own;
+					break;
+				}
 			}
 		}
 		if (text.isEmpty() && overlay == null) {
@@ -284,10 +317,11 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 			return true;
 		}
 		List<Widget> active = activeWidgets();
-		boolean overWidget = false;
 		for (int i = active.size() - 1; i >= 0; i--) {
 			Widget widget = active.get(i);
-			overWidget |= widget.contains(event.x(), event.y());
+			if (!widget.inClip(event.x(), event.y())) {
+				continue;
+			}
 			if (widget.press(event.x(), event.y(), event.button())) {
 				pressed = widget;
 				pressedButton = event.button();
@@ -302,8 +336,9 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 			swallowedRelease = event.button();
 			return true;
 		}
-		// A left click on nothing leaves the field; a right click on the field keeps it.
-		if (event.button() == 0 && !overWidget) {
+		// A left click that nothing takes (empty space, a card's text, a scroll area) leaves the field;
+		// other buttons keep it.
+		if (event.button() == 0) {
 			focus(null);
 		}
 		return super.mouseClicked(event, doubleClick);
@@ -355,7 +390,7 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 		if (notches != 0) {
 			List<Widget> active = activeWidgets();
 			for (int i = active.size() - 1; i >= 0; i--) {
-				if (active.get(i).scroll(mouseX, mouseY, notches, fine)) {
+				if (active.get(i).inClip(mouseX, mouseY) && active.get(i).scroll(mouseX, mouseY, notches, fine)) {
 					return true;
 				}
 			}

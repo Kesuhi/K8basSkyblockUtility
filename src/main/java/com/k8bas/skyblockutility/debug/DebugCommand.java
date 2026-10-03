@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.debug;
 
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
 import com.k8bas.skyblockutility.location.IslandTracker;
+import com.k8bas.skyblockutility.ui.screen.ConfigScreen;
 import com.k8bas.skyblockutility.util.ChatUtils;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
  * <ul>
  *   <li>`debug island <name|clear>` forces an island. Dev-only: it is not registered in production
  *       builds (REQ-LOC-08).</li>
+ *   <li>`debug newui` opens the new settings screen while it is built (T2.4a). Dev-only too.</li>
  *   <li>`debug dump tab|sidebar|entities` writes what the client currently shows to latest.log,
  *       one `[K8BAS-DUMP]` line each, for parser fixtures (REQ-GS-13). `debug dump containers
  *       on|off` arms the menu capture (ContainerDump). All of them ship in production, only read,
@@ -79,6 +81,13 @@ public final class DebugCommand {
 										return builder.buildFuture();
 									})
 									.executes(context -> forceIsland(StringArgumentType.getString(context, "name")))));
+					// The new settings screen, until it replaces the Cloth one (T2.5b).
+					debug.then(ClientCommands.literal("newui").executes(context -> {
+						var client = context.getSource().getClient();
+						// Next tick, so the chat's own Enter does not reach the new screen.
+						client.execute(() -> client.gui.setScreen(new ConfigScreen(client.gui.screen())));
+						return 1;
+					}));
 				}
 				dispatcher.register(ClientCommands.literal(root).then(debug));
 			}

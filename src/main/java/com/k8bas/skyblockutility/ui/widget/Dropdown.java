@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.render.ClipRect;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.Shapes;
@@ -37,7 +38,8 @@ public final class Dropdown<E> extends Widget {
 
 	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
-		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {
+		// Half scrolled out of view it does not open: its list would have nothing to hang from.
+		if (!enabled || button != 0 || !contains(mouseX, mouseY) || !fullyShowing()) {
 			return false;
 		}
 		list = new OpenList();
@@ -81,7 +83,16 @@ public final class Dropdown<E> extends Widget {
 
 		@Override
 		public void layout(int screenWidth, int screenHeight) {
-			placement = DropdownPlacement.place(x, y, width, height, choice.values().size(), ROW_HEIGHT, MAX_ROWS, screenWidth, screenHeight, 4);
+			ClipRect area = clip();
+			if (area == null) {
+				placement = DropdownPlacement.place(x, y, width, height, choice.values().size(), ROW_HEIGHT, MAX_ROWS, screenWidth, screenHeight, 4);
+			} else {
+				// Inside a scrolled region (a settings card) the list stays in that region, so it never leaves the panel.
+				DropdownPlacement.Placement local = DropdownPlacement.place(x - area.x(), y - area.y(), width, height, choice.values().size(),
+						ROW_HEIGHT, MAX_ROWS, area.width(), area.height(), 2);
+				placement = new DropdownPlacement.Placement(local.x() + area.x(), local.y() + area.y(), local.width(), local.height(), local.rows(),
+						local.upward());
+			}
 			model.setVisible(placement.rows());
 			rows.setBounds(placement.x(), placement.y(), placement.width(), placement.height());
 		}
@@ -116,7 +127,8 @@ public final class Dropdown<E> extends Widget {
 
 		@Override
 		public boolean stillAnchored() {
-			return width > 0 && height > 0;
+			// Scrolled or resized even partly out of its region, the box no longer anchors the list.
+			return width > 0 && height > 0 && fullyShowing();
 		}
 
 		void pick(int index) {
