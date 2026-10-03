@@ -1,0 +1,101 @@
+package com.k8bas.skyblockutility.ui.widget;
+
+import com.k8bas.skyblockutility.ui.render.Animated;
+import com.k8bas.skyblockutility.ui.render.UiClock;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+
+/**
+ * A control of the settings screen (T2.3a), drawn with the render kit. Its bounds are set by the
+ * layout every frame, so drawing and hit-testing use the same rectangle (REQ-UI-03). Input arrives as
+ * plain values from {@link WidgetScreen}, which keeps the behaviour unit-testable. Written from the
+ * spec; no AlpakaAddons code (REQ-UI-24).
+ */
+public abstract class Widget {
+	protected int x;
+	protected int y;
+	protected int width;
+	protected int height;
+	/** False: takes no input and is drawn in the disabled colours. */
+	protected boolean enabled = true;
+	/** True: still works, but drawn faded, as the sub-option of a feature that is off (REQ-UI-05). */
+	protected boolean dimmed;
+	protected boolean focused;
+	private Animated hoverAnimation;
+
+	public void setBounds(int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+
+	public boolean contains(double mouseX, double mouseY) {
+		return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setDimmed(boolean dimmed) {
+		this.dimmed = dimmed;
+	}
+
+	public abstract void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY);
+
+	/** A mouse press; true if this widget takes it (and then gets the drag and release). */
+	public boolean press(double mouseX, double mouseY, int button) {
+		return false;
+	}
+
+	public void drag(double mouseX, double mouseY) {
+	}
+
+	public void release(double mouseX, double mouseY) {
+	}
+
+	/** The scroll wheel over this widget; {@code notches} up is positive. True if it used them. */
+	public boolean scroll(double mouseX, double mouseY, int notches, boolean fine) {
+		return false;
+	}
+
+	/** True for widgets that take the keyboard while focused (text fields, keybind capture). */
+	public boolean wantsKeyboard() {
+		return false;
+	}
+
+	public boolean key(int key, boolean ctrl, boolean shift) {
+		return false;
+	}
+
+	public boolean typed(int codePoint) {
+		return false;
+	}
+
+	public void setFocused(boolean focused) {
+		this.focused = focused;
+	}
+
+	public boolean isFocused() {
+		return focused;
+	}
+
+	/** How hovered the widget looks, easing to 1 or 0 in 150 ms (REQ-UI-17). Created on the first draw, on the game's clock. */
+	protected float hoverAmount(boolean hot) {
+		if (hoverAnimation == null) {
+			hoverAnimation = new Animated(hot ? 1F : 0F, Animated.DEFAULT_DURATION_MS, UiClock.MILLIS);
+		}
+		hoverAnimation.animateTo(hot ? 1F : 0F);
+		return hoverAnimation.value();
+	}
+
+	/** A colour faded for a dimmed widget. */
+	protected int faded(int argb) {
+		return dimmed ? (argb & 0x00FFFFFF) | ((argb >>> 24) * 45 / 100) << 24 : argb;
+	}
+}
