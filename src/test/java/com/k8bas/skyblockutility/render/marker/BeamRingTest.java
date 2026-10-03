@@ -4,6 +4,7 @@ import net.minecraft.network.chat.Component;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,6 +35,29 @@ class BeamRingTest {
 		assertThrows(IllegalArgumentException.class, () -> new MarkerRing(0, 0xFF000000, MarkerRing.Style.OUTLINE));
 	}
 
+	/** A ring that would draw nothing, or draw at an endless radius, is refused instead of silently dropped. */
+	@Test
+	void ringsRejectInvisibleOrEndlessShapes() {
+		assertThrows(IllegalArgumentException.class, () -> new MarkerRing(Double.POSITIVE_INFINITY, 0xFF000000, MarkerRing.Style.OUTLINE));
+		assertThrows(IllegalArgumentException.class, () -> new MarkerRing(Double.NaN, 0xFF000000, MarkerRing.Style.OUTLINE));
+		assertThrows(NullPointerException.class, () -> new MarkerRing(3, 0xFF000000, null));
+		// The outline is drawn opaque, so an RGB colour is fine for it; a disc with an alpha of 0 would be invisible.
+		assertEquals(0x00FF00FF, new MarkerRing(3, 0x00FF00FF, MarkerRing.Style.OUTLINE).argb());
+		assertThrows(IllegalArgumentException.class, () -> new MarkerRing(3, 0x00FF00FF, MarkerRing.Style.DISC));
+		assertThrows(IllegalArgumentException.class, () -> new MarkerRing(3, 0x00FF00FF, MarkerRing.Style.BOTH));
+	}
+
+	/** A label can float above its anchor while the beam still rises from the anchor's block (review T3.0n #9). */
+	@Test
+	void aRaisedLabelKeepsItsRiseWhenMadeDepthTested() {
+		MarkerLabel raised = LABEL.asSeeThrough().withDistance(0xFFFF55).raisedBy(1.5);
+		assertEquals(1.5, raised.rise());
+		assertEquals(0, LABEL.rise());
+		Marker onEntity = new Marker(new MarkerAnchor.OfEntity(null, 0), raised);
+		assertEquals(1.5, onEntity.label().rise());
+		assertFalse(onEntity.label().seeThrough());
+	}
+
 	/** REQ-MARK-04 / EC-MARK-11: the beam rises from the marker block to the build height, clipped there. */
 	@Test
 	void beamsRunToTheBuildHeightAndAreClipped() {
@@ -47,8 +71,15 @@ class BeamRingTest {
 	/** REQ-MARK-04: the beam widens with horizontal distance, as a vanilla beacon's does (never below 1). */
 	@Test
 	void beamsWidenWithDistance() {
-		assertEquals(1.0F, WorldMarkers.beamRadiusScale(10));
-		assertEquals(1.0F, WorldMarkers.beamRadiusScale(96));
-		assertEquals(2.0F, WorldMarkers.beamRadiusScale(192));
+		assertEquals(1.0F, WorldMarkers.beamRadiusScale(10, false));
+		assertEquals(1.0F, WorldMarkers.beamRadiusScale(96, false));
+		assertEquals(2.0F, WorldMarkers.beamRadiusScale(192, false));
+	}
+
+	/** REQ-NPCWP-04: through a spyglass a far beam keeps its natural width, as in vanilla. */
+	@Test
+	void beamsDoNotWidenThroughASpyglass() {
+		assertEquals(1.0F, WorldMarkers.beamRadiusScale(192, true));
+		assertEquals(1.0F, WorldMarkers.beamRadiusScale(1000, true));
 	}
 }

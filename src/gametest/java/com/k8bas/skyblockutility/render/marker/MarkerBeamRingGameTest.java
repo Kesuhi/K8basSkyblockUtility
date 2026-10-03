@@ -29,7 +29,10 @@ import java.util.function.Consumer;
  *   <li>AC-MARK-03: a ring of radius 3 on a water surface is visible in the open, untinted, and hidden
  *       behind a stone wall.</li>
  *   <li>AC-MARK-06: 150 label-and-beam markers keep the marker pass at 1 ms or less on average over 600
- *       frames, and a marker behind the camera is counted as not submitted.</li>
+ *       frames, both its submit step and what it adds to the whole main pass (A/B against no markers),
+ *       and a marker behind the camera is counted as not submitted.</li>
+ *   <li>REQ-MARK-03 with Improved Transparency (the Fabulous preset): the label stays pure white behind
+ *       water and ice, the ring on water stays untinted, and stone still hides the ring.</li>
  *   <li>EC-MARK-06: beams stay with F1; EC-MARK-11: no beam above the build height.</li>
  * </ul>
  */
@@ -73,6 +76,7 @@ public class MarkerBeamRingGameTest implements FabricClientGameTest {
 			try {
 				beamsShowAboveObstacles(context, singleplayer, server, provider);
 				ringsOnWater(context, singleplayer, server, provider);
+				withImprovedTransparency(context, singleplayer, server, provider);
 				beamsStayWithF1AndAreClipped(context, provider);
 				performanceWith150Markers(context, singleplayer, server, provider);
 			} finally {
@@ -99,7 +103,7 @@ public class MarkerBeamRingGameTest implements FabricClientGameTest {
 		obstacles.put("nothing", new String[0]);
 		obstacles.put("stone", new String[] {"fill -8 -60 5 8 -57 5 minecraft:stone"});
 		obstacles.put("glass pane", new String[] {"fill -8 -60 5 8 -57 5 minecraft:glass_pane"});
-		obstacles.put("water", new String[] {"fill -8 -60 3 8 -56 7 minecraft:glass", "fill -7 -60 4 7 -57 6 minecraft:water"});
+		obstacles.put("water", new String[] {"fill -8 -60 5 8 -57 9 minecraft:glass", "fill -7 -59 6 7 -57 8 minecraft:water"});
 		obstacles.put("ice", new String[] {"fill -8 -60 5 8 -57 5 minecraft:ice"});
 		Marker marker = labelAndBeam(0.5, -58.5, 30.5, "Beam Test");
 		Map<String, Shot> shots = new LinkedHashMap<>();
@@ -127,6 +131,7 @@ public class MarkerBeamRingGameTest implements FabricClientGameTest {
 			check(shot.topChanged > 20, "the beam shows above the " + entry.getKey() + ": " + shot);
 		}
 		// Counts red beam pixels, not every change: a terrain section being rebuilt can leave a one-frame gap in either shot.
+		check(hidden.frame.beams() == 1, "the hidden beam was submitted, so the wall is what hides it: " + hidden);
 		check(hidden.redPixels == 0 && open.redPixels > 20, "a beam behind a wall that fills the view is hidden (depth-tested): " + hidden + " vs open " + open);
 	}
 
@@ -147,7 +152,57 @@ public class MarkerBeamRingGameTest implements FabricClientGameTest {
 		// The outline is opaque magenta: magenta pixels on the water mean the water did not tint it.
 		check(grass.magentaPixels > 50, "the ring is visible on grass: " + grass);
 		check(open.magentaPixels > 50, "the ring on the water is visible in the open, untinted: " + open);
+		check(behind.frame.rings() == 1, "the ring behind the wall was submitted, so the wall is what hides it: " + behind);
 		check(behind.magentaPixels == 0, "the ring is hidden behind a stone wall: " + behind);
+	}
+
+	/**
+	 * REQ-MARK-03 with Improved Transparency (the Fabulous preset), which draws translucent terrain into
+	 * its own target and composites it over the main one by depth at the end of the level. Before the
+	 * fix a see-through label behind water or ice ended up under that layer (0 exact-white pixels) and a
+	 * ring on water was tinted (0 magenta pixels).
+	 */
+	private static void withImprovedTransparency(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server,
+			TestProvider provider) {
+		context.runOnClient(client -> client.options.improvedTransparency().set(true));
+		try {
+			context.waitTicks(20);
+			// Sampled during a rendered frame: the option alone would not show whether the mode took effect.
+			context.runOnClient(client -> FrameTimer.register());
+			context.waitTicks(2);
+			boolean fabulous = context.computeOnClient(client -> FrameTimer.ownTranslucentTarget());
+			Marker marker = labelAndBeam(0.5, -58.5, 30.5, "Beam Test");
+			server.runCommand("fill -8 -60 1 8 -40 40 minecraft:air");
+			Shot open = shoot(context, singleplayer, server, provider, marker, "t3.0n-fabulous-beam-nothing");
+			server.runCommand("fill -8 -60 5 8 -57 9 minecraft:glass");
+			server.runCommand("fill -7 -59 6 7 -57 8 minecraft:water");
+			Shot water = shoot(context, singleplayer, server, provider, marker, "t3.0n-fabulous-beam-water");
+			server.runCommand("fill -8 -60 5 8 -57 9 minecraft:air");
+			server.runCommand("fill -8 -60 5 8 -57 5 minecraft:ice");
+			Shot ice = shoot(context, singleplayer, server, provider, marker, "t3.0n-fabulous-beam-ice");
+			server.runCommand("fill -8 -60 5 8 -57 5 minecraft:air");
+			server.runCommand("fill -8 -61 9 8 -61 22 minecraft:water");
+			Marker onWater = new Marker(MarkerAnchor.fixed(0.5, -61 + 8.0 / 9.0, 15.5), null, null, new MarkerRing(3, 0x80FF00FF, MarkerRing.Style.BOTH));
+			Shot ring = shoot(context, singleplayer, server, provider, onWater, "t3.0n-fabulous-ring-on-water");
+			server.runCommand("fill -8 -60 5 8 -57 5 minecraft:stone");
+			Shot ringBehind = shoot(context, singleplayer, server, provider, onWater, "t3.0n-fabulous-ring-behind-stone");
+			server.runCommand("fill -8 -60 5 8 -57 5 minecraft:air");
+			server.runCommand("fill -8 -61 9 8 -61 22 minecraft:grass_block");
+			LOGGER.info("improved transparency (own translucent target: {}): open {}, behind water {}, behind ice {}, ring on water {}, behind stone {}",
+					fabulous, open, water, ice, ring, ringBehind);
+			check(fabulous, "Improved Transparency is really on: a rendered frame drew translucent terrain into its own target");
+			check(open.textPixels > 30, "the label is visible in the open with Improved Transparency: " + open);
+			for (Shot behind : List.of(water, ice)) {
+				check(behind.textPixels >= open.textPixels * 0.9, "the label stays pure white behind water and ice with Improved Transparency: "
+						+ behind + " vs " + open);
+				check(behind.topChanged > 20, "the beam shows above the obstacle with Improved Transparency: " + behind);
+			}
+			check(ring.magentaPixels > 50, "the ring on water is visible and untinted with Improved Transparency: " + ring);
+			check(ringBehind.frame.rings() == 1 && ringBehind.magentaPixels == 0, "stone still hides the ring with Improved Transparency: " + ringBehind);
+		} finally {
+			context.runOnClient(client -> client.options.improvedTransparency().set(false));
+			context.waitTicks(20);
+		}
 	}
 
 	/** EC-MARK-06 and EC-MARK-11. */
@@ -189,13 +244,16 @@ public class MarkerBeamRingGameTest implements FabricClientGameTest {
 		context.waitFor(client -> WorldMarkers.stats().frames() >= 600, 20 * 120);
 		WorldMarkers.Stats stats = context.computeOnClient(client -> WorldMarkers.stats());
 		WorldMarkers.Frame frame = context.computeOnClient(client -> WorldMarkers.lastFrame());
-		context.runOnClient(client -> {
-			WorldMarkers.setRecordFrames(false);
-			provider.markers = List.of();
-		});
-		LOGGER.info("151 markers: {} frames, average {} ms per frame; last frame {}", stats.frames(), String.format("%.3f", stats.averageMillis()), frame);
-		check(stats.averageMillis() <= 1.0, "the marker pass averages at most 1 ms per frame over 600 frames: " + stats);
-		check(frame.submitted() + frame.culled() == 151 && frame.culled() >= 1, "the marker behind the camera is not submitted: " + frame);
+		context.runOnClient(client -> WorldMarkers.setRecordFrames(false));
+		// The glyph, beam and ring geometry is built later in the frame: time whole frames with and without the markers.
+		FrameTimer.Comparison comparison = FrameTimer.compare(context, () -> provider.markers = List.copyOf(markers), () -> provider.markers = List.of(), 600);
+		LOGGER.info("151 markers: {} frames, submit step average {} ms per frame; last frame {}; A/B {}", stats.frames(),
+				String.format("%.3f", stats.averageMillis()), frame, comparison);
+		check(stats.averageMillis() <= 1.0, "the submit step averages at most 1 ms per frame over 600 frames: " + stats);
+		check(comparison.frameDelta() <= 1.0, "the markers add at most 1 ms of CPU to the mean frame time: " + comparison);
+		check(comparison.with().minDrawn() == 150 && comparison.without().maxDrawn() == 0, "every timed frame drew all or none of the markers: " + comparison);
+		check(frame.beams() == 150 && frame.submitted() == 150, "all 150 markers ahead are drawn with their beams, so the full load is timed: " + frame);
+		check(frame.culled() == 1, "the marker behind the camera is not submitted: " + frame);
 	}
 
 	private static Shot shoot(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server, TestProvider provider,
@@ -208,17 +266,18 @@ public class MarkerBeamRingGameTest implements FabricClientGameTest {
 		context.runOnClient(client -> provider.markers = List.of(marker));
 		context.waitTicks(5);
 		Path with = context.takeScreenshot(name);
+		WorldMarkers.Frame frame = context.computeOnClient(client -> WorldMarkers.lastFrame());
 		context.runOnClient(client -> provider.markers = List.of());
-		return Shot.of(with, without);
+		return Shot.of(with, without, frame);
 	}
 
 	/**
 	 * A screenshot pair: exact-white text pixels added, pixels changed in the top 8% of the image (above
-	 * the walls, where only the beam can be), every changed pixel, exact-magenta pixels added, and added
-	 * pixels with the red beam's hue.
+	 * the walls, where only the beam can be), every changed pixel, added magenta pixels (within 0x0F of #FF00FF, so untinted), and added
+	 * pixels with the red beam's hue; and what the toolkit counted in the frame of the first.
 	 */
-	private record Shot(int textPixels, int topChanged, int changed, int magentaPixels, int redPixels) {
-		static Shot of(Path with, Path without) {
+	private record Shot(int textPixels, int topChanged, int changed, int magentaPixels, int redPixels, WorldMarkers.Frame frame) {
+		static Shot of(Path with, Path without, WorldMarkers.Frame frame) {
 			try {
 				BufferedImage a = ImageIO.read(with.toFile());
 				BufferedImage b = ImageIO.read(without.toFile());
@@ -247,7 +306,7 @@ public class MarkerBeamRingGameTest implements FabricClientGameTest {
 						}
 					}
 				}
-				return new Shot(text, topChanged, changed, magenta, red);
+				return new Shot(text, topChanged, changed, magenta, red, frame);
 			} catch (IOException e) {
 				throw new AssertionError("cannot read screenshots", e);
 			}

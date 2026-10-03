@@ -7,7 +7,8 @@ import java.util.Objects;
  * optional. This is where the see-through policy is enforced (REQ-MARK-02): a marker that is not at
  * fixed coordinates never shows through blocks, never shows a distance line and never gets a beam
  * (a beam rising from a hidden entity would show where it is, above every wall), whatever it asks for.
- * Rings are always depth-tested and flat, so they stay.
+ * Rings are always depth-tested and flat, so they stay, but on an entity anchor only for a hologram
+ * whose name tag vanilla displays (see {@link MarkerRing}).
  *
  * @param label the label, or null for none
  * @param beam  the beam, or null for none

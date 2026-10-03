@@ -4,16 +4,21 @@ import com.k8bas.skyblockutility.location.IslandTracker;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhase;
 import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhases;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.feature.CustomFeatureRenderer;
 import net.minecraft.client.renderer.feature.TextFeatureRenderer;
+import net.minecraft.client.renderer.feature.submit.SubmitNode;
+import net.minecraft.client.renderer.rendertype.OutputTarget;
+import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -37,16 +42,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * The world marker toolkit (T3.0b): collects the markers of every active provider each frame and
  * submits them during COLLECT_SUBMITS (the 26.x render-state pipeline), with camera-relative
- * translation applied by hand. Labels go into Fabric's AFTER_TERRAIN phase, so translucent terrain
- * (water, glass, ice) drawn earlier cannot tint them (REQ-MARK-03).
+ * translation applied by hand. Translucent terrain (water, glass, ice) must not tint or hide a label
+ * (REQ-MARK-03), also with Improved Transparency (the Fabulous preset), which draws translucent terrain
+ * into its own target and composites it over the main one by depth at the end of the level:
  * <ul>
- *   <li>A see-through label (fixed anchors only) is drawn pulled in to 10 blocks from the camera, so
- *       its on-screen size stays constant and it stays inside the far plane (EC-MARK-02).</li>
- *   <li>A depth-tested label is drawn at its true position and grown with the distance instead, so it
- *       has the same on-screen size and every block in front of it hides it (REQ-MARK-02).</li>
+ *   <li>A see-through label (fixed anchors only) goes into Fabric's ALWAYS_ON_TOP phase, which runs
+ *       after that composite (and after clouds and weather). It is drawn pulled in to 10 blocks from
+ *       the camera, so its on-screen size stays constant and it stays inside the far plane (EC-MARK-02).</li>
+ *   <li>A depth-tested label goes into AFTER_TERRAIN, after translucent terrain. It is drawn at its
+ *       true position and grown with the distance instead, so it has the same on-screen size and every
+ *       block in front of it hides it (REQ-MARK-02).</li>
  * </ul>
  * Beacon beams (T3.0n) go through vanilla's beacon renderer, so they are depth-tested and animated
- * like a beacon, up to the build height. Rings are translucent, depth-tested quads in AFTER_TERRAIN.
+ * like a beacon, up to the build height. Rings are translucent, depth-tested quads in AFTER_TERRAIN,
+ * drawn into the translucent terrain's target so they blend over water instead of under it.
  * Markers outside the view are not submitted (REQ-MARK-07), labels hide with F1 while beams and rings
  * stay (EC-MARK-06), and every provider is reset on world change, server switch and disconnect;
  * markers on an entity that is gone or in another world are skipped (REQ-MARK-08). No chunk or block
@@ -67,12 +76,20 @@ public final class WorldMarkers {
 	/** "<n>m" components for whole metres up to this distance are made once. */
 	private static final int CACHED_DISTANCES = 1024;
 	private static final Component[] DISTANCE_LINES = new Component[CACHED_DISTANCES + 1];
-	/** The vanilla beacon's core and glow radii at a radius scale of 1. */
-	private static final float BEAM_SOLID_RADIUS = 0.2F;
-	private static final float BEAM_GLOW_RADIUS = 0.25F;
 	/** How far a ring floats above its anchor, and its outline's width, in blocks. */
 	private static final double RING_LIFT = 0.02;
 	private static final double RING_OUTLINE_WIDTH = 0.08;
+	/**
+	 * Rings: vanilla's debug quads (translucent, depth-tested, no depth write), drawn into the target
+	 * translucent terrain uses. With Improved Transparency that is its own target, which holds the opaque
+	 * depth plus the water's, so a ring on water is drawn after the water inside that layer and blends
+	 * over it, while opaque terrain still hides it. Without Improved Transparency the supplier gives null
+	 * and the main target is used, as for vanilla's debug quads.
+	 */
+	private static final RenderType RING = RenderType.create("k8bas_marker_ring",
+			RenderSetup.builder(RenderPipelines.DEBUG_QUADS).sortOnUpload()
+					.setOutputTarget(new OutputTarget("k8bas_translucent_terrain", () -> Minecraft.getInstance().levelRenderer.translucentTarget()))
+					.createRenderSetup());
 
 	private static final List<MarkerProvider> PROVIDERS = new CopyOnWriteArrayList<>();
 	private static final Set<MarkerProvider> FAILED = ConcurrentHashMap.newKeySet();
@@ -189,6 +206,15 @@ public final class WorldMarkers {
 		return distance < CONSTANT_SIZE_DISTANCE || distance == 0 ? 0.0 : -(distance - CONSTANT_SIZE_DISTANCE) / distance;
 	}
 
+	/**
+	 * Where a label is drawn: a see-through one after everything in the level, including the Improved
+	 * Transparency composite, so no translucent terrain covers it; a depth-tested one after translucent
+	 * terrain, still depth-tested against the opaque terrain.
+	 */
+	static SubmitRenderPhase<SubmitNode> labelPhase(boolean seeThrough) {
+		return seeThrough ? SubmitRenderPhases.ALWAYS_ON_TOP : SubmitRenderPhases.AFTER_TERRAIN;
+	}
+
 	/** The label scale at a distance: see-through labels are pulled in instead; depth-tested ones grow. */
 	static float labelScale(double distance, boolean seeThrough) {
 		return seeThrough ? SCALE : (float) (SCALE * Math.max(1.0, distance / CONSTANT_SIZE_DISTANCE));
@@ -196,7 +222,7 @@ public final class WorldMarkers {
 
 	/**
 	 * A beam from the marker block up to the build height, clipped there (REQ-MARK-04, EC-MARK-11): it
-	 * starts at the world's floor for a marker below it, and there is none at or above the top block.
+	 * starts at the world's floor for a marker below it, and there is none above the top block.
 	 *
 	 * @param maxY the top block's y (inclusive); the beam ends at its top face
 	 * @return the span, or null for no beam
@@ -210,13 +236,19 @@ public final class WorldMarkers {
 		return new BeamSpan(start, maxY + 1 - start);
 	}
 
-	/** The beam widens with horizontal distance like a vanilla beacon's, so it stays visible far away. */
-	static float beamRadiusScale(double horizontalDistance) {
-		return (float) Math.max(1.0, horizontalDistance / 96.0);
+	/** The beam widens with horizontal distance like a vanilla beacon's, so it stays visible far away;
+	 *  not while the player looks through a spyglass, as in vanilla (REQ-NPCWP-04). */
+	static float beamRadiusScale(double horizontalDistance, boolean scoping) {
+		return scoping ? 1.0F : (float) Math.max(1.0, horizontalDistance / 96.0);
 	}
 
-	/** Whole metres from the player's position (not the camera) to the anchor, rounded half-up (REQ-MARK-05). */
-	static String distanceText(Vec3 player, Vec3 anchor) {
+	/** Where a label is drawn, and what its distance line measures to: its rise above the anchor. */
+	public static Vec3 labelPosition(Vec3 anchor, MarkerLabel label) {
+		return label.rise() == 0 ? anchor : anchor.add(0, label.rise(), 0);
+	}
+
+	/** Whole metres from the player's position (not the camera) to the label, rounded half-up (REQ-MARK-05). */
+	public static String distanceText(Vec3 player, Vec3 anchor) {
 		return distanceMetres(player, anchor) + "m";
 	}
 
@@ -263,6 +295,7 @@ public final class WorldMarkers {
 		// The vanilla beacon animation: one turn every 40 ticks.
 		float animationTime = Math.floorMod(level.getGameTime(), 40) + partialTick;
 		Vec3 player = client.player == null ? null : client.player.getPosition(partialTick);
+		boolean scoping = client.player != null && client.player.isScoping();
 		boolean record = recordFrames;
 		List<String> distanceTexts = record ? new ArrayList<>() : List.of();
 		int submitted = 0;
@@ -282,8 +315,9 @@ public final class WorldMarkers {
 			boolean outOfView = false;
 			MarkerLabel label = marker.label();
 			if (label != null && !labelsHidden) {
-				Component distanceLine = label.distanceLine() && player != null ? distanceLine(distanceMetres(player, pos)) : null;
-				if (submitLabel(matrices, submits, camera, client.font, pos, label, distanceLine)) {
+				Vec3 labelPos = labelPosition(pos, label);
+				Component distanceLine = label.distanceLine() && player != null ? distanceLine(distanceMetres(player, labelPos)) : null;
+				if (submitLabel(matrices, submits, camera, client.font, labelPos, label, distanceLine)) {
 					drawn = true;
 					if (record && distanceLine != null) {
 						distanceTexts.add(distanceLine.getString());
@@ -296,7 +330,7 @@ public final class WorldMarkers {
 			if (marker.beam() != null) {
 				BeamSpan span = beamSpan(pos.y, level.getMinY(), level.getMaxY());
 				if (span != null) {
-					if (submitBeam(matrices, submits, camera, pos, span, marker.beam(), animationTime)) {
+					if (submitBeam(matrices, submits, camera, pos, span, marker.beam(), animationTime, scoping)) {
 						beams++;
 						drawn = true;
 					} else {
@@ -327,15 +361,15 @@ public final class WorldMarkers {
 	 * the translucent geometry, both depth-tested (REQ-MARK-02). False if it is outside the view.
 	 */
 	private static boolean submitBeam(PoseStack matrices, SubmitNodeCollector submits, CameraRenderState camera, Vec3 pos, BeamSpan span,
-			MarkerBeam beam, float animationTime) {
+			MarkerBeam beam, float animationTime, boolean scoping) {
 		int blockX = Mth.floor(pos.x);
 		int blockZ = Mth.floor(pos.z);
 		double centreX = blockX + 0.5;
 		double centreZ = blockZ + 0.5;
 		double hx = centreX - camera.pos.x;
 		double hz = centreZ - camera.pos.z;
-		float radiusScale = beamRadiusScale(Math.sqrt(hx * hx + hz * hz));
-		double halfWidth = BEAM_GLOW_RADIUS * radiusScale + CULL_MARGIN;
+		float radiusScale = beamRadiusScale(Math.sqrt(hx * hx + hz * hz), scoping);
+		double halfWidth = BeaconRenderer.BEAM_GLOW_RADIUS * radiusScale + CULL_MARGIN;
 		if (!camera.cullFrustum.isVisible(new AABB(centreX - halfWidth, span.start(), centreZ - halfWidth,
 				centreX + halfWidth, span.start() + span.height(), centreZ + halfWidth))) {
 			return false;
@@ -344,17 +378,17 @@ public final class WorldMarkers {
 		// The renderer centres the beam on the block itself (it translates by 0.5, 0, 0.5).
 		matrices.translate(blockX, span.start(), blockZ);
 		BeaconRenderer.submitBeaconBeam(matrices, submits, BeaconRenderer.BEAM_LOCATION, 1.0F, animationTime, 0, span.height(), beam.argb(),
-				BEAM_SOLID_RADIUS * radiusScale, BEAM_GLOW_RADIUS * radiusScale);
+				BeaconRenderer.SOLID_BEAM_RADIUS * radiusScale, BeaconRenderer.BEAM_GLOW_RADIUS * radiusScale);
 		matrices.popPose();
 		return true;
 	}
 
 	/**
-	 * Submits a ring in the AFTER_TERRAIN phase with translucent, depth-tested quads, so terrain hides it
-	 * and water drawn earlier cannot tint it. It sits just above the anchor, so it does not flicker on
-	 * the surface it marks. The outline is opaque; the disc has the ring's alpha. False if out of view.
-	 * The debug quad type blends, is depth-tested, culls nothing and writes no depth, so a ring never hides
-	 * a label behind it.
+	 * Submits a ring in the AFTER_TERRAIN phase with translucent, depth-tested quads ({@link #RING}), so
+	 * terrain hides it and water drawn earlier cannot tint it, with Improved Transparency on or off. It
+	 * sits just above the anchor, so it does not flicker on the surface it marks. The outline is opaque;
+	 * the disc has the ring's alpha. False if out of view. The quads blend, cull nothing and write no
+	 * depth, so a ring never hides a label behind it.
 	 */
 	private static boolean submitRing(PoseStack matrices, SubmitNodeCollector submits, CameraRenderState camera, Vec3 pos, MarkerRing ring) {
 		double radius = ring.radius();
@@ -372,7 +406,7 @@ public final class WorldMarkers {
 		matrices.pushPose();
 		matrices.translate(pos.x, y, pos.z);
 		submits.order(BACKGROUND_ORDER).submitCustom(SubmitRenderPhases.AFTER_TERRAIN, new CustomFeatureRenderer.Submit(
-				matrices.last().copy(), RenderTypes.debugQuads(), (pose, quads) -> {
+				matrices.last().copy(), RING, (pose, quads) -> {
 					Matrix4f matrix = pose.pose();
 					for (int i = 0; i < segments; i++) {
 						double a0 = Math.PI * 2 * i / segments;
@@ -470,9 +504,10 @@ public final class WorldMarkers {
 		matrices.pushPose();
 		matrices.translate(-width / 2F, lineIndex * (lineHeight + 1), 0F);
 		int backgroundColor = label.backgroundColor();
+		SubmitRenderPhase<SubmitNode> phase = labelPhase(seeThrough);
 		if (backgroundColor != 0) {
 			RenderType backgroundType = seeThrough ? RenderTypes.textBackgroundSeeThrough() : RenderTypes.textBackground();
-			submits.order(BACKGROUND_ORDER).submitCustom(SubmitRenderPhases.AFTER_TERRAIN, new CustomFeatureRenderer.Submit(
+			submits.order(BACKGROUND_ORDER).submitCustom(phase, new CustomFeatureRenderer.Submit(
 					matrices.last().copy(), backgroundType, (pose, background) -> {
 						Matrix4f matrix = pose.pose();
 						background.addVertex(matrix, -1F, -1F, 0F).setColor(backgroundColor).setLight(LightCoordsUtil.FULL_BRIGHT);
@@ -483,7 +518,7 @@ public final class WorldMarkers {
 		}
 		matrices.translate(0F, 0F, 0.01F);
 
-		submits.order(TEXT_ORDER).submitCustom(SubmitRenderPhases.AFTER_TERRAIN, new TextFeatureRenderer.Submit(
+		submits.order(TEXT_ORDER).submitCustom(phase, new TextFeatureRenderer.Submit(
 				new Matrix4f(matrices.last().pose()), 0F, 0F, text.getVisualOrderText(), false,
 				seeThrough ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.POLYGON_OFFSET,
 				LightCoordsUtil.FULL_BRIGHT, textColor, 0, 0));

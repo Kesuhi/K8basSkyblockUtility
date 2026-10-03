@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.render.marker;
 
+import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhases;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,7 +42,17 @@ class MarkerTest {
 		assertThrows(IllegalArgumentException.class, () -> MarkerLabel.of());
 		assertEquals(3, MarkerLabel.of(line, line).withDistance(0xFFFFFF).lineCount());
 		assertThrows(IllegalArgumentException.class, () -> MarkerLabel.of(line, line, line).withDistance(0xFFFFFF));
-		assertThrows(IllegalArgumentException.class, () -> new MarkerLabel(List.of(line, line, line, line), 0, false, false, 0));
+		assertThrows(IllegalArgumentException.class, () -> new MarkerLabel(List.of(line, line, line, line), 0, false, false, 0, 0));
+	}
+
+	/**
+	 * REQ-MARK-03: a see-through label is drawn after the Improved Transparency composite, so no
+	 * translucent terrain covers it; a depth-tested one right after translucent terrain.
+	 */
+	@Test
+	void seeThroughLabelsAreDrawnAfterEverythingElseInTheLevel() {
+		assertSame(SubmitRenderPhases.ALWAYS_ON_TOP, WorldMarkers.labelPhase(true));
+		assertSame(SubmitRenderPhases.AFTER_TERRAIN, WorldMarkers.labelPhase(false));
 	}
 
 	@Test
