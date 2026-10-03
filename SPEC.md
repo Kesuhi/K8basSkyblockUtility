@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01); all are listed in §12.3. Two field questions stay open for G3: the command and menu path that enable the Frozen Corpses widget (R24 a) and whether a key held only in the Dwarven Sack opens a corpse (R24 b). R22 drops the possible corpse spots (module corpse-waypoints). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped R22]` and keep their ids. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
+| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 (2026-10-03); all are listed in §12.3. Two field questions stay open for G3: the command and menu path that enable the Frozen Corpses widget (R24 a) and whether a key held only in the Dwarven Sack opens a corpse (R24 b). R22 drops the possible corpse spots (module corpse-waypoints). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped R22]` and keep their ids. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
 | Date | 2026-10-01 |
 | Inputs | Your original task prompt (verbatim) and the *SkyBlock XP Optimizer* addendum (verbatim), plus the research and decisions recorded in `PLAN.md` |
 | Relationship to PLAN.md | This file says **what** must be true and how we will know. `PLAN.md` says **how and in which order**. Every PLAN task names the requirement ids it implements (§13 Traceability). |
@@ -1992,7 +1992,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
     3. otherwise the global default beam colour (for a blank island or an island without a colour).
   - Every island in the NPC data has an editable colour with a documented default.
   - "Use island colour" clears a rule's override.
-  - Documented defaults (T3.4; chosen by Claude to fill a gap in this spec, so they can be changed before release). Every island name of the location table has one; the global default is `0x0AA351`, the mod's long-standing NPC green:
+  - Documented defaults (T3.4; chosen by Claude to fill a gap in this spec, kept by R25). Every island name of the location table has one; the global default is `0x0AA351`, the mod's long-standing NPC green:
 
     | Island | Default | Island | Default |
     |---|---|---|---|
@@ -2135,7 +2135,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **Q-NPCWP-01** What is a "category" for beam colours? → decided D-15 (category = island, optional per-rule beam override, glow colour separate)
 - **Q-NPCWP-02** How should existing fixed-rule colours migrate? → decided R8
 - **Q-NPCWP-03** Should the waypoint distance line default to ON? → decided D-6 (distance line ON)
-- **Q-NPCWP-04** Are the documented island colour defaults (the table under REQ-NPCWP-05, chosen by Claude in T3.4 to fill a gap) the ones to ship? → open; to be confirmed by you before the waypoint path is released
+- **Q-NPCWP-04** Are the documented island colour defaults (the table under REQ-NPCWP-05, chosen by Claude in T3.4 to fill a gap) the ones to ship? → decided R25 (keep them)
 
 ---
 
@@ -3891,7 +3891,7 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.3 Decisions after G1 — R18–R24
+### 12.3 Decisions after G1 — R18–R25
 
 You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 drops carry `[dropped R22]` and keep their ids.
 
@@ -3904,6 +3904,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R22 | The possible corpse spots (brief Phase 3 item 3) are dropped from the plan entirely: the corpse-waypoints module, PLAN T3.3a (spot table) and T3.3 (markers and `/ksu corpses`), their defaults row, the `corpses` reserved word, D-5's corpse-spot data (SkyHanni-REPO PR #759 + meowdding spots) and the corpse-spot points of R7. Ids are kept and marked dropped. What stays: the mineshaft entry alert (T3.2), the Frozen Corpses widget reading (T3.0m), the corpse odds (T3.9d, T3.9e) and D-5's NEU bestiary and RNG-weight data. The README's excluded-behaviour line "filtering possible corpse spots by entities you cannot see" stays (REQ-REL-03) | corpse-waypoints (all ids), REQ-GS-16, AC-GS-16, REQ-REL-03, §11, REQ-GS-17, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T2.5b, T3.0m, T3.3a, T3.3, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
 | R23 | Order after the v1.1.0 merge: the first Phase 3 work is the waypoint path T3.0b (marker toolkit) → T3.0n (beacon beams) → T3.4 (Skyblocker-style NPC waypoints: white label plus coloured beacon beam), so beams come right after v1.1.0. Reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used (REQ-NPCWP-11). Whether this ships as an intermediate release is decided then | §2 (build order), REQ-PORT-06, AC-PORT-06, AC-PORT-14 ("once T3.4 lands"); PLAN §6, Phase 3 intro, T3.0b, T3.4, T3.8 |
 | R24 | G1 field answers. (a) Q-MSA-04: you believe the Frozen Corpses tab widget is on by default and ask for a failsafe that tells the player when it is off. The once-per-launch widget hint (REQ-MSA-08, REQ-GS-18) is that failsafe. The command and menu path that enable the widget were not given, so the hint wording stays UNVERIFIED and is checked at G3. (b) Whether a Tungsten or Umber key held only in the Dwarven Sack opens a corpse could not be tested: D-7 (inventory only) stands, the REQ-MSA-05 sack fallback is not triggered, and the question stays open for G3. (c) Every area of the game counts as a Bestiary area except the Dungeon Hub | Status, §10 intro, REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-BEST-12, AC-BEST-11, §13.3; PLAN G1, T3.0m, T3.2, T5.3, G3 |
+| R25 | After T3.4 (2026-10-03): (a) Q-NPCWP-04, keep the documented island colour defaults under REQ-NPCWP-05 as they are. (b) The waypoint path (T3.0b, T3.0n, T3.4) does not ship as an intermediate release; it ships with the next regular release, so T3.4b (colour settings and the R8 migration) lands first | REQ-NPCWP-05, Q-NPCWP-04; PLAN §6 waypoint path, T3.4 |
 
 ### 12.H Defaults table (decided D-6, R1–R17 and R20–R22)
 

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, see SPEC §12.3; R22 drops the possible corpse spots, T3.3a and T3.3). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped T3.3a and T3.3 keep theirs as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
+| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke and R25 after T3.4, see SPEC §12.3; R22 drops the possible corpse spots, T3.3a and T3.3). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped T3.3a and T3.3 keep theirs as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
 | Date | 2026-10-01 |
 | Branch | `update/26.2` (from `main` @ `bc0f2f6`, v1.0.1) |
 | Baseline | `./gradlew build` on `main` is green (26.1.2) |
@@ -249,7 +249,7 @@ Phase 6 reuses:
 
 It can only start after Phase 5, but its **calculator core (T6.1)** is pure Java and could be built earlier, once T1.18 has merged, if you want progress sooner.
 
-**Waypoint path first (R23).** After the v1.1.0 merge, the first Phase 3 work is T3.0b → T3.0n → T3.4, so the beacon beams come right after v1.1.0. It is reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used. Whether it ships as an intermediate release is decided then. T3.4 no longer waits for T3.8: until the bundled NPC table lands, the sourceId lookup reads the NPC list that v1.1.0 already loads. If the waypoint path ships as an intermediate release, that release needs its own checkpoint (AC-NPCWP-11 [E]/[D], AC-MARK-08), and the R8 colour migration (REQ-NPCWP-09, AC-NPCWP-02, now in T3.4b) is split out of T3.4b first, so the beams do not ignore 1.0.1 custom colours.
+**Waypoint path first (R23).** After the v1.1.0 merge, the first Phase 3 work is T3.0b → T3.0n → T3.4, so the beacon beams come right after v1.1.0. It is reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used. It does not ship as an intermediate release (R25, 2026-10-03): it ships with the next regular release, after T3.4b. T3.4 no longer waits for T3.8: until the bundled NPC table lands, the sourceId lookup reads the NPC list that v1.1.0 already loads. If the waypoint path ships as an intermediate release, that release needs its own checkpoint (AC-NPCWP-11 [E]/[D], AC-MARK-08), and the R8 colour migration (REQ-NPCWP-09, AC-NPCWP-02, now in T3.4b) is split out of T3.4b first, so the beams do not ignore 1.0.1 custom colours.
 
 Highest-risk items come first: the port, the glow replacement, the config migration framework.
 
