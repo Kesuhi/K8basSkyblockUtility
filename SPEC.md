@@ -839,7 +839,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-UI-20** Long lists. Lists with many rows (the database picker with ~370 entries, long rule lists, the optimizer table with ~2,800 rows) must draw and hit-test only the visible rows, so cost does not grow with the row count. *(Derived: research GAP-1 §7–8 row volumes; T2.3c)*
 - **REQ-UI-21** Notices (toasts) [decided D-8; uses decided R12].
   - Shape: a notice has a title and up to 2 body lines.
-  - Position and duration: it appears in a configurable corner or top-centre and stays for a configurable 1–15 s. At most 4 are stacked, and the oldest is retired first.
+  - Position and duration: it appears in a configurable corner or top-centre and stays for a configurable 1–15 s; both are set in General › Interface, top right and 5 s until picked [decided R28]. At most 4 are stacked, and the oldest is retired first.
   - Input: notices never take focus or input.
   - Actions: a notice may point to a screen, but it must never itself start an install or any other consequential action.
   - Uses:
@@ -3894,7 +3894,7 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.3 Decisions after G1 — R18–R27
+### 12.3 Decisions after G1 — R18–R28
 
 You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 drops carry `[dropped R22]` and keep their ids.
 
@@ -3910,8 +3910,9 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R25 | After T3.4 (2026-10-03): (a) Q-NPCWP-04, keep the documented island colour defaults under REQ-NPCWP-05 as they are. (b) The waypoint path (T3.0b, T3.0n, T3.4) does not ship as an intermediate release; it ships with the next regular release, so T3.4b (colour settings and the R8 migration) lands first | REQ-NPCWP-05, Q-NPCWP-04; PLAN §6 waypoint path, T3.4 |
 | R26 | T2.3b (2026-10-03): a keybind conflict is marked in yellow, as vanilla 26.2 Controls does, not in the error red (EC-UI-11 had assumed vanilla used red) | EC-UI-11; PLAN T2.3b |
 | R27 | T2.3b (2026-10-03): (a) while a keybind widget is armed, a left click cancels, a right click resets to the default, other mouse buttons bind; (b) the colour hex field accepts 8 digits for colours without alpha and drops the alpha | REQ-UI-13, REQ-UI-14, EC-NPCWP-06; PLAN T2.3b |
+| R28 | T2.4d (2026-10-04): where notices appear and how long they stay is the player's choice in General › Interface; until a value is picked, top right and 5 s | REQ-UI-21, §12.H; PLAN T2.4d |
 
-### 12.H Defaults table (decided D-6, R1–R17 and R20–R22)
+### 12.H Defaults table (decided D-6, R1–R17, R20–R22 and R28)
 
 | Feature | Default | | Feature | Default |
 |---|---|---|---|---|
@@ -3922,7 +3923,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | Fixed-coordinate labels see-through | yes | | Hotspot-gone warning | ON (title + sound + chat) [R2] |
 | Drill re-equip fix | ON (drills only) | | Rare Drop Odds | **OFF**; once enabled all cases ON, chat lines ON, rare threshold 2 % |
 | Bestiary HUD | **OFF**; lines when enabled: tier, kills, to next tier, rate, session kills, milestone (when known) ON; to max, ETA OFF; reset on island change OFF [R11] | | Update check / channel | ON (notify) / STABLE |
-| Toast channel on warnings | **OFF** [R12] | | SkyBlock XP module / passive reading / live deltas | ON / ON / ON [R14] |
+| Toast channel on warnings | **OFF** [R12]; notices top right, 5 s, set in General › Interface [R28] | | SkyBlock XP module / passive reading / live deltas | ON / ON / ON [R14] |
 | "Next best task" HUD | **OFF** | | Live Bazaar | **OFF** |
 | Coins per hour | 5,000,000 (global) [R14] | | Player stage | suggested from your level, per profile [R14] |
 
