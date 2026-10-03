@@ -56,6 +56,8 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 	private double scrollRest;
 	/** Asked for by {@link #drawContent} this frame. */
 	private String requestedTooltip = "";
+	/** Counts focus requests, so a press that asked for one (even for the widget that already had it) keeps it. */
+	private int focusRequests;
 	private TooltipLayout.Box lastTooltip;
 
 	protected WidgetScreen(Component title) {
@@ -74,6 +76,11 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 	/** The widget that has the keyboard, or null. */
 	public Widget keyboardFocus() {
 		return keyboardFocus;
+	}
+
+	/** Whether a mouse button is held on a widget (a slider being dragged). */
+	protected boolean pressHeld() {
+		return pressed != null;
 	}
 
 	/** The open overlay, or null. */
@@ -100,6 +107,7 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 
 	/** Gives the keyboard to a widget that wants it, or to none. */
 	public void focus(Widget widget) {
+		focusRequests++;
 		Widget target = widget != null && widget.wantsKeyboard() ? widget : null;
 		if (target == keyboardFocus) {
 			return;
@@ -322,10 +330,14 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 			if (!widget.inClip(event.x(), event.y())) {
 				continue;
 			}
+			int requestsBefore = focusRequests;
 			if (widget.press(event.x(), event.y(), event.button())) {
 				pressed = widget;
 				pressedButton = event.button();
-				focus(widget);
+				// A press that set the focus itself (a clear button handing it back to its field) keeps that.
+				if (focusRequests == requestsBefore) {
+					focus(widget);
+				}
 				return true;
 			}
 		}
@@ -466,7 +478,7 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 	 * types characters such as "ą" or "@", as Ctrl+Alt. Also read from the keyboard, as gametest input
 	 * carries no modifiers.
 	 */
-	private static boolean shortcutCtrl(KeyEvent event) {
+	protected static boolean shortcutCtrl(KeyEvent event) {
 		Minecraft client = Minecraft.getInstance();
 		boolean ctrl = event.hasControlDownWithQuirk() || client.hasControlDown();
 		boolean alt = event.hasAltDown() || client.hasAltDown();

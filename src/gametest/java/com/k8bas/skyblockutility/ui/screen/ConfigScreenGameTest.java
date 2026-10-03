@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.screen;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.module.ModuleManager;
+import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Option;
@@ -9,8 +10,11 @@ import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.widget.Widget;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
+import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -62,6 +66,10 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			context.waitTicks(2);
 			Screen after = context.computeOnClient(client -> client.gui.screen());
 			check(after instanceof TitleScreen, "Esc goes back to the title screen: " + after);
+			context.setScreen(() -> new ConfigScreen(Minecraft.getInstance().gui.screen()));
+			context.waitForScreen(ConfigScreen.class);
+			context.waitTicks(2);
+			search(context);
 		} finally {
 			context.runOnClient(client -> {
 				ModuleManager.modules().forEach(module -> module.setEnabled(true));
@@ -338,6 +346,144 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		context.takeScreenshot("t2.4a-tooltip-over-a-switch");
 		LOGGER.info("config screen focus and tooltip: the search box kept the keyboard through a resize, typed {}; the switch showed {} lines",
 				typed, shown.lines().size());
+	}
+
+	/** T2.4b, AC-UI-07 [C] with real keys: Ctrl+F, typing, the category switch, nothing found, Esc, ×, and the query kept across categories. */
+	private static void search(ClientGameTestContext context) {
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.waitTicks(2);
+		int[] cross = context.computeOnClient(client -> {
+			ConfigLayout.Rect box = screen(client).frame().search();
+			return new int[] {box.right() - ClearButton.SIZE / 2 - 2, box.y() + box.h() / 2};
+		});
+		context.getInput().holdControl();
+		context.getInput().pressKey(GLFW.GLFW_KEY_F);
+		context.getInput().releaseControl();
+		context.waitTick();
+		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "Ctrl+F focuses the search box");
+		context.getInput().typeChars("range");
+		context.waitTicks(2);
+		SearchView range = context.computeOnClient(client -> screen(client).view());
+		Category shown = context.computeOnClient(client -> screen(client).selected());
+		List<String> rows = context.computeOnClient(client -> optionIds(screen(client)));
+		check(range.categories().equals(List.of(Category.HIGHLIGHTS)) && shown == Category.HIGHLIGHTS, "\"range\" leaves Highlights and switches to it: "
+				+ range.categories() + ", " + shown);
+		check(range.badge(Category.HIGHLIGHTS) == 1 && rows.equals(List.of("mob_highlighter.scan_range")), "one hit, the scan range: " + rows);
+		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "the switch kept the box focused");
+		context.takeScreenshot("t2.4b-search-range");
+		// × while typing: the box empties and keeps the keyboard, so the next query can be typed at once.
+		click(context, cross);
+		check(context.computeOnClient(client -> screen(client).query()).isEmpty(), "× while typing empties the box");
+		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "and the box keeps the keyboard");
+		context.getInput().typeChars("range");
+		context.waitTicks(2);
+
+		replaceQuery(context, "  RANGE ");
+		check(context.computeOnClient(client -> optionIds(screen(client))).equals(rows), "\"  RANGE \" finds the same");
+
+		replaceQuery(context, "zzzz");
+		SearchView none = context.computeOnClient(client -> screen(client).view());
+		check(none.nothingFound() && none.categories().isEmpty(), "\"zzzz\" finds nothing and empties the sidebar");
+		check(context.computeOnClient(client -> optionIds(screen(client))).isEmpty(), "and no card shows");
+		context.takeScreenshot("t2.4b-search-nothing-found");
+
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
+		check(context.computeOnClient(client -> screen(client).keyboardFocus() == null), "Esc leaves the box");
+		check(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen, "and keeps the screen open");
+		check("zzzz".equals(context.computeOnClient(client -> screen(client).query())), "with the query");
+
+		click(context, cross);
+		check(context.computeOnClient(client -> screen(client).query()).isEmpty(), "× empties the box");
+		check(context.computeOnClient(client -> screen(client).view().categories().size()) == 3, "and every category is back");
+		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "and the box has the keyboard again");
+
+		// A query matching several categories survives a click on another tab.
+		context.getInput().typeChars("npc");
+		context.waitTicks(2);
+		List<Category> withNpc = context.computeOnClient(client -> screen(client).view().categories());
+		check("npc".equals(context.computeOnClient(client -> screen(client).query())), "typed into the box");
+		check(withNpc.size() >= 2, "\"npc\" matches more than one category: " + withNpc);
+		Category other = withNpc.get(withNpc.size() - 1) == context.computeOnClient(client -> screen(client).selected()) ? withNpc.get(0)
+				: withNpc.get(withNpc.size() - 1);
+		int[] tab = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			int row = screen.view().categories().indexOf(other);
+			return new int[] {screen.tabs().x() + 20, screen.tabs().y() + row * (ConfigLayout.TAB + ConfigLayout.TAB_GAP) + ConfigLayout.TAB / 2};
+		});
+		click(context, tab);
+		check(context.computeOnClient(client -> screen(client).selected()) == other, "the tab switches to " + other);
+		String kept = context.computeOnClient(client -> screen(client).query());
+		check("npc".equals(kept), "and the query stays: " + kept);
+		click(context, cross);
+		LOGGER.info("config screen search: Ctrl+F focused the box; \"range\" showed {} in {}; \"zzzz\" emptied the sidebar; Esc kept the screen; "
+				+ "× cleared it; \"npc\" in {} survived a switch to {}", rows, shown, withNpc, other);
+		searchKeepsTheKeysInAWorld(context);
+	}
+
+	/** AC-UI-05 [C]: in a world, with the search box focused, E and the bound "Open settings" key open nothing. */
+	private static void searchKeepsTheKeysInAWorld(ClientGameTestContext context) {
+		context.setScreen(() -> null);
+		try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
+			singleplayer.getConnection().waitForChunksRender();
+			context.runOnClient(client -> {
+				SettingsKeybind.OPEN_SETTINGS_KEY.setKey(InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_KP_7));
+				KeyMapping.resetMapping();
+			});
+			try {
+				context.setScreen(() -> new ConfigScreen(null));
+				context.waitForScreen(ConfigScreen.class);
+				context.waitTicks(2);
+				ConfigScreen opened = context.computeOnClient(client -> screen(client));
+				int[] box = context.computeOnClient(client -> {
+					ConfigLayout.Rect search = screen(client).frame().search();
+					return new int[] {search.x() + 20, search.y() + search.h() / 2};
+				});
+				// The control: with nothing focused, F3 on this screen toggles the debug overlay.
+				boolean overlayBefore = context.computeOnClient(client -> client.debugEntries.isOverlayVisible());
+				context.getInput().pressKey(GLFW.GLFW_KEY_F3);
+				context.waitTicks(2);
+				check(context.computeOnClient(client -> client.debugEntries.isOverlayVisible()) != overlayBefore, "control: F3 toggles the overlay");
+				context.getInput().pressKey(GLFW.GLFW_KEY_F3);
+				context.waitTicks(2);
+				click(context, box);
+				context.getInput().pressKey(GLFW.GLFW_KEY_F3);
+				context.waitTicks(2);
+				check(context.computeOnClient(client -> client.debugEntries.isOverlayVisible()) == overlayBefore, "the focused box takes F3");
+				context.getInput().pressKey(options -> options.keyInventory);
+				context.getInput().typeChars("e");
+				context.getInput().pressKey(SettingsKeybind.OPEN_SETTINGS_KEY);
+				context.waitTicks(3);
+				Screen after = context.computeOnClient(client -> client.gui.screen());
+				check(after == opened, "E and the settings key open nothing while the box is focused: " + after);
+				String typed = context.computeOnClient(client -> screen(client).search().model().text());
+				check(typed.startsWith("e"), "E went into the box: " + typed);
+				context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+				context.waitTick();
+				context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+				context.waitFor(client -> client.gui.screen() == null, 40);
+				LOGGER.info("config screen in a world: E and the settings key went to the search box ({}), Esc left it, Esc closed", typed);
+			} finally {
+				context.runOnClient(client -> {
+					SettingsKeybind.OPEN_SETTINGS_KEY.setKey(InputConstants.UNKNOWN);
+					KeyMapping.resetMapping();
+				});
+			}
+		}
+	}
+
+	private static void replaceQuery(ClientGameTestContext context, String query) {
+		context.getInput().holdControl();
+		context.getInput().pressKey(GLFW.GLFW_KEY_A);
+		context.getInput().releaseControl();
+		context.getInput().typeChars(query);
+		context.waitTicks(2);
+	}
+
+	/** The options laid out on the shown page, by id. */
+	private static List<String> optionIds(ConfigScreen screen) {
+		return screen.page().page().rows().stream().filter(row -> row instanceof ConfigLayout.OptionRow)
+				.map(row -> ((ConfigLayout.OptionRow) row).option().id()).toList();
 	}
 
 	private static String settings() {

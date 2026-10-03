@@ -78,6 +78,8 @@ public final class VirtualList extends Widget {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {
 			return false;
 		}
+		// The rows may have changed since the last frame (a search typed in between): hit-test the current ones.
+		rows.setCount(count.getAsInt());
 		// A grab whose release never came (the press was taken over, or an overlay closed) ends here.
 		grab = -1;
 		if (onScrollbar(mouseX)) {

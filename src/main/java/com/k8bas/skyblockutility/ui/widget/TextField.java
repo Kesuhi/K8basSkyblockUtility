@@ -35,6 +35,8 @@ public final class TextField extends Widget {
 	private boolean forcedHot;
 	private boolean selectAllOnFocus;
 	private BooleanSupplier invalid = () -> false;
+	/** Room kept free at the right end, e.g. for a clear button drawn over the field. */
+	private int rightInset;
 
 	public TextField(TextEditModel model, String placeholder, Consumer<String> onChange, LongSupplier clock) {
 		this.model = model;
@@ -71,7 +73,12 @@ public final class TextField extends Widget {
 	}
 
 	int innerWidth() {
-		return width - 2 * PADDING;
+		return Math.max(0, width - 2 * PADDING - rightInset);
+	}
+
+	/** Keeps {@code pixels} at the right end free of text, for a control drawn over the field there. */
+	public void reserveRight(int pixels) {
+		this.rightInset = Math.max(0, pixels);
 	}
 
 	@Override

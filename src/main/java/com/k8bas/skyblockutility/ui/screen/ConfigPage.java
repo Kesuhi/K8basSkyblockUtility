@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
 /**
@@ -81,9 +82,23 @@ final class ConfigPage {
 
 	/** Places every card and control for this frame and returns the page (for its height and rows). */
 	ConfigLayout.Page layout(ConfigLayout.Frame frame, int scroll, ToIntFunction<String> width) {
-		page = ConfigLayout.page(cards, category, frame.content().w(), width);
+		return layout(frame, scroll, width, option -> true);
+	}
+
+	/**
+	 * Places the cards and controls of the options {@code shown} accepts (a search); the others are
+	 * hidden, so they are neither drawn nor reached by a click.
+	 */
+	ConfigLayout.Page layout(ConfigLayout.Frame frame, int scroll, ToIntFunction<String> width, Predicate<Option> shown) {
+		page = ConfigLayout.page(cards, category, frame.content().w(), width, shown);
 		ConfigLayout.Rect content = frame.content();
 		ClipRect clip = ClipRect.of(content.x(), content.y(), content.w(), content.h());
+		for (Option option : cardWidgets.keySet()) {
+			if (!shown.test(option)) {
+				hide(cardWidgets.get(option));
+				hide(controls.get(option));
+			}
+		}
 		for (ConfigLayout.Row row : page.rows()) {
 			if (!(row instanceof ConfigLayout.OptionRow optionRow)) {
 				continue;
@@ -107,5 +122,10 @@ final class ConfigPage {
 			control.setEnabled(available && ownEnabled.get(control));
 		}
 		return page;
+	}
+
+	private static void hide(Widget widget) {
+		widget.setBounds(0, 0, 0, 0);
+		widget.setClip(ClipRect.of(0, 0, 0, 0));
 	}
 }

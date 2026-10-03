@@ -11,6 +11,7 @@ import com.k8bas.skyblockutility.ui.render.TooltipLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
 /**
@@ -146,6 +147,15 @@ public final class ConfigLayout {
 
 	/** The rows of one category, for a content area {@code contentWidth} wide. */
 	public static Page page(List<Card> cards, Category category, int contentWidth, ToIntFunction<String> width) {
+		return page(cards, category, contentWidth, width, option -> true);
+	}
+
+	/**
+	 * The rows of one category showing only the options {@code shown} accepts (a search, REQ-UI-08): a
+	 * section appears when at least one of its options does. A feature's switch keeps its whole-card
+	 * click wherever it shows.
+	 */
+	public static Page page(List<Card> cards, Category category, int contentWidth, ToIntFunction<String> width, Predicate<Option> shown) {
 		List<Row> rows = new ArrayList<>();
 		int textWidth = Math.max(1, contentWidth - 2 * PAD - SCROLLBAR);
 		Lines description = fitLines(category.description(), textWidth, DESCRIPTION_LINES, width);
@@ -154,16 +164,17 @@ public final class ConfigLayout {
 		rows.add(new Heading(category, description.lines(), description.cut(), y, headingHeight));
 		y += headingHeight;
 		for (Card card : cards) {
-			if (card.category() != category) {
+			if (card.category() != category || card.all().stream().noneMatch(shown)) {
 				continue;
 			}
 			rows.add(new Section(card, y));
 			y += SECTION;
-			boolean first = true;
 			for (Option option : card.all()) {
-				rows.add(new OptionRow(card, option, first && card.toggle() != null, y));
+				if (!shown.test(option)) {
+					continue;
+				}
+				rows.add(new OptionRow(card, option, option == card.toggle(), y));
 				y += CARD + CARD_GAP;
-				first = false;
 			}
 			y += SECTION_GAP - CARD_GAP;
 		}

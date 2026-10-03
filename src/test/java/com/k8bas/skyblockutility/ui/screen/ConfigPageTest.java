@@ -252,6 +252,31 @@ class ConfigPageTest {
 		assertFalse(page.control(key).isEnabled());
 	}
 
+	/** REQ-UI-08: while searching only the matching options show; the others are neither laid out nor clickable. */
+	@Test
+	void aSearchShowsOnlyTheMatchingOptions() {
+		List<Card> cards = catalog();
+		Card mobHighlighter = cards.stream().filter(card -> card.category() == Category.HIGHLIGHTS).findFirst().orElseThrow();
+		Option range = mobHighlighter.options().get(0);
+		ConfigPage page = new ConfigPage(Category.HIGHLIGHTS, cards, this::control);
+		ConfigLayout.Frame frame = ConfigLayout.frame(1280, 720);
+		page.layout(frame, 0, text -> text.length() * 6);
+		ConfigLayout.Rect toggleCard = ConfigLayout.card(frame, 0, (ConfigLayout.OptionRow) page.page().rows().get(2));
+		page.layout(frame, 0, text -> text.length() * 6, option -> option == range);
+		List<Option> rows = page.page().rows().stream().filter(row -> row instanceof ConfigLayout.OptionRow)
+				.map(row -> ((ConfigLayout.OptionRow) row).option()).toList();
+		assertEquals(List.of(range), rows, "only the match");
+		assertTrue(page.page().rows().stream().anyMatch(row -> row instanceof ConfigLayout.Section section && section.card() == mobHighlighter),
+				"under its feature's section");
+		String before = state();
+		// The match moved up into the switch's old place: a click on its text reaches nothing, the hidden switch included.
+		assertNull(press(page, toggleCard.x() + 5, toggleCard.y() + 5));
+		assertEquals(before, state(), "nothing changed");
+		assertFalse(page.control(mobHighlighter.toggle()).showing());
+		page.layout(frame, 0, text -> text.length() * 6, option -> false);
+		assertEquals(1, page.page().rows().size(), "nothing matches: only the heading");
+	}
+
 	/** REQ-UI-05: a feature switched off dims its sub-options, which stay there and still work. */
 	@Test
 	void aFeatureOffDimsItsSubOptions() {

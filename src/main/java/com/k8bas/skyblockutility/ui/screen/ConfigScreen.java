@@ -9,6 +9,7 @@ import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
+import com.k8bas.skyblockutility.ui.option.SearchIndex;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.Clip;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
@@ -37,11 +38,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * The settings screen (T2.4a, REQ-UI-01): one centred panel over the dimmed game, with a header (name,
@@ -57,13 +61,16 @@ public final class ConfigScreen extends WidgetScreen {
 	private final Screen parent;
 	private final List<Card> cards;
 	private final List<Category> categories;
-	private final Map<Category, Integer> counts = new EnumMap<>(Category.class);
+	private final SearchIndex index;
 	private final Map<Category, ConfigPage> pages = new EnumMap<>(Category.class);
 	private final Map<Category, Integer> scrolls = new EnumMap<>(Category.class);
 	private final String version;
 	private final ScrollArea scrollArea = new ScrollArea();
 	private final VirtualList tabs;
 	private final TextField search;
+	private final ClearButton clear;
+	/** What the current query shows: the categories, badges and options (REQ-UI-08). */
+	private SearchView view;
 	private Category selected;
 	private ConfigPage page;
 	private ConfigLayout.Frame frame;
@@ -79,26 +86,59 @@ public final class ConfigScreen extends WidgetScreen {
 		this.parent = parent;
 		this.cards = cards;
 		this.categories = ConfigLayout.categories(cards);
-		for (Card card : cards) {
-			counts.merge(card.category(), card.all().size(), Integer::sum);
-		}
+		this.index = SearchIndex.of(cards);
+		this.view = SearchView.of(index, categories, "", categories.get(0));
 		this.version = RuntimeVersions.mod(K8basSkyblockUtilityClient.MOD_ID);
 		add(scrollArea);
-		tabs = add(new VirtualList(ConfigLayout.TAB + ConfigLayout.TAB_GAP, categories::size, this::drawTab, index -> {
+		tabs = add(new VirtualList(ConfigLayout.TAB + ConfigLayout.TAB_GAP, () -> view.categories().size(), this::drawTab, row -> {
 			UiSound.click();
-			select(categories.get(index));
+			// A keystroke may have shortened the list since the last frame.
+			if (row < view.categories().size()) {
+				select(view.categories().get(row));
+			}
 		}));
-		// The search box's place; T2.4b wires it to the index.
-		search = add(TextField.of(new TextEditModel(35, GameClipboard.INSTANCE), "Search settings", query -> { }));
-		select(categories.get(0));
+		search = add(TextField.of(new TextEditModel(SearchIndex.MAX_QUERY_LENGTH, GameClipboard.INSTANCE), "Search settings", this::applyQuery));
+		search.reserveRight(ClearButton.SIZE);
+		clear = add(new ClearButton(() -> !search.model().text().isEmpty(), () -> {
+			UiSound.click();
+			search.model().setText("");
+			applyQuery("");
+			focus(search);
+		}));
+		show(view.selected(), false);
 	}
 
-	/** Shows a category, keeping the scroll each one had. */
+	/** Shows a category, keeping the scroll each one had; the query stays (REQ-UI-08). */
 	public void select(Category category) {
+		show(category, false);
+	}
+
+	/** Filters by what is typed in the search box; the shown category moves to the first with a hit when it has none. */
+	private void applyQuery(String typed) {
+		view = SearchView.of(index, categories, typed, selected);
+		if (view.selected() != selected) {
+			// Switched by the search itself: the box keeps the keyboard.
+			show(view.selected(), true);
+		}
+		scrollTo(0);
+	}
+
+	/** The query typed, as the search sees it (trimmed, lower case). */
+	String query() {
+		return view.result().query();
+	}
+
+	SearchView view() {
+		return view;
+	}
+
+	private void show(Category category, boolean keepFocus) {
 		if (category == selected || !categories.contains(category)) {
 			return;
 		}
-		focus(null);
+		if (!keepFocus) {
+			focus(null);
+		}
 		if (page != null) {
 			// A category shown and left before a frame was drawn keeps the scroll it came with.
 			scrolls.put(selected, pendingScroll >= 0 ? pendingScroll : scrollArea.scroll());
@@ -165,17 +205,19 @@ public final class ConfigScreen extends WidgetScreen {
 		tabs.setBounds(sidebar.x() + 6, sidebar.y() + 8, Math.max(0, sidebar.w() - 12), Math.max(0, sidebar.h() - 12));
 		ConfigLayout.Rect box = frame.search();
 		search.setBounds(box.x(), box.y(), box.w(), box.h());
+		clear.setBounds(box.right() - ClearButton.SIZE - 2, box.y() + (box.h() - ClearButton.SIZE) / 2, ClearButton.SIZE, ClearButton.SIZE);
 		ConfigLayout.Rect content = frame.content();
 		scrollArea.setBounds(content.x(), content.y(), content.w(), content.h());
 		int scroll = scrollArea.scroll();
-		ConfigLayout.Page laidOut = page.layout(frame, scroll, font::width);
+		Predicate<Option> shown = view.nothingFound() ? option -> false : view::shows;
+		ConfigLayout.Page laidOut = page.layout(frame, scroll, font::width, shown);
 		scrollArea.setContentHeight(laidOut.height());
 		if (pendingScroll >= 0) {
 			scrollArea.setScroll(pendingScroll);
 			pendingScroll = -1;
 		}
 		if (scrollArea.scroll() != scroll) {
-			page.layout(frame, scrollArea.scroll(), font::width);
+			page.layout(frame, scrollArea.scroll(), font::width, shown);
 		}
 	}
 
@@ -227,6 +269,11 @@ public final class ConfigScreen extends WidgetScreen {
 			if (!clip.visible()) {
 				return;
 			}
+			if (view.nothingFound()) {
+				String message = Ellipsis.fit(view.message(), content.w() - 2 * ConfigLayout.PAD, font::width);
+				UiText.centred(graphics, font, message, content.x() + content.w() / 2, content.y() + 40, Theme.TEXT_SECONDARY);
+				return;
+			}
 			for (ConfigLayout.Row row : page.page().rows()) {
 				ConfigLayout.Rect rect = ConfigLayout.row(frame, scroll, row);
 				if (rect.bottom() < content.y() || rect.y() > content.bottom()) {
@@ -256,8 +303,8 @@ public final class ConfigScreen extends WidgetScreen {
 		}
 	}
 
-	private void drawTab(GuiGraphicsExtractor graphics, Font font, int index, int x, int y, int w, int h, boolean hovered) {
-		Category category = categories.get(index);
+	private void drawTab(GuiGraphicsExtractor graphics, Font font, int row, int x, int y, int w, int h, boolean hovered) {
+		Category category = view.categories().get(row);
 		boolean current = category == selected;
 		Theme theme = Theme.current();
 		int tabHeight = ConfigLayout.TAB;
@@ -267,7 +314,8 @@ public final class ConfigScreen extends WidgetScreen {
 		} else if (hovered) {
 			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_TAB, Theme.CARD_HOVER);
 		}
-		String count = Integer.toString(counts.getOrDefault(category, 0));
+		// The number of options, or of hits while searching (REQ-UI-08).
+		String count = Integer.toString(view.badge(category));
 		int badgeWidth = font.width(count) + 8;
 		int badgeX = x + w - 6 - badgeWidth;
 		Shapes.roundedRect(graphics, badgeX, y + 5, badgeWidth, tabHeight - 10, Shapes.RADIUS_CONTROL, current ? theme.accent() : Theme.CARD);
@@ -305,6 +353,21 @@ public final class ConfigScreen extends WidgetScreen {
 		Button missing = new Button("Unavailable", Button.Style.NORMAL, () -> { }, () -> { });
 		missing.setEnabled(false);
 		return missing;
+	}
+
+	/**
+	 * Ctrl+F (Cmd+F on macOS) focuses the search box while nothing else has the keyboard (REQ-UI-08); not
+	 * AltGr+F, which types a character on some layouts, and not while a slider is held, so a search cannot
+	 * hide the control being dragged.
+	 */
+	@Override
+	public boolean keyPressed(KeyEvent event) {
+		if (event.key() == GLFW.GLFW_KEY_F && shortcutCtrl(event) && keyboardFocus() == null && overlay() == null && !pressHeld()) {
+			focus(search);
+			search.model().selectAll();
+			return true;
+		}
+		return super.keyPressed(event);
 	}
 
 	@Override
