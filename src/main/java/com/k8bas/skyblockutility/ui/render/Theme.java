@@ -27,6 +27,9 @@ public record Theme(int accentRgb) {
 	public static final int DESTRUCTIVE_HOVER = 0xFFD14545;
 	public static final int DESTRUCTIVE_PRESSED = 0xFFB83232;
 	public static final int ERROR = 0xFFFF5555;
+	/** A keybind conflict, in vanilla Controls' yellow (R26); the error red stays for real errors. */
+	public static final int CONFLICT_TEXT = 0xFFFFFF55;
+	public static final int CONFLICT_BAR = 0xFFFFFF00;
 	public static final int ERROR_BACKGROUND = 0xFF3A1A1C;
 
 	public static Theme of(GeneralConfig config) {

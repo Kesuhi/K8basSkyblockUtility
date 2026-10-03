@@ -11,6 +11,7 @@
 			"com.k8bas.skyblockutility.render.marker.MarkerBeamRingGameTest",
 			"com.k8bas.skyblockutility.ui.render.RenderKitGameTest",
 			"com.k8bas.skyblockutility.ui.widget.WidgetsGameTest",
+			"com.k8bas.skyblockutility.ui.widget.AdvancedWidgetsGameTest",
 			"com.k8bas.skyblockutility.highlight.HighlightGameTest",
 			"com.k8bas.skyblockutility.highlight.GlowGameTest",
 			"com.k8bas.skyblockutility.module.npcsearch.FoundTitleGameTest",

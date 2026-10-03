@@ -795,7 +795,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Each of the mod's keybinds (Open settings, Toggle Mob Highlighter, Toggle NPC Search, and later ones) has a capture widget that shows the current binding.
   - Click arms the widget and the next key binds. Esc unbinds, and right-click resets to the default.
   - While armed, a left click cancels without changing the binding (so attack is never bound by accident), a right click resets to the default, and the middle and side mouse buttons bind as mouse keys [decided R27].
-  - The keys bound to Fullscreen, Screenshot and Friends (F11, F2, O by default) cannot be captured: the game acts on them before any screen sees them, as in vanilla Controls.
+  - The keys bound to Fullscreen and Screenshot (F11, F2 by default) cannot be captured: the game acts on them before any screen sees them, as in vanilla Controls. (Friends, O by default, is only taken first on the title and pause screens, so it can be bound here.)
   - Bindings are written to `options.txt` under the same key names as in 1.0.1, and they stay listed in vanilla Controls under the mod's category.
 
   *(Derived: parity with 1.0.1 (read-ui); Brief Phase 2 "users don't lose settings")*

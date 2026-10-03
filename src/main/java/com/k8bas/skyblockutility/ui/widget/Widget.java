@@ -69,6 +69,24 @@ public abstract class Widget {
 		return false;
 	}
 
+	/** True for widgets that type text: the game then keeps its input method (IME) on for them. */
+	public boolean usesTextInput() {
+		return wantsKeyboard();
+	}
+
+	/** True for widgets that capture the next key or mouse button as a binding (keybind capture). */
+	public boolean capturesKeys() {
+		return false;
+	}
+
+	/** The captured key, by its options.txt name; Esc is passed as {@code escape}. */
+	public void captureKey(String keyName, boolean escape) {
+	}
+
+	/** A mouse button pressed while capturing, with its options.txt name. */
+	public void captureMouse(int button, String mouseKeyName) {
+	}
+
 	public boolean key(int key, boolean ctrl, boolean shift) {
 		return false;
 	}
