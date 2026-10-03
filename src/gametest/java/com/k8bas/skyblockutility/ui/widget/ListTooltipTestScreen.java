@@ -64,6 +64,10 @@ public final class ListTooltipTestScreen extends WidgetScreen {
 		graphics.fill(0, 0, width, height, Theme.PANEL);
 	}
 
+	public int clicked() {
+		return clicked;
+	}
+
 	TooltipLayout.Box tooltip() {
 		return lastTooltip();
 	}
