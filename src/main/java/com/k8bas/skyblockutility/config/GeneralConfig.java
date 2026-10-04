@@ -24,6 +24,8 @@ public class GeneralConfig implements Normalizable {
 	 */
 	public Integer noticeSeconds;
 	public static final int DEFAULT_NOTICE_SECONDS = 5;
+	/** HUD element positions (REQ-HUD-03). Absent (null, never written) until a position is saved in the HUD editor. */
+	public HudConfig hud;
 
 	public NoticePosition noticePosition() {
 		return noticePosition == null ? DEFAULT_NOTICE_POSITION : noticePosition;

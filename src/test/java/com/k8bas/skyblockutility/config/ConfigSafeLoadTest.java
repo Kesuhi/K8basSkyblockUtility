@@ -343,6 +343,25 @@ class ConfigSafeLoadTest {
 		assertFalse(Files.readString(file()).isEmpty());
 	}
 
+	/** REQ-HUD-03, REQ-CFG-12, EC-HUD-04, EC-HUD-05 (T2.7): HUD positions live in the config and survive a save as written. */
+	@Test
+	void hudPositionsSurviveASaveAsWritten() throws IOException {
+		String positions = "{\"odds\":{\"anchor\":\"BOTTOM_RIGHT\",\"x\":-6,\"y\":-12,\"scale\":1.25},"
+				+ "\"removed_feature\":{\"anchor\":\"CENTER\",\"x\":1,\"y\":2,\"scale\":1.0,\"future\":true},\"broken\":{\"anchor\":\"NOWHERE\",\"scale\":0}}";
+		write("{\"general\": {\"mobScanRangeBlocks\": 64, \"hud\": {\"positions\": " + positions + "}}}");
+		ConfigManager.load(file());
+		assertEquals(JsonParser.parseString(positions), ConfigManager.general().hud.positions.entrySet().stream()
+				.collect(JsonObject::new, (object, entry) -> object.add(entry.getKey(), entry.getValue()), (a, b) -> { }));
+		ConfigManager.save();
+		ConfigManager.flush();
+		assertEquals(JsonParser.parseString(positions), json(file()).getAsJsonObject("general").getAsJsonObject("hud").get("positions"));
+		write("{\"general\": {\"mobScanRangeBlocks\": 64}}");
+		ConfigManager.load(file());
+		ConfigManager.save();
+		ConfigManager.flush();
+		assertFalse(json(file()).getAsJsonObject("general").has("hud"), "absent until a position is saved");
+	}
+
 	private static JsonElement withoutNulls(JsonElement element) {
 		if (element.isJsonObject()) {
 			JsonObject copy = new JsonObject();

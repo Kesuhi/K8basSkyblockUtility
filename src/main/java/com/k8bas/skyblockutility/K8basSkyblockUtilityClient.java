@@ -12,6 +12,7 @@ import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
 import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
+import com.k8bas.skyblockutility.hud.HudRenderer;
 import com.k8bas.skyblockutility.ui.notice.NoticeHooks;
 import com.k8bas.skyblockutility.ui.screen.ConfigScreen;
 import com.k8bas.skyblockutility.update.Updates;
@@ -68,6 +69,7 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		ContainerDump.register();
 		Updates.register();
 		NoticeHooks.register();
+		HudRenderer.register();
 
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
 	}
