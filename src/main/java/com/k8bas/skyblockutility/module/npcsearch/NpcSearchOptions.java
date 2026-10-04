@@ -6,15 +6,17 @@ import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Option;
 import com.k8bas.skyblockutility.ui.option.OptionText;
+import com.k8bas.skyblockutility.ui.option.RuleGroup;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * NPC Search's declarations (T2.1), in Waypoints (REQ-UI-04). The module and its distance line are
- * AMBER in PLAN §3, so their tooltips state the restriction (REQ-UI-19). Rules follow in T2.5a, the
- * beam colours in T3.4b.
+ * AMBER in PLAN §3, so their tooltips state the restriction (REQ-UI-19). Its rules are cards of their own
+ * (NpcRuleCards, T2.5a); the beam colours follow in T3.4b.
  */
 public final class NpcSearchOptions {
 	/** The restriction of the AMBER NPC waypoints, ahead of the glow changes in the card's tooltip. */
@@ -35,6 +37,11 @@ public final class NpcSearchOptions {
 	 * @param displayChanged applies a changed beam, distance or label setting to the waypoints at once (REQ-UI-15)
 	 */
 	public static List<Card> cards(NpcSearchConfig config, Consumer<Boolean> setEnabled, Runnable displayChanged) {
+		return cards(config, setEnabled, displayChanged, List::of);
+	}
+
+	/** @param rules the rule cards (NpcRuleCards::groups) */
+	public static List<Card> cards(NpcSearchConfig config, Consumer<Boolean> setEnabled, Runnable displayChanged, Supplier<List<RuleGroup>> rules) {
 		Toggle enabled = Toggle.of("npc_search.enabled", "modules.npc_search.enabled",
 				new OptionText("NPC Search", "Outlines NPCs from your list and marks fixed NPC positions with waypoints.",
 						WAYPOINT_RESTRICTION + "\n" + GlowBehaviourText.tooltip(), List.of("npc", "waypoint", "find", "glow", "outline")),
@@ -72,6 +79,6 @@ public final class NpcSearchOptions {
 							config.whiteWaypointLabels = value;
 							displayChanged.run();
 						})));
-		return List.of(new Card("npc_search", Category.WAYPOINTS, "NPC Search", enabled, options));
+		return List.of(new Card("npc_search", Category.WAYPOINTS, "NPC Search", enabled, options, rules));
 	}
 }

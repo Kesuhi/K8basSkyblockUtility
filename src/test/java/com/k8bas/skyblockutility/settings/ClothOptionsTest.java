@@ -3,7 +3,10 @@ package com.k8bas.skyblockutility.settings;
 import com.google.gson.Gson;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.InfoOption;
+import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
@@ -51,6 +54,9 @@ class ClothOptionsTest {
 				save.accept(any.binding().get());
 			}
 			case Keybind keybind -> { }
+			case TextOption t -> { }
+			case ActionOption a -> { }
+			case InfoOption i -> { }
 		}
 	}
 }

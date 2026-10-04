@@ -68,6 +68,9 @@ public final class MobHighlighterModule implements Module {
 	 *  Cloth Config's own field-level edits already behave. Re-seeded fresh from config.rules
 	 *  every time buildConfigScreen runs (i.e. every time the settings screen opens). */
 	private List<HighlightRule> workingRules;
+	/** The rule cards of the new settings screen, for the config they were made from. */
+	private MobRuleCards ruleCards;
+	private MobHighlighterConfig ruleCardsConfig;
 
 	@Override
 	public String id() {
@@ -105,7 +108,17 @@ public final class MobHighlighterModule implements Module {
 
 	@Override
 	public List<Card> cards() {
-		return MobHighlighterOptions.cards(config, ConfigManager.general(), this::setEnabled);
+		if (ruleCards == null || ruleCardsConfig != config) {
+			ruleCards = new MobRuleCards(config, HighlightManager::inertReason, this::rulesChanged);
+			ruleCardsConfig = config;
+		}
+		return MobHighlighterOptions.cards(config, ConfigManager.general(), this::setEnabled, ruleCards::groups);
+	}
+
+	/** A rule edited, added or deleted in the settings screen: stored in the section and applied at once (REQ-UI-15). */
+	private void rulesChanged() {
+		ConfigManager.putModuleSection(ID, config);
+		highlightManager.rebuild(config.rules);
 	}
 
 	@Override

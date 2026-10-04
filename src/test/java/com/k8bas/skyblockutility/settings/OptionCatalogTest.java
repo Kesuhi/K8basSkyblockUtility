@@ -13,7 +13,10 @@ import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.InfoOption;
+import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
@@ -93,6 +96,9 @@ class OptionCatalogTest {
 				case Choice<?> choice -> choice.binding().get();
 				case Keybind keybind -> keybind.defaultValue();
 				case ColorOption colour -> colour.binding().get();
+				case TextOption t -> throw new AssertionError("only rule cards have text fields");
+				case ActionOption a -> throw new AssertionError("only rule cards have actions");
+				case InfoOption i -> throw new AssertionError("only rule cards show info");
 			};
 			assertEquals(option.defaultValue(), current, "a fresh config holds the declared default: " + option.id());
 		}
@@ -397,6 +403,9 @@ class OptionCatalogTest {
 			case Choice<?> choice -> choice.binding().get();
 			case Keybind keybind -> keybind.defaultValue();
 			case ColorOption colour -> colour.binding().get();
+			case TextOption t -> throw new AssertionError("only rule cards have text fields");
+			case ActionOption a -> throw new AssertionError("only rule cards have actions");
+			case InfoOption i -> throw new AssertionError("only rule cards show info");
 		};
 	}
 
@@ -407,6 +416,9 @@ class OptionCatalogTest {
 			case Choice<?> choice -> changeChoice(choice);
 			case Keybind keybind -> { }
 			case ColorOption colour -> colour.binding().set(colour.binding().get() == 0x123456 ? 0x654321 : 0x123456);
+			case TextOption t -> throw new AssertionError("only rule cards have text fields");
+			case ActionOption a -> throw new AssertionError("only rule cards have actions");
+			case InfoOption i -> throw new AssertionError("only rule cards show info");
 		}
 	}
 
@@ -427,6 +439,9 @@ class OptionCatalogTest {
 			case Choice<?> choice -> ((Choice<Object>) choice).binding().set(original);
 			case Keybind keybind -> { }
 			case ColorOption colour -> colour.binding().set((Integer) original);
+			case TextOption t -> throw new AssertionError("only rule cards have text fields");
+			case ActionOption a -> throw new AssertionError("only rule cards have actions");
+			case InfoOption i -> throw new AssertionError("only rule cards show info");
 		}
 	}
 

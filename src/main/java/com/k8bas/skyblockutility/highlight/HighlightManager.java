@@ -115,7 +115,9 @@ public final class HighlightManager {
 			String inert = inertReason(rule, knownType);
 			if (inert != null) {
 				newInert.put(rule.id, inert);
-				if (LOGGED_INERT.add(rule.id + "|" + inert)) {
+				// Keyed on the kind of problem, not the text typed: an entity type or regex edited live in the
+				// settings screen changes the message with every key, and must not log a line each time.
+				if (LOGGED_INERT.add(rule.id + "|" + problemKind(inert))) {
 					LOGGER.warn("Highlight rule '{}' is inactive: {}", rule.label, inert);
 				}
 				continue;
@@ -133,6 +135,17 @@ public final class HighlightManager {
 		byType = newByType;
 		anyType = newAnyType;
 		inertRules = Map.copyOf(newInert);
+	}
+
+	/** A problem's kind: its message without the quoted or bracketed text it repeats from the rule. */
+	static String problemKind(String reason) {
+		return reason.replaceAll("'[^']*'", "''").replaceAll("\\([^)]*\\)", "()");
+	}
+
+	/** Why a rule cannot be evaluated, against the game's entity types, or null if it can: for the rule
+	 *  editor, which shows it as the rule is edited, also while the rule is switched off (REQ-GLOW-10). */
+	public static String inertReason(HighlightRule rule) {
+		return inertReason(rule, BuiltInRegistries.ENTITY_TYPE::containsKey);
 	}
 
 	/** Why a rule cannot be evaluated, or null if it can: an empty CONTAINS or EXACT pattern, an

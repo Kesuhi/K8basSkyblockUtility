@@ -1,13 +1,16 @@
 package com.k8bas.skyblockutility.settings;
 
+import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
 import com.k8bas.skyblockutility.ui.option.OptionText;
+import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -72,6 +75,10 @@ public final class ClothOptions {
 					.setTooltip(tooltip)
 					.setSaveConsumer(ifChanged(colour.binding()))
 					.build();
+			// Only rule cards have these, and the Cloth screen builds its rules itself until T2.5b.
+			case TextOption text -> throw new IllegalArgumentException("not a Cloth setting: " + text.id());
+			case ActionOption action -> throw new IllegalArgumentException("not a Cloth setting: " + action.id());
+			case InfoOption info -> throw new IllegalArgumentException("not a Cloth setting: " + info.id());
 			case Keybind keybind -> entryBuilder.fillKeybindingField(title, keyMapping(keybind.keyMappingName()))
 					.setTooltip(tooltip)
 					.build();

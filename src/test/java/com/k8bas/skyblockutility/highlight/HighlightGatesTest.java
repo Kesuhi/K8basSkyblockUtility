@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -148,5 +149,14 @@ class HighlightGatesTest {
 		rule.namePattern = pattern;
 		rule.enabled = enabled;
 		return rule;
+	}
+
+	/** REQ-GLOW-10: logged once per rule and kind of problem, so an entity type or regex typed live logs one line, not one per key. */
+	@Test
+	void aProblemIsLoggedOncePerKindNotPerTypedText() {
+		assertEquals(HighlightManager.problemKind("unknown entity type 'm'"), HighlightManager.problemKind("unknown entity type 'minecraft:zombi'"));
+		assertEquals(HighlightManager.problemKind("the regular expression is invalid (Unclosed group)"),
+				HighlightManager.problemKind("the regular expression is invalid (Unclosed character class)"));
+		assertNotEquals(HighlightManager.problemKind("the name pattern is empty"), HighlightManager.problemKind("unknown entity type 'x'"));
 	}
 }

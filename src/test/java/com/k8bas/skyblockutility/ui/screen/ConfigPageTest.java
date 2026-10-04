@@ -9,7 +9,10 @@ import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.InfoOption;
+import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
@@ -73,6 +76,11 @@ class ConfigPageTest {
 			case ColorOption colour -> new com.k8bas.skyblockutility.ui.widget.ColorSwatch(colour.binding(), colour.storesAlpha(), colour.text().title(), host,
 					() -> { }, () -> { });
 			case Keybind keybind -> new KeybindButton(new StubKey(keybind.keyMappingName()), List::of, name -> name, () -> { });
+			case TextOption text -> com.k8bas.skyblockutility.ui.widget.TextField.of(new com.k8bas.skyblockutility.ui.widget.TextEditModel(text.maxLength(), null),
+					text.placeholder(), text.binding()::set);
+			case ActionOption action -> new com.k8bas.skyblockutility.ui.widget.Button(action.buttonLabel(), com.k8bas.skyblockutility.ui.widget.Button.Style.DESTRUCTIVE,
+					action.action(), () -> { });
+			case InfoOption info -> new InfoText(info.value());
 		};
 	}
 
@@ -164,6 +172,9 @@ class ConfigPageTest {
 				assertEquals(1, opened.size(), colour.id() + " opens the picker");
 				assertEquals(before, state(), colour.id() + ": nothing changes until Save");
 			}
+			case TextOption text -> assertEquals(before, state(), text.id() + ": a click into the field changes nothing");
+			case ActionOption action -> { }
+			case InfoOption info -> { }
 			case IntSlider slider -> {
 				// A press on the track sets that value; put back what was there (a setting absent until picked stays absent).
 				GeneralConfig was = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class);
@@ -209,6 +220,9 @@ class ConfigPageTest {
 					case Choice<?> c -> assertEquals(1, opened.size(), "opens its list");
 					case Keybind k -> assertTrue(((KeybindButton) page.control(option)).armed(), "armed");
 					case ColorOption c -> assertEquals(1, opened.size(), "opens the picker");
+					case TextOption t -> { }
+					case ActionOption a -> { }
+					case InfoOption f -> { }
 					case IntSlider s -> assertTrue(feature[0] && mode[0].equals("Exact") && keys.isEmpty(), "only the amount changes");
 				}
 				feature[0] = true;

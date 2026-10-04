@@ -10,8 +10,8 @@ import java.util.Objects;
 /**
  * The settings search (REQ-UI-08): a case-insensitive substring match over each option's title,
  * description, keywords and dropdown labels (not its tooltip), with hit counts per category for the
- * sidebar badges. Built from the same declarations as the cards (REQ-UI-07); T2.5a adds rule labels
- * and patterns as extra entries.
+ * sidebar badges. Built from the same declarations as the cards (REQ-UI-07), plus each rule's label and
+ * name pattern (REQ-UI-09).
  */
 public final class SearchIndex {
 	public static final int MAX_QUERY_LENGTH = 35;
@@ -61,15 +61,12 @@ public final class SearchIndex {
 				fields.addAll(option.searchLabels());
 				entries.add(new Entry(card.category(), card.id(), option.id(), fields));
 			}
+			// Rules by their label and name pattern (REQ-UI-09), each its own entry, so two with one label are both found.
+			for (RuleGroup rule : card.rules()) {
+				entries.add(new Entry(card.category(), card.id(), rule.id(), rule.searchFields().get()));
+			}
 		}
 		return new SearchIndex(entries);
-	}
-
-	/** This index plus further entries, such as rule labels and patterns. */
-	public SearchIndex with(List<Entry> extra) {
-		List<Entry> all = new ArrayList<>(entries);
-		all.addAll(extra);
-		return new SearchIndex(all);
 	}
 
 	/** The box keeps at most 35 typed characters; then surrounding spaces go and case is ignored. */

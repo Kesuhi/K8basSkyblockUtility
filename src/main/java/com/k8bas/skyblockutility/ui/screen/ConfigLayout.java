@@ -1,11 +1,15 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Option;
+import com.k8bas.skyblockutility.ui.option.RuleGroup;
+import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.TooltipLayout;
@@ -37,6 +41,11 @@ public final class ConfigLayout {
 	public static final int SECTION_GAP = 8;
 	public static final int PAD = 10;
 	public static final int SCROLLBAR = 6;
+	/** A rule card's header, collapsed or not (REQ-UI-11). */
+	public static final int RULE_HEADER = 24;
+	public static final int RULE_GAP = 4;
+	/** A rule's fields sit this far right of its header. */
+	public static final int RULE_INDENT = 12;
 	public static final int TAB = 22;
 	public static final int TAB_GAP = 2;
 	public static final int SEARCH_WIDTH = 140;
@@ -72,7 +81,7 @@ public final class ConfigLayout {
 	}
 
 	/** One row of a category's page, at {@code y} from the page's top. */
-	public sealed interface Row permits Heading, Section, OptionRow {
+	public sealed interface Row permits Heading, Section, OptionRow, RuleHeader, RuleProblem {
 		int y();
 
 		int height();
@@ -108,11 +117,47 @@ public final class ConfigLayout {
 		}
 	}
 
-	/** One option's card; {@code featureToggle} for the feature's own switch, which a click anywhere on it flips. */
-	public record OptionRow(Card card, Option option, boolean featureToggle, int y) implements Row {
+	/**
+	 * One option's card; {@code featureToggle} for the feature's own switch, which a click anywhere on it
+	 * flips; {@code indent} for a rule's field, under its rule's header.
+	 */
+	public record OptionRow(Card card, Option option, boolean featureToggle, int y, int indent) implements Row {
+		public OptionRow(Card card, Option option, boolean featureToggle, int y) {
+			this(card, option, featureToggle, y, 0);
+		}
+
 		@Override
 		public int height() {
 			return CARD;
+		}
+	}
+
+	/** A rule's header: label and colour dot; a click opens or closes the rule (REQ-UI-11). */
+	public record RuleHeader(Card card, RuleGroup rule, boolean expanded, int y) implements Row {
+		@Override
+		public int height() {
+			return RULE_HEADER;
+		}
+	}
+
+	/** Why an open rule does nothing, under its header (REQ-GLOW-10, REQ-UI-12). */
+	public record RuleProblem(RuleGroup rule, List<String> lines, int y, int height) implements Row {
+	}
+
+	/** What a page shows: which options and rules (a search, REQ-UI-08/09) and which rules are open. */
+	public interface Filter {
+		boolean shows(Option option);
+
+		default boolean shows(RuleGroup rule) {
+			return true;
+		}
+
+		default boolean expanded(RuleGroup rule) {
+			return false;
+		}
+
+		static Filter of(Predicate<Option> shown) {
+			return shown::test;
 		}
 	}
 
@@ -148,15 +193,15 @@ public final class ConfigLayout {
 
 	/** The rows of one category, for a content area {@code contentWidth} wide. */
 	public static Page page(List<Card> cards, Category category, int contentWidth, ToIntFunction<String> width) {
-		return page(cards, category, contentWidth, width, option -> true);
+		return page(cards, category, contentWidth, width, Filter.of(option -> true));
 	}
 
 	/**
-	 * The rows of one category showing only the options {@code shown} accepts (a search, REQ-UI-08): a
-	 * section appears when at least one of its options does. A feature's switch keeps its whole-card
-	 * click wherever it shows.
+	 * The rows of one category: the options {@code filter} shows (a section appears when one of its options or
+	 * rules does), then each feature's rules (REQ-UI-11): a header per rule, and for an open one the reason it does
+	 * nothing (if it does nothing) and its fields, indented.
 	 */
-	public static Page page(List<Card> cards, Category category, int contentWidth, ToIntFunction<String> width, Predicate<Option> shown) {
+	public static Page page(List<Card> cards, Category category, int contentWidth, ToIntFunction<String> width, Filter filter) {
 		List<Row> rows = new ArrayList<>();
 		int textWidth = Math.max(1, contentWidth - 2 * PAD - SCROLLBAR);
 		Lines description = fitLines(category.description(), textWidth, DESCRIPTION_LINES, width);
@@ -165,17 +210,40 @@ public final class ConfigLayout {
 		rows.add(new Heading(category, description.lines(), description.cut(), y, headingHeight));
 		y += headingHeight;
 		for (Card card : cards) {
-			if (card.category() != category || card.all().stream().noneMatch(shown)) {
+			if (card.category() != category) {
+				continue;
+			}
+			List<RuleGroup> rules = card.rules().stream().filter(filter::shows).toList();
+			if (card.all().stream().noneMatch(filter::shows) && rules.isEmpty()) {
 				continue;
 			}
 			rows.add(new Section(card, y));
 			y += SECTION;
 			for (Option option : card.all()) {
-				if (!shown.test(option)) {
+				if (!filter.shows(option)) {
 					continue;
 				}
 				rows.add(new OptionRow(card, option, option == card.toggle(), y));
 				y += CARD + CARD_GAP;
+			}
+			for (RuleGroup rule : rules) {
+				boolean expanded = filter.expanded(rule);
+				rows.add(new RuleHeader(card, rule, expanded, y));
+				y += RULE_HEADER + RULE_GAP;
+				if (!expanded) {
+					continue;
+				}
+				String problem = rule.problem().get();
+				if (problem != null) {
+					Lines lines = fitLines(problemText(problem), Math.max(1, textWidth - RULE_INDENT), 2, width);
+					int height = lines.lines().size() * 10 + 2;
+					rows.add(new RuleProblem(rule, lines.lines(), y, height));
+					y += height + RULE_GAP;
+				}
+				for (Option field : rule.fields()) {
+					rows.add(new OptionRow(card, field, false, y, RULE_INDENT));
+					y += CARD + CARD_GAP;
+				}
 			}
 			y += SECTION_GAP - CARD_GAP;
 		}
@@ -186,7 +254,17 @@ public final class ConfigLayout {
 	/** A row's rectangle on screen, the page scrolled by {@code scroll}. */
 	public static Rect row(Frame frame, int scroll, Row row) {
 		Rect content = frame.content();
-		return new Rect(content.x() + PAD, content.y() + row.y() - scroll, content.w() - 2 * PAD - SCROLLBAR, row.height());
+		int indent = switch (row) {
+			case OptionRow option -> option.indent();
+			case RuleProblem problem -> RULE_INDENT;
+			default -> 0;
+		};
+		return new Rect(content.x() + PAD + indent, content.y() + row.y() - scroll, content.w() - 2 * PAD - SCROLLBAR - indent, row.height());
+	}
+
+	/** The line under an open rule that does nothing (REQ-GLOW-10). */
+	public static String problemText(String reason) {
+		return "⚠ This rule can't be used: " + reason + ". It is kept, but does nothing until you change it.";
 	}
 
 	public static Rect card(Frame frame, int scroll, OptionRow row) {
@@ -210,6 +288,12 @@ public final class ConfigLayout {
 			right -= SLIDER_LABEL;
 		} else if (option instanceof Choice<?>) {
 			width = 120;
+		} else if (option instanceof TextOption) {
+			width = 140;
+		} else if (option instanceof ActionOption) {
+			width = 90;
+		} else if (option instanceof InfoOption) {
+			width = 160;
 		} else if (option instanceof ColorOption) {
 			width = 24;
 			height = 14;

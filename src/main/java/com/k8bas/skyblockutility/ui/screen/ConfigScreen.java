@@ -7,14 +7,18 @@ import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.settings.OptionCatalog;
 import com.k8bas.skyblockutility.ui.notice.Notice;
 import com.k8bas.skyblockutility.ui.notice.Notices;
+import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
+import com.k8bas.skyblockutility.ui.option.RuleGroup;
 import com.k8bas.skyblockutility.ui.option.SearchIndex;
+import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.Clip;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
@@ -50,8 +54,9 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.Set;
 
 /**
  * The settings screen (T2.4a, REQ-UI-01): one centred panel over the dimmed game, with a header (name,
@@ -68,7 +73,16 @@ public final class ConfigScreen extends WidgetScreen {
 	private final Screen parent;
 	private final List<Card> cards;
 	private final List<Category> categories;
-	private final SearchIndex index;
+	/** Built anew for each query, so rules added, renamed or deleted are found as they are (REQ-UI-09). */
+	private SearchIndex index;
+	/** Rules opened by a click, by id; kept while the screen is open. */
+	private final Set<String> openRules = new HashSet<>();
+	/** Rules the search opened and a click closed again, until the query changes. */
+	private final Set<String> closedInSearch = new HashSet<>();
+	/** The page's widgets as last put into the screen's list. */
+	private List<Widget> pageWidgets = List.of();
+	/** A rule was renamed, added or deleted: the badges and hits are recounted at the next layout. */
+	private boolean viewStale;
 	private final Map<Category, ConfigPage> pages = new EnumMap<>(Category.class);
 	private final Map<Category, Integer> scrolls = new EnumMap<>(Category.class);
 	private final String version;
@@ -124,12 +138,28 @@ public final class ConfigScreen extends WidgetScreen {
 
 	/** Filters by what is typed in the search box; the shown category moves to the first with a hit when it has none. */
 	private void applyQuery(String typed) {
+		index = SearchIndex.of(cards);
 		view = SearchView.of(index, categories, typed, selected);
+		closedInSearch.clear();
+		viewStale = false;
 		if (view.selected() != selected) {
 			// Switched by the search itself: the box keeps the keyboard.
 			show(view.selected(), true);
 		}
 		scrollTo(0);
+	}
+
+	/**
+	 * Recounts the badges and hits for the same query after a rule changed (renamed, added, deleted),
+	 * keeping the scroll and the rules closed by hand; with no hit left in the shown category it moves on.
+	 */
+	private void refreshView() {
+		viewStale = false;
+		index = SearchIndex.of(cards);
+		view = SearchView.of(index, categories, search.model().text(), selected);
+		if (view.selected() != selected) {
+			show(view.selected(), true);
+		}
 	}
 
 	/** The query typed, as the search sees it (trimmed, lower case). */
@@ -151,12 +181,13 @@ public final class ConfigScreen extends WidgetScreen {
 		if (page != null) {
 			// A category shown and left before a frame was drawn keeps the scroll it came with.
 			scrolls.put(selected, pendingScroll >= 0 ? pendingScroll : scrollArea.scroll());
-			widgets().removeAll(page.widgets());
+			widgets().removeAll(pageWidgets);
 		}
 		selected = category;
-		page = pages.computeIfAbsent(category, shown -> new ConfigPage(shown, cards, this::control));
+		page = pages.computeIfAbsent(category, shown -> new ConfigPage(shown, cards, this::control, this::toggleRule));
 		// Over the scroll area, under the sidebar and the search box.
-		widgets().addAll(1, page.widgets());
+		pageWidgets = List.copyOf(page.widgets());
+		widgets().addAll(1, pageWidgets);
 		pendingScroll = scrolls.getOrDefault(category, 0);
 	}
 
@@ -168,6 +199,32 @@ public final class ConfigScreen extends WidgetScreen {
 	public void scrollTo(int y) {
 		pendingScroll = Math.max(0, y);
 	}
+
+	/** Opens or closes a rule card; while searching, a matching rule starts open (REQ-UI-09). */
+	void toggleRule(RuleGroup rule) {
+		UiSound.click();
+		Set<String> set = view.filtering() ? closedInSearch : openRules;
+		if (!set.remove(rule.id())) {
+			set.add(rule.id());
+		}
+	}
+
+	private final ConfigLayout.Filter filter = new ConfigLayout.Filter() {
+		@Override
+		public boolean shows(Option option) {
+			return !view.nothingFound() && view.shows(option);
+		}
+
+		@Override
+		public boolean shows(RuleGroup rule) {
+			return !view.nothingFound() && view.shows(rule);
+		}
+
+		@Override
+		public boolean expanded(RuleGroup rule) {
+			return view.filtering() ? !closedInSearch.contains(rule.id()) : openRules.contains(rule.id());
+		}
+	};
 
 	public Category selected() {
 		return selected;
@@ -209,6 +266,9 @@ public final class ConfigScreen extends WidgetScreen {
 
 	@Override
 	protected void layout() {
+		if (viewStale) {
+			refreshView();
+		}
 		frame = ConfigLayout.frame(width, height);
 		ConfigLayout.Rect sidebar = frame.sidebar();
 		tabs.setBounds(sidebar.x() + 6, sidebar.y() + 8, Math.max(0, sidebar.w() - 12), Math.max(0, sidebar.h() - 12));
@@ -218,15 +278,32 @@ public final class ConfigScreen extends WidgetScreen {
 		ConfigLayout.Rect content = frame.content();
 		scrollArea.setBounds(content.x(), content.y(), content.w(), content.h());
 		int scroll = scrollArea.scroll();
-		Predicate<Option> shown = view.nothingFound() ? option -> false : view::shows;
-		ConfigLayout.Page laidOut = page.layout(frame, scroll, font::width, shown);
+		ConfigLayout.Page laidOut = page.layout(frame, scroll, font::width, filter);
 		scrollArea.setContentHeight(laidOut.height());
 		if (pendingScroll >= 0) {
 			scrollArea.setScroll(pendingScroll);
 			pendingScroll = -1;
 		}
 		if (scrollArea.scroll() != scroll) {
-			page.layout(frame, scrollArea.scroll(), font::width, shown);
+			page.layout(frame, scrollArea.scroll(), font::width, filter);
+		}
+		syncPageWidgets();
+	}
+
+	/**
+	 * Puts the page's widgets, which change as rules open, close, come and go, into the screen's list
+	 * (over the scroll area, under the sidebar and the search box). A field that left the page gives up
+	 * the keyboard.
+	 */
+	private void syncPageWidgets() {
+		if (pageWidgets.equals(page.widgets())) {
+			return;
+		}
+		widgets().removeAll(pageWidgets);
+		pageWidgets = List.copyOf(page.widgets());
+		widgets().addAll(1, pageWidgets);
+		if (keyboardFocus() != null && !widgets().contains(keyboardFocus())) {
+			focus(null);
 		}
 	}
 
@@ -299,6 +376,13 @@ public final class ConfigScreen extends WidgetScreen {
 					if (heading.cut() && rect.contains(mouseX, mouseY) && content.contains(mouseX, mouseY)) {
 						showTooltip(heading.category().description());
 					}
+				} else if (row instanceof ConfigLayout.RuleProblem problem) {
+					// Why the rule does nothing, in the fixed error colour (REQ-GLOW-10, REQ-UI-12).
+					int lineY = rect.y() + 1;
+					for (String line : problem.lines()) {
+						UiText.draw(graphics, font, line, rect.x(), lineY, Theme.ERROR);
+						lineY += 10;
+					}
 				} else if (row instanceof ConfigLayout.Section section) {
 					String title = Ellipsis.fit(section.card().title(), rect.w(), font::width);
 					int textY = rect.y() + 8;
@@ -347,7 +431,33 @@ public final class ConfigScreen extends WidgetScreen {
 			case Keybind keybind -> keybindButton(keybind);
 			// Save in the picker is a discrete commit (REQ-UI-15).
 			case ColorOption colour -> new ColorSwatch(colour.binding(), colour.storesAlpha(), colour.text().title(), this, session::commit, UiSound::click);
+			case TextOption text -> textField(text);
+			// An action (a rule's Delete) is a discrete commit too.
+			case ActionOption action -> new Button(action.buttonLabel(), action.destructive() ? Button.Style.DESTRUCTIVE : Button.Style.NORMAL,
+					() -> {
+						action.action().run();
+						viewStale = true;
+						session.commit();
+					}, UiSound::click);
+			case InfoOption info -> new InfoText(info.value());
 		};
+	}
+
+	/**
+	 * Typing applies at once; the field shows the error colour while the option says so (REQ-UI-12). A
+	 * stored text longer than the field's limit (a hand edit) is shown whole and kept: the limit grows to it.
+	 */
+	private TextField textField(TextOption option) {
+		String stored = option.binding().get();
+		TextEditModel model = new TextEditModel(Math.max(option.maxLength(), stored.length()), GameClipboard.INSTANCE);
+		model.setText(stored);
+		TextField field = TextField.of(model, option.placeholder(), value -> {
+			option.binding().set(value);
+			// A rule's label or pattern is searchable: recount the badges and hits.
+			viewStale = true;
+		});
+		field.markInvalidWhen(option.invalid());
+		return field;
 	}
 
 	private <E> Dropdown<E> dropdown(Choice<E> choice) {

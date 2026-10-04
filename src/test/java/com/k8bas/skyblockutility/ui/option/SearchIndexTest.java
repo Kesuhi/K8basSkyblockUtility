@@ -95,10 +95,13 @@ class SearchIndexTest {
 		assertEquals("a", SearchIndex.normalize("a" + " ".repeat(40) + "b"));
 	}
 
-	/** T2.5a adds rule labels and patterns; the index takes extra entries without new option types. */
+	/** REQ-UI-09: a card's rules are found by their label and pattern, each by its own id. */
 	@Test
-	void extraEntriesCanJoinTheIndex() {
-		SearchIndex index = SearchIndex.of(cards()).with(List.of(new SearchIndex.Entry(Category.WAYPOINTS, "npc_search", "rule:trinity", List.of("Trinity"))));
+	void rulesJoinTheIndex() {
+		RuleGroup trinity = new RuleGroup("rule:trinity", () -> "Trinity", () -> 0, () -> null, () -> List.of("Trinity", "Trinity"), List.of());
+		List<Card> cards = new java.util.ArrayList<>(cards());
+		cards.add(new Card("npc_search", Category.WAYPOINTS, "NPC Search", null, List.of(), () -> List.of(trinity)));
+		SearchIndex index = SearchIndex.of(cards);
 		SearchIndex.Result trini = index.search("trini");
 		assertEquals(List.of("rule:trinity"), ids(trini));
 		assertEquals(1, trini.count(Category.WAYPOINTS));

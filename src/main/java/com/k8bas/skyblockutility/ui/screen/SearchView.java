@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.screen;
 
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Option;
+import com.k8bas.skyblockutility.ui.option.RuleGroup;
 import com.k8bas.skyblockutility.ui.option.SearchIndex;
 
 import java.util.HashSet;
@@ -41,6 +42,11 @@ record SearchView(SearchIndex.Result result, String typed, List<Category> catego
 
 	boolean shows(Option option) {
 		return !filtering() || hits.contains(option.id());
+	}
+
+	/** A rule shows when its label or pattern matches (REQ-UI-09), or when there is no query. */
+	boolean shows(RuleGroup rule) {
+		return !filtering() || hits.contains(rule.id());
 	}
 
 	/** The content's text when nothing matches; the query as typed, trimmed. */

@@ -64,6 +64,9 @@ public final class NpcSearchModule implements Module {
 	 *  config.rules, so Cancel/Escape actually discards them instead of them having already
 	 *  taken effect. */
 	private List<NpcRule> workingRules;
+	/** The rule cards of the new settings screen, for the config they were made from. */
+	private NpcRuleCards ruleCards;
+	private NpcSearchConfig ruleCardsConfig;
 
 	@Override
 	public String id() {
@@ -179,7 +182,24 @@ public final class NpcSearchModule implements Module {
 
 	@Override
 	public List<Card> cards() {
-		return NpcSearchOptions.cards(config, this::setEnabled, this::rebuildDerived);
+		if (ruleCards == null || ruleCardsConfig != config) {
+			ruleCards = new NpcRuleCards(config, rule -> HighlightManager.inertReason(toHighlightRule(rule)), NpcSearchModule::positionText,
+					this::rulesChanged);
+			ruleCardsConfig = config;
+		}
+		return NpcSearchOptions.cards(config, this::setEnabled, this::rebuildDerived, ruleCards::groups);
+	}
+
+	/** A rule edited, added or deleted in the settings screen: stored in the section and applied at once (REQ-UI-15). */
+	private void rulesChanged() {
+		ConfigManager.putModuleSection(ID, config);
+		rebuildDerived();
+	}
+
+	/** A fixed NPC's waypoint position, as its card shows it (the NPC data's, or the rule's own). */
+	static String positionText(NpcRule rule) {
+		Vec3 position = NpcWaypointMarkers.position(rule, NpcDatabase::byId);
+		return (int) Math.floor(position.x) + ", " + (int) Math.floor(position.y) + ", " + (int) Math.floor(position.z);
 	}
 
 	@Override
