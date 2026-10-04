@@ -34,6 +34,7 @@ import com.k8bas.skyblockutility.ui.widget.Dropdown;
 import com.k8bas.skyblockutility.ui.widget.GameClipboard;
 import com.k8bas.skyblockutility.ui.widget.KeyMappingTarget;
 import com.k8bas.skyblockutility.ui.widget.KeybindButton;
+import com.k8bas.skyblockutility.ui.widget.SavesOnClose;
 import com.k8bas.skyblockutility.ui.widget.ScrollArea;
 import com.k8bas.skyblockutility.ui.widget.Slider;
 import com.k8bas.skyblockutility.ui.widget.SliderModel;
@@ -68,7 +69,7 @@ import java.util.Set;
  * written on discrete commits and once when the screen closes, by any route (REQ-UI-15). Opened by
  * `/ksu`, the "Open settings" key and Mod Menu; closing returns to the screen it was opened from.
  */
-public final class ConfigScreen extends WidgetScreen {
+public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	public static final String NAME = "K8bas Skyblock Utility";
 
 	private final Screen parent;
@@ -319,12 +320,8 @@ public final class ConfigScreen extends WidgetScreen {
 
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		// The game stays visible around the panel, only dimmed; with no world the title panorama shows.
-		if (minecraft.level == null) {
-			extractPanorama(graphics, partialTick);
-		}
-		graphics.fill(0, 0, width, height, Theme.BACKDROP);
-		minecraft.gui.hud.extractDeferredSubtitles();
+		// The game stays visible around the panel, only dimmed.
+		extractDimmedGame(graphics, partialTick);
 	}
 
 	@Override
@@ -536,6 +533,7 @@ public final class ConfigScreen extends WidgetScreen {
 	 * Saves now, for a game that is shutting down with the screen open: the game flushes the config
 	 * before it removes the screen (REQ-CFG-10). The removal that follows then writes nothing more.
 	 */
+	@Override
 	public void saveBeforeShutdown() {
 		session.close();
 	}

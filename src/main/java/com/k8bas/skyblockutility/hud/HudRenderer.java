@@ -23,7 +23,7 @@ import java.util.function.BooleanSupplier;
  */
 public final class HudRenderer {
 	private static final Identifier ID = Identifier.fromNamespaceAndPath(K8basSkyblockUtilityClient.MOD_ID, "hud_elements");
-	/** Whether the HUD editor is open (it draws the elements itself); set by the editor. */
+	/** Whether the HUD editor is open (it draws the elements itself); installed at startup by the client initializer. */
 	private static volatile BooleanSupplier editorOpen = () -> false;
 	/** The rectangles drawn since the last {@link #forgetDrawn}, by element id, in GUI pixels (for tests; with F1 the HUD pass does not run at all). */
 	private static final Map<String, HudRect> LAST_DRAWN = new HashMap<>();

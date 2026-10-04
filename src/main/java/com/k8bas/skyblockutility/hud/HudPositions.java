@@ -70,6 +70,31 @@ public final class HudPositions {
 		return position;
 	}
 
+	/** Element {@code id}'s entry as written, or null. */
+	public JsonElement raw(String id) {
+		HudConfig config = read.get();
+		return config == null || config.positions == null ? null : config.positions.get(id);
+	}
+
+	/** Puts back an entry as it was written ({@link #raw}), or removes it when it was null. */
+	public void restore(String id, JsonElement raw) {
+		if (raw != null) {
+			HudConfig config = write.get();
+			if (config.positions == null) {
+				config.positions = new LinkedHashMap<>();
+			}
+			config.positions.put(id, raw);
+		} else if (read.get() != null && read.get().positions != null) {
+			read.get().positions.remove(id);
+		}
+	}
+
+	/** Whether element {@code id} has an entry in the config, usable or not. */
+	public boolean has(String id) {
+		HudConfig config = read.get();
+		return config != null && config.positions != null && config.positions.containsKey(id);
+	}
+
 	/** Stores element {@code id}'s position in the config; the caller saves. */
 	public void set(String id, HudPosition position) {
 		JsonObject entry = new JsonObject();

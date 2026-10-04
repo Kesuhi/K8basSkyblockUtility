@@ -31,6 +31,12 @@ public record HudPosition(HudAnchor anchor, int x, int y, double scale) {
 		return (int) Math.ceil(pixel - 0.5 - base);
 	}
 
+	/** The same anchor and scale, with the offset that draws it with its top-left on pixel ({@code left}, {@code top}), rounded. */
+	public HudPosition movedTo(double left, double top, double screenW, double screenH, double w, double h) {
+		return new HudPosition(anchor, offsetFor(Math.round(left), anchor.fx() * (screenW - w)), offsetFor(Math.round(top), anchor.fy() * (screenH - h)),
+				scale);
+	}
+
 	public HudPosition withScale(double newScale) {
 		return new HudPosition(anchor, x, y, newScale);
 	}

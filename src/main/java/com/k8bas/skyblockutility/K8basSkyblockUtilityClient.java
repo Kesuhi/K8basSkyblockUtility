@@ -14,6 +14,9 @@ import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.hud.HudRenderer;
 import com.k8bas.skyblockutility.hud.ShippedHud;
+import com.k8bas.skyblockutility.ui.screen.HudEditorScreen;
+import com.k8bas.skyblockutility.ui.widget.SavesOnClose;
+import net.minecraft.client.Minecraft;
 import com.k8bas.skyblockutility.ui.notice.NoticeHooks;
 import com.k8bas.skyblockutility.ui.screen.ConfigScreen;
 import com.k8bas.skyblockutility.update.Updates;
@@ -41,9 +44,9 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		// Queued like the load notices, so a failure before joining a world is still shown.
 		ConfigManager.setSaveFailureNotice(ConfigManager::queueNotice);
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
-			// The game removes an open screen only after this event: the settings screen saves first.
-			if (client.gui.screen() instanceof ConfigScreen settings) {
-				settings.saveBeforeShutdown();
+			// The game removes an open screen only after this event: a screen that saves on close saves first.
+			if (client.gui.screen() instanceof SavesOnClose screen) {
+				screen.saveBeforeShutdown();
 			}
 			ConfigManager.flush();
 		});
@@ -72,6 +75,7 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		NoticeHooks.register();
 		ShippedHud.register();
 		HudRenderer.register();
+		HudRenderer.setEditorOpen(() -> Minecraft.getInstance().gui.screen() instanceof HudEditorScreen);
 
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
 	}

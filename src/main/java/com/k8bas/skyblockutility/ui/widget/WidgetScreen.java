@@ -200,6 +200,15 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 		super.removed();
 	}
 
+	/** The game behind the screen, dimmed; with no world, the title panorama. Subtitles stay. */
+	protected void extractDimmedGame(GuiGraphicsExtractor graphics, float partialTick) {
+		if (minecraft.level == null) {
+			extractPanorama(graphics, partialTick);
+		}
+		graphics.fill(0, 0, width, height, Theme.BACKDROP);
+		minecraft.gui.hud.extractDeferredSubtitles();
+	}
+
 	/** Sets every widget's bounds for this frame. */
 	protected abstract void layout();
 
@@ -485,7 +494,7 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 		return ctrl && !alt;
 	}
 
-	private static boolean shift(KeyEvent event) {
+	protected static boolean shift(KeyEvent event) {
 		return (event.modifiers() & MOD_SHIFT) != 0 || Minecraft.getInstance().hasShiftDown();
 	}
 }

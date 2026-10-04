@@ -26,6 +26,14 @@ public final class Shapes {
 		}
 	}
 
+	/** A 1 px square outline just inside (x, y, w, h). */
+	public static void outline(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int argb) {
+		graphics.fill(x, y, x + w, y + 1, argb);
+		graphics.fill(x, y + h - 1, x + w, y + h, argb);
+		graphics.fill(x, y + 1, x + 1, y + h - 1, argb);
+		graphics.fill(x + w - 1, y + 1, x + w, y + h - 1, argb);
+	}
+
 	public static void roundedRect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
 		int scale = guiScale();
 		drawSpans(graphics, x, y, scale, Corners.fill(w * scale, h * scale, radius * scale), argb);

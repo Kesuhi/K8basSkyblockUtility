@@ -19,6 +19,7 @@
 			"com.k8bas.skyblockutility.ui.screen.DatabasePickerGameTest",
 			"com.k8bas.skyblockutility.ui.screen.OpenCloseGameTest",
 			"com.k8bas.skyblockutility.hud.HudGameTest",
+			"com.k8bas.skyblockutility.ui.screen.HudEditorGameTest",
 			"com.k8bas.skyblockutility.highlight.HighlightGameTest",
 			"com.k8bas.skyblockutility.highlight.GlowGameTest",
 			"com.k8bas.skyblockutility.module.npcsearch.FoundTitleGameTest",
