@@ -73,7 +73,8 @@ public final class HudRenderer {
 	 */
 	public static HudRect drawAt(GuiGraphicsExtractor graphics, Font font, HudContent content, HudPosition position) {
 		double scale = position.scale();
-		HudRect placed = position.place(graphics.guiWidth(), graphics.guiHeight(), content.width(font) * scale, content.height(font) * scale);
+		TextMeasure text = TextMeasure.of(font);
+		HudRect placed = position.place(graphics.guiWidth(), graphics.guiHeight(), content.width(text) * scale, content.height(text) * scale);
 		HudRect rect = HudRect.onPixels(placed, graphics.guiWidth(), graphics.guiHeight());
 		Matrix3x2fStack pose = graphics.pose();
 		pose.pushMatrix();

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * T2.7, the HUD framework in a singleplayer world, with a test element that exists only in the gametest
@@ -22,7 +23,9 @@ import java.nio.file.Path;
  *       content (EC-HUD-09) and the inventory hide it; chat does not (R12);</li>
  *   <li>AC-HUD-03 [C] + [A]: placed at the bottom right at GUI scale 2 on 1920×1080, it stays fully visible
  *       at the bottom right at scales 3 and 4 and on 854×480; one that would be off the small window is
- *       drawn inside it; back at scale 2 and 1920×1080 the stored entries are as before.</li>
+ *       drawn inside it; back at scale 2 and 1920×1080 the stored entries are as before;</li>
+ *   <li>AC-HUD-11 [C] (T2.7b): a 9-line text element with lines 2 and 5 off draws 7 lines, its box the
+ *       text's bounds plus 2 px.</li>
  * </ul>
  */
 public class HudGameTest implements FabricClientGameTest {
@@ -44,6 +47,7 @@ public class HudGameTest implements FabricClientGameTest {
 			context.waitTicks(3);
 			shownAndHidden(context, element);
 			survivesScaleAndWindow(context, element);
+			multiLineText(context, element);
 		} finally {
 			context.runOnClient(client -> {
 				HudRegistry.unregister(TestHudElement.ID);
@@ -133,6 +137,72 @@ public class HudGameTest implements FabricClientGameTest {
 		check(far != null && far.x() == 400 && far.y() == 300, "back on the large window it is where it was stored: " + far);
 		LOGGER.info("hud: bottom right at GUI scales 2-4 on 1920×1080 and at 2 on 854×480; the far element clamped inside and back at (400, 300); "
 				+ "entries unchanged");
+	}
+
+	/**
+	 * AC-HUD-11 [C]: the text drawn over a solid background the size of its box, read back from the screenshot:
+	 * the outermost text pixels (shadow included) are exactly 2 px inside every edge of the box.
+	 */
+	private static void multiLineText(ClientGameTestContext context, TestHudElement element) {
+		// The last shown line has a descender (g), so its shadow reaches the bottom of the text.
+		List<String> lines = List.of("§6Scatha odds", "§7line two (off)", "Worm: 1 in 12", "Scatha: 1 in 40", "§7line five (off)", "Pet: 1 in 5000",
+				"Session: 12 worms", "Rate: 300/h", "§aLast: 2 min ago");
+		HudText text = HudText.of(lines, index -> index != 1 && index != 4);
+		int background = 0xFF1A2B6C;
+		element.content = new Backed(text, background);
+		context.runOnClient(client -> HudPositions.LIVE.set(TestHudElement.ID, new HudPosition(HudAnchor.TOP_LEFT, 10, 10, 1)));
+		HudRect box = drawn(context, TestHudElement.ID);
+		check(text.lines().size() == 7, "7 of the 9 lines show: " + text.lines());
+		int[] size = context.computeOnClient(client -> new int[] {text.width(TextMeasure.of(client.font)), text.height(TextMeasure.of(client.font))});
+		check(box != null && box.w() == size[0] && box.h() == size[1], "the drawn box is the text's: " + box);
+		Path shot = context.takeScreenshot("t2.7b-hud-multiline");
+		int[] gui = context.computeOnClient(client -> new int[] {client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()});
+		try {
+			var image = javax.imageio.ImageIO.read(shot.toFile());
+			double px = (double) image.getWidth() / gui[0];
+			int left = Integer.MAX_VALUE;
+			int top = Integer.MAX_VALUE;
+			int right = -1;
+			int bottom = -1;
+			for (int y = (int) (box.y() * px); y < (int) ((box.y() + box.h()) * px); y++) {
+				for (int x = (int) (box.x() * px); x < (int) ((box.x() + box.w()) * px); x++) {
+					if ((image.getRGB(x, y) & 0xFFFFFF) != (background & 0xFFFFFF)) {
+						left = Math.min(left, x);
+						top = Math.min(top, y);
+						right = Math.max(right, x);
+						bottom = Math.max(bottom, y);
+					}
+				}
+			}
+			double[] gaps = {(left - box.x() * px) / px, (top - box.y() * px) / px, ((box.x() + box.w()) * px - 1 - right) / px,
+					((box.y() + box.h()) * px - 1 - bottom) / px};
+			for (double gap : gaps) {
+				check(gap >= 2 && gap < 3, "the text is 2 px inside every edge (left, top, right, bottom): " + java.util.Arrays.toString(gaps));
+			}
+			LOGGER.info("hud: a 9-line element with lines 2 and 5 off drew 7 lines in a {}×{} box, 2 px inside each edge {}", size[0], size[1],
+					java.util.Arrays.toString(gaps));
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
+	}
+
+	/** Content drawn over a solid background the size of its box. */
+	private record Backed(HudContent inner, int argb) implements HudContent {
+		@Override
+		public int width(TextMeasure text) {
+			return inner.width(text);
+		}
+
+		@Override
+		public int height(TextMeasure text) {
+			return inner.height(text);
+		}
+
+		@Override
+		public void draw(net.minecraft.client.gui.GuiGraphicsExtractor graphics, net.minecraft.client.gui.Font font) {
+			graphics.fill(0, 0, width(TextMeasure.of(font)), height(TextMeasure.of(font)), argb);
+			inner.draw(graphics, font);
+		}
 	}
 
 	/** Another element, for the clamp. */

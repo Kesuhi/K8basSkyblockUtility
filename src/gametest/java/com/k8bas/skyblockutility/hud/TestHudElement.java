@@ -10,12 +10,12 @@ final class TestHudElement implements HudElement {
 	/** A filled box of {@code width}×{@code height} at scale 1. */
 	record Box(int width, int height, int argb) implements HudContent {
 		@Override
-		public int width(Font font) {
+		public int width(TextMeasure text) {
 			return width;
 		}
 
 		@Override
-		public int height(Font font) {
+		public int height(TextMeasure text) {
 			return height;
 		}
 
