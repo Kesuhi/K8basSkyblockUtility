@@ -38,7 +38,7 @@ public final class SettingsCommand {
 							if (word != null) {
 								boolean exists = context.getRootNode().getChild(name).getChild(word) != null;
 								context.getSource().sendError(Component.literal(exists ? "Subcommands are lower case: /" + name + " " + word
-										: "Unknown /" + name + " subcommand: " + text.strip().split("\s+", 2)[0]));
+										: "Unknown /" + name + " subcommand: " + CommandWords.firstWord(text)));
 								return 0;
 							}
 							return open(context.getSource().getClient(), text);

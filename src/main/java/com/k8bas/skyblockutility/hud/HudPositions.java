@@ -6,6 +6,7 @@ import com.google.gson.JsonPrimitive;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.config.HudConfig;
+import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,14 +27,17 @@ import java.util.function.Supplier;
  */
 public final class HudPositions {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/hud");
-	/** The live positions, in the config file's general section. */
+	/**
+	 * The live positions, in the config file's general section. A malformed entry is logged with the next frame's
+	 * tasks, not from the draw path that read it (REQ-HUD-11).
+	 */
 	public static final HudPositions LIVE = new HudPositions(() -> ConfigManager.general().hud, () -> {
 		GeneralConfig general = ConfigManager.general();
 		if (general.hud == null) {
 			general.hud = new HudConfig();
 		}
 		return general.hud;
-	}, message -> LOGGER.warn("{}", message));
+	}, message -> Minecraft.getInstance().schedule(() -> LOGGER.warn("{}", message)));
 
 	private record Parsed(JsonElement raw, HudPosition fallback, HudPosition position) {
 	}

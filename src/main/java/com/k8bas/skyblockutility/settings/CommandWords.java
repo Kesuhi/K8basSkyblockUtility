@@ -17,7 +17,12 @@ public final class CommandWords {
 
 	/** The reserved word {@code text} starts with, or null when the text is a search term. */
 	public static String reserved(String text) {
-		String first = text.strip().split("\\s+", 2)[0].toLowerCase(Locale.ROOT);
+		String first = firstWord(text).toLowerCase(Locale.ROOT);
 		return RESERVED.contains(first) ? first : null;
+	}
+
+	/** The first word as typed, split off at any whitespace; "" when there is none. */
+	public static String firstWord(String text) {
+		return text.strip().split("\\s+", 2)[0];
 	}
 }

@@ -33,6 +33,13 @@ class CommandWordsTest {
 	}
 
 	@Test
+	void theFirstWordIsSplitOffAtAnyWhitespace() {
+		assertEquals("HUD", CommandWords.firstWord("  HUD	now"));
+		assertEquals("glow", CommandWords.firstWord("glow"));
+		assertEquals("", CommandWords.firstWord("   "));
+	}
+
+	@Test
 	void theListIsTheOneCentralPlace() {
 		assertEquals(List.of("hud", "debug", "update", "sbxp"), CommandWords.RESERVED);
 	}
