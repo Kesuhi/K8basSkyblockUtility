@@ -9,6 +9,7 @@ import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterOptions;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchOptions;
 import com.k8bas.skyblockutility.ui.option.Card;
+import com.k8bas.skyblockutility.ui.screen.HudEditorScreen;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -31,7 +32,7 @@ public final class OptionCatalog {
 
 	/** The catalog of the running game: General plus each registered module's cards. */
 	public static List<Card> live() {
-		List<Card> cards = new ArrayList<>(GeneralOptions.cards(ConfigManager.general()));
+		List<Card> cards = new ArrayList<>(GeneralOptions.cards(ConfigManager.general(), () -> HudEditorScreen.openEditor(null)));
 		for (Module module : ModuleManager.modules()) {
 			cards.addAll(module.cards());
 		}

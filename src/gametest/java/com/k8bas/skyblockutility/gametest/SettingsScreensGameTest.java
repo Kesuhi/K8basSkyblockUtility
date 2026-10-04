@@ -8,6 +8,7 @@ import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.ui.screen.ConfigScreen;
 import com.k8bas.skyblockutility.ui.screen.ConfigScreensForTests;
+import com.k8bas.skyblockutility.ui.screen.HudEditorScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.tree.CommandNode;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
@@ -90,11 +91,22 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 		closeWithEscape(context, null);
 	}
 
-	/** A reserved word runs its subcommand; without one yet (`hud` comes with T2.8b) it opens no search. */
+	/** A reserved word runs its subcommand (`/ksu hud`, AC-UI-09); one without a subcommand yet (`sbxp`, T6.8) opens no search. */
 	private static void reservedWordIsNoSearch(ClientGameTestContext context) {
-		context.runOnClient(client -> client.player.connection.sendCommand("ksu hud"));
+		// Typed in chat and sent with Enter, so the closing chat would close an editor opened at once (EC-UI-03).
+		context.getInput().pressKey(options -> options.keyChat);
+		context.waitFor(client -> client.gui.screen() instanceof ChatScreen);
+		context.waitTicks(2);
+		context.getInput().typeChars("/ksu hud");
+		context.waitTicks(2);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ENTER);
+		waitForTitle(context, HudEditorScreen.TITLE);
+		context.waitTicks(10);
+		check(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen, "/ksu hud from chat opens the HUD editor, and it stays open");
+		closeWithEscape(context, null);
+		context.runOnClient(client -> client.player.connection.sendCommand("ksu sbxp"));
 		context.waitTicks(5);
-		check(context.computeOnClient(client -> client.gui.screen()) == null, "/ksu hud is not a search for \"hud\"");
+		check(context.computeOnClient(client -> client.gui.screen()) == null, "/ksu sbxp is not a search for \"sbxp\"");
 		context.runOnClient(client -> client.player.connection.sendCommand("ksu hudson"));
 		waitForTitle(context, SETTINGS_TITLE);
 		check("hudson".equals(context.computeOnClient(client -> ConfigScreensForTests.query(client.gui.screen()))), "a word that only begins like one is");

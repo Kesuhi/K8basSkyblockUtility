@@ -209,6 +209,18 @@ public abstract class WidgetScreen extends Screen implements OverlayHost {
 		minecraft.gui.hud.extractDeferredSubtitles();
 	}
 
+	/**
+	 * A screen shown while Esc is still held (the one before closed on its press, e.g. the HUD editor returning
+	 * here) takes that Esc's repeats until its release, so one long press does not close this one too.
+	 */
+	@Override
+	public void added() {
+		super.added();
+		if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), KEY_ESCAPE)) {
+			keysTaken.add(KEY_ESCAPE);
+		}
+	}
+
 	/** Sets every widget's bounds for this frame. */
 	protected abstract void layout();
 

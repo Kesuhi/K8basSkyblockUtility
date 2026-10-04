@@ -66,6 +66,26 @@ class OptionCatalogTest {
 		return catalog().stream().flatMap(card -> card.all().stream()).toList();
 	}
 
+	/** The options that store a value; a button (an action such as "Edit HUD layout", a database picker) stores nothing. */
+	private static List<Option> storedOptions() {
+		return options().stream().filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption)).toList();
+	}
+
+	/** REQ-UI-04, REQ-HUD-06 (T2.8b): General › HUD, between Interface and Keybinds, has "Edit HUD layout", which runs the action given. */
+	@Test
+	void generalHasTheHudCardWithEditHudLayout() {
+		int[] opened = {0};
+		List<Card> general = GeneralOptions.cards(new GeneralConfig(), () -> opened[0]++);
+		assertEquals(List.of("interface", "hud", "keybinds", "updates"), general.stream().map(Card::id).toList());
+		Card hud = general.get(1);
+		assertEquals("HUD", hud.title());
+		ActionOption edit = (ActionOption) hud.all().get(0);
+		assertEquals("Edit HUD layout", edit.buttonLabel());
+		edit.action().run();
+		assertEquals(1, opened[0]);
+		assertTrue(SearchIndex.of(general).search("hud layout").count(Category.GENERAL) > 0, "found by searching");
+	}
+
 	/** AC-UI-04 [A] part, REQ-XC-TOGGLE-02: every declared default equals the defaults table (SPEC §12.H) and the fresh config. */
 	@Test
 	void defaultsMatchTheDefaultsTable() {
@@ -89,7 +109,7 @@ class OptionCatalogTest {
 		expected.put("options.txt:key.k8bas_skyblock_utility.npc_search_toggle", UNBOUND);
 
 		Map<String, Object> declared = new LinkedHashMap<>();
-		for (Option option : options()) {
+		for (Option option : storedOptions()) {
 			declared.put(option.storageKey(), option.defaultValue());
 			Object current = switch (option) {
 				case Toggle toggle -> toggle.binding().get();
@@ -193,7 +213,8 @@ class OptionCatalogTest {
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		for (Card card : cards) {
 			for (Option option : card.all()) {
-				if (option instanceof Keybind) {
+				// Keys live in options.txt; a button stores nothing.
+				if (option instanceof Keybind || option instanceof ActionOption) {
 					continue;
 				}
 				Map<String, String> before = leaves(gson, general, mob, npc);
@@ -342,7 +363,7 @@ class OptionCatalogTest {
 				"general", gson.toJsonTree(new GeneralConfig()).getAsJsonObject(),
 				"modules.mob_highlighter", gson.toJsonTree(new MobHighlighterConfig()).getAsJsonObject(),
 				"modules.npc_search", gson.toJsonTree(new NpcSearchConfig()).getAsJsonObject());
-		for (Option option : options()) {
+		for (Option option : storedOptions()) {
 			String key = option.storageKey();
 			if (key.startsWith("options.txt:")) {
 				continue;

@@ -16,14 +16,22 @@ import com.k8bas.skyblockutility.ui.option.Toggle;
 import java.util.List;
 
 /**
- * The General category's declarations (T2.1, T2.4d): Interface (accent, notices), Keybinds and Updates.
- * HUD follows in T2.8b. The key names are compile-time constants, so this loads no Minecraft class.
+ * The General category's declarations (T2.1, T2.4d, T2.8b): Interface (accent, notices), HUD, Keybinds and
+ * Updates. The key names are compile-time constants and the HUD editor is opened through the action given, so
+ * this loads no Minecraft class.
  */
 public final class GeneralOptions {
 	private GeneralOptions() {
 	}
 
+	/** With an "Edit HUD layout" that does nothing (for tests). */
 	public static List<Card> cards(GeneralConfig config) {
+		return cards(config, () -> {
+		});
+	}
+
+	/** @param editHudLayout opens the HUD editor */
+	public static List<Card> cards(GeneralConfig config, Runnable editHudLayout) {
 		Toggle updateCheck = Toggle.of("updates.check", "general.autoUpdateCheckEnabled",
 				new OptionText("Check for updates (notify)", "Tells you in chat when a newer version is out. Nothing is installed.",
 						"Asks GitHub (api.github.com) for new releases at most 4 times a day; after a successful check, not again for 6 "
@@ -57,6 +65,7 @@ public final class GeneralOptions {
 						GeneralConfig.DEFAULT_NOTICE_SECONDS, 1, 15, 1, "s", "", Binding.of(config::noticeSeconds, value -> config.noticeSeconds = value)));
 		return List.of(
 				new Card("interface", Category.GENERAL, "Interface", null, look),
+				HudOptions.layoutCard(editHudLayout),
 				new Card("keybinds", Category.GENERAL, "Keybinds", null, keys),
 				new Card("updates", Category.GENERAL, "Updates", updateCheck, List.of()));
 	}

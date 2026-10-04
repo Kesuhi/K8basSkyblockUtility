@@ -68,6 +68,7 @@ public class HudEditorGameTest implements FabricClientGameTest {
 				cancelAndResets(context);
 				externalCloseSaves(context);
 				untouchedEntriesStay(context);
+				entryPoints(context, singleplayer);
 			}
 			fromTheTitleScreen(context);
 		} finally {
@@ -259,6 +260,70 @@ public class HudEditorGameTest implements FabricClientGameTest {
 		check(context.computeOnClient(client -> ConfigManager.saveRequests()) == saves + 1, "and the removal writes nothing more");
 		context.runOnClient(client -> HudPositions.LIVE.restore(B, null));
 		LOGGER.info("hud editor: a malformed entry survived Cancel and Save, Cancel undid a reset, quitting saved once");
+	}
+
+	/**
+	 * AC-HUD-06 [C]: `/ksu hud` opens the editor; "Edit HUD layout" in General opens it; "Edit position" on a HUD
+	 * feature's card (a gametest card for element A) opens it with A selected and its name in the status line;
+	 * closing returns to the settings screen.
+	 */
+	private static void entryPoints(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
+		context.runOnClient(client -> client.player.connection.sendCommand("ksu hud"));
+		context.waitForScreen(HudEditorScreen.class);
+		check(context.computeOnClient(client -> editor(client).model().selected()) == null, "/ksu hud opens it with nothing selected");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> client.gui.screen()) == null, "and Esc returns to the game");
+
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		ConfigScreen settings = context.computeOnClient(client -> (ConfigScreen) client.gui.screen());
+		pressAction(context, com.k8bas.skyblockutility.ui.option.Category.GENERAL, "hud.edit_layout");
+		check(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen, "\"Edit HUD layout\" opens it");
+		context.takeScreenshot("t2.8b-editor-from-general");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> client.gui.screen()) == settings, "closing returns to the settings screen");
+		context.setScreen(() -> null);
+
+		com.k8bas.skyblockutility.ui.option.Card card = new com.k8bas.skyblockutility.ui.option.Card("gametest_hud_feature",
+				com.k8bas.skyblockutility.ui.option.Category.GENERAL, "Gametest HUD feature", null,
+				List.of(com.k8bas.skyblockutility.settings.HudOptions.editPosition("gametest_hud_feature", A)));
+		context.setScreen(() -> new ConfigScreen(null, List.of(card)));
+		context.waitForScreen(ConfigScreen.class);
+		ConfigScreen withCard = context.computeOnClient(client -> (ConfigScreen) client.gui.screen());
+		pressAction(context, com.k8bas.skyblockutility.ui.option.Category.GENERAL, "gametest_hud_feature.edit_position");
+		check(A.equals(context.computeOnClient(client -> editor(client).model().selected())), "\"Edit position\" opens it with that element selected");
+		String status = context.computeOnClient(client -> editor(client).status());
+		check(status.startsWith("Box A"), "and its name in the status line: " + status);
+		context.takeScreenshot("t2.8b-editor-edit-position");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> client.gui.screen()) == withCard, "closing returns to the settings screen");
+		context.setScreen(() -> null);
+		LOGGER.info("hud editor: opened by /ksu hud, \"Edit HUD layout\" and \"Edit position\" (A selected); closing returned to the opener");
+	}
+
+	/** Clicks an action button of the settings screen, scrolled into view first. */
+	private static void pressAction(ClientGameTestContext context, com.k8bas.skyblockutility.ui.option.Category category, String optionId) {
+		context.runOnClient(client -> ((ConfigScreen) client.gui.screen()).select(category));
+		context.waitTicks(2);
+		context.runOnClient(client -> {
+			ConfigScreen screen = (ConfigScreen) client.gui.screen();
+			ConfigLayout.OptionRow row = optionRow(screen, optionId);
+			screen.scrollArea().ensureVisible(row.y(), row.y() + row.height());
+		});
+		context.waitTicks(2);
+		HudRect button = context.computeOnClient(client -> {
+			ConfigScreen screen = (ConfigScreen) client.gui.screen();
+			return bounds(screen.page().control(optionRow(screen, optionId).option()));
+		});
+		click(context, centre(button));
+	}
+
+	private static ConfigLayout.OptionRow optionRow(ConfigScreen screen, String optionId) {
+		return screen.page().page().rows().stream().filter(r -> r instanceof ConfigLayout.OptionRow o && o.option().id().equals(optionId))
+				.map(r -> (ConfigLayout.OptionRow) r).findFirst().orElseThrow(() -> new AssertionError("FAILED: no " + optionId));
 	}
 
 	/** EC-HUD-08: from the title screen, previews, and Esc back to it. */

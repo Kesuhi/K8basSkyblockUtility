@@ -49,6 +49,7 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	public static final String TITLE = "Edit HUD layout";
 	static final String HINT = "Drag to move · Scroll to scale · Arrows nudge (Shift: 10 px) · Esc saves";
 	static final String NOTHING_SELECTED = "Click a HUD to select it";
+	static final String NO_ELEMENTS = "No HUD elements yet: features that show one on screen add it here";
 	/** Boxes in the top this many pixels have their name below them. */
 	static final int LABEL_FLIP = 48;
 	private static final int GREY = 0xB0202226;
@@ -112,6 +113,12 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		}, UiSound::click));
 		cancel = add(new Button("Cancel", Button.Style.NORMAL, this::cancelAndClose, UiSound::click));
 		save = add(new Button("Save", Button.Style.PRIMARY, this::onClose, UiSound::click));
+	}
+
+	/** Opens the editor over the current screen, which it returns to; with {@code select} selected, or none (null). */
+	public static void openEditor(String select) {
+		Minecraft client = Minecraft.getInstance();
+		client.gui.setScreen(new HudEditorScreen(client.gui.screen(), select));
 	}
 
 	HudEditorModel model() {
@@ -208,6 +215,9 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 
 	/** The selected element's name, place and scale, or how to select one. */
 	String status() {
+		if (elements.isEmpty()) {
+			return NO_ELEMENTS;
+		}
 		String selected = model.selected();
 		if (selected == null) {
 			return NOTHING_SELECTED;

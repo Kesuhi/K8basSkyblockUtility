@@ -681,6 +681,12 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	}
 
 	private static int[] controlCentre(ClientGameTestContext context, String optionId) {
+		// Scrolled into view first (General grew a HUD card in T2.8b); the place is read after the next layout.
+		context.runOnClient(client -> {
+			ConfigLayout.OptionRow row = optionRow(screen(client), option -> option.id().equals(optionId));
+			screen(client).scrollArea().ensureVisible(row.y(), row.y() + row.height());
+		});
+		context.waitTicks(2);
 		return context.computeOnClient(client -> {
 			ConfigScreen screen = screen(client);
 			ConfigLayout.OptionRow row = optionRow(screen, option -> option.id().equals(optionId));
