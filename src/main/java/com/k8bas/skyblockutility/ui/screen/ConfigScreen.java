@@ -11,6 +11,7 @@ import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.DatabaseOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
 import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
@@ -440,6 +441,12 @@ public final class ConfigScreen extends WidgetScreen {
 						session.commit();
 					}, UiSound::click);
 			case InfoOption info -> new InfoText(info.value());
+			// The picker writes each add at once (a discrete commit) and the badges count the new rule.
+			case DatabaseOption database -> new Button(database.buttonLabel(), Button.Style.NORMAL,
+					() -> open(new DatabasePickerOverlay(database.database(), this, () -> {
+						viewStale = true;
+						session.commit();
+					}, UiSound::click)), UiSound::click);
 		};
 	}
 

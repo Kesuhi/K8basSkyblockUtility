@@ -5,6 +5,7 @@ import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.DatabaseOption;
 import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
@@ -57,6 +58,7 @@ class ClothOptionsTest {
 			case TextOption t -> { }
 			case ActionOption a -> { }
 			case InfoOption i -> { }
+			case DatabaseOption d -> { }
 		}
 	}
 }

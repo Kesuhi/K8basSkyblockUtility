@@ -2,6 +2,8 @@ package com.k8bas.skyblockutility.module.npcsearch;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.highlight.HighlightManager;
+import com.k8bas.skyblockutility.settings.ListDatabase;
+import com.k8bas.skyblockutility.ui.option.RuleDatabase;
 import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.location.IslandTracker;
@@ -66,6 +68,8 @@ public final class NpcSearchModule implements Module {
 	private List<NpcRule> workingRules;
 	/** The rule cards of the new settings screen, for the config they were made from. */
 	private NpcRuleCards ruleCards;
+	/** "Add from database" of the new settings screen. */
+	private RuleDatabase database;
 	private NpcSearchConfig ruleCardsConfig;
 
 	@Override
@@ -187,7 +191,28 @@ public final class NpcSearchModule implements Module {
 					this::rulesChanged);
 			ruleCardsConfig = config;
 		}
-		return NpcSearchOptions.cards(config, this::setEnabled, this::rebuildDerived, ruleCards::groups);
+		if (database == null) {
+			database = new ListDatabase<>("NPC Database", () -> {
+				NpcDatabase.fetchIfNeeded();
+				return NpcDatabase.state();
+			}, NpcDatabase::entries, npc -> new RuleDatabase.Entry(npc.id, npc.displayName, npc.island, null, npc.matchText),
+					this::usedSources, npc -> {
+						config.rules.add(createRuleForNpc(npc));
+						rulesChanged();
+					});
+		}
+		return NpcSearchOptions.cards(config, this::setEnabled, this::rebuildDerived, ruleCards::groups, database);
+	}
+
+	/** The database entries the rules already come from (the picker hides them). */
+	private Set<String> usedSources() {
+		Set<String> ids = new HashSet<>();
+		for (NpcRule rule : config.rules) {
+			if (rule.sourceId != null) {
+				ids.add(rule.sourceId);
+			}
+		}
+		return ids;
 	}
 
 	/** A rule edited, added or deleted in the settings screen: stored in the section and applied at once (REQ-UI-15). */

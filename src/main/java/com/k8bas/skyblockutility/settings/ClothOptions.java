@@ -5,6 +5,7 @@ import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.DatabaseOption;
 import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Keybind;
@@ -49,6 +50,10 @@ public final class ClothOptions {
 	public static void addCards(ConfigCategory category, ConfigEntryBuilder entryBuilder, List<Card> cards) {
 		for (Card card : cards) {
 			for (Option option : card.all()) {
+				// The Cloth screen has its own database buttons (until T2.5b).
+				if (option instanceof DatabaseOption) {
+					continue;
+				}
 				category.addEntry(entry(entryBuilder, option));
 			}
 		}
@@ -79,6 +84,7 @@ public final class ClothOptions {
 			case TextOption text -> throw new IllegalArgumentException("not a Cloth setting: " + text.id());
 			case ActionOption action -> throw new IllegalArgumentException("not a Cloth setting: " + action.id());
 			case InfoOption info -> throw new IllegalArgumentException("not a Cloth setting: " + info.id());
+			case DatabaseOption database -> throw new IllegalArgumentException("not a Cloth setting: " + database.id());
 			case Keybind keybind -> entryBuilder.fillKeybindingField(title, keyMapping(keybind.keyMappingName()))
 					.setTooltip(tooltip)
 					.build();

@@ -15,6 +15,7 @@ import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.DatabaseOption;
 import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
@@ -99,6 +100,7 @@ class OptionCatalogTest {
 				case TextOption t -> throw new AssertionError("only rule cards have text fields");
 				case ActionOption a -> throw new AssertionError("only rule cards have actions");
 				case InfoOption i -> throw new AssertionError("only rule cards show info");
+				case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
 			};
 			assertEquals(option.defaultValue(), current, "a fresh config holds the declared default: " + option.id());
 		}
@@ -406,6 +408,7 @@ class OptionCatalogTest {
 			case TextOption t -> throw new AssertionError("only rule cards have text fields");
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("only rule cards show info");
+			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
 		};
 	}
 
@@ -419,6 +422,7 @@ class OptionCatalogTest {
 			case TextOption t -> throw new AssertionError("only rule cards have text fields");
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("only rule cards show info");
+			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
 		}
 	}
 
@@ -442,6 +446,7 @@ class OptionCatalogTest {
 			case TextOption t -> throw new AssertionError("only rule cards have text fields");
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("only rule cards show info");
+			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
 		}
 	}
 

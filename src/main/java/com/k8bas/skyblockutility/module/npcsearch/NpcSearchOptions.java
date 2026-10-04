@@ -5,10 +5,13 @@ import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Option;
+import com.k8bas.skyblockutility.ui.option.DatabaseOption;
 import com.k8bas.skyblockutility.ui.option.OptionText;
+import com.k8bas.skyblockutility.ui.option.RuleDatabase;
 import com.k8bas.skyblockutility.ui.option.RuleGroup;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -40,8 +43,16 @@ public final class NpcSearchOptions {
 		return cards(config, setEnabled, displayChanged, List::of);
 	}
 
-	/** @param rules the rule cards (NpcRuleCards::groups) */
 	public static List<Card> cards(NpcSearchConfig config, Consumer<Boolean> setEnabled, Runnable displayChanged, Supplier<List<RuleGroup>> rules) {
+		return cards(config, setEnabled, displayChanged, rules, null);
+	}
+
+	/**
+	 * @param rules    the rule cards (NpcRuleCards::groups)
+	 * @param database the NPC Database for "Add from database", or null for none
+	 */
+	public static List<Card> cards(NpcSearchConfig config, Consumer<Boolean> setEnabled, Runnable displayChanged, Supplier<List<RuleGroup>> rules,
+			RuleDatabase database) {
 		Toggle enabled = Toggle.of("npc_search.enabled", "modules.npc_search.enabled",
 				new OptionText("NPC Search", "Outlines NPCs from your list and marks fixed NPC positions with waypoints.",
 						WAYPOINT_RESTRICTION + "\n" + GlowBehaviourText.tooltip(), List.of("npc", "waypoint", "find", "glow", "outline")),
@@ -79,6 +90,12 @@ public final class NpcSearchOptions {
 							config.whiteWaypointLabels = value;
 							displayChanged.run();
 						})));
-		return List.of(new Card("npc_search", Category.WAYPOINTS, "NPC Search", enabled, options, rules));
+		List<Option> all = new ArrayList<>(options);
+		if (database != null) {
+			all.add(new DatabaseOption("npc_search.add_from_database",
+					new OptionText("Add from database", "Pick an NPC from the NPC Database; its rule joins the list below.", "",
+							List.of("add", "database", "npc", "rule", "new")), "Add from database", database));
+		}
+		return List.of(new Card("npc_search", Category.WAYPOINTS, "NPC Search", enabled, all, rules));
 	}
 }

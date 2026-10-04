@@ -6,7 +6,7 @@ import java.util.List;
  * One setting, declared once (REQ-UI-07): its text feeds the card and the search index, its binding
  * the value. Later kinds (decimal slider, HUD position) join the permits list.
  */
-public sealed interface Option permits Toggle, IntSlider, Choice, Keybind, ColorOption, TextOption, ActionOption, InfoOption {
+public sealed interface Option permits Toggle, IntSlider, Choice, Keybind, ColorOption, TextOption, ActionOption, InfoOption, DatabaseOption {
 	/** Unique id, e.g. "npc_search.show_distance"; a search hit names it. */
 	String id();
 

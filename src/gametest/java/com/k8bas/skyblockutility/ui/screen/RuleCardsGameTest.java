@@ -202,17 +202,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		click(context, headerPoint(context, "Zealot Bruiser"));
 		// Only the colour of the second rule, through the picker.
 		click(context, headerPoint(context, "Voidgloom"));
-		click(context, controlCentre(context, "mob_highlighter.rule.mob-2.colour"));
-		int[] hex = context.computeOnClient(client -> centreOf(((ColorPickerOverlay) screen(client).overlay()).widgets().stream()
-				.filter(widget -> widget instanceof TextField).findFirst().orElseThrow()));
-		click(context, hex);
-		context.getInput().typeChars("#123456");
-		context.waitTicks(2);
-		int[] save = context.computeOnClient(client -> {
-			List<Widget> buttons = ((ColorPickerOverlay) screen(client).overlay()).widgets().stream().filter(widget -> widget instanceof Button).toList();
-			return centreOf(buttons.get(buttons.size() - 1));
-		});
-		click(context, save);
+		pickColour(context, "mob_highlighter.rule.mob-2.colour", "#123456");
 		click(context, headerPoint(context, "Voidgloom"));
 		// Delete the fourth: written at once.
 		click(context, headerPoint(context, "Delete me"));
@@ -257,7 +247,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		LOGGER.info("rule cards: \"trini\" showed Waypoints with badge {} and Trinity open", badge);
 	}
 
-	private static HighlightRule mob(String id, String label, String pattern, String island, int colour) {
+	static HighlightRule mob(String id, String label, String pattern, String island, int colour) {
 		HighlightRule rule = new HighlightRule();
 		rule.id = id;
 		rule.label = label;
@@ -292,7 +282,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 				.filter(row -> row instanceof ConfigLayout.RuleProblem).count());
 	}
 
-	private static int[] headerPoint(ClientGameTestContext context, String title) {
+	static int[] headerPoint(ClientGameTestContext context, String title) {
 		// Scrolled into view first; the header's place is read after the next layout.
 		context.runOnClient(client -> {
 			ConfigLayout.RuleHeader row = headerRow(screen(client), title);
@@ -328,7 +318,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		return ((com.k8bas.skyblockutility.ui.option.TextOption) option).invalid().getAsBoolean();
 	}
 
-	private static int[] controlCentre(ClientGameTestContext context, String id) {
+	static int[] controlCentre(ClientGameTestContext context, String id) {
 		// Scrolled into view first; the control's place is read after the next layout.
 		context.runOnClient(client -> {
 			ConfigScreen screen = screen(client);
@@ -342,7 +332,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		return context.computeOnClient(client -> centreOf(screen(client).page().control(option(screen(client), id))));
 	}
 
-	private static void replaceText(ClientGameTestContext context, String id, String text) {
+	static void replaceText(ClientGameTestContext context, String id, String text) {
 		click(context, controlCentre(context, id));
 		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).page().control(option(screen(client), id))),
 				"the click focused " + id);
@@ -355,11 +345,26 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		context.waitTick();
 	}
 
+	/** A colour set through the colour picker: its hex field, then Save. */
+	static void pickColour(ClientGameTestContext context, String id, String hex) {
+		click(context, controlCentre(context, id));
+		int[] field = context.computeOnClient(client -> centreOf(((ColorPickerOverlay) screen(client).overlay()).widgets().stream()
+				.filter(widget -> widget instanceof TextField).findFirst().orElseThrow()));
+		click(context, field);
+		context.getInput().typeChars(hex);
+		context.waitTicks(2);
+		int[] save = context.computeOnClient(client -> {
+			List<Widget> buttons = ((ColorPickerOverlay) screen(client).overlay()).widgets().stream().filter(widget -> widget instanceof Button).toList();
+			return centreOf(buttons.get(buttons.size() - 1));
+		});
+		click(context, save);
+	}
+
 	private static int[] centreOf(Widget widget) {
 		return new int[] {widget.x() + widget.width() / 2, widget.y() + widget.height() / 2};
 	}
 
-	private static void click(ClientGameTestContext context, int[] gui) {
+	static void click(ClientGameTestContext context, int[] gui) {
 		// One frame first, so a scroll asked for while finding the point has been laid out.
 		context.waitTick();
 		int[] window = context.computeOnClient(client -> window(gui[0], gui[1]));
@@ -386,7 +391,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		}
 	}
 
-	private static String configFile(ClientGameTestContext context) {
+	static String configFile(ClientGameTestContext context) {
 		Path file = context.computeOnClient(client -> FabricLoader.getInstance().getConfigDir().resolve("k8bas_skyblock_utility.json"));
 		try {
 			return Files.readString(file);

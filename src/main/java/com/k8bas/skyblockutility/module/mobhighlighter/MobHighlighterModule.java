@@ -2,6 +2,8 @@ package com.k8bas.skyblockutility.module.mobhighlighter;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.highlight.HighlightManager;
+import com.k8bas.skyblockutility.settings.ListDatabase;
+import com.k8bas.skyblockutility.ui.option.RuleDatabase;
 import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
 import com.k8bas.skyblockutility.module.Module;
@@ -70,6 +72,8 @@ public final class MobHighlighterModule implements Module {
 	private List<HighlightRule> workingRules;
 	/** The rule cards of the new settings screen, for the config they were made from. */
 	private MobRuleCards ruleCards;
+	/** "Add from database" of the new settings screen. */
+	private RuleDatabase database;
 	private MobHighlighterConfig ruleCardsConfig;
 
 	@Override
@@ -112,7 +116,28 @@ public final class MobHighlighterModule implements Module {
 			ruleCards = new MobRuleCards(config, HighlightManager::inertReason, this::rulesChanged);
 			ruleCardsConfig = config;
 		}
-		return MobHighlighterOptions.cards(config, ConfigManager.general(), this::setEnabled, ruleCards::groups);
+		if (database == null) {
+			database = new ListDatabase<>("Mob Database", () -> {
+				MobDatabase.fetchIfNeeded();
+				return MobDatabase.state();
+			}, MobDatabase::entries, mob -> new RuleDatabase.Entry(mob.id, mob.displayName, mob.island, mob.subfolder, mob.matchText),
+					this::usedSources, mob -> {
+						config.rules.add(createRuleForMob(mob));
+						rulesChanged();
+					});
+		}
+		return MobHighlighterOptions.cards(config, ConfigManager.general(), this::setEnabled, ruleCards::groups, database);
+	}
+
+	/** The database entries the rules already come from (the picker hides them). */
+	private Set<String> usedSources() {
+		Set<String> ids = new HashSet<>();
+		for (HighlightRule rule : config.rules) {
+			if (rule.sourceId != null) {
+				ids.add(rule.sourceId);
+			}
+		}
+		return ids;
 	}
 
 	/** A rule edited, added or deleted in the settings screen: stored in the section and applied at once (REQ-UI-15). */

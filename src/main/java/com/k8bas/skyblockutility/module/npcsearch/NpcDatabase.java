@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.module.npcsearch;
 
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
+import com.k8bas.skyblockutility.ui.option.RuleDatabase;
 import com.k8bas.skyblockutility.location.Islands;
 import com.k8bas.skyblockutility.net.SharedHttpClient;
 import com.k8bas.skyblockutility.util.JsonEntries;
@@ -31,6 +32,8 @@ public final class NpcDatabase {
 
 	private static volatile List<NpcDatabaseEntry> entries = List.of();
 	private static volatile Map<String, NpcDatabaseEntry> byId = Map.of();
+	/** Loading until the fetch ends; then ready, or unavailable if it failed (the picker says so, EC-UI-08). */
+	private static volatile RuleDatabase.State state = RuleDatabase.State.LOADING;
 	private static final List<Runnable> LOADED_LISTENERS = new CopyOnWriteArrayList<>();
 
 	private NpcDatabase() {
@@ -44,6 +47,7 @@ public final class NpcDatabase {
 		Thread.ofVirtual().name("k8bas-npc-database-fetch").start(() -> {
 			String body = SharedHttpClient.fetchText(URI.create(RAW_URL), "NPC database fetch", K8basSkyblockUtilityClient.LOGGER::warn);
 			if (body == null) {
+				state = RuleDatabase.State.UNAVAILABLE;
 				return;
 			}
 			List<NpcDatabaseEntry> parsed;
@@ -51,10 +55,12 @@ public final class NpcDatabase {
 				parsed = parse(body);
 			} catch (RuntimeException e) {
 				K8basSkyblockUtilityClient.LOGGER.warn("NPC database is not a list of entries: {}", e.toString());
+				state = RuleDatabase.State.UNAVAILABLE;
 				return;
 			}
 			byId = index(parsed);
 			entries = parsed;
+			state = RuleDatabase.State.READY;
 			K8basSkyblockUtilityClient.LOGGER.info("Loaded {} NPC database entries", parsed.size());
 			Minecraft.getInstance().execute(() -> LOADED_LISTENERS.forEach(Runnable::run));
 		});
@@ -99,6 +105,23 @@ public final class NpcDatabase {
 			index.putIfAbsent(entry.id, entry);
 		}
 		return Map.copyOf(index);
+	}
+
+	public static RuleDatabase.State state() {
+		return state;
+	}
+
+	/** Every entry, in the gist's order (empty until loaded). */
+	public static List<NpcDatabaseEntry> entries() {
+		return entries;
+	}
+
+	/** For gametests, which have no network: the list as if it had been fetched (or had failed). */
+	static void useForTest(List<NpcDatabaseEntry> list, RuleDatabase.State newState) {
+		fetchStarted.set(true);
+		byId = index(list);
+		entries = List.copyOf(list);
+		state = newState;
 	}
 
 	/** The entry with this id, or null if there is none (also while the list is still loading). */

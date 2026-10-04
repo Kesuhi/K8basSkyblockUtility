@@ -6,7 +6,10 @@ import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
+import com.k8bas.skyblockutility.ui.option.DatabaseOption;
+import com.k8bas.skyblockutility.ui.option.Option;
 import com.k8bas.skyblockutility.ui.option.OptionText;
+import com.k8bas.skyblockutility.ui.option.RuleDatabase;
 import com.k8bas.skyblockutility.ui.option.RuleGroup;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 
@@ -26,8 +29,16 @@ public final class MobHighlighterOptions {
 		return cards(config, general, setEnabled, List::of);
 	}
 
-	/** @param rules the rule cards (MobRuleCards::groups) */
 	public static List<Card> cards(MobHighlighterConfig config, GeneralConfig general, Consumer<Boolean> setEnabled, Supplier<List<RuleGroup>> rules) {
+		return cards(config, general, setEnabled, rules, null);
+	}
+
+	/**
+	 * @param rules    the rule cards (MobRuleCards::groups)
+	 * @param database the Mob Database for "Add from database", or null for none
+	 */
+	public static List<Card> cards(MobHighlighterConfig config, GeneralConfig general, Consumer<Boolean> setEnabled, Supplier<List<RuleGroup>> rules,
+			RuleDatabase database) {
 		Toggle enabled = Toggle.of("mob_highlighter.enabled", "modules.mob_highlighter.enabled",
 				new OptionText("Mob Highlighter", "Outlines mobs that match your rules while you can see them.", GlowBehaviourText.tooltip(),
 						List.of("glow", "outline", "mob", "highlight")),
@@ -37,6 +48,9 @@ public final class MobHighlighterOptions {
 				new OptionText("Mob scan range", "How far around you mobs are checked, in blocks. 0 = unlimited.",
 						"Applies to Mob Highlighter and to the moving NPCs of NPC Search.", List.of("distance", "radius", "blocks")),
 				64, 0, 128, 1, "blocks", "Unlimited", Binding.of(() -> general.mobScanRangeBlocks, value -> general.mobScanRangeBlocks = value));
-		return List.of(new Card("mob_highlighter", Category.HIGHLIGHTS, "Mob Highlighter", enabled, List.of(range), rules));
+		List<Option> options = database == null ? List.of(range) : List.of(range, new DatabaseOption("mob_highlighter.add_from_database",
+				new OptionText("Add from database", "Pick a mob from the Mob Database; its rule joins the list below.", "",
+						List.of("add", "database", "mob", "rule", "new")), "Add from database", database));
+		return List.of(new Card("mob_highlighter", Category.HIGHLIGHTS, "Mob Highlighter", enabled, options, rules));
 	}
 }

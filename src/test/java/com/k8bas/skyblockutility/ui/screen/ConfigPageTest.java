@@ -11,6 +11,7 @@ import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
+import com.k8bas.skyblockutility.ui.option.DatabaseOption;
 import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
@@ -81,6 +82,7 @@ class ConfigPageTest {
 			case ActionOption action -> new com.k8bas.skyblockutility.ui.widget.Button(action.buttonLabel(), com.k8bas.skyblockutility.ui.widget.Button.Style.DESTRUCTIVE,
 					action.action(), () -> { });
 			case InfoOption info -> new InfoText(info.value());
+			case DatabaseOption database -> new com.k8bas.skyblockutility.ui.widget.Button(database.buttonLabel(), com.k8bas.skyblockutility.ui.widget.Button.Style.NORMAL, () -> { }, () -> { });
 		};
 	}
 
@@ -175,6 +177,7 @@ class ConfigPageTest {
 			case TextOption text -> assertEquals(before, state(), text.id() + ": a click into the field changes nothing");
 			case ActionOption action -> { }
 			case InfoOption info -> { }
+			case DatabaseOption d -> { }
 			case IntSlider slider -> {
 				// A press on the track sets that value; put back what was there (a setting absent until picked stays absent).
 				GeneralConfig was = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class);
@@ -223,6 +226,7 @@ class ConfigPageTest {
 					case TextOption t -> { }
 					case ActionOption a -> { }
 					case InfoOption f -> { }
+					case DatabaseOption d -> { }
 					case IntSlider s -> assertTrue(feature[0] && mode[0].equals("Exact") && keys.isEmpty(), "only the amount changes");
 				}
 				feature[0] = true;

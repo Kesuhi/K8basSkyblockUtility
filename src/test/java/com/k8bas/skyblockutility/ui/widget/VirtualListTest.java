@@ -153,6 +153,18 @@ class VirtualListTest {
 		assertEquals(List.of(0), clicked);
 	}
 
+	/** A row click with its place in the row, so a button drawn on the row is hit-tested as drawn. */
+	@Test
+	void aRowClickKnowsWhereInTheRowItFell() {
+		List<String> clicks = new ArrayList<>();
+		VirtualList list = new VirtualList(18, () -> 5000, (graphics, font, index, x, y, w, h, hovered) -> { }, index -> clicks.add("plain"));
+		list.onRowClick((index, x, y, width, height) -> clicks.add(index + " at " + x + "," + y + " of " + width + "x" + height));
+		list.setBounds(10, 20, 160, 200);
+		list.rows().setScroll(9);
+		list.press(15, 20 + 18 + 4, 0);
+		assertEquals(List.of("1 at 5.0,13.0 of 154x18"), clicks, "the second row on screen (scrolled half a row), without the scroll bar's width");
+	}
+
 	@Test
 	void aListThatFitsHasNoThumbAndPassesTheWheelOn() {
 		List<Integer> clicked = new ArrayList<>();

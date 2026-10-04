@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.option.DatabaseOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
 import com.k8bas.skyblockutility.ui.option.InfoOption;
 import com.k8bas.skyblockutility.ui.option.IntSlider;
@@ -292,6 +293,8 @@ public final class ConfigLayout {
 			width = 140;
 		} else if (option instanceof ActionOption) {
 			width = 90;
+		} else if (option instanceof DatabaseOption) {
+			width = 120;
 		} else if (option instanceof InfoOption) {
 			width = 160;
 		} else if (option instanceof ColorOption) {

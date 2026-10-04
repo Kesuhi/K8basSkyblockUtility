@@ -30,6 +30,8 @@ public final class VirtualList extends Widget {
 	private final RowPainter painter;
 	private final IntConsumer onClick;
 	private IntFunction<String> rowTooltip = index -> "";
+	/** A click that needs to know where in the row it fell (a button on the row); replaces the plain one. */
+	private RowClick rowClick;
 	/** While the thumb is dragged: where it was grabbed, from its top; else -1. */
 	private int grab = -1;
 	private VirtualRows.Range lastDrawn = new VirtualRows.Range(0, 0);
@@ -43,6 +45,22 @@ public final class VirtualList extends Widget {
 
 	public VirtualRows rows() {
 		return rows;
+	}
+
+	/** A row click with its place in the row. */
+	@FunctionalInterface
+	public interface RowClick {
+		/**
+		 * @param x from the row's left edge
+		 * @param y from the row's top edge
+		 * @param width the row's width (without the scroll bar)
+		 */
+		void click(int index, double x, double y, int width, int height);
+	}
+
+	/** Clicks on rows go here, with where in the row they fell, instead of to the plain click. */
+	public void onRowClick(RowClick rowClick) {
+		this.rowClick = rowClick;
 	}
 
 	/** A tooltip per row, e.g. the whole text of a cut entry; null or "" for none. */
@@ -95,7 +113,9 @@ public final class VirtualList extends Widget {
 			return true;
 		}
 		int row = rows.rowAt(mouseY - y);
-		if (row >= 0) {
+		if (row >= 0 && rowClick != null) {
+			rowClick.click(row, mouseX - x, mouseY - y - rows.rowTop(row), rowWidth(), rows.rowHeight());
+		} else if (row >= 0) {
 			onClick.accept(row);
 		}
 		return true;

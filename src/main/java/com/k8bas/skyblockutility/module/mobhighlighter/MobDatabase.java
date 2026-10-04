@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.module.mobhighlighter;
 
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
+import com.k8bas.skyblockutility.ui.option.RuleDatabase;
 import com.k8bas.skyblockutility.net.SharedHttpClient;
 import com.k8bas.skyblockutility.util.JsonEntries;
 
@@ -28,6 +29,8 @@ public final class MobDatabase {
 	private static final AtomicBoolean fetchStarted = new AtomicBoolean(false);
 
 	private static volatile List<MobDatabaseEntry> entries = List.of();
+	/** Loading until the fetch ends; then ready, or unavailable if it failed (the picker says so, EC-UI-08). */
+	private static volatile RuleDatabase.State state = RuleDatabase.State.LOADING;
 
 	private MobDatabase() {
 	}
@@ -40,12 +43,15 @@ public final class MobDatabase {
 		Thread.ofVirtual().name("k8bas-mob-database-fetch").start(() -> {
 			String body = SharedHttpClient.fetchText(URI.create(RAW_URL), "Mob database fetch", K8basSkyblockUtilityClient.LOGGER::warn);
 			if (body == null) {
+				state = RuleDatabase.State.UNAVAILABLE;
 				return;
 			}
 			try {
 				entries = parse(body);
+				state = RuleDatabase.State.READY;
 				K8basSkyblockUtilityClient.LOGGER.info("Loaded {} mob database entries", entries.size());
 			} catch (RuntimeException e) {
+				state = RuleDatabase.State.UNAVAILABLE;
 				K8basSkyblockUtilityClient.LOGGER.warn("Mob database is not a list of entries: {}", e.toString());
 			}
 		});
@@ -64,6 +70,22 @@ public final class MobDatabase {
 	/** An id, a name, an island and a match text. */
 	static boolean valid(MobDatabaseEntry entry) {
 		return entry.id != null && entry.displayName != null && entry.island != null && !JsonEntries.isBlank(entry.matchText);
+	}
+
+	public static RuleDatabase.State state() {
+		return state;
+	}
+
+	/** Every entry, in the gist's order (empty until loaded). */
+	public static List<MobDatabaseEntry> entries() {
+		return entries;
+	}
+
+	/** For gametests, which have no network: the list as if it had been fetched (or had failed). */
+	static void useForTest(List<MobDatabaseEntry> list, RuleDatabase.State newState) {
+		fetchStarted.set(true);
+		entries = List.copyOf(list);
+		state = newState;
 	}
 
 	/** Grouped by island, entries within each island sorted by display name, islands sorted alphabetically. */
