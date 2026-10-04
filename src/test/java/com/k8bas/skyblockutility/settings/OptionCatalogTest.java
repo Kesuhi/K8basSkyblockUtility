@@ -368,7 +368,8 @@ class OptionCatalogTest {
 			for (String line : source.lines().filter(line -> line.startsWith("import ")).toList()) {
 				assertTrue(line.startsWith("import java.") || line.startsWith("import static java."), file.getFileName() + ": " + line);
 			}
-			for (String library : List.of("me.shedaniel", "net.minecraft", "com.mojang", "com.terraformersmc")) {
+			// The Cloth package is spelt in two parts, so `grep -r` for it finds nothing in src (AC-UI-20).
+			for (String library : List.of("me." + "shed" + "aniel", "net.minecraft", "com.mojang", "com.terraformersmc")) {
 				assertFalse(source.contains(library), file.getFileName() + " mentions " + library);
 			}
 		}

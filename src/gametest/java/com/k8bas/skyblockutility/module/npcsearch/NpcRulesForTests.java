@@ -14,6 +14,11 @@ public final class NpcRulesForTests {
 		module().useRulesForTest(rules);
 	}
 
+	/** Puts the rules into the config root, as the settings screen does when it closes; the next save writes them. */
+	public static void storeSection() {
+		module().onSettingsClosed();
+	}
+
 	public static List<NpcRule> rules() {
 		return module().rulesForTest();
 	}

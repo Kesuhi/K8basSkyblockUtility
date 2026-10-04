@@ -14,10 +14,6 @@ repositories {
 		url = "https://repo.hypixel.net/repository/Hypixel/"
 	}
 	maven {
-		name = "Shedaniel"
-		url = "https://maven.shedaniel.me/"
-	}
-	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
 	}
@@ -55,11 +51,6 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-
-	// Cloth Config powers the settings screen; a real (non-optional) dependency.
-	implementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
 
 	// Mod Menu integration is optional: compiled against, but not required at runtime.
 	compileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"

@@ -90,16 +90,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 	 * pattern longer than the field's usual limit is shown whole.
 	 */
 	private static void fixtureRules(ClientGameTestContext context) {
-		JsonObject root;
-		try {
-			Path fixture = context.computeOnClient(client -> FabricLoader.getInstance().getGameDir())
-					.resolve("../../../src/test/resources/fixtures/config-1.0.1-shaped.json").normalize();
-			root = JsonParser.parseString(Files.readString(fixture)).getAsJsonObject();
-		} catch (IOException e) {
-			throw new AssertionError("cannot read the 1.0.1 fixture", e);
-		}
-		ConfigMigrations.MIGRATOR.migrate(root);
-		JsonObject modules = root.getAsJsonObject("modules");
+		JsonObject modules = migratedFixture(context).getAsJsonObject("modules");
 		Gson gson = new Gson();
 		List<HighlightRule> mobs = new java.util.ArrayList<>(List.of(gson.fromJson(modules.getAsJsonObject("mob_highlighter").get("rules"), HighlightRule[].class)));
 		List<NpcRule> npcs = List.of(gson.fromJson(modules.getAsJsonObject("npc_search").get("rules"), NpcRule[].class));
@@ -248,6 +239,20 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		check(headers.size() == 1 && headers.get(0).expanded(), "Trinity's card is shown open: " + headers);
 		context.takeScreenshot("t2.5a-search-trini");
 		LOGGER.info("rule cards: \"trini\" showed Waypoints with badge {} and Trinity open", badge);
+	}
+
+	/** The 1.0.1-shaped fixture of the unit tests, migrated as the game migrates a file it loads. */
+	static JsonObject migratedFixture(ClientGameTestContext context) {
+		JsonObject root;
+		try {
+			Path fixture = context.computeOnClient(client -> FabricLoader.getInstance().getGameDir())
+					.resolve("../../../src/test/resources/fixtures/config-1.0.1-shaped.json").normalize();
+			root = JsonParser.parseString(Files.readString(fixture)).getAsJsonObject();
+		} catch (IOException e) {
+			throw new AssertionError("cannot read the 1.0.1 fixture", e);
+		}
+		ConfigMigrations.MIGRATOR.migrate(root);
+		return root;
 	}
 
 	/** REQ-GLOW-10 [C]: "Any name" with no entity type would outline everything, so it does nothing and says so. */

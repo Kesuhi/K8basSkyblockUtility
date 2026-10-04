@@ -20,6 +20,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ### Changed
 
+- **Cloth Config is no longer needed.** The settings screen is the mod's own, so the mod no longer
+  depends on Cloth Config. You can remove it unless another mod needs it.
 - **Behaviour change: settings apply as you change them.** Every change takes effect at once and is
   saved when you close the screen; there is no Save or Cancel button. *Reason:* you see the effect
   of a change while you make it. *Effect:* closing with Esc keeps your changes.

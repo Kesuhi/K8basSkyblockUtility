@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -50,9 +51,17 @@ class FabricModJsonTest {
 		assertTrue(accepts("fabricloader", "0.19.5"));
 		assertFalse(accepts("fabricloader", "0.19.4"));
 		assertTrue(accepts("fabric-api", "0.161.0"));
-		assertTrue(accepts("cloth-config", "26.2.155"));
 		assertTrue(accepts("render-chest", "1.0.3+26.2"));
 		assertFalse(accepts("render-chest", "1.0.2+26.2"));
+	}
+
+	/** AC-UI-20 [R] (T2.6): the settings screen is the mod's own; Cloth Config is neither required nor suggested. */
+	@Test
+	void clothConfigIsNoDependency() throws Exception {
+		for (String kind : List.of("depends", "recommends", "suggests")) {
+			JsonObject entries = modJson().getAsJsonObject(kind);
+			assertTrue(entries == null || !entries.has("cloth-config"), kind);
+		}
 	}
 
 	/** REQ-UPD-20 (T1.4): Mod Menu must not look this mod up on Modrinth; GitHub is the only source. */
