@@ -22,7 +22,6 @@
 			"com.k8bas.skyblockutility.module.npcsearch.FoundTitleGameTest",
 			"com.k8bas.skyblockutility.module.npcsearch.NpcWaypointGameTest",
 			"com.k8bas.skyblockutility.update.UpdateNoticeGameTest",
-			"com.k8bas.skyblockutility.module.mobhighlighter.RuleWarningGameTest",
 			"com.k8bas.skyblockutility.gametest.DebugToolsGameTest",
 			"com.k8bas.skyblockutility.gametest.SettingsScreensGameTest"
 		]

@@ -178,8 +178,8 @@ public final class HighlightManager {
 		return null;
 	}
 
-	/** Inactive rules of the last rebuild, rule id to reason, for the settings UI. */
-	public Map<String, String> inertRules() {
+	/** For tests: the rules the last rebuild left out as inactive, rule id to reason (the settings screen asks {@link #inertReason}). */
+	Map<String, String> inertRules() {
 		return inertRules;
 	}
 

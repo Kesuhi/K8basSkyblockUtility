@@ -6,18 +6,13 @@ import com.k8bas.skyblockutility.net.SharedHttpClient;
 import com.k8bas.skyblockutility.util.JsonEntries;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Fetched fresh from a public Gist — deliberately not cached to disk, so entries added to the
  * Gist show up next launch without shipping a mod update. If the fetch hasn't completed yet (or
- * failed), byIsland() just returns empty until it has; the picker section in the settings screen
- * simply shows nothing until the next time it's opened.
+ * failed), the picker says so (state()).
  *
  * Fetched at module registration (mod startup), not lazily on first picker-open — opening the
  * picker for the first time in a session should never show the "still loading" message if it can
@@ -88,15 +83,4 @@ public final class MobDatabase {
 		state = newState;
 	}
 
-	/** Grouped by island, entries within each island sorted by display name, islands sorted alphabetically. */
-	public static Map<String, List<MobDatabaseEntry>> byIsland() {
-		Map<String, List<MobDatabaseEntry>> grouped = new TreeMap<>();
-		for (MobDatabaseEntry entry : entries) {
-			grouped.computeIfAbsent(entry.island, key -> new ArrayList<>()).add(entry);
-		}
-		for (List<MobDatabaseEntry> group : grouped.values()) {
-			group.sort((a, b) -> a.displayName.compareToIgnoreCase(b.displayName));
-		}
-		return Collections.unmodifiableMap(grouped);
-	}
 }

@@ -2,7 +2,6 @@ package com.k8bas.skyblockutility.debug;
 
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
 import com.k8bas.skyblockutility.location.IslandTracker;
-import com.k8bas.skyblockutility.ui.screen.ConfigScreen;
 import com.k8bas.skyblockutility.util.ChatUtils;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -13,6 +12,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
  * <ul>
  *   <li>`debug island <name|clear>` forces an island. Dev-only: it is not registered in production
  *       builds (REQ-LOC-08).</li>
- *   <li>`debug newui` opens the new settings screen while it is built (T2.4a). Dev-only too.</li>
  *   <li>`debug dump tab|sidebar|entities` writes what the client currently shows to latest.log,
  *       one `[K8BAS-DUMP]` line each, for parser fixtures (REQ-GS-13). `debug dump containers
  *       on|off` arms the menu capture (ContainerDump). All of them ship in production, only read,
@@ -58,12 +57,16 @@ public final class DebugCommand {
 		boolean dev = FabricLoader.getInstance().isDevelopmentEnvironment();
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			for (String root : ROOTS) {
+				// Every prefix runs here and says how to go on: one without a command would go to the server (REQ-UI-25).
 				LiteralArgumentBuilder<FabricClientCommandSource> debug = ClientCommands.literal("debug")
+						.executes(context -> usage(context.getSource(), root, dev ? "debug <dump|island>" : "debug dump"))
 						.then(ClientCommands.literal("dump")
+								.executes(context -> usage(context.getSource(), root, "debug dump <tab|sidebar|entities|containers>"))
 								.then(ClientCommands.literal("tab").executes(context -> report("tab", dumpTab())))
 								.then(ClientCommands.literal("sidebar").executes(context -> report("sidebar", dumpSidebar())))
 								.then(ClientCommands.literal("entities").executes(context -> report("entities", dumpEntities())))
 								.then(ClientCommands.literal("containers")
+										.executes(context -> usage(context.getSource(), root, "debug dump containers <on|off>"))
 										.then(ClientCommands.literal("on").executes(context -> {
 											ContainerDump.arm();
 											return 1;
@@ -74,6 +77,7 @@ public final class DebugCommand {
 										}))));
 				if (dev) {
 					debug.then(ClientCommands.literal("island")
+							.executes(context -> usage(context.getSource(), root, "debug island <name|clear>"))
 							.then(ClientCommands.argument("name", StringArgumentType.greedyString())
 									.suggests((context, builder) -> {
 										builder.suggest("clear");
@@ -81,13 +85,6 @@ public final class DebugCommand {
 										return builder.buildFuture();
 									})
 									.executes(context -> forceIsland(StringArgumentType.getString(context, "name")))));
-					// The new settings screen, until it replaces the Cloth one (T2.5b).
-					debug.then(ClientCommands.literal("newui").executes(context -> {
-						var client = context.getSource().getClient();
-						// Next tick, so the chat's own Enter does not reach the new screen.
-						client.execute(() -> client.gui.setScreen(new ConfigScreen(client.gui.screen())));
-						return 1;
-					}));
 				}
 				dispatcher.register(ClientCommands.literal(root).then(debug));
 			}
@@ -99,6 +96,12 @@ public final class DebugCommand {
 						debugNode.getChild("dump").getChildren().stream().map(node -> node.getName()).sorted().collect(Collectors.joining(", ")));
 			}
 		});
+	}
+
+	/** A local error with how the command goes on; nothing is sent. */
+	private static int usage(FabricClientCommandSource source, String root, String rest) {
+		source.sendError(Component.literal("Usage: /" + root + " " + rest));
+		return 0;
 	}
 
 	private static int forceIsland(String name) {

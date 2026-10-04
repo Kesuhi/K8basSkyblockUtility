@@ -10,11 +10,9 @@ import java.net.URI;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -134,15 +132,4 @@ public final class NpcDatabase {
 		LOADED_LISTENERS.add(listener);
 	}
 
-	/** Grouped by island, entries within each island sorted by display name, islands sorted alphabetically. */
-	public static Map<String, List<NpcDatabaseEntry>> byIsland() {
-		Map<String, List<NpcDatabaseEntry>> grouped = new TreeMap<>();
-		for (NpcDatabaseEntry entry : entries) {
-			grouped.computeIfAbsent(entry.island, key -> new ArrayList<>()).add(entry);
-		}
-		for (List<NpcDatabaseEntry> group : grouped.values()) {
-			group.sort((a, b) -> a.displayName.compareToIgnoreCase(b.displayName));
-		}
-		return Collections.unmodifiableMap(grouped);
-	}
 }

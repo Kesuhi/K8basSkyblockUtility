@@ -65,8 +65,8 @@ import java.util.Set;
  * cards under section headers. The sidebar and the content scroll separately (EC-UI-12). Everything is
  * laid out each frame by {@link ConfigLayout}; the selected category, each category's scroll and the
  * widgets' state survive a resize or GUI-scale change (EC-UI-01). Changes apply at once; the file is
- * written on discrete commits and once when the screen closes, by any route (REQ-UI-15). Opened from a
- * dev command until it replaces the Cloth screen (T2.5b).
+ * written on discrete commits and once when the screen closes, by any route (REQ-UI-15). Opened by
+ * `/ksu`, the "Open settings" key and Mod Menu; closing returns to the screen it was opened from.
  */
 public final class ConfigScreen extends WidgetScreen {
 	public static final String NAME = "K8bas Skyblock Utility";
@@ -103,6 +103,15 @@ public final class ConfigScreen extends WidgetScreen {
 
 	public ConfigScreen(Screen parent) {
 		this(parent, OptionCatalog.live());
+	}
+
+	/** Opened with {@code search} in the search box, as `/ksu <text>` does (REQ-UI-10). */
+	public ConfigScreen(Screen parent, String search) {
+		this(parent);
+		if (!search.isBlank()) {
+			this.search.model().setText(search.strip());
+			applyQuery(this.search.model().text());
+		}
 	}
 
 	ConfigScreen(Screen parent, List<Card> cards) {

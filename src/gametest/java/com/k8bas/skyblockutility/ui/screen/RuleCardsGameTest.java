@@ -37,7 +37,9 @@ import java.util.List;
  *   <li>AC-UI-11 [C]: the regex "([" shows the warning sign, the reason and the marked field; fixing it clears all three;</li>
  *   <li>AC-UI-10 (T2.5a part): a label and pattern edit, a colour-only change through the picker and a Delete are
  *       in the file after the screen closes;</li>
- *   <li>AC-UI-08 [C]: "trini" lists Waypoints with a badge and shows Trinity's card open.</li>
+ *   <li>AC-UI-08 [C]: "trini" lists Waypoints with a badge and shows Trinity's card open;</li>
+ *   <li>REQ-GLOW-10 [C] (decision 2026-10-01, S-6): a rule that ignores names and has no entity type has the
+ *       warning sign and, open, says why; a valid rule next to it has neither.</li>
  * </ul>
  */
 public class RuleCardsGameTest implements FabricClientGameTest {
@@ -66,6 +68,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 			invalidRegex(context);
 			editsSurviveTheClose(context);
 			searchOpensTheRule(context);
+			anyNameWithoutATypeWarns(context);
 		} finally {
 			context.runOnClient(client -> {
 				MobRulesForTests.use(mobsBefore);
@@ -245,6 +248,29 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		check(headers.size() == 1 && headers.get(0).expanded(), "Trinity's card is shown open: " + headers);
 		context.takeScreenshot("t2.5a-search-trini");
 		LOGGER.info("rule cards: \"trini\" showed Waypoints with badge {} and Trinity open", badge);
+	}
+
+	/** REQ-GLOW-10 [C]: "Any name" with no entity type would outline everything, so it does nothing and says so. */
+	private static void anyNameWithoutATypeWarns(ClientGameTestContext context) {
+		context.setScreen(() -> null);
+		context.runOnClient(client -> {
+			HighlightRule everything = mob("mob-any", "Everything", null, null, 0xFF0000);
+			everything.nameMatchMode = NameMatchMode.NONE;
+			MobRulesForTests.use(List.of(everything, mob("mob-ok", "Zealot", "Zealot", null, 0xAA00FF)));
+		});
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(3);
+		String warning = context.computeOnClient(client -> headers(screen(client)).get(0).rule().problem().get());
+		check(warning != null && warning.contains("needs an entity type"), "the rule that ignores names is marked, with the reason: " + warning);
+		check(context.computeOnClient(client -> headers(screen(client)).get(1).rule().problem().get()) == null, "the valid rule is not");
+		click(context, headerPoint(context, "Everything"));
+		List<String> lines = context.computeOnClient(client -> screen(client).page().page().rows().stream()
+				.filter(row -> row instanceof ConfigLayout.RuleProblem).flatMap(row -> ((ConfigLayout.RuleProblem) row).lines().stream()).toList());
+		check(String.join(" ", lines).contains("needs an entity type"), "open, it says why: " + lines);
+		context.takeScreenshot("s6-inert-rule-warning");
+		LOGGER.info("rule cards: \"Any name\" without an entity type warned \"{}\"; the valid rule did not", warning);
 	}
 
 	static HighlightRule mob(String id, String label, String pattern, String island, int colour) {

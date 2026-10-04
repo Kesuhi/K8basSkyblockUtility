@@ -8,6 +8,10 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ### Added
 
+- **A new settings screen.** `/ksu`, the "Open settings" key and Mod Menu open the mod's own
+  settings screen: categories down the side, a search box that finds every option and rule, rules
+  as cards you open and edit in place, and **Add from database** with island folders and a search.
+- **`/ksu <text>` opens the settings with `<text>` searched**, for example `/ksu glow`.
 - **NPC waypoints get a beacon beam.** Each fixed NPC you add gets a beam from its block up to the
   top of the world, in its island's colour (each island has its own default, listed in SPEC.md,
   REQ-NPCWP-05). Like a vanilla beacon's, the beam is animated, terrain in front of it hides it,
@@ -16,6 +20,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ### Changed
 
+- **Behaviour change: settings apply as you change them.** Every change takes effect at once and is
+  saved when you close the screen; there is no Save or Cancel button. *Reason:* you see the effect
+  of a change while you make it. *Effect:* closing with Esc keeps your changes.
 - **Behaviour change: waypoints look like Skyblocker's.** The label has no dark background any
   more and sits on the centre of the NPC's block, 1.5 blocks up. With "White waypoint labels" ON
   (the default) the label is white and the distance line below it yellow; OFF draws both in the
@@ -30,6 +37,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ### Fixed
 
+- `/ksu debug`, `/ksu debug dump` and `/ksu debug dump containers` on their own show how to go on;
+  before, they were sent to the server.
 - Waypoint labels behind water, stained glass or ice stay readable with **Improved Transparency**
   (the Fabulous graphics preset) on; before, water and ice covered them. Waypoint labels are now
   drawn over clouds and rain as well.

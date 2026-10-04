@@ -1,8 +1,6 @@
 package com.k8bas.skyblockutility.module;
 
 import com.k8bas.skyblockutility.ui.option.Card;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 
 import java.util.List;
 
@@ -17,9 +15,6 @@ public interface Module {
 	/** Stable id, used as the config-section key. e.g. "mob_highlighter". */
 	String id();
 
-	/** Display name, used as the Cloth Config category title. */
-	String displayName();
-
 	/** Called once at mod bootstrap: load config, register listeners, keybinds and highlight managers. */
 	void onRegister();
 
@@ -30,21 +25,10 @@ public interface Module {
 	/** This module's settings, declared once for the cards and the search index (REQ-UI-07). */
 	List<Card> cards();
 
-	/** Add this module's entries to its own settings category. */
-	void buildConfigScreen(ConfigCategory category, ConfigEntryBuilder entryBuilder);
-
-	/** Called once when the Cloth settings screen's Save button fires (removed in T2.5b), before ConfigManager.save()
-	 *  writes the file — override to reconcile pending add/delete actions collected during
-	 *  buildConfigScreen (so they're included in that write) and rebuild any derived runtime
-	 *  state (e.g. a rule-matching index) from the now-final config. */
-	default void onConfigScreenSaved() {
-	}
-
 	/**
-	 * Called once when the new settings screen closes (REQ-UI-15). Its changes were applied to the
-	 * config as they were made, so this only rebuilds derived runtime state (e.g. a rule-matching index)
-	 * from the config as it is now. Unlike {@link #onConfigScreenSaved}, it never applies the Cloth
-	 * screen's pending edits.
+	 * Called once when the settings screen closes (REQ-UI-15). Its changes were applied to the config
+	 * as they were made, so this only refreshes the module's section and rebuilds derived runtime state
+	 * (e.g. a rule-matching index) from the config as it is now.
 	 */
 	default void onSettingsClosed() {
 	}
