@@ -378,16 +378,22 @@ class OptionCatalogTest {
 	/** REQ-UI-07: option declarations do not depend on a UI library (or on Minecraft). */
 	@Test
 	void theOptionPackageIsPlainJava() throws IOException {
-		Path dir = PROJECT.resolve("src/main/java/com/k8bas/skyblockutility/ui/option");
-		List<Path> files;
-		try (Stream<Path> walk = Files.walk(dir)) {
-			files = walk.filter(path -> path.toString().endsWith(".java")).toList();
+		// The package's Java and Kotlin sources (R30 moved most of it to Kotlin); the standard libraries only.
+		List<Path> files = new java.util.ArrayList<>();
+		for (String language : List.of("java", "kotlin")) {
+			Path dir = PROJECT.resolve("src/main/" + language + "/com/k8bas/skyblockutility/ui/option");
+			if (Files.isDirectory(dir)) {
+				try (Stream<Path> walk = Files.walk(dir)) {
+					walk.filter(path -> path.toString().endsWith(".java") || path.toString().endsWith(".kt")).forEach(files::add);
+				}
+			}
 		}
-		assertTrue(files.size() >= 4, "the scan sees the package");
+		assertTrue(files.size() >= 18, "the scan sees the whole package: " + files.size());
 		for (Path file : files) {
 			String source = Files.readString(file);
 			for (String line : source.lines().filter(line -> line.startsWith("import ")).toList()) {
-				assertTrue(line.startsWith("import java.") || line.startsWith("import static java."), file.getFileName() + ": " + line);
+				assertTrue(line.startsWith("import java.") || line.startsWith("import static java.") || line.startsWith("import kotlin."),
+						file.getFileName() + ": " + line);
 			}
 			// The Cloth package is spelt in two parts, so `grep -r` for it finds nothing in src (AC-UI-20).
 			for (String library : List.of("me." + "shed" + "aniel", "net.minecraft", "com.mojang", "com.terraformersmc")) {
