@@ -27,7 +27,7 @@ class FixedAnchorSourceTest {
 	private static final List<String> TREES = List.of("java", "kotlin");
 	private static final Map<String, String> ALLOWED = Map.of(
 			"render/marker/MarkerAnchor.kt", "defines the anchors",
-			"module/npcsearch/NpcWaypointMarkers.java", "positions from NpcRule and NPC-data coordinates only");
+			"module/npcsearch/NpcWaypointMarkers.kt", "positions from NpcRule and NPC-data coordinates only");
 	/** Every way to build one: the factory or the record, called, referenced (::) or imported, and {@code new Fixed(}. */
 	private static final Pattern BUILDS_A_FIXED_ANCHOR = Pattern.compile("MarkerAnchor\\s*(\\.|::)\\s*(fixed|Fixed|\\*)|new\\s+Fixed\\s*\\(");
 

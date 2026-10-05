@@ -261,11 +261,15 @@ class OptionCatalogTest {
 	@Test
 	void theTestCatalogHasEveryModule() throws IOException {
 		Set<String> moduleIds = new TreeSet<>();
-		try (Stream<Path> files = Files.walk(PROJECT.resolve("src/main/java"))) {
-			for (Path file : files.filter(path -> path.toString().endsWith(".java")).toList()) {
+		// Both source trees and both languages (R30): Java's "implements Module" and "String ID = ...",
+		// Kotlin's "class X : Module" and "const val ID: String = ...".
+		Pattern implementsModule = Pattern.compile("implements Module\\b|class \\w+\\s*:\\s*Module\\b");
+		Pattern moduleId = Pattern.compile("(?:String|const val) ID(?:: String)? = \"([a-z_]+)\"");
+		try (Stream<Path> files = Files.walk(PROJECT.resolve("src/main"))) {
+			for (Path file : files.filter(path -> path.toString().endsWith(".java") || path.toString().endsWith(".kt")).toList()) {
 				String source = Files.readString(file);
-				if (source.contains("implements Module")) {
-					java.util.regex.Matcher id = Pattern.compile("String ID = \"([a-z_]+)\"").matcher(source);
+				if (implementsModule.matcher(source).find()) {
+					java.util.regex.Matcher id = moduleId.matcher(source);
 					assertTrue(id.find(), "a module id in " + file.getFileName());
 					moduleIds.add(id.group(1));
 				}
