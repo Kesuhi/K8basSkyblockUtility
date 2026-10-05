@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** REQ-HUD-05, REQ-HUD-08 (T2.8): the HUD editor's model, AC-HUD-04 [A] and EC-HUD-01/02/03/06. */
+/** REQ-HUD-05, REQ-HUD-08 (T2.8), REQ-HUD-14 (T2.9c): the HUD editor's model, AC-HUD-04/14 [A] and EC-HUD-01/02/03/06. */
 class HudEditorModelTest {
 	private static final double W = 960;
 	private static final double H = 540;
@@ -36,6 +36,128 @@ class HudEditorModelTest {
 						return sizes.get(id)[1];
 					}
 				});
+	}
+
+	/** AC-HUD-14 [A] (T2.9c): dragged to 2 px from the vertical centre line, it snaps there and shows the guide; dropped, it stays. */
+	@Test
+	void aSnappingDragCentresTheElement() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		model.press(210, 110, W, H);
+		model.drag(442, 110, W, H, true);
+		assertEquals(430, model.rect("odds", W, H).x(), 0, "centre 482 snapped to 480");
+		assertTrue(model.guides(W, H).contains(new HudSnap.Guide(true, 480)));
+		model.release(W, H);
+		assertEquals(430, model.rect("odds", W, H).x(), 0, "kept on the drop");
+		assertEquals(0.5, model.positions().get("odds").anchor().fx(), "anchored to the centre column");
+		assertEquals(0, model.positions().get("odds").x(), "centred exactly");
+		assertTrue(model.guides(W, H).isEmpty(), "no guide after the drop");
+	}
+
+	/** AC-HUD-14 [A]: with Alt held (no snap) the element follows the mouse exactly and no guide shows. */
+	@Test
+	void withoutSnappingTheDragFollowsTheMouse() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		model.press(210, 110, W, H);
+		model.drag(442, 110, W, H, false);
+		assertEquals(432, model.rect("odds", W, H).x(), 0);
+		assertTrue(model.guides(W, H).isEmpty());
+	}
+
+	@Test
+	void aDragSnapsToAnotherElementsEdge() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		model.press(210, 110, W, H);
+		model.drag(783, 110, W, H, true);
+		assertEquals(776, model.rect("odds", W, H).x(), 0, "its right edge 873 to xp's left edge 876");
+		assertTrue(model.guides(W, H).contains(new HudSnap.Guide(true, 876)));
+	}
+
+	/** REQ-HUD-08: a click that only selects never moves the element, even 2 px from a target. */
+	@Test
+	void aPressWithoutMovingNeverSnaps() {
+		HudPosition stored = new HudPosition(HudAnchor.TOP_LEFT, 432, 100, 1);
+		HudEditorModel model = model(stored, XP_DEFAULT);
+		model.press(442, 110, W, H);
+		model.drag(442, 110, W, H, true);
+		assertEquals(stored, model.positions().get("odds"));
+		assertTrue(model.guides(W, H).isEmpty());
+	}
+
+	/** REQ-HUD-08: a hand's sub-pixel jitter during a click that only selects never snaps the element, 2 px from a target. */
+	@Test
+	void aJitterWhileClickingNeverSnaps() {
+		HudPosition stored = new HudPosition(HudAnchor.TOP_LEFT, 432, 100, 1);
+		HudEditorModel model = model(stored, XP_DEFAULT);
+		model.press(442, 110, W, H);
+		model.drag(442.33, 110, W, H, true);
+		model.drag(441.8, 109.9, W, H, true);
+		model.release(W, H);
+		assertEquals(stored, model.positions().get("odds"), "within 2 px of the press nothing snaps");
+	}
+
+	/** The 4 px are measured on the place as drawn: left 425.5 is drawn at 426, its centre 4 px from 480, and snaps. */
+	@Test
+	void theThresholdIsMeasuredOnTheDrawnPlace() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		model.press(210, 110, W, H);
+		model.drag(435.5, 110, W, H, true);
+		assertEquals(430, model.rect("odds", W, H).x(), 0);
+	}
+
+	/** EC-HUD-01 mid-drag: on another screen size the guides of the old one are not shown. */
+	@Test
+	void guidesAreForTheScreenTheyWereMadeFor() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		model.press(210, 110, W, H);
+		model.drag(442, 110, W, H, true);
+		assertFalse(model.guides(W, H).isEmpty());
+		assertTrue(model.guides(640, 360).isEmpty(), "resized: none until the next move");
+	}
+
+	@Test
+	void aScaledElementSnapsByItsScaledBounds() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1.5), XP_DEFAULT);
+		model.press(210, 110, W, H);
+		model.drag(417, 110, W, H, true);
+		assertEquals(405, model.rect("odds", W, H).x(), 0, "150 px wide: centre 482 to 480");
+	}
+
+	@Test
+	void itsOwnStartPlaceIsNoTarget() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		model.press(210, 110, W, H);
+		model.drag(212, 110, W, H, true);
+		assertEquals(202, model.rect("odds", W, H).x(), 0, "2 px away from where it started, nothing pulls it back");
+	}
+
+	@Test
+	void guidesClearOnScrollReleaseAndCancel() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		model.press(210, 110, W, H);
+		model.drag(442, 110, W, H, true);
+		assertFalse(model.guides(W, H).isEmpty());
+		model.scroll(450, 110, 1, W, H);
+		assertTrue(model.guides(W, H).isEmpty(), "a new scale: the guides are stale");
+		// 110 px wide now: left 426 puts its centre 1 px from 480.
+		model.drag(436, 110, W, H, true);
+		assertFalse(model.guides(W, H).isEmpty(), "the next move snaps the new size");
+		model.release(W, H);
+		assertTrue(model.guides(W, H).isEmpty());
+		model.press(440, 110, W, H);
+		model.drag(443, 110, W, H, true);
+		assertFalse(model.guides(W, H).isEmpty(), "snapped again before the cancel");
+		model.cancel();
+		assertTrue(model.guides(W, H).isEmpty());
+	}
+
+	/** Arrow nudges never snap: a 1 px step next to a target stays a 1 px step. */
+	@Test
+	void nudgesNeverSnap() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 428, 100, 1), XP_DEFAULT);
+		model.select("odds");
+		model.nudge(1, 0, W, H);
+		assertEquals(429, model.rect("odds", W, H).x(), 0, "centre 479, not pulled to 480");
+		assertTrue(model.guides(W, H).isEmpty());
 	}
 
 	/** AC-HUD-04: a drag by (+40, +25) moves the rectangle by as much, with no jump at the press. */

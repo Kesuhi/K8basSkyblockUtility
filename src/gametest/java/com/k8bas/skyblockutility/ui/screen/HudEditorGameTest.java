@@ -9,6 +9,7 @@ import com.k8bas.skyblockutility.hud.HudForTests;
 import com.k8bas.skyblockutility.hud.HudPosition;
 import com.k8bas.skyblockutility.hud.HudPositions;
 import com.k8bas.skyblockutility.hud.HudRect;
+import com.k8bas.skyblockutility.hud.HudSnap;
 import com.k8bas.skyblockutility.hud.HudRegistry;
 import com.k8bas.skyblockutility.hud.HudText;
 import com.k8bas.skyblockutility.hud.TextMeasure;
@@ -36,6 +37,8 @@ import java.util.Map;
  *   <li>AC-HUD-04 [C] + AC-HUD-05: a real mouse drag of (+40, +25) moves it by as much over 100 move events with
  *       no write, then Esc writes once; three wheel notches give 1.30; arrows nudge 1 and, with Shift, 10 px;
  *       Cancel puts every element back; Reset Selected and Reset All;</li>
+ *   <li>AC-HUD-14 [C] (T2.9c): dragged to 3 px from the vertical centre line it snaps there with its guide; with
+ *       Alt held it follows the mouse and shows no guide;</li>
  *   <li>EC-HUD-07: another screen replacing the editor saves once, as Esc; EC-HUD-08: it works from the title
  *       screen with previews; EC-HUD-01: a resize keeps the selection and the changes.</li>
  * </ul>
@@ -66,6 +69,7 @@ public class HudEditorGameTest implements FabricClientGameTest {
 				drawnOnceByTheEditor(context);
 				dragNudgeScaleAndSave(context);
 				cancelAndResets(context);
+				snapsToTheCentreLine(context);
 				externalCloseSaves(context);
 				untouchedEntriesStay(context);
 				entryPoints(context, singleplayer);
@@ -203,6 +207,52 @@ public class HudEditorGameTest implements FabricClientGameTest {
 		click(context, centre(context.computeOnClient(client -> bounds(editor(client).saveButton()))));
 		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Save closes it");
 		LOGGER.info("hud editor: Cancel restored {} entries; Reset Selected and Reset All put defaults back; a resize kept the selection", stored.size());
+	}
+
+	/**
+	 * AC-HUD-14 [C] (T2.9c): A dragged to 3 px from the vertical centre line snaps there and shows the guide; with Alt
+	 * held it follows the mouse and no guide shows; dropped, no guide stays. Cancelled, so nothing is kept.
+	 */
+	private static void snapsToTheCentreLine(ClientGameTestContext context) {
+		open(context, null);
+		HudRect before = rect(context, A);
+		double startX = Math.floor(before.x() + 20) + 0.5;
+		double startY = Math.floor(before.y() + 10) + 0.5;
+		cursorExact(context, startX, startY);
+		context.waitTicks(2);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		// To a left edge of 447: the centre (477) 3 px from the line at 480.
+		double targetX = startX + (447 - before.x());
+		for (int i = 1; i <= 20; i++) {
+			cursorExact(context, startX + (targetX - startX) * i / 20, startY);
+			context.waitTick();
+		}
+		context.waitTick();
+		HudRect snapped = rect(context, A);
+		check(snapped.x() == 450 && snapped.y() == before.y(), "snapped to the centre line: " + snapped);
+		check(context.computeOnClient(client -> editor(client).model().guides(client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()))
+				.contains(new HudSnap.Guide(true, 480)), "with its guide");
+		context.takeScreenshot("t2.9c-snap-centre");
+		// Alt held: a move off and back to the same place, and the element follows the mouse.
+		context.getInput().holdAlt();
+		cursorExact(context, targetX + 1, startY);
+		context.waitTick();
+		cursorExact(context, targetX, startY);
+		context.waitTicks(2);
+		HudRect free = rect(context, A);
+		check(free.x() == 447, "with Alt it does not snap: " + free);
+		check(context.computeOnClient(client -> editor(client).model().guides(client.getWindow().getGuiScaledWidth(),
+				client.getWindow().getGuiScaledHeight())).isEmpty(), "and shows no guide");
+		context.takeScreenshot("t2.9c-snap-alt-off");
+		context.getInput().releaseAlt();
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> editor(client).model().guides(client.getWindow().getGuiScaledWidth(),
+				client.getWindow().getGuiScaledHeight())).isEmpty(), "no guide after the drop");
+		click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closes it");
+		LOGGER.info("hud editor: A snapped to the centre line with its guide, followed the mouse with Alt held, no guide after the drop");
 	}
 
 	/** EC-HUD-07: another screen replacing the editor saves as Esc does. */

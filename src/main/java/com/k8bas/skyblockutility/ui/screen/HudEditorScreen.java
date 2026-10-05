@@ -8,6 +8,7 @@ import com.k8bas.skyblockutility.hud.HudElement;
 import com.k8bas.skyblockutility.hud.HudPosition;
 import com.k8bas.skyblockutility.hud.HudPositions;
 import com.k8bas.skyblockutility.hud.HudRect;
+import com.k8bas.skyblockutility.hud.HudSnap;
 import com.k8bas.skyblockutility.hud.HudRegistry;
 import com.k8bas.skyblockutility.hud.HudRenderer;
 import com.k8bas.skyblockutility.hud.HudText;
@@ -203,6 +204,16 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			}
 			UiText.draw(graphics, font, label, labelX, labelY, disabled ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY);
 		}
+		// While a drag is snapped, a 1 px accent guide per target it lies on (REQ-HUD-14), under the status panel.
+		List<HudSnap.Guide> guides = model.guides(width, height);
+		for (int i = 0; i < guides.size(); i++) {
+			HudSnap.Guide guide = guides.get(i);
+			if (guide.vertical()) {
+				graphics.fill(guide.at(), 0, guide.at() + 1, height, accent);
+			} else {
+				graphics.fill(0, guide.at(), width, guide.at() + 1, accent);
+			}
+		}
 		// Above the buttons, clear of the top edge where HUDs usually sit, on a panel over the game's own HUD.
 		String status = status();
 		int panelW = Math.max(font.width(status), font.width(HINT)) + 16;
@@ -362,7 +373,8 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 
 		@Override
 		public void drag(double mouseX, double mouseY) {
-			model.drag(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height);
+			// Snaps unless Alt is held (REQ-HUD-14); read live, as a drag event carries the modifiers of its press.
+			model.drag(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height, !minecraft.hasAltDown());
 		}
 
 		@Override

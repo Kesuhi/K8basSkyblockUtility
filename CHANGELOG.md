@@ -21,7 +21,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   binding. A ring in the accent colour shows where you are. Esc works as before.
 - **HUD editor.** `/ksu hud`, **Edit HUD layout** in General › HUD, or **Edit position** on a feature's card
   opens it: drag the mod's on-screen elements to move them, scroll to scale them (0.5–3.0), use the arrow keys
-  to nudge. Esc or Save keeps the layout; Cancel undoes the session.
+  to nudge. Esc or Save keeps the layout; Cancel undoes the session. While you drag, an element snaps to the
+  screen's centre lines and edges and to the other elements' edges when it comes within 4 px, and a thin line
+  shows where; hold Alt to place it freely.
 - **NPC waypoints get a beacon beam.** Each fixed NPC you add gets a beam from its block up to the
   top of the world, in its island's colour (each island has its own default, listed in SPEC.md,
   REQ-NPCWP-05). Like a vanilla beacon's, the beam is animated, terrain in front of it hides it,

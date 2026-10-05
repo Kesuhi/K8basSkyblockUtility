@@ -626,7 +626,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 - [x] **T2.9b feat(ui): keyboard focus navigation** (M, stretch, deps T2.4b). Tab/Shift+Tab move focus, Space/Enter activate, and the arrow keys operate focused controls.
   - Req: REQ-UI-18
   - Accept: AC-UI-05 and AC-UI-07 still pass (Esc order per REQ-UI-08 and REQ-UI-22).
-- [ ] **T2.9c feat(hud): snapping + guide lines in the HUD editor** (S, stretch, deps T2.8). Edges snap within 4 px to the screen edges, the centre lines and other elements, with 1 px guide lines; holding Alt disables snapping.
+- [x] **T2.9c feat(hud): snapping + guide lines in the HUD editor** (S, stretch, deps T2.8). Edges snap within 4 px to the screen edges, the centre lines and other elements, with 1 px guide lines; holding Alt disables snapping.
   - Req: REQ-HUD-14
   - Accept: AC-HUD-14.
 - [ ] **T2.9d feat(ui): anti-aliased rounded corners** (S, stretch, deps T2.2). Uses public render APIs only (no accessor mixin, per REQ-UI-17 and AD-4). Fill-based corners remain the default and the fallback. Skipped if 26.2 offers no public path.
