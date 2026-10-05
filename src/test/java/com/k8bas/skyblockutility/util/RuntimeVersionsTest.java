@@ -29,7 +29,7 @@ class RuntimeVersionsTest {
 		List<String> hits;
 		try (Stream<Path> files = Files.walk(root)) {
 			hits = files.filter(Files::isRegularFile)
-					.filter(file -> file.toString().endsWith(".java") || file.toString().endsWith(".json"))
+					.filter(file -> file.toString().endsWith(".java") || file.toString().endsWith(".kt") || file.toString().endsWith(".json"))
 					.flatMap(file -> {
 						try {
 							return Files.readAllLines(file).stream().filter(line -> literal.matcher(line).find())

@@ -48,15 +48,22 @@ class CommandWordsTest {
 	@Test
 	void settingsUiAndCommandCodeSendNothing() throws IOException {
 		Pattern sends = Pattern.compile("sendCommand|sendChat|sendUnsignedCommand|\\.connection\\.send|getConnection\\(\\)\\.send|ServerboundChat");
-		Path root = Path.of(System.getProperty("k8bas.projectDir", ".")).resolve("src/main/java/com/k8bas/skyblockutility");
-		List<Path> dirs = List.of(root.resolve("settings"), root.resolve("ui"), root.resolve("debug"));
+		Path project = Path.of(System.getProperty("k8bas.projectDir", "."));
 		int files = 0;
-		for (Path dir : dirs) {
-			try (Stream<Path> walk = Files.walk(dir)) {
-				for (Path file : walk.filter(path -> path.toString().endsWith(".java")).toList()) {
-					files++;
-					String source = Files.readString(file);
-					assertTrue(!sends.matcher(source).find(), file + " sends something to the server");
+		// Both source trees (R30: some of these packages are Kotlin); a package not (yet) in a tree is skipped.
+		for (String tree : List.of("src/main/java", "src/main/kotlin")) {
+			Path root = project.resolve(tree).resolve("com/k8bas/skyblockutility");
+			for (String pkg : List.of("settings", "ui", "debug")) {
+				Path dir = root.resolve(pkg);
+				if (!Files.isDirectory(dir)) {
+					continue;
+				}
+				try (Stream<Path> walk = Files.walk(dir)) {
+					for (Path file : walk.filter(path -> path.toString().endsWith(".java") || path.toString().endsWith(".kt")).toList()) {
+						files++;
+						String source = Files.readString(file);
+						assertTrue(!sends.matcher(source).find(), file + " sends something to the server");
+					}
 				}
 			}
 		}

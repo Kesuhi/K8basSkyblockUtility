@@ -22,7 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * NpcWaypointMarkers takes NpcRules, so where a rule's coordinates come from stays a review item.
  */
 class FixedAnchorSourceTest {
-	private static final Path MAIN = Path.of(System.getProperty("k8bas.projectDir", "../..")).resolve("src/main/java");
+	/** Both source trees (R30): a file is named by its path under the package root, with its extension. */
+	private static final Path MAIN = Path.of(System.getProperty("k8bas.projectDir", "../..")).resolve("src/main");
+	private static final List<String> TREES = List.of("java", "kotlin");
 	private static final Map<String, String> ALLOWED = Map.of(
 			"render/marker/MarkerAnchor.java", "defines the anchors",
 			"module/npcsearch/NpcWaypointMarkers.java", "positions from NpcRule and NPC-data coordinates only");
@@ -33,7 +35,7 @@ class FixedAnchorSourceTest {
 	void onlyReviewedFilesBuildFixedAnchors() throws IOException {
 		List<String> offenders;
 		try (Stream<Path> files = Files.walk(MAIN)) {
-			offenders = files.filter(file -> file.toString().endsWith(".java"))
+			offenders = files.filter(file -> file.toString().endsWith(".java") || file.toString().endsWith(".kt"))
 					.filter(file -> !ALLOWED.containsKey(relative(file)))
 					.filter(FixedAnchorSourceTest::buildsAFixedAnchor)
 					.map(FixedAnchorSourceTest::relative)
@@ -48,7 +50,8 @@ class FixedAnchorSourceTest {
 			assertTrue(files.anyMatch(file -> relative(file).equals("render/marker/MarkerAnchor.java")), "the scan finds the main sources");
 		}
 		for (String allowed : ALLOWED.keySet()) {
-			assertTrue(Files.exists(MAIN.resolve("com/k8bas/skyblockutility").resolve(allowed)), "a listed file that no longer exists: " + allowed);
+			assertTrue(TREES.stream().anyMatch(tree -> Files.exists(MAIN.resolve(tree).resolve("com/k8bas/skyblockutility").resolve(allowed))),
+					"a listed file that no longer exists: " + allowed);
 		}
 	}
 
@@ -62,6 +65,6 @@ class FixedAnchorSourceTest {
 	}
 
 	private static String relative(Path file) {
-		return MAIN.relativize(file).toString().replace('\\', '/').replaceFirst("^com/k8bas/skyblockutility/", "");
+		return MAIN.relativize(file).toString().replace('\\', '/').replaceFirst("^(java|kotlin)/com/k8bas/skyblockutility/", "");
 	}
 }
