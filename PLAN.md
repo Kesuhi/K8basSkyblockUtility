@@ -596,7 +596,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 - [x] **T2.10d refactor(ui): settings-screen helpers and widgets in Kotlin** (M, deps T2.10c). `ui/screen` ConfigLayout, PickerRows, SearchView; `ui/widget` WidgetScreen, DropdownPlacement, GameClipboard, KeyConflicts, WheelTexture; `settings/` ListDatabase, OptionCatalog, RuleFields (11 files). The source scans read `.kt` too.
   - Req: REQ-UI-26
   - Accept: AC-UI-26 for these files.
-- [ ] **T2.10e refactor(render): marker value types in Kotlin** (S, deps T2.10b). `render/marker` Marker, MarkerAnchor, MarkerBeam, MarkerLabel, MarkerRing (5 files).
+- [x] **T2.10e refactor(render): marker value types in Kotlin** (S, deps T2.10b). `render/marker` Marker, MarkerAnchor, MarkerBeam, MarkerLabel, MarkerRing (5 files).
   - Req: REQ-UI-26
   - Accept: AC-UI-26 for these files.
 - [ ] **T2.10f refactor: location, debug and updater runtime in Kotlin** (M, deps T2.10b). `location/` (4); `debug/` DebugCommand, NameMasker, ContainerDump; `update/` GitHubReleaseSource, Updates (9 files).

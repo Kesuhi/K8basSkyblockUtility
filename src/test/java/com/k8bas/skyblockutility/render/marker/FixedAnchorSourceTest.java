@@ -26,7 +26,7 @@ class FixedAnchorSourceTest {
 	private static final Path MAIN = Path.of(System.getProperty("k8bas.projectDir", "../..")).resolve("src/main");
 	private static final List<String> TREES = List.of("java", "kotlin");
 	private static final Map<String, String> ALLOWED = Map.of(
-			"render/marker/MarkerAnchor.java", "defines the anchors",
+			"render/marker/MarkerAnchor.kt", "defines the anchors",
 			"module/npcsearch/NpcWaypointMarkers.java", "positions from NpcRule and NPC-data coordinates only");
 	/** Every way to build one: the factory or the record, called, referenced (::) or imported, and {@code new Fixed(}. */
 	private static final Pattern BUILDS_A_FIXED_ANCHOR = Pattern.compile("MarkerAnchor\\s*(\\.|::)\\s*(fixed|Fixed|\\*)|new\\s+Fixed\\s*\\(");
@@ -47,7 +47,7 @@ class FixedAnchorSourceTest {
 	@Test
 	void theScanSeesTheSources() throws IOException {
 		try (Stream<Path> files = Files.walk(MAIN)) {
-			assertTrue(files.anyMatch(file -> relative(file).equals("render/marker/MarkerAnchor.java")), "the scan finds the main sources");
+			assertTrue(files.anyMatch(file -> relative(file).equals("render/marker/MarkerAnchor.kt")), "the scan finds the main sources");
 		}
 		for (String allowed : ALLOWED.keySet()) {
 			assertTrue(TREES.stream().anyMatch(tree -> Files.exists(MAIN.resolve(tree).resolve("com/k8bas/skyblockutility").resolve(allowed))),
