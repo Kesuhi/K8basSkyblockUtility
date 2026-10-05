@@ -620,7 +620,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 
 *Stretch, after G2 (optional per D-8 / REQ-UI-18. Nothing for 2.0.0 and no checkpoint waits on these. The multi-select dropdown moved to T6.7.)*
 
-- [ ] **T2.9 feat(ui): open and category-switch animations** (S, stretch, deps T2.4a). The panel opens with a scale of 0.90 → 1.00 over 220 ms; switching category plays a 200 ms slide-and-fade.
+- [x] **T2.9 feat(ui): open and category-switch animations** (S, stretch, deps T2.4a). The panel opens with a scale of 0.90 → 1.00 over 220 ms; switching category plays a 200 ms slide-and-fade.
   - Req: REQ-UI-18
   - Accept: AC-UI-02 and AC-UI-03 still pass during and after the animations.
 - [ ] **T2.9b feat(ui): keyboard focus navigation** (M, stretch, deps T2.4b). Tab/Shift+Tab move focus, Space/Enter activate, and the arrow keys operate focused controls.

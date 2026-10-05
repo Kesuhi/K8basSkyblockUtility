@@ -22,6 +22,7 @@ import com.k8bas.skyblockutility.ui.option.SearchIndex;
 import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.Clip;
+import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
@@ -35,6 +36,7 @@ import com.k8bas.skyblockutility.ui.widget.Dropdown;
 import com.k8bas.skyblockutility.ui.widget.GameClipboard;
 import com.k8bas.skyblockutility.ui.widget.KeyMappingTarget;
 import com.k8bas.skyblockutility.ui.widget.KeybindButton;
+import com.k8bas.skyblockutility.ui.widget.Overlay;
 import com.k8bas.skyblockutility.ui.widget.SavesOnClose;
 import com.k8bas.skyblockutility.ui.widget.ScrollArea;
 import com.k8bas.skyblockutility.ui.widget.Slider;
@@ -60,6 +62,8 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
+import java.util.function.LongSupplier;
 
 /**
  * The settings screen (T2.4a, REQ-UI-01): one centred panel over the dimmed game, with a header (name,
@@ -104,6 +108,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private ConfigLayout.Frame frame;
 	/** A category's remembered scroll, applied once its page height is known. */
 	private int pendingScroll = -1;
+	/** The open scale and the category slide-and-fade (REQ-UI-18, T2.9). */
+	private final ConfigMotion motion;
+	/** The scroll the page was laid out at this frame: the real scroll less the slide, so text and cards move together. */
+	private int pageScroll;
 
 	public ConfigScreen(Screen parent) {
 		this(parent, OptionCatalog.live());
@@ -115,11 +123,19 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (!search.isBlank()) {
 			this.search.model().setText(search.strip());
 			applyQuery(this.search.model().text());
+			// The category the search picked is the first page: it comes with the open, without a slide.
+			motion.finish();
 		}
 	}
 
 	ConfigScreen(Screen parent, List<Card> cards) {
+		this(parent, cards, UiClock.MILLIS, () -> UiClock.MOTION);
+	}
+
+	/** With the motion's clock and switch given, so a gametest can step through an animation (T2.9). */
+	ConfigScreen(Screen parent, List<Card> cards, LongSupplier clock, BooleanSupplier motionOn) {
 		super(Component.literal(NAME));
+		this.motion = new ConfigMotion(clock, motionOn);
 		this.parent = parent;
 		this.cards = cards;
 		this.categories = ConfigLayout.categories(cards);
@@ -192,6 +208,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (!keepFocus) {
 			focus(null);
 		}
+		Category previous = selected;
 		if (page != null) {
 			// A category shown and left before a frame was drawn keeps the scroll it came with.
 			scrolls.put(selected, pendingScroll >= 0 ? pendingScroll : scrollArea.scroll());
@@ -203,6 +220,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		pageWidgets = List.copyOf(page.widgets());
 		widgets().addAll(1, pageWidgets);
 		pendingScroll = scrolls.getOrDefault(category, 0);
+		// Every switch (a tab, select, a search) slides and fades the new page in; the first page comes with the open.
+		if (previous != null) {
+			motion.switchCategory(categories.indexOf(previous), categories.indexOf(category));
+		}
 	}
 
 	/**
@@ -283,6 +304,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (viewStale) {
 			refreshView();
 		}
+		// After the view: a switch it made starts on this frame, the first that draws the new page.
+		motion.frame();
 		frame = ConfigLayout.frame(width, height);
 		ConfigLayout.Rect sidebar = frame.sidebar();
 		tabs.setBounds(sidebar.x() + 6, sidebar.y() + 8, Math.max(0, sidebar.w() - 12), Math.max(0, sidebar.h() - 12));
@@ -291,16 +314,19 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		clear.setBounds(box.right() - ClearButton.SIZE - 2, box.y() + (box.h() - ClearButton.SIZE) / 2, ClearButton.SIZE, ClearButton.SIZE);
 		ConfigLayout.Rect content = frame.content();
 		scrollArea.setBounds(content.x(), content.y(), content.w(), content.h());
+		// The slide moves the page, not the scroll: its widgets are laid out where they are drawn, so clicks meet them (AC-UI-03).
+		int slide = motion.slideOffset();
 		int scroll = scrollArea.scroll();
-		ConfigLayout.Page laidOut = page.layout(frame, scroll, font::width, filter);
+		ConfigLayout.Page laidOut = page.layout(frame, scroll - slide, font::width, filter);
 		scrollArea.setContentHeight(laidOut.height());
 		if (pendingScroll >= 0) {
 			scrollArea.setScroll(pendingScroll);
 			pendingScroll = -1;
 		}
 		if (scrollArea.scroll() != scroll) {
-			page.layout(frame, scrollArea.scroll(), font::width, filter);
+			page.layout(frame, scrollArea.scroll() - slide, font::width, filter);
 		}
+		pageScroll = scrollArea.scroll() - slide;
 		syncPageWidgets();
 	}
 
@@ -360,7 +386,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	 */
 	private void drawPageText(GuiGraphicsExtractor graphics, Theme theme, int mouseX, int mouseY) {
 		ConfigLayout.Rect content = frame.content();
-		int scroll = scrollArea.scroll();
+		int scroll = pageScroll;
 		try (Clip clip = Clip.push(graphics, content.x(), content.y(), content.w(), content.h())) {
 			if (!clip.visible()) {
 				return;
@@ -524,12 +550,54 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	@Override
 	public void added() {
 		super.added();
+		// Each time the screen shows (also back from the HUD editor), never on a resize.
+		motion.open();
 		session.open();
 		// The settings file could not be read and was copied aside: say where, once (EC-UI-16).
 		String backup = ConfigManager.takeBackupForScreen();
 		if (backup != null) {
 			Notices.post(new Notice("Settings file backed up", List.of("A copy is in the config folder:", backup)));
 		}
+	}
+
+	@Override
+	protected float contentScale() {
+		return motion.scale();
+	}
+
+	/**
+	 * The fade of a category switch: a veil in the panel colour over the content, clearing over 200 ms. The content
+	 * lies on the opaque panel colour, so this looks the same as fading the content in, with no alpha on each widget.
+	 */
+	@Override
+	protected void drawOverWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		int veil = motion.veilAlpha();
+		if (veil > 0) {
+			ConfigLayout.Rect content = frame.content();
+			graphics.fill(content.x(), content.y(), content.right(), content.bottom(), ColorMath.withAlpha(veil, Theme.PANEL & 0xFFFFFF));
+		}
+	}
+
+	/**
+	 * An overlay (a dropdown's list, the colour picker) is drawn unscaled and in the settled layout, so the motion ends
+	 * first. The rest of a slide goes into the scroll, so the page stays where it is drawn and the control that opened
+	 * the overlay keeps its place (a list anchored to a box that moved could close at once).
+	 */
+	@Override
+	public void open(Overlay overlay) {
+		int slide = motion.slideOffset();
+		motion.finish();
+		if (slide != 0 && page != null && frame != null) {
+			scrollArea.setScroll(scrollArea.scroll() - slide);
+			page.layout(frame, scrollArea.scroll(), font::width, filter);
+			pageScroll = scrollArea.scroll();
+		}
+		super.open(overlay);
+	}
+
+	/** For gametests: the motion, to step through or check. */
+	ConfigMotion motion() {
+		return motion;
 	}
 
 	/** Every way the screen goes (Esc, replaced by another screen, a disconnect) saves once (REQ-UI-15, EC-UI-02). */

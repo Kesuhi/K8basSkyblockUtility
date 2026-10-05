@@ -131,8 +131,10 @@ test {
 
 // Gametests never contact GitHub: the update check goes to a closed local port (one WARN line).
 // The update-notice gametest points the updater at its own local test server.
+// They also run without the settings screen's motion (T2.9), as they click at the settled layout;
+// ConfigMotionGameTest turns it on for its own screen on a manual clock.
 tasks.matching { it.name == "runClientGameTest" }.configureEach {
-	jvmArgs "-Dk8bas.update.source=http://127.0.0.1:1/updates-disabled-in-gametests"
+	jvmArgs "-Dk8bas.update.source=http://127.0.0.1:1/updates-disabled-in-gametests", "-Dk8bas.ui.motion=off"
 }
 
 // The release sidecar (REQ-REL-07): "<64 lowercase hex>  <jar name>" and LF, UTF-8 without a BOM.

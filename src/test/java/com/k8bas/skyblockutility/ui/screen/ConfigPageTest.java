@@ -19,6 +19,7 @@ import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.Option;
 import com.k8bas.skyblockutility.ui.option.OptionText;
 import com.k8bas.skyblockutility.ui.option.Toggle;
+import com.k8bas.skyblockutility.ui.render.ScaleAbout;
 import com.k8bas.skyblockutility.ui.widget.Dropdown;
 import com.k8bas.skyblockutility.ui.widget.KeyTarget;
 import com.k8bas.skyblockutility.ui.widget.KeybindButton;
@@ -111,40 +112,81 @@ class ConfigPageTest {
 	/** AC-UI-03 [A]: centre and edge reach only the control and change only its setting; 1 px outside reaches only a toggle card. */
 	@Test
 	void clicksReachOnlyTheirControl() {
+		checkClicks(0, 1F);
+	}
+
+	/**
+	 * AC-UI-03 [A] for the page during a category switch (T2.9): laid out slid down or up, the page takes clicks where
+	 * its controls are. The screen's own path (WidgetScreen) is covered by ConfigMotionGameTest.
+	 */
+	@Test
+	void clicksReachOnlyTheirControlWhileTheContentSlides() {
+		checkClicks(-ConfigMotion.SLIDE_PX, 1F);
+		checkClicks(ConfigMotion.SLIDE_PX, 1F);
+	}
+
+	/**
+	 * AC-UI-03 [A] for the page during the open (T2.9): with the panel drawn scaled about the screen centre, a click at a
+	 * control's drawn place, mapped back with ScaleAbout.toLocal (the mapping WidgetScreen applies), reaches that control
+	 * only: the layout and the mapping agree to the edge pixels. The screen's own path is covered by ConfigMotionGameTest.
+	 */
+	@Test
+	void clicksReachOnlyTheirControlWhileThePanelScales() {
+		checkClicks(0, 0.90F);
+		checkClicks(0, 0.95F);
+	}
+
+	/**
+	 * Clicks every control of every category at its centre, its inner edges and 1 px outside, with the page laid out at
+	 * [scroll] and the panel drawn at [scale] about the centre of a 1280x720 screen (as WidgetScreen draws and maps it).
+	 */
+	private void checkClicks(int scroll, float scale) {
 		List<Card> cards = catalog();
 		ConfigLayout.Frame frame = ConfigLayout.frame(1280, 720);
+		double cx = 640;
+		double cy = 360;
+		// Drawn: a layout point scaled about the centre; clicked there, then mapped back to the layout.
+		java.util.function.ToDoubleBiFunction<Double, Boolean> drawn = (value, horizontal) ->
+				ScaleAbout.toScreen(value, horizontal ? cx : cy, scale);
 		int checked = 0;
 		for (Category category : ConfigLayout.categories(cards)) {
 			ConfigPage page = new ConfigPage(category, cards, this::control);
-			page.layout(frame, 0, text -> text.length() * 6);
+			page.layout(frame, scroll, text -> text.length() * 6);
 			for (ConfigLayout.Row row : page.page().rows()) {
 				if (!(row instanceof ConfigLayout.OptionRow optionRow)) {
 					continue;
 				}
-				ConfigLayout.Rect card = ConfigLayout.card(frame, 0, optionRow);
-				if (card.bottom() > frame.content().bottom()) {
+				ConfigLayout.Rect card = ConfigLayout.card(frame, scroll, optionRow);
+				if (card.bottom() > frame.content().bottom() || card.y() < frame.content().y()) {
 					continue;
 				}
 				Option option = optionRow.option();
 				Widget control = page.control(option);
 				ConfigLayout.Rect rect = ConfigLayout.control(card, option);
-				for (double[] point : new double[][] {{rect.x() + rect.w() / 2.0, rect.y() + rect.h() / 2.0}, {rect.x(), rect.y()},
-						{rect.right() - 1, rect.bottom() - 1}}) {
+				double left = drawn.applyAsDouble((double) rect.x(), true);
+				double top = drawn.applyAsDouble((double) rect.y(), false);
+				double right = drawn.applyAsDouble((double) rect.right(), true);
+				double bottom = drawn.applyAsDouble((double) rect.bottom(), false);
+				// The drawn centre, and the drawn edges a quarter pixel in (the inner edge pixel at any scale).
+				for (double[] point : new double[][] {{(left + right) / 2, (top + bottom) / 2}, {left + 0.25, top + 0.25},
+						{right - 0.25, bottom - 0.25}}) {
 					opened.clear();
 					String before = state();
-					Widget hit = press(page, point[0], point[1]);
-					assertSame(control, hit, option.id() + " at " + point[0] + "," + point[1]);
+					Widget hit = press(page, ScaleAbout.toLocal(point[0], cx, scale), ScaleAbout.toLocal(point[1], cy, scale));
+					assertSame(control, hit, option.id() + " at " + point[0] + "," + point[1] + " (scroll " + scroll + ", scale " + scale + ")");
 					expectOnlyItsSetting(option, before, page);
 				}
 				opened.clear();
 				String before = state();
-				Widget outside = press(page, rect.x() - 1, rect.y() + rect.h() / 2.0);
+				double outsideX = ScaleAbout.toLocal(left - 1, cx, scale);
+				double outsideY = ScaleAbout.toLocal((top + bottom) / 2, cy, scale);
+				Widget outside = press(page, outsideX, outsideY);
 				if (option instanceof Toggle) {
 					assertSame(page.card(option), outside, option.id() + ": the whole card toggles");
 					assertFalse(before.equals(state()), option.id() + ": and flips it");
-					press(page, rect.x() - 1, rect.y() + rect.h() / 2.0);
+					press(page, outsideX, outsideY);
 				} else {
-					assertNull(outside, option.id() + ": 1 px outside reaches nothing");
+					assertNull(outside, option.id() + ": 1 px outside reaches nothing (scroll " + scroll + ", scale " + scale + ")");
 					assertEquals(before, state(), option.id() + ": and changes nothing");
 				}
 				checked++;

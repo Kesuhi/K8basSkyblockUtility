@@ -15,6 +15,7 @@
 			"com.k8bas.skyblockutility.ui.widget.ListTooltipGameTest",
 			"com.k8bas.skyblockutility.ui.notice.NoticeGameTest",
 			"com.k8bas.skyblockutility.ui.screen.ConfigScreenGameTest",
+			"com.k8bas.skyblockutility.ui.screen.ConfigMotionGameTest",
 			"com.k8bas.skyblockutility.ui.screen.RuleCardsGameTest",
 			"com.k8bas.skyblockutility.ui.screen.DatabasePickerGameTest",
 			"com.k8bas.skyblockutility.ui.screen.OpenCloseGameTest",

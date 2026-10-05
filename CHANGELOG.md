@@ -12,6 +12,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   settings screen: categories down the side, a search box that finds every option and rule, rules
   as cards you open and edit in place, and **Add from database** with island folders and a search.
 - **`/ksu <text>` opens the settings with `<text>` searched**, for example `/ksu glow`.
+- **A little motion in the settings screen.** It opens with a short zoom, and switching category slides
+  and fades the new page in. Both take about a fifth of a second, and clicks land where things are drawn
+  while they play.
 - **HUD editor.** `/ksu hud`, **Edit HUD layout** in General › HUD, or **Edit position** on a feature's card
   opens it: drag the mod's on-screen elements to move them, scroll to scale them (0.5–3.0), use the arrow keys
   to nudge. Esc or Save keeps the layout; Cancel undoes the session.

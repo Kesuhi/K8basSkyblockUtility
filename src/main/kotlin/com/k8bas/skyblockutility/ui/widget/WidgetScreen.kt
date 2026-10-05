@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget
 
 import com.k8bas.skyblockutility.ui.render.Clip
+import com.k8bas.skyblockutility.ui.render.ScaleAbout
 import com.k8bas.skyblockutility.ui.render.Shapes
 import com.k8bas.skyblockutility.ui.render.Theme
 import com.k8bas.skyblockutility.ui.render.TooltipLayout
@@ -16,6 +17,7 @@ import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 import kotlin.math.abs
+import kotlin.math.floor
 import kotlin.math.sign
 
 /**
@@ -52,6 +54,11 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	/** Asked for by [drawContent] this frame. */
 	private var requestedTooltip = ""
+
+	/** The content's scale and its centre as drawn last (T2.9); the mouse maps back through them until the next frame. */
+	private var frameScale = 1F
+	private var frameCx = 0F
+	private var frameCy = 0F
 
 	/** Counts focus requests, so a press that asked for one (even for the widget that already had it) keeps it. */
 	private var focusRequests = 0
@@ -183,16 +190,49 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	protected open fun drawContent(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
 	}
 
+	/** Draws over the widgets, under any overlay and the tooltip (a fade veil); in the same scale as the content. */
+	protected open fun drawOverWidgets(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
+	}
+
+	/**
+	 * The scale this frame's content and widgets are drawn at, about the screen centre (an opening panel, T2.9);
+	 * asked after [layout]. Overlays and tooltips are never scaled, and while an overlay is open the content is not either.
+	 */
+	protected open fun contentScale(): Float = 1F
+
+	/** Where a mouse x or y lies in the layout: through the inverse of the scale drawn last, so input meets what was drawn. */
+	private fun localX(x: Double): Double = ScaleAbout.toLocal(x, frameCx.toDouble(), frameScale)
+
+	private fun localY(y: Double): Double = ScaleAbout.toLocal(y, frameCy.toDouble(), frameScale)
+
 	override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
 		super.extractRenderState(graphics, mouseX, mouseY, partialTick)
 		layout()
 		requestedTooltip = ""
+		// The transform input maps through until the next frame; no scale under an open overlay.
+		frameScale = if (overlay != null) 1F else contentScale()
+		frameCx = width / 2F
+		frameCy = height / 2F
+		val lookX = localX(mouseX.toDouble())
+		val lookY = localY(mouseY.toDouble())
 		// Under an open overlay nothing shows hover.
-		val underX = if (overlay != null) -1 else mouseX
-		val underY = if (overlay != null) -1 else mouseY
-		drawContent(graphics, underX, underY)
-		for (widget in widgets) {
-			drawClipped(graphics, widget, underX, underY)
+		val underX = if (overlay != null) -1 else floor(lookX).toInt()
+		val underY = if (overlay != null) -1 else floor(lookY).toInt()
+		val scaled = frameScale != 1F
+		if (scaled) {
+			graphics.pose().pushMatrix()
+			graphics.pose().scaleAround(frameScale, frameCx, frameCy)
+		}
+		try {
+			drawContent(graphics, underX, underY)
+			for (widget in widgets) {
+				drawClipped(graphics, widget, underX, underY)
+			}
+			drawOverWidgets(graphics, underX, underY)
+		} finally {
+			if (scaled) {
+				graphics.pose().popMatrix()
+			}
 		}
 		val open = overlay
 		if (open != null) {
@@ -212,7 +252,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 				drawClipped(graphics, widget, mouseX, mouseY)
 			}
 		}
-		drawTooltip(graphics, mouseX, mouseY)
+		drawTooltip(graphics, mouseX, mouseY, lookX, lookY)
 	}
 
 	/** Draws a widget inside its clip region, if it has one; the mouse outside the region is no hover. */
@@ -249,7 +289,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	 * a control without one shows its card's. With an overlay open only its widgets count. None while a
 	 * press is held, so a drag is not covered.
 	 */
-	private fun drawTooltip(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
+	private fun drawTooltip(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, lookX: Double, lookY: Double) {
 		lastTooltip = null
 		if (pressed != null) {
 			return
@@ -258,8 +298,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		val active = activeWidgets()
 		for (i in active.size - 1 downTo 0) {
 			val widget = active[i]
-			if (widget.contains(mouseX.toDouble(), mouseY.toDouble()) && widget.inClip(mouseX.toDouble(), mouseY.toDouble())) {
-				val own = widget.tooltipAt(mouseX.toDouble(), mouseY.toDouble())
+			// The widget under the mouse in the layout (the content may be scaled); the box itself at the real mouse, unscaled.
+			if (widget.contains(lookX, lookY) && widget.inClip(lookX, lookY)) {
+				val own = widget.tooltipAt(lookX, lookY)
 				if (!own.isNullOrEmpty()) {
 					text = own
 					break
@@ -296,13 +337,15 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			return true
 		}
 		val active = activeWidgets()
+		val x = localX(event.x())
+		val y = localY(event.y())
 		for (i in active.size - 1 downTo 0) {
 			val widget = active[i]
-			if (!widget.inClip(event.x(), event.y())) {
+			if (!widget.inClip(x, y)) {
 				continue
 			}
 			val requestsBefore = focusRequests
-			if (widget.press(event.x(), event.y(), event.button())) {
+			if (widget.press(x, y, event.button())) {
 				pressed = widget
 				pressedButton = event.button()
 				// A press that set the focus itself (a clear button handing it back to its field) keeps that.
@@ -314,6 +357,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		}
 		val open = overlay
 		if (open != null) {
+			// No scale while an overlay is open, so these are the raw coordinates.
 			if (!open.modal() && !open.contains(event.x(), event.y())) {
 				closeOverlay(true)
 			}
@@ -331,7 +375,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean {
 		val held = pressed
 		if (held != null && event.button() == pressedButton) {
-			held.drag(event.x(), event.y())
+			held.drag(localX(event.x()), localY(event.y()))
 			return true
 		}
 		return super.mouseDragged(event, dragX, dragY)
@@ -342,7 +386,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (held != null && event.button() == pressedButton) {
 			pressed = null
 			pressedButton = -1
-			held.release(event.x(), event.y())
+			held.release(localX(event.x()), localY(event.y()))
 			return true
 		}
 		if (event.button() == swallowedRelease) {
@@ -371,8 +415,10 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		}
 		if (notches != 0) {
 			val active = activeWidgets()
+			val x = localX(mouseX)
+			val y = localY(mouseY)
 			for (i in active.size - 1 downTo 0) {
-				if (active[i].inClip(mouseX, mouseY) && active[i].scroll(mouseX, mouseY, notches, fine)) {
+				if (active[i].inClip(x, y) && active[i].scroll(x, y, notches, fine)) {
 					return true
 				}
 			}
