@@ -1,5 +1,7 @@
 plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	// The settings UI and the HUD editor are Kotlin (R29); Fabric Language Kotlin brings the runtime.
+	id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
 	id 'maven-publish'
 }
 
@@ -51,6 +53,9 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// Fabric Language Kotlin: the Kotlin standard library at runtime, a required mod (R29). Not bundled.
+	implementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
 	// Mod Menu integration is optional: compiled against, but not required at runtime.
 	compileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
@@ -188,6 +193,13 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.release = 25
+}
+
+// The same target as Java; set here rather than taken from the JDK Gradle runs on.
+kotlin {
+	compilerOptions {
+		jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_25
+	}
 }
 
 java {

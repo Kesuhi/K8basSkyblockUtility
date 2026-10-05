@@ -52,6 +52,9 @@ class FabricModJsonTest {
 		assertFalse(accepts("fabricloader", "0.19.4"));
 		assertTrue(accepts("fabric-api", "0.161.0"));
 		assertTrue(accepts("render-chest", "1.0.3+26.2"));
+		// R29: the settings UI is Kotlin; Fabric Language Kotlin brings its runtime.
+		assertTrue(accepts("fabric-language-kotlin", "1.14.1+kotlin.2.4.20"));
+		assertFalse(accepts("fabric-language-kotlin", "1.14.0+kotlin.2.4.10"));
 		assertFalse(accepts("render-chest", "1.0.2+26.2"));
 	}
 

@@ -581,9 +581,10 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 
 **Best-fit languages [decided R29, R30]** (before the stretch tasks and the 1.2.0 release). Each file's language follows `docs/language-classification.md`; 73 files move to Kotlin in the batches below, lowest risk first, one commit each on `update/26.2`. A converted file keeps its Java-facing API (`@JvmRecord`, `@JvmStatic`, `@JvmField`, `@JvmOverloads`, public test hooks), so its Java callers and the tests stay unchanged, and the existing suite is the check that behaviour is kept.
 
-- [ ] **T2.10a build(ui): Kotlin and Fabric Language Kotlin** (S, deps G2). The Kotlin Gradle plugin (JVM 25, as Java), `src/main/kotlin` next to `src/main/java`, Fabric Language Kotlin as a required mod (`fabric.mod.json`, CHANGELOG; the README with the compaction).
+- [x] **T2.10a build(ui): Kotlin and Fabric Language Kotlin** (S, deps G2). The Kotlin Gradle plugin (JVM 25, as Java), `src/main/kotlin` next to `src/main/java`, Fabric Language Kotlin as a required mod (`fabric.mod.json`, CHANGELOG; the README with the compaction).
   - Req: REQ-UI-26
   - Accept: AC-UI-26 (the dependency part); `build` and every gametest green; FabricModJsonTest checks the dependency.
+  - Done (2026-10-05): the Kotlin Gradle plugin 2.4.20 (the Kotlin of Fabric Language Kotlin 1.14.1, Gradle 9.5.1 supported) with `jvmTarget = JVM_25`, matching Java's `release 25`; Fabric Language Kotlin `1.14.1+kotlin.2.4.20` as `implementation` (it brings the standard library to compile, test and dev runs; nothing is bundled) and in `fabric.mod.json` `depends` as `>=1.14.1+kotlin.2.4.20`; CHANGELOG names the new requirement (the README with its compaction). FabricModJsonTest accepts 1.14.1 and refuses 1.14.0. `build` and every gametest green; the dev client lists fabric-language-kotlin 1.14.1.
 - [ ] **T2.10b refactor: HUD value types and pure logic in Kotlin** (M, deps T2.10a). `hud/` HudPosition, HudRect, HudText, HudLayout, HudRegistry, HudPositions, HudEditorModel; `ui/color/Hsv`; `util/JsonEntries`; `update/` SemVer, CheckPolicy, AssetSelector, CandidateFinder (13 files).
   - Req: REQ-UI-26
   - Accept: AC-UI-26 for these files.
