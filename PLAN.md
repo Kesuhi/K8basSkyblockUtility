@@ -608,7 +608,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 - [x] **T2.10h refactor(config): config manager and migrator in Kotlin** (M, deps T2.10g). `config/ConfigManager`, `config/migration/Migrator` (2 files), checked against the config-loading tests and the 1.0.1 fixtures.
   - Req: REQ-UI-26
   - Accept: AC-UI-26 for these files.
-- [ ] **T2.10i refactor(test): test helpers in Kotlin** (S, deps T2.10h). `test/` ReleaseDraftCheck; `gametest/` FrameTimer (2 files).
+- [x] **T2.10i refactor(test): test helpers in Kotlin** (S, deps T2.10h). `test/` ReleaseDraftCheck; `gametest/` FrameTimer (2 files).
   - Req: REQ-UI-26
   - Accept: AC-UI-26 for these files.
 
