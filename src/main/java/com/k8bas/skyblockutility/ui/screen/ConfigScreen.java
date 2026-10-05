@@ -44,6 +44,8 @@ import com.k8bas.skyblockutility.ui.widget.SliderModel;
 import com.k8bas.skyblockutility.ui.widget.TextEditModel;
 import com.k8bas.skyblockutility.ui.widget.TextField;
 import com.k8bas.skyblockutility.ui.widget.ToggleSwitch;
+import com.k8bas.skyblockutility.ui.widget.FocusCycle;
+import com.k8bas.skyblockutility.ui.widget.NavKey;
 import com.k8bas.skyblockutility.ui.widget.VirtualList;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import com.k8bas.skyblockutility.ui.widget.WidgetScreen;
@@ -112,6 +114,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private final ConfigMotion motion;
 	/** The scroll the page was laid out at this frame: the real scroll less the slide, so text and cards move together. */
 	private int pageScroll;
+	/** A page control a key reached, scrolled into view in the next layout (T2.9b). */
+	private Widget revealRow;
 
 	public ConfigScreen(Screen parent) {
 		this(parent, OptionCatalog.live());
@@ -152,6 +156,9 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		}));
 		search = add(TextField.of(new TextEditModel(SearchIndex.MAX_QUERY_LENGTH, GameClipboard.INSTANCE), "Search settings", this::applyQuery));
 		search.reserveRight(ClearButton.SIZE);
+		// One keyboard stop for the sidebar: Up/Down/Home/End pick the category at once, the query stays (T2.9b).
+		tabs.setKeys(this::tabKey);
+		tabs.setFocusRow(() -> view.categories().indexOf(selected));
 		clear = add(new ClearButton(() -> !search.model().text().isEmpty(), () -> {
 			UiSound.click();
 			search.model().setText("");
@@ -209,6 +216,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			focus(null);
 		}
 		Category previous = selected;
+		// A control of the page being left loses the keyboard focus; the sidebar and the search box keep it.
+		Widget focused = navFocus();
+		if (focused != null && focused != tabs && focused != search) {
+			clearNavFocus();
+		}
 		if (page != null) {
 			// A category shown and left before a frame was drawn keeps the scroll it came with.
 			scrolls.put(selected, pendingScroll >= 0 ? pendingScroll : scrollArea.scroll());
@@ -323,6 +335,15 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			scrollArea.setScroll(pendingScroll);
 			pendingScroll = -1;
 		}
+		// A control a key reached comes into view, with its section title for a card's first option (T2.9b).
+		if (revealRow != null) {
+			ConfigLayout.Row row = page.rowOf(revealRow);
+			revealRow = null;
+			if (row != null) {
+				int[] span = ConfigLayout.revealSpan(laidOut, row);
+				scrollArea.ensureVisible(span[0], span[1]);
+			}
+		}
 		if (scrollArea.scroll() != scroll) {
 			page.layout(frame, scrollArea.scroll() - slide, font::width, filter);
 		}
@@ -345,6 +366,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (keyboardFocus() != null && !widgets().contains(keyboardFocus())) {
 			focus(null);
 		}
+		// A focused control that went (a removed rule, a field filtered away): the next one still there takes the focus.
+		repairNavFocus();
 	}
 
 	@Override
@@ -558,6 +581,44 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (backup != null) {
 			Notices.post(new Notice("Settings file backed up", List.of("A copy is in the config folder:", backup)));
 		}
+	}
+
+	@Override
+	protected boolean keyboardNavigation() {
+		return true;
+	}
+
+	/** The sidebar, the search box, then the page in reading order (REQ-UI-18, T2.9b). */
+	@Override
+	protected void collectFocusOrder(List<Widget> out) {
+		if (!view.categories().isEmpty()) {
+			out.add(tabs);
+		}
+		out.add(search);
+		page.focusOrder(out);
+	}
+
+	@Override
+	protected void revealFocus(Widget widget) {
+		if (pageWidgets.contains(widget)) {
+			revealRow = widget;
+		}
+	}
+
+	/** The sidebar's keys: Up/Down a category, Home/End the first or last, picked at once. */
+	private boolean tabKey(NavKey key) {
+		List<Category> shown = view.categories();
+		int current = shown.indexOf(selected);
+		int target = FocusCycle.listStep(current, shown.size(), key);
+		if (target < 0) {
+			return false;
+		}
+		if (target != current) {
+			UiSound.click();
+			show(shown.get(target), true);
+			tabs.rows().ensureVisible(target);
+		}
+		return true;
 	}
 
 	@Override

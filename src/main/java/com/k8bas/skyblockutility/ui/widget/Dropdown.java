@@ -37,6 +37,42 @@ public final class Dropdown<E> extends Widget {
 	}
 
 	@Override
+	public boolean focusable() {
+		return true;
+	}
+
+	/** Space or Enter opens the list; the screen has scrolled the box into view first. */
+	@Override
+	public boolean activate() {
+		if (!enabled) {
+			return false;
+		}
+		list = new OpenList();
+		host.open(list);
+		clickSound.run();
+		return true;
+	}
+
+	/** On the closed box the arrows, Home and End pick the neighbouring (first, last) choice at once. */
+	@Override
+	public boolean navKey(NavKey key, boolean fine) {
+		if (!enabled) {
+			return false;
+		}
+		List<E> values = choice.values();
+		int current = values.indexOf(choice.binding().get());
+		int target = FocusCycle.listStep(current, values.size(), key);
+		if (target < 0) {
+			return false;
+		}
+		if (target != current) {
+			choice.binding().set(values.get(target));
+			clickSound.run();
+		}
+		return true;
+	}
+
+	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		// Half scrolled out of view it does not open: its list would have nothing to hang from.
 		if (!enabled || button != 0 || !contains(mouseX, mouseY) || !fullyShowing()) {

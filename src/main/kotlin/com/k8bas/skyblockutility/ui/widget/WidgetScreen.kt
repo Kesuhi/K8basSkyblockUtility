@@ -31,6 +31,10 @@ import kotlin.math.sign
  *   input. A click outside closes a plain overlay unchanged and is not passed on; a modal stays.
  *   Esc closes it without applying anything.
  * - The hovered widget's tooltip is drawn last, over everything, inside the window (REQ-UI-19).
+ * - A screen that opts in ([keyboardNavigation], REQ-UI-18) is also run from the keyboard: Tab and Shift+Tab move a
+ *   focus marked by an accent ring, Space/Enter activate, the arrows operate the focused control. Tab is the one
+ *   key a typing field or a plain overlay lets go of (to the next control); a modal keeps Tab inside. The Esc
+ *   order above is unchanged.
  *
  * The game checks a few keys (the narrator hotkey) before the screen sees them and turns the input
  * method off each tick unless a vanilla text box is focused, so while one of our text fields has the
@@ -60,6 +64,16 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	private var frameCx = 0F
 	private var frameCy = 0F
 
+	/** The keyboard focus apart from typing (REQ-UI-18, T2.9b), for screens with [keyboardNavigation]. */
+	private val nav = KeyboardNav<Widget>()
+
+	/** The order Tab goes through, refilled on a key or a click (never per frame). */
+	private val order = ArrayList<Widget>()
+	private val ring = IntArray(4)
+
+	/** A control a key reached, to be scrolled into view before the next layout. */
+	private var revealPending: Widget? = null
+
 	/** Counts focus requests, so a press that asked for one (even for the widget that already had it) keeps it. */
 	private var focusRequests = 0
 	private var lastTooltip: TooltipLayout.Box? = null
@@ -80,11 +94,43 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	/** The open overlay, or null. */
 	fun overlay(): Overlay? = overlay
 
+	/**
+	 * Whether Tab, Shift+Tab, Space/Enter and the arrows navigate this screen's controls (REQ-UI-18, T2.9b). Off by default:
+	 * other screens keep their keys as they were.
+	 */
+	protected open fun keyboardNavigation(): Boolean = false
+
+	/** The controls Tab goes through, in order; by default the focusable widgets as listed. */
+	protected open fun collectFocusOrder(out: MutableList<Widget>) {
+		for (widget in widgets) {
+			if (widget.focusable()) {
+				out.add(widget)
+			}
+		}
+	}
+
+	/** A key reached [widget]: scroll it into view in the next layout. */
+	protected open fun revealFocus(widget: Widget) {
+	}
+
+	/** The control with the keyboard focus (the ring), typing or not; null for none. */
+	fun navFocus(): Widget? = nav.focus
+
+	protected fun clearNavFocus() {
+		nav.focus = null
+	}
+
+	/** After controls came and went: a focus that is gone moves to the next control still there. */
+	protected fun repairNavFocus() {
+		nav.repair { widgets.contains(it) || overlay?.widgets()?.contains(it) == true }
+	}
+
 	override fun open(opened: Overlay) {
 		if (overlay !== opened) {
 			closeOverlay(true)
 		}
 		focus(null)
+		nav.overlayOpened()
 		overlay = opened
 		updateFocusGuard()
 	}
@@ -105,6 +151,10 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		keyboardFocus?.setFocused(false)
 		keyboardFocus = target
 		target?.setFocused(true)
+		// A field given the keyboard (a click, Ctrl+F) is also where Tab goes on from.
+		if (target != null) {
+			nav.focus = target
+		}
 		updateFocusGuard()
 	}
 
@@ -152,6 +202,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		overlay = null
 		pressed = null
 		pressedButton = -1
+		nav.overlayClosed()
 		updateFocusGuard()
 	}
 
@@ -160,6 +211,8 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			closeOverlay(true)
 		}
 		focus(null)
+		nav.clear()
+		keysTaken.clear()
 		super.removed()
 	}
 
@@ -207,6 +260,10 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
 		super.extractRenderState(graphics, mouseX, mouseY, partialTick)
+		revealPending?.let {
+			revealPending = null
+			revealFocus(it)
+		}
 		layout()
 		requestedTooltip = ""
 		// The transform input maps through until the next frame; no scale under an open overlay.
@@ -228,6 +285,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			for (widget in widgets) {
 				drawClipped(graphics, widget, underX, underY)
 			}
+			drawFocusRing(graphics, false)
 			drawOverWidgets(graphics, underX, underY)
 		} finally {
 			if (scaled) {
@@ -251,8 +309,35 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			for (widget in open.widgets()) {
 				drawClipped(graphics, widget, mouseX, mouseY)
 			}
+			drawFocusRing(graphics, true)
 		}
 		drawTooltip(graphics, mouseX, mouseY, lookX, lookY)
+	}
+
+	/**
+	 * The keyboard focus ring in the accent colour (REQ-UI-17), in the layer that has the focus ([inOverlay]); none after a
+	 * click, and none for a field that is typing (it draws its own outline). Clipped like its widget.
+	 */
+	private fun drawFocusRing(graphics: GuiGraphicsExtractor, inOverlay: Boolean) {
+		if (!keyboardNavigation() || nav.focusInOverlay != inOverlay) {
+			return
+		}
+		val target = nav.ringTarget(keyboardFocus, overlay != null) ?: return
+		if (!target.showing()) {
+			return
+		}
+		target.focusRing(ring)
+		val accent = Theme.current().accent()
+		val region = target.clip()
+		if (region == null) {
+			Shapes.roundedOutline(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), 1, accent)
+			return
+		}
+		Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
+			if (clip.visible()) {
+				Shapes.roundedOutline(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), 1, accent)
+			}
+		}
 	}
 
 	/** Draws a widget inside its clip region, if it has one; the mouse outside the region is no hover. */
@@ -345,9 +430,21 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 				continue
 			}
 			val requestsBefore = focusRequests
+			val overlayBefore = overlay
 			if (widget.press(x, y, event.button())) {
 				pressed = widget
 				pressedButton = event.button()
+				if (keyboardNavigation()) {
+					// The ring hides; Tab goes on from the clicked control, or from the field the press gave the keyboard to
+					// (the search box's clear button), or the control gets the focus back when the overlay it opened closes.
+					val handedOver = if (focusRequests != requestsBefore) keyboardFocus else null
+					nav.pointer(handedOver ?: widget.takeIf { it.focusable() }, overlay !== overlayBefore)
+					if (overlay === overlayBefore) {
+						nav.focusInOverlay = overlay?.widgets()?.contains(widget) == true
+						fillOrder()
+						nav.remember(order)
+					}
+				}
 				// A press that set the focus itself (a clear button handing it back to its field) keeps that.
 				if (focusRequests == requestsBefore) {
 					focus(widget)
@@ -360,6 +457,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			// No scale while an overlay is open, so these are the raw coordinates.
 			if (!open.modal() && !open.contains(event.x(), event.y())) {
 				closeOverlay(true)
+				nav.ringVisible = false
 			}
 			swallowedRelease = event.button()
 			return true
@@ -368,6 +466,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		// other buttons keep it.
 		if (event.button() == 0) {
 			focus(null)
+			nav.pointer(null, false)
 		}
 		return super.mouseClicked(event, doubleClick)
 	}
@@ -427,6 +526,13 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	}
 
 	override fun keyPressed(event: KeyEvent): Boolean {
+		val navigating = keyboardNavigation()
+		val navKey = if (navigating) navKeyOf(event) else NavKey.NONE
+		// A held Space or Enter that just activated a control must not pick in the list it opened, bind the capture it armed
+		// or press the button it led to.
+		if (navigating && nav.isActivationRepeat(keyId(event))) {
+			return true
+		}
 		// A held Esc that left a field or closed something must not go on to close what lies behind.
 		if (event.key() == KEY_ESCAPE && keysTaken.contains(keyId(event))) {
 			return true
@@ -440,6 +546,11 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		}
 		if (focused != null) {
 			keysTaken.add(keyId(event))
+			// Tab leaves a field for the next control; every other key stays the field's (REQ-UI-22).
+			if (navKey == NavKey.NEXT || navKey == NavKey.PREVIOUS) {
+				navigate(navKey == NavKey.NEXT)
+				return true
+			}
 			if (event.key() == KEY_ESCAPE) {
 				focus(null)
 			} else {
@@ -451,6 +562,18 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		val open = overlay
 		if (open != null) {
 			keysTaken.add(keyId(event))
+			if (navKey == NavKey.NEXT || navKey == NavKey.PREVIOUS) {
+				if (!open.modal()) {
+					// Tab leaves a dropdown's list unchanged and goes on from its box.
+					closeOverlay(true)
+				}
+				navigate(navKey == NavKey.NEXT)
+				return true
+			}
+			val inside = nav.focus
+			if (navKey != NavKey.NONE && open.modal() && inside != null && open.widgets().contains(inside) && navigateKey(inside, navKey, event)) {
+				return true
+			}
 			if (event.key() == KEY_ESCAPE) {
 				closeOverlay(true)
 			} else {
@@ -459,15 +582,101 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			// The screen never closes behind an overlay.
 			return true
 		}
-		// A repeat of a key taken above (a held Esc) is taken too, so it cannot close the screen.
+		if (navKey == NavKey.NEXT || navKey == NavKey.PREVIOUS) {
+			// Taken even with nothing to focus, so the game's own Tab handling never runs here.
+			if (!pressHeld()) {
+				navigate(navKey == NavKey.NEXT)
+			}
+			return true
+		}
+		// A repeat of a key taken above (a held Esc; an Enter that picked in a list or was bound) is taken too: it
+		// cannot close the screen, and does not activate the control that has the focus again.
 		if (keysTaken.contains(keyId(event))) {
+			return true
+		}
+		val current = nav.focus
+		if (navKey != NavKey.NONE && current != null && !pressHeld() && navigateKey(current, navKey, event)) {
 			return true
 		}
 		return super.keyPressed(event)
 	}
 
+	/**
+	 * Tab or Shift+Tab: the next (previous) control takes the focus and is scrolled into view; a field is given the
+	 * keyboard with its text selected, as Ctrl+F does.
+	 */
+	private fun navigate(forward: Boolean) {
+		fillOrder()
+		val next = nav.navigate(order, forward) ?: return
+		nav.focusInOverlay = overlay != null
+		if (next.wantsKeyboard()) {
+			focus(next)
+			(next as? TextField)?.model()?.selectAll()
+		} else {
+			focus(null)
+		}
+		revealPending = next
+	}
+
+	/** The order Tab goes through now: an open modal's controls, or the screen's; only placed, enabled ones (a plain list has none). */
+	private fun fillOrder() {
+		order.clear()
+		val open = overlay
+		if (open != null) {
+			if (open.modal()) {
+				for (widget in open.widgets()) {
+					if (widget.focusable() && widget.isEnabled && placed(widget)) {
+						order.add(widget)
+					}
+				}
+			}
+			return
+		}
+		collectFocusOrder(order)
+		order.removeIf { !it.focusable() || !it.isEnabled || !placed(it) }
+	}
+
+	/** Laid out this frame (a control scrolled out of view still is; Tab brings it into view). */
+	private fun placed(widget: Widget): Boolean = widget.width() > 0 && widget.height() > 0
+
+	/**
+	 * Space/Enter or an arrow for the focused control: Space/Enter activates it (Enter gives a field the keyboard again),
+	 * other keys go to its [Widget.navKey]. True if it used the key.
+	 */
+	private fun navigateKey(widget: Widget, key: NavKey, event: KeyEvent): Boolean {
+		if (key == NavKey.ACTIVATE) {
+			nav.ringVisible = true
+			revealPending = widget
+			// Recorded first: an activation that leaves the screen (the HUD editor) has this cleared with the screen.
+			nav.activated(keyId(event), event.key() == KEY_SPACE)
+			keysTaken.add(keyId(event))
+			var done = widget.activate()
+			if (!done && widget.wantsKeyboard() && event.key() != KEY_SPACE) {
+				focus(widget)
+				done = true
+			}
+			if (!done) {
+				nav.released(keyId(event))
+				keysTaken.remove(keyId(event))
+				return false
+			}
+			// An armed keybind wants the next key.
+			if (widget.wantsKeyboard()) {
+				focus(widget)
+			}
+			return true
+		}
+		if (!widget.navKey(key, shift(event))) {
+			return false
+		}
+		nav.ringVisible = true
+		revealPending = widget
+		return true
+	}
+
 	/** Releases of keys taken above are taken too; others reach the game, so no key stays held. */
 	override fun keyReleased(event: KeyEvent): Boolean {
+		nav.released(keyId(event))
 		if (keysTaken.remove(keyId(event))) {
 			return true
 		}
@@ -475,6 +684,10 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	}
 
 	override fun charTyped(event: CharacterEvent): Boolean {
+		// The space that follows a Space activation types nowhere.
+		if (keyboardNavigation() && nav.takeSpaceChar(event.codepoint())) {
+			return true
+		}
 		val focused = keyboardFocus
 		if (focused != null) {
 			focused.typed(event.codepoint())
@@ -485,6 +698,13 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	companion object {
 		private const val KEY_ESCAPE = 256
+		private const val KEY_SPACE = 32
+
+		/** What a key means for navigation; Ctrl and Alt read from the keyboard too, as gametest input carries no modifiers. */
+		private fun navKeyOf(event: KeyEvent): NavKey {
+			val client = Minecraft.getInstance()
+			return NavKey.of(event.key(), shift(event), event.hasControlDownWithQuirk() || client.hasControlDown(), event.hasAltDown() || client.hasAltDown())
+		}
 		private const val MOD_SHIFT = 1
 
 		/** A key's identity for press/release pairing; keys without a key code are told apart by scancode. */

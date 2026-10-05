@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.render.Animated;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.UiClock;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -150,6 +151,40 @@ public abstract class Widget {
 
 	public boolean key(int key, boolean ctrl, boolean shift) {
 		return false;
+	}
+
+	/**
+	 * A stop of keyboard navigation (REQ-UI-18, T2.9b), when also enabled and laid out: a control scrolled out of view
+	 * still is one, and Tab scrolls it into view.
+	 */
+	public boolean focusable() {
+		return false;
+	}
+
+	/** Space or Enter while it has the keyboard focus and nothing is typing; true if it did something. */
+	public boolean activate() {
+		return false;
+	}
+
+	/**
+	 * An arrow, Home/End, Page Up/Down or Delete while it has the keyboard focus and nothing is typing (typing keys go
+	 * to {@link #key}); {@code fine} with Shift. True if it used the key.
+	 */
+	public boolean navKey(NavKey key, boolean fine) {
+		return false;
+	}
+
+	/** Where the focus ring goes: x, y, width, height into {@code out}; 2 px outside the bounds. */
+	public void focusRing(int[] out) {
+		out[0] = x - 2;
+		out[1] = y - 2;
+		out[2] = width + 4;
+		out[3] = height + 4;
+	}
+
+	/** The focus ring's corner radius. */
+	public int focusRadius() {
+		return Shapes.RADIUS_CONTROL + 2;
 	}
 
 	public boolean typed(int codePoint) {

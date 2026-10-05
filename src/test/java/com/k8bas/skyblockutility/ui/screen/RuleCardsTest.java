@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -365,6 +366,82 @@ class RuleCardsTest {
 		page.layout(frame, 0, text -> text.length() * 6, filter);
 		assertFalse(page.widgets().contains(page.control(label)), "closed: gone from the page");
 		assertFalse(page.control(label).showing(), "and hidden");
+	}
+
+	/** REQ-UI-18 (T2.9b): Enter opens or closes a rule; Right opens a closed one, Left closes an open one; the ring stops before Remove. */
+	@Test
+	void aRuleHeaderTakesTheKeyboard() {
+		mobs.rules.add(mob("mob-1", "Zealot", "Zealot"));
+		int[] toggles = {0};
+		RuleHeaderWidget header = new RuleHeaderWidget(mobCards.groups().get(0), () -> toggles[0]++);
+		assertTrue(header.focusable());
+		assertTrue(header.activate());
+		assertEquals(1, toggles[0]);
+		assertTrue(header.navKey(com.k8bas.skyblockutility.ui.widget.NavKey.RIGHT, false));
+		assertEquals(2, toggles[0], "closed: Right opens");
+		header.setExpanded(true);
+		assertTrue(header.navKey(com.k8bas.skyblockutility.ui.widget.NavKey.RIGHT, false));
+		assertEquals(2, toggles[0], "open: Right does nothing more");
+		assertTrue(header.navKey(com.k8bas.skyblockutility.ui.widget.NavKey.LEFT, false));
+		assertEquals(3, toggles[0], "open: Left closes");
+		header.setExpanded(false);
+		assertTrue(header.navKey(com.k8bas.skyblockutility.ui.widget.NavKey.LEFT, false));
+		assertEquals(3, toggles[0], "closed: Left does nothing more");
+		header.setBounds(0, 0, 400, ConfigLayout.RULE_HEADER);
+		header.setActionRoom(70);
+		int[] ring = new int[4];
+		header.focusRing(ring);
+		assertArrayEquals(new int[] {-2, -2, 400 - 70 + 4, ConfigLayout.RULE_HEADER + 4}, ring, "around the header, not its Remove");
+	}
+
+	/** REQ-UI-18 (T2.9b): Tab goes through a page in reading order: each card's control, then each rule's header, Remove and (open) fields. */
+	@Test
+	void theFocusOrderFollowsTheRows() {
+		mobs.rules.add(mob("mob-1", "Zealot", "Zealot"));
+		mobs.rules.add(mob("mob-2", "Voidgloom", "Voidgloom"));
+		List<RuleGroup> groups = mobCards.groups();
+		ConfigPage page = new ConfigPage(Category.HIGHLIGHTS, cards(), option -> new Widget() {
+			@Override
+			public void draw(net.minecraft.client.gui.GuiGraphicsExtractor graphics, net.minecraft.client.gui.Font font, int mouseX, int mouseY) {
+			}
+		});
+		ConfigLayout.Frame frame = ConfigLayout.frame(1280, 720);
+		page.layout(frame, 0, text -> text.length() * 6, new ConfigLayout.Filter() {
+			@Override
+			public boolean shows(Option option) {
+				return true;
+			}
+
+			@Override
+			public boolean expanded(RuleGroup rule) {
+				return rule == groups.get(0);
+			}
+		});
+		List<Widget> expected = new ArrayList<>();
+		for (ConfigLayout.Row row : page.page().rows()) {
+			if (row instanceof ConfigLayout.OptionRow option) {
+				expected.add(page.control(option.option()));
+			} else if (row instanceof ConfigLayout.RuleHeader header) {
+				expected.add(page.header(header.rule()));
+				expected.add(page.control(header.rule().remove()));
+			}
+		}
+		List<Widget> order = new ArrayList<>();
+		page.focusOrder(order);
+		assertEquals(expected, order);
+		int firstHeader = order.indexOf(page.header(groups.get(0)));
+		assertSame(page.control(groups.get(0).remove()), order.get(firstHeader + 1), "the header, then its Remove");
+		assertSame(page.control(groups.get(0).fields().get(0)), order.get(firstHeader + 2), "then the open rule's fields");
+		assertSame(page.header(groups.get(1)), order.get(firstHeader + 2 + groups.get(0).fields().size()), "then the next rule");
+
+		// A control, a header and a Remove each find their row, so the screen can scroll it into view.
+		Option scanRange = page.page().rows().stream().filter(row -> row instanceof ConfigLayout.OptionRow option
+				&& option.option() instanceof com.k8bas.skyblockutility.ui.option.IntSlider).map(row -> ((ConfigLayout.OptionRow) row).option())
+				.findFirst().orElseThrow();
+		ConfigLayout.Row optionRow = page.rowOf(page.control(scanRange));
+		assertTrue(optionRow instanceof ConfigLayout.OptionRow row && row.option() == scanRange);
+		assertTrue(page.rowOf(page.header(groups.get(1))) instanceof ConfigLayout.RuleHeader header && header.rule() == groups.get(1));
+		assertTrue(page.rowOf(page.control(groups.get(1).remove())) instanceof ConfigLayout.RuleHeader header && header.rule() == groups.get(1));
 	}
 
 	/** EC-UI-07: an empty label reads "(unnamed)", a long one is cut by the header, never past its width. */

@@ -43,6 +43,42 @@ public final class ToggleSwitch extends Widget {
 		clickSound.run();
 	}
 
+	/** Sets the value; nothing (no sound) when it already is. */
+	private void set(boolean value) {
+		if (binding.get() != value) {
+			toggle();
+		}
+	}
+
+	@Override
+	public boolean focusable() {
+		return true;
+	}
+
+	@Override
+	public boolean activate() {
+		if (!enabled) {
+			return false;
+		}
+		toggle();
+		return true;
+	}
+
+	/** Left is off, right is on. */
+	@Override
+	public boolean navKey(NavKey key, boolean fine) {
+		if (!enabled || key != NavKey.LEFT && key != NavKey.RIGHT) {
+			return false;
+		}
+		set(key == NavKey.RIGHT);
+		return true;
+	}
+
+	@Override
+	public int focusRadius() {
+		return height / 2 + 2;
+	}
+
 	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {

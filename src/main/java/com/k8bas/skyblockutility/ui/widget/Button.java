@@ -41,6 +41,22 @@ public final class Button extends Widget {
 	}
 
 	@Override
+	public boolean focusable() {
+		return true;
+	}
+
+	/** Space or Enter: the action, as a click does. */
+	@Override
+	public boolean activate() {
+		if (!enabled) {
+			return false;
+		}
+		clickSound.run();
+		action.run();
+		return true;
+	}
+
+	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {
 			return false;

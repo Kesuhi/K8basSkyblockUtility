@@ -121,6 +121,52 @@ final class ConfigPage {
 		return headers.get(rule);
 	}
 
+	/**
+	 * The page's keyboard stops in reading order, as the last layout placed them (REQ-UI-18, T2.9b): each option's control,
+	 * each rule's header and Remove, and an open rule's fields. The caller keeps those that are focusable and enabled.
+	 */
+	void focusOrder(List<Widget> out) {
+		if (page == null) {
+			return;
+		}
+		for (ConfigLayout.Row row : page.rows()) {
+			if (row instanceof ConfigLayout.RuleHeader ruleRow) {
+				RuleHeaderWidget header = headers.get(ruleRow.rule());
+				if (header != null) {
+					out.add(header);
+				}
+				ActionOption remove = ruleRow.rule().remove();
+				Widget control = remove == null ? null : controls.get(remove);
+				if (control != null) {
+					out.add(control);
+				}
+			} else if (row instanceof ConfigLayout.OptionRow optionRow) {
+				Widget control = controls.get(optionRow.option());
+				if (control != null) {
+					out.add(control);
+				}
+			}
+		}
+	}
+
+	/** The row a page widget stands in (a control, a rule header or its Remove), or null; to scroll it into view. */
+	ConfigLayout.Row rowOf(Widget widget) {
+		if (page == null || widget == null) {
+			return null;
+		}
+		for (ConfigLayout.Row row : page.rows()) {
+			if (row instanceof ConfigLayout.RuleHeader ruleRow) {
+				ActionOption remove = ruleRow.rule().remove();
+				if (headers.get(ruleRow.rule()) == widget || remove != null && controls.get(remove) == widget) {
+					return row;
+				}
+			} else if (row instanceof ConfigLayout.OptionRow optionRow && controls.get(optionRow.option()) == widget) {
+				return row;
+			}
+		}
+		return null;
+	}
+
 	/** Places every card and control for this frame and returns the page (for its height and rows). */
 	ConfigLayout.Page layout(ConfigLayout.Frame frame, int scroll, ToIntFunction<String> width) {
 		return layout(frame, scroll, width, ConfigLayout.Filter.of(option -> true));

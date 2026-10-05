@@ -82,6 +82,11 @@ public final class TextField extends Widget {
 	}
 
 	@Override
+	public boolean focusable() {
+		return true;
+	}
+
+	@Override
 	public boolean wantsKeyboard() {
 		return true;
 	}

@@ -69,6 +69,33 @@ public final class KeybindButton extends Widget {
 	}
 
 	@Override
+	public boolean focusable() {
+		return true;
+	}
+
+	/** Space or Enter arms the capture, as a left click does: the next key binds (REQ-UI-14). */
+	@Override
+	public boolean activate() {
+		if (!enabled) {
+			return false;
+		}
+		capture.arm();
+		clickSound.run();
+		return true;
+	}
+
+	/** Delete resets the default, as a right click does. */
+	@Override
+	public boolean navKey(NavKey key, boolean fine) {
+		if (!enabled || key != NavKey.DELETE) {
+			return false;
+		}
+		capture.reset();
+		clickSound.run();
+		return true;
+	}
+
+	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		if (!enabled || !contains(mouseX, mouseY)) {
 			return false;

@@ -99,6 +99,39 @@ public final class Slider extends Widget {
 		return true;
 	}
 
+	@Override
+	public boolean focusable() {
+		return true;
+	}
+
+	/**
+	 * Right/Up a step up, Left/Down a step down (Shift: the fine step), Page Up/Down ten steps, Home/End the ends. Like
+	 * the wheel: live, written when the screen closes, and a stored value off the range is kept until a step changes it.
+	 */
+	@Override
+	public boolean navKey(NavKey key, boolean fine) {
+		if (!enabled || dragging) {
+			return false;
+		}
+		long stored = get.getAsLong();
+		long after = switch (key) {
+			case RIGHT, UP -> model.stepFrom(stored, 1, fine);
+			case LEFT, DOWN -> model.stepFrom(stored, -1, fine);
+			case PAGE_UP -> model.stepFrom(stored, 10, fine);
+			case PAGE_DOWN -> model.stepFrom(stored, -10, fine);
+			case HOME -> model.min();
+			case END -> model.max();
+			default -> Long.MIN_VALUE;
+		};
+		if (after == Long.MIN_VALUE) {
+			return false;
+		}
+		if (after != model.shown(stored)) {
+			set.accept(after);
+		}
+		return true;
+	}
+
 	/** Follows the pointer; writes only when the shown value changes. */
 	private void moveTo(double mouseX) {
 		double fraction = width <= KNOB_SIZE ? 0 : (mouseX - x - KNOB_SIZE / 2.0) / (width - KNOB_SIZE);

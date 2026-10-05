@@ -300,6 +300,31 @@ object ConfigLayout {
 		return Rect(content.x + PAD + indent, content.y + row.y() - scroll, content.w - 2 * PAD - SCROLLBAR - indent, row.height())
 	}
 
+	/**
+	 * What to scroll into view for a row the keyboard reached (REQ-UI-18, T2.9b), as [top, bottom] in page pixels: the
+	 * row and the card gap around it; a card's first option brings its section title along, and the page's first
+	 * section is shown from the top (heading and all). Asked only on a key, so the small array is fine.
+	 */
+	@JvmStatic
+	fun revealSpan(page: Page, row: Row): IntArray {
+		val rows = page.rows
+		var index = -1
+		for (i in rows.indices) {
+			if (rows[i] === row) {
+				index = i
+				break
+			}
+		}
+		val bottom = row.y() + row.height() + CARD_GAP
+		val before = if (index > 0) rows[index - 1] else null
+		val top = when {
+			before is Section && (index < 2 || rows[index - 2] is Heading) -> 0
+			before is Section -> before.y()
+			else -> row.y() - CARD_GAP
+		}
+		return intArrayOf(maxOf(0, top), bottom)
+	}
+
 	/** The line under an open rule that does nothing (REQ-GLOW-10). */
 	@JvmStatic
 	fun problemText(reason: String): String = "⚠ This rule can't be used: $reason. It is kept, but does nothing until you change it."

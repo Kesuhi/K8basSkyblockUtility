@@ -15,6 +15,10 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - **A little motion in the settings screen.** It opens with a short zoom, and switching category slides
   and fades the new page in. Both take about a fifth of a second, and clicks land where things are drawn
   while they play.
+- **The settings screen works from the keyboard.** Tab and Shift+Tab move through the sidebar, the search
+  box and every setting, which scrolls into view; Space or Enter switches, opens or presses it; the arrow keys
+  move a slider, pick in a dropdown, open or close a rule and change the category; Delete resets a key
+  binding. A ring in the accent colour shows where you are. Esc works as before.
 - **HUD editor.** `/ksu hud`, **Edit HUD layout** in General › HUD, or **Edit position** on a feature's card
   opens it: drag the mod's on-screen elements to move them, scroll to scale them (0.5–3.0), use the arrow keys
   to nudge. Esc or Save keeps the layout; Cancel undoes the session.

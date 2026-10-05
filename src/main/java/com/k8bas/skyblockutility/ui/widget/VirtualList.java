@@ -29,6 +29,8 @@ public final class VirtualList extends Widget {
 	private final IntSupplier count;
 	private final RowPainter painter;
 	private final IntConsumer onClick;
+	private KeyHandler keys;
+	private IntSupplier focusRow;
 	private IntFunction<String> rowTooltip = index -> "";
 	/** A click that needs to know where in the row it fell (a button on the row); replaces the plain one. */
 	private RowClick rowClick;
@@ -61,6 +63,48 @@ public final class VirtualList extends Widget {
 	/** Clicks on rows go here, with where in the row they fell, instead of to the plain click. */
 	public void onRowClick(RowClick rowClick) {
 		this.rowClick = rowClick;
+	}
+
+	/** Keyboard steps through the list (REQ-UI-18, T2.9b): true if the key was used. */
+	@FunctionalInterface
+	public interface KeyHandler {
+		boolean key(NavKey key);
+	}
+
+	/** Makes the list one stop of keyboard navigation, its keys going to {@code keys} (the sidebar's tabs). */
+	public void setKeys(KeyHandler keys) {
+		this.keys = keys;
+	}
+
+	/** The row the focus ring marks while the list has the keyboard focus (the selected tab); -1 for none. */
+	public void setFocusRow(IntSupplier focusRow) {
+		this.focusRow = focusRow;
+	}
+
+	@Override
+	public boolean focusable() {
+		return keys != null && count.getAsInt() > 0;
+	}
+
+	@Override
+	public boolean navKey(NavKey key, boolean fine) {
+		return enabled && keys != null && keys.key(key);
+	}
+
+	/** The focus row, 1 px inside the list (the rows touch its edges); the whole list when no row is marked. */
+	@Override
+	public void focusRing(int[] out) {
+		int row = focusRow == null ? -1 : focusRow.getAsInt();
+		if (row < 0 || row >= count.getAsInt()) {
+			super.focusRing(out);
+			return;
+		}
+		int top = Math.max(y, y + rows.rowTop(row));
+		int bottom = Math.min(y + height, y + rows.rowTop(row) + rows.rowHeight());
+		out[0] = x + 1;
+		out[1] = top + 1;
+		out[2] = Math.max(0, rowWidth() - 2);
+		out[3] = Math.max(0, bottom - top - 2);
 	}
 
 	/** A tooltip per row, e.g. the whole text of a cut entry; null or "" for none. */

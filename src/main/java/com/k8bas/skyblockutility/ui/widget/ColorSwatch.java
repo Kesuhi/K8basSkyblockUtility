@@ -34,6 +34,20 @@ public final class ColorSwatch extends Widget {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {
 			return false;
 		}
+		return activate();
+	}
+
+	@Override
+	public boolean focusable() {
+		return true;
+	}
+
+	/** Space, Enter or a click opens the colour picker. */
+	@Override
+	public boolean activate() {
+		if (!enabled) {
+			return false;
+		}
 		clickSound.run();
 		host.open(new ColorPickerOverlay(title, binding, storesAlpha, host, commit, clickSound));
 		return true;

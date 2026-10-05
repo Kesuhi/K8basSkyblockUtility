@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.function.ToIntFunction;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -23,6 +24,48 @@ class ConfigLayoutTest {
 
 	private static List<Card> catalog() {
 		return OptionCatalog.build(new GeneralConfig(), new MobHighlighterConfig(), new NpcSearchConfig(), enabled -> { }, enabled -> { });
+	}
+
+	/**
+	 * REQ-UI-18 (T2.9b): what the page scrolls into view for a control the keyboard reached: its row with the gaps
+	 * around it; for a card's first option also its section title; for the page's first section from the top.
+	 */
+	@Test
+	void theRevealSpanCoversARowAndItsSectionTitle() {
+		ConfigLayout.Page page = ConfigLayout.page(catalog(), Category.GENERAL, 500, WIDTH);
+		List<ConfigLayout.Row> rows = page.rows();
+		int firstOption = -1;
+		int laterOption = -1;
+		int laterSectionOption = -1;
+		int sections = 0;
+		for (int i = 0; i < rows.size(); i++) {
+			if (rows.get(i) instanceof ConfigLayout.Section) {
+				sections++;
+			}
+			if (rows.get(i) instanceof ConfigLayout.OptionRow) {
+				if (firstOption < 0) {
+					firstOption = i;
+				} else if (rows.get(i - 1) instanceof ConfigLayout.OptionRow && laterOption < 0) {
+					laterOption = i;
+				} else if (rows.get(i - 1) instanceof ConfigLayout.Section && sections >= 2 && laterSectionOption < 0) {
+					laterSectionOption = i;
+				}
+			}
+		}
+		assertTrue(firstOption > 0 && laterOption > 0 && laterSectionOption > 0, "the General page has those rows");
+
+		int[] first = ConfigLayout.revealSpan(page, rows.get(firstOption));
+		assertEquals(0, first[0], "the page's first section: from the top, heading and all");
+		assertEquals(rows.get(firstOption).y() + rows.get(firstOption).height() + ConfigLayout.CARD_GAP, first[1]);
+
+		ConfigLayout.Row later = rows.get(laterOption);
+		assertArrayEquals(new int[] {later.y() - ConfigLayout.CARD_GAP, later.y() + later.height() + ConfigLayout.CARD_GAP},
+				ConfigLayout.revealSpan(page, later));
+
+		ConfigLayout.Row titled = rows.get(laterSectionOption);
+		int[] span = ConfigLayout.revealSpan(page, titled);
+		assertEquals(rows.get(laterSectionOption - 1).y(), span[0], "a later card's first option brings its section title along");
+		assertEquals(titled.y() + titled.height() + ConfigLayout.CARD_GAP, span[1]);
 	}
 
 	/** AC-UI-01: at 1920x1080 and GUI scale 1, a centred 660x440 panel, 38 px header, 160 px sidebar. */

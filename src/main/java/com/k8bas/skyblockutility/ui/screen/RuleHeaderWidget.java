@@ -6,6 +6,7 @@ import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
+import com.k8bas.skyblockutility.ui.widget.NavKey;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -47,6 +48,50 @@ final class RuleHeaderWidget extends Widget {
 	/** Where the label must end: before the Remove button, or 8 px before the right edge without one. */
 	int textRight() {
 		return x + width - 8 - actionRoom;
+	}
+
+	@Override
+	public boolean focusable() {
+		return true;
+	}
+
+	/** Space or Enter opens or closes the rule, as a click does (REQ-UI-18, T2.9b). */
+	@Override
+	public boolean activate() {
+		toggle.run();
+		return true;
+	}
+
+	/** As in a tree: Right opens a closed rule, Left closes an open one. */
+	@Override
+	public boolean navKey(NavKey key, boolean fine) {
+		if (key == NavKey.RIGHT) {
+			if (!expanded) {
+				toggle.run();
+			}
+			return true;
+		}
+		if (key == NavKey.LEFT) {
+			if (expanded) {
+				toggle.run();
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/** Around the header, not its Remove button (a stop of its own). */
+	@Override
+	public void focusRing(int[] out) {
+		out[0] = x - 2;
+		out[1] = y - 2;
+		out[2] = width - actionRoom + 4;
+		out[3] = height + 4;
+	}
+
+	@Override
+	public int focusRadius() {
+		return Shapes.RADIUS_CARD + 2;
 	}
 
 	/** Whether the point is in the Remove button's area, which is the button's alone: no toggle, hover or tooltip here. */
