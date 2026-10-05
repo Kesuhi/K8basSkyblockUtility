@@ -579,6 +579,24 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Accept: AC-HUD-06 (using the gametest element's card); AC-UI-09 (the `/ksu hud` part).
   - Done (2026-10-04): `/ksu hud` and `/kskyblockutility hud` open the HUD editor on the next frame (a registered literal, so the reserved word runs it); General gets the HUD card between Interface and Keybinds with "Edit HUD layout" (settings/HudOptions; GeneralOptions takes the action, so it still loads no Minecraft class); `HudOptions.editPosition(cardId, elementId)` is the "Edit position" button the HUD features of Phases 3, 5 and 6 put on their cards, opening the editor with their element selected. The editor opens over the current screen and returns to it; with no element registered it says so. A screen shown while Esc is still held takes that Esc's repeats until its release, so a long Esc in the editor does not also close the settings behind it. CHANGELOG: the HUD editor. Unit tests: OptionCatalogTest (the HUD card, its place and action, found by search; stored-value checks skip buttons, wording checks keep them). Gametests: SettingsScreensGameTest (`/ksu hud` typed in chat opens the editor and it stays open, AC-UI-09; `/ksu sbxp` opens no search), HudEditorGameTest (AC-HUD-06: `/ksu hud`, "Edit HUD layout" and "Edit position" with the element selected and named in the status line; closing returns to the settings screen), ConfigScreenGameTest scrolls controls into view (General grew). Reviewed in two angles; the 3 confirmed findings are fixed.
 
+**Kotlin menu [decided R29]** (before the stretch tasks, which are then written in Kotlin, and before the 1.2.0 release). Each step converts files one by one, keeps their Java-facing API (`@JvmRecord`, `@JvmStatic`, `@JvmField`, public test hooks) and leaves every Java caller and test unchanged, so the existing suite is the check that behaviour is kept.
+
+- [ ] **T2.10a build(ui): Kotlin and Fabric Language Kotlin** (S, deps G2). The Kotlin Gradle plugin, `src/main/kotlin` next to `src/main/java`, Fabric Language Kotlin as a required mod (`fabric.mod.json`, README requirements, CHANGELOG).
+  - Req: REQ-UI-26
+  - Accept: AC-UI-26 (the dependency part); `build` and every gametest green; FabricModJsonTest checks the dependency.
+- [ ] **T2.10b refactor(ui): option model, rendering helpers and notices in Kotlin** (M, deps T2.10a). `ui/option`, `ui/render`, `ui/notice`. The option package's purity check accepts `kotlin.*`.
+  - Req: REQ-UI-26
+  - Accept: AC-UI-26 for these packages.
+- [ ] **T2.10c refactor(ui): widget kit in Kotlin** (M, deps T2.10b). `ui/widget`.
+  - Req: REQ-UI-26
+  - Accept: AC-UI-26 for the package.
+- [ ] **T2.10d refactor(ui): settings screen and HUD editor in Kotlin** (M, deps T2.10c). `ui/screen`, including HudEditorScreen.
+  - Req: REQ-UI-26
+  - Accept: AC-UI-26 for the package.
+- [ ] **T2.10e refactor(ui): settings glue in Kotlin** (S, deps T2.10d). `settings/` (cards, commands, keybind, Mod Menu hook). The source scans read `.kt` too.
+  - Req: REQ-UI-26
+  - Accept: AC-UI-26 in full.
+
 *Stretch, after G2 (optional per D-8 / REQ-UI-18. Nothing for 2.0.0 and no checkpoint waits on these. The multi-select dropdown moved to T6.7.)*
 
 - [ ] **T2.9 feat(ui): open and category-switch animations** (S, stretch, deps T2.4a). The panel opens with a scale of 0.90 → 1.00 over 220 ms; switching category plays a 200 ms slide-and-fade.

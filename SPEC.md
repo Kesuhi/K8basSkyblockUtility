@@ -93,7 +93,8 @@ The map is acyclic. Every feature module also depends on `config-store` and `ui-
 | Area | Choice (verified for 26.2) |
 |---|---|
 | Game / loader | Minecraft **26.2** (unobfuscated, so no mappings), Fabric Loader **0.19.5**, Fabric API **0.161.0+26.2**, Loom **1.17** line pinned, Gradle **9.5.1**, Java **25** |
-| Required runtime mods | Hypixel Mod API (Fabric glue `1.0.2+build.1+mc26.1`, tagged 26.1–26.2); library `net.hypixel:mod-api:1.0.2` |
+| Required runtime mods | Hypixel Mod API (Fabric glue `1.0.2+build.1+mc26.1`, tagged 26.1–26.2); library `net.hypixel:mod-api:1.0.2`; Fabric Language Kotlin `[decided R29]` |
+| Languages | Java 25; Kotlin for the settings UI, the HUD editor and the settings glue `[decided R29]` |
 | Optional | Mod Menu **20.0.3** (compile-only) |
 | Removed in Phase 2 | Cloth Config (26.2.155 during the port only) |
 | Bundled library | Render Chest **1.0.3+26.2** (Apache-2.0, JiJ), for depth-tested glow `[decided D-1]` |
@@ -128,6 +129,8 @@ src/main/java/com/k8bas/skyblockutility/
   highlight/                        rule matching + glow (glow)
   module/<feature>/                 one package per feature: <Feature>Config, <Feature>Module, keybinds
   ui/  hud/                         new UI kit, config screen, HUD framework and editor (ui-config, hud)
+src/main/kotlin/com/k8bas/skyblockutility/
+  ui/  settings/                    the settings UI and the HUD editor in Kotlin (R29); hud/ stays Java
   data/                             bundled-data registry and loaders (data-registry)
   skyblock/                         read-only game-state readers, profile service (game-state)
   render/                           world markers (world-markers)
@@ -856,6 +859,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   *(Brief: Phase 2 "UI only … Do not copy any non-UI features"; ground rule 4; REQ-XC-LICENSE)*
 - **REQ-UI-25** Local only. The UI and its commands must not send packets, chat messages or server commands. All commands are client-side. *(Brief: ground rule 5; REQ-XC-RULES)*
+- **REQ-UI-26** Language [decided R29]. The settings UI (`ui/**`: widget kit, settings screen, option model, rendering helpers, notices), the HUD editor screen and the settings glue (`settings/**`: cards, commands, the Mod Menu hook) are written in Kotlin; features, config and the HUD framework stay Java. Their Java-facing API stays as it was (records, static members), so the Java modules and tests use them unchanged. Players need the Fabric Language Kotlin mod. *(Decided R29, 2026-10-05)*
 
 **Out of scope**
 - Copying anything from AlpakaAddons. Its non-UI features (chat blur, pause/main menu, viewmodel, item-size and block-overlay screens, command wheel, cosmetics).
@@ -966,6 +970,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - THIRD_PARTY_NOTICES has no AlpakaAddons entry
 - **AC-UI-22** (REQ-UI-25) Review: UI and command code contains no call that sends chat, commands or packets — [R]
 - **AC-UI-23** (REQ-UI-01, REQ-UI-04, REQ-UI-08, REQ-UI-17) At G2 the user compares the screen with AlpakaAddons in their own instance. They confirm it "feels similar" in layout, structure, categories, search and style, or list the differences to fix — [E]
+- **AC-UI-26** (REQ-UI-26) No `.java` file is left under `ui/` or `settings/` and the HUD editor screen is Kotlin; `fabric.mod.json` depends on `fabric-language-kotlin`; every unit test and gametest that passed before the conversion passes unchanged, apart from source scans that now also read `.kt` files — [A] + [R]
 
 **Edge cases**
 - **EC-UI-01** The window is resized or the GUI scale changes while the screen is open → the layout is redone; scroll positions are clamped; the search query, focused field and expanded cards are kept.
@@ -3894,7 +3899,7 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.3 Decisions after G1 — R18–R28
+### 12.3 Decisions after G1 — R18–R29
 
 You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 drops carry `[dropped R22]` and keep their ids.
 
@@ -3911,6 +3916,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R26 | T2.3b (2026-10-03): a keybind conflict is marked in yellow, as vanilla 26.2 Controls does, not in the error red (EC-UI-11 had assumed vanilla used red) | EC-UI-11; PLAN T2.3b |
 | R27 | T2.3b (2026-10-03): (a) while a keybind widget is armed, a left click cancels, a right click resets to the default, other mouse buttons bind; (b) the colour hex field accepts 8 digits for colours without alpha and drops the alpha | REQ-UI-13, REQ-UI-14, EC-NPCWP-06; PLAN T2.3b |
 | R28 | T2.4d (2026-10-04): where notices appear and how long they stay is the player's choice in General › Interface; until a value is picked, top right and 5 s | REQ-UI-21, §12.H; PLAN T2.4d |
+| R29 | 2026-10-05: the settings UI, the HUD editor and the settings glue move to Kotlin; players need Fabric Language Kotlin (no bundled copy); the conversion comes before T2.9–T2.9d, which are then written in Kotlin, and before the 1.2.0 release | REQ-UI-26, AC-UI-26, §3, §5; PLAN T2.10a–T2.10e, T2.9–T2.9d |
 
 ### 12.H Defaults table (decided D-6, R1–R17, R20–R22 and R28)
 
@@ -4039,6 +4045,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-UI-23 | T2.5b, T2.6 |
 | REQ-UI-24 | T2.2 |
 | REQ-UI-25 | T2.5b |
+| REQ-UI-26 | T2.10a, T2.10b, T2.10c, T2.10d, T2.10e |
 
 **hud** (14)
 
@@ -4502,6 +4509,11 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T2.9b | feat(ui): keyboard focus navigation | REQ-UI-18 |
 | T2.9c | feat(hud): snapping + guide lines in the HUD editor | REQ-HUD-14 |
 | T2.9d | feat(ui): anti-aliased rounded corners | REQ-UI-18 |
+| T2.10a | build(ui): Kotlin and Fabric Language Kotlin | REQ-UI-26 |
+| T2.10b | refactor(ui): option model, rendering helpers and notices in Kotlin | REQ-UI-26 |
+| T2.10c | refactor(ui): widget kit in Kotlin | REQ-UI-26 |
+| T2.10d | refactor(ui): settings screen and HUD editor in Kotlin | REQ-UI-26 |
+| T2.10e | refactor(ui): settings glue in Kotlin | REQ-UI-26 |
 | T3.0a | feat(skyblock): reader base + tab-widget and sidebar readers | REQ-XC-PRIVACY-01, REQ-GS-12, REQ-GS-01, REQ-GS-02, REQ-GS-03, REQ-GS-10, REQ-GS-11, REQ-GS-14, REQ-GS-15, REQ-GS-16 |
 | T3.0g | feat(skyblock): chat + action-bar listener | REQ-XC-RULES-02, REQ-GS-14, REQ-GS-04, REQ-GS-05 |
 | T3.0h | feat(skyblock): inventory counter by SkyBlock id | REQ-GS-07 |
