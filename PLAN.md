@@ -595,14 +595,22 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Accept: screenshot comparison at scales 1–4; AC-UI-02 still passes.
 
 **Checkpoint G2:**
-- [ ] tiers A–C green; per-commit worktree build since G1 (AC-XC-05)
-- [ ] screenshots reviewed: AC-UI-01, AC-UI-02, AC-UI-16, AC-UI-17, AC-HUD-07, AC-HUD-13
-- [ ] tier D boot with a copy of your mod set minus Cloth Config, once also without Mod Menu: AC-UI-09 [D], AC-UI-20 [D], AC-HUD-09 (no test element), EC-UI-13 (the backdrop and clicks still work next to the other GUI mods)
-- [ ] 1.0.1 config migrates with no loss (AC-UI-15, AC-CFG-12)
-- [ ] `code-reviewer` review, incl. clean room and local-only: AC-UI-21, AC-UI-22, AC-UI-04 [R], AC-HUD-10, AC-XC-01
-- [ ] your quick look: AC-UI-23 (compare with AlpakaAddons in your instance; either it "feels similar", or you list the differences to fix)
-- [ ] push `update/26.2` (D-10 checkpoint push) after the per-commit build; CI green on the pushed head
-- [ ] Phase 2 report (AC-XC-07, AC-XC-10); stretch tasks T2.9–T2.9d are listed as not started or done, never as blocking
+- [x] tiers A–C green; per-commit worktree build since G1 (AC-XC-05)
+  - Done (2026-10-05): `build` and every gametest green; `scripts/build-each-commit.sh` over the 19 commits since the last push (0186f17..e32595e): all build, every subject and author ok.
+- [x] screenshots reviewed: AC-UI-01, AC-UI-02, AC-UI-16, AC-UI-17, AC-HUD-07, AC-HUD-13
+  - Done (2026-10-05): the categories, the dimmed switched-off feature, the #FF5252 accent, the 6-line tooltip at scale 4, the HUD editor (previews, outlines, the disabled element, a label below a top box, Phase 2 buttons).
+- [x] tier D boot with a copy of your mod set minus Cloth Config, once also without Mod Menu: AC-UI-09 [D], AC-UI-20 [D], AC-HUD-09 (no test element), EC-UI-13 (the backdrop and clicks still work next to the other GUI mods)
+  - Done (2026-10-05) on a copy of the `26.2 Skyblock` instance's mods: 48 jars (Cloth Config left out with Gamma Utils and MoreCulling, which require it), then 47 without Mod Menu, each against a baseline without this mod, all loading a test world. Both boots load the mod and register the production `/ksu` tree (no `debug island`), log no NoClassDefFoundError from it and add no ERROR line (only thread names differ); the jar holds no test class or test element. Typing `/ksu` in the production client was not driven: simulated keystrokes went to the game's own keybinds, so the in-world part rests on the gametests (`/ksu glow` and `/ksu hud` through chat) and your look in your instance (EC-UI-13).
+- [x] 1.0.1 config migrates with no loss (AC-UI-15, AC-CFG-12)
+  - Done (2026-10-05): ConfigSafeLoadTest (a 1.0.1 file saves back every value), OpenCloseGameTest (open every category and close keeps every key, range 200 and the three key lines), RuleCardsGameTest (every 1.0.1 rule shown with its values).
+- [x] `code-reviewer` review, incl. clean room and local-only: AC-UI-21, AC-UI-22, AC-UI-04 [R], AC-HUD-10, AC-XC-01
+  - Done (2026-10-05): APPROVE, all five pass (no repository file matches the hashed AlpakaAddons jars; no assets added; no server sends; categories and defaults per §12.H; no I/O on the HUD draw path; no mixins). Its two small findings are fixed in e32595e.
+- [x] your quick look: AC-UI-23 (compare with AlpakaAddons in your instance; either it "feels similar", or you list the differences to fix)
+  - Done (2026-10-05): "Works fine", Mod Menu included.
+- [x] push `update/26.2` (D-10 checkpoint push) after the per-commit build; CI green on the pushed head
+  - Done (2026-10-05): pushed 2a107c0..e32595e after the privacy scan, changelog-lint, check-forbidden, a clean build and `gh auth status` (Kesuhi). The first CI run failed while Loom downloaded Minecraft (runner network); the re-run is green.
+- [x] Phase 2 report (AC-XC-07, AC-XC-10); stretch tasks T2.9–T2.9d are listed as not started or done, never as blocking
+  - Done (2026-10-05): given in the session; T2.9–T2.9d not started.
 
 ### Phase 3 — Features (each behind its own toggle)
 
