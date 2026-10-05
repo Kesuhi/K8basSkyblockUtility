@@ -5,7 +5,7 @@ import java.util.Collections
 /**
  * The beam colour of an NPC waypoint (REQ-NPCWP-05, D-15): the rule's own beam colour, otherwise its
  * island's colour (edited, or the documented default below), otherwise the global default. A rule's
- * `color` is its glow and label colour and never feeds into the beam (REQ-NPCWP-07).
+ * stored `color` (unused since R31: NPCs are white) never feeds into the beam (REQ-NPCWP-07).
  */
 object WaypointColors {
 	/** The mod's long-standing NPC green, for a blank island or one without a colour. */

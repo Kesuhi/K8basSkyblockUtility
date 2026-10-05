@@ -8,16 +8,16 @@ import java.util.Map;
 
 /** For gametests: shows NPC waypoints with chosen settings, without touching the saved config. Call on the client thread. */
 public final class TestWaypoints {
-	/** The fresh-config look: white labels, beams and distance (AC-NPCWP-05). */
-	public static final NpcWaypointMarkers.Settings DEFAULTS = settings(true, true, true);
+	/** The fresh-config look: beams and distance; labels are always white (AC-NPCWP-05, R31). */
+	public static final NpcWaypointMarkers.Settings DEFAULTS = settings(true, true);
 	/** Only the label and its distance line, for tests that measure the label alone. */
-	public static final NpcWaypointMarkers.Settings LABELS_ONLY = settings(true, false, true);
+	public static final NpcWaypointMarkers.Settings LABELS_ONLY = settings(false, true);
 
 	private TestWaypoints() {
 	}
 
-	public static NpcWaypointMarkers.Settings settings(boolean whiteLabels, boolean beams, boolean distance) {
-		return new NpcWaypointMarkers.Settings(whiteLabels, beams, distance, Map.of());
+	public static NpcWaypointMarkers.Settings settings(boolean beams, boolean distance) {
+		return new NpcWaypointMarkers.Settings(beams, distance, Map.of());
 	}
 
 	public static void show(List<NpcRule> rules, NpcWaypointMarkers.Settings settings) {

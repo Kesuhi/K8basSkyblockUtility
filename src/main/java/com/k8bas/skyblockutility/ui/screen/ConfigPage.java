@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Option;
@@ -68,6 +69,18 @@ final class ConfigPage {
 		widgets.addAll(controlWidgets);
 	}
 
+	/** A control without a card (a rule header's Remove), made the first time. */
+	private Widget controlFor(Option option) {
+		Widget existing = controls.get(option);
+		if (existing != null) {
+			return existing;
+		}
+		Widget control = factory.control(option);
+		controls.put(option, control);
+		ownEnabled.put(control, control.isEnabled());
+		return control;
+	}
+
 	/** The option's card, made (with its control) the first time. */
 	private OptionCard cardFor(Option option) {
 		OptionCard existing = cardWidgets.get(option);
@@ -129,6 +142,20 @@ final class ConfigPage {
 				header.setExpanded(ruleRow.expanded());
 				header.setDimmed(featureOff(ruleRow.card()));
 				placedCards.add(header);
+				// Remove, over the header's right end (R31); placed with the controls, so it lies over the header and gets the click.
+				ActionOption remove = ruleRow.rule().remove();
+				if (remove == null) {
+					header.setActionRoom(0);
+				} else {
+					Widget control = controlFor(remove);
+					ConfigLayout.Rect actionRect = ConfigLayout.headerAction(rect);
+					control.setBounds(actionRect.x(), actionRect.y(), actionRect.w(), actionRect.h());
+					control.setClip(clip);
+					control.setDimmed(featureOff(ruleRow.card()));
+					control.setEnabled(ownEnabled.get(control));
+					header.setActionRoom(rect.right() - actionRect.x());
+					placedControls.add(control);
+				}
 				continue;
 			}
 			if (!(row instanceof ConfigLayout.OptionRow optionRow)) {
@@ -179,6 +206,9 @@ final class ConfigPage {
 		headers.keySet().removeIf(rule -> {
 			if (live.contains(rule)) {
 				return false;
+			}
+			if (rule.remove() != null) {
+				ownEnabled.remove(controls.remove(rule.remove()));
 			}
 			for (Option field : rule.fields()) {
 				cardWidgets.remove(field);

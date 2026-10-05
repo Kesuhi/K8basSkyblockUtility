@@ -18,10 +18,12 @@ import java.util.function.IntSupplier
 import java.util.function.Supplier
 
 /**
- * Mob Highlighter's rule cards (REQ-UI-11): one per rule, with label, enabled, entity type, island,
- * name match, name pattern, colour and a destructive Delete. Every edit is stored at once and
- * `changed` applies it (the highlights follow live); Delete is written at once by the screen.
- * Kept per rule object, so a card keeps its widgets while the rule lives.
+ * Mob Highlighter's rule cards (REQ-UI-11): one per rule, with enabled, label, entity type, island,
+ * name match, name pattern and colour, and a destructive Remove in the header. A rule from the Mob
+ * Database (it has a `sourceId`) shows only enabled, entity type and colour: the database gave it the
+ * rest (R31). Every edit is stored at once and `changed` applies it (the highlights follow live);
+ * Remove is written at once by the screen. Kept per rule object, so a card keeps its widgets while
+ * the rule lives.
  *
  * @param problem why a rule does nothing, or null (HighlightManager.inertReason)
  * @param changed stores the section and rebuilds the highlights after an edit
@@ -49,15 +51,25 @@ class MobRuleCards(
 	private fun group(rule: HighlightRule): RuleGroup {
 		val id = RULE_ID + rule.id
 		val memo = ProblemMemo(rule)
-		val fields: List<Option> = java.util.List.of(
+		// A rule from the database: its label, island, name match and pattern are the database's (R31). One that
+		// already does nothing (edited before 1.2.0, e.g. an invalid pattern) keeps its full card, so it can be fixed.
+		val fromDatabase = rule.sourceId != null && memo.get() == null
+		val fields = ArrayList<Option>()
+		fields.add(
 			Toggle.of(
 				"$id.enabled", KEY + "enabled", OptionText("Enabled", "Off: the rule is kept but outlines nothing.", "", java.util.List.of()),
 				true, Binding.of({ rule.enabled }, { value -> edit { rule.enabled = value } }),
 			),
-			TextOption.of(
-				"$id.label", KEY + "label", OptionText("Label", "The rule's name in this list.", "", java.util.List.of()), "New Rule", 100,
-				"(unnamed)", Binding.of({ rule.label ?: "" }, { value -> edit { rule.label = value } }),
-			),
+		)
+		if (!fromDatabase) {
+			fields.add(
+				TextOption.of(
+					"$id.label", KEY + "label", OptionText("Label", "The rule's name in this list.", "", java.util.List.of()), "New Rule", 100,
+					"(unnamed)", Binding.of({ rule.label ?: "" }, { value -> edit { rule.label = value } }),
+				),
+			)
+		}
+		fields.add(
 			TextOption.of(
 				"$id.type", KEY + "entityTypeId",
 				OptionText("Entity type", "Only this kind of entity, e.g. minecraft:zombie; empty for any.", "", java.util.List.of()), "", 64,
@@ -68,24 +80,32 @@ class MobRuleCards(
 					{ value -> edit { rule.entityTypeId = if (value.all(Character::isWhitespace)) null else value.trim(Character::isWhitespace) } },
 				),
 			).invalidWhen { RuleFields.aboutType(memo.get()) },
-			RuleFields.island("$id.island", KEY + "island", Supplier { rule.island }, Consumer { value -> edit { rule.island = value } }),
-			RuleFields.matchMode(
-				"$id.mode", KEY + "nameMatchMode", Supplier { rule.nameMatchMode }, Consumer { value -> edit { rule.nameMatchMode = value } },
-			),
-			TextOption.of(
-				"$id.pattern", KEY + "namePattern",
-				OptionText("Name pattern", "The text the entity's name is compared with.", "", java.util.List.of()), "", 256, "",
-				Binding.of({ rule.namePattern ?: "" }, { value -> edit { rule.namePattern = value } }),
-			).invalidWhen { RuleFields.aboutPattern(memo.get()) },
+		)
+		if (!fromDatabase) {
+			fields.add(RuleFields.island("$id.island", KEY + "island", Supplier { rule.island }, Consumer { value -> edit { rule.island = value } }))
+			fields.add(
+				RuleFields.matchMode(
+					"$id.mode", KEY + "nameMatchMode", Supplier { rule.nameMatchMode }, Consumer { value -> edit { rule.nameMatchMode = value } },
+				),
+			)
+			fields.add(
+				TextOption.of(
+					"$id.pattern", KEY + "namePattern",
+					OptionText("Name pattern", "The text the entity's name is compared with.", "", java.util.List.of()), "", 256, "",
+					Binding.of({ rule.namePattern ?: "" }, { value -> edit { rule.namePattern = value } }),
+				).invalidWhen { RuleFields.aboutPattern(memo.get()) },
+			)
+		}
+		fields.add(
 			ColorOption.of(
 				"$id.colour", KEY + "color", OptionText("Colour", "The outline's colour.", "", java.util.List.of()), 0xFF0000, false,
 				Binding.of({ rule.color and 0xFFFFFF }, { value -> edit { rule.color = value and 0xFFFFFF } }),
 			),
-			ActionOption("$id.delete", OptionText("Delete", "Removes this rule.", "", java.util.List.of()), "Delete rule", true, Runnable { delete(rule) }),
 		)
 		return RuleGroup(
 			id, Supplier { rule.label }, IntSupplier { rule.color }, Supplier { memo.get() },
 			Supplier { java.util.List.of(nullToEmpty(rule.label), nullToEmpty(rule.namePattern)) }, fields,
+			ActionOption("$id.delete", OptionText("Remove", "Removes this rule from the list.", "", java.util.List.of()), "Remove", true, Runnable { delete(rule) }),
 		)
 	}
 

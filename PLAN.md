@@ -139,7 +139,7 @@ Authoritative per-feature defaults: `SPEC.md` §12.H.
 | Existing glow through walls (Mob Highlighter, NPC Search) | 🔴 RED | Replaced by depth-tested glow (Render Chest); `MinecraftMixin` deleted | module ON (user rules) |
 | Existing outline of invisible mobs | 🔴 RED | Removed: `isInvisible()` means no glow and no "found" alert | always enforced |
 | Trinity/Tomioka/Duncan glow | 🟢 if depth-tested | Depth-tested glow; "You found X" title only after line of sight, reset per run, and only for Trinity, Tomioka, Duncan, Xalx and Pete (R20) | your rules stay on; title ON |
-| NPC waypoints: white label + coloured beacon beam | 🟡→🟢 | Fixed coordinates only; labels white unless "White waypoint labels" is OFF, which uses the rule colour (R21) | module ON; white labels ON |
+| NPC waypoints: white label + coloured beacon beam | 🟡→🟢 | Fixed coordinates only; labels always white with a yellow distance line (R31; R21's option removed) | module ON |
 | Waypoint distance "Nm" line | 🟡 | Only to fixed coordinates; own toggle | ON |
 | Mineshaft entry alert (corpse types + keys in inventory) | 🟢 | Reads the server's *Frozen Corpses* tab widget and your inventory; local message only | ON |
 | Possible-corpse-spot waypoints | **[dropped R22]** | Not built: the maintainer dropped corpse-spot waypoints after G1 (was: every known spot for the shaft variant, never filtered by unseen entities; text only) | — (was **OFF**) |
@@ -611,6 +611,12 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 - [x] **T2.10i refactor(test): test helpers in Kotlin** (S, deps T2.10h). `test/` ReleaseDraftCheck; `gametest/` FrameTimer (2 files).
   - Req: REQ-UI-26
   - Accept: AC-UI-26 for these files.
+
+*After the hand checks of the Kotlin build [decided R31]:*
+
+- [x] **T2.11 feat(ui)!: slim database rules, a Remove button per rule, white NPC labels** (M, deps T2.10i). `RuleGroup` gets an optional header action; `MobRuleCards` and `NpcRuleCards` give a rule from a database (it has a `sourceId`) only enabled, plus entity type and colour for a mob and the position for a fixed NPC, and move Delete to the header as Remove; `ConfigLayout`, `ConfigPage` and `RuleHeaderWidget` place it at the header's right end and keep the label clear of it. NPC Search drops the per-NPC colour and the "White waypoint labels" setting: labels white with a yellow distance line, moving-NPC outlines, header dots and the "You found" title white. CHANGELOG entry.
+  - Req: REQ-UI-11, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-07, REQ-NPCWP-08
+  - Accept: AC-UI-10, AC-NPCWP-03, AC-NPCWP-05, EC-NPCWP-06 as amended by R31; the rule-card and waypoint unit tests and gametests.
 
 *Stretch, after G2 (optional per D-8 / REQ-UI-18. Nothing for 2.0.0 and no checkpoint waits on these. The multi-select dropdown moved to T6.7.)*
 

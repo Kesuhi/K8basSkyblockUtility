@@ -23,8 +23,8 @@ import java.util.Map;
 /**
  * AC-PORT-06 / REQ-PORT-07: a fixed waypoint label stays fully legible behind nothing, stone, glass
  * and water, at 5 and 30 blocks, and keeps its 10-block size beyond 10 blocks. Each label screenshot
- * is paired with the same view without the label; their difference is the label. R21: labels are
- * white by default and take the rule's colour once "White waypoint labels" is off. The beams are off
+ * is paired with the same view without the label; their difference is the label. R31: labels are
+ * always white, whatever colour the rule has stored. The beams are off
  * here, so only the label is measured (beams: MarkerBeamRingGameTest, NpcWaypointGameTest).
  */
 public class WaypointLabelGameTest implements FabricClientGameTest {
@@ -88,7 +88,7 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			check(Math.abs(at30 - at10) <= 2, "height at 30 blocks (" + at30 + ") equals height at 10 blocks (" + at10 + ") +-2 px");
 
 			waypointsFollowTheIsland(context, singleplayer, server);
-			labelColourFollowsTheSetting(context, singleplayer, server);
+			labelsAreWhiteWhateverTheRuleColour(context, singleplayer, server);
 
 			context.runOnClient(client -> {
 				setHudHidden(client, false);
@@ -127,8 +127,8 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 		context.runOnClient(client -> IslandTracker.forceIsland("Hub"));
 	}
 
-	/** R21: a red rule's label is white by default and red with "White waypoint labels" off. */
-	private static void labelColourFollowsTheSetting(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
+	/** R31: a red rule's label is white; the rule's colour never shows (there is no setting for it). */
+	private static void labelsAreWhiteWhateverTheRuleColour(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
 		int red = 0xFF5555;
 		server.runCommand("fill -8 -60 1 8 -50 40 minecraft:air");
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
@@ -141,16 +141,10 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			context.runOnClient(client -> TestWaypoints.show(List.of(rule), TestWaypoints.LABELS_ONLY));
 			context.waitTicks(5);
 			Path white = context.takeScreenshot("r21-white-labels");
-			context.runOnClient(client -> TestWaypoints.show(List.of(rule), TestWaypoints.settings(false, false, true)));
-			context.waitTicks(5);
-			Path ruleColour = context.takeScreenshot("r21-rule-colour");
 			Label whiteAsWhite = Label.of(white, none, TEXT_COLOR);
 			Label whiteAsRed = Label.of(white, none, red);
-			Label ruleAsWhite = Label.of(ruleColour, none, TEXT_COLOR);
-			Label ruleAsRed = Label.of(ruleColour, none, red);
-			LOGGER.info("label colour: default white {} / red {}, setting off white {} / red {}", whiteAsWhite, whiteAsRed, ruleAsWhite, ruleAsRed);
-			check(whiteAsWhite.textPixels > 50 && whiteAsRed.textPixels == 0, "labels are white by default (R21)");
-			check(ruleAsRed.textPixels > 50 && ruleAsWhite.textPixels == 0, "with the setting off, labels take the rule's colour");
+			LOGGER.info("label colour of a red rule: white {} / red {}", whiteAsWhite, whiteAsRed);
+			check(whiteAsWhite.textPixels > 50 && whiteAsRed.textPixels == 0, "a red rule's label is white (R31)");
 		} finally {
 			context.runOnClient(client -> TestWaypoints.clear());
 		}

@@ -15,23 +15,25 @@ import java.util.function.Supplier
  * @param id           unique across every list, e.g. "mob_highlighter.rule.mob-1"; also its search entry's id
  * @param problem      why the rule does nothing, or null when it works
  * @param searchFields the texts the search matches (label and pattern)
+ * @param remove       the destructive Remove at the header's right end, or null for none (R31)
  */
-class RuleGroup(
+class RuleGroup @JvmOverloads constructor(
 	@get:JvmName("id") val id: String,
 	@get:JvmName("label") val label: Supplier<String>,
 	@get:JvmName("colour") val colour: IntSupplier,
 	@get:JvmName("problem") val problem: Supplier<String?>,
 	@get:JvmName("searchFields") val searchFields: Supplier<List<String>>,
 	fields: List<Option>,
+	@get:JvmName("remove") val remove: ActionOption? = null,
 ) {
 	@get:JvmName("fields")
 	val fields: List<Option> = java.util.List.copyOf(fields)
 
 	override fun equals(other: Any?): Boolean = other is RuleGroup && id == other.id && label == other.label && colour == other.colour &&
-		problem == other.problem && searchFields == other.searchFields && fields == other.fields
+		problem == other.problem && searchFields == other.searchFields && fields == other.fields && remove == other.remove
 
-	override fun hashCode(): Int = listOf(id, label, colour, problem, searchFields, fields).hashCode()
+	override fun hashCode(): Int = listOf(id, label, colour, problem, searchFields, fields, remove).hashCode()
 
 	override fun toString(): String =
-		"RuleGroup[id=$id, label=$label, colour=$colour, problem=$problem, searchFields=$searchFields, fields=$fields]"
+		"RuleGroup[id=$id, label=$label, colour=$colour, problem=$problem, searchFields=$searchFields, fields=$fields, remove=$remove]"
 }

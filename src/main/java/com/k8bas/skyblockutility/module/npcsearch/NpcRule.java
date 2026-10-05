@@ -28,8 +28,8 @@ public class NpcRule {
 	public NameMatchMode nameMatchMode = NameMatchMode.CONTAINS;
 	public String namePattern = "";
 
-	/** Packed 0xRRGGBB: a moving NPC's outline, and a fixed NPC's label with "White waypoint labels"
-	 *  off (R21). Never the beam's colour (REQ-NPCWP-07). */
+	/** Packed 0xRRGGBB. Unused since 1.2.0: NPCs are drawn in white (R31). Kept in the file, so a
+	 *  downgrade keeps the colour it had. Never the beam's colour (REQ-NPCWP-07). */
 	public int color = 0x0AA351;
 	/** A fixed NPC's own beam colour, 0xRRGGBB, or null to follow its island's (REQ-NPCWP-05,
 	 *  WaypointColors). Gson leaves it null in configs written before T3.4. */

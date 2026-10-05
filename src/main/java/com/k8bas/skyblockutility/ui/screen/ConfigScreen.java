@@ -25,6 +25,7 @@ import com.k8bas.skyblockutility.ui.render.Clip;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.UiClock;
 import com.k8bas.skyblockutility.ui.render.TooltipLayout;
 import com.k8bas.skyblockutility.ui.render.UiSound;
 import com.k8bas.skyblockutility.ui.render.UiText;
@@ -85,6 +86,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private List<Widget> pageWidgets = List.of();
 	/** A rule was renamed, added or deleted: the badges and hits are recounted at the next layout. */
 	private boolean viewStale;
+	/** A rule's Remove acts once per double click: the next rule's Remove slides under the cursor (R31). */
+	private final RepeatGuard actionGuard = new RepeatGuard(500, UiClock.MILLIS);
 	private final Map<Category, ConfigPage> pages = new EnumMap<>(Category.class);
 	private final Map<Category, Integer> scrolls = new EnumMap<>(Category.class);
 	private final String version;
@@ -439,13 +442,20 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			// Save in the picker is a discrete commit (REQ-UI-15).
 			case ColorOption colour -> new ColorSwatch(colour.binding(), colour.storesAlpha(), colour.text().title(), this, session::commit, UiSound::click);
 			case TextOption text -> textField(text);
-			// An action (a rule's Delete) is a discrete commit too.
-			case ActionOption action -> new Button(action.buttonLabel(), action.destructive() ? Button.Style.DESTRUCTIVE : Button.Style.NORMAL,
-					() -> {
-						action.action().run();
-						viewStale = true;
-						session.commit();
-					}, UiSound::click);
+			// An action (a rule header's Remove) is a discrete commit too; its tooltip says what it does.
+			case ActionOption action -> {
+				Button button = new Button(action.buttonLabel(), action.destructive() ? Button.Style.DESTRUCTIVE : Button.Style.NORMAL,
+						() -> {
+							if (!actionGuard.allow()) {
+								return;
+							}
+							action.action().run();
+							viewStale = true;
+							session.commit();
+						}, UiSound::click);
+				button.setTooltip(action.text().description());
+				yield button;
+			}
 			case InfoOption info -> new InfoText(info.value());
 			// The picker writes each add at once (a discrete commit) and the badges count the new rule.
 			case DatabaseOption database -> new Button(database.buttonLabel(), Button.Style.NORMAL,

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /** The NPC waypoints (T3.4): position, gating, look and toggles (REQ-NPCWP-01/-02/-03/-08). */
 class NpcWaypointMarkersTest {
 	private static final Function<String, NpcDatabaseEntry> NO_DATA = id -> null;
-	private static final NpcWaypointMarkers.Settings DEFAULTS = new NpcWaypointMarkers.Settings(true, true, true, Map.of());
+	private static final NpcWaypointMarkers.Settings DEFAULTS = new NpcWaypointMarkers.Settings(true, true, Map.of());
 
 	private static NpcRule fixedRule(double x, double y, double z) {
 		NpcRule rule = new NpcRule();
@@ -120,27 +120,23 @@ class NpcWaypointMarkersTest {
 		assertNotNull(on.beam());
 		assertEquals(0xFF000000 | WaypointColors.ISLAND_DEFAULTS.get("Crimson Isle"), on.beam().argb(), "the beam in the island colour");
 
-		// "White waypoint labels" OFF: both lines in the rule's colour, the beam unchanged (R21).
-		Marker off = NpcWaypointMarkers.markerFor(rule, new NpcWaypointMarkers.Settings(false, true, true, Map.of()), NO_DATA);
-		assertEquals(0x00AAFF, off.label().lines().get(0).color() & 0xFFFFFF);
-		assertEquals(0x00AAFF, off.label().distanceColor() & 0xFFFFFF);
-		assertEquals(on.beam(), off.beam());
+		// R31: the rule's own colour never reaches the label or its distance line.
+		assertTrue((label.lines().get(0).color() & 0xFFFFFF) != rule.color && (label.distanceColor() & 0xFFFFFF) != rule.color);
 
-		Marker noBeam = NpcWaypointMarkers.markerFor(rule, new NpcWaypointMarkers.Settings(true, false, true, Map.of()), NO_DATA);
+		Marker noBeam = NpcWaypointMarkers.markerFor(rule, new NpcWaypointMarkers.Settings(false, true, Map.of()), NO_DATA);
 		assertNull(noBeam.beam(), "Show beacon beams OFF");
 		assertNotNull(noBeam.label(), "the label stays");
-		Marker noDistance = NpcWaypointMarkers.markerFor(rule, new NpcWaypointMarkers.Settings(true, true, false, Map.of()), NO_DATA);
+		Marker noDistance = NpcWaypointMarkers.markerFor(rule, new NpcWaypointMarkers.Settings(true, false, Map.of()), NO_DATA);
 		assertFalse(noDistance.label().distanceLine(), "Show distance OFF: one text line");
 	}
 
-	/** AC-NPCWP-05 [A]: a fresh config has the module, beams, distance and white labels ON. */
+	/** AC-NPCWP-05 [A]: a fresh config has the module, beams and distance ON. */
 	@Test
 	void aFreshConfigHasEverythingOn() {
 		NpcSearchConfig config = new NpcSearchConfig();
 		assertTrue(config.enabled);
 		assertTrue(config.showBeams);
 		assertTrue(config.showDistance);
-		assertTrue(config.whiteWaypointLabels);
 		assertTrue(config.islandBeamColors.isEmpty(), "every island starts at its documented default");
 		assertNull(new NpcRule().beamColor, "a new rule follows its island colour");
 	}
@@ -161,18 +157,37 @@ class NpcWaypointMarkersTest {
 		assertFalse(noDistance.label().distanceLine());
 		assertEquals(0xFF123456, noDistance.beam().argb(), "the edited island colour");
 		config.showDistance = true;
-		config.whiteWaypointLabels = false;
-		Marker ruleColour = NpcWaypointMarkers.markerFor(fixedRule(0, 64, 0), NpcSearchModule.waypointSettings(config), NO_DATA);
-		assertEquals(0xFF0AA351, ruleColour.label().lines().get(0).color());
-		assertNotNull(ruleColour.beam());
+		Marker both = NpcWaypointMarkers.markerFor(fixedRule(0, 64, 0), NpcSearchModule.waypointSettings(config), NO_DATA);
+		assertEquals(0xFFFFFFFF, both.label().lines().get(0).color(), "white, never the rule's colour (R31)");
+		assertNotNull(both.beam());
 	}
 
-	/** R21: the colour of the label and of its distance line with "White waypoint labels" ON or OFF. */
+	/** R31: every waypoint label is opaque white with a yellow distance line, whatever colour its rule has stored. */
 	@Test
-	void labelsAreWhiteUnlessSwitchedToTheRuleColour() {
-		assertEquals(0xFFFFFFFF, NpcWaypointMarkers.labelColor(0x0AA351, true));
-		assertEquals(0xFF0AA351, NpcWaypointMarkers.labelColor(0x0AA351, false));
-		// A colour stored with an alpha of 0 is still drawn opaque.
-		assertEquals(0xFFFF5555, NpcWaypointMarkers.labelColor(0x00FF5555, false));
+	void labelsAreAlwaysWhite() {
+		for (int stored : new int[] {0x0AA351, 0x00FF5555, 0xFFFFFF, 0}) {
+			NpcRule rule = fixedRule(0, 64, 0);
+			rule.color = stored;
+			MarkerLabel label = NpcWaypointMarkers.markerFor(rule, DEFAULTS, NO_DATA).label();
+			assertEquals(0xFFFFFFFF, label.lines().get(0).color(), "stored " + Integer.toHexString(stored));
+			assertEquals(0xFFFFFF55, label.distanceColor(), "stored " + Integer.toHexString(stored));
+		}
+	}
+
+	/** R31: a moving NPC is outlined in white, so its "You found" title is white too; the rest of the rule carries over. */
+	@Test
+	void movingNpcsAreOutlinedInWhite() {
+		NpcRule rule = fixedRule(0, 64, 0);
+		rule.fixed = false;
+		rule.id = "npc-1";
+		rule.color = 0xFF5555;
+		rule.namePattern = "Trinity";
+		rule.sourceId = "trinity";
+		com.k8bas.skyblockutility.highlight.HighlightRule outline = NpcSearchModule.toHighlightRule(rule);
+		assertEquals(0xFFFFFF, outline.color);
+		assertEquals("npc-1", outline.id);
+		assertEquals("Trinity", outline.namePattern);
+		assertEquals("trinity", outline.sourceId);
+		assertEquals("Crimson Isle", outline.island);
 	}
 }

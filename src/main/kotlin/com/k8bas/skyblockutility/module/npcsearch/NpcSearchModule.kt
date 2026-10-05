@@ -75,7 +75,7 @@ class NpcSearchModule : Module {
 	/**
 	 * Called on the client tick, from HighlightManager, whenever an unfixed NPC's rule matches a
 	 * nearby entity. For the special NPCs only (R20), the first time the player can see the NPC on
-	 * this server, a short vanilla title in the rule's own colour says so (FoundTitleGate).
+	 * this server, a short vanilla title says so, in white like every NPC (R31, FoundTitleGate).
 	 */
 	private fun onNpcMatched(rule: HighlightRule, entity: Entity) {
 		val player = Minecraft.getInstance().player
@@ -214,11 +214,14 @@ class NpcSearchModule : Module {
 		 */
 		private const val UNKNOWN_ISLAND = "Unknown"
 
+		/** The outline of every moving NPC, and so the colour of its "You found" title (R31). */
+		private const val OUTLINE_WHITE = 0xFFFFFF
+
 		@JvmStatic
 		fun waypointSettings(config: NpcSearchConfig): NpcWaypointMarkers.Settings =
-			NpcWaypointMarkers.Settings(config.whiteWaypointLabels, config.showBeams, config.showDistance, config.islandBeamColors)
+			NpcWaypointMarkers.Settings(config.showBeams, config.showDistance, config.islandBeamColors)
 
-		/** A moving NPC's outline rule; its colour is the rule's own, never a beam colour (REQ-NPCWP-07). */
+		/** A moving NPC's outline rule, in white: NPCs have no colour of their own (R31), and never a beam colour (REQ-NPCWP-07). */
 		@JvmStatic
 		fun toHighlightRule(rule: NpcRule): HighlightRule {
 			val highlightRule = HighlightRule()
@@ -227,7 +230,7 @@ class NpcSearchModule : Module {
 			highlightRule.enabled = rule.enabled
 			highlightRule.nameMatchMode = rule.nameMatchMode
 			highlightRule.namePattern = rule.namePattern
-			highlightRule.color = rule.color
+			highlightRule.color = OUTLINE_WHITE
 			highlightRule.island = rule.island
 			highlightRule.sourceId = rule.sourceId
 			return highlightRule

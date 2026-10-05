@@ -32,11 +32,20 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   saved when you close the screen; there is no Save or Cancel button. *Reason:* you see the effect
   of a change while you make it. *Effect:* closing with Esc keeps your changes.
 - **Behaviour change: waypoints look like Skyblocker's.** The label has no dark background any
-  more and sits on the centre of the NPC's block, 1.5 blocks up. With "White waypoint labels" ON
-  (the default) the label is white and the distance line below it yellow; OFF draws both in the
-  NPC's colour, as before. *Reason:* the beam now carries the colour, and plain text over a beam
-  reads better. *Effect:* your waypoints look different after the update; their position moves by
-  half a block to the block's centre.
+  more and sits on the centre of the NPC's block, 1.5 blocks up. The label is always white and the
+  distance line below it yellow; the "White waypoint labels" option is gone. *Reason:* the beam now
+  carries the colour, and plain text over a beam reads better. *Effect:* your waypoints look
+  different after the update; their position moves by half a block to the block's centre.
+- **Behaviour change: NPCs have no colour of their own any more.** NPC Search draws everything in
+  white: waypoint labels, the outline of moving NPCs, the dot on a rule's card and the "You found"
+  title. *Reason:* the beam shows the island's colour, and one colour keeps the NPC list simple.
+  *Effect:* NPCs you had coloured are white now; the colour stays in your settings file, unused.
+- **Behaviour change: slimmer rule cards with a Remove button.** A mob or NPC you added from the
+  database shows only what you can usefully change: on or off, and for a mob its entity type and
+  colour. Its label, island, name match and name pattern come from the database. Every rule has a
+  **Remove** button at the right end of its header, in place of the Delete button inside the card.
+  *Reason:* the database already knows those fields, and removing a rule should not take a click to
+  open it first. *Effect:* rules you wrote by hand (no database entry) still show every field.
 - **Behaviour change: a waypoint from the NPC list follows its corrected position.** A waypoint you
   added from the NPC list uses that NPC's current coordinates from the list, so a corrected entry
   moves it; a waypoint whose NPC is no longer listed keeps its stored position. *Reason:* fixes to

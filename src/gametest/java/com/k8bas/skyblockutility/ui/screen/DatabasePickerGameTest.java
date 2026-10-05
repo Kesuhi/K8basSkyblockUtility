@@ -26,7 +26,7 @@ import java.util.List;
  * <ul>
  *   <li>AC-UI-10 (in full): an entry added from the picker becomes a rule at once, is written at once
  *       and leaves the picker; Done closes it with no "Changes not saved" prompt; edits to it, a colour-only
- *       change of a second rule and a Delete of a third are in the file, and after a restart (the rules read
+ *       change of a second rule and the Remove of a third are in the file, and after a restart (the rules read
  *       back from the file) the entry is still gone from the picker;</li>
  *   <li>AC-UI-18 [C]: the NPC picker with 150 entries scrolls from start to end, in screenshots;</li>
  *   <li>EC-UI-08: when the fetch failed, the picker says the database is unavailable and offers nothing.</li>
@@ -102,16 +102,18 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 				.toList());
 		check(cards.equals(List.of("Voidgloom", "Delete me", "Zealot")), "its card is in the list: " + cards);
 
-		// The added rule edited, only the colour of the second changed, the third deleted; then a restart.
+		// The added rule edited (its slim card: entity type and colour, R31), only the colour of the second changed,
+		// the third removed with its header's button; then a restart.
 		String rule = "mob_highlighter.rule.";
 		RuleCardsGameTest.click(context, RuleCardsGameTest.headerPoint(context, "Zealot"));
-		RuleCardsGameTest.replaceText(context, rule + added + ".label", "Zealot Hunter");
-		RuleCardsGameTest.replaceText(context, rule + added + ".pattern", "Zealot Hunter");
+		check(context.computeOnClient(client -> screen(client).page().page().rows().stream().noneMatch(row -> row instanceof ConfigLayout.OptionRow o
+				&& (o.option().id().equals(rule + added + ".label") || o.option().id().equals(rule + added + ".pattern")))),
+				"a rule from the database shows no label or pattern field (R31)");
+		RuleCardsGameTest.replaceText(context, rule + added + ".type", "minecraft:enderman");
 		RuleCardsGameTest.pickColour(context, rule + added + ".colour", "#00AAFF");
 		RuleCardsGameTest.click(context, RuleCardsGameTest.headerPoint(context, "Voidgloom"));
 		RuleCardsGameTest.pickColour(context, rule + "keep.colour", "#123456");
-		RuleCardsGameTest.click(context, RuleCardsGameTest.headerPoint(context, "Delete me"));
-		RuleCardsGameTest.click(context, RuleCardsGameTest.controlCentre(context, rule + "drop.delete"));
+		RuleCardsGameTest.click(context, RuleCardsGameTest.removeCentre(context, rule + "drop"));
 		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 		context.waitTicks(2);
 		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen), "Esc closed the settings");
@@ -122,8 +124,8 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		HighlightRule zealot = restarted.get(1);
 		check("keep".equals(keep.id) && keep.color == 0x123456 && "Voidgloom".equals(keep.label) && "Voidgloom".equals(keep.namePattern),
 				"only the colour of the second rule changed: " + keep.label + " " + Integer.toHexString(keep.color));
-		check("zealot".equals(zealot.sourceId) && "Zealot Hunter".equals(zealot.label) && "Zealot Hunter".equals(zealot.namePattern)
-				&& zealot.color == 0x00AAFF, "the added rule kept its edits and its source: " + zealot.label + " " + zealot.namePattern + " "
+		check("zealot".equals(zealot.sourceId) && "Zealot".equals(zealot.label) && "minecraft:enderman".equals(zealot.entityTypeId)
+				&& zealot.color == 0x00AAFF, "the added rule kept its edits and its source: " + zealot.label + " " + zealot.entityTypeId + " "
 						+ Integer.toHexString(zealot.color) + " " + zealot.sourceId);
 		context.setScreen(() -> new ConfigScreen(null));
 		context.waitForScreen(ConfigScreen.class);
@@ -139,7 +141,7 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 		check(context.computeOnClient(client -> screen(client).overlay()) == null, "the picker is closed");
 		LOGGER.info("database picker: folders {}, \"zeal\" found {}, Zealot added and written at once, gone from the picker; its edits, a "
-				+ "colour-only change and a Delete survived a restart, and Zealot stayed out of the picker", folders, found);
+				+ "colour-only change and a Remove survived a restart, and Zealot stayed out of the picker", folders, found);
 	}
 
 	/** AC-UI-18 [C]: the NPC picker scrolls from start to end. */

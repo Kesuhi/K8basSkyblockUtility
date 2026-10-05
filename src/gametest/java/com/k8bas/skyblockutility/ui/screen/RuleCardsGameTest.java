@@ -33,9 +33,9 @@ import java.util.List;
 /**
  * T2.5a, the rule cards in a real client:
  * <ul>
- *   <li>AC-UI-15 [C]: rules shaped like a 1.0.1 config show their label, colour dot, island, pattern and colour;</li>
+ *   <li>AC-UI-15 [C]: rules shaped like a 1.0.1 config show their label and the fields of their kind (R31);</li>
  *   <li>AC-UI-11 [C]: the regex "([" shows the warning sign, the reason and the marked field; fixing it clears all three;</li>
- *   <li>AC-UI-10 (T2.5a part): a label and pattern edit, a colour-only change through the picker and a Delete are
+ *   <li>AC-UI-10 (T2.5a part): a label and pattern edit, a colour-only change through the picker and a Remove are
  *       in the file after the screen closes;</li>
  *   <li>AC-UI-08 [C]: "trini" lists Waypoints with a badge and shows Trinity's card open;</li>
  *   <li>REQ-GLOW-10 [C] (decision 2026-10-01, S-6): a rule that ignores names and has no entity type has the
@@ -85,9 +85,10 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 	}
 
 	/**
-	 * AC-UI-15 [C] on the 1.0.1-shaped fixture, migrated as the game migrates it: every rule card shows
-	 * the rule's label, island, pattern and colour (a fixed NPC its position instead of a pattern). A
-	 * pattern longer than the field's usual limit is shown whole.
+	 * AC-UI-15 [C] on the 1.0.1-shaped fixture, migrated as the game migrates it: every rule's header names
+	 * it; a hand-made rule's card shows its label, island and pattern (a fixed NPC its position instead of a
+	 * pattern), a rule from a database shows none of them, and only mob rules have a colour (R31). A pattern
+	 * longer than the field's usual limit is shown whole.
 	 */
 	private static void fixtureRules(ClientGameTestContext context) {
 		JsonObject modules = migratedFixture(context).getAsJsonObject("modules");
@@ -113,11 +114,11 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 			context.waitTicks(2);
 			String prefix = category == Category.HIGHLIGHTS ? "mob_highlighter.rule." : "npc_search.rule.";
 			for (HighlightRule rule : category == Category.HIGHLIGHTS ? mobs : List.<HighlightRule>of()) {
-				expectCard(context, prefix + rule.id, rule.label, rule.island, rule.namePattern, rule.color);
+				expectCard(context, prefix + rule.id, rule.label, rule.island, rule.namePattern, rule.color, rule.sourceId != null);
 				checked++;
 			}
 			for (NpcRule rule : category == Category.WAYPOINTS ? npcs : List.<NpcRule>of()) {
-				expectCard(context, prefix + rule.id, rule.label, rule.island, rule.fixed ? null : rule.namePattern, rule.color);
+				expectCard(context, prefix + rule.id, rule.label, rule.island, rule.fixed ? null : rule.namePattern, null, rule.sourceId != null);
 				if (rule.fixed) {
 					String position = context.computeOnClient(client -> ((com.k8bas.skyblockutility.ui.option.InfoOption) option(screen(client),
 							prefix + rule.id + ".position")).value().get());
@@ -129,11 +130,26 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 			context.runOnClient(client -> headers(screen(client)).forEach(header -> screen(client).toggleRule(header.rule())));
 		}
 		check(checked == mobs.size() + npcs.size(), "every rule was checked: " + checked);
-		LOGGER.info("rule cards: all {} rules of the 1.0.1 fixture show their label, island, pattern and colour; a 300-character pattern "
+		LOGGER.info("rule cards: all {} rules of the 1.0.1 fixture show their label and the fields of their kind (R31); a 300-character pattern "
 				+ "is shown whole", checked);
 	}
 
-	private static void expectCard(ClientGameTestContext context, String id, String label, String island, String pattern, int colour) {
+	/** @param colour the mob rule's colour, or null for an NPC rule, which has no colour field (R31) */
+	private static void expectCard(ClientGameTestContext context, String id, String label, String island, String pattern, Integer colour,
+			boolean fromDatabase) {
+		String title = context.computeOnClient(client -> screen(client).page().header(ruleHeader(screen(client), id).rule()).title());
+		check(title.equals(label == null || label.isBlank() ? RuleHeaderWidget.UNNAMED : label.strip()), id + ": header " + title);
+		check(context.computeOnClient(client -> shown(screen(client), id + ".colour")) == (colour != null), id + ": a colour field only for a mob");
+		if (colour != null) {
+			int shownColour = context.computeOnClient(client -> ((ColorOption) option(screen(client), id + ".colour")).binding().get());
+			check(shownColour == (colour & 0xFFFFFF), id + ": colour " + Integer.toHexString(shownColour));
+		}
+		if (fromDatabase) {
+			for (String field : List.of(".label", ".island", ".mode", ".pattern")) {
+				check(!context.computeOnClient(client -> shown(screen(client), id + field)), id + ": a rule from a database shows no " + field + " field");
+			}
+			return;
+		}
 		check(fieldText(context, id + ".label").equals(label == null ? "" : label), id + ": label " + fieldText(context, id + ".label"));
 		String shownIsland = context.computeOnClient(client -> ((com.k8bas.skyblockutility.ui.option.Choice<?>) option(screen(client), id + ".island"))
 				.binding().get().toString());
@@ -142,8 +158,10 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		if (pattern != null) {
 			check(fieldText(context, id + ".pattern").equals(pattern), id + ": pattern " + fieldText(context, id + ".pattern"));
 		}
-		int shownColour = context.computeOnClient(client -> ((ColorOption) option(screen(client), id + ".colour")).binding().get());
-		check(shownColour == (colour & 0xFFFFFF), id + ": colour " + Integer.toHexString(shownColour));
+	}
+
+	private static boolean shown(ConfigScreen screen, String id) {
+		return screen.page().page().rows().stream().anyMatch(row -> row instanceof ConfigLayout.OptionRow option && option.option().id().equals(id));
 	}
 
 	/** AC-UI-15 [C]: the original label, dot colour, island, pattern and colour. */
@@ -189,7 +207,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		LOGGER.info("rule cards: \"([\" warned with its reason and a marked field; \"(\\\\w+)\" cleared both");
 	}
 
-	/** AC-UI-10 (T2.5a part): an edit, a colour-only change and a Delete are in the file after the close. */
+	/** AC-UI-10 (T2.5a part): an edit, a colour-only change and a Remove are in the file after the close. */
 	private static void editsSurviveTheClose(ClientGameTestContext context) {
 		click(context, headerPoint(context, "Zealot"));
 		replaceText(context, "mob_highlighter.rule.mob-1.label", "Zealot Bruiser");
@@ -198,12 +216,11 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		click(context, headerPoint(context, "Voidgloom"));
 		pickColour(context, "mob_highlighter.rule.mob-2.colour", "#123456");
 		click(context, headerPoint(context, "Voidgloom"));
-		// Delete the fourth: written at once.
-		click(context, headerPoint(context, "Delete me"));
+		// Remove the fourth with its header's button, without opening it: written at once (R31).
 		int beforeDelete = context.computeOnClient(client -> ConfigManager.saveRequests());
 		int badgeBefore = context.computeOnClient(client -> screen(client).view().badge(Category.HIGHLIGHTS));
-		click(context, controlCentre(context, "mob_highlighter.rule.mob-4.delete"));
-		check(context.computeOnClient(client -> MobRulesForTests.rules().size()) == 3, "Delete removes the rule");
+		click(context, removeCentre(context, "mob_highlighter.rule.mob-4"));
+		check(context.computeOnClient(client -> MobRulesForTests.rules().size()) == 3, "Remove deletes the rule");
 		check(context.computeOnClient(client -> ConfigManager.saveRequests()) - beforeDelete == 1, "and writes at once");
 		context.waitTicks(2);
 		int badgeAfter = context.computeOnClient(client -> screen(client).view().badge(Category.HIGHLIGHTS));
@@ -217,7 +234,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		check(!file.contains("\"label\":\"Deleteme\""), "the deleted rule is gone from the file");
 		context.setScreen(() -> new ConfigScreen(null));
 		context.waitForScreen(ConfigScreen.class);
-		LOGGER.info("rule cards: the edit, the colour-only change and the Delete are in the file after the close");
+		LOGGER.info("rule cards: the edit, the colour-only change and the Remove are in the file after the close");
 	}
 
 	/** AC-UI-08 [C]. */
@@ -347,6 +364,21 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 	private static boolean fieldMarked(ConfigScreen screen, String id) {
 		Option option = option(screen, id);
 		return ((com.k8bas.skyblockutility.ui.option.TextOption) option).invalid().getAsBoolean();
+	}
+
+	/** The centre of a rule's Remove button, at the right end of its header (R31); the header is scrolled into view first. */
+	static int[] removeCentre(ClientGameTestContext context, String ruleId) {
+		context.runOnClient(client -> {
+			ConfigLayout.RuleHeader row = ruleHeader(screen(client), ruleId);
+			screen(client).scrollArea().ensureVisible(row.y(), row.y() + row.height());
+		});
+		context.waitTicks(2);
+		return context.computeOnClient(client -> centreOf(screen(client).page().control(ruleHeader(screen(client), ruleId).rule().remove())));
+	}
+
+	private static ConfigLayout.RuleHeader ruleHeader(ConfigScreen screen, String ruleId) {
+		return screen.page().page().rows().stream().filter(row -> row instanceof ConfigLayout.RuleHeader header && header.rule().id().equals(ruleId))
+				.map(row -> (ConfigLayout.RuleHeader) row).findFirst().orElseThrow(() -> new AssertionError("FAILED: no rule header " + ruleId));
 	}
 
 	static int[] controlCentre(ClientGameTestContext context, String id) {

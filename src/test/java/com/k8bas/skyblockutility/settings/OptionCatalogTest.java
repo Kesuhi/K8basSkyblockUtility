@@ -98,12 +98,11 @@ class OptionCatalogTest {
 		expected.put("general.noticePosition", NoticePosition.TOP_RIGHT);
 		expected.put("general.noticeSeconds", 5);
 		expected.put("modules.mob_highlighter.enabled", true);
-		// §12.H: NPC Search ON, NPC waypoints ON, "You found" title ON (R20), white labels ON (R21), beams and distance ON.
+		// §12.H: NPC Search ON, NPC waypoints ON, "You found" title ON (R20), beams and distance ON; labels are always white (R31).
 		expected.put("modules.npc_search.enabled", true);
 		expected.put("modules.npc_search.foundTitleEnabled", true);
 		expected.put("modules.npc_search.showBeams", true);
 		expected.put("modules.npc_search.showDistance", true);
-		expected.put("modules.npc_search.whiteWaypointLabels", true);
 		expected.put("options.txt:key.k8bas_skyblock_utility.open_settings", UNBOUND);
 		expected.put("options.txt:key.k8bas_skyblock_utility.mob_highlighter_toggle", UNBOUND);
 		expected.put("options.txt:key.k8bas_skyblock_utility.npc_search_toggle", UNBOUND);
@@ -338,9 +337,10 @@ class OptionCatalogTest {
 		for (String field : List.of("label", "enabled", "entityTypeId", "nameMatchMode", "namePattern", "color", "island")) {
 			documented.put("modules.mob_highlighter.rules[]." + field, "rule card (T2.5a)");
 		}
-		for (String field : List.of("label", "enabled", "nameMatchMode", "namePattern", "color", "island")) {
+		for (String field : List.of("label", "enabled", "nameMatchMode", "namePattern", "island")) {
 			documented.put("modules.npc_search.rules[]." + field, "rule card (T2.5a)");
 		}
+		documented.put("modules.npc_search.rules[].color", "kept, unused: NPCs are white (R31)");
 		for (String field : List.of("id", "sourceId", "maxDistance")) {
 			documented.put("modules.mob_highlighter.rules[]." + field, "kept, not editable (ui-config out of scope)");
 		}

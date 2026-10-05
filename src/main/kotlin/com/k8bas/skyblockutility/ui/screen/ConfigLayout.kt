@@ -58,6 +58,10 @@ object ConfigLayout {
 	/** Room for a slider's value ("Unlimited", "128 blocks") right of its track. */
 	const val SLIDER_LABEL: Int = 62
 
+	/** A rule header's Remove button (R31), and its gap to the header's right edge. */
+	const val HEADER_ACTION_WIDTH: Int = 56
+	const val HEADER_ACTION_INSET: Int = 6
+
 	/**
 	 * A rectangle in GUI pixels; width and height are never negative. A class rather than a data class, as
 	 * the size is held on construction; Java sees `x()`, `y()`, `w()`, `h()`.
@@ -334,6 +338,17 @@ object ConfigLayout {
 		}
 		width = minOf(width, maxOf(0, card.w / 2 - PAD))
 		return Rect(right - width, card.y + (card.h - height) / 2, width, height)
+	}
+
+	/**
+	 * A rule header's Remove button: at the header's right end, inside it, vertically centred (R31). A narrow
+	 * header gives it at most a third of its width, so the label keeps room.
+	 */
+	@JvmStatic
+	fun headerAction(header: Rect): Rect {
+		val width = minOf(HEADER_ACTION_WIDTH, header.w / 3)
+		val height = minOf(CONTROL_HEIGHT, header.h)
+		return Rect(header.right() - HEADER_ACTION_INSET - width, header.y + (header.h - height) / 2, width, height)
 	}
 
 	/** Where a card's title, description and status go: from its left edge to just before the control. */

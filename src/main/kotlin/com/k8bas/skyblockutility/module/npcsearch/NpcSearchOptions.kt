@@ -89,19 +89,6 @@ object NpcSearchOptions {
 					displayChanged.run()
 				}),
 			).asAmber(),
-			Toggle.of(
-				"npc_search.white_labels", "modules.npc_search.whiteWaypointLabels",
-				OptionText(
-					"White waypoint labels", "White labels with a yellow distance line, or each NPC's own colour.",
-					"On: a white label with a yellow distance line. Off: both in the NPC's own colour.",
-					java.util.List.of("label", "colour", "color"),
-				),
-				true,
-				Binding.of({ config.whiteWaypointLabels }, { value ->
-					config.whiteWaypointLabels = value
-					displayChanged.run()
-				}),
-			),
 		)
 		val all = ArrayList<Option>(options)
 		if (database != null) {

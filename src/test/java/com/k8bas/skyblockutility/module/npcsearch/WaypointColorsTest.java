@@ -67,10 +67,10 @@ class WaypointColorsTest {
 		moving.island = "Crimson Isle";
 		moving.color = 0x0AA351;
 		int beamBefore = WaypointColors.beamColor(fixed, islandColors);
-		// An island colour edit or a beam override leaves a moving rule's outline colour as it is ...
+		// An island colour edit or a beam override leaves a moving rule's outline colour as it is (white, R31) ...
 		islandColors.put("Crimson Isle", 0x00FFFF);
 		moving.beamColor = 0xFF0000;
-		assertEquals(0x0AA351, NpcSearchModule.toHighlightRule(moving).color);
+		assertEquals(0xFFFFFF, NpcSearchModule.toHighlightRule(moving).color);
 		assertNotEquals(beamBefore, WaypointColors.beamColor(fixed, islandColors));
 		// ... and a glow colour edit leaves the resolved beam colour as it is.
 		int beam = WaypointColors.beamColor(fixed, islandColors);

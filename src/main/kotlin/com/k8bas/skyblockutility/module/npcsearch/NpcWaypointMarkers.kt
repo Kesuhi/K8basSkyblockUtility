@@ -16,8 +16,8 @@ import java.util.function.Function
 /**
  * NPC Search's fixed waypoints (T3.4), supplied as markers to the world marker toolkit: at each
  * active fixed NPC's block, a beacon beam in the waypoint's resolved colour and, 1.5 blocks above, a
- * see-through name label with no plate plus the distance from the player. With "White waypoint
- * labels" ON the label is white and the distance yellow; OFF, both are in the rule's colour (R21).
+ * see-through name label with no plate plus the distance from the player: the label white and the
+ * distance yellow, whatever colour the rule has stored (R31).
  * Reimplemented from scratch after Skyblocker's look; no Skyblocker code (REQ-NPCWP-11). Positions
  * come only from rule or NPC-data coordinates, never from an entity (REQ-NPCWP-12).
  */
@@ -25,15 +25,18 @@ object NpcWaypointMarkers {
 	/** Vanilla's chat yellow, the distance colour of Skyblocker-style waypoints (REQ-NPCWP-03). */
 	const val DISTANCE_YELLOW: Int = 0xFFFF55
 
+	/** Every waypoint label's colour: opaque white (REQ-NPCWP-02, R31). */
+	const val LABEL_WHITE: Int = 0xFFFFFFFF.toInt()
+
 	/** The label floats this far above the waypoint block; the beam rises from the block (REQ-NPCWP-02). */
 	const val LABEL_RISE: Double = 1.5
 
 	/**
 	 * The NPC Search settings a waypoint's look depends on. A class rather than a data class: the colours
-	 * are copied on construction. Java sees `whiteLabels()`, `showBeams()`, `showDistance()`, `islandColors()`.
+	 * are copied on construction. Java sees `showBeams()`, `showDistance()`, `islandColors()`. The labels
+	 * are always white, so there is no setting for them (R31).
 	 */
 	class Settings(
-		@get:JvmName("whiteLabels") val whiteLabels: Boolean,
 		@get:JvmName("showBeams") val showBeams: Boolean,
 		@get:JvmName("showDistance") val showDistance: Boolean,
 		islandColors: Map<String, Int>,
@@ -41,14 +44,12 @@ object NpcWaypointMarkers {
 		@get:JvmName("islandColors")
 		val islandColors: Map<String, Int> = java.util.Map.copyOf(islandColors)
 
-		override fun equals(other: Any?): Boolean = other is Settings && whiteLabels == other.whiteLabels && showBeams == other.showBeams &&
-			showDistance == other.showDistance && islandColors == other.islandColors
+		override fun equals(other: Any?): Boolean =
+			other is Settings && showBeams == other.showBeams && showDistance == other.showDistance && islandColors == other.islandColors
 
-		override fun hashCode(): Int =
-			((whiteLabels.hashCode() * 31 + showBeams.hashCode()) * 31 + showDistance.hashCode()) * 31 + islandColors.hashCode()
+		override fun hashCode(): Int = (showBeams.hashCode() * 31 + showDistance.hashCode()) * 31 + islandColors.hashCode()
 
-		override fun toString(): String =
-			"Settings[whiteLabels=$whiteLabels, showBeams=$showBeams, showDistance=$showDistance, islandColors=$islandColors]"
+		override fun toString(): String = "Settings[showBeams=$showBeams, showDistance=$showDistance, islandColors=$islandColors]"
 	}
 
 	/** A waypoint's rule, for the per-frame enabled and island check, and its prepared marker. */
@@ -58,7 +59,7 @@ object NpcWaypointMarkers {
 	private var activeWaypoints: List<NpcRule> = java.util.List.of()
 
 	@Volatile
-	private var settings: Settings = Settings(true, true, true, java.util.Map.of())
+	private var settings: Settings = Settings(true, true, java.util.Map.of())
 
 	@Volatile
 	private var waypoints: List<Waypoint> = java.util.List.of()
@@ -141,16 +142,11 @@ object NpcWaypointMarkers {
 
 	private fun blockCentre(x: Double, y: Double, z: Double): Vec3 = Vec3(Math.floor(x) + 0.5, y, Math.floor(z) + 0.5)
 
-	/** The colour of a label and its distance line: white, or the rule's colour drawn opaque. */
-	@JvmStatic
-	fun labelColor(ruleColor: Int, white: Boolean): Int = if (white) 0xFFFFFFFF.toInt() else ARGB.opaque(ruleColor)
-
 	@JvmStatic
 	fun markerFor(rule: NpcRule, settings: Settings, data: Function<String, NpcDatabaseEntry?>): Marker {
-		val textColor = labelColor(rule.color, settings.whiteLabels)
-		var label = MarkerLabel.of(MarkerLabel.Line(Component.literal(rule.label), textColor)).asSeeThrough().raisedBy(LABEL_RISE)
+		var label = MarkerLabel.of(MarkerLabel.Line(Component.literal(rule.label), LABEL_WHITE)).asSeeThrough().raisedBy(LABEL_RISE)
 		if (settings.showDistance) {
-			label = label.withDistance(if (settings.whiteLabels) ARGB.opaque(DISTANCE_YELLOW) else textColor)
+			label = label.withDistance(ARGB.opaque(DISTANCE_YELLOW))
 		}
 		val beam = if (settings.showBeams) MarkerBeam(WaypointColors.beamColor(rule, settings.islandColors)) else null
 		val block = position(rule, data)

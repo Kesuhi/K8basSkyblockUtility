@@ -13,7 +13,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 /**
  * A rule's header (REQ-UI-11): a chevron, the rule's colour dot and its label, cut with "..." when long
  * and "(unnamed)" when empty (EC-UI-07). A rule that does nothing has a warning sign before its label
- * (REQ-GLOW-10). A click anywhere on it opens or closes the rule.
+ * (REQ-GLOW-10). A click anywhere on it opens or closes the rule, except on its Remove button, which the
+ * page places over its right end (R31); the label stops before that button.
  */
 final class RuleHeaderWidget extends Widget {
 	static final String UNNAMED = "(unnamed)";
@@ -23,6 +24,8 @@ final class RuleHeaderWidget extends Widget {
 	private final RuleGroup rule;
 	private final Runnable toggle;
 	private boolean expanded;
+	/** The width kept free at the right end for the Remove button, 0 when there is none. */
+	private int actionRoom;
 
 	RuleHeaderWidget(RuleGroup rule, Runnable toggle) {
 		this.rule = rule;
@@ -37,6 +40,20 @@ final class RuleHeaderWidget extends Widget {
 		return expanded;
 	}
 
+	void setActionRoom(int room) {
+		actionRoom = Math.max(0, room);
+	}
+
+	/** Where the label must end: before the Remove button, or 8 px before the right edge without one. */
+	int textRight() {
+		return x + width - 8 - actionRoom;
+	}
+
+	/** Whether the point is in the Remove button's area, which is the button's alone: no toggle, hover or tooltip here. */
+	boolean overAction(double mouseX) {
+		return actionRoom > 0 && mouseX >= x + width - actionRoom;
+	}
+
 	/** The label as the header shows it, before any cut. */
 	String title() {
 		String label = rule.label().get();
@@ -45,7 +62,7 @@ final class RuleHeaderWidget extends Widget {
 
 	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
-		if (button != 0 || !contains(mouseX, mouseY)) {
+		if (button != 0 || !contains(mouseX, mouseY) || overAction(mouseX)) {
 			return false;
 		}
 		toggle.run();
@@ -55,19 +72,19 @@ final class RuleHeaderWidget extends Widget {
 	@Override
 	public String tooltipAt(double mouseX, double mouseY) {
 		String problem = rule.problem().get();
-		return problem == null ? "" : ConfigLayout.problemText(problem);
+		return problem == null || overAction(mouseX) ? "" : ConfigLayout.problemText(problem);
 	}
 
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
-		float hover = hoverAmount(contains(mouseX, mouseY));
+		float hover = hoverAmount(contains(mouseX, mouseY) && !overAction(mouseX));
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover)));
 		int midY = y + height / 2;
 		drawChevron(graphics, x + 10, midY);
 		Shapes.roundedRect(graphics, x + 22, midY - DOT / 2, DOT, DOT, DOT / 2, faded(0xFF000000 | rule.colour().getAsInt()));
 		int textX = x + 22 + DOT + 6;
 		int textY = y + (height - font.lineHeight) / 2 + 1;
-		int room = x + width - 8 - textX;
+		int room = textRight() - textX;
 		if (rule.problem().get() != null) {
 			UiText.draw(graphics, font, WARNING, textX, textY, faded(Theme.ERROR));
 			int warning = font.width(WARNING);

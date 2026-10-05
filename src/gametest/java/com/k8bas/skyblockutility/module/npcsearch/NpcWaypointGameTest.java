@@ -26,8 +26,7 @@ import java.util.Map;
  * T3.4, the Skyblocker-style NPC waypoints in a real frame (Improved Transparency off):
  * <ul>
  *   <li>AC-NPCWP-03: a white label with no plate, a yellow distance line and a beam in the island
- *       colour (Crimson Isle, red) for a rule coloured blue; with "White waypoint labels" OFF both lines
- *       are blue and the beam stays red. The label stays visible behind stone, glass and water, and a
+ *       colour (Crimson Isle, red) for a rule coloured blue: the rule's colour never shows (R31). The label stays visible behind stone, glass and water, and a
  *       wall that fills the view hides the beam.</li>
  *   <li>AC-NPCWP-04: the label's text height is equal within 1 px at 20 and 100 blocks, larger at 5.</li>
  *   <li>AC-NPCWP-05: "Show beacon beams" OFF keeps the label; "Show distance" OFF leaves one line.</li>
@@ -78,17 +77,13 @@ public class NpcWaypointGameTest implements FabricClientGameTest {
 		return TestWaypoints.fixedRule("Researcher Timmy", ISLAND, RULE_BLUE, 0, -60, distance);
 	}
 
-	/** AC-NPCWP-03, the look; REQ-NPCWP-02 no plate; R21 the colours with the setting OFF. */
+	/** AC-NPCWP-03, the look; REQ-NPCWP-02 no plate; R31 the rule's colour never shows. */
 	private static void lookAndColours(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
 		Shot defaults = shoot(context, singleplayer, server, List.of(blueRule(20)), TestWaypoints.DEFAULTS, "t3.4-defaults");
-		Shot ruleColour = shoot(context, singleplayer, server, List.of(blueRule(20)), TestWaypoints.settings(false, true, true), "t3.4-rule-colour");
 		Shot noBeam = shoot(context, singleplayer, server, List.of(blueRule(20)), TestWaypoints.LABELS_ONLY, "t3.4-no-plate");
-		LOGGER.info("waypoint look: defaults {}, white labels off {}, without beam {}", defaults, ruleColour, noBeam);
+		LOGGER.info("waypoint look: defaults {}, without beam {}", defaults, noBeam);
 		check(defaults.white > 50 && defaults.yellow > 20 && defaults.blue == 0, "a white label with a yellow distance line: " + defaults);
 		check(defaults.redTop > 20 && defaults.frame.beams() == 1, "a beam in the island colour (Crimson Isle, red) above the label: " + defaults);
-		check(ruleColour.blue >= (defaults.white + defaults.yellow) * 0.9 && ruleColour.white == 0 && ruleColour.yellow == 0,
-				"with \"White waypoint labels\" OFF both lines take the rule's colour: " + ruleColour);
-		check(ruleColour.redTop > 20, "the beam keeps the island colour with white labels OFF: " + ruleColour);
 		// The name sits 1.5 blocks above the block (y -58.5), about at eye height (-58.38): near the middle
 		// of the 480 px window. At the block itself (no rise) it would be about 27 px lower.
 		check(Math.abs(defaults.whiteCentreY - 240) <= 8, "the label is drawn 1.5 blocks above its block: name centre row " + defaults.whiteCentreY);
@@ -128,7 +123,7 @@ public class NpcWaypointGameTest implements FabricClientGameTest {
 
 	/** AC-NPCWP-04: constant on-screen size from 10 blocks out, true size closer. */
 	private static void constantSizeFromTenBlocks(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
-		NpcWaypointMarkers.Settings nameOnly = TestWaypoints.settings(true, false, false);
+		NpcWaypointMarkers.Settings nameOnly = TestWaypoints.settings(false, false);
 		Shot at5 = shoot(context, singleplayer, server, List.of(blueRule(5)), nameOnly, "t3.4-size-5");
 		Shot at20 = shoot(context, singleplayer, server, List.of(blueRule(20)), nameOnly, "t3.4-size-20");
 		Shot at100 = shoot(context, singleplayer, server, List.of(blueRule(100)), nameOnly, "t3.4-size-100");
@@ -142,8 +137,8 @@ public class NpcWaypointGameTest implements FabricClientGameTest {
 	private static void togglesHideTheirPart(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
 		context.runOnClient(client -> WorldMarkers.setRecordFrames(true));
 		Shot both = shoot(context, singleplayer, server, List.of(blueRule(20)), TestWaypoints.DEFAULTS, "t3.4-toggles-on");
-		Shot noBeams = shoot(context, singleplayer, server, List.of(blueRule(20)), TestWaypoints.settings(true, false, true), "t3.4-beams-off");
-		Shot noDistance = shoot(context, singleplayer, server, List.of(blueRule(20)), TestWaypoints.settings(true, true, false), "t3.4-distance-off");
+		Shot noBeams = shoot(context, singleplayer, server, List.of(blueRule(20)), TestWaypoints.settings(false, true), "t3.4-beams-off");
+		Shot noDistance = shoot(context, singleplayer, server, List.of(blueRule(20)), TestWaypoints.settings(true, false), "t3.4-distance-off");
 		context.runOnClient(client -> WorldMarkers.setRecordFrames(false));
 		LOGGER.info("toggles: on {}, beams off {}, distance off {}", both, noBeams, noDistance);
 		// The player stands at (0.5, -60, 0.5); the label is at (0.5, -58.5, 20.5): 20.06 m.

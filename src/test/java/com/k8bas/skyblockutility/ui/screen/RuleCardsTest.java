@@ -108,16 +108,145 @@ class RuleCardsTest {
 		});
 		List<String> fields = open.rows().stream().filter(row -> row instanceof ConfigLayout.OptionRow option && option.indent() > 0)
 				.map(row -> ((ConfigLayout.OptionRow) row).option().id().replace("mob_highlighter.rule.mob-1.", "")).toList();
-		assertEquals(List.of("enabled", "label", "type", "island", "mode", "pattern", "colour", "delete"), fields);
+		// A hand-made rule keeps every field; Remove is in its header, not among them (R31).
+		assertEquals(List.of("enabled", "label", "type", "island", "mode", "pattern", "colour"), fields);
 
 		npcs.rules.add(npc("npc-1", "Trinity", false));
 		npcs.rules.add(npc("npc-2", "Dungeon Hub Mort", true));
 		RuleGroup fixed = npcCards.groups().get(1);
 		assertEquals("12, 70, -34", field(fixed, InfoOption.class, ".position").value().get(), "a fixed NPC shows its position, read-only");
 		assertTrue(fixed.fields().stream().noneMatch(option -> option.id().endsWith(".pattern") || option.id().endsWith(".mode")));
+		assertEquals(List.of("enabled", "label", "island", "mode", "pattern"), suffixes(npcCards.groups().get(0)), "no NPC colour (R31)");
+		assertEquals(List.of("enabled", "label", "island", "position"), suffixes(fixed));
 	}
 
-	/** Every edit is stored on the rule at once and applied (REQ-UI-15); Delete removes the rule. */
+	private static List<String> suffixes(RuleGroup group) {
+		return group.fields().stream().map(option -> option.id().substring(group.id().length() + 1)).toList();
+	}
+
+	/** R31: a rule from the Mob or NPC Database shows only what is useful to change; the database owns the rest. */
+	@Test
+	void databaseRulesShowASlimCard() {
+		HighlightRule zealot = mob("mob-1", "Zealot", "Zealot");
+		zealot.sourceId = "zealot";
+		mobs.rules.add(zealot);
+		assertEquals(List.of("enabled", "type", "colour"), suffixes(mobCards.groups().get(0)));
+
+		NpcRule trinity = npc("npc-1", "Trinity", false);
+		trinity.sourceId = "trinity";
+		NpcRule udel = npc("npc-2", "Udel", true);
+		udel.sourceId = "udel";
+		npcs.rules.add(trinity);
+		npcs.rules.add(udel);
+		assertEquals(List.of("enabled"), suffixes(npcCards.groups().get(0)), "a moving NPC from the list");
+		assertEquals(List.of("enabled", "position"), suffixes(npcCards.groups().get(1)), "a fixed NPC from the list");
+		assertEquals("Udel", npcCards.groups().get(1).label().get(), "the header still names it");
+
+		// One that already does nothing (edited before 1.2.0) keeps its full card, so it can be fixed.
+		HighlightRule broken = mob("mob-2", "Voidgloom", "([");
+		broken.sourceId = "voidgloom";
+		broken.nameMatchMode = NameMatchMode.REGEX;
+		mobs.rules.add(broken);
+		assertEquals(List.of("enabled", "label", "type", "island", "mode", "pattern", "colour"), suffixes(mobCards.groups().get(1)));
+	}
+
+	/** R31: every rule has a destructive Remove in its header; it deletes the rule at once. */
+	@Test
+	void everyRuleHasARemoveButton() {
+		HighlightRule zealot = mob("mob-1", "Zealot", "Zealot");
+		zealot.sourceId = "zealot";
+		mobs.rules.add(zealot);
+		npcs.rules.add(npc("npc-1", "Udel", true));
+		for (RuleGroup group : List.of(mobCards.groups().get(0), npcCards.groups().get(0))) {
+			ActionOption remove = group.remove();
+			assertEquals("Remove", remove.buttonLabel(), group.id());
+			assertTrue(remove.destructive(), group.id());
+			assertTrue(group.fields().stream().noneMatch(option -> option instanceof ActionOption), "no Delete field any more: " + group.id());
+		}
+		mobCards.groups().get(0).remove().action().run();
+		npcCards.groups().get(0).remove().action().run();
+		assertTrue(mobs.rules.isEmpty() && npcs.rules.isEmpty());
+		assertEquals(2, changes, "each removal applied at once");
+	}
+
+	/** The widget a click at the point reaches: the topmost placed one in its clip that takes the press (as WidgetScreen does). */
+	private static Widget routed(ConfigPage page, double x, double y) {
+		List<Widget> widgets = page.widgets();
+		for (int i = widgets.size() - 1; i >= 0; i--) {
+			Widget widget = widgets.get(i);
+			if (widget.inClip(x, y) && widget.press(x, y, 0)) {
+				return widget;
+			}
+		}
+		return null;
+	}
+
+	/** R31: over the Remove button the header neither lights up nor shows its warning; the button has its own tooltip. */
+	@Test
+	void theRemoveAreaBelongsToTheButton() {
+		HighlightRule broken = mob("mob-1", "Broken", "([");
+		broken.nameMatchMode = NameMatchMode.REGEX;
+		mobs.rules.add(broken);
+		RuleGroup group = mobCards.groups().get(0);
+		RuleHeaderWidget header = new RuleHeaderWidget(group, () -> { });
+		header.setBounds(0, 0, 400, ConfigLayout.RULE_HEADER);
+		ConfigLayout.Rect action = ConfigLayout.headerAction(new ConfigLayout.Rect(0, 0, 400, ConfigLayout.RULE_HEADER));
+		header.setActionRoom(400 - action.x());
+		assertTrue(header.tooltipAt(30, 5).startsWith("⚠ "), "the warning left of the button");
+		assertEquals("", header.tooltipAt(action.x() + 2, 5), "none over the button");
+		assertEquals("Removes this rule from the list.", group.remove().text().description());
+	}
+
+	/** R31: NPC rules have no colour of their own; their header dot is white whatever the stored colour. */
+	@Test
+	void npcRulesAreWhite() {
+		NpcRule coloured = npc("npc-1", "Trinity", false);
+		coloured.color = 0xFF5555;
+		npcs.rules.add(coloured);
+		RuleGroup group = npcCards.groups().get(0);
+		assertEquals(0xFFFFFF, group.colour().getAsInt());
+		assertTrue(group.fields().stream().noneMatch(option -> option instanceof ColorOption));
+	}
+
+	/** R31: the Remove button sits at the header's right end, over the header (so it gets the click), clear of the label. */
+	@Test
+	void theRemoveButtonSitsAtTheHeadersRightEnd() {
+		mobs.rules.add(mob("mob-1", "Zealot", "Zealot"));
+		RuleGroup group = mobCards.groups().get(0);
+		List<RuleGroup> toggled = new ArrayList<>();
+		ConfigPage page = new ConfigPage(Category.HIGHLIGHTS, cards(), option -> new Widget() {
+			@Override
+			public boolean press(double mouseX, double mouseY, int button) {
+				return contains(mouseX, mouseY);
+			}
+
+			@Override
+			public void draw(net.minecraft.client.gui.GuiGraphicsExtractor graphics, net.minecraft.client.gui.Font font, int mouseX, int mouseY) {
+			}
+		}, toggled::add);
+		ConfigLayout.Frame frame = ConfigLayout.frame(1280, 720);
+		page.layout(frame, 0, text -> text.length() * 6);
+		RuleHeaderWidget header = page.header(group);
+		Widget remove = page.control(group.remove());
+		assertTrue(page.widgets().contains(remove), "placed while the rule is closed");
+		assertTrue(page.widgets().indexOf(remove) > page.widgets().indexOf(header), "over the header");
+		assertTrue(remove.x() > header.x() + header.width() / 2 && remove.x() + remove.width() <= header.x() + header.width(), "at the right end");
+		assertTrue(remove.y() >= header.y() && remove.y() + remove.height() <= header.y() + header.height(), "inside the header");
+		assertTrue(header.textRight() <= remove.x(), "the label stops before it");
+		// Routed as WidgetScreen routes a click: the topmost placed widget that takes it.
+		assertSame(remove, routed(page, remove.x() + 2, remove.y() + 2), "a click on Remove reaches Remove");
+		assertTrue(toggled.isEmpty(), "and does not open or close the rule");
+		assertFalse(header.press(remove.x() + 2, remove.y() + 2, 0), "the header never takes a press in the button's area");
+		assertSame(header, routed(page, header.x() + 30, header.y() + 5), "left of it, the header takes the click");
+		assertEquals(List.of(group), toggled);
+
+		// Removed, the rule's header and button leave the page.
+		group.remove().action().run();
+		page.layout(frame, 0, text -> text.length() * 6);
+		assertFalse(page.widgets().contains(remove));
+	}
+
+	/** Every edit is stored on the rule at once and applied (REQ-UI-15); Remove deletes the rule. */
 	@Test
 	void editsAreStoredAndAppliedAtOnce() {
 		HighlightRule rule = mob("mob-1", "Zealot", "Zealot");
@@ -132,7 +261,7 @@ class RuleCardsTest {
 		assertEquals(0x123456, rule.color);
 		assertNull(rule.entityTypeId, "a blank type is any type");
 		assertEquals(4, changes, "each edit applied at once");
-		field(group, ActionOption.class, ".delete").action().run();
+		group.remove().action().run();
 		assertTrue(mobs.rules.isEmpty());
 		assertTrue(mobCards.groups().isEmpty());
 		assertEquals(5, changes);

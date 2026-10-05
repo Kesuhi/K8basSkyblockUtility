@@ -170,8 +170,8 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 		return count;
 	}
 
-	/** Baseline for T1.1: the label in the open and behind an opaque wall, in the rule's colour ("White
-	 *  waypoint labels" off, R21). T3.4 replaced the 1.0.1 look on purpose (REQ-PORT-06), so the screenshots
+	/** Baseline for T1.1: the label in the open and behind an opaque wall, in white (R31; the rule's colour
+	 *  until 1.2.0). T3.4 replaced the 1.0.1 look on purpose (REQ-PORT-06), so the screenshots
 	 *  are kept for comparison but no longer matched against the 1.0.1 template. */
 	private static void waypointBaselineScreenshots(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
 		server.runCommand("time set noon");
@@ -182,7 +182,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 			WorldMarkers.setHideLabelsWithHud(false);
 			setHudHidden(client, true);
 			NpcRule rule = TestWaypoints.fixedRule("Baseline NPC", "Hub", 0x0AA351, 0, -60, 6);
-			TestWaypoints.show(List.of(rule), TestWaypoints.settings(false, false, true));
+			TestWaypoints.show(List.of(rule), TestWaypoints.LABELS_ONLY);
 		});
 		runClientCommand(context, "ksu debug island Hub");
 		singleplayer.getConnection().waitForChunksRender();
