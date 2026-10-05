@@ -92,14 +92,21 @@ class HudPositionsTest {
 	@Test
 	void theHudPackageDoesNoIo() throws IOException {
 		Pattern io = Pattern.compile("java\\.io\\.|java\\.nio\\.file|java\\.net\\.|HttpClient|ConfigManager\\.(save|flush)|\\.join\\(\\)|\\.get\\(\\d|Thread\\.sleep|\\.await");
-		Path dir = Path.of(System.getProperty("k8bas.projectDir", ".")).resolve("src/main/java/com/k8bas/skyblockutility/hud");
+		// The package's Java and Kotlin sources (R30 moved some of it to Kotlin).
+		Path project = Path.of(System.getProperty("k8bas.projectDir", "."));
 		int files = 0;
-		try (Stream<Path> walk = Files.walk(dir)) {
-			for (Path file : walk.filter(path -> path.toString().endsWith(".java")).toList()) {
-				files++;
-				assertTrue(!io.matcher(Files.readString(file)).find(), file.getFileName() + " does I/O or blocks");
+		for (String language : List.of("java", "kotlin")) {
+			Path dir = project.resolve("src/main/" + language + "/com/k8bas/skyblockutility/hud");
+			if (!Files.isDirectory(dir)) {
+				continue;
+			}
+			try (Stream<Path> walk = Files.walk(dir)) {
+				for (Path file : walk.filter(path -> path.toString().endsWith(".java") || path.toString().endsWith(".kt")).toList()) {
+					files++;
+					assertTrue(!io.matcher(Files.readString(file)).find(), file.getFileName() + " does I/O or blocks");
+				}
 			}
 		}
-		assertTrue(files >= 6, "the scan sees the package: " + files);
+		assertTrue(files >= 15, "the scan sees the whole package: " + files);
 	}
 }

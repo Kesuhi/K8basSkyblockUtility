@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * the release list, which covers both channels. It sends only the User-Agent (mod id and version),
  * Accept, the pinned API version and If-None-Match; no token, no player data.
  */
-final class GitHubReleaseSource {
+public final class GitHubReleaseSource {
 	static final URI RELEASES = URI.create("https://api.github.com/repos/Kesuhi/K8basSkyblockUtility/releases?per_page=30");
 	static final String API_VERSION = "2022-11-28";
 	static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(20);
@@ -37,7 +37,7 @@ final class GitHubReleaseSource {
 	/** Points the updater at a test server; honoured only in the development environment. */
 	static final String SOURCE_PROPERTY = "k8bas.update.source";
 
-	enum Kind {
+	public enum Kind {
 		OK, NOT_MODIFIED, HTTP_ERROR, NO_RESPONSE, MALFORMED, BAD_REDIRECT
 	}
 
@@ -46,7 +46,7 @@ final class GitHubReleaseSource {
 	 *                x-ratelimit-remaining, x-ratelimit-reset)
 	 * @param problem what went wrong, for the one log line; null on success
 	 */
-	record Result(Kind kind, int status, List<Release> releases, String etag, Map<String, String> headers, String problem) {
+	public record Result(Kind kind, int status, List<Release> releases, String etag, Map<String, String> headers, String problem) {
 		static Result failure(Kind kind, int status, Map<String, String> headers, String problem) {
 			return new Result(kind, status, List.of(), null, headers, problem);
 		}
