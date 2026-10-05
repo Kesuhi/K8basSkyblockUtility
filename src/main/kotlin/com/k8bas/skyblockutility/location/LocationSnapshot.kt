@@ -1,4 +1,4 @@
-package com.k8bas.skyblockutility.location;
+package com.k8bas.skyblockutility.location
 
 /**
  * Where the player is, as last reported by the Hypixel Mod API location event (REQ-LOC-04).
@@ -11,6 +11,20 @@ package com.k8bas.skyblockutility.location;
  * @param island     the mapped island name (exact strings stored in rules and data), or null
  * @param onSkyBlock whether the server type is SkyBlock, also for modes that map to no island
  */
-public record LocationSnapshot(String rawMode, String map, String serverName, String serverType, String island, boolean onSkyBlock) {
-	public static final LocationSnapshot NONE = new LocationSnapshot(null, null, null, null, null, false);
+@JvmRecord
+data class LocationSnapshot(
+	val rawMode: String?,
+	val map: String?,
+	val serverName: String?,
+	val serverType: String?,
+	val island: String?,
+	val onSkyBlock: Boolean,
+) {
+	override fun toString(): String =
+		"LocationSnapshot[rawMode=$rawMode, map=$map, serverName=$serverName, serverType=$serverType, island=$island, onSkyBlock=$onSkyBlock]"
+
+	companion object {
+		@JvmField
+		val NONE: LocationSnapshot = LocationSnapshot(null, null, null, null, null, false)
+	}
 }

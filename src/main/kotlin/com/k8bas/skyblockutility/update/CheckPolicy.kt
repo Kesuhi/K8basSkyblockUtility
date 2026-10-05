@@ -47,15 +47,15 @@ object CheckPolicy {
 	@JvmStatic
 	fun apply(state: UpdateState, result: GitHubReleaseSource.Result, now: Long) {
 		// `!!`: a null kind throws NullPointerException, as the Java switch did.
-		when (result.kind()!!) {
+		when (result.kind!!) {
 			GitHubReleaseSource.Kind.OK -> {
-				state.releases = ArrayList(result.releases())
-				state.etag = result.etag()
+				state.releases = ArrayList(result.releases!!)
+				state.etag = result.etag
 				succeeded(state, now)
 			}
 			GitHubReleaseSource.Kind.NOT_MODIFIED -> succeeded(state, now)
-			GitHubReleaseSource.Kind.HTTP_ERROR -> when (result.status()) {
-				403, 429 -> waitFor(state, now, rateLimitWait(state, result.headers(), now))
+			GitHubReleaseSource.Kind.HTTP_ERROR -> when (result.status) {
+				403, 429 -> waitFor(state, now, rateLimitWait(state, result.headers!!, now))
 				404 -> waitFor(state, now, DAY)
 				else -> waitFor(state, now, doubling(state.errorStreak++))
 			}

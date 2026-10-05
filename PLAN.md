@@ -599,7 +599,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 - [x] **T2.10e refactor(render): marker value types in Kotlin** (S, deps T2.10b). `render/marker` Marker, MarkerAnchor, MarkerBeam, MarkerLabel, MarkerRing (5 files).
   - Req: REQ-UI-26
   - Accept: AC-UI-26 for these files.
-- [ ] **T2.10f refactor: location, debug and updater runtime in Kotlin** (M, deps T2.10b). `location/` (4); `debug/` DebugCommand, NameMasker, ContainerDump; `update/` GitHubReleaseSource, Updates (9 files).
+- [x] **T2.10f refactor: location, debug and updater runtime in Kotlin** (M, deps T2.10b). `location/` (4); `debug/` DebugCommand, NameMasker, ContainerDump; `update/` GitHubReleaseSource, Updates (9 files).
   - Req: REQ-UI-26
   - Accept: AC-UI-26 for these files.
 - [ ] **T2.10g refactor: feature modules in Kotlin** (M, deps T2.10c, T2.10e). `module/` ModuleManager; `mobhighlighter/` MobDatabase, MobHighlighterModule, MobHighlighterOptions, MobRuleCards; `npcsearch/` FoundTitleGate, NpcDatabase, NpcRuleCards, NpcSearchModule, NpcSearchOptions, NpcWaypointMarkers, WaypointColors (12 files). Gson-read classes stay Java.

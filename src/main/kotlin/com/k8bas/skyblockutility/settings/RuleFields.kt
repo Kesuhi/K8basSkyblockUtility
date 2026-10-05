@@ -28,7 +28,7 @@ object RuleFields {
 	fun island(id: String, storageKey: String, get: Supplier<String?>, set: Consumer<String?>): Choice<String> {
 		val values = ArrayList<String>()
 		values.add(ANY_ISLAND)
-		Islands.all().forEach { values.add(it.name()) }
+		Islands.all().forEach { values.add(it.name!!) }
 		val stored = get.get()
 		if (stored != null && !isBlank(stored) && !values.contains(stored)) {
 			values.add(stored)
