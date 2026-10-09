@@ -9,6 +9,11 @@ import java.util.List;
 public final class MainHookPlugin extends HookPlugin {
 	@Override
 	protected List<Hook> hooks() {
-		return List.of();
+		// Plain strings: the plugin runs before the mods are initialised, so it loads no feature class (BobberFixModule ids).
+		String fishingHook = "net.minecraft.world.entity.projectile.FishingHook";
+		String mixin = "com.k8bas.skyblockutility.mixin.FishingHookMixin";
+		return List.of(
+				new Hook("bobber.link", mixin, fishingHook, "k8bas$skipTimerStand", ""),
+				new Hook("bobber.lava", mixin, fishingHook, "k8bas$floatOnLava", ""));
 	}
 }

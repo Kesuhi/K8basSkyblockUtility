@@ -37,6 +37,7 @@
 			"com.k8bas.skyblockutility.skyblock.InventoryReaderGameTest",
 			"com.k8bas.skyblockutility.skyblock.MineshaftStateGameTest",
 			"com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertGameTest",
+			"com.k8bas.skyblockutility.module.bobberfix.BobberFixGameTest",
 			"com.k8bas.skyblockutility.skyblock.ProfileServiceGameTest",
 			"com.k8bas.skyblockutility.skyblock.MenuReaderGameTest",
 			"com.k8bas.skyblockutility.gametest.hook.HookStatusGameTest",

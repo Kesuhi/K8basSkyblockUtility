@@ -18,6 +18,11 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - Beam colours you can change: Waypoints › "Island beam colours" has a colour per island (picker
   and hex), and a fixed NPC's card has its own "Beam colour" and "Use island colour". Changes show
   on the beams at once.
+- Bobber Fix (Fishing, ON by default): on SkyBlock, your own bobber floats smoothly instead of
+  jumping back every moment, and it floats on lava as it does on water. Only how your bobber is
+  drawn changes; the server still decides bites and catches. Other players' bobbers and other
+  servers are unchanged. If a game update or another mod blocks it, the game still starts and the
+  card says it is unavailable. Thanks to SkyOcean for finding the cause.
 
 ### Changed
 

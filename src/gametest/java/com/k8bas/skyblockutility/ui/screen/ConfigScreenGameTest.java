@@ -119,7 +119,8 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	/** AC-UI-04: each category opens with its cards; a feature switched off dims its sub-options. */
 	private static void everyCategory(ClientGameTestContext context) {
 		List<Category> categories = context.computeOnClient(client -> screen(client).categories());
-		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING)), "the categories with cards: " + categories);
+		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING)),
+				"the categories with cards: " + categories);
 		for (Category category : categories) {
 			context.runOnClient(client -> screen(client).select(category));
 			context.waitTicks(2);

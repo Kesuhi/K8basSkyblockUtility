@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.hook;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -32,5 +33,11 @@ class MainHookPluginTest {
 		assertEquals(listed, hooks.stream().map(Hook::mixin).collect(Collectors.toSet()));
 		assertEquals(hooks.size(), hooks.stream().map(Hook::id).distinct().count(), "unique ids");
 		assertEquals(hooks.size(), hooks.stream().map(Hook::handler).distinct().count(), "unique handlers");
+	}
+
+	@Test
+	void theBobberHooksAreTheBobberFixCardsOwn() {
+		// The plugin spells the ids out (it runs before the mods are initialised); they must be the ones the card asks about.
+		assertEquals(List.of(BobberFixModule.LINK_HOOK, BobberFixModule.LAVA_HOOK), new MainHookPlugin().hooks().stream().map(Hook::id).toList());
 	}
 }

@@ -199,6 +199,8 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 			case "npc_search" -> com.k8bas.skyblockutility.module.npcsearch.ModKeybinds.TOGGLE_KEY;
 			// REQ-MSA-11 gives the mineshaft alert two settings toggles and no toggle key.
 			case "mineshaft_alert" -> null;
+			// REQ-BOB-07: the bobber fix has its settings toggle and no toggle key.
+			case "bobber_fix" -> null;
 			default -> throw new AssertionError("no toggle key known for " + module.id());
 		};
 	}

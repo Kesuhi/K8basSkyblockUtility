@@ -988,12 +988,29 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - The catalog, rule-card, safe-load and step-2 tests know step 3 and the new fields. The 1.0.1-shaped fixture's fixed rules are `0x0AA751`, not the old green, so they keep it as their beam colour.
       - Gametest BeamColorSettingsGameTest (AC-NPCWP-07 [C]): through the real picker, Crimson Isle set to green reaches the markers on Save and the file at once. The beam in the world goes red → orange (the rule's own colour) → green after "Use island colour" (228 px each). Screenshots of the swatches and the rule's beam colour at GUI scale 2, 854×480.
     - **Review:** two angles with two verifiers each. Fixed (confirmed): a picker Save wrote the file without the new island colour; a corrupt huge number in a rule's colour could crash startup in step 3; the CHANGELOG did not cover 1.1.0 and 1.2.0 users. Rejected: reading string-typed fields as Gson does (the mod never writes them).
-- [ ] **T3.5 feat(fishing): bobber rubber-band fix [brief 3.5]** (S, deps T3.0f, T1.9). Applies only to **your own** hook (R9) and only on SkyBlock (from the location snapshot; an unknown location behaves as vanilla). Two `@WrapOperation` hooks in the T3.0f config.
+- [x] **T3.5 feat(fishing): bobber rubber-band fix [brief 3.5]** (S, deps T3.0f, T1.9). Applies only to **your own** hook (R9) and only on SkyBlock (from the location snapshot; an unknown location behaves as vanilla). Two `@WrapOperation` hooks in the T3.0f config.
   - Req: REQ-BOB-01, REQ-BOB-02, REQ-BOB-03, REQ-BOB-04, REQ-BOB-05, REQ-BOB-06, REQ-BOB-07, REQ-BOB-08
   - `FishingHook.onSyncedDataUpdated` skips the client-side attach to Hypixel's timer stand (id + 1). Any other hooked entity stays vanilla. The entity data itself is applied unchanged (REQ-XC-RULES-02).
   - `FishingHook.tick` makes the hook float on lava as it does on water.
   - The toggle "Bobber Fix" (Fishing) is ON, with an AMBER tooltip, and applies from the next cast. The card shows "unavailable" if a hook was skipped. Courtesy credit to SkyOcean; no code copied.
   - Accept: AC-BOB-01, AC-BOB-02, AC-BOB-03, AC-BOB-06, AC-BOB-08. AC-BOB-07 (tier D), AC-BOB-04 and AC-BOB-05 are checked at G3.
+  - Done (2026-10-09):
+    - **Hooks** (`mixin/FishingHookMixin`, the first entries of the T3.0f config, declared in MainHookPlugin as `bobber.link` and `bobber.lava`). Both were checked against the decompiled 26.2 FishingHook (research, not in the repo).
+      - `k8bas$skipTimerStand` wraps the one `Level.getEntity(id - 1)` in `onSyncedDataUpdated`. For the own hook on SkyBlock with the toggle on, an armor stand with id hook + 1 is not taken as `hookedIn`. The entity data stays as sent; FishingHookRenderer never reads `hookedIn`.
+      - `k8bas$floatOnLava` wraps both `FluidState.is(WATER)` calls in `tick()` (height and gravity), so the own hook also bobs on lava.
+      - Own hook: `getPlayerOwner() == Minecraft.getInstance().player`, which also keeps the integrated server's hook vanilla.
+    - **Module** `bobberfix/`: the pure `BobberFix` decisions, the "Bobber Fix" card in Fishing (ON, AMBER tooltip with the SkyOcean credit), and a status that is unavailable when either hook was skipped.
+    - **Tests:**
+      - BobberFixTest: AC-BOB-01 and AC-BOB-02 as full tables, the card, and AC-BOB-06 [R] as a source scan (no packet, send or cancel; only `onSyncedDataUpdated` and `tick`).
+      - MainHookPluginTest: the plugin's ids are the card's.
+      - Gametest BobberFixGameTest [B] with a real rod cast:
+        - both hooks are applied;
+        - off SkyBlock the hook bobs in water and not in lava (AC-BOB-03);
+        - forced SkyBlock: it bobs on lava;
+        - switched off: saved, and the next lava cast is vanilla (AC-BOB-08).
+      - The settings tests know the Fishing card.
+    - **Open for G3:** AC-BOB-04/05 on Hypixel; AC-BOB-07 at the release's tier D boot. Whether Hypixel's timer stand is really hook id + 1 on the client is UNVERIFIED (EC-BOB-01: the fix then does nothing, nothing crashes).
+    - **Review:** two angles with two verifiers each; no finding confirmed. Rejected: an outdated category list (already fixed), and in-game coverage of the link path and of another player's hook (beyond the ACs; the tables cover them).
 - [ ] **T3.6 feat(fishing): hotspot detection + ring [brief 3.6]** (M, deps T3.0b, T3.0n, T3.0f, T1.9). Recognises hotspot stands whose name tag vanilla displays (R2) on every SkyBlock island, then reads the buff line and finds the liquid surface. Draws a depth-tested ring, with an optional fill, in the buff colour.
   - Req: REQ-HOT-01, REQ-HOT-02, REQ-HOT-03, REQ-HOT-04, REQ-HOT-05, REQ-HOT-06, REQ-HOT-12, REQ-HOT-13
   - Radius: the most frequent ring-particle distance, in 0.5-block steps, from a read-only `handleParticleEvent` observer (T3.0f). Capped per island, with a fallback radius otherwise. The buff patterns live in one place, and unknown text is logged once.
