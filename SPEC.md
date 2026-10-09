@@ -3560,13 +3560,13 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
 
 ### release — Repository & release
 
-**Origin:** Brief Phase 6; Brief ground rules 2–4; Addendum "Done when" (README and CHANGELOG) | **Depends on:** all modules; in particular updater (format contract), port-26-2, ui-config, sbxp-optimizer | **Plan tasks:** T0.5, T1.14, T1.15, T1.16, T1.17, T1.18, T1.19, T4.4b, T6.11, T7.1, T7.1b, T7.2, T7.2b, T7.2c, T7.3, T7.4, T7.4b; checkpoint G7 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Brief Phase 6; Brief ground rules 2–4; Addendum "Done when" (README and CHANGELOG) | **Depends on:** all modules; in particular updater (format contract), port-26-2, ui-config, sbxp-optimizer | **Plan tasks:** T0.5, T1.14, T1.15, T1.16, T1.17, T1.18, T1.19, T2.12, T2.13, T2.14, T4.4b, T6.11, T7.1, T7.1b, T7.2, T7.2b, T7.2c, T7.3, T7.4, T7.4b; checkpoint G7 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
 **Purpose:** Ship the 26.2 work as a documented, correctly versioned GitHub release, merged into `main` only after the user's approval. The release must be in exactly the format the updater can find, verify and install, and must stay that way for later releases.
 
 **Functional requirements**
 - **REQ-REL-01** The README must contain:
-  - **Supported version:** "Minecraft 26.2 (Fabric)", with the requirements: Java 25, the minimum Fabric Loader, Fabric API, and the Hypixel Mod API mod. It also states that 26.1.x is no longer supported and that 1.0.1 was the last 26.1 build.
+  - **Supported version:** "Minecraft 26.2 (Fabric)", with the requirements: Java 25, the minimum Fabric Loader, Fabric API, Fabric Language Kotlin (from 1.2.0, R29, R33) and the Hypixel Mod API mod. It also states that 26.1.x is no longer supported and that 1.0.1 was the last 26.1 build.
   - **Feature list:** every shipped feature with a one-line description, its config category and its default (ON/OFF).
   - **Screenshot placeholders:** one per user-visible feature (config screen, HUD editor, each HUD, waypoints and beams, mineshaft alert, hotspot ring, optimizer screen). None may render as a broken image on GitHub: use either a committed placeholder image or a visible text marker.
   - **Commands:** every user-facing command.
@@ -3689,6 +3689,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   - **Git flow:** an intermediate PR from `update/26.2` to `main` at G1, merged after the user's approval, with the tag on `main`. Approval, "ship" and order are the same as for 2.0.0 (REQ-REL-08 to REQ-REL-10) [decided R4].
   - Its README and CHANGELOG state at least: 26.2 support, the behaviour changes and the upgrade note.
   - Its update behaviour follows REQ-UPD-01: a notify-only GitHub check shown as a chat line, with no toast yet [decided R4].
+  - v1.2.0 follows the same flow after T2.9–T2.9d, with its PR summary starting at v1.1.0 [decided R33].
 
   *(Derived: PLAN D-13; risk "users keep running rule-breaking 1.0.1")*
 - **REQ-REL-15** Warning on the old releases [decided D-13]:
@@ -3763,7 +3764,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   - A production boot of the exact jar with the user's mod set reaches the title screen with no new ERROR lines. — [D]
 - **AC-REL-10** (REQ-REL-12) *Given* the test install on the lower version, *when* the client starts, *then* a toast and a chat line show v2.0.0; after confirming and quitting, the next launch shows "Updated to v2.0.0", and exactly one k8bas jar remains in `mods/`, with the release's digest. — [D] or [E]
 - **AC-REL-11** (REQ-REL-13) Before publishing, `gh api repos/Kesuhi/K8basSkyblockUtility/immutable-releases` returns `enabled: true`; after publishing, `gh release verify v2.0.0` passes [decided R4]. — [R]
-- **AC-REL-12** (REQ-REL-14) The v1.1.0 release passes AC-REL-04, AC-REL-05, AC-REL-08 and AC-REL-09 with its own version. — [A] + [R] + [D]
+- **AC-REL-12** (REQ-REL-14) The v1.1.0 release, and the v1.2.0 release [decided R33], each pass AC-REL-04, AC-REL-05, AC-REL-08 and AC-REL-09 with their own version. — [A] + [R] + [D]
 - **AC-REL-13** (REQ-REL-15) `gh release view v1.0.1 --json body` (and the same for v1.0.0) starts with the approved warning, and the asset digest is unchanged (`sha256:5396068…` for v1.0.1). Both edits are later than the user's message approving the wording. — [R]
 - **AC-REL-14** (REQ-REL-16) The release document exists. A dry run of its steps against a throwaway draft, deleted afterwards, succeeds. — [R]
 - **AC-REL-15** (REQ-REL-17) The Phase 7 report is present, with the URL, digests and end-to-end result. — [R]
@@ -3913,7 +3914,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R22 | The possible corpse spots (brief Phase 3 item 3) are dropped from the plan entirely: the corpse-waypoints module, PLAN T3.3a (spot table) and T3.3 (markers and `/ksu corpses`), their defaults row, the `corpses` reserved word, D-5's corpse-spot data (SkyHanni-REPO PR #759 + meowdding spots) and the corpse-spot points of R7. Ids are kept and marked dropped. What stays: the mineshaft entry alert (T3.2), the Frozen Corpses widget reading (T3.0m), the corpse odds (T3.9d, T3.9e) and D-5's NEU bestiary and RNG-weight data. The README's excluded-behaviour line "filtering possible corpse spots by entities you cannot see" stays (REQ-REL-03) | corpse-waypoints (all ids), REQ-GS-16, AC-GS-16, REQ-REL-03, §11, REQ-GS-17, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T2.5b, T3.0m, T3.3a, T3.3, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
 | R23 | Order after the v1.1.0 merge: the first Phase 3 work is the waypoint path T3.0b (marker toolkit) → T3.0n (beacon beams) → T3.4 (Skyblocker-style NPC waypoints: white label plus coloured beacon beam), so beams come right after v1.1.0. Reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used (REQ-NPCWP-11). Whether this ships as an intermediate release is decided then | §2 (build order), REQ-PORT-06, AC-PORT-06, AC-PORT-14 ("once T3.4 lands"); PLAN §6, Phase 3 intro, T3.0b, T3.4, T3.8 |
 | R24 | G1 field answers. (a) Q-MSA-04: you believe the Frozen Corpses tab widget is on by default and ask for a failsafe that tells the player when it is off. The once-per-launch widget hint (REQ-MSA-08, REQ-GS-18) is that failsafe. The command and menu path that enable the widget were not given, so the hint wording stays UNVERIFIED and is checked at G3. (b) Whether a Tungsten or Umber key held only in the Dwarven Sack opens a corpse could not be tested: D-7 (inventory only) stands, the REQ-MSA-05 sack fallback is not triggered, and the question stays open for G3. (c) Every area of the game counts as a Bestiary area except the Dungeon Hub | Status, §10 intro, REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-BEST-12, AC-BEST-11, §13.3; PLAN G1, T3.0m, T3.2, T5.3, G3 |
-| R25 | After T3.4 (2026-10-03): (a) Q-NPCWP-04, keep the documented island colour defaults under REQ-NPCWP-05 as they are. (b) The waypoint path (T3.0b, T3.0n, T3.4) does not ship as an intermediate release; it ships with the next regular release, so T3.4b (colour settings and the R8 migration) lands first | REQ-NPCWP-05, Q-NPCWP-04; PLAN §6 waypoint path, T3.4 |
+| R25 | After T3.4 (2026-10-03): (a) Q-NPCWP-04, keep the documented island colour defaults under REQ-NPCWP-05 as they are. (b) The waypoint path (T3.0b, T3.0n, T3.4) does not ship as an intermediate release; it ships with the next regular release, so T3.4b (colour settings and the R8 migration) lands first. (b) is superseded by R33: the path ships in v1.2.0 before T3.4b | REQ-NPCWP-05, Q-NPCWP-04; PLAN §6 waypoint path, T3.4 |
 | R26 | T2.3b (2026-10-03): a keybind conflict is marked in yellow, as vanilla 26.2 Controls does, not in the error red (EC-UI-11 had assumed vanilla used red) | EC-UI-11; PLAN T2.3b |
 | R27 | T2.3b (2026-10-03): (a) while a keybind widget is armed, a left click cancels, a right click resets to the default, other mouse buttons bind; (b) the colour hex field accepts 8 digits for colours without alpha and drops the alpha | REQ-UI-13, REQ-UI-14, EC-NPCWP-06; PLAN T2.3b |
 | R28 | T2.4d (2026-10-04): where notices appear and how long they stay is the player's choice in General › Interface; until a value is picked, top right and 5 s | REQ-UI-21, §12.H; PLAN T2.4d |
@@ -3921,6 +3922,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R30 | 2026-10-05: each file's language follows the best-fit criteria (`docs/language-classification.md`) instead of R29's "the whole settings UI in Kotlin": 73 files move to Kotlin across the mod, the rest stays Java; the work stays on `update/26.2` (no separate branch), one commit per batch, not pushed until asked | REQ-UI-26, AC-UI-26, §3, §5; PLAN T2.10b–T2.10i |
 | R31 | 2026-10-05, after the hand checks of the Kotlin build (it also amends REQ-UI-16 and AC-UI-15: those fields are off the screen and kept in the file): (a) a rule added from the Mob or NPC Database (it has a `sourceId`) shows a slim card: enabled, plus entity type and colour for a mob, and the position for a fixed NPC; its label, island, name match and name pattern are not shown, while a hand-made rule keeps every field, as does a database rule that already does nothing (so it can be fixed); (b) every rule header has a destructive Remove button at its right end, which replaces the Delete field inside the card; it acts once per double click, since the next rule's button slides under the cursor; (c) NPC Search has no per-NPC colour any more: waypoint labels are always white with a yellow distance line, moving NPCs are outlined in white, the header dot and the "You found" title are white, and the "White waypoint labels" setting is removed (superseding R21). The stored `color` of NPC rules is kept in the file, unused, so a downgrade keeps it | REQ-UI-11, AC-UI-10, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-07, REQ-NPCWP-08, AC-NPCWP-03, AC-NPCWP-05, EC-NPCWP-06, REQ-PORT-06, REQ-UI-16, AC-UI-15, npc-waypoints out of scope, §12.H; PLAN §3, T2.11 |
 | R32 | 2026-10-05, T2.9d: the anti-aliased corners are the opt-in setting "Smooth corners" in General › Interface, OFF until picked (the key is absent from the file until then, so a 1.0.1 file saves back unchanged), so the fill-based corners stay the default. When it is ON, rounded rectangles and outlines draw each corner from a white alpha mask baked per radius at screen-pixel resolution and tinted with the shape's colour (public render APIs only, REQ-UI-17); the straight parts stay plain fills. A shape the mask cannot draw (radius 0 or above 256 screen px, an outline thicker than its radius, a box too small for its outline) and a session in which a mask texture could not be made fall back to the fill-based corners. Every place that draws rounded shapes follows the setting, the HUD notices included | REQ-UI-18, REQ-UI-17, §12.H; PLAN T2.9d |
+| R33 | 2026-10-09: after T2.9–T2.9d, the work on `update/26.2` ships as v1.2.0 (the maintainer: "create a new release with the changes up till then"), an intermediate release in the REQ-REL-14 flow (a PR to `main` merged after the maintainer's approval, then tag and publish after a separate "ship"); its PR summary starts at v1.1.0, which `main` already holds. It includes the waypoint path (T3.0b, T3.0n, T3.4) before T3.4b, superseding R25(b): beams use the island colours, not changeable in game yet, and the R8 colour migration (REQ-NPCWP-09) runs when T3.4b lands, because the stored colours are kept (R31); the [D] parts of AC-NPCWP-11 and AC-MARK-08 run at the release's tier D boot, their [E] parts are known issues (EC-REL-13). Its README is compacted to what 1.2.0 ships: Fabric Language Kotlin required, Cloth Config and "White waypoint labels" gone | REQ-REL-14, AC-REL-12, AC-REL-06, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, R25, REQ-NPCWP-09; PLAN §6 waypoint path, T3.4, T2.12, T2.13, T2.14, G2r |
 
 ### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28 and R32)
 
@@ -4403,20 +4405,20 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 
 | Requirement | PLAN tasks |
 |---|---|
-| REQ-REL-01 | T1.16, T6.11, T7.1 |
-| REQ-REL-02 | T1.16, T7.1, T7.2 |
-| REQ-REL-03 | T1.16, T7.1, T7.1b |
-| REQ-REL-04 | T1.16, T7.1, T7.1b |
-| REQ-REL-05 | T1.14, T1.16, T1.17, T4.4b, T6.11, T7.1b, T7.2b |
+| REQ-REL-01 | T1.16, T2.12, T6.11, T7.1 |
+| REQ-REL-02 | T1.16, T2.12, T7.1, T7.2 |
+| REQ-REL-03 | T1.16, T2.12, T7.1, T7.1b |
+| REQ-REL-04 | T1.16, T2.12, T7.1, T7.1b |
+| REQ-REL-05 | T1.14, T1.16, T1.17, T2.12, T4.4b, T6.11, T7.1b, T7.2b |
 | REQ-REL-06 | T1.15, T7.2, T7.2c |
 | REQ-REL-07 | T1.15, T1.17, T7.2, T7.2b, T7.4 |
-| REQ-REL-08 | T1.18, T7.3 |
-| REQ-REL-09 | T1.18, T7.3 |
-| REQ-REL-10 | T1.19, T7.4 |
-| REQ-REL-11 | T1.17, T1.19, T7.2b, T7.4 |
+| REQ-REL-08 | T1.18, T2.13, T7.3 |
+| REQ-REL-09 | T1.18, T2.13, T7.3 |
+| REQ-REL-10 | T1.19, T2.14, T7.4 |
+| REQ-REL-11 | T1.17, T1.19, T2.14, T7.2b, T7.4 |
 | REQ-REL-12 | T7.4b |
 | REQ-REL-13 | T7.2c, T7.4 |
-| REQ-REL-14 | T1.15, T1.16, T1.18, T1.19 |
+| REQ-REL-14 | T1.15, T1.16, T1.18, T1.19, T2.12, T2.13, T2.14 |
 | REQ-REL-15 | T0.5 |
 | REQ-REL-16 | T1.17, T7.2c |
 | REQ-REL-17 | G7 (checkpoint) |
@@ -4441,7 +4443,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-XC-TOGGLE-02 | T1.11, T1.3b, T2.1, T4.4b, T5.3, T6.8, T7.1 |
 | REQ-XC-PLAN-01 | T0.1, T6.0 |
 | REQ-XC-GIT-01 | T0.0, T7.3 |
-| REQ-XC-GIT-02 | T0.0, T1.18, T6.10, T7.3, T7.4 |
+| REQ-XC-GIT-02 | T0.0, T1.18, T2.13, T6.10, T7.3, T7.4 |
 | REQ-XC-BUILD-01 | T0.0, T6.2b, T7.3 |
 | REQ-XC-VERIFY-01 | T0.4, T0.4c |
 | REQ-XC-VERIFY-02 | T0.2, T0.3, T0.4, T0.4c, T0.4b, T1.5, T1.6, T3.0m |
@@ -4524,6 +4526,9 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T2.10h | refactor(config): config manager and migrator in Kotlin | REQ-UI-26 |
 | T2.10i | refactor(test): test helpers in Kotlin | REQ-UI-26 |
 | T2.11 | feat(ui)!: slim database rules, a Remove button per rule, white NPC labels | REQ-UI-11, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-07, REQ-NPCWP-08 |
+| T2.12 | docs(release): README, CHANGELOG, mod description and version for v1.2.0 | REQ-REL-14, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-REL-05 |
+| T2.13 | chore(release): intermediate PR `update/26.2` → `main` for v1.2.0 | REQ-REL-14, REQ-REL-08, REQ-REL-09, REQ-XC-GIT-02 |
+| T2.14 | chore(release): tag and publish v1.2.0 | REQ-REL-14, REQ-REL-11, REQ-REL-10 |
 | T3.0a | feat(skyblock): reader base + tab-widget and sidebar readers | REQ-XC-PRIVACY-01, REQ-GS-12, REQ-GS-01, REQ-GS-02, REQ-GS-03, REQ-GS-10, REQ-GS-11, REQ-GS-14, REQ-GS-15, REQ-GS-16 |
 | T3.0g | feat(skyblock): chat + action-bar listener | REQ-XC-RULES-02, REQ-GS-14, REQ-GS-04, REQ-GS-05 |
 | T3.0h | feat(skyblock): inventory counter by SkyBlock id | REQ-GS-07 |

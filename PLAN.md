@@ -231,7 +231,7 @@ Phase 0 seams + tests + dev runtime (on 26.1.2)
  ─► Phase 1 port ─► compliance & correctness ─► [G1: tiers A–D, your smoke E + format captures]
  ─► early release v1.1.0+26.2 (port + compliance, notify-only GitHub check, R20/R21) via PR to main [D-13, R4]
  ─► waypoint path first [R23]: T3.0b marker toolkit ─► T3.0n beacon beams ─► T3.4 NPC waypoints
-               (white label + coloured beam; whether it ships as an intermediate release is decided then)
+               (white label + coloured beam; whether it ships as an intermediate release is decided then: it ships in v1.2.0 before T3.4b [decided R33])
  ─► Phase 2 UI: option model ─► render kit ─► widgets ─► screen ─► rule lists + switch ─► drop Cloth
                HUD framework ─► HUD editor                          ─► [G2]
  ─► Phase 3 features: the other 3.0 shared services first; odds (T3.9) last, after D-3 ─► [G3]
@@ -249,7 +249,7 @@ Phase 6 reuses:
 
 It can only start after Phase 5, but its **calculator core (T6.1)** is pure Java and could be built earlier, once T1.18 has merged, if you want progress sooner.
 
-**Waypoint path first (R23).** After the v1.1.0 merge, the first Phase 3 work is T3.0b → T3.0n → T3.4, so the beacon beams come right after v1.1.0. It is reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used. It does not ship as an intermediate release (R25, 2026-10-03): it ships with the next regular release, after T3.4b. T3.4 no longer waits for T3.8: until the bundled NPC table lands, the sourceId lookup reads the NPC list that v1.1.0 already loads. If the waypoint path ships as an intermediate release, that release needs its own checkpoint (AC-NPCWP-11 [E]/[D], AC-MARK-08), and the R8 colour migration (REQ-NPCWP-09, AC-NPCWP-02, now in T3.4b) is split out of T3.4b first, so the beams do not ignore 1.0.1 custom colours.
+**Waypoint path first (R23).** After the v1.1.0 merge, the first Phase 3 work is T3.0b → T3.0n → T3.4, so the beacon beams come right after v1.1.0. It is reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used. It does not ship as an intermediate release (R25, 2026-10-03): it ships with the next regular release, after T3.4b. T3.4 no longer waits for T3.8: until the bundled NPC table lands, the sourceId lookup reads the NPC list that v1.1.0 already loads. [Superseded by R33: the waypoint path ships in v1.2.0 before T3.4b; the colour migration still runs when T3.4b lands, since the stored colours are kept (R31); the [D] boots are in T2.14 and the [E] checks are known issues of the v1.2.0 PR (EC-REL-13).] If the waypoint path ships as an intermediate release, that release needs its own checkpoint (AC-NPCWP-11 [E]/[D], AC-MARK-08), and the R8 colour migration (REQ-NPCWP-09, AC-NPCWP-02, now in T3.4b) is split out of T3.4b first, so the beams do not ignore 1.0.1 custom colours.
 
 Highest-risk items come first: the port, the glow replacement, the config migration framework.
 
@@ -653,6 +653,22 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 - [x] Phase 2 report (AC-XC-07, AC-XC-10); stretch tasks T2.9–T2.9d are listed as not started or done, never as blocking
   - Done (2026-10-05): given in the session; T2.9–T2.9d not started.
 
+**Release 1.2.0 [decided R33].** After T2.9–T2.9d, the work on `update/26.2` ships as v1.2.0, an intermediate release in the v1.1.0 flow (REQ-REL-14): a PR to `main`, merged after your approval, then tag and publish after your separate "ship". It includes the waypoint path (T3.0b, T3.0n, T3.4) before T3.4b, superseding R25(b): beams use the island colours, which cannot be changed in game yet, and the R8 colour migration (REQ-NPCWP-09) runs when T3.4b lands, because the stored colours are kept (R31). Phase 3 work continues on `update/26.2` afterwards.
+
+- [x] **T2.12 docs(release): README, CHANGELOG, mod description and version for v1.2.0** (S, deps T2.9d, T2.11). The README is compacted to what 1.2.0 ships: Fabric Language Kotlin required, Cloth Config and "White waypoint labels" gone, the new settings screen, categories and commands, beacon beams, one features-and-defaults table, upgrade notes from 1.1.0 and 1.0.x. `[Unreleased]` becomes `## [1.2.0] - YYYY-MM-DD` with requirements, the upgrade note and the defaults, usable word for word as the release notes. `mod_version=1.2.0`; the `fabric.mod.json` description names the beams and the settings screen.
+  - Req: REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-REL-05, REQ-REL-14
+  - Accept: AC-REL-01, AC-REL-02 and AC-REL-03 (README and the `[1.2.0]` release body) for what 1.2.0 ships; AC-REL-04 (lint and extraction of `[1.2.0]`); AC-XC-04 (README defaults = code defaults); T0.6's check passes.
+  - Done (2026-10-09): README 350 → 184 lines (one features-and-defaults table, upgrade notes from 1.1.0 and 1.0.x, Fabric Language Kotlin in, Cloth Config and white labels out); `[1.2.0] - 2026-10-09` with requirements, upgrade note and defaults (lint and extraction pass); `mod_version=1.2.0`; the mod description; the "Notice position" tooltip names the backup notice, the only notice 1.2.0 posts. Every claim checked against the code in four parts; the 13 confirmed findings are fixed (incl. R33 superseding R25(b)).
+- [ ] **T2.13 chore(release): intermediate PR `update/26.2` → `main` for v1.2.0** (S, deps T2.12). As T1.18: before opening, the per-commit worktree build since the last push is green (AC-XC-05), `git log --format=%ae main..update/26.2` shows only noreply addresses (AC-XC-12), the range and PR-body privacy scan is clean, and CI is green on the head. The body has the change summary since v1.1.0 (`main` already holds it), test evidence per tier, the G2 and hand-check results, known issues (the open [E] field checks of AC-NPCWP-11 and AC-MARK-08, EC-REL-13) and the decisions R25–R33. Pushing and opening the PR each need your OK. **Then wait for your approval**, and merge with a merge commit (D-10).
+  - Req: REQ-REL-14, REQ-REL-08, REQ-REL-09, REQ-XC-GIT-02
+  - Accept: AC-REL-06 (summary from v1.1.0, R33) and AC-REL-07 for this PR; AC-XC-05, AC-XC-12; you accept the known issues (EC-REL-13); CI green on its head; a commit added after the approval voids it (EC-REL-12).
+- [ ] **T2.14 chore(release): tag and publish v1.2.0** (S, deps T2.13). Starts only after the merge **and** your "ship". The order of T1.19 and `RELEASING.md`: preflight → annotated tag `v1.2.0` on the merge commit → `./gradlew clean build` from that commit → push the tag → `gh release create v1.2.0 --verify-tag --draft` with the jar, the sidecar and the `[1.2.0]` body → `release-check.sh` → tier D boot of the exact jar with your mod set against a baseline (no new ERROR; also AC-NPCWP-11 and AC-MARK-08 [D]) → `release-check.sh` again → publish as Latest, not as a pre-release. Any failed check stops before publishing and is reported; fixes happen only inside the draft (EC-REL-05), then all checks rerun.
+  - Req: REQ-REL-14, REQ-REL-10, REQ-REL-11
+  - Accept: AC-REL-12 with v1.2.0 (AC-REL-04, -05, -08 and -09, R33); the record in `RELEASING.md`.
+
+**Checkpoint G2r:**
+- [ ] v1.2.0 is public and marked Latest; `main` and its README match the release
+
 ### Phase 3 — Features (each behind its own toggle)
 
 *Shared game-state, data and rendering infrastructure comes first (T3.0*), then the NPC/mob data (T3.8*), then the features. Rare Drop Odds (T3.9*) is built last. Exception (R23): the waypoint path T3.0b → T3.0n → T3.4 is the first Phase 3 work, right after the v1.1.0 merge (§6). The possible corpse spots, T3.3a and T3.3, are dropped (R22).*
@@ -816,7 +832,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - `/ksu corpses` sorts spots by distance from the player (rounded half-up) and gives the special replies. It works with the markers and the alert OFF, because it subscribes to the mineshaft state (REQ-GS-16). "corpses" is added to the reserved subcommand list (REQ-UI-10).
   - Gametests drive T3.0m's dev-only shaft simulation (`/ksu debug shaft`); there is no second hook. (This rule now lives in T3.9d.)
   - Was Accept: AC-CORPSE-03, AC-CORPSE-04, AC-CORPSE-05, AC-CORPSE-06, AC-CORPSE-07, AC-CORPSE-09. AC-CORPSE-10 is checked at G3.
-- [x] **T3.4 feat(waypoints): Skyblocker-style NPC waypoints [brief 3.4]** (M, deps T3.0b, T3.0n, T1.9). Third task of the R23 waypoint path, right after the v1.1.0 merge; whether it ships as an intermediate release is decided then. Every enabled fixed NPC rule on the current island gets three parts:
+- [x] **T3.4 feat(waypoints): Skyblocker-style NPC waypoints [brief 3.4]** (M, deps T3.0b, T3.0n, T1.9). Third task of the R23 waypoint path, right after the v1.1.0 merge; whether it ships as an intermediate release is decided then (it ships in v1.2.0, R33). Every enabled fixed NPC rule on the current island gets three parts:
   - a white label: no shadow or plate, centred on x+0.5 / z+0.5, 1.5 blocks above
   - an optional yellow "<d>m" line, measured from the player
   - an opaque beacon beam in its resolved colour

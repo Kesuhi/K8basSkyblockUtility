@@ -3,7 +3,7 @@
 	"id": "k8bas_skyblock_utility",
 	"version": "${version}",
 	"name": "K8bas Skyblock Utility",
-	"description": "A modular client-side toolkit for Hypixel SkyBlock: rule-based outlines for the mobs and NPCs you can see, searchable mob and NPC lists, island-aware waypoints for NPCs at fixed spots, and a notify-only update check on GitHub. Display only: no automation, and no packet is cancelled or changed. Not affiliated with or endorsed by Hypixel.",
+	"description": "A modular client-side toolkit for Hypixel SkyBlock: rule-based outlines for the mobs and NPCs you can see, island-aware waypoints with beacon beams for NPCs at fixed spots, a searchable settings screen with mob and NPC lists, and a notify-only update check on GitHub. Display only: no automation, and no packet is cancelled or changed. Not affiliated with or endorsed by Hypixel.",
 	"authors": [
 		"Kesuhi"
 	],

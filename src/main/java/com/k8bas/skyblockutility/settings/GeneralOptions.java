@@ -61,7 +61,7 @@ public final class GeneralOptions {
 						false, Binding.of(config::smoothCorners, value -> config.smoothCorners = value)),
 				Choice.of("interface.notice_position", "general.noticePosition",
 						new OptionText("Notice position", "Where notices appear on the screen.",
-								"Notices are short messages, e.g. that an update is out. Vanilla toasts show top right too and are drawn "
+								"Notices are short messages, e.g. that your settings file was backed up. Vanilla toasts show top right too and are drawn "
 										+ "over ours there.",
 								List.of("notice", "toast", "popup", "corner")),
 						GeneralConfig.DEFAULT_NOTICE_POSITION, List.of(NoticePosition.values()), NoticePosition::label,
