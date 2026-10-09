@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Mob list (REQ-NPCDB-06, T3.8): mobs by island or ungated group, with the name text to match",
+  "x-keys": {
+    "/rows": "id"
+  },
+  "type": "object",
+  "required": [
+    "rows"
+  ],
+  "properties": {
+    "table": {
+      "const": "npcdb.mobs"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "license": {
+      "const": "CC0-1.0"
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "displayName",
+          "island",
+          "matchText"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^\\S(.*\\S)?$"
+          },
+          "island": {
+            "enum": [
+              "Private Island",
+              "Hub",
+              "Garden",
+              "The Farming Islands",
+              "The Park",
+              "Moonglade Marsh",
+              "Torrhus Canyon",
+              "Spider's Den",
+              "The End",
+              "Crimson Isle",
+              "Gold Mine",
+              "Deep Caverns",
+              "Dwarven Mines",
+              "Crystal Hollows",
+              "Glacite Mineshafts",
+              "Backwater Bayou",
+              "Lotus Atoll",
+              "Critter Safari",
+              "Kuudra",
+              "Jerry",
+              "The Rift",
+              "Dark Auction",
+              "Catacombs",
+              "Dungeon Hub",
+              "Fishing",
+              "Mythological Creatures",
+              "Spooky Festival",
+              "Hidden Jerries"
+            ]
+          },
+          "matchText": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^\\S(.*\\S)?$"
+          },
+          "subfolder": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^\\S(.*\\S)?$"
+          },
+          "aliases": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_]+$"
+            }
+          }
+        }
+      }
+    }
+  }
+}

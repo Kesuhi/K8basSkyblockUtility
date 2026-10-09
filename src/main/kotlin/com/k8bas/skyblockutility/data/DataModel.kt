@@ -55,6 +55,11 @@ class TableSpec<T : Any>(val id: String, val schemaVersion: Int, val decoder: Ta
  * (REQ-DATA-07), so one bad row never loses the table.
  */
 class TableContext internal constructor(val entry: IndexEntry, val body: JsonObject, private val warn: Consumer<String>) {
+	/** Logs one problem the decoder found across rows (e.g. a key used twice), naming the table. */
+	fun warn(message: String) {
+		warn.accept("Data table ${entry.table}: $message")
+	}
+
 	/**
 	 * The decoded rows of [array], in order. A row that is not an object, or whose [decode] throws or
 	 * returns null, is skipped and logged once; [id] names the row in that log (its position if it fails).

@@ -8,6 +8,22 @@
       "schemaVersion": 1,
       "dataVersion": 1,
       "gameVersion": "0.27.1"
+    },
+    "npcdb.mobs": {
+      "path": "npcdb/mobs.json",
+      "sha256": "b0dc79fe8007eb50cbe06176a36fc55b5bbd1338bed318c1489a96f0cfd463c4",
+      "rows": 308,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
+    },
+    "npcdb.npcs": {
+      "path": "thirdparty/neu-repo/npcdb/npcs.json",
+      "sha256": "6e4fbd141e2502aca335964fbb2f1fd15839fa943fe690bf088650ed7b21b864",
+      "rows": 367,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
     }
   }
 }

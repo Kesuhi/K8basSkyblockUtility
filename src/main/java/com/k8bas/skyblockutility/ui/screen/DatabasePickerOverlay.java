@@ -25,7 +25,7 @@ import java.util.Set;
  * "Add from database" (REQ-UI-11): a modal with a search field, the entries in island folders on the
  * virtual list (REQ-UI-20), and an Add button per entry. An entry that already backs a rule is hidden,
  * so one just added leaves the list at once. Each add is written at once; closing never asks about
- * unsaved changes (AC-UI-10). While the list loads, or when it could not be fetched, it says so and
+ * unsaved changes (AC-UI-10). While the list loads, or when its table could not be read, it says so and
  * nothing can be added (EC-UI-08).
  */
 public final class DatabasePickerOverlay extends Overlay {
@@ -168,7 +168,7 @@ public final class DatabasePickerOverlay extends Overlay {
 	String message() {
 		return switch (database.state()) {
 			case LOADING -> "Loading the database...";
-			case UNAVAILABLE -> "Database unavailable: it could not be fetched";
+			case UNAVAILABLE -> "Database unavailable: its bundled data could not be read";
 			case READY -> !rows.isEmpty() ? null
 					: database.entries().isEmpty() ? "The database is empty"
 					: search.model().text().isBlank() ? "Every entry already has a rule" : "No entry matches";

@@ -38,9 +38,8 @@ class MobHighlighterModule : Module {
 		config = ConfigManager.getModuleSection(ID, MobHighlighterConfig::class.java) { MobHighlighterConfig() }
 		highlightManager.setEnabled(cfg.enabled)
 		highlightManager.rebuild(cfg.rules)
-		// Fetched at startup rather than lazily on first picker-open, so opening the picker for
-		// the first time doesn't show the "still loading" message / a moment of an empty list.
-		MobDatabase.fetchIfNeeded()
+		// The bundled mob table (T3.8): registered before the registry starts, so it loads with the others.
+		MobDatabase.register()
 		ModKeybinds.register(this)
 	}
 
@@ -61,10 +60,7 @@ class MobHighlighterModule : Module {
 		if (database == null) {
 			database = ListDatabase<MobDatabaseEntry>(
 				"Mob Database",
-				Supplier {
-					MobDatabase.fetchIfNeeded()
-					MobDatabase.state()
-				},
+				Supplier { MobDatabase.state() },
 				Supplier { MobDatabase.entries() },
 				Function { mob -> RuleDatabase.Entry(mob.id, mob.displayName, mob.island, mob.subfolder, mob.matchText) },
 				Supplier { usedSources() },
@@ -119,19 +115,12 @@ class MobHighlighterModule : Module {
 		rule.nameMatchMode = NameMatchMode.CONTAINS
 		rule.color = 0xFF0000
 		rule.sourceId = mob.id
-		rule.island = if (UNGATED_ISLANDS.contains(mob.island)) null else mob.island
+		rule.island = if (MobTable.UNGATED_GROUPS.contains(mob.island)) null else mob.island
 		return rule
 	}
 
 	companion object {
 		const val ID: String = "mob_highlighter"
 
-		/**
-		 * Islands the mob database groups mobs under that aren't a single physical location — Jerry's
-		 * Workshop can start on whatever island you're already on, and fishing happens all over the
-		 * place, so a rule sourced from one of these is left ungated (active everywhere) rather than
-		 * restricted to an island it isn't really tied to.
-		 */
-		private val UNGATED_ISLANDS: Set<String> = java.util.Set.of("Jerry", "Fishing", "Spooky Festival", "Mythological Creatures")
 	}
 }

@@ -8,7 +8,7 @@ import java.util.Set;
  * client thread each time the picker draws, so it follows the fetch and the rules as they change.
  */
 public interface RuleDatabase {
-	/** Whether the list is still loading, ready, or could not be fetched (then nothing can be added, EC-UI-08). */
+	/** Whether the list is still loading, ready, or could not be read (then nothing can be added, EC-UI-08). */
 	enum State {
 		LOADING, READY, UNAVAILABLE
 	}

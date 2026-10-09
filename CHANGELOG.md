@@ -6,6 +6,17 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+### Changed
+
+- The NPC and mob lists for "Add from database" now ship inside the mod. They are no longer
+  downloaded at start, so both pickers work offline and on the first launch, and the mod makes no
+  request to GitHub gists any more. Their content is the same as the lists 1.2.0 downloaded.
+- The four hidden Jerries (Blue, Green, Purple and Golden Jerry) are now in a mob folder called
+  "Hidden Jerries" instead of "Jerry", which is also the name of Jerry's Workshop. Rules you made
+  from them keep working on every island.
+- The NPC list is built from NotEnoughUpdates-REPO (MIT); `THIRD_PARTY_NOTICES.md` and the jar's
+  `META-INF/licenses/` now carry its notice and licence.
+
 ## [1.2.0] - 2026-10-09
 
 This release brings the mod's own settings screen, with a search that finds every option and rule,

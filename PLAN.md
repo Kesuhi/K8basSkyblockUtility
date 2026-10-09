@@ -822,12 +822,35 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - Six fetch failure modes from the code, all removed by bundling.
 
     Fact-checked by three independent checkers against the raw files and code; their ~20 findings are applied. `data-schemas/upstreams.json` now names SkyHanni-REPO's real owner, `hannibal002`. Open for G3 (you): the positions of Bobby Joe, Keran, Prie and Scoop; Bestiary and Fred as second names; Wiki Tiki on Torrhus Canyon; a sample of old-export positions.
-- [ ] **T3.8 feat(data): bundle NPC & mob databases [brief 3.9]** (M, deps T3.0c, T3.0i, T3.0j, T3.8a, T1.9, T3.4). Both lists become registry tables (AD-7 envelope), converted from the frozen gists. The gist fetch, any cache of it and the T1.12 entry validation are deleted. The T1.12 timeout helper goes with it; the update check has its own REQ-UPD-09 timeouts (T1.4a).
+- [x] **T3.8 feat(data): bundle NPC & mob databases [brief 3.9]** (M, deps T3.0c, T3.0i, T3.0j, T3.8a, T1.9, T3.4). Both lists become registry tables (AD-7 envelope), converted from the frozen gists. The gist fetch, any cache of it and the T1.12 entry validation are deleted. The T1.12 timeout helper goes with it; the update check has its own REQ-UPD-09 timeouts (T1.4a).
   - Req: REQ-NPCDB-03, REQ-NPCDB-04, REQ-NPCDB-06, REQ-NPCDB-09, REQ-NPCDB-10, REQ-DATA-01, REQ-DATA-13
   - Schemas and data tests check entry validity: unique ids, islands from T1.9's island list or the ungated allowlist, valid fixed coordinates, a matchText on moving entries.
   - Lookup by id follows aliases, so a rule linked to a DB entry resolves to the entry's current values. T3.4's waypoint lookup switches to it here; T3.4 itself comes earlier (R23) and reads the list v1.1.0 loads until then. A missing id keeps the rule's stored values.
   - The gists stay frozen and the code never writes to them. You remove the 4 invisible mobs from the 1.0.x mob gist. T7.4 checks AC-NPCDB-09.
   - Accept: AC-NPCDB-02, AC-NPCDB-03, AC-NPCDB-05, AC-NPCDB-08, AC-DATA-01, AC-DATA-05 ([B]: with the mob table removed, only the mob picker shows "database unavailable" with Add disabled), EC-UI-08 (registry case).
+  - Your decisions (2026-10-09):
+    - **NPC table: MIT, credit NotEnoughUpdates-REPO.** The audit found 359 of its 362 positions match NEU exactly.
+    - **Mob table: CC0**, your own compilation.
+    - **The hidden Jerries' group is renamed "Hidden Jerries"** (it was "Jerry", which is also Jerry's Workshop).
+  - Done (2026-10-09):
+    - **Tables:** `npcdb.npcs` (367 rows, `data/thirdparty/neu-repo/npcdb/npcs.json`, MIT) and `npcdb.mobs` (308 rows, `data/npcdb/mobs.json`, CC0). Both are converted unchanged from the frozen gists, apart from the group rename.
+    - **Schemas** (`data-schemas/npcdb.{npcs,mobs}.schema.json`) pin:
+      - the island values: the 24 tracker islands, plus for mobs the ungated groups Fishing, Mythological Creatures, Spooky Festival and Hidden Jerries;
+      - integer coordinates with y in [-64, 320) for fixed NPCs, and a match text otherwise;
+      - optional `aliases`.
+    - **Notices:** NEU's licence is in `licenses/neu-repo.txt` (copied into the jar), with a `THIRD_PARTY_NOTICES.md` section. The NEU source is recorded as the upstream the gist was compiled from, and the audit's revision as `checkedAgainst`.
+    - **Code:**
+      - `NpcTable`/`MobTable` decode the rows, skipping a broken row with one WARN. Fixed "Catacombs" NPCs are still read as "Dungeon Hub" (REQ-LOC-03).
+      - `NpcList`/`MobList` look up by id or alias; an id wins over an alias, and a clashing alias is ignored with a WARN through the new `TableContext.warn`.
+      - `NpcDatabase`/`MobDatabase` read the registry: loading, ready or unavailable. Their API is unchanged, so NPC waypoints follow `byId` and with it any aliases.
+      - `MobTable.UNGATED_GROUPS` replaces the module's list.
+    - **Removed:** the gist fetch, `JsonEntries` (T1.12 validation) and the gist-era `SharedHttpClient.fetchText`, together with its user agent and request timeout. `SharedHttpClient` keeps only the client and its 10 s connect timeout for the update check.
+    - **Picker text:** the unavailable message now reads "Database unavailable: its bundled data could not be read".
+    - **CHANGELOG:** [Unreleased] has the change.
+    - **Tests:**
+      - NpcMobTablesTest (9): the real tables through the registry; positions; island sync with `Islands.kt` and the schemas (EC-NPCDB-03); alias lookup and clashes; a row skipped with one WARN (AC-DATA-05 [A]); no gist URL, raw gist URL or fetch helper in the main source set (AC-NPCDB-02/03 [R]).
+      - Gametest BundledListsGameTest: each picker lists exactly its index's row count in island folders; the registry reports both tables loaded; no gist-fetch log line and no cache in the config folder (AC-NPCDB-02/03 [B]); both lists read one registry that lacks the mob file, and only the mob picker says unavailable while the NPC list loads (AC-DATA-05 [B], EC-UI-08).
+    - **Review:** two angles with two verifiers each. Fixed: the fetch helper was still there; the NEU revision was recorded as the build source; the gametest's no-gist and no-cache checks could not fail; its "others still work" check passed by construction.
 - [ ] **T3.8b data(npcdb): NPC & mob data corrections** (S, deps T3.8). Applies the audit's outcomes; each content change bumps `dataVersion` by exactly 1 (by hand), then `dataIndex`.
   - Req: REQ-NPCDB-07, REQ-NPCDB-08
   - Changes:

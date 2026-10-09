@@ -65,9 +65,8 @@ class NpcSearchModule : Module {
 		)
 		ClientTickEvents.END_CLIENT_TICK.register { showPendingTitle(it) }
 		rebuildDerived()
-		// Fetched at startup rather than lazily on first picker-open, so opening the picker for
-		// the first time doesn't show the "still loading" message / a moment of an empty list.
-		NpcDatabase.fetchIfNeeded()
+		// The bundled NPC table (T3.8): registered before the registry starts, so it loads with the others.
+		NpcDatabase.register()
 		NpcWaypointMarkers.register()
 		ModKeybinds.register(this)
 	}
@@ -146,10 +145,7 @@ class NpcSearchModule : Module {
 		if (database == null) {
 			database = ListDatabase<NpcDatabaseEntry>(
 				"NPC Database",
-				Supplier {
-					NpcDatabase.fetchIfNeeded()
-					NpcDatabase.state()
-				},
+				Supplier { NpcDatabase.state() },
 				Supplier { NpcDatabase.entries() },
 				Function { npc -> RuleDatabase.Entry(npc.id, npc.displayName, npc.island, null, npc.matchText) },
 				Supplier { usedSources() },
