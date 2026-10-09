@@ -86,7 +86,7 @@ class DataRegistry(
 	private fun readIndex() {
 		try {
 			val bytes = source.read(INDEX) ?: return failIndex("no $INDEX")
-			val json = JsonParser.parseString(text(bytes)).asJsonObject
+			val json = JsonParser.parseString(DataText.text(bytes)).asJsonObject
 			if (json.get("indexVersion")?.asInt != INDEX_VERSION) {
 				return failIndex("unknown indexVersion")
 			}
@@ -134,15 +134,15 @@ class DataRegistry(
 	private fun <T : Any> decode(spec: TableSpec<T>): TableState<T> {
 		indexProblem?.let { return TableState.Unavailable("index unavailable: $it") }
 		val entry = index?.get(spec.id) ?: return TableState.Unavailable("not in the index")
-		if (!SAFE_PATH.matches(entry.path)) {
+		if (!DataText.isSafePath(entry.path)) {
 			return TableState.Unavailable("bad path in the index")
 		}
 		val bytes = source.read(entry.path) ?: return TableState.Unavailable("file missing")
-		if (!checksum(bytes).equals(entry.sha256, ignoreCase = true)) {
+		if (!DataText.checksum(bytes).equals(entry.sha256, ignoreCase = true)) {
 			return TableState.Unavailable("checksum differs from the index")
 		}
 		val body: JsonObject = try {
-			JsonParser.parseString(text(bytes)).asJsonObject
+			JsonParser.parseString(DataText.text(bytes)).asJsonObject
 		} catch (e: RuntimeException) {
 			return TableState.Unavailable("unreadable JSON")
 		}
@@ -161,23 +161,32 @@ class DataRegistry(
 		const val INDEX = "index.json"
 		const val INDEX_VERSION = 1
 
-		/** Relative, inside the data folder: no `..`, no leading slash or drive. */
-		val SAFE_PATH = Regex("^(?!.*\\.\\.)[A-Za-z0-9_][A-Za-z0-9_./-]*\\.json$")
+	}
+}
 
-		val BOM = Char(0xFEFF).toString()
-		val CRLF = "" + Char(13) + Char(10)
-		val LF = Char(10).toString()
+/**
+ * How a table file is read as text, and its index checksum (REQ-DATA-04, REQ-DATA-08): UTF-8 with a BOM
+ * dropped; the checksum is the SHA-256 of that text with CRLF as LF, so a Windows checkout (core.autocrlf) and
+ * CI agree. The registry and the index tool (`./gradlew dataIndex`) both use these, so they cannot drift.
+ */
+internal object DataText {
+	private val BOM = Char(0xFEFF).toString()
+	private val CRLF = "" + Char(13) + Char(10)
+	private val LF = Char(10).toString()
 
-		/** UTF-8, with a BOM dropped; JSON does not care about LF or CRLF. */
-		fun text(bytes: ByteArray): String = String(bytes, StandardCharsets.UTF_8).removePrefix(BOM)
+	/** Relative, inside the data folder: no `..`, no leading slash or drive, no spaces. */
+	private val SAFE_PATH = Regex("^(?!.*\\.\\.)[A-Za-z0-9_][A-Za-z0-9_./-]*\\.json$")
 
-		/**
-		 * The index checksum: SHA-256 of the UTF-8 text with a BOM removed and CRLF as LF, so a Windows checkout
-		 * (core.autocrlf) and CI hash the same table alike (REQ-DATA-08).
-		 */
-		fun checksum(bytes: ByteArray): String {
-			val normal = text(bytes).replace(CRLF, LF).toByteArray(StandardCharsets.UTF_8)
-			return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(normal))
-		}
+	/** True for a table path the registry reads; the validator rejects any other. */
+	@JvmStatic
+	fun isSafePath(path: String): Boolean = SAFE_PATH.matches(path)
+
+	@JvmStatic
+	fun text(bytes: ByteArray): String = String(bytes, StandardCharsets.UTF_8).removePrefix(BOM)
+
+	@JvmStatic
+	fun checksum(bytes: ByteArray): String {
+		val normal = text(bytes).replace(CRLF, LF).toByteArray(StandardCharsets.UTF_8)
+		return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(normal))
 	}
 }

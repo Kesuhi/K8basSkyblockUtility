@@ -78,6 +78,8 @@ dependencies {
 	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
 	testImplementation "org.junit.jupiter:junit-jupiter"
 	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+	// The bundled-data validator (T3.0i, REQ-DATA-03): JSON Schema draft 2020-12, tests and tools only, never shipped.
+	testImplementation "com.networknt:json-schema-validator:${project.json_schema_validator_version}"
 }
 
 // Tier D: boots the production client with the built jar plus every *.jar of a mod folder (a copy
@@ -120,7 +122,9 @@ test {
 	def testRunDir = layout.buildDirectory.dir("test-run").get().asFile
 	workingDir = testRunDir
 	doFirst { testRunDir.mkdirs() }
-	// For tests that read the source tree (RuntimeVersionsTest).
+	// For tests that read the source tree (RuntimeVersionsTest, BundledDataValidationTest): a schema-only
+	// change must rerun the data validation.
+	inputs.dir("data-schemas").withPropertyName("dataSchemas").withPathSensitivity(PathSensitivity.RELATIVE)
 	systemProperty "k8bas.projectDir", projectDir.absolutePath
 	// ReleaseArtifactTest checks the built jar and its sidecar against the release contract.
 	dependsOn "sha256Sidecar"
@@ -158,6 +162,36 @@ tasks.named("jar") { finalizedBy sha256Sidecar }
 // The jar, its sidecar and the versions default to this build's; -Pk8bas.releaseJar,
 // -Pk8bas.releaseSidecar, -Pk8bas.releaseVersion and -Pk8bas.releaseMinecraft override them. It never
 // builds the jar: it checks the file that was uploaded. Fails with one line per problem.
+// The bundled-data validator on its own (T3.0i, REQ-DATA-04), for the update skill; `check` runs the same
+// rules through BundledDataValidationTest. -PbaseRef=<git ref> adds the dataVersion guard: a table changed
+// since <ref> must have <ref>'s dataVersion + 1. Prints bytes per table (REQ-DATA-12).
+tasks.register("validateData", JavaExec) {
+	group = "verification"
+	description = "Validates the bundled data tables against their schemas and the index (REQ-DATA-04)."
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = "com.k8bas.skyblockutility.data.DataValidator"
+	// Minecraft's log4j config on the test classpath writes logs/ into the working directory.
+	workingDir = layout.buildDirectory.dir("tool-run").get().asFile
+	doFirst { workingDir.mkdirs() }
+	jvmArgs "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8"
+	def baseRef = providers.gradleProperty("baseRef")
+	doFirst {
+		args(baseRef.isPresent() ? [projectDir.absolutePath, baseRef.get()] : [projectDir.absolutePath])
+	}
+}
+
+// Rewrites data/index.json from the tables (path, checksum, row count, versions; REQ-DATA-04). It never edits
+// a table: bump the table's dataVersion by 1 first, then run this.
+tasks.register("dataIndex", JavaExec) {
+	group = "build"
+	description = "Rewrites the bundled data index from the tables (REQ-DATA-04)."
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = "com.k8bas.skyblockutility.data.DataIndexer"
+	workingDir = layout.buildDirectory.dir("tool-run").get().asFile
+	doFirst { workingDir.mkdirs() }
+	args(projectDir.absolutePath)
+}
+
 tasks.register("releaseDraftCheck", JavaExec) {
 	group = "verification"
 	description = "Checks a release draft's JSON against the local jar, sidecar and release notes (REQ-REL-11)."
