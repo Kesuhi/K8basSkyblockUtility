@@ -118,7 +118,8 @@ class RuleCardsTest {
 		assertEquals("12, 70, -34", field(fixed, InfoOption.class, ".position").value().get(), "a fixed NPC shows its position, read-only");
 		assertTrue(fixed.fields().stream().noneMatch(option -> option.id().endsWith(".pattern") || option.id().endsWith(".mode")));
 		assertEquals(List.of("enabled", "label", "island", "mode", "pattern"), suffixes(npcCards.groups().get(0)), "no NPC colour (R31)");
-		assertEquals(List.of("enabled", "label", "island", "position"), suffixes(fixed));
+		// T3.4b (REQ-NPCWP-06): a fixed NPC's beam colour and "Use island colour".
+		assertEquals(List.of("enabled", "label", "island", "position", "beam_color", "use_island_color"), suffixes(fixed));
 	}
 
 	private static List<String> suffixes(RuleGroup group) {
@@ -140,7 +141,7 @@ class RuleCardsTest {
 		npcs.rules.add(trinity);
 		npcs.rules.add(udel);
 		assertEquals(List.of("enabled"), suffixes(npcCards.groups().get(0)), "a moving NPC from the list");
-		assertEquals(List.of("enabled", "position"), suffixes(npcCards.groups().get(1)), "a fixed NPC from the list");
+		assertEquals(List.of("enabled", "position", "beam_color", "use_island_color"), suffixes(npcCards.groups().get(1)), "a fixed NPC from the list");
 		assertEquals("Udel", npcCards.groups().get(1).label().get(), "the header still names it");
 
 		// One that already does nothing (edited before 1.2.0) keeps its full card, so it can be fixed.
@@ -182,7 +183,9 @@ class RuleCardsTest {
 			ActionOption remove = group.remove();
 			assertEquals("Remove", remove.buttonLabel(), group.id());
 			assertTrue(remove.destructive(), group.id());
-			assertTrue(group.fields().stream().noneMatch(option -> option instanceof ActionOption), "no Delete field any more: " + group.id());
+			// The only destructive button is Remove in the header; "Use island colour" (T3.4b) is a plain action.
+			assertTrue(group.fields().stream().noneMatch(option -> option instanceof ActionOption action && action.destructive()),
+					"no Delete field any more: " + group.id());
 		}
 		mobCards.groups().get(0).remove().action().run();
 		npcCards.groups().get(0).remove().action().run();

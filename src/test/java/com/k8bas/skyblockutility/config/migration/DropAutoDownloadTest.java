@@ -59,7 +59,7 @@ class DropAutoDownloadTest {
 		assertFalse(general.get("autoUpdateCheckEnabled").getAsBoolean());
 		assertFalse(saved.contains("autoUpdateDownloadEnabled"));
 		assertFalse(saved.contains("updateChannel"));
-		assertEquals(2, JsonParser.parseString(saved).getAsJsonObject().get("configVersion").getAsInt());
+		assertEquals(ConfigMigrations.MIGRATOR.currentVersion(), JsonParser.parseString(saved).getAsJsonObject().get("configVersion").getAsInt());
 		assertTrue(Files.exists(dir.resolve("k8bas_skyblock_utility.json.v0.bak")));
 	}
 }

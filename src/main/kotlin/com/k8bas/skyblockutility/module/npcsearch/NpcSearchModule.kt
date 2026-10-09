@@ -163,7 +163,8 @@ class NpcSearchModule : Module {
 		}
 		// Bound now, as Java's ruleCards::groups was: a card keeps the rule cards it was made with.
 		val cards = ruleCards!!
-		return NpcSearchOptions.cards(cfg, Consumer { setEnabled(it) }, Runnable { rebuildDerived() }, Supplier { cards.groups() }, database)
+		// A display setting or island colour: stored in the section first, so the screen's commit writes it (REQ-UI-15).
+		return NpcSearchOptions.cards(cfg, Consumer { setEnabled(it) }, Runnable { rulesChanged() }, Supplier { cards.groups() }, database)
 	}
 
 	/** The database entries the rules already come from (the picker hides them). */

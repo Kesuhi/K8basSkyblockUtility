@@ -15,9 +15,15 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   update. It reads Hypixel's Frozen Corpses tab widget; if the widget is off or cut off, the line
   says so and tells you once how to turn it on. Keys in sacks or storage are not counted. "Show
   corpse key counts" (ON) turns the key part off.
+- Beam colours you can change: Waypoints › "Island beam colours" has a colour per island (picker
+  and hex), and a fixed NPC's card has its own "Beam colour" and "Use island colour". Changes show
+  on the beams at once.
 
 ### Changed
 
+- A fixed NPC whose colour from 1.0.x or 1.1.0 was not the default green now uses that colour for
+  its beam (in 1.2.0 its beam had the island colour), so no colour you picked is lost; NPCs on the
+  default green keep their island's colour. "Use island colour" on its card undoes it.
 - The NPC and mob lists for "Add from database" now ship inside the mod. They are no longer
   downloaded at start, so both pickers work offline and on the first launch, and the mod makes no
   request to GitHub gists any more. Their content is the same as the lists 1.2.0 downloaded.

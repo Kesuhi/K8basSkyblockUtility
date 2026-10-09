@@ -10,6 +10,7 @@ import com.k8bas.skyblockutility.highlight.GlowBehaviourText;
 import com.k8bas.skyblockutility.ui.notice.NoticePosition;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
+import com.k8bas.skyblockutility.module.npcsearch.WaypointColors;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
@@ -107,6 +108,8 @@ class OptionCatalogTest {
 		expected.put("modules.npc_search.foundTitleEnabled", true);
 		expected.put("modules.npc_search.showBeams", true);
 		expected.put("modules.npc_search.showDistance", true);
+		// REQ-NPCWP-05 (T3.4b): one swatch per island, at its documented default; stored only once changed.
+		WaypointColors.ISLAND_DEFAULTS.forEach((island, colour) -> expected.put("modules.npc_search.islandBeamColors." + island, colour));
 		// REQ-MSA-11 (D-6): the mineshaft entry alert and its key counts ON.
 		expected.put("modules.mineshaft_alert.enabled", true);
 		expected.put("modules.mineshaft_alert.showKeys", true);
@@ -229,11 +232,14 @@ class OptionCatalogTest {
 				change(option);
 				Map<String, String> after = leaves(gson, general, mob, npc, shaft);
 				Set<String> changed = new TreeSet<>();
-				before.forEach((key, value) -> {
-					if (!value.equals(after.get(key))) {
+				// Both ways: an island colour is a map entry that exists only once it differs from its default.
+				Set<String> keys = new TreeSet<>(before.keySet());
+				keys.addAll(after.keySet());
+				for (String key : keys) {
+					if (!java.util.Objects.equals(before.get(key), after.get(key))) {
 						changed.add(key);
 					}
-				});
+				}
 				assertEquals(Set.of(option.storageKey()), changed, option.id());
 				restore(option, original);
 				Map<String, String> restored = leaves(gson, general, mob, npc, shaft);
@@ -379,6 +385,13 @@ class OptionCatalogTest {
 		for (Option option : storedOptions()) {
 			String key = option.storageKey();
 			if (key.startsWith("options.txt:")) {
+				continue;
+			}
+			// An island colour is an entry of the islandBeamColors map, one per documented island.
+			String islands = "modules.npc_search.islandBeamColors.";
+			if (key.startsWith(islands)) {
+				assertTrue(roots.get("modules.npc_search").has("islandBeamColors"), "the map is a real field: " + key);
+				assertTrue(WaypointColors.ISLAND_DEFAULTS.containsKey(key.substring(islands.length())), "a documented island: " + key);
 				continue;
 			}
 			int dot = key.lastIndexOf('.');

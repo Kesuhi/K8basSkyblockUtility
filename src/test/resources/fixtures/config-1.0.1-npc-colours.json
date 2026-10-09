@@ -1,0 +1,20 @@
+{
+  "general": {
+    "autoUpdateCheckEnabled": true,
+    "autoUpdateDownloadEnabled": false,
+    "mobScanRangeBlocks": 128
+  },
+  "modules": {
+    "npc_search": {
+      "enabled": true,
+      "rules": [
+        {"id": "npc-1", "label": "Trinity", "enabled": true, "island": "Catacombs", "fixed": false, "sourceId": "trinity", "x": 0.0, "y": 0.0, "z": 0.0, "nameMatchMode": "CONTAINS", "namePattern": "Trinity", "color": 697169},
+        {"id": "npc-2", "label": "Tomioka", "enabled": true, "island": "Catacombs", "fixed": false, "sourceId": "tomioka", "x": 0.0, "y": 0.0, "z": 0.0, "nameMatchMode": "CONTAINS", "namePattern": "Tomioka", "color": 697169},
+        {"id": "npc-3", "label": "Duncan", "enabled": true, "island": "Catacombs", "fixed": false, "sourceId": "duncan", "x": 0.0, "y": 0.0, "z": 0.0, "nameMatchMode": "CONTAINS", "namePattern": "Duncan", "color": 697169},
+        {"id": "npc-4", "label": "Udel", "enabled": true, "island": "Crimson Isle", "fixed": true, "sourceId": "udel", "x": -79.0, "y": 108.0, "z": -788.0, "nameMatchMode": "CONTAINS", "namePattern": "", "color": 697169},
+        {"id": "npc-5", "label": "Researcher Timmy", "enabled": true, "island": "Lotus Atoll", "fixed": true, "sourceId": "researcher_timmy", "x": 11.0, "y": 75.0, "z": 30.0, "nameMatchMode": "CONTAINS", "namePattern": "", "color": 697169},
+        {"id": "npc-6", "label": "My red marker", "enabled": true, "island": "Hub", "fixed": true, "sourceId": null, "x": 5.0, "y": 70.0, "z": -20.0, "nameMatchMode": "CONTAINS", "namePattern": "", "color": 16711680}
+      ]
+    }
+  }
+}

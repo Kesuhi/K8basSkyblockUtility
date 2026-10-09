@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.module.npcsearch
 import com.k8bas.skyblockutility.settings.RuleFields
 import com.k8bas.skyblockutility.ui.option.ActionOption
 import com.k8bas.skyblockutility.ui.option.Binding
+import com.k8bas.skyblockutility.ui.option.ColorOption
 import com.k8bas.skyblockutility.ui.option.InfoOption
 import com.k8bas.skyblockutility.ui.option.Option
 import com.k8bas.skyblockutility.ui.option.OptionText
@@ -21,7 +22,8 @@ import java.util.function.Supplier
  * NPC Search's rule cards (REQ-UI-11): enabled, label, island, name match and pattern for a moving NPC,
  * the position read-only for a fixed one, and a destructive Remove in the header. A rule from the NPC
  * Database (it has a `sourceId`) shows only enabled and, when fixed, its position: the database gave it
- * the rest. NPCs have no colour of their own: NPC Search draws them in white (R31). Every edit is stored
+ * the rest. A fixed NPC also has its beam colour, with "Use island colour" (T3.4b, REQ-NPCWP-06). NPCs
+ * have no label or outline colour of their own: NPC Search draws them in white (R31). Every edit is stored
  * at once and `changed` applies it (outlines and waypoints follow live); Remove is written at once by
  * the screen. Kept per rule object, so a card keeps its widgets while the rule lives.
  *
@@ -82,6 +84,31 @@ class NpcRuleCards @JvmOverloads constructor(
 					Supplier { position.apply(rule) },
 				),
 			)
+			fields.add(
+				ColorOption.of(
+					"$id.beam_color", KEY + "beamColor",
+					OptionText(
+						"Beam colour", "This NPC's own beam colour; without one it follows its island's.",
+						"Changing it gives the NPC its own colour. \"Use island colour\" goes back to the island's.",
+						java.util.List.of("beam", "colour", "color"),
+					),
+					WaypointColors.GLOBAL_DEFAULT, false,
+					Binding.of({ WaypointColors.beamColor(rule, config.islandBeamColors) }, { value ->
+						val rgb = value and 0xFFFFFF
+						// Saving the island's own colour unchanged keeps following the island.
+						if (rule.beamColor != null || rgb != WaypointColors.islandColor(rule.island, config.islandBeamColors)) {
+							edit { rule.beamColor = rgb }
+						}
+					}),
+				),
+			)
+			fields.add(
+				ActionOption(
+					"$id.use_island_color",
+					OptionText("Use island colour", "Drops the NPC's own colour.", "Its beam follows its island's colour again.", java.util.List.of()),
+					"Reset", false, Runnable { edit { rule.beamColor = null } },
+				),
+			)
 		} else if (!fromDatabase) {
 			fields.add(
 				RuleFields.matchMode(
@@ -97,7 +124,7 @@ class NpcRuleCards @JvmOverloads constructor(
 				).invalidWhen { RuleFields.aboutPattern(memo.get()) },
 			)
 		}
-		// No colour field and a white dot: NPC Search draws every NPC in white; the stored colour is kept, unused (R31).
+		// No label colour field and a white dot: NPC Search draws every NPC in white; the stored colour is kept, unused (R31).
 		return RuleGroup(
 			id, Supplier { rule.label }, IntSupplier { WHITE }, Supplier { memo.get() },
 			Supplier { java.util.List.of(nullToEmpty(rule.label), nullToEmpty(rule.namePattern)) }, fields,

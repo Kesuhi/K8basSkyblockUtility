@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.highlight.GlowBehaviourText
 import com.k8bas.skyblockutility.ui.option.Binding
 import com.k8bas.skyblockutility.ui.option.Card
 import com.k8bas.skyblockutility.ui.option.Category
+import com.k8bas.skyblockutility.ui.option.ColorOption
 import com.k8bas.skyblockutility.ui.option.DatabaseOption
 import com.k8bas.skyblockutility.ui.option.Option
 import com.k8bas.skyblockutility.ui.option.OptionText
@@ -16,7 +17,7 @@ import java.util.function.Supplier
 /**
  * NPC Search's declarations (T2.1), in Waypoints (REQ-UI-04). The module and its distance line are
  * AMBER in PLAN §3, so their tooltips state the restriction (REQ-UI-19). Its rules are cards of their own
- * (NpcRuleCards, T2.5a); the beam colours follow in T3.4b.
+ * (NpcRuleCards, T2.5a). The island beam colours are a section card after it (T3.4b, REQ-NPCWP-06).
  */
 object NpcSearchOptions {
 	/** The restriction of the AMBER NPC waypoints, ahead of the glow changes in the card's tooltip. */
@@ -29,7 +30,7 @@ object NpcSearchOptions {
 	 * toggles then only store their value.
 	 *
 	 * @param setEnabled     applies the module switch (NpcSearchModule.setEnabled)
-	 * @param displayChanged applies a changed beam, distance or label setting to the waypoints at once (REQ-UI-15)
+	 * @param displayChanged applies a changed beam, distance or colour setting to the waypoints at once (REQ-UI-15)
 	 * @param rules          the rule cards (NpcRuleCards::groups); none by default
 	 * @param database       the NPC Database for "Add from database", or null for none
 	 */
@@ -65,8 +66,8 @@ object NpcSearchOptions {
 				"npc_search.show_beams", "modules.npc_search.showBeams",
 				OptionText(
 					"Show beacon beams", "A beacon beam rises from each waypoint, in its island's colour.",
-					"A beacon beam rises from each waypoint, in its island's colour (green for waypoints shown on every " +
-						"island). Off: only the label.",
+					"A beacon beam rises from each waypoint, in the NPC's own beam colour if you gave it one, otherwise in " +
+						"its island's colour (green for waypoints shown on every island). Off: only the label.",
 					java.util.List.of("beam", "beacon"),
 				),
 				true,
@@ -103,6 +104,35 @@ object NpcSearchOptions {
 				),
 			)
 		}
-		return java.util.List.of(Card("npc_search", Category.WAYPOINTS, "NPC Search", enabled, all, rules))
+		return java.util.List.of(Card("npc_search", Category.WAYPOINTS, "NPC Search", enabled, all, rules), islandColors(config, displayChanged))
+	}
+
+	/** The id of the island beam colour section. */
+	const val ISLAND_COLORS_CARD: String = "npc_search.island_colors"
+
+	/**
+	 * One swatch per island (REQ-NPCWP-05, REQ-NPCWP-06): picker and hex input, starting at the documented default.
+	 * Only a colour that differs from the default is stored, so a later change of the default reaches everyone who
+	 * kept it.
+	 */
+	private fun islandColors(config: NpcSearchConfig, displayChanged: Runnable): Card {
+		val swatches = WaypointColors.ISLAND_DEFAULTS.map { (island, default) ->
+			ColorOption.of(
+				"npc_search.island_color." + island.lowercase().replace(Regex("[^a-z0-9]+"), "_"),
+				"modules.npc_search.islandBeamColors.$island",
+				OptionText(
+					island, "The beam colour of waypoints on $island.",
+					"Waypoints on $island use this colour unless the NPC has its own beam colour.",
+					java.util.List.of("beam", "colour", "color", "island"),
+				),
+				default, false,
+				Binding.of({ WaypointColors.islandColor(island, config.islandBeamColors) }, { value ->
+					val rgb = value and 0xFFFFFF
+					if (rgb == default) config.islandBeamColors.remove(island) else config.islandBeamColors[island] = rgb
+					displayChanged.run()
+				}),
+			)
+		}
+		return Card(ISLAND_COLORS_CARD, Category.WAYPOINTS, "Island beam colours", null, swatches)
 	}
 }
