@@ -32,6 +32,7 @@
 			"com.k8bas.skyblockutility.skyblock.GameStateReadersGameTest",
 			"com.k8bas.skyblockutility.skyblock.ChatReaderGameTest",
 			"com.k8bas.skyblockutility.skyblock.InventoryReaderGameTest",
+			"com.k8bas.skyblockutility.data.BundledDataGameTest",
 			"com.k8bas.skyblockutility.gametest.SettingsScreensGameTest"
 		]
 	},

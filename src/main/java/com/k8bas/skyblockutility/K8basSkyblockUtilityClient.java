@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.data.BundledData;
 import com.k8bas.skyblockutility.debug.ContainerDump;
 import com.k8bas.skyblockutility.debug.DebugCommand;
 import com.k8bas.skyblockutility.highlight.GlowHandler;
@@ -42,6 +43,8 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ConfigManager.load();
+		// Bundled tables load off the client thread; features register theirs as they register.
+		BundledData.start();
 		// Queued like the load notices, so a failure before joining a world is still shown.
 		ConfigManager.setSaveFailureNotice(ConfigManager::queueNotice);
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {

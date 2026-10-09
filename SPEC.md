@@ -1161,7 +1161,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - differs from its index entry in sha256, row count or schemaVersion
   - is in the jar without an index entry, or is listed in the index without a file
 
-  The same validation must also be runnable on its own, for the update skill. *(Addendum: Data; Claude Code skill step 4 "validate it against the schema"; Derived: AD-7)*
+  The same validation must also be runnable on its own, for the update skill.
+  - The index is `assets/k8bas_skyblock_utility/data/index.json`: `{"indexVersion": 1, "tables": {"<table id>": {"path", "sha256", "rows", "schemaVersion", "dataVersion", "gameVersion"}}}`, with `path` relative to the data folder. `sha256` is taken over the file's UTF-8 text with a BOM removed and CRLF turned into LF, so a Windows checkout (core.autocrlf) and CI agree (REQ-DATA-08). The runtime registry (T3.0c) reads exactly this; `./gradlew dataIndex` (T3.0i) writes it.
+
+  *(Addendum: Data; Claude Code skill step 4 "validate it against the schema"; Derived: AD-7)*
 - **REQ-DATA-05** Licence enforcement. The build must fail when:
   - a table's licence is not on the allowlist: `CC0-1.0`, or `MIT` / `Apache-2.0` from an upstream approved in PLAN §2
   - a table whose licence is not `CC0-1.0` lies outside `data/thirdparty/<upstream>/`

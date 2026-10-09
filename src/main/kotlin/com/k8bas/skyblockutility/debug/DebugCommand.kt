@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.debug
 
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient
+import com.k8bas.skyblockutility.data.BundledData
 import com.k8bas.skyblockutility.location.IslandTracker
 import com.k8bas.skyblockutility.util.ChatUtils
 import com.mojang.brigadier.arguments.StringArgumentType
@@ -47,7 +48,9 @@ object DebugCommand {
 			for (root in ROOTS) {
 				// Every prefix runs here and says how to go on: one without a command would go to the server (REQ-UI-25).
 				val debug: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommands.literal("debug")
-					.executes { usage(it.source, root, if (dev) "debug <dump|island>" else "debug dump") }
+					.executes { usage(it.source, root, if (dev) "debug <data|dump|island>" else "debug <data|dump>") }
+					// The bundled data tables and their versions (REQ-DATA-11); read-only, shown in chat only.
+					.then(ClientCommands.literal("data").executes { showData() })
 					.then(
 						ClientCommands.literal("dump")
 							.executes { usage(it.source, root, "debug dump <tab|sidebar|entities|containers>") }
@@ -98,6 +101,18 @@ object DebugCommand {
 				)
 			}
 		}
+	}
+
+	/** Lists every indexed data table with its dataVersion, gameVersion and state, as local chat lines. */
+	private fun showData(): Int {
+		val lines = BundledData.describe()
+		if (lines.isEmpty()) {
+			ChatUtils.chat("No bundled data tables")
+		} else {
+			ChatUtils.chat("Bundled data tables:")
+			lines.forEach { ChatUtils.chat(it) }
+		}
+		return 1
 	}
 
 	/** A local error with how the command goes on; nothing is sent. */
