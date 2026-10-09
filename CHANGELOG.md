@@ -31,6 +31,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   listed as "Fred"). Waypoints you added from either entry keep working and now point at the right
   block; searching the picker for the old name still finds the NPC.
 - Gemma's and Scoop's waypoints point at their current positions.
+- When the mod reads a mob's or NPC's name, it skips "CLICK" labels, empty lines and hidden names, so an
+  NPC is matched by its name even where its "CLICK" label floats nearer than the name.
 - Glacite Bowman, Caver, Mage, Mutt and Littlefoot are also listed under "Glacite Mineshafts", as
   "Glacite Bowman (Mineshafts)" and so on, so a rule added from there works inside a mineshaft.
 - If you added an NPC twice under two of its names (for example "Fred" and "Forge Foreman"), its

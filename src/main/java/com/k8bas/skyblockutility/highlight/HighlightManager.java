@@ -379,19 +379,15 @@ public final class HighlightManager {
 				entity.getX() - halfWidth, entity.getY() - 0.5, entity.getZ() - halfWidth,
 				entity.getX() + halfWidth, entity.getY() + entity.getBbHeight() + 2.5, entity.getZ() + halfWidth);
 
-		ArmorStand nearest = null;
-		double nearestDistSq = Double.MAX_VALUE;
+		// The nearest line that is a name: an NPC's "CLICK" label, an empty line and a hidden name are skipped
+		// (REQ-GLOW-09, T3.1).
+		List<NameLines.Line> lines = new ArrayList<>();
 		for (ArmorStand stand : level.getEntitiesOfClass(ArmorStand.class, searchBox)) {
-			if (!stand.hasCustomName()) {
-				continue;
-			}
-			double distSq = stand.distanceToSqr(entity);
-			if (distSq < nearestDistSq) {
-				nearestDistSq = distSq;
-				nearest = stand;
+			if (stand.hasCustomName()) {
+				lines.add(new NameLines.Line(stand.getCustomName().getString(), stand.distanceToSqr(entity), stand.isCustomNameVisible()));
 			}
 		}
-		return nearest != null ? nearest.getCustomName().getString() : null;
+		return NameLines.pick(lines);
 	}
 
 	private record CachedName(long tick, String name) {
