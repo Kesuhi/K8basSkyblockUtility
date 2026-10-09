@@ -28,7 +28,8 @@ class ReaderArchitectureTest {
 			"container close", Pattern.compile("(?i)closeContainer|ServerboundContainerClose|\\.onClose\\(|setScreen\\("),
 			"command or chat send", Pattern.compile("\\bsend[A-Z]\\w*Command\\b|\\bsendCommand\\b|\\bsendChat\\b|ServerboundChat\\w*"),
 			"packet send", Pattern.compile("\\.send\\(|\\.connection\\.send|getConnection\\(\\)\\.send|ServerboundPacket|Serverbound\\w+Packet"),
-			"cancellation", Pattern.compile("CallbackInfo|\\.cancel\\(|@Inject|@WrapOperation|@Redirect|ALLOW_GAME|ALLOW_CHAT"),
+			// ALLOW_GAME is allowed only in ChatReader, whose listener always lets the message through (below).
+			"cancellation", Pattern.compile("CallbackInfo|\\.cancel\\(|@Inject|@WrapOperation|@Redirect|MODIFY_GAME|MODIFY_CHAT|ALLOW_CHAT"),
 			"disk write", Pattern.compile("Files\\.write|Files\\.newBufferedWriter|Files\\.newOutputStream|FileWriter|FileOutputStream|AtomicFileStore|PrintWriter"));
 
 	@Test
@@ -58,6 +59,43 @@ class ReaderArchitectureTest {
 		assertEquals(List.of(), violations);
 	}
 
+	/**
+	 * REQ-XC-RULES-02: the one ALLOW_GAME listener (T3.0g) is ChatReader's, and it returns what
+	 * MessageDispatch.allow returns, which is always true (MessageDispatchTest).
+	 */
+	@Test
+	void theOnlyAllowGameListenerLetsEverythingThrough() throws IOException {
+		Path project = Path.of(System.getProperty("k8bas.projectDir", "."));
+		List<String> users = new ArrayList<>();
+		for (String tree : List.of("src/main/java", "src/main/kotlin")) {
+			Path dir = project.resolve(tree).resolve("com/k8bas/skyblockutility/skyblock");
+			if (!Files.isDirectory(dir)) {
+				continue;
+			}
+			try (Stream<Path> walk = Files.walk(dir)) {
+				for (Path file : walk.filter(Files::isRegularFile).toList()) {
+					if (withoutComments(Files.readString(file)).contains("ALLOW_GAME")) {
+						users.add(file.getFileName().toString());
+					}
+				}
+			}
+		}
+		assertEquals(List.of("ChatReader.kt"), users);
+		String reader = withoutComments(Files.readString(project.resolve("src/main/kotlin/com/k8bas/skyblockutility/skyblock/ChatReader.kt")));
+		assertTrue(onlyAllowingListener(reader), "exactly one ALLOW_GAME listener, whose result is dispatch.allow(...)");
+		// The check itself catches a second, cancelling registration.
+		assertTrue(!onlyAllowingListener(reader + "\nClientReceiveMessageEvents.ALLOW_GAME.register { _, _ -> false }"));
+	}
+
+	/** One addPhaseOrdering and one register on ALLOW_GAME, and that register returns dispatch.allow(...). */
+	private static boolean onlyAllowingListener(String reader) {
+		int uses = reader.split("ALLOW_GAME", -1).length - 1;
+		int registrations = reader.split("ALLOW_GAME\\.register", -1).length - 1;
+		Matcher listener = Pattern.compile("ALLOW_GAME\\.register\\(EARLY_PHASE, ClientReceiveMessageEvents\\.AllowGame \\{ message, overlay ->"
+				+ "\\s*GameStateReaders\\.CLIENT_THREAD\\.run\\(\\)\\s*dispatch\\.allow\\(message\\.string, overlay\\)\\s*}\\)").matcher(reader);
+		return uses == 2 && registrations == 1 && listener.find();
+	}
+
 	@Test
 	void theScanCatchesEachKindOfViolation() {
 		// One real 26.2 call per pattern, so a pattern that names no existing API fails here.
@@ -68,7 +106,8 @@ class ReaderArchitectureTest {
 				"command or chat send", List.of("connection.sendUnattendedCommand(\"warp mines\", null)",
 						"connection.sendCommand(\"pc hi\")", "connection.sendChat(\"hi\");"),
 				"packet send", List.of("connection.send(packet)", "ServerboundPlayerCommandPacket(player, action)"),
-				"cancellation", List.of("ci.cancel()", "ClientReceiveMessageEvents.ALLOW_GAME.register { _, _ -> false }"),
+				"cancellation", List.of("ci.cancel()", "ClientReceiveMessageEvents.MODIFY_GAME.register { message, _ -> message }",
+						"ClientReceiveMessageEvents.ALLOW_CHAT.register { _, _, _, _, _ -> false }"),
 				"disk write", List.of("Files.writeString(path, text)", "FileOutputStream(file)", "AtomicFileStore.write(path, bytes)"));
 		assertEquals(FORBIDDEN.keySet(), samples.keySet(), "every pattern has samples");
 		samples.forEach((what, calls) -> {

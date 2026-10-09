@@ -28,6 +28,7 @@ object GameStateReaders {
 		ClientTickEvents.END_CLIENT_TICK.register {
 			TabReader.tick()
 			SidebarReader.tick()
+			ChatReader.tick()
 		}
 		// IslandTracker calls its listeners on the client thread.
 		IslandTracker.onChange { clearAll() }
@@ -35,6 +36,8 @@ object GameStateReaders {
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register { _, _ -> clearAll() }
 		// A disconnect may be signalled on the network thread.
 		ClientPlayConnectionEvents.DISCONNECT.register { _, client -> client.execute { clearAll() } }
+		// Chat and action bar (T3.0g): delivered as they arrive; nothing is cached, so nothing to clear.
+		ChatReader.register()
 	}
 
 	private fun clearAll() {

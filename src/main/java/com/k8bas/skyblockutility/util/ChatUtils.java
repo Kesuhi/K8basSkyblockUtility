@@ -13,7 +13,15 @@ import net.minecraft.network.chat.MutableComponent;
 public final class ChatUtils {
 	private static final String PREFIX = "[KSU] ";
 
+	/** True while a line of this mod is being shown; the client thread only. */
+	private static boolean sending;
+
 	private ChatUtils() {
+	}
+
+	/** True while this mod is showing one of its own chat lines, so the game-state readers skip it (REQ-GS-04). */
+	public static boolean isSending() {
+		return sending;
 	}
 
 	/** Must be called from the main/render thread — same requirement as sendSystemMessage itself.
@@ -30,6 +38,12 @@ public final class ChatUtils {
 			return;
 		}
 		MutableComponent text = Component.literal(PREFIX).withStyle(ChatFormatting.GOLD).append(message);
-		client.player.sendSystemMessage(text);
+		// The client shows it through the same message events as a server line.
+		sending = true;
+		try {
+			client.player.sendSystemMessage(text);
+		} finally {
+			sending = false;
+		}
 	}
 }
