@@ -144,7 +144,7 @@ public final class DatabasePickerOverlay extends Overlay {
 			return;
 		}
 		int[] add = addButton(width, height);
-		if (x >= add[0] && x < add[0] + add[2] && y >= add[1] && y < add[1] + add[3]) {
+		if (row.entry().addable() && x >= add[0] && x < add[0] + add[2] && y >= add[1] && y < add[1] + add[3]) {
 			database.add(row.entry());
 			commit.run();
 			refresh();
@@ -195,6 +195,17 @@ public final class DatabasePickerOverlay extends Overlay {
 		}
 		int[] add = addButton(width, height);
 		int addX = x + add[0];
+		String note = row.entry().note();
+		if (note != null) {
+			// Not addable (REQ-NPCDB-08): greyed, with the reason where Add would be.
+			// The note takes what it needs; the name keeps at least 60 px (or its own width, if less).
+			int nameMin = Math.min(font.width(row.label()), 60);
+			int noteWidth = Math.max(0, Math.min(font.width(note), x + width - 12 - nameMin - (indent + 12)));
+			UiText.rightAligned(graphics, font, Ellipsis.fit(note, noteWidth, font::width), x + width - 6, textY, Theme.TEXT_SECONDARY);
+			UiText.draw(graphics, font, Ellipsis.fit(row.label(), x + width - 12 - noteWidth - (indent + 12), font::width), indent + 12, textY,
+					Theme.TEXT_SECONDARY);
+			return;
+		}
 		UiText.draw(graphics, font, Ellipsis.fit(row.label(), addX - 6 - (indent + 12), font::width), indent + 12, textY, Theme.TEXT_PRIMARY);
 		Theme theme = Theme.current();
 		Shapes.roundedRect(graphics, addX, y + add[1], add[2], add[3], Shapes.RADIUS_CONTROL, hovered ? theme.accent() : ColorMath.lerp(Theme.CARD, theme.accent(), 0.6F));

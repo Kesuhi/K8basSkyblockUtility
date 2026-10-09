@@ -177,6 +177,22 @@ class NpcMobTablesTest {
 		assertEquals(Set.of("forge_foreman", "bramass_beastslayer", "gone"), used);
 	}
 
+	@Test
+	void anUnlinkedRuleWithTheSamePatternAndIslandCoversItsEntry() {
+		// EC-NPCDB-02: the user's own Trinity rule (no sourceId) counts as the entry already added.
+		Map<String, kotlin.Pair<String, String>> entries = Map.of(
+				"trinity", new kotlin.Pair<>("Trinity", "Catacombs"),
+				"tomioka", new kotlin.Pair<>("Tomioka", "Catacombs"),
+				"golden_jerry", new kotlin.Pair<>("Golden Jerry", null));
+		List<kotlin.Pair<String, String>> rules = List.of(
+				new kotlin.Pair<>("Trinity", "Catacombs"),
+				new kotlin.Pair<>("Tomioka", "Hub"),
+				new kotlin.Pair<>("Golden Jerry", null),
+				new kotlin.Pair<>("", "Catacombs"));
+		assertEquals(Set.of("trinity", "golden_jerry"), TableRows.coveredByPattern(rules, entries),
+				"the same pattern on another island is another rule; a blank pattern covers nothing");
+	}
+
 	private static void assertPosition(NpcDatabaseEntry npc, int x, int y, int z) {
 		assertEquals(List.of((double) x, (double) y, (double) z), List.of(npc.x, npc.y, npc.z), npc.id);
 	}

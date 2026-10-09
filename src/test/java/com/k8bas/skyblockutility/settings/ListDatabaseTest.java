@@ -39,4 +39,18 @@ class ListDatabaseTest {
 		database.add(entries.get(1));
 		assertEquals(1, added.size(), "an entry that already backs a rule adds nothing (a second click before the list refreshed)");
 	}
+
+	/** T3.8c, REQ-NPCDB-08: an entry with a note (invisible by design) is listed but never added. */
+	@Test
+	void anEntryWithANoteIsNeverAdded() {
+		List<Mob> added = new ArrayList<>();
+		ListDatabase<Mob> database = new ListDatabase<>("Mob Database", () -> RuleDatabase.State.READY,
+				() -> List.of(new Mob("ghost", "Ghost", "Dwarven Mines")),
+				mob -> new RuleDatabase.Entry(mob.id(), mob.name(), mob.island(), null, mob.name(), RuleDatabase.NEVER_HIGHLIGHTED), Set::of, added::add);
+		RuleDatabase.Entry ghost = database.entries().get(0);
+		assertEquals("never highlighted (Hypixel rules)", ghost.note());
+		assertTrue(!ghost.addable());
+		database.add(ghost);
+		assertEquals(List.of(), added);
+	}
 }

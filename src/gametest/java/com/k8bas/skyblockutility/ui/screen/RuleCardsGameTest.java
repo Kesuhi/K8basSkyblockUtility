@@ -7,7 +7,9 @@ import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.config.migration.ConfigMigrations;
 import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.highlight.NameMatchMode;
+import com.k8bas.skyblockutility.module.mobhighlighter.MobDatabase;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobRulesForTests;
+import com.k8bas.skyblockutility.module.npcsearch.NpcDatabase;
 import com.k8bas.skyblockutility.module.npcsearch.NpcRule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcRulesForTests;
 import com.k8bas.skyblockutility.ui.option.Category;
@@ -114,11 +116,15 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 			context.waitTicks(2);
 			String prefix = category == Category.HIGHLIGHTS ? "mob_highlighter.rule." : "npc_search.rule.";
 			for (HighlightRule rule : category == Category.HIGHLIGHTS ? mobs : List.<HighlightRule>of()) {
-				expectCard(context, prefix + rule.id, rule.label, rule.island, rule.namePattern, rule.color, rule.sourceId != null);
+				// A rule from the list shows the slim card while its entry is still listed; the fixture's "special_zealot"
+				// is not in the bundled mob list, so that rule shows as a custom rule (EC-NPCDB-01, T3.8c).
+				boolean listed = rule.sourceId != null && context.computeOnClient(client -> MobDatabase.byId(rule.sourceId) != null);
+				expectCard(context, prefix + rule.id, rule.label, rule.island, rule.namePattern, rule.color, listed);
 				checked++;
 			}
 			for (NpcRule rule : category == Category.WAYPOINTS ? npcs : List.<NpcRule>of()) {
-				expectCard(context, prefix + rule.id, rule.label, rule.island, rule.fixed ? null : rule.namePattern, null, rule.sourceId != null);
+				boolean listed = rule.sourceId != null && context.computeOnClient(client -> NpcDatabase.byId(rule.sourceId) != null);
+				expectCard(context, prefix + rule.id, rule.label, rule.island, rule.fixed ? null : rule.namePattern, null, listed);
 				if (rule.fixed) {
 					String position = context.computeOnClient(client -> ((com.k8bas.skyblockutility.ui.option.InfoOption) option(screen(client),
 							prefix + rule.id + ".position")).value().get());

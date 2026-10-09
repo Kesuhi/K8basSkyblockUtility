@@ -31,6 +31,17 @@ internal object TableRows {
 		java.util.Set.copyOf(sourceIds.filterNotNull().map { resolve(it) ?: it })
 
 	/**
+	 * The entries a rule already covers by its name pattern and island, though it is not linked to them (EC-NPCDB-02,
+	 * e.g. Trinity, Tomioka and Duncan rules made by hand): the picker counts them as added. [rules] and [entries]
+	 * are (pattern, island) pairs, the island as the rule has it (null: every island); [entries] by id.
+	 */
+	@JvmStatic
+	fun coveredByPattern(rules: Iterable<Pair<String?, String?>>, entries: Map<String, Pair<String?, String?>>): Set<String> {
+		val covered = rules.filter { !it.first.isNullOrBlank() }.toSet()
+		return java.util.Set.copyOf(entries.filter { (_, entry) -> entry.first != null && covered.contains(entry) }.keys)
+	}
+
+	/**
 	 * Entries by id and by alias (REQ-NPCDB-07(d)): a merged or renamed entry keeps its old id as an alias, so rules
 	 * linked to it still find it. An id always wins over an alias; an alias used twice or equal to an id is ignored
 	 * with one warning.

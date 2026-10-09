@@ -16,6 +16,13 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   from them keep working on every island.
 - The NPC list is built from NotEnoughUpdates-REPO (MIT); `THIRD_PARTY_NOTICES.md` and the jar's
   `META-INF/licenses/` now carry its notice and licence.
+- Ghost, Fels, Sneaky Creeper and Invisibug are shown greyed in the mob picker with "never highlighted
+  (Hypixel rules)" and can no longer be added: the mod never outlines invisible mobs, so a rule for
+  them would do nothing.
+- The pickers treat an entry as already added when one of your own rules has the same name pattern
+  and island (for example a Trinity rule you made yourself), and no longer offer it again.
+- A rule whose list entry no longer exists shows all its fields again, like a rule you made yourself;
+  it keeps working with the values it has.
 
 ### Fixed
 

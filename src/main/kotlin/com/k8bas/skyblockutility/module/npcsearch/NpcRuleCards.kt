@@ -13,6 +13,7 @@ import java.util.Collections
 import java.util.IdentityHashMap
 import java.util.function.Consumer
 import java.util.function.Function
+import java.util.function.Predicate
 import java.util.function.IntSupplier
 import java.util.function.Supplier
 
@@ -27,12 +28,14 @@ import java.util.function.Supplier
  * @param problem  why a moving NPC's rule does nothing, or null (a fixed one always works)
  * @param position a fixed NPC's position as shown, e.g. "12, 70, -34"
  * @param changed  stores the section and rebuilds the outlines and waypoints after an edit
+ * @param known    whether a rule's sourceId is still in the database; one that is not shows as a custom rule (EC-NPCDB-01)
  */
-class NpcRuleCards(
+class NpcRuleCards @JvmOverloads constructor(
 	private val config: NpcSearchConfig,
 	private val problem: Function<NpcRule, String?>,
 	private val position: Function<NpcRule, String>,
 	private val changed: Runnable,
+	private val known: Predicate<String> = Predicate { true },
 ) {
 	private val groups = IdentityHashMap<NpcRule, RuleGroup>()
 
@@ -54,7 +57,7 @@ class NpcRuleCards(
 		val memo = ProblemMemo(rule)
 		// A rule from the database: its label, island, name match and pattern are the database's (R31). One that
 		// already does nothing (edited before 1.2.0, e.g. an invalid pattern) keeps its full card, so it can be fixed.
-		val fromDatabase = rule.sourceId != null && memo.get() == null
+		val fromDatabase = rule.sourceId?.let { known.test(it) } == true && memo.get() == null
 		val fields = ArrayList<Option>()
 		fields.add(
 			Toggle.of(

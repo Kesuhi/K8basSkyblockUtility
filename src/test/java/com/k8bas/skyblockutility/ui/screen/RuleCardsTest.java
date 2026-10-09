@@ -151,6 +151,26 @@ class RuleCardsTest {
 		assertEquals(List.of("enabled", "label", "type", "island", "mode", "pattern", "colour"), suffixes(mobCards.groups().get(1)));
 	}
 
+	/** EC-NPCDB-01 (T3.8c): a rule whose database entry is gone keeps its values and shows as a custom rule. */
+	@Test
+	void aRuleWhoseEntryIsGoneShowsAsACustomRule() {
+		MobRuleCards cards = new MobRuleCards(mobs, RuleCardsTest::problem, () -> changes++, id -> !id.equals("removed"));
+		HighlightRule gone = mob("mob-1", "Old Mob", "Old Mob");
+		gone.sourceId = "removed";
+		HighlightRule kept = mob("mob-2", "Zealot", "Zealot");
+		kept.sourceId = "zealot";
+		mobs.rules.add(gone);
+		mobs.rules.add(kept);
+		assertEquals(List.of("enabled", "label", "type", "island", "mode", "pattern", "colour"), suffixes(cards.groups().get(0)));
+		assertEquals(List.of("enabled", "type", "colour"), suffixes(cards.groups().get(1)));
+
+		NpcRuleCards npcCards = new NpcRuleCards(npcs, rule -> null, rule -> "12, 70, -34", () -> changes++, id -> !id.equals("removed"));
+		NpcRule npc = npc("npc-1", "Old NPC", false);
+		npc.sourceId = "removed";
+		npcs.rules.add(npc);
+		assertTrue(suffixes(npcCards.groups().get(0)).contains("label"), "the NPC rule's full card: " + suffixes(npcCards.groups().get(0)));
+	}
+
 	/** R31: every rule has a destructive Remove in its header; it deletes the rule at once. */
 	@Test
 	void everyRuleHasARemoveButton() {

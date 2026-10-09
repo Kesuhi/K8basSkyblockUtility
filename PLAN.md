@@ -885,9 +885,27 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - an untested alias path (split);
       - an exact-group check (split);
       - the overlap decision recorded (split).
-- [ ] **T3.8c feat(ui): invisible-by-design mobs greyed in the picker** (S, deps T3.8b, T2.5c). Flagged mobs stay listed, greyed and not addable, labelled "never highlighted (Hypixel rules)" (R5). The picker marks an entry as already added when a rule's pattern and island match it (EC-NPCDB-02). A rule whose sourceId is gone shows as a custom rule (EC-NPCDB-01).
+- [x] **T3.8c feat(ui): invisible-by-design mobs greyed in the picker** (S, deps T3.8b, T2.5c). Flagged mobs stay listed, greyed and not addable, labelled "never highlighted (Hypixel rules)" (R5). The picker marks an entry as already added when a rule's pattern and island match it (EC-NPCDB-02). A rule whose sourceId is gone shows as a custom rule (EC-NPCDB-01).
   - Req: REQ-NPCDB-08, REQ-NPCDB-09, REQ-UI-11, REQ-XC-RULES-04
   - Accept: AC-NPCDB-07 ([C] for Ghost, Fels, Sneaky Creeper and Invisibug).
+  - Done (2026-10-09):
+    - **Invisible mobs (REQ-NPCDB-08):**
+      - `RuleDatabase.Entry` gains an optional `note`; an entry with one is not `addable()`.
+      - The mob module gives flagged mobs `NEVER_HIGHLIGHTED` ("never highlighted (Hypixel rules)").
+      - `DatabasePickerOverlay` draws such a row greyed, with the note in full where Add would be (the name keeps at least 60 px), and a click there adds nothing.
+      - `ListDatabase.add` refuses them as well.
+      - An entry whose mob already has a rule is hidden like every used entry (REQ-UI-11).
+    - **EC-NPCDB-02:** `TableRows.coveredByPattern` counts an entry as added when a rule has its name pattern and island; for mobs in an ungated group the island is none, and for NPCs only moving entries count (fixed ones have no pattern).
+    - **EC-NPCDB-01:** `MobRuleCards`/`NpcRuleCards` take a `known` predicate. Once the list has loaded, a rule whose sourceId is gone gets its full card and keeps its values. The 1.0.1 fixture's "Special Zealot" rule is such a case.
+    - **CHANGELOG:** [Unreleased] has the three changes.
+    - **Tests:**
+      - ListDatabaseTest: a noted entry is never added.
+      - NpcMobTablesTest: pattern and island coverage.
+      - RuleCardsTest: a gone source gives the full card, a listed one the slim card.
+      - RuleCardsGameTest: expects the slim card only for listed sources.
+      - BundledListsGameTest: Ghost, Fels, Sneaky Creeper and Invisibug are searched in the real picker, listed with the note, and a click where Add would be adds nothing (AC-NPCDB-07 [C]). Hand-made Sea Walker (ungated) and Trinity rules hide their entries while Tomioka stays. In the real settings screen, a rule linked to a gone id shows the full card and one linked to Zealot the slim card.
+    - **Review:** two angles with two verifiers each. The one confirmed finding, that the modules' wiring was untested, is fixed by the gametest steps above.
+    - **Known flake:** MarkerToolkitGameTest's "far entity label" check failed once in a full run (a label width of 0 with terrain changing) and passed alone twice and in the next full runs. It is unrelated to this task; watch for a repeat.
 
 - [ ] **T3.1 fix(highlight): verify Trinity/Tomioka/Duncan glow [brief 3.1]** (S, deps T1.9, T1.10, T1.11, T1.18). The name-line resolver skips action labels ("CLICK" etc.), empty lines and hidden-name lines, then takes the nearest remaining line. The three NPCs glow inside runs through their own NPC Search rules (R1).
   - Req: REQ-GLOW-09, REQ-GLOW-12, REQ-GLOW-13

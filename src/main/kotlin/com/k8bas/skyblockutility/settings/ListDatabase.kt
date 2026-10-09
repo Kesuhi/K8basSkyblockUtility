@@ -47,8 +47,9 @@ class ListDatabase<T : Any>(
 	override fun used(): Set<String> = used.get()
 
 	override fun add(entry: RuleDatabase.Entry) {
-		// A second click that came before the picker refreshed: the entry already backs a rule.
-		if (used.get().contains(entry.id())) {
+		// A second click that came before the picker refreshed: the entry already backs a rule. An entry with a
+		// note (invisible by design) is never added (REQ-NPCDB-08).
+		if (!entry.addable() || used.get().contains(entry.id())) {
 			return
 		}
 		entries()

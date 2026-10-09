@@ -39,8 +39,9 @@ import java.util.stream.Stream;
 /**
  * The bundled NPC and mob lists in the dev client (T3.8, AC-NPCDB-02 [B], AC-NPCDB-03 [B], AC-DATA-05 [B],
  * EC-UI-08). With no network and no rules, each picker lists exactly its table's row count from the data
- * index, in island folders, and nothing asks a gist or leaves a cache in the config folder. A registry without
- * the mob table makes only the mob picker unavailable; the NPC picker still lists its entries.
+ * index, in island folders, and nothing asks a gist or leaves a cache in the config folder. The invisible-by-design
+ * mobs are listed greyed with their note and cannot be added (AC-NPCDB-07 [C]). A registry without the mob table
+ * makes only the mob picker unavailable; the NPC picker still lists its entries.
  */
 public class BundledListsGameTest implements FabricClientGameTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas-gametest");
@@ -72,6 +73,12 @@ public class BundledListsGameTest implements FabricClientGameTest {
 			context.getInput().setCursorPos(2, 2);
 			checkPickerLists(context, Category.HIGHLIGHTS, MOB_PICKER, mobRows);
 			checkPickerLists(context, Category.WAYPOINTS, NPC_PICKER, npcRows);
+
+			// AC-NPCDB-07 [C]: each invisible-by-design mob is found, greyed with its note, and Add does nothing.
+			for (String name : List.of("Ghost", "Fels", "Sneaky Creeper", "Invisibug")) {
+				neverAddable(context, name);
+			}
+			moduleWiring(context);
 
 			// AC-NPCDB-02, AC-NPCDB-03: both lists came from the bundled tables, and none of the gist fetch's log lines
 			// ("<list> database fetch ...", "Loaded <n> <list> database entries") nor a gist host appears.
@@ -123,6 +130,120 @@ public class BundledListsGameTest implements FabricClientGameTest {
 			context.restoreDefaultGameOptions();
 			context.getInput().resizeWindow(854, 480);
 		}
+	}
+
+	/**
+	 * The modules' own wiring (T3.8c): a hand-made rule with an entry's pattern and island hides that entry
+	 * (EC-NPCDB-02), for an ungated mob group (no island) and a moving NPC; a rule whose entry is gone shows its full
+	 * card while one linked to a listed entry keeps the slim card (EC-NPCDB-01).
+	 */
+	private static void moduleWiring(ClientGameTestContext context) {
+		context.runOnClient(client -> {
+			HighlightRule seaWalker = new HighlightRule();
+			seaWalker.id = "own-sea-walker";
+			seaWalker.label = "My sea walkers";
+			seaWalker.namePattern = "Sea Walker";
+			seaWalker.island = null;
+			HighlightRule gone = new HighlightRule();
+			gone.id = "gone";
+			gone.label = "Old Mob";
+			gone.namePattern = "Old Mob";
+			gone.island = "Hub";
+			gone.sourceId = "no_such_mob";
+			HighlightRule zealot = new HighlightRule();
+			zealot.id = "linked";
+			zealot.label = "Zealot";
+			zealot.namePattern = "Zealot";
+			zealot.island = "The End";
+			zealot.sourceId = "zealot";
+			MobRulesForTests.use(List.of(seaWalker, gone, zealot));
+			NpcRule trinity = new NpcRule();
+			trinity.id = "own-trinity";
+			trinity.label = "Trinity";
+			trinity.namePattern = "Trinity";
+			trinity.island = "Catacombs";
+			trinity.fixed = false;
+			NpcRulesForTests.use(List.of(trinity));
+		});
+		check(!found(context, Category.HIGHLIGHTS, MOB_PICKER, "Sea Walker"), "a hand-made Sea Walker rule hides the entry");
+		check(!found(context, Category.WAYPOINTS, NPC_PICKER, "Trinity"), "a hand-made Trinity rule hides the entry");
+		check(found(context, Category.WAYPOINTS, NPC_PICKER, "Tomioka"), "an entry no rule covers stays");
+		// Fresh cards for the new rule objects.
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(2);
+		List<String> goneFields = cardFields(context, "mob_highlighter.rule.gone");
+		List<String> linkedFields = cardFields(context, "mob_highlighter.rule.linked");
+		check(goneFields.contains("label") && goneFields.contains("pattern"), "a rule whose entry is gone shows its full card: " + goneFields);
+		check(!linkedFields.contains("label"), "a rule linked to a listed entry keeps the slim card: " + linkedFields);
+		context.runOnClient(client -> {
+			MobRulesForTests.use(List.of());
+			NpcRulesForTests.use(List.of());
+		});
+	}
+
+	/** Whether a search for {@code name} in the picker lists an entry of that name. */
+	private static boolean found(ClientGameTestContext context, Category category, String picker, String name) {
+		openPicker(context, category, picker);
+		click(context, context.computeOnClient(client -> centreOf(picker(client).searchField())));
+		context.getInput().typeChars(name);
+		context.waitTicks(2);
+		boolean listed = context.computeOnClient(client -> picker(client).rows().stream().anyMatch(row -> row.entry() != null && name.equals(row.label())));
+		closePicker(context);
+		return listed;
+	}
+
+	/** The field names of a rule's card, e.g. "enabled", "label". */
+	private static List<String> cardFields(ClientGameTestContext context, String groupId) {
+		return context.computeOnClient(client -> screen(client).page().page().rows().stream()
+				.filter(row -> row instanceof ConfigLayout.RuleHeader header && header.rule().id().equals(groupId))
+				.map(row -> ((ConfigLayout.RuleHeader) row).rule()).findFirst()
+				.orElseThrow(() -> new AssertionError("FAILED: no card " + groupId))
+				.fields().stream().map(option -> option.id().substring(groupId.length() + 1)).toList());
+	}
+
+	/** Searches the mob picker for {@code name}: the entry is listed with the note, and a click where Add would be adds nothing. */
+	private static void neverAddable(ClientGameTestContext context, String name) {
+		openPicker(context, Category.HIGHLIGHTS, MOB_PICKER);
+		int[] field = context.computeOnClient(client -> centreOf(picker(client).searchField()));
+		click(context, field);
+		context.getInput().typeChars(name);
+		context.waitTicks(2);
+		PickerRows.Row row = context.computeOnClient(client -> picker(client).rows().stream()
+				.filter(r -> r.entry() != null && name.equals(r.label())).findFirst().orElse(null));
+		check(row != null && RuleDatabase.NEVER_HIGHLIGHTED.equals(row.entry().note()), name + " is listed with its note: " + row);
+		if (name.equals("Ghost")) {
+			context.takeScreenshot("t3.8c-picker-never-highlighted");
+		}
+		int rules = context.computeOnClient(client -> MobRulesForTests.rules().size());
+		click(context, addArea(context, name));
+		check(context.computeOnClient(client -> MobRulesForTests.rules().size()) == rules, name + " cannot be added");
+		closePicker(context);
+	}
+
+	/** Where an entry's Add button would be, in GUI pixels. */
+	private static int[] addArea(ClientGameTestContext context, String name) {
+		return context.computeOnClient(client -> {
+			DatabasePickerOverlay picker = picker(client);
+			List<PickerRows.Row> rows = picker.rows();
+			for (int i = 0; i < rows.size(); i++) {
+				if (rows.get(i).entry() != null && name.equals(rows.get(i).label())) {
+					Widget list = picker.list();
+					int[] add = DatabasePickerOverlay.addButton(list.width() - (picker.list().rows().overflows() ? 6 : 0), DatabasePickerOverlay.ROW_HEIGHT);
+					return new int[] {list.x() + add[0] + add[2] / 2, list.y() + picker.list().rows().rowTop(i) + add[1] + add[3] / 2};
+				}
+			}
+			throw new AssertionError("FAILED: no row " + name);
+		});
+	}
+
+	private static void click(ClientGameTestContext context, int[] gui) {
+		int[] window = context.computeOnClient(client -> window(gui[0], gui[1]));
+		context.getInput().setCursorPos(window[0], window[1]);
+		context.waitTicks(2);
+		context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
 	}
 
 	/** The picker's island folders together hold exactly {@code rows} entries. */
