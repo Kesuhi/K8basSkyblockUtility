@@ -1114,13 +1114,37 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - **Tests:** OddsMathTest (7), every AC-ODDS-05 and AC-ODDS-07 fixture plus the boundaries.
     - **For T3.9b:** the Scatha "chance by now" at 0 kills is a computed 0. The panel must show it as such and not pass 0 to `oneIn`.
     - **Review:** two angles with two verifiers each. Fixed (confirmed): whole-number percentages lost their second digit ("1%"), and exactly 0.0001 % showed as below the minimum (both from rounding the binary double). Also taken: p ≥ 1 as 100 %, and the meter cap test.
-- [ ] **T3.9g feat(odds): bundled drop tables (two MIT, one CC0)** (M, deps T3.0c, T3.0i, T3.0j). Three registry tables, each with a schema and an index entry:
+- [x] **T3.9g feat(odds): bundled drop tables (two MIT, one CC0)** (M, deps T3.0c, T3.0i, T3.0j). Three registry tables, each with a schema and an index entry:
   - MIT: the dungeon and slayer sections of NEU `constants/rngscore.json` (D-5), with notice files and a THIRD_PARTY_NOTICES entry
   - MIT: SkyOcean's `src/repo/vanguard.jsonc` weights (R6), with notice files and a THIRD_PARTY_NOTICES entry. Its assumed dye weight is replaced by a Frostbitten Dye row with its own `sourceRefs`/`license`, from a page you supply (REQ-ODDS-10)
   - CC0 `odds.supplied` under `data/` (not `thirdparty/`): the Scatha pet chances and the Lapis/Umber/Tungsten per-roll chances. Each row cites a source with `kind: wiki_crosscheck`, `access: user_supplied` (D-16 (a), D-28 (i)) and is `verified: false` unless a non-wiki origin agrees (REQ-ODDS-10). Rows are added only once you supply the pages; until then the table has no row for those items, so they show no number (REQ-ODDS-11). T3.9b and T3.9e add their rows; they create no table.
   - Req: REQ-ODDS-09, REQ-ODDS-10, REQ-XC-LICENSE-03
   - Each row holds the case id, SkyBlock id and display name; a weight plus the table total, or a base chance; roll min/max; `sourceRefs`, `license`, `verified` and `gameVersion`. Placeholder scores are flagged.
   - Accept: AC-ODDS-08 (all three tables; a wiki-only row with `verified: true` and no second non-wiki origin also fails): `check` rejects a row without `sourceRefs` or `license`, any per-corpse % field, SkyOcean's assumed dye weight, and an MIT table without a notice.
+  - Done (2026-10-09):
+    - **`odds.rngscore`** (`thirdparty/neu-repo/odds/rngscore.json`, MIT): NEU `constants/rngscore.json` at c4f7d475… (D-5), 390 rows "<catacombs|slayer>:<floor or boss>:<item>" with the dungeon score or slayer XP, and the display names from NEU `items/*.json`.
+      - All 8 `DYE_*` rows are flagged `placeholder`: round scores set without a source (REQ-ODDS-17).
+      - `WISP_POTION` (Inferno Demonlord) is left out: NEU has no item for it at that revision, so it has no name to match. It shows no number (REQ-ODDS-11).
+    - **`odds.vanguard`** (`thirdparty/skyocean/odds/vanguard.json`, MIT): SkyOcean `src/repo/vanguard.jsonc` at 762ec36e (also unchanged in meowdding-repo), 25 weights totalling 3,515. SkyOcean's "Assumed odds" dye weight (1) is not used (R6). The weights are `verified: true`, since SkyOcean is a non-wiki origin.
+    - **`odds.supplied`** (`odds/supplied.json`, CC0): empty. Rows come with the pages you supply (D-16 (a)): the Scatha pet chances, the Lapis/Umber/Tungsten per-roll chances, and the Frostbitten Dye per-roll chance (case `vanguard`, replacing SkyOcean's assumed weight).
+    - **Not shipped yet, pending pages from you:** the Vanguard roll counts (5–8, SPEC case 3) are not in either MIT file, so `odds.vanguard` has no `rolls`. Until the page comes, T3.9d shows per-roll values only and no per-corpse value (REQ-ODDS-11); AC-ODDS-06 and AC-ODDS-15 wait for it.
+    - **Licences:** `licenses/skyocean.txt` holds SkyOcean's licence (`src/repo/**` is MIT) and meowdding-repo's MIT text. THIRD_PARTY_NOTICES gets a SkyOcean section, and the NEU section names both tables and the display names in `vanguard.json`.
+    - **Validator** (`rowSources`):
+      - every `sourceRefs` entry names a source of the table;
+      - a `verified: true` row needs a non-wiki origin (git, api, a url or a revision; a page a person supplied or a title-only record is none);
+      - in odds tables: no percentage field anywhere, no SkyOcean dye row, and roll min at most max.
+      The odds schemas close their rows and their root.
+    - **Tests:**
+      - DataOddsRulesTest (9): each rule on a synthetic table.
+      - ShippedOddsTablesTest: AC-ODDS-08 on copies of the real tables and schemas. They pass as shipped; no sourceRefs, no licence, a per-corpse %, SkyOcean's dye and a missing notice each fail.
+      - OddsTablesTest: the shipped data matches SPEC's fixtures (3,515, Caged Wisp 10, Shattered Locket 5, Warden Heart 3,674,250).
+    - **Review:** two angles with two verifiers each. Fixed (confirmed):
+      - a name made up for WISP_POTION;
+      - the dye row's home was not written down;
+      - a verified row resting on a pasted page, or on a title-only record, passed;
+      - a percentage map at the table root passed;
+      - AC-ODDS-08 was not tested on the real schemas.
+      Also taken: the NEU notice names `vanguard.json`, and an upside-down roll range fails.
 - [ ] **T3.9h feat(odds): Rare Drop Odds module** (M, deps T3.9a, T3.9g, T3.0a, T3.0g, T3.0d, T3.0m, T1.9, T2.4a). The "Rare Drop Odds" card in Odds & Trackers: master toggle OFF; five case toggles ON; chat-line toggle ON; rare threshold 2 % (range 0.01–10 %). "Gambling" appears only as a hidden search keyword.
   - Req: REQ-ODDS-01, REQ-ODDS-02, REQ-ODDS-03, REQ-ODDS-04, REQ-ODDS-07, REQ-ODDS-11, REQ-ODDS-12
   - Inputs are read-only, through game-state, and each event gets at most one local line. An unknown item or floor shows no number and is logged once. A missing table disables only its own case and shows a card notice.
@@ -1143,7 +1167,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Req: REQ-ODDS-17, REQ-ODDS-18, REQ-ODDS-19
   - The floor comes from the title or the dungeon context; if neither gives it, no lines are shown. Lines are recomputed when the contents change (reroll). Placeholders are excluded, and the lines appear only in the Dungeon Hub or a dungeon. The chest titles are registered with the menu reader and the capture allowlist.
   - Accept: AC-ODDS-13 (a provisional UNVERIFIED chest fixture until a capture replaces it), AC-ODDS-14. The Croesus check is at G3.
-- [ ] **T3.9d feat(odds): Frozen Corpse odds panel + loot parser, Vanguard** (M, deps T3.9h, T3.0m, T3.0g, T2.8). A mineshaft HUD panel per corpse type in the Frozen Corpses state (REQ-GS-17). It shows the N rarest items (default 3, range 1–10) with per-roll and per-corpse chance, plus the corpses looted this session. Falls back to "(widget off)" and never reads entities.
+- [ ] **T3.9d feat(odds): Frozen Corpse odds panel + loot parser, Vanguard** *(T3.9g: the Frostbitten Dye row is an `odds.supplied` row with case `vanguard`; the Vanguard roll counts come with your page, so until then only per-roll values show)* (M, deps T3.9h, T3.0m, T3.0g, T2.8). A mineshaft HUD panel per corpse type in the Frozen Corpses state (REQ-GS-17). It shows the N rarest items (default 3, range 1–10) with per-roll and per-corpse chance, plus the corpses looted this session. Falls back to "(widget off)" and never reads entities.
   - Req: REQ-ODDS-05, REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22
   - A parser for "<TYPE> CORPSE LOOT!" blocks ignores lines other mods insert and drops a block that is cut off for 2 s. It posts one line for the items at or below the threshold.
   - The Frostbitten Dye per-roll chance is the Vanguard table's supplied row (T3.9g), with `verified: false`. Per-corpse values carry the "no extra-roll perk" note.

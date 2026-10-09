@@ -1,0 +1,5488 @@
+{
+  "table": "odds.rngscore",
+  "schemaVersion": 1,
+  "dataVersion": 1,
+  "gameVersion": "0.27.1",
+  "generatedAt": "2026-10-09T19:59:30Z",
+  "license": "MIT",
+  "sources": {
+    "neu": {
+      "title": "NEU-REPO constants/rngscore.json (meter scores) and items/*.json (display names)",
+      "url": "https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO",
+      "revision": "c4f7d4757641f3a11c74d3d77cec76c100abaf98",
+      "license": "MIT",
+      "notice": "neu-repo",
+      "access": "git"
+    }
+  },
+  "rows": [
+    {
+      "id": "catacombs:F1:BONZO_STAFF",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "BONZO_STAFF",
+      "displayName": "Bonzo's Staff",
+      "score": 31800,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:ULTIMATE_JERRY;1",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "ULTIMATE_JERRY;1",
+      "displayName": "Ultimate Jerry I",
+      "score": 31800,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 15900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:ULTIMATE_BANK;1",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "ULTIMATE_BANK;1",
+      "displayName": "Bank I",
+      "score": 15900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 10599,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:BONZO_MASK",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "BONZO_MASK",
+      "displayName": "Bonzo's Mask",
+      "score": 10599,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:RED_NOSE",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "RED_NOSE",
+      "displayName": "Red Nose",
+      "score": 10599,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:BALLOON_SNAKE",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "BALLOON_SNAKE",
+      "displayName": "Balloon Snake",
+      "score": 7950,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 6360,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:INFINITE_QUIVER;6",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "INFINITE_QUIVER;6",
+      "displayName": "Infinite Quiver VI",
+      "score": 3975,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:FEATHER_FALLING;6",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "FEATHER_FALLING;6",
+      "displayName": "Feather Falling VI",
+      "score": 3975,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:NECROMANCER_BROOCH",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "NECROMANCER_BROOCH",
+      "displayName": "Necromancer's Brooch",
+      "score": 3180,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:ULTIMATE_COMBO;1",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "ULTIMATE_COMBO;1",
+      "displayName": "Combo I",
+      "score": 2120,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "displayName": "No Pain No Gain I",
+      "score": 2120,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F1:REJUVENATE;1",
+      "case": "catacombs",
+      "group": "F1",
+      "item": "REJUVENATE;1",
+      "displayName": "Rejuvenate I",
+      "score": 1272,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:RED_SCARF",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "RED_SCARF",
+      "displayName": "Red Scarf",
+      "score": 18900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 9450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:STONE_BLADE",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "STONE_BLADE",
+      "displayName": "Adaptive Blade",
+      "score": 9450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:ULTIMATE_BANK;1",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "ULTIMATE_BANK;1",
+      "displayName": "Bank I",
+      "score": 9450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:ADAPTIVE_BELT",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "ADAPTIVE_BELT",
+      "displayName": "Adaptive Belt",
+      "score": 6300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 6300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:SCARF_STUDIES",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "SCARF_STUDIES",
+      "displayName": "Scarf's Studies",
+      "score": 4725,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 3780,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:ULTIMATE_COMBO;1",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "ULTIMATE_COMBO;1",
+      "displayName": "Combo I",
+      "score": 3780,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "displayName": "No Pain No Gain I",
+      "score": 3780,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:NECROMANCER_BROOCH",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "NECROMANCER_BROOCH",
+      "displayName": "Necromancer's Brooch",
+      "score": 3780,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:ULTIMATE_WISE;1",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "ULTIMATE_WISE;1",
+      "displayName": "Ultimate Wise I",
+      "score": 1890,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F2:REJUVENATE;1",
+      "case": "catacombs",
+      "group": "F2",
+      "item": "REJUVENATE;1",
+      "displayName": "Rejuvenate I",
+      "score": 1260,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ADAPTIVE_CHESTPLATE",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ADAPTIVE_CHESTPLATE",
+      "displayName": "Adaptive Chestplate",
+      "score": 26100,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ADAPTIVE_LEGGINGS",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ADAPTIVE_LEGGINGS",
+      "displayName": "Adaptive Leggings",
+      "score": 26100,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ULTIMATE_JERRY;2",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ULTIMATE_JERRY;2",
+      "displayName": "Ultimate Jerry II",
+      "score": 26100,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ADAPTIVE_HELMET",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ADAPTIVE_HELMET",
+      "displayName": "Adaptive Helmet",
+      "score": 13050,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ADAPTIVE_BOOTS",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ADAPTIVE_BOOTS",
+      "displayName": "Adaptive Boots",
+      "score": 13050,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 8700,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 6525,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:NECROMANCER_BROOCH",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "NECROMANCER_BROOCH",
+      "displayName": "Necromancer's Brooch",
+      "score": 6525,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 5220,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:SUSPICIOUS_VIAL",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "SUSPICIOUS_VIAL",
+      "displayName": "Suspicious Vial",
+      "score": 5220,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ULTIMATE_COMBO;1",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ULTIMATE_COMBO;1",
+      "displayName": "Combo I",
+      "score": 5220,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "displayName": "No Pain No Gain I",
+      "score": 5220,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ULTIMATE_WISE;1",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ULTIMATE_WISE;1",
+      "displayName": "Ultimate Wise I",
+      "score": 3262,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ULTIMATE_BANK;2",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ULTIMATE_BANK;2",
+      "displayName": "Bank II",
+      "score": 3262,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ULTIMATE_WISDOM;1",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ULTIMATE_WISDOM;1",
+      "displayName": "Wisdom I",
+      "score": 3262,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:ULTIMATE_LAST_STAND;1",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "ULTIMATE_LAST_STAND;1",
+      "displayName": "Last Stand I",
+      "score": 2175,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F3:REJUVENATE;2",
+      "case": "catacombs",
+      "group": "F3",
+      "item": "REJUVENATE;2",
+      "displayName": "Rejuvenate II",
+      "score": 2175,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:SPIRIT_SWORD",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "SPIRIT_SWORD",
+      "displayName": "Spirit Sword",
+      "score": 24899,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ITEM_SPIRIT_BOW",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ITEM_SPIRIT_BOW",
+      "displayName": "Spirit Shortbow",
+      "score": 24899,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:THORNS_BOOTS",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "THORNS_BOOTS",
+      "displayName": "Spirit Boots",
+      "score": 24899,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:SPIRIT;4",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "SPIRIT;4",
+      "displayName": "Spirit",
+      "score": 24899,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ULTIMATE_JERRY;2",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ULTIMATE_JERRY;2",
+      "displayName": "Ultimate Jerry II",
+      "score": 24899,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:SPIRIT_WING",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "SPIRIT_WING",
+      "displayName": "Spirit Wing",
+      "score": 12449,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:SPIRIT_BONE",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "SPIRIT_BONE",
+      "displayName": "Spirit Bone",
+      "score": 12449,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:SPIRIT_DECOY",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "SPIRIT_DECOY",
+      "displayName": "Spirit Stone",
+      "score": 12449,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ULTIMATE_REND;2",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ULTIMATE_REND;2",
+      "displayName": "Rend II",
+      "score": 12449,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 8300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 8300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 4979,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ULTIMATE_COMBO;1",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ULTIMATE_COMBO;1",
+      "displayName": "Combo I",
+      "score": 4979,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "displayName": "No Pain No Gain I",
+      "score": 4979,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ULTIMATE_WISE;1",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ULTIMATE_WISE;1",
+      "displayName": "Ultimate Wise I",
+      "score": 3112,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ULTIMATE_BANK;2",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ULTIMATE_BANK;2",
+      "displayName": "Bank II",
+      "score": 3112,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ULTIMATE_WISDOM;1",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ULTIMATE_WISDOM;1",
+      "displayName": "Wisdom I",
+      "score": 3112,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:ULTIMATE_LAST_STAND;1",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "ULTIMATE_LAST_STAND;1",
+      "displayName": "Last Stand I",
+      "score": 2075,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F4:REJUVENATE;2",
+      "case": "catacombs",
+      "group": "F4",
+      "item": "REJUVENATE;2",
+      "displayName": "Rejuvenate II",
+      "score": 2075,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:SHADOW_FURY",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "SHADOW_FURY",
+      "displayName": "Shadow Fury",
+      "score": 114300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:LAST_BREATH",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "LAST_BREATH",
+      "displayName": "Last Breath",
+      "score": 114300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:SHADOW_ASSASSIN_CHESTPLATE",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "SHADOW_ASSASSIN_CHESTPLATE",
+      "displayName": "Shadow Assassin Chestplate",
+      "score": 57150,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:AOTE_STONE",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "AOTE_STONE",
+      "displayName": "Warped Stone",
+      "score": 57150,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:LIVID_DAGGER",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "LIVID_DAGGER",
+      "displayName": "Livid Dagger",
+      "score": 28575,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:ULTIMATE_JERRY;3",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "ULTIMATE_JERRY;3",
+      "displayName": "Ultimate Jerry III",
+      "score": 28575,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:SHADOW_ASSASSIN_LEGGINGS",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "SHADOW_ASSASSIN_LEGGINGS",
+      "displayName": "Shadow Assassin Leggings",
+      "score": 22860,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:SHADOW_ASSASSIN_CLOAK",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "SHADOW_ASSASSIN_CLOAK",
+      "displayName": "Shadow Assassin Cloak",
+      "score": 22860,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 19050,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:SHADOW_ASSASSIN_HELMET",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "SHADOW_ASSASSIN_HELMET",
+      "displayName": "Shadow Assassin Helmet",
+      "score": 11430,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:SHADOW_ASSASSIN_BOOTS",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "SHADOW_ASSASSIN_BOOTS",
+      "displayName": "Shadow Assassin Boots",
+      "score": 7620,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 5715,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:OVERLOAD;1",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "OVERLOAD;1",
+      "displayName": "Overload I",
+      "score": 5715,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:ULTIMATE_LEGION;1",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "ULTIMATE_LEGION;1",
+      "displayName": "Legion I",
+      "score": 5715,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:LETHALITY;6",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "LETHALITY;6",
+      "displayName": "Lethality VI",
+      "score": 5715,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:ULTIMATE_COMBO;2",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "ULTIMATE_COMBO;2",
+      "displayName": "Combo II",
+      "score": 5715,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "displayName": "No Pain No Gain II",
+      "score": 5715,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:ULTIMATE_BANK;3",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "ULTIMATE_BANK;3",
+      "displayName": "Bank III",
+      "score": 5715,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:ULTIMATE_WISDOM;2",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "ULTIMATE_WISDOM;2",
+      "displayName": "Wisdom II",
+      "score": 4572,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:DARK_ORB",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "DARK_ORB",
+      "displayName": "Dark Orb",
+      "score": 3810,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:ULTIMATE_WISE;2",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "ULTIMATE_WISE;2",
+      "displayName": "Ultimate Wise II",
+      "score": 2857,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:REJUVENATE;3",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "REJUVENATE;3",
+      "displayName": "Rejuvenate III",
+      "score": 2540,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F5:ULTIMATE_LAST_STAND;2",
+      "case": "catacombs",
+      "group": "F5",
+      "item": "ULTIMATE_LAST_STAND;2",
+      "displayName": "Last Stand II",
+      "score": 2540,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:PRECURSOR_EYE",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "PRECURSOR_EYE",
+      "displayName": "Precursor Eye",
+      "score": 266699,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:GIANTS_SWORD",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "GIANTS_SWORD",
+      "displayName": "Giant's Sword",
+      "score": 160020,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:NECROMANCER_LORD_CHESTPLATE",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "NECROMANCER_LORD_CHESTPLATE",
+      "displayName": "Necromancer Lord Chestplate",
+      "score": 100012,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:SUMMONING_RING",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "SUMMONING_RING",
+      "displayName": "Summoning Ring",
+      "score": 80010,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:FEL_SKULL",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "FEL_SKULL",
+      "displayName": "Fel Skull",
+      "score": 53339,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:NECROMANCER_SWORD",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "NECROMANCER_SWORD",
+      "displayName": "Necromancer Sword",
+      "score": 40005,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:NECROMANCER_LORD_LEGGINGS",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "NECROMANCER_LORD_LEGGINGS",
+      "displayName": "Necromancer Lord Leggings",
+      "score": 26669,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:SOULWEAVER_GLOVES",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "SOULWEAVER_GLOVES",
+      "displayName": "Soulweaver Gloves",
+      "score": 26669,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:NECROMANCER_LORD_HELMET",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "NECROMANCER_LORD_HELMET",
+      "displayName": "Necromancer Lord Helmet",
+      "score": 20002,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:SADAN_BROOCH",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "SADAN_BROOCH",
+      "displayName": "Sadan's Brooch",
+      "score": 20002,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:ULTIMATE_JERRY;3",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "ULTIMATE_JERRY;3",
+      "displayName": "Ultimate Jerry III",
+      "score": 20002,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:GIANT_TOOTH",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "GIANT_TOOTH",
+      "displayName": "Giant Tooth",
+      "score": 16001,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:NECROMANCER_LORD_BOOTS",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "NECROMANCER_LORD_BOOTS",
+      "displayName": "Necromancer Lord Boots",
+      "score": 13334,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 8000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:ULTIMATE_SWARM;1",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "ULTIMATE_SWARM;1",
+      "displayName": "Swarm I",
+      "score": 5334,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "displayName": "No Pain No Gain II",
+      "score": 4572,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:ULTIMATE_BANK;3",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "ULTIMATE_BANK;3",
+      "displayName": "Bank III",
+      "score": 4572,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 4000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:ULTIMATE_COMBO;2",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "ULTIMATE_COMBO;2",
+      "displayName": "Combo II",
+      "score": 4000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:ULTIMATE_WISDOM;2",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "ULTIMATE_WISDOM;2",
+      "displayName": "Wisdom II",
+      "score": 3556,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:ULTIMATE_WISE;2",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "ULTIMATE_WISE;2",
+      "displayName": "Ultimate Wise II",
+      "score": 2424,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:REJUVENATE;3",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "REJUVENATE;3",
+      "displayName": "Rejuvenate III",
+      "score": 2105,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F6:ULTIMATE_LAST_STAND;2",
+      "case": "catacombs",
+      "group": "F6",
+      "item": "ULTIMATE_LAST_STAND;2",
+      "displayName": "Last Stand II",
+      "score": 2105,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:STORM_THE_FISH",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "STORM_THE_FISH",
+      "displayName": "Storm the Fish",
+      "score": 411180,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:MAXOR_THE_FISH",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "MAXOR_THE_FISH",
+      "displayName": "Maxor the Fish",
+      "score": 411180,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:GOLDOR_THE_FISH",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "GOLDOR_THE_FISH",
+      "displayName": "Goldor the Fish",
+      "score": 411180,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:NECRON_HANDLE",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "NECRON_HANDLE",
+      "displayName": "Necron's Handle",
+      "score": 274119,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:SHADOW_WARP_SCROLL",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "SHADOW_WARP_SCROLL",
+      "displayName": "Shadow Warp",
+      "score": 205590,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:WITHER_SHIELD_SCROLL",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "WITHER_SHIELD_SCROLL",
+      "displayName": "Wither Shield",
+      "score": 205590,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:IMPLOSION_SCROLL",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "IMPLOSION_SCROLL",
+      "displayName": "Implosion",
+      "score": 205590,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:AUTO_RECOMBOBULATOR",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "AUTO_RECOMBOBULATOR",
+      "displayName": "Auto Recombobulator",
+      "score": 51397,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:WITHER_CHESTPLATE",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "WITHER_CHESTPLATE",
+      "displayName": "Wither Chestplate",
+      "score": 51397,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_ONE_FOR_ALL;1",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_ONE_FOR_ALL;1",
+      "displayName": "One For All I",
+      "score": 51397,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:WITHER_LEGGINGS",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "WITHER_LEGGINGS",
+      "displayName": "Wither Leggings",
+      "score": 12849,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:FEATHER_FALLING;7",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "FEATHER_FALLING;7",
+      "displayName": "Feather Falling VII",
+      "score": 12849,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 10279,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 10279,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:WITHER_CATALYST",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "WITHER_CATALYST",
+      "displayName": "Wither Catalyst",
+      "score": 10279,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "displayName": "No Pain No Gain II",
+      "score": 10279,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:WITHER_CLOAK",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "WITHER_CLOAK",
+      "displayName": "Wither Cloak Sword",
+      "score": 8566,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:WITHER_HELMET",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "WITHER_HELMET",
+      "displayName": "Wither Helmet",
+      "score": 8566,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:WITHER_BLOOD",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "WITHER_BLOOD",
+      "displayName": "Wither Blood",
+      "score": 8566,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:WITHER_BOOTS",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "WITHER_BOOTS",
+      "displayName": "Wither Boots",
+      "score": 8566,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_BANK;3",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_BANK;3",
+      "displayName": "Bank III",
+      "score": 8223,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_WISDOM;2",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_WISDOM;2",
+      "displayName": "Wisdom II",
+      "score": 8223,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_JERRY;3",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_JERRY;3",
+      "displayName": "Ultimate Jerry III",
+      "score": 6853,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_SOUL_EATER;1",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_SOUL_EATER;1",
+      "displayName": "Soul Eater I",
+      "score": 5139,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 5139,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_WISE;2",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_WISE;2",
+      "displayName": "Ultimate Wise II",
+      "score": 5139,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_COMBO;2",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_COMBO;2",
+      "displayName": "Combo II",
+      "score": 4111,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:REJUVENATE;3",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "REJUVENATE;3",
+      "displayName": "Rejuvenate III",
+      "score": 4111,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:ULTIMATE_LAST_STAND;2",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "ULTIMATE_LAST_STAND;2",
+      "displayName": "Last Stand II",
+      "score": 4111,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:INFINITE_QUIVER;7",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "INFINITE_QUIVER;7",
+      "displayName": "Infinite Quiver VII",
+      "score": 4111,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:F7:PRECURSOR_GEAR",
+      "case": "catacombs",
+      "group": "F7",
+      "item": "PRECURSOR_GEAR",
+      "displayName": "Precursor Gear",
+      "score": 3426,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:BONZO_STAFF",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "BONZO_STAFF",
+      "displayName": "Bonzo's Staff",
+      "score": 25800,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:ULTIMATE_JERRY;1",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "ULTIMATE_JERRY;1",
+      "displayName": "Ultimate Jerry I",
+      "score": 25800,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 12900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:ULTIMATE_BANK;1",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "ULTIMATE_BANK;1",
+      "displayName": "Bank I",
+      "score": 12900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:MASTER_SKULL_TIER_1",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "MASTER_SKULL_TIER_1",
+      "displayName": "Master Skull - Tier 1",
+      "score": 8600,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:BONZO_MASK",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "BONZO_MASK",
+      "displayName": "Bonzo's Mask",
+      "score": 8600,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:BALLOON_SNAKE",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "BALLOON_SNAKE",
+      "displayName": "Balloon Snake",
+      "score": 8600,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 6450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:RED_NOSE",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "RED_NOSE",
+      "displayName": "Red Nose",
+      "score": 6450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 5160,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:INFINITE_QUIVER;6",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "INFINITE_QUIVER;6",
+      "displayName": "Infinite Quiver VI",
+      "score": 4300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:FEATHER_FALLING;6",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "FEATHER_FALLING;6",
+      "displayName": "Feather Falling VI",
+      "score": 4300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:ULTIMATE_COMBO;1",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "ULTIMATE_COMBO;1",
+      "displayName": "Combo I",
+      "score": 2580,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "displayName": "No Pain No Gain I",
+      "score": 2580,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:NECROMANCER_BROOCH",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "NECROMANCER_BROOCH",
+      "displayName": "Necromancer's Brooch",
+      "score": 2580,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M1:REJUVENATE;1",
+      "case": "catacombs",
+      "group": "M1",
+      "item": "REJUVENATE;1",
+      "displayName": "Rejuvenate I",
+      "score": 1720,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:RED_SCARF",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "RED_SCARF",
+      "displayName": "Red Scarf",
+      "score": 18600,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:STONE_BLADE",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "STONE_BLADE",
+      "displayName": "Adaptive Blade",
+      "score": 9300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:ULTIMATE_BANK;1",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "ULTIMATE_BANK;1",
+      "displayName": "Bank I",
+      "score": 9300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 6199,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:MASTER_SKULL_TIER_2",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "MASTER_SKULL_TIER_2",
+      "displayName": "Master Skull - Tier 2",
+      "score": 6199,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:ADAPTIVE_BELT",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "ADAPTIVE_BELT",
+      "displayName": "Adaptive Belt",
+      "score": 6199,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 6199,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:SCARF_STUDIES",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "SCARF_STUDIES",
+      "displayName": "Scarf's Studies",
+      "score": 4650,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 3720,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:ULTIMATE_COMBO;1",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "ULTIMATE_COMBO;1",
+      "displayName": "Combo I",
+      "score": 3720,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "displayName": "No Pain No Gain I",
+      "score": 3720,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:NECROMANCER_BROOCH",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "NECROMANCER_BROOCH",
+      "displayName": "Necromancer's Brooch",
+      "score": 3720,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:ULTIMATE_WISE;1",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "ULTIMATE_WISE;1",
+      "displayName": "Ultimate Wise I",
+      "score": 1860,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M2:REJUVENATE;1",
+      "case": "catacombs",
+      "group": "M2",
+      "item": "REJUVENATE;1",
+      "displayName": "Rejuvenate I",
+      "score": 1860,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ADAPTIVE_CHESTPLATE",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ADAPTIVE_CHESTPLATE",
+      "displayName": "Adaptive Chestplate",
+      "score": 23700,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ADAPTIVE_LEGGINGS",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ADAPTIVE_LEGGINGS",
+      "displayName": "Adaptive Leggings",
+      "score": 23700,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ULTIMATE_JERRY;2",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ULTIMATE_JERRY;2",
+      "displayName": "Ultimate Jerry II",
+      "score": 23700,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:FIRST_MASTER_STAR",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "FIRST_MASTER_STAR",
+      "displayName": "First Master Star",
+      "score": 11850,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ADAPTIVE_HELMET",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ADAPTIVE_HELMET",
+      "displayName": "Adaptive Helmet",
+      "score": 11850,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ADAPTIVE_BOOTS",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ADAPTIVE_BOOTS",
+      "displayName": "Adaptive Boots",
+      "score": 11850,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 7900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 5925,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:MASTER_SKULL_TIER_3",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "MASTER_SKULL_TIER_3",
+      "displayName": "Master Skull - Tier 3",
+      "score": 5925,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:NECROMANCER_BROOCH",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "NECROMANCER_BROOCH",
+      "displayName": "Necromancer's Brooch",
+      "score": 5925,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 4740,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:SUSPICIOUS_VIAL",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "SUSPICIOUS_VIAL",
+      "displayName": "Suspicious Vial",
+      "score": 4740,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ULTIMATE_COMBO;1",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ULTIMATE_COMBO;1",
+      "displayName": "Combo I",
+      "score": 4740,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "displayName": "No Pain No Gain I",
+      "score": 4740,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ULTIMATE_WISE;1",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ULTIMATE_WISE;1",
+      "displayName": "Ultimate Wise I",
+      "score": 3950,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ULTIMATE_BANK;2",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ULTIMATE_BANK;2",
+      "displayName": "Bank II",
+      "score": 3950,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ULTIMATE_WISDOM;1",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ULTIMATE_WISDOM;1",
+      "displayName": "Wisdom I",
+      "score": 3950,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:ULTIMATE_LAST_STAND;1",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "ULTIMATE_LAST_STAND;1",
+      "displayName": "Last Stand I",
+      "score": 2962,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M3:REJUVENATE;2",
+      "case": "catacombs",
+      "group": "M3",
+      "item": "REJUVENATE;2",
+      "displayName": "Rejuvenate II",
+      "score": 2962,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ULTIMATE_LAST_STAND;1",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ULTIMATE_LAST_STAND;1",
+      "displayName": "Last Stand I",
+      "score": 2775,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:REJUVENATE;2",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "REJUVENATE;2",
+      "displayName": "Rejuvenate II",
+      "score": 2775,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ULTIMATE_WISE;1",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ULTIMATE_WISE;1",
+      "displayName": "Ultimate Wise I",
+      "score": 3699,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ULTIMATE_BANK;2",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ULTIMATE_BANK;2",
+      "displayName": "Bank II",
+      "score": 3699,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ULTIMATE_WISDOM;1",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ULTIMATE_WISDOM;1",
+      "displayName": "Wisdom I",
+      "score": 3699,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 4440,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ULTIMATE_COMBO;1",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ULTIMATE_COMBO;1",
+      "displayName": "Combo I",
+      "score": 4440,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;1",
+      "displayName": "No Pain No Gain I",
+      "score": 5550,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 7399,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:MASTER_SKULL_TIER_3",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "MASTER_SKULL_TIER_3",
+      "displayName": "Master Skull - Tier 3",
+      "score": 7399,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 7399,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:SECOND_MASTER_STAR",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "SECOND_MASTER_STAR",
+      "displayName": "Second Master Star",
+      "score": 11100,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:SPIRIT_WING",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "SPIRIT_WING",
+      "displayName": "Spirit Wing",
+      "score": 11100,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:SPIRIT_BONE",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "SPIRIT_BONE",
+      "displayName": "Spirit Bone",
+      "score": 11100,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:SPIRIT_DECOY",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "SPIRIT_DECOY",
+      "displayName": "Spirit Stone",
+      "score": 11100,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ULTIMATE_REND;2",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ULTIMATE_REND;2",
+      "displayName": "Rend II",
+      "score": 11100,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:SPIRIT_SWORD",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "SPIRIT_SWORD",
+      "displayName": "Spirit Sword",
+      "score": 22200,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ITEM_SPIRIT_BOW",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ITEM_SPIRIT_BOW",
+      "displayName": "Spirit Shortbow",
+      "score": 22200,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:THORNS_BOOTS",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "THORNS_BOOTS",
+      "displayName": "Spirit Boots",
+      "score": 22200,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:SPIRIT;4",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "SPIRIT;4",
+      "displayName": "Spirit",
+      "score": 22200,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:SPIRIT_MASK",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "SPIRIT_MASK",
+      "displayName": "Spirit Mask",
+      "score": 22200,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M4:ULTIMATE_JERRY;2",
+      "case": "catacombs",
+      "group": "M4",
+      "item": "ULTIMATE_JERRY;2",
+      "displayName": "Ultimate Jerry II",
+      "score": 22200,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:REJUVENATE;3",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "REJUVENATE;3",
+      "displayName": "Rejuvenate III",
+      "score": 2794,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:ULTIMATE_LAST_STAND;2",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "ULTIMATE_LAST_STAND;2",
+      "displayName": "Last Stand II",
+      "score": 2794,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:DARK_ORB",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "DARK_ORB",
+      "displayName": "Dark Orb",
+      "score": 3260,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:ULTIMATE_WISE;2",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "ULTIMATE_WISE;2",
+      "displayName": "Ultimate Wise II",
+      "score": 3260,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 4890,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:OVERLOAD;1",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "OVERLOAD;1",
+      "displayName": "Overload I",
+      "score": 4890,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:ULTIMATE_LEGION;1",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "ULTIMATE_LEGION;1",
+      "displayName": "Legion I",
+      "score": 4890,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:LETHALITY;6",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "LETHALITY;6",
+      "displayName": "Lethality VI",
+      "score": 4890,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:SHADOW_ASSASSIN_BOOTS",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "SHADOW_ASSASSIN_BOOTS",
+      "displayName": "Shadow Assassin Boots",
+      "score": 6520,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:ULTIMATE_COMBO;2",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "ULTIMATE_COMBO;2",
+      "displayName": "Combo II",
+      "score": 6520,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "displayName": "No Pain No Gain II",
+      "score": 6520,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:ULTIMATE_WISDOM;2",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "ULTIMATE_WISDOM;2",
+      "displayName": "Wisdom II",
+      "score": 8150,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:SHADOW_ASSASSIN_HELMET",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "SHADOW_ASSASSIN_HELMET",
+      "displayName": "Shadow Assassin Helmet",
+      "score": 9780,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:ULTIMATE_BANK;3",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "ULTIMATE_BANK;3",
+      "displayName": "Bank III",
+      "score": 9780,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 16300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:SHADOW_ASSASSIN_LEGGINGS",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "SHADOW_ASSASSIN_LEGGINGS",
+      "displayName": "Shadow Assassin Leggings",
+      "score": 19560,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:SHADOW_ASSASSIN_CLOAK",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "SHADOW_ASSASSIN_CLOAK",
+      "displayName": "Shadow Assassin Cloak",
+      "score": 19560,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:MASTER_SKULL_TIER_4",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "MASTER_SKULL_TIER_4",
+      "displayName": "Master Skull - Tier 4",
+      "score": 19560,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:LIVID_DAGGER",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "LIVID_DAGGER",
+      "displayName": "Livid Dagger",
+      "score": 24450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:ULTIMATE_JERRY;3",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "ULTIMATE_JERRY;3",
+      "displayName": "Ultimate Jerry III",
+      "score": 24450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:SHADOW_ASSASSIN_CHESTPLATE",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "SHADOW_ASSASSIN_CHESTPLATE",
+      "displayName": "Shadow Assassin Chestplate",
+      "score": 48900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:THIRD_MASTER_STAR",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "THIRD_MASTER_STAR",
+      "displayName": "Third Master Star",
+      "score": 48900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:AOTE_STONE",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "AOTE_STONE",
+      "displayName": "Warped Stone",
+      "score": 48900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:SHADOW_FURY",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "SHADOW_FURY",
+      "displayName": "Shadow Fury",
+      "score": 97800,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:LAST_BREATH",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "LAST_BREATH",
+      "displayName": "Last Breath",
+      "score": 97800,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M5:DYE_LIVID",
+      "case": "catacombs",
+      "group": "M5",
+      "item": "DYE_LIVID",
+      "displayName": "Livid Dye",
+      "score": 1000000,
+      "placeholder": true,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:PRECURSOR_EYE",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "PRECURSOR_EYE",
+      "displayName": "Precursor Eye",
+      "score": 270800,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:GIANTS_SWORD",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "GIANTS_SWORD",
+      "displayName": "Giant's Sword",
+      "score": 135400,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:NECROMANCER_LORD_CHESTPLATE",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "NECROMANCER_LORD_CHESTPLATE",
+      "displayName": "Necromancer Lord Chestplate",
+      "score": 101550,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:FOURTH_MASTER_STAR",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "FOURTH_MASTER_STAR",
+      "displayName": "Fourth Master Star",
+      "score": 81240,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:SUMMONING_RING",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "SUMMONING_RING",
+      "displayName": "Summoning Ring",
+      "score": 81240,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:MASTER_SKULL_TIER_4",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "MASTER_SKULL_TIER_4",
+      "displayName": "Master Skull - Tier 4",
+      "score": 81240,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:FEL_SKULL",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "FEL_SKULL",
+      "displayName": "Fel Skull",
+      "score": 54160,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:NECROMANCER_SWORD",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "NECROMANCER_SWORD",
+      "displayName": "Necromancer Sword",
+      "score": 40620,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:NECROMANCER_LORD_LEGGINGS",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "NECROMANCER_LORD_LEGGINGS",
+      "displayName": "Necromancer Lord Leggings",
+      "score": 27080,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:SOULWEAVER_GLOVES",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "SOULWEAVER_GLOVES",
+      "displayName": "Soulweaver Gloves",
+      "score": 27080,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:NECROMANCER_LORD_HELMET",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "NECROMANCER_LORD_HELMET",
+      "displayName": "Necromancer Lord Helmet",
+      "score": 20310,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:SADAN_BROOCH",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "SADAN_BROOCH",
+      "displayName": "Sadan's Brooch",
+      "score": 20310,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:ULTIMATE_JERRY;3",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "ULTIMATE_JERRY;3",
+      "displayName": "Ultimate Jerry III",
+      "score": 20310,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:GIANT_TOOTH",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "GIANT_TOOTH",
+      "displayName": "Giant Tooth",
+      "score": 16247,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:NECROMANCER_LORD_BOOTS",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "NECROMANCER_LORD_BOOTS",
+      "displayName": "Necromancer Lord Boots",
+      "score": 13540,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 6770,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:ULTIMATE_SWARM;1",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "ULTIMATE_SWARM;1",
+      "displayName": "Swarm I",
+      "score": 5415,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "displayName": "No Pain No Gain II",
+      "score": 4642,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:ULTIMATE_BANK;3",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "ULTIMATE_BANK;3",
+      "displayName": "Bank III",
+      "score": 4642,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 4061,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:ULTIMATE_COMBO;2",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "ULTIMATE_COMBO;2",
+      "displayName": "Combo II",
+      "score": 4061,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:ULTIMATE_WISDOM;2",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "ULTIMATE_WISDOM;2",
+      "displayName": "Wisdom II",
+      "score": 3610,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:ULTIMATE_WISE;2",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "ULTIMATE_WISE;2",
+      "displayName": "Ultimate Wise II",
+      "score": 2461,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:REJUVENATE;3",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "REJUVENATE;3",
+      "displayName": "Rejuvenate III",
+      "score": 2137,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M6:ULTIMATE_LAST_STAND;2",
+      "case": "catacombs",
+      "group": "M6",
+      "item": "ULTIMATE_LAST_STAND;2",
+      "displayName": "Last Stand II",
+      "score": 2137,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:PRECURSOR_GEAR",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "PRECURSOR_GEAR",
+      "displayName": "Precursor Gear",
+      "score": 3473,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_COMBO;2",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_COMBO;2",
+      "displayName": "Combo II",
+      "score": 4168,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:REJUVENATE;3",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "REJUVENATE;3",
+      "displayName": "Rejuvenate III",
+      "score": 4168,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_LAST_STAND;2",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_LAST_STAND;2",
+      "displayName": "Last Stand II",
+      "score": 4168,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:INFINITE_QUIVER;7",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "INFINITE_QUIVER;7",
+      "displayName": "Infinite Quiver VII",
+      "score": 4168,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_SOUL_EATER;1",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_SOUL_EATER;1",
+      "displayName": "Soul Eater I",
+      "score": 5210,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:HOT_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "HOT_POTATO_BOOK",
+      "displayName": "Hot Potato Book",
+      "score": 5210,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_WISE;2",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_WISE;2",
+      "displayName": "Ultimate Wise II",
+      "score": 5210,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_JERRY;3",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_JERRY;3",
+      "displayName": "Ultimate Jerry III",
+      "score": 6947,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:RECOMBOBULATOR_3000",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "RECOMBOBULATOR_3000",
+      "displayName": "Recombobulator 3000",
+      "score": 8336,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_BANK;3",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_BANK;3",
+      "displayName": "Bank III",
+      "score": 8336,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_WISDOM;2",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_WISDOM;2",
+      "displayName": "Wisdom II",
+      "score": 8336,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:WITHER_CLOAK",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "WITHER_CLOAK",
+      "displayName": "Wither Cloak Sword",
+      "score": 8683,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:WITHER_HELMET",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "WITHER_HELMET",
+      "displayName": "Wither Helmet",
+      "score": 8683,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:WITHER_BLOOD",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "WITHER_BLOOD",
+      "displayName": "Wither Blood",
+      "score": 8683,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:WITHER_BOOTS",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "WITHER_BOOTS",
+      "displayName": "Wither Boots",
+      "score": 8683,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:FUMING_POTATO_BOOK",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "FUMING_POTATO_BOOK",
+      "displayName": "Fuming Potato Book",
+      "score": 10420,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:WITHER_CATALYST",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "WITHER_CATALYST",
+      "displayName": "Wither Catalyst",
+      "score": 10420,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_NO_PAIN_NO_GAIN;2",
+      "displayName": "No Pain No Gain II",
+      "score": 10420,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:WITHER_LEGGINGS",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "WITHER_LEGGINGS",
+      "displayName": "Wither Leggings",
+      "score": 13025,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:FEATHER_FALLING;7",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "FEATHER_FALLING;7",
+      "displayName": "Feather Falling VII",
+      "score": 13025,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:AUTO_RECOMBOBULATOR",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "AUTO_RECOMBOBULATOR",
+      "displayName": "Auto Recombobulator",
+      "score": 52102,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:WITHER_CHESTPLATE",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "WITHER_CHESTPLATE",
+      "displayName": "Wither Chestplate",
+      "score": 52102,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:ULTIMATE_ONE_FOR_ALL;1",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "ULTIMATE_ONE_FOR_ALL;1",
+      "displayName": "One For All I",
+      "score": 52102,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:FIFTH_MASTER_STAR",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "FIFTH_MASTER_STAR",
+      "displayName": "Fifth Master Star",
+      "score": 138940,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:SHADOW_WARP_SCROLL",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "SHADOW_WARP_SCROLL",
+      "displayName": "Shadow Warp",
+      "score": 166728,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:WITHER_SHIELD_SCROLL",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "WITHER_SHIELD_SCROLL",
+      "displayName": "Wither Shield",
+      "score": 166728,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:IMPLOSION_SCROLL",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "IMPLOSION_SCROLL",
+      "displayName": "Implosion",
+      "score": 166728,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:MASTER_SKULL_TIER_5",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "MASTER_SKULL_TIER_5",
+      "displayName": "Master Skull - Tier 5",
+      "score": 173675,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:THUNDERLORD;7",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "THUNDERLORD;7",
+      "displayName": "Thunderlord VII",
+      "score": 208410,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:NECRON_HANDLE",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "NECRON_HANDLE",
+      "displayName": "Necron's Handle",
+      "score": 231566,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:DARK_CLAYMORE",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "DARK_CLAYMORE",
+      "displayName": "Dark Claymore",
+      "score": 416820,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:STORM_THE_FISH",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "STORM_THE_FISH",
+      "displayName": "Storm the Fish",
+      "score": 833640,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:MAXOR_THE_FISH",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "MAXOR_THE_FISH",
+      "displayName": "Maxor the Fish",
+      "score": 833640,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:GOLDOR_THE_FISH",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "GOLDOR_THE_FISH",
+      "displayName": "Goldor the Fish",
+      "score": 833640,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "catacombs:M7:DYE_NECRON",
+      "case": "catacombs",
+      "group": "M7",
+      "item": "DYE_NECRON",
+      "displayName": "Necron Dye",
+      "score": 1000000,
+      "placeholder": true,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:DYE_MATCHA",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "DYE_MATCHA",
+      "displayName": "Matcha Dye",
+      "score": 75000000,
+      "placeholder": true,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:FOUL_FLESH",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "FOUL_FLESH",
+      "displayName": "Foul Flesh",
+      "score": 3093,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:ATTRIBUTE_SHARD_UNDEAD_ESSENCE;1",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "ATTRIBUTE_SHARD_UNDEAD_ESSENCE;1",
+      "displayName": "Revenant Shard",
+      "score": 36742,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:ZOMBIE_SLAYER_RUNE;1",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "ZOMBIE_SLAYER_RUNE;1",
+      "displayName": "◆ Pestilence Rune I",
+      "score": 7977,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:UNDEAD_CATALYST",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "UNDEAD_CATALYST",
+      "displayName": "Undead Catalyst",
+      "score": 24750,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:SMITE;6",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "SMITE;6",
+      "displayName": "Smite VI",
+      "score": 124370,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:BEHEADED_HORROR",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "BEHEADED_HORROR",
+      "displayName": "Beheaded Horror",
+      "score": 310925,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "displayName": "Paragon Shard",
+      "score": 250000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:REVENANT_CATALYST",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "REVENANT_CATALYST",
+      "displayName": "Revenant Catalyst",
+      "score": 49500,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:SNAKE_RUNE;1",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "SNAKE_RUNE;1",
+      "displayName": "◆ Snake Rune I",
+      "score": 332250,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:FESTERING_MAGGOT",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "FESTERING_MAGGOT",
+      "displayName": "Festering Maggot",
+      "score": 367424,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:REVENANT_VISCERA",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "REVENANT_VISCERA",
+      "displayName": "Revenant Viscera",
+      "score": 3674,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:SCYTHE_BLADE",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "SCYTHE_BLADE",
+      "displayName": "Scythe Blade",
+      "score": 489900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:SEVERED_HAND",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "SEVERED_HAND",
+      "displayName": "Severed Hand",
+      "score": 1049785,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:SHARD_OF_THE_SHREDDED",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "SHARD_OF_THE_SHREDDED",
+      "displayName": "Shredded Sinew",
+      "score": 918562,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Revenant Horror:WARDEN_HEART",
+      "case": "slayer",
+      "group": "Revenant Horror",
+      "item": "WARDEN_HEART",
+      "displayName": "Warden Heart",
+      "score": 3674250,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:DYE_BRICK_RED",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "DYE_BRICK_RED",
+      "displayName": "Brick Red Dye",
+      "score": 75000000,
+      "placeholder": true,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:TOXIC_ARROW_POISON",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "TOXIC_ARROW_POISON",
+      "displayName": "Toxic Arrow Poison",
+      "score": 3277,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:BITE_RUNE;1",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "BITE_RUNE;1",
+      "displayName": "◆ Bite Rune I",
+      "score": 7657,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:DARKNESS_WITHIN_RUNE;1",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "DARKNESS_WITHIN_RUNE;1",
+      "displayName": "◆ Darkness Within Rune I",
+      "score": 75430,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:ATTRIBUTE_SHARD_COCOON_CHANCE;1",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "ATTRIBUTE_SHARD_COCOON_CHANCE;1",
+      "displayName": "Primordial Shard",
+      "score": 70765,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:SPIDER_CATALYST",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "SPIDER_CATALYST",
+      "displayName": "Spider Catalyst",
+      "score": 24250,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:BANE_OF_ARTHROPODS;6",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "BANE_OF_ARTHROPODS;6",
+      "displayName": "Bane of Arthropods VI",
+      "score": 120269,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:TARANTULA_CATALYST",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "TARANTULA_CATALYST",
+      "displayName": "Tarantula Catalyst",
+      "score": 117941,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:FLY_SWATTER",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "FLY_SWATTER",
+      "displayName": "Fly Swatter",
+      "score": 235883,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "displayName": "Paragon Shard",
+      "score": 250000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:VIAL_OF_VENOM",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "VIAL_OF_VENOM",
+      "displayName": "Vial of Venom",
+      "score": 353825,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:TARANTULA_TALISMAN",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "TARANTULA_TALISMAN",
+      "displayName": "Tarantula Talisman",
+      "score": 235883,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:DIGESTED_MOSQUITO",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "DIGESTED_MOSQUITO",
+      "displayName": "Digested Mosquito",
+      "score": 707650,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:TARANTULA_SILK",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "TARANTULA_SILK",
+      "displayName": "Tarantula Silk",
+      "score": 3538,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:SHRIVELED_WASP",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "SHRIVELED_WASP",
+      "displayName": "Shriveled Wasp",
+      "score": 353825,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:ENSNARED_SNAIL",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "ENSNARED_SNAIL",
+      "displayName": "Ensnared Snail",
+      "score": 1179416,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Tarantula Broodfather:PRIMORDIAL_EYE",
+      "case": "slayer",
+      "group": "Tarantula Broodfather",
+      "item": "PRIMORDIAL_EYE",
+      "displayName": "Primordial Eye",
+      "score": 3538250,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:DYE_CELESTE",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "DYE_CELESTE",
+      "displayName": "Celeste Dye",
+      "score": 75000000,
+      "placeholder": true,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:HAMSTER_WHEEL",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "HAMSTER_WHEEL",
+      "displayName": "Hamster Wheel",
+      "score": 3000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:SPIRIT_RUNE;1",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "SPIRIT_RUNE;1",
+      "displayName": "◆ Spirit Rune I",
+      "score": 7917,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:CRITICAL;6",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "CRITICAL;6",
+      "displayName": "Critical VI",
+      "score": 61634,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:FURBALL",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "FURBALL",
+      "displayName": "Furball",
+      "score": 30637,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:RED_CLAW_EGG",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "RED_CLAW_EGG",
+      "displayName": "Red Claw Egg",
+      "score": 410900,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "displayName": "Paragon Shard",
+      "score": 250000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:COUTURE_RUNE;1",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "COUTURE_RUNE;1",
+      "displayName": "◆ Couture Rune I",
+      "score": 219833,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:OVERFLUX_CAPACITOR",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "OVERFLUX_CAPACITOR",
+      "displayName": "Overflux Capacitor",
+      "score": 1232700,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Sven Packmaster:GRIZZLY_BAIT",
+      "case": "slayer",
+      "group": "Sven Packmaster",
+      "item": "GRIZZLY_BAIT",
+      "displayName": "Grizzly Salmon",
+      "score": 880500,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:DYE_BYZANTIUM",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "DYE_BYZANTIUM",
+      "displayName": "Byzantium Dye",
+      "score": 75000000,
+      "placeholder": true,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:TWILIGHT_ARROW_POISON",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "TWILIGHT_ARROW_POISON",
+      "displayName": "Twilight Arrow Poison",
+      "score": 3300,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:ENDERSNAKE_RUNE;1",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "ENDERSNAKE_RUNE;1",
+      "displayName": "◆ Endersnake Rune I",
+      "score": 9438,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:SUMMONING_EYE",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "SUMMONING_EYE",
+      "displayName": "Summoning Eye",
+      "score": 74250,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:MANA_STEAL;1",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "MANA_STEAL;1",
+      "displayName": "Mana Steal I",
+      "score": 11183,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:TRANSMISSION_TUNER",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "TRANSMISSION_TUNER",
+      "displayName": "Transmission Tuner",
+      "score": 22366,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:NULL_ATOM",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "NULL_ATOM",
+      "displayName": "Null Atom",
+      "score": 10120,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:HAZMAT_ENDERMAN",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "HAZMAT_ENDERMAN",
+      "displayName": "Hazmat Enderman",
+      "score": 32202,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:POCKET_ESPRESSO_MACHINE",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "POCKET_ESPRESSO_MACHINE",
+      "displayName": "Pocket Espresso Machine",
+      "score": 128809,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:SMARTY_PANTS;1",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "SMARTY_PANTS;1",
+      "displayName": "Smarty Pants I",
+      "score": 28338,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:DRAGON_RUNE;1",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "DRAGON_RUNE;1",
+      "displayName": "◆ End Rune I",
+      "score": 75505,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:HANDY_BLOOD_CHALICE",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "HANDY_BLOOD_CHALICE",
+      "displayName": "Handy Blood Chalice",
+      "score": 283380,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "displayName": "Paragon Shard",
+      "score": 250000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:SINFUL_DICE",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "SINFUL_DICE",
+      "displayName": "Sinful Dice",
+      "score": 108992,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:EXCEEDINGLY_RARE_ENDER_ARTIFACT_UPGRADER",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "EXCEEDINGLY_RARE_ENDER_ARTIFACT_UPGRADER",
+      "displayName": "Exceedingly Rare Ender Artifact Upgrade",
+      "score": 1771125,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:PET_SKIN_ENDERMAN_SLAYER",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "PET_SKIN_ENDERMAN_SLAYER",
+      "displayName": "Void Conqueror Enderman Skin",
+      "score": 302020,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:ETHERWARP_MERGER",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "ETHERWARP_MERGER",
+      "displayName": "Etherwarp Merger",
+      "score": 118075,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:JUDGEMENT_CORE",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "JUDGEMENT_CORE",
+      "displayName": "Judgement Core",
+      "score": 885562,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:ENCHANT_RUNE;1",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "ENCHANT_RUNE;1",
+      "displayName": "◆ Enchant Rune I",
+      "score": 1078642,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Voidgloom Seraph:ENDSTONE_IDOL",
+      "case": "slayer",
+      "group": "Voidgloom Seraph",
+      "item": "ENDSTONE_IDOL",
+      "displayName": "End Stone Idol",
+      "score": 3542250,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:DYE_FLAME",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "DYE_FLAME",
+      "displayName": "Flame Dye",
+      "score": 75000000,
+      "placeholder": true,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:ENCHANTED_BLAZE_POWDER",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "ENCHANTED_BLAZE_POWDER",
+      "displayName": "Enchanted Blaze Powder",
+      "score": 3833,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:LAVATEARS_RUNE;1",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "LAVATEARS_RUNE;1",
+      "displayName": "◆ Lavatears Rune I",
+      "score": 21437,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:ARROW_BUNDLE_MAGMA",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "ARROW_BUNDLE_MAGMA",
+      "displayName": "Bundle of Magma Arrows",
+      "score": 5340,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:MANA_DISINTEGRATOR",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "MANA_DISINTEGRATOR",
+      "displayName": "Mana Disintegrator",
+      "score": 11442,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:SCORCHED_BOOKS",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "SCORCHED_BOOKS",
+      "displayName": "Scorched Books",
+      "score": 20025,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:KELVIN_INVERTER",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "KELVIN_INVERTER",
+      "displayName": "Kelvin Inverter",
+      "score": 16020,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:CRUDE_GABAGOOL_DISTILLATE",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "CRUDE_GABAGOOL_DISTILLATE",
+      "displayName": "Gabagool Distillate",
+      "score": 11955,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:ATTRIBUTE_SHARD_ATTACK_SPEED;1",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "ATTRIBUTE_SHARD_ATTACK_SPEED;1",
+      "displayName": "Inferno Demonlord Shard",
+      "score": 9402,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:SCORCHED_POWER_CRYSTAL",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "SCORCHED_POWER_CRYSTAL",
+      "displayName": "Scorched Power Crystal",
+      "score": 14224,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:ARCHFIEND_DICE",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "ARCHFIEND_DICE",
+      "displayName": "Archfiend Dice",
+      "score": 42675,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:FIRE_ASPECT;3",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "FIRE_ASPECT;3",
+      "displayName": "Fire Aspect III",
+      "score": 37608,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:FIERY_BURST_RUNE;1",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "FIERY_BURST_RUNE;1",
+      "displayName": "◆ Fiery Burst Rune I",
+      "score": 241175,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:FLAWED_OPAL_GEM",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "FLAWED_OPAL_GEM",
+      "displayName": "Flawed Opal Gemstone",
+      "score": 17094,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "ATTRIBUTE_SHARD_SLAYER_DISCOUNT;1",
+      "displayName": "Paragon Shard",
+      "score": 250000,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:ULTIMATE_REITERATE;1",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "ULTIMATE_REITERATE;1",
+      "displayName": "Duplex I",
+      "score": 26862,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:HIGH_CLASS_ARCHFIEND_DICE",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "HIGH_CLASS_ARCHFIEND_DICE",
+      "displayName": "High Class Archfiend Dice",
+      "score": 188040,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:WILSON_ENGINEERING_PLANS",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "WILSON_ENGINEERING_PLANS",
+      "displayName": "Wilson's Engineering Plans",
+      "score": 553058,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Inferno Demonlord:SUBZERO_INVERTER",
+      "case": "slayer",
+      "group": "Inferno Demonlord",
+      "item": "SUBZERO_INVERTER",
+      "displayName": "Subzero Inverter",
+      "score": 553058,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:ENCHANTED_BOOK_BUNDLE_QUANTUM",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "ENCHANTED_BOOK_BUNDLE_QUANTUM",
+      "displayName": "Enchanted Book Bundle",
+      "score": 1687,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:SOULTWIST_RUNE;1",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "SOULTWIST_RUNE;1",
+      "displayName": "◆ Soultwist Rune I",
+      "score": 1912,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:BUBBA_BLISTER",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "BUBBA_BLISTER",
+      "displayName": "Bubba Blister",
+      "score": 2250,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:CHOCOLATE_CHIP",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "CHOCOLATE_CHIP",
+      "displayName": "Fang-tastic Chocolate Chip",
+      "score": 2250,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:GUARDIAN_LUCKY_BLOCK",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "GUARDIAN_LUCKY_BLOCK",
+      "displayName": "Guardian Lucky Block",
+      "score": 3600,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:MCGRUBBER_BURGER",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "MCGRUBBER_BURGER",
+      "displayName": "McGrubber's Burger",
+      "score": 18450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:UNFANGED_VAMPIRE_PART",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "UNFANGED_VAMPIRE_PART",
+      "displayName": "Unfanged Vampire Part",
+      "score": 18450,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:ENCHANTED_BOOK_BUNDLE_THE_ONE",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "ENCHANTED_BOOK_BUNDLE_THE_ONE",
+      "displayName": "Enchanted Book Bundle",
+      "score": 12525,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "slayer:Riftstalker Bloodfiend:DYE_SANGRIA",
+      "case": "slayer",
+      "group": "Riftstalker Bloodfiend",
+      "item": "DYE_SANGRIA",
+      "displayName": "Sangria Dye",
+      "score": 750000,
+      "placeholder": true,
+      "sourceRefs": [
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    }
+  ]
+}

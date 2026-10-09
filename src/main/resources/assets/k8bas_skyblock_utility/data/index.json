@@ -24,6 +24,30 @@
       "schemaVersion": 1,
       "dataVersion": 2,
       "gameVersion": "0.27.1"
+    },
+    "odds.rngscore": {
+      "path": "thirdparty/neu-repo/odds/rngscore.json",
+      "sha256": "b637f0e094f22f012b88a0a820138a4eb85c61968b8242028d26de72a7443354",
+      "rows": 390,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
+    },
+    "odds.supplied": {
+      "path": "odds/supplied.json",
+      "sha256": "7b90a2470599979dceea4e7d3403bda9fa4525a7389869fd9479615477f8c290",
+      "rows": 0,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
+    },
+    "odds.vanguard": {
+      "path": "thirdparty/skyocean/odds/vanguard.json",
+      "sha256": "1a9d3a29f5dfb74c06c3e94a920d7cca189013e4001f8692687cefad90fcefc4",
+      "rows": 25,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
     }
   }
 }

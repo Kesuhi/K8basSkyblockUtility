@@ -1,0 +1,363 @@
+{
+  "table": "odds.vanguard",
+  "schemaVersion": 1,
+  "dataVersion": 1,
+  "gameVersion": "0.27.1",
+  "generatedAt": "2026-10-09T19:59:30Z",
+  "license": "MIT",
+  "sources": {
+    "skyocean": {
+      "title": "SkyOcean src/repo/vanguard.jsonc (the MIT part of its licence)",
+      "url": "https://github.com/meowdding/SkyOcean",
+      "revision": "762ec36eb5b6d9e881e783126952cc7175712465",
+      "license": "MIT",
+      "notice": "skyocean",
+      "access": "git"
+    },
+    "meowdding": {
+      "title": "The same file in meowdding-repo, repo/skyocean/vanguard.jsonc",
+      "url": "https://github.com/meowdding/meowdding-repo",
+      "revision": "d010ae02cf87fc6ca619430e33d176672ff43789",
+      "license": "MIT",
+      "notice": "skyocean",
+      "access": "git"
+    },
+    "neu": {
+      "title": "NEU-REPO items/*.json (display names)",
+      "url": "https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO",
+      "revision": "c4f7d4757641f3a11c74d3d77cec76c100abaf98",
+      "license": "MIT",
+      "notice": "neu-repo",
+      "access": "git"
+    }
+  },
+  "corpse": "VANGUARD",
+  "totalWeight": 3515,
+  "rows": [
+    {
+      "id": "SHATTERED_PENDANT",
+      "item": "SHATTERED_PENDANT",
+      "displayName": "Shattered Locket",
+      "weight": 5,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "CAGED_WISP",
+      "item": "CAGED_WISP",
+      "displayName": "Caged Wisp",
+      "weight": 10,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "FROZEN_SCUTE",
+      "item": "FROZEN_SCUTE",
+      "displayName": "Frozen Scute",
+      "weight": 10,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "SKELETON_KEY",
+      "item": "SKELETON_KEY",
+      "displayName": "Skeleton Key",
+      "weight": 10,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "UMBER_PLATE",
+      "item": "UMBER_PLATE",
+      "displayName": "Umber Plate",
+      "weight": 30,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "TUNGSTEN_PLATE",
+      "item": "TUNGSTEN_PLATE",
+      "displayName": "Tungsten Plate",
+      "weight": 30,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "MITHRIL_PLATE",
+      "item": "MITHRIL_PLATE",
+      "displayName": "Mithril Plate",
+      "weight": 60,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "DWARVEN_OS_METALLIC_MINIS",
+      "item": "DWARVEN_OS_METALLIC_MINIS",
+      "displayName": "Dwarven O's Metallic Minis",
+      "weight": 120,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "OPAL_CRYSTAL",
+      "item": "OPAL_CRYSTAL",
+      "displayName": "Opal Crystal",
+      "weight": 120,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "ONYX_CRYSTAL",
+      "item": "ONYX_CRYSTAL",
+      "displayName": "Onyx Crystal",
+      "weight": 120,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "PERIDOT_CRYSTAL",
+      "item": "PERIDOT_CRYSTAL",
+      "displayName": "Peridot Crystal",
+      "weight": 120,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "CITRINE_CRYSTAL",
+      "item": "CITRINE_CRYSTAL",
+      "displayName": "Citrine Crystal",
+      "weight": 120,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "AQUAMARINE_CRYSTAL",
+      "item": "AQUAMARINE_CRYSTAL",
+      "displayName": "Aquamarine Crystal",
+      "weight": 120,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "UMBER_KEY",
+      "item": "UMBER_KEY",
+      "displayName": "Umber Key",
+      "weight": 140,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "TUNGSTEN_KEY",
+      "item": "TUNGSTEN_KEY",
+      "displayName": "Tungsten Key",
+      "weight": 140,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "ICE_COLD;1",
+      "item": "ICE_COLD;1",
+      "displayName": "Ice Cold I",
+      "weight": 160,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "FLAWLESS_ONYX_GEM",
+      "item": "FLAWLESS_ONYX_GEM",
+      "displayName": "Flawless Onyx Gemstone",
+      "weight": 240,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "FLAWLESS_CITRINE_GEM",
+      "item": "FLAWLESS_CITRINE_GEM",
+      "displayName": "Flawless Citrine Gemstone",
+      "weight": 240,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "FLAWLESS_PERIDOT_GEM",
+      "item": "FLAWLESS_PERIDOT_GEM",
+      "displayName": "Flawless Peridot Gemstone",
+      "weight": 240,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "FLAWLESS_AQUAMARINE_GEM",
+      "item": "FLAWLESS_AQUAMARINE_GEM",
+      "displayName": "Flawless Aquamarine Gemstone",
+      "weight": 240,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "SUSPICIOUS_SCRAP",
+      "item": "SUSPICIOUS_SCRAP",
+      "displayName": "Suspicious Scrap",
+      "weight": 240,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "GOBLIN_EGG_BLUE",
+      "item": "GOBLIN_EGG_BLUE",
+      "displayName": "Blue Goblin Egg",
+      "weight": 240,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "REFINED_UMBER",
+      "item": "REFINED_UMBER",
+      "displayName": "Refined Umber",
+      "weight": 240,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "REFINED_TUNGSTEN",
+      "item": "REFINED_TUNGSTEN",
+      "displayName": "Refined Tungsten",
+      "weight": 240,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    },
+    {
+      "id": "GLACITE_AMALGAMATION",
+      "item": "GLACITE_AMALGAMATION",
+      "displayName": "Glacite Amalgamation",
+      "weight": 280,
+      "sourceRefs": [
+        "skyocean",
+        "neu"
+      ],
+      "license": "MIT",
+      "verified": true,
+      "gameVersion": "0.27.1"
+    }
+  ]
+}

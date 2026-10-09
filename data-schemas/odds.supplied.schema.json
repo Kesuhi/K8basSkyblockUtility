@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Odds from pages you supplied (T3.9g, REQ-ODDS-10, D-16 (a), D-28 (i)): Scatha pet chances per kill, Lapis/Umber/Tungsten per-roll chances and the Frostbitten Dye per-roll chance (case vanguard, replacing SkyOcean's assumed weight, R6); empty until the pages are supplied",
+  "x-keys": {
+    "/rows": "id"
+  },
+  "type": "object",
+  "required": [
+    "rows"
+  ],
+  "properties": {
+    "table": {
+      "const": "odds.supplied"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "license": {
+      "const": "CC0-1.0"
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "item",
+          "displayName",
+          "sourceRefs",
+          "license",
+          "verified",
+          "gameVersion",
+          "case",
+          "chance"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_:;.\\- ]+$"
+          },
+          "item": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_;]+$",
+            "description": "The SkyBlock item id (NEU internal id; enchanted books NAME;LEVEL)."
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^\\S(.*\\S)?$",
+            "description": "The name as shown in game, for matching."
+          },
+          "sourceRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Keys of this table's sources."
+          },
+          "license": {
+            "enum": [
+              "CC0-1.0",
+              "MIT"
+            ]
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "False for a wiki-only number (shown with \"?\", REQ-ODDS-06/10)."
+          },
+          "gameVersion": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+            "description": "The SkyBlock version the row was last checked against."
+          },
+          "case": {
+            "enum": [
+              "scatha",
+              "lapis",
+              "umber",
+              "tungsten",
+              "vanguard"
+            ]
+          },
+          "chance": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1,
+            "description": "The base chance per kill or per roll (0..1); never a per-corpse value."
+          },
+          "rarity": {
+            "enum": [
+              "RARE",
+              "EPIC",
+              "LEGENDARY"
+            ],
+            "description": "A Scatha pet's rarity."
+          },
+          "rolls": {
+            "type": "object",
+            "required": [
+              "min",
+              "max",
+              "sourceRefs"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "sourceRefs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                },
+                "description": "Keys of this table's sources."
+              }
+            },
+            "description": "How many times a corpse rolls (uniform from min to max, D-3); absent until a source gives it."
+          }
+        }
+      }
+    },
+    "$schema": {},
+    "dataVersion": {},
+    "gameVersion": {},
+    "generatedAt": {},
+    "sources": {}
+  },
+  "additionalProperties": false
+}

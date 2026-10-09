@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vanguard corpse loot weights per roll (T3.9g, REQ-ODDS-09, R6) from SkyOcean src/repo/vanguard.jsonc (MIT); its assumed dye weight is never used",
+  "x-keys": {
+    "/rows": "id"
+  },
+  "type": "object",
+  "required": [
+    "rows",
+    "corpse",
+    "totalWeight"
+  ],
+  "properties": {
+    "table": {
+      "const": "odds.vanguard"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "license": {
+      "const": "MIT"
+    },
+    "corpse": {
+      "const": "VANGUARD"
+    },
+    "totalWeight": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The sum of the rows' weights."
+    },
+    "rolls": {
+      "type": "object",
+      "required": [
+        "min",
+        "max",
+        "sourceRefs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "min": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sourceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "description": "Keys of this table's sources."
+        }
+      },
+      "description": "How many times a corpse rolls (uniform from min to max, D-3); absent until a source gives it."
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "item",
+          "displayName",
+          "sourceRefs",
+          "license",
+          "verified",
+          "gameVersion",
+          "weight"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_:;.\\- ]+$"
+          },
+          "item": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_;]+$",
+            "description": "The SkyBlock item id (NEU internal id; enchanted books NAME;LEVEL)."
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^\\S(.*\\S)?$",
+            "description": "The name as shown in game, for matching."
+          },
+          "sourceRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Keys of this table's sources."
+          },
+          "license": {
+            "enum": [
+              "CC0-1.0",
+              "MIT"
+            ]
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "False for a wiki-only number (shown with \"?\", REQ-ODDS-06/10)."
+          },
+          "gameVersion": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+            "description": "The SkyBlock version the row was last checked against."
+          },
+          "weight": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The item's weight per roll; the chance per roll is weight / totalWeight."
+          }
+        }
+      }
+    },
+    "$schema": {},
+    "dataVersion": {},
+    "gameVersion": {},
+    "generatedAt": {},
+    "sources": {}
+  },
+  "additionalProperties": false
+}
