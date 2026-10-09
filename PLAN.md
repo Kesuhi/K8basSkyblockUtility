@@ -919,12 +919,34 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - **What the capture shows:** Hypixel's name stand sits at the NPC's feet and CLICK 0.25 below, a layout the old nearest-wins already resolved. The 1.0.1 failure of the three NPCs was most likely the island gating that T1.9 fixed ("dungeon" → "Catacombs", in 1.1.0). This resolver guards SPEC's CLICK-nearer case.
     - **Not field-verified on the three NPCs:** the opportunistic rare-room check stays open for G3 and the Phase 3 report.
     - **Review:** two angles with two verifiers each. Fixed (confirmed): the capture test could not tell the fix from the old behaviour, and the docs and CHANGELOG claimed more than the evidence shows.
-- [ ] **T3.2 feat(mining): mineshaft entry alert [brief 3.2]** (M, deps T3.0m, T3.0h, T1.9). Posts one local `[KSU]` chat line per shaft entry, per server id and including party summons. It names the shaft, the corpses and the matching keys in your inventory. It uses game-state's mineshaft state (REQ-GS-17), inventory counts (REQ-GS-07) and widget hint (REQ-GS-18). It has no code parser of its own and never reads entities.
+- [x] **T3.2 feat(mining): mineshaft entry alert [brief 3.2]** (M, deps T3.0m, T3.0h, T1.9). Posts one local `[KSU]` chat line per shaft entry, per server id and including party summons. It names the shaft, the corpses and the matching keys in your inventory. It uses game-state's mineshaft state (REQ-GS-17), inventory counts (REQ-GS-07) and widget hint (REQ-GS-18). It has no code parser of its own and never reads entities.
   - Req: REQ-MSA-01, REQ-MSA-02, REQ-MSA-03, REQ-MSA-04, REQ-MSA-05, REQ-MSA-06, REQ-MSA-07, REQ-MSA-08, REQ-MSA-09, REQ-MSA-10, REQ-MSA-11, REQ-MSA-12
   - Timing: the alert posts once the list has been stable for 1.5 s. One follow-up if the list grows within 30 s (R7). At 8 s with no list: "corpse list unavailable", plus the shared hint once per launch. Cancelled on leave, server switch or disconnect.
   - Message: order Lapis, Tungsten, Umber, Vanguard; "n in inventory" (36 slots + offhand, D-7); ⚠ + red when short; "(n looted)"; the hover says sacks and storage are not counted. The sack-keys fallback is a build constant; the G1 sack check could not be run, so D-7 stands, the constant stays off and the check moves to G3 (Q-MSA-04, R24).
   - Toggles (Mining): "Mineshaft entry alert" ON, "Show corpse key counts" ON; search keywords mineshaft, corpse, key.
   - Accept: AC-MSA-01, AC-MSA-02, AC-MSA-03, AC-MSA-04, AC-MSA-05, AC-MSA-06, AC-MSA-07, AC-MSA-08, AC-MSA-09, AC-MSA-13, AC-MSA-14 (A/R; fixtures stay UNVERIFIED until the G1 captures replace them). AC-MSA-10, AC-MSA-11 and AC-MSA-12 are checked at G3.
+  - Done (2026-10-09):
+    - **Code:** `module/mineshaftalert/`.
+      - `MineshaftAlert` is the state machine on a given clock.
+        - Only a whole (PRESENT) corpse list counts. A cut-off or unparsable (PARTIAL) list is treated as no list (REQ-GS-10, EC-MSA-05).
+        - An EMPTY widget gives "no corpses listed" with no hint (EC-MSA-06).
+        - The unavailable line waits for the shaft name, so "Unknown shaft" only comes after the 15 s code search.
+        - The 30 s window counts from when the list appeared or grew, not from a later loot or redraw.
+        - The late-list follow-up (REQ-MSA-08) and the Dead Man's Chest follow-up (REQ-MSA-07) are separate.
+        - Re-entering the same server id starts over unless something was already posted for it.
+      - `MineshaftAlertText` builds the line.
+        - A type not known yet is listed by its raw name after the known ones, with no key entry and no "no keys needed" (EC-MSA-07), and is logged once per launch.
+        - The body is yellow so the gold `[KSU]` tag stands apart.
+      - `MineshaftAlertModule` has the Mining card with both toggles.
+        - It reads the inventory only in a shaft (REQ-GS-16).
+        - While it is off it records no entry, so switching it on inside a shaft posts nothing until the next entry.
+    - **Tests:**
+      - MineshaftAlertTest (28): the message, colours, hover, toggles, the [R] source scan, and every timing case above, including the negative side of both 30 s windows.
+      - MineshaftAlertGameTest (AC-MSA-01/03 wiring [C]): forced island, simulated shaft and a real Umber Key in the hotbar give exactly one `[KSU] Opal 1 · 1 Lapis, 2 Umber · Umber Key: 1 in inventory ⚠`; switched on inside a shaft, nothing.
+      - Settings tests know the Mining card. SettingsScreensGameTest skips modules with no toggle key. MineshaftStateGameTest switches the alert off for its consumer-off check.
+    - **Kept as SPEC says:** a PARTIAL list gets "corpse list unavailable" with the once-per-launch hint (EC-MSA-05 → REQ-MSA-08), although a list that is cut off is visible. If the G3 check shows that cut-offs are common, decide whether they get their own wording.
+    - **Field checks for G3:** AC-MSA-10/11/12, the widget hint wording, the sack-key check (`SACK_KEYS_WORK` stays off).
+    - **Review:** two angles with two verifiers each, then a second round on the fixes. Every confirmed finding is fixed: the always-on inventory read, the consumer-off and toggle-key gametests, presence handling, re-entry, unknown types, the body colour, the early "Unknown shaft", both window timings, the blocked growth follow-up, tests that could not fail, and the switch-on inside a shaft.
 - **T3.3a feat(data): corpse spot table [brief 3.3]** [dropped R22] *(the maintainer dropped corpse-spot waypoints after G1)*. Not built; kept as the record, and no other task depends on it. Was: (M, deps T3.0c). A registry table of possible corpse spots per shaft code (D-5), built from SkyHanni-REPO PR #759 @ `e2c8edb932` plus meowdding-repo @ `42d01278a8`. Normalised to Skyblocker's frame: 29 codes and 129 spots; `_C` codes share one list; 5 codes are marked "no spot data"; each spot records its sources.
   - Was Req: REQ-CORPSE-01, REQ-CORPSE-09, REQ-CORPSE-10, REQ-XC-LICENSE-03
   - MIT licence files go under `data/thirdparty/<upstream>/`, with THIRD_PARTY_NOTICES entries (hannibal2, meowdding, credit to GrowlingGrizzly). Table-specific validator rules run in `check`.

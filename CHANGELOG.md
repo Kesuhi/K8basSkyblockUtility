@@ -6,6 +6,16 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+### Added
+
+- Mineshaft entry alert (Mining, ON by default): when you enter a Glacite Mineshaft, one chat line
+  that only you see names the shaft, lists its frozen corpses (Lapis, Tungsten, Umber, Vanguard,
+  with any already looted) and shows how many of each needed key are in your inventory and offhand,
+  with ⚠ in red when you have too few. A corpse added by a Dead Man's Chest within 30 s gives one
+  update. It reads Hypixel's Frozen Corpses tab widget; if the widget is off or cut off, the line
+  says so and tells you once how to turn it on. Keys in sacks or storage are not counted. "Show
+  corpse key counts" (ON) turns the key part off.
+
 ### Changed
 
 - The NPC and mob lists for "Add from database" now ship inside the mod. They are no longer

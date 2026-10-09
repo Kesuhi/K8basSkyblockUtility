@@ -3,6 +3,8 @@ package com.k8bas.skyblockutility.settings
 import com.k8bas.skyblockutility.config.ConfigManager
 import com.k8bas.skyblockutility.config.GeneralConfig
 import com.k8bas.skyblockutility.module.ModuleManager
+import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig
+import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertModule
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterOptions
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig
@@ -15,16 +17,20 @@ import java.util.function.Consumer
 object OptionCatalog {
 	/** The catalog over the given configs, without any module running (for tests). */
 	@JvmStatic
+	@JvmOverloads
 	fun build(
 		general: GeneralConfig,
 		mobHighlighter: MobHighlighterConfig,
 		npcSearch: NpcSearchConfig,
 		setMobHighlighterEnabled: Consumer<Boolean>,
 		setNpcSearchEnabled: Consumer<Boolean>,
+		mineshaftAlert: MineshaftAlertConfig = MineshaftAlertConfig(),
+		setMineshaftAlertEnabled: Consumer<Boolean> = Consumer { mineshaftAlert.enabled = it },
 	): List<Card> = sorted(
 		GeneralOptions.cards(general) +
 			MobHighlighterOptions.cards(mobHighlighter, general, setMobHighlighterEnabled) +
-			NpcSearchOptions.cards(npcSearch, setNpcSearchEnabled),
+			NpcSearchOptions.cards(npcSearch, setNpcSearchEnabled) +
+			MineshaftAlertModule.cards(mineshaftAlert, setMineshaftAlertEnabled),
 	)
 
 	/** The catalog of the running game: General plus each registered module's cards. */

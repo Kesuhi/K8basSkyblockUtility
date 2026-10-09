@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.highlight.GlowBehaviourText;
 import com.k8bas.skyblockutility.ui.notice.NoticePosition;
+import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.ui.option.Card;
@@ -59,7 +60,8 @@ class OptionCatalogTest {
 	private static final Pattern COMPLIANCE_TOGGLE = Pattern.compile("(?i)(invisible|through.?walls?|x-?ray|see.?through|depth)");
 
 	private static List<Card> catalog() {
-		return OptionCatalog.build(new GeneralConfig(), new MobHighlighterConfig(), new NpcSearchConfig(), enabled -> { }, enabled -> { });
+		return OptionCatalog.build(new GeneralConfig(), new MobHighlighterConfig(), new NpcSearchConfig(), enabled -> { }, enabled -> { },
+				new MineshaftAlertConfig(), enabled -> { });
 	}
 
 	private static List<Option> options() {
@@ -105,6 +107,9 @@ class OptionCatalogTest {
 		expected.put("modules.npc_search.foundTitleEnabled", true);
 		expected.put("modules.npc_search.showBeams", true);
 		expected.put("modules.npc_search.showDistance", true);
+		// REQ-MSA-11 (D-6): the mineshaft entry alert and its key counts ON.
+		expected.put("modules.mineshaft_alert.enabled", true);
+		expected.put("modules.mineshaft_alert.showKeys", true);
 		expected.put("options.txt:key.k8bas_skyblock_utility.open_settings", UNBOUND);
 		expected.put("options.txt:key.k8bas_skyblock_utility.mob_highlighter_toggle", UNBOUND);
 		expected.put("options.txt:key.k8bas_skyblock_utility.npc_search_toggle", UNBOUND);
@@ -210,7 +215,8 @@ class OptionCatalogTest {
 		GeneralConfig general = new GeneralConfig();
 		MobHighlighterConfig mob = new MobHighlighterConfig();
 		NpcSearchConfig npc = new NpcSearchConfig();
-		List<Card> cards = OptionCatalog.build(general, mob, npc, value -> mob.enabled = value, value -> npc.enabled = value);
+		MineshaftAlertConfig shaft = new MineshaftAlertConfig();
+		List<Card> cards = OptionCatalog.build(general, mob, npc, value -> mob.enabled = value, value -> npc.enabled = value, shaft, value -> shaft.enabled = value);
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		for (Card card : cards) {
 			for (Option option : card.all()) {
@@ -218,10 +224,10 @@ class OptionCatalogTest {
 				if (option instanceof Keybind || option instanceof ActionOption) {
 					continue;
 				}
-				Map<String, String> before = leaves(gson, general, mob, npc);
+				Map<String, String> before = leaves(gson, general, mob, npc, shaft);
 				Object original = current(option);
 				change(option);
-				Map<String, String> after = leaves(gson, general, mob, npc);
+				Map<String, String> after = leaves(gson, general, mob, npc, shaft);
 				Set<String> changed = new TreeSet<>();
 				before.forEach((key, value) -> {
 					if (!value.equals(after.get(key))) {
@@ -230,7 +236,7 @@ class OptionCatalogTest {
 				});
 				assertEquals(Set.of(option.storageKey()), changed, option.id());
 				restore(option, original);
-				Map<String, String> restored = leaves(gson, general, mob, npc);
+				Map<String, String> restored = leaves(gson, general, mob, npc, shaft);
 				// A setting absent until picked (R28, the accent) now holds its default: picked, so it is written.
 				if ("null".equals(before.get(option.storageKey()))) {
 					assertEquals(gson.toJson(option.defaultValue()), restored.get(option.storageKey()), option.id() + " holds its default");
@@ -279,7 +285,7 @@ class OptionCatalogTest {
 		Set<String> cardIds = new TreeSet<>();
 		catalog().forEach(card -> cardIds.add(card.id()));
 		assertTrue(cardIds.containsAll(moduleIds), "modules " + moduleIds + " vs cards " + cardIds);
-		assertEquals(2, moduleIds.size());
+		assertEquals(3, moduleIds.size());
 	}
 
 	/** REQ-XC-RULES-07 (P7): no forbidden word in what is shown; "gambling" only as a keyword. */
@@ -368,7 +374,8 @@ class OptionCatalogTest {
 		Map<String, JsonObject> roots = Map.of(
 				"general", gson.toJsonTree(new GeneralConfig()).getAsJsonObject(),
 				"modules.mob_highlighter", gson.toJsonTree(new MobHighlighterConfig()).getAsJsonObject(),
-				"modules.npc_search", gson.toJsonTree(new NpcSearchConfig()).getAsJsonObject());
+				"modules.npc_search", gson.toJsonTree(new NpcSearchConfig()).getAsJsonObject(),
+				"modules.mineshaft_alert", gson.toJsonTree(new MineshaftAlertConfig()).getAsJsonObject());
 		for (Option option : storedOptions()) {
 			String key = option.storageKey();
 			if (key.startsWith("options.txt:")) {
@@ -408,13 +415,14 @@ class OptionCatalogTest {
 		}
 	}
 
-	private static Map<String, String> leaves(Gson gson, GeneralConfig general, MobHighlighterConfig mob, NpcSearchConfig npc) {
+	private static Map<String, String> leaves(Gson gson, GeneralConfig general, MobHighlighterConfig mob, NpcSearchConfig npc, MineshaftAlertConfig shaft) {
 		Set<String> keys = new TreeSet<>();
 		Map<String, String> values = new LinkedHashMap<>();
 		JsonObject root = new JsonObject();
 		root.add("general", gson.toJsonTree(general));
 		JsonObject modules = new JsonObject();
 		modules.add("mob_highlighter", gson.toJsonTree(mob));
+		modules.add("mineshaft_alert", gson.toJsonTree(shaft));
 		modules.add("npc_search", gson.toJsonTree(npc));
 		root.add("modules", modules);
 		flatten("", root, keys);

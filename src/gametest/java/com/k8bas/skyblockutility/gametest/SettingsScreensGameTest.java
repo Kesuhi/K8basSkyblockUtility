@@ -63,7 +63,9 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 			closingReturnsToTheOpener(context);
 
 			for (Module module : ModuleManager.modules()) {
-				toggleKeyFlipsAndSaves(context, module);
+				if (toggleKey(module) != null) {
+					toggleKeyFlipsAndSaves(context, module);
+				}
 			}
 
 			keybindNamesAreTranslated(context);
@@ -195,6 +197,8 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 		return switch (module.id()) {
 			case "mob_highlighter" -> com.k8bas.skyblockutility.module.mobhighlighter.ModKeybinds.TOGGLE_KEY;
 			case "npc_search" -> com.k8bas.skyblockutility.module.npcsearch.ModKeybinds.TOGGLE_KEY;
+			// REQ-MSA-11 gives the mineshaft alert two settings toggles and no toggle key.
+			case "mineshaft_alert" -> null;
 			default -> throw new AssertionError("no toggle key known for " + module.id());
 		};
 	}

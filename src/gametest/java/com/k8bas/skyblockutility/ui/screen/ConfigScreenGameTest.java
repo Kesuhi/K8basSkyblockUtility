@@ -119,7 +119,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	/** AC-UI-04: each category opens with its cards; a feature switched off dims its sub-options. */
 	private static void everyCategory(ClientGameTestContext context) {
 		List<Category> categories = context.computeOnClient(client -> screen(client).categories());
-		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS)), "the categories with cards: " + categories);
+		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING)), "the categories with cards: " + categories);
 		for (Category category : categories) {
 			context.runOnClient(client -> screen(client).select(category));
 			context.waitTicks(2);
@@ -404,7 +404,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 
 		click(context, cross);
 		check(context.computeOnClient(client -> screen(client).query()).isEmpty(), "× empties the box");
-		check(context.computeOnClient(client -> screen(client).view().categories().size()) == 3, "and every category is back");
+		check(context.computeOnClient(client -> screen(client).view().categories().equals(screen(client).categories())), "and every category is back");
 		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "and the box has the keyboard again");
 
 		// A query matching several categories survives a click on another tab.
