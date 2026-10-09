@@ -12,6 +12,7 @@ import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
 import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
+import com.k8bas.skyblockutility.skyblock.GameStateReaders;
 import com.k8bas.skyblockutility.hud.HudRenderer;
 import com.k8bas.skyblockutility.hud.ShippedHud;
 import com.k8bas.skyblockutility.ui.screen.HudEditorScreen;
@@ -57,6 +58,8 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 			}
 		});
 		IslandTracker.register();
+		// Read-only tab and sidebar readers; they read only while an enabled feature subscribes.
+		GameStateReaders.register();
 		// Rule matching runs once per tick on the client thread; rendering only reads the results.
 		ClientTickEvents.END_CLIENT_TICK.register(HighlightManager::tick);
 		GlowHandler.register();

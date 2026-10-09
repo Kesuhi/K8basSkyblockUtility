@@ -1,0 +1,87 @@
+package com.k8bas.skyblockutility.skyblock;
+
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * AC-GS-01 [A] (REQ-GS-01) and REQ-GS-12, made repeatable: the reader packages (`skyblock` and below, in both
+ * source trees) never click, close or open a menu, send a command, chat or packet, cancel anything, or write
+ * to disk. A reader only reads what the server already shows.
+ */
+class ReaderArchitectureTest {
+	/** The 26.2 names (checked with javap on minecraft-merged-deobf-26.2.jar), plus every Serverbound packet. */
+	private static final Map<String, Pattern> FORBIDDEN = Map.of(
+			"slot click", Pattern.compile("handleInventoryMouseClick|handleInventoryButtonClick|handleSlotStateChanged|handlePlaceRecipe"
+					+ "|handleContainerInput|ContainerInput\\.|ServerboundContainer\\w*"),
+			"container close", Pattern.compile("(?i)closeContainer|ServerboundContainerClose|\\.onClose\\(|setScreen\\("),
+			"command or chat send", Pattern.compile("\\bsend[A-Z]\\w*Command\\b|\\bsendCommand\\b|\\bsendChat\\b|ServerboundChat\\w*"),
+			"packet send", Pattern.compile("\\.send\\(|\\.connection\\.send|getConnection\\(\\)\\.send|ServerboundPacket|Serverbound\\w+Packet"),
+			"cancellation", Pattern.compile("CallbackInfo|\\.cancel\\(|@Inject|@WrapOperation|@Redirect|ALLOW_GAME|ALLOW_CHAT"),
+			"disk write", Pattern.compile("Files\\.write|Files\\.newBufferedWriter|Files\\.newOutputStream|FileWriter|FileOutputStream|AtomicFileStore|PrintWriter"));
+
+	@Test
+	void readerPackagesOnlyRead() throws IOException {
+		Path project = Path.of(System.getProperty("k8bas.projectDir", "."));
+		List<String> violations = new ArrayList<>();
+		int files = 0;
+		for (String tree : List.of("src/main/java", "src/main/kotlin")) {
+			Path dir = project.resolve(tree).resolve("com/k8bas/skyblockutility/skyblock");
+			if (!Files.isDirectory(dir)) {
+				continue;
+			}
+			try (Stream<Path> walk = Files.walk(dir)) {
+				for (Path file : walk.filter(path -> path.toString().endsWith(".java") || path.toString().endsWith(".kt")).toList()) {
+					files++;
+					String source = withoutComments(Files.readString(file));
+					FORBIDDEN.forEach((what, pattern) -> {
+						Matcher m = pattern.matcher(source);
+						if (m.find()) {
+							violations.add(project.relativize(file) + ": " + what + " (" + m.group() + ")");
+						}
+					});
+				}
+			}
+		}
+		assertTrue(files >= 8, "the scan found the reader sources: " + files);
+		assertEquals(List.of(), violations);
+	}
+
+	@Test
+	void theScanCatchesEachKindOfViolation() {
+		// One real 26.2 call per pattern, so a pattern that names no existing API fails here.
+		Map<String, List<String>> samples = Map.of(
+				"slot click", List.of("client.gameMode?.handleInventoryMouseClick(menu.containerId, 0, 0, input, player)",
+						"gameMode.handleInventoryButtonClick(menu.containerId, 1);", "ServerboundContainerClickPacket(id)"),
+				"container close", List.of("player.clientSideCloseContainer()", "player.closeContainer();", "client.setScreen(null)"),
+				"command or chat send", List.of("connection.sendUnattendedCommand(\"warp mines\", null)",
+						"connection.sendCommand(\"pc hi\")", "connection.sendChat(\"hi\");"),
+				"packet send", List.of("connection.send(packet)", "ServerboundPlayerCommandPacket(player, action)"),
+				"cancellation", List.of("ci.cancel()", "ClientReceiveMessageEvents.ALLOW_GAME.register { _, _ -> false }"),
+				"disk write", List.of("Files.writeString(path, text)", "FileOutputStream(file)", "AtomicFileStore.write(path, bytes)"));
+		assertEquals(FORBIDDEN.keySet(), samples.keySet(), "every pattern has samples");
+		samples.forEach((what, calls) -> {
+			for (String call : calls) {
+				assertTrue(FORBIDDEN.get(what).matcher(withoutComments(call)).find(), what + " misses " + call);
+			}
+		});
+		assertTrue(!FORBIDDEN.get("command or chat send").matcher(withoutComments("// sendCommand is never used")).find(),
+				"a comment that names an API is no violation");
+	}
+
+	/** Drops line and block comments, so KDoc that explains what is never done does not trip the scan. */
+	private static String withoutComments(String source) {
+		return source.replaceAll("(?s)/\\*.*?\\*/", "").replaceAll("(?m)//.*$", "");
+	}
+}
