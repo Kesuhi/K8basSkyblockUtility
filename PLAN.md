@@ -1101,10 +1101,19 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 
 *T3.9 Rare Drop Odds [brief 3.7]: split into T3.9a–h and built last in Phase 3. D-3 = A (numeric odds, five cases), R10 = b. Reveal animations and the later candidates listed in SPEC rare-drop-odds are not in v1.*
 
-- [ ] **T3.9a feat(odds): odds math + "1 in N (P%)" format** (S, deps T1.18). Pure Java; every value is computed in code: at least one success, expected attempts, luck percentile, MF/Pet Luck scaling (cap 900, the < 5 % rule), per-corpse chance from per-roll weights over uniform roll counts, RNG-meter boost, slayer base chance, and bosses until guaranteed.
+- [x] **T3.9a feat(odds): odds math + "1 in N (P%)" format** (S, deps T1.18). Pure Java; every value is computed in code: at least one success, expected attempts, luck percentile, MF/Pet Luck scaling (cap 900, the < 5 % rule), per-corpse chance from per-roll weights over uniform roll counts, RNG-meter boost, slayer base chance, and bosses until guaranteed.
   - Req: REQ-ODDS-06, REQ-ODDS-08
   - Format: thousands separators, 2 significant digits (minimum 0.0001 %), a basis label, "≈" for estimates, "?" for `verified: false` rows.
   - Accept: AC-ODDS-05, AC-ODDS-07.
+  - Done (2026-10-09): `module/odds/`, plain Kotlin with no game types (the repo's language since R30).
+    - **`OddsMath`:** at least one success, expected attempts, luck percentile, the pet and drop chance with MF capped at 900 (pets always scale, other drops only below 5 %), the per-corpse mean over uniform roll counts, the meter boost (at most ×3), "guaranteed", the slayer base (500, or 250 for the Riftstalker) and bosses until guaranteed (null before a gain is seen).
+    - **`OddsFormat`:** "1 in N (P%) <basis>" with US thousands separators, and the six SPEC basis labels.
+      - P has 2 significant digits, rounded half up on the decimal value (0.01 → "1.0%", 0.004 → "0.40%"), and shows "<0.0001%" below the minimum.
+      - A chance of 1 or more is "1 in 1 (100%)"; 0 or NaN throws, since a missing number is the caller's "no number" case (REQ-ODDS-11).
+      - A `verified: false` row ends in " ?"; the run estimate reads "≈ 1 in N runs (P%, base, no bonuses)".
+    - **Tests:** OddsMathTest (7), every AC-ODDS-05 and AC-ODDS-07 fixture plus the boundaries.
+    - **For T3.9b:** the Scatha "chance by now" at 0 kills is a computed 0. The panel must show it as such and not pass 0 to `oneIn`.
+    - **Review:** two angles with two verifiers each. Fixed (confirmed): whole-number percentages lost their second digit ("1%"), and exactly 0.0001 % showed as below the minimum (both from rounding the binary double). Also taken: p ≥ 1 as 100 %, and the meter cap test.
 - [ ] **T3.9g feat(odds): bundled drop tables (two MIT, one CC0)** (M, deps T3.0c, T3.0i, T3.0j). Three registry tables, each with a schema and an index entry:
   - MIT: the dungeon and slayer sections of NEU `constants/rngscore.json` (D-5), with notice files and a THIRD_PARTY_NOTICES entry
   - MIT: SkyOcean's `src/repo/vanguard.jsonc` weights (R6), with notice files and a THIRD_PARTY_NOTICES entry. Its assumed dye weight is replaced by a Frostbitten Dye row with its own `sourceRefs`/`license`, from a page you supply (REQ-ODDS-10)
