@@ -333,6 +333,30 @@ published. The 2.0.0 steps extend this document (PLAN T7.2c).
 
 ## Release records
 
+### v1.2.0, published 2026-10-09
+
+- **PR #2** was merged as merge commit `c33ba20` after the maintainer's approval ("merge"); its head
+  `46035d3` was the approved commit, and CI was green on both. The annotated tag `v1.2.0` is on the
+  merge commit, with the noreply identity, pushed after the maintainer's "ship".
+- **Build:** `./gradlew clean build` ran from the detached tag. All 551 unit tests passed.
+  - Jar: `sha256:4c72ecf0251b8285284a74b0fd9bf853763be5788925de2b9285e17d6b9d739e` (709,316 bytes).
+    It nests only Render Chest; Fabric Language Kotlin is a dependency, not bundled.
+  - Sidecar: `sha256:c7861b607b98bebbe970354b34252411ccb4587612ccb9228a6b29631bac589f`.
+- **Draft checks:** `release-check.sh v1.2.0` printed PASS, with all five steps `[ok]`. It ran
+  before and after the tier D boot.
+- **Tier D:** the maintainer's 53-jar `26.2 Skyblock` mod set (copied; its installed 1.1.0 jar
+  left out by the task). The baseline ran without this mod (no `- k8bas_skyblock_utility` line);
+  both boots reached the title screen. The release run loaded 187 mods, among them
+  `k8bas_skyblock_utility 1.2.0+26.2` and `fabric-language-kotlin 1.14.1+kotlin.2.4.20`. Both had
+  the same 9 distinct ERROR messages (offline-account log-ins of other mods) once thread names are
+  removed, and the release jar added no ERROR and no WARN line. This covers the [D] parts of
+  AC-NPCWP-11 and AC-MARK-08; their [E] parts are the accepted known issues of PR #2.
+- **Published** as Latest, not as a pre-release, at 2026-10-09T10:56:18Z. The assets are only the
+  jar and the sidecar, both `uploaded`, and the body equals the CHANGELOG section. An anonymous
+  `GET …/releases/latest` is v1.2.0, and `GET …/releases` lists v1.2.0 first.
+- Compare ERROR lines without the whole thread name: `ForkJoinPool.commonPool-worker-3` against
+  `-worker-6` differs from boot to boot too.
+
 ### v1.1.0, published 2026-10-02
 
 - **PR #1** was merged as merge commit `0588945` after the maintainer's approval. The annotated tag
