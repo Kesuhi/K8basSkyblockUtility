@@ -66,6 +66,9 @@ class ProfileStore @JvmOverloads constructor(
 		}
 	}
 
+	/** Whether the current profile's state can be read and written (known, and sure which profile it is). */
+	fun usable(): Boolean = profile != null && usable
+
 	/** The consumer's state for the current profile, or null when unknown, not usable or not saved yet. */
 	fun read(consumer: String): String? {
 		val file = file(consumer) ?: return null

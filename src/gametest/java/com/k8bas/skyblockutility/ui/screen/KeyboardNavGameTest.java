@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.screen;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.gametest.ModuleStates;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
@@ -38,6 +39,7 @@ public class KeyboardNavGameTest implements FabricClientGameTest {
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
+		ModuleStates modules = context.computeOnClient(client -> ModuleStates.capture());
 		context.getInput().resizeWindow(1280, 960);
 		NoticePosition noticeBefore = ConfigManager.general().noticePosition;
 		try {
@@ -55,7 +57,7 @@ public class KeyboardNavGameTest implements FabricClientGameTest {
 			context.waitTicks(2);
 		} finally {
 			context.runOnClient(client -> {
-				ModuleManager.modules().forEach(module -> module.setEnabled(true));
+				modules.restore();
 				ConfigManager.general().mobScanRangeBlocks = 64;
 				ConfigManager.general().noticePosition = noticeBefore;
 				ConfigManager.save();

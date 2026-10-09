@@ -1145,11 +1145,28 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - a percentage map at the table root passed;
       - AC-ODDS-08 was not tested on the real schemas.
       Also taken: the NEU notice names `vanguard.json`, and an upside-down roll range fails.
-- [ ] **T3.9h feat(odds): Rare Drop Odds module** (M, deps T3.9a, T3.9g, T3.0a, T3.0g, T3.0d, T3.0m, T1.9, T2.4a). The "Rare Drop Odds" card in Odds & Trackers: master toggle OFF; five case toggles ON; chat-line toggle ON; rare threshold 2 % (range 0.01–10 %). "Gambling" appears only as a hidden search keyword.
+- [x] **T3.9h feat(odds): Rare Drop Odds module** (M, deps T3.9a, T3.9g, T3.0a, T3.0g, T3.0d, T3.0m, T1.9, T2.4a). The "Rare Drop Odds" card in Odds & Trackers: master toggle OFF; five case toggles ON; chat-line toggle ON; rare threshold 2 % (range 0.01–10 %). "Gambling" appears only as a hidden search keyword.
   - Req: REQ-ODDS-01, REQ-ODDS-02, REQ-ODDS-03, REQ-ODDS-04, REQ-ODDS-07, REQ-ODDS-11, REQ-ODDS-12
   - Inputs are read-only, through game-state, and each event gets at most one local line. An unknown item or floor shows no number and is logged once. A missing table disables only its own case and shows a card notice.
   - Per-profile counters use the T3.0d store and are labelled "counted by K8bas since <date>". A "Reset odds counters" button resets the session counters.
   - Accept: AC-ODDS-01, AC-ODDS-02, AC-ODDS-09, AC-ODDS-10.
+  - Done (2026-10-09): `module/odds/`.
+    - **`OddsCase`:** the five cases with the tables each needs. `OddsGate` turns a case on only with the master, its toggle and its tables readable (a table still loading counts as readable); the card notice reads "No data, off: <cases>".
+    - **`OddsTables`:** the three table specs, decoded to typed rows, registered before the registry starts. A test hook can treat a table as unreadable.
+    - **`OddsCounters`** (per profile through ProfileService):
+      - While the profile is unknown, or its id is not settled, the per-profile values are null (no false zero). Counts made meanwhile are added to that profile once it can be stored.
+      - The session starts over only when another profile arrives, on a restart, or with "Reset odds counters".
+    - **`OnceLog`:** an unknown name is logged once per session.
+    - **`RareDropOddsModule`:** the Odds & Trackers card.
+      - Master OFF; five case toggles, "Chat lines" and "Rare threshold" (a choice of 0.01 % to 10 %, default 2 %); "Reset odds counters".
+      - "gambling" is only a keyword (P7).
+      - The cases get `active(case)`, `post(case, line)` (one local line, when the chat lines are on), `unknown(case, name)`, `counters()` and `rareThreshold()`.
+    - **`ProfileService.storable()`** says whether the current profile's state can be read and written.
+    - **Tests:**
+      - OddsFrameworkTest (13): the gate and AC-ODDS-09's table and log rules, the card (AC-ODDS-01), the counters (AC-ODDS-10, plus an unsettled profile and session resets), and the AC-ODDS-02 [R] source scan.
+      - Gametest RareDropOddsGameTest [B]: the tables load; the cases follow the master; with the Vanguard table unreadable only that case is off and the card says so; screenshots.
+    - **Gametest hygiene:** ConfigScreenGameTest, ConfigMotionGameTest and KeyboardNavGameTest switched every module ON after themselves. With a feature that is OFF by default this kept the profile service reading for later gametests, so they now put each module back (`gametest/ModuleStates`).
+    - **Review:** two angles with two verifiers each. Fixed (confirmed): counts made while the profile was unknown or unsettled were shown as zeros and lost; the session reset on a reconnect, on the id arriving or on a toggle; AC-ODDS-09's real table state and the once-per-session log were untested; the notice's case names were cut off. The all-modules-ON cleanup (split vote) is fixed too.
 - [ ] **T3.9b feat(odds): Scatha case** (M, deps T3.9h, T2.8). A Crystal Hollows HUD panel showing:
   - the base and the MF + Pet Luck-adjusted pet chances: any, Rare, Epic, Legendary
   - kills this session and kills since the last pet

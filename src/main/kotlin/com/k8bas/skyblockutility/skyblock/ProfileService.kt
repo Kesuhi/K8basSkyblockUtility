@@ -49,6 +49,10 @@ object ProfileService {
 	@JvmStatic
 	fun read(consumer: String): String? = store.read(consumer)
 
+	/** Whether the current profile's state can be read and written now (it is known and its id settled). */
+	@JvmStatic
+	fun storable(): Boolean = store.usable()
+
 	/** Saves the consumer's state for the current profile; nothing while the profile is unknown. */
 	@JvmStatic
 	fun write(consumer: String, content: String) = store.write(consumer, content)
