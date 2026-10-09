@@ -129,6 +129,8 @@ test {
 	inputs.file("THIRD_PARTY_NOTICES.md").withPropertyName("thirdPartyNotices").withPathSensitivity(PathSensitivity.RELATIVE)
 	inputs.files(fileTree("licenses")).withPropertyName("licenceTexts").withPathSensitivity(PathSensitivity.RELATIVE)
 	inputs.file(tasks.named("jar").flatMap { it.archiveFile }).withPropertyName("releaseJar").withPathSensitivity(PathSensitivity.NAME_ONLY)
+	// The mixin rules (T3.0f, MixinRulesTest) also scan the gametest sources, which the test task does not compile.
+	inputs.dir("src/gametest/java").withPropertyName("gametestSources").withPathSensitivity(PathSensitivity.RELATIVE)
 	systemProperty "k8bas.projectDir", projectDir.absolutePath
 	// ReleaseArtifactTest checks the built jar and its sidecar against the release contract.
 	dependsOn "sha256Sidecar"

@@ -1,0 +1,11 @@
+{
+	"required": false,
+	"minVersion": "0.8",
+	"package": "com.k8bas.skyblockutility.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"plugin": "com.k8bas.skyblockutility.hook.MainHookPlugin",
+	"injectors": {
+		"defaultRequire": 0
+	},
+	"client": []
+}

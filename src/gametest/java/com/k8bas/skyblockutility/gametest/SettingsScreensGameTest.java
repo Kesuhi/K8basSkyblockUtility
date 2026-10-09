@@ -68,7 +68,7 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 
 			keybindNamesAreTranslated(context);
 
-			String log = latestLog();
+			String log = withoutDeliberateFailures(latestLog());
 			check(!log.contains("at com.k8bas") && !log.contains("at knot//com.k8bas"), "no exception from com.k8bas in latest.log");
 		}
 	}
@@ -240,6 +240,21 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 		} else {
 			waitForTitle(context, expectedTitle);
 		}
+	}
+
+	/**
+	 * The log without the failures fixtures cause on purpose: HookStatusGameTest's ForeignBadMixin and OwnBadLateMixin
+	 * (T3.0f) fail when the hook check loads their target classes, so their stack traces pass through com.k8bas.
+	 * Every other entry, stack traces included, stays.
+	 */
+	private static String withoutDeliberateFailures(String log) {
+		StringBuilder kept = new StringBuilder();
+		for (String entry : log.split("\r?\n(?=\\[\\d{2}:\\d{2}:\\d{2}])")) {
+			if (!entry.contains("ForeignBadMixin") && !entry.contains("OwnBadLateMixin")) {
+				kept.append(entry).append('\n');
+			}
+		}
+		return kept.toString();
 	}
 
 	private static String latestLog() {

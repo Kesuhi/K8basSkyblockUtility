@@ -35,12 +35,17 @@
 			"com.k8bas.skyblockutility.skyblock.MineshaftStateGameTest",
 			"com.k8bas.skyblockutility.skyblock.ProfileServiceGameTest",
 			"com.k8bas.skyblockutility.skyblock.MenuReaderGameTest",
+			"com.k8bas.skyblockutility.gametest.hook.HookStatusGameTest",
 			"com.k8bas.skyblockutility.data.BundledDataGameTest",
 			"com.k8bas.skyblockutility.gametest.SettingsScreensGameTest"
 		]
 	},
 	"depends": {
+		"fabricloader": ">=0.19.5",
 		"k8bas_skyblock_utility": "*",
 		"fabric-client-gametest-api-v1": "*"
-	}
+	},
+	"mixins": [
+		"k8bas_skyblock_utility_gametest.mixins.json"
+	]
 }

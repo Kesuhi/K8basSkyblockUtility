@@ -12,8 +12,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** AC-PORT-03: the shipped dependency ranges, evaluated with Fabric Loader's own version parser. */
@@ -73,10 +73,23 @@ class FabricModJsonTest {
 		assertFalse(modJson().getAsJsonObject("custom").getAsJsonObject("modmenu").get("update_checker").getAsBoolean());
 	}
 
-	/** AC-GLOW-05 [R] (T1.10): no mixin forces glowing or visibility; the glow goes through Render Chest. */
+	/**
+	 * AD-9 (T3.0f): the one mixin config is the optional cosmetic one: not required, injectors not required, its
+	 * own package and the hook-status plugin, so a hook that cannot go in never stops the game (REQ-BOB-08). No
+	 * mixin forces glowing or visibility (AC-GLOW-05, T1.10; MixinRulesTest and check-forbidden.sh).
+	 */
 	@Test
-	void theModShipsNoMixins() throws Exception {
-		assertFalse(modJson().has("mixins"));
-		assertNull(FabricModJsonTest.class.getResource("/k8bas_skyblock_utility.mixins.json"));
+	void theOnlyMixinConfigIsTheOptionalCosmeticOne() throws Exception {
+		assertEquals(List.of("k8bas_skyblock_utility.mixins.json"),
+				modJson().getAsJsonArray("mixins").asList().stream().map(element -> element.getAsString()).toList());
+		JsonObject config;
+		try (InputStream in = FabricModJsonTest.class.getResourceAsStream("/k8bas_skyblock_utility.mixins.json")) {
+			config = JsonParser.parseString(new String(in.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
+		}
+		assertFalse(config.get("required").getAsBoolean());
+		assertEquals(0, config.getAsJsonObject("injectors").get("defaultRequire").getAsInt());
+		assertEquals("com.k8bas.skyblockutility.mixin", config.get("package").getAsString());
+		assertEquals("com.k8bas.skyblockutility.hook.MainHookPlugin", config.get("plugin").getAsString());
+		assertFalse(config.has("mixins") || config.has("server"), "client-side cosmetic hooks only");
 	}
 }

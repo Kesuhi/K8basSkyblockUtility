@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.data.BundledData;
 import com.k8bas.skyblockutility.debug.ContainerDump;
 import com.k8bas.skyblockutility.debug.DebugCommand;
+import com.k8bas.skyblockutility.hook.HookStatus;
 import com.k8bas.skyblockutility.highlight.GlowHandler;
 import com.k8bas.skyblockutility.highlight.HighlightManager;
 import com.k8bas.skyblockutility.location.IslandTracker;
@@ -81,6 +82,9 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		HudRenderer.register();
 		HudRenderer.setEditorOpen(() -> Minecraft.getInstance().gui.screen() instanceof HudEditorScreen);
 
+		// The optional cosmetic hooks (AD-9): their target classes are loaded now, so each card knows whether its
+		// hook went in; one warning per hook that did not.
+		HookStatus.settle();
 		// Bundled tables load off the client thread, once every feature has registered its tables, so the startup
 		// log lists what they use; a table registered later still loads.
 		BundledData.start();
