@@ -47,6 +47,10 @@ class ReaderArchitectureTest {
 					files++;
 					String source = withoutComments(Files.readString(file));
 					FORBIDDEN.forEach((what, pattern) -> {
+						// REQ-GS-12's one exception: the parsed per-profile results features need (T3.0d).
+						if (what.equals("disk write") && file.getFileName().toString().equals("ProfileStore.kt")) {
+							return;
+						}
 						Matcher m = pattern.matcher(source);
 						if (m.find()) {
 							violations.add(project.relativize(file) + ": " + what + " (" + m.group() + ")");

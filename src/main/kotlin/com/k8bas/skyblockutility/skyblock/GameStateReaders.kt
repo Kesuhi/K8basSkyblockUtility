@@ -31,17 +31,26 @@ object GameStateReaders {
 			InventoryReader.tick()
 			ChatReader.tick()
 			MineshaftState.tick()
+			ProfileService.tick()
 		}
 		// IslandTracker calls its listeners on the client thread.
 		IslandTracker.onChange { clearAll() }
 		// It does not publish a world change it does not see (e.g. off SkyBlock), so the readers listen too.
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register { _, _ -> clearAll() }
 		// A disconnect may be signalled on the network thread.
-		ClientPlayConnectionEvents.DISCONNECT.register { _, client -> client.execute { clearAll() } }
+		ClientPlayConnectionEvents.DISCONNECT.register { _, client ->
+			client.execute {
+				clearAll()
+				// The profile outlives island and server changes, not a disconnect.
+				ProfileService.reset()
+			}
+		}
 		// Chat and action bar (T3.0g): delivered as they arrive; nothing is cached, so nothing to clear.
 		ChatReader.register()
 		// The mineshaft state (T3.0m) reads the tab and sidebar readers above.
 		MineshaftState.register()
+		// The profile service (T3.0d) reads the tab and chat readers above.
+		ProfileService.register()
 	}
 
 	private fun clearAll() {
