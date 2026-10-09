@@ -31,6 +31,7 @@
 			"com.k8bas.skyblockutility.gametest.DebugToolsGameTest",
 			"com.k8bas.skyblockutility.skyblock.GameStateReadersGameTest",
 			"com.k8bas.skyblockutility.skyblock.ChatReaderGameTest",
+			"com.k8bas.skyblockutility.skyblock.InventoryReaderGameTest",
 			"com.k8bas.skyblockutility.gametest.SettingsScreensGameTest"
 		]
 	},

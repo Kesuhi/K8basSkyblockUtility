@@ -28,6 +28,7 @@ object GameStateReaders {
 		ClientTickEvents.END_CLIENT_TICK.register {
 			TabReader.tick()
 			SidebarReader.tick()
+			InventoryReader.tick()
 			ChatReader.tick()
 		}
 		// IslandTracker calls its listeners on the client thread.
@@ -43,5 +44,6 @@ object GameStateReaders {
 	private fun clearAll() {
 		TabReader.clear()
 		SidebarReader.clear()
+		InventoryReader.clear()
 	}
 }
