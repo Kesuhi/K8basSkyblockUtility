@@ -43,8 +43,6 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ConfigManager.load();
-		// Bundled tables load off the client thread; features register theirs as they register.
-		BundledData.start();
 		// Queued like the load notices, so a failure before joining a world is still shown.
 		ConfigManager.setSaveFailureNotice(ConfigManager::queueNotice);
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
@@ -83,6 +81,9 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		HudRenderer.register();
 		HudRenderer.setEditorOpen(() -> Minecraft.getInstance().gui.screen() instanceof HudEditorScreen);
 
+		// Bundled tables load off the client thread, once every feature has registered its tables, so the startup
+		// log lists what they use; a table registered later still loads.
+		BundledData.start();
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
 	}
 }

@@ -1,5 +1,6 @@
 {
 	"key.category.k8bas_skyblock_utility.general": "K8bas Skyblock Utility",
+	"k8bas_skyblock_utility.hint.tab_widget": "The %s widget is off in your tab list. Turn it on with /widget.",
 	"key.k8bas_skyblock_utility.mob_highlighter_toggle": "Toggle Mob Highlighter",
 	"key.k8bas_skyblock_utility.npc_search_toggle": "Toggle NPC Search",
 	"key.k8bas_skyblock_utility.open_settings": "Open Settings"

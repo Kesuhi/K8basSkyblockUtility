@@ -30,6 +30,7 @@ object GameStateReaders {
 			SidebarReader.tick()
 			InventoryReader.tick()
 			ChatReader.tick()
+			MineshaftState.tick()
 		}
 		// IslandTracker calls its listeners on the client thread.
 		IslandTracker.onChange { clearAll() }
@@ -39,11 +40,14 @@ object GameStateReaders {
 		ClientPlayConnectionEvents.DISCONNECT.register { _, client -> client.execute { clearAll() } }
 		// Chat and action bar (T3.0g): delivered as they arrive; nothing is cached, so nothing to clear.
 		ChatReader.register()
+		// The mineshaft state (T3.0m) reads the tab and sidebar readers above.
+		MineshaftState.register()
 	}
 
 	private fun clearAll() {
 		TabReader.clear()
 		SidebarReader.clear()
 		InventoryReader.clear()
+		MineshaftState.clear()
 	}
 }

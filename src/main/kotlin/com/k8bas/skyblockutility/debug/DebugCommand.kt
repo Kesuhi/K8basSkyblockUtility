@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.debug
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient
 import com.k8bas.skyblockutility.data.BundledData
 import com.k8bas.skyblockutility.location.IslandTracker
+import com.k8bas.skyblockutility.skyblock.MineshaftState
 import com.k8bas.skyblockutility.util.ChatUtils
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
@@ -48,7 +49,7 @@ object DebugCommand {
 			for (root in ROOTS) {
 				// Every prefix runs here and says how to go on: one without a command would go to the server (REQ-UI-25).
 				val debug: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommands.literal("debug")
-					.executes { usage(it.source, root, if (dev) "debug <data|dump|island>" else "debug <data|dump>") }
+					.executes { usage(it.source, root, if (dev) "debug <data|dump|island|shaft>" else "debug <data|dump>") }
 					// The bundled data tables and their versions (REQ-DATA-11); read-only, shown in chat only.
 					.then(ClientCommands.literal("data").executes { showData() })
 					.then(
@@ -88,6 +89,15 @@ object DebugCommand {
 									.executes { forceIsland(StringArgumentType.getString(it, "name")) },
 							),
 					)
+					// Simulates a mineshaft for the gametests (T3.0m): /ksu debug shaft <code> [Type:STATE...] or clear.
+					debug.then(
+						ClientCommands.literal("shaft")
+							.executes { usage(it.source, root, "debug shaft <code> [Type:NOT_LOOTED|LOOTED...] | clear") }
+							.then(
+								ClientCommands.argument("shaft", StringArgumentType.greedyString())
+									.executes { simulateShaft(StringArgumentType.getString(it, "shaft")) },
+							),
+					)
 				}
 				dispatcher.register(ClientCommands.literal(root).then(debug))
 			}
@@ -119,6 +129,19 @@ object DebugCommand {
 	private fun usage(source: FabricClientCommandSource, root: String, rest: String): Int {
 		source.sendError(Component.literal("Usage: /$root $rest"))
 		return 0
+	}
+
+	/** Dev only: `clear`, or a shaft code and corpses written `Type:NOT_LOOTED` or `Type:LOOTED`. */
+	private fun simulateShaft(text: String): Int {
+		val words = text.trim().split(Regex("\\s+"))
+		if (words[0].equals("clear", ignoreCase = true)) {
+			MineshaftState.clearSimulation()
+			ChatUtils.chat("Shaft simulation cleared")
+		} else {
+			MineshaftState.simulate(words[0], words.drop(1))
+			ChatUtils.chat("Shaft simulated: " + words.joinToString(" "))
+		}
+		return 1
 	}
 
 	private fun forceIsland(name: String): Int {

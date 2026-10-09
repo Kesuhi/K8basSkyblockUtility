@@ -49,6 +49,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 			for (List<String> path : List.of(
 					List.of("ksu", "debug", "dump", "tab"),
 					List.of("ksu", "debug", "data"),
+					List.of("ksu", "debug", "shaft"),
 					List.of("ksu", "debug", "dump", "sidebar"),
 					List.of("ksu", "debug", "island"),
 					List.of("ksu", "debug", "dump", "entities"),
