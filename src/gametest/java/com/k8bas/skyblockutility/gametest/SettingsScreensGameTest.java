@@ -201,6 +201,8 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 			case "mineshaft_alert" -> null;
 			// REQ-BOB-07: the bobber fix has its settings toggle and no toggle key.
 			case "bobber_fix" -> null;
+			// REQ-HOT-12: Fishing Hotspots has its settings toggle and no toggle key.
+			case "fishing_hotspots" -> null;
 			default -> throw new AssertionError("no toggle key known for " + module.id());
 		};
 	}

@@ -36,8 +36,9 @@ class MainHookPluginTest {
 	}
 
 	@Test
-	void theBobberHooksAreTheBobberFixCardsOwn() {
+	void theFeatureHooksAreTheirCardsOwn() {
 		// The plugin spells the ids out (it runs before the mods are initialised); they must be the ones the card asks about.
-		assertEquals(List.of(BobberFixModule.LINK_HOOK, BobberFixModule.LAVA_HOOK), new MainHookPlugin().hooks().stream().map(Hook::id).toList());
+		assertEquals(List.of(BobberFixModule.LINK_HOOK, BobberFixModule.LAVA_HOOK, com.k8bas.skyblockutility.module.hotspot.HotspotModule.PARTICLE_HOOK),
+				new MainHookPlugin().hooks().stream().map(Hook::id).toList());
 	}
 }

@@ -5,6 +5,8 @@ import com.k8bas.skyblockutility.config.GeneralConfig
 import com.k8bas.skyblockutility.module.ModuleManager
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule
+import com.k8bas.skyblockutility.module.hotspot.HotspotConfig
+import com.k8bas.skyblockutility.module.hotspot.HotspotModule
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertModule
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig
@@ -29,12 +31,14 @@ object OptionCatalog {
 		mineshaftAlert: MineshaftAlertConfig = MineshaftAlertConfig(),
 		setMineshaftAlertEnabled: Consumer<Boolean> = Consumer { mineshaftAlert.enabled = it },
 		bobberFix: BobberFixConfig = BobberFixConfig(),
+		hotspots: HotspotConfig = HotspotConfig(),
 	): List<Card> = sorted(
 		GeneralOptions.cards(general) +
 			MobHighlighterOptions.cards(mobHighlighter, general, setMobHighlighterEnabled) +
 			NpcSearchOptions.cards(npcSearch, setNpcSearchEnabled) +
 			MineshaftAlertModule.cards(mineshaftAlert, setMineshaftAlertEnabled) +
-			BobberFixModule.cards(bobberFix, Consumer { bobberFix.enabled = it }),
+			BobberFixModule.cards(bobberFix, Consumer { bobberFix.enabled = it }) +
+			HotspotModule.cards(hotspots, Consumer { hotspots.enabled = it }),
 	)
 
 	/** The catalog of the running game: General plus each registered module's cards. */

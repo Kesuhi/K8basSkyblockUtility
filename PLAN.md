@@ -1011,13 +1011,38 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - The settings tests know the Fishing card.
     - **Open for G3:** AC-BOB-04/05 on Hypixel; AC-BOB-07 at the release's tier D boot. Whether Hypixel's timer stand is really hook id + 1 on the client is UNVERIFIED (EC-BOB-01: the fix then does nothing, nothing crashes).
     - **Review:** two angles with two verifiers each; no finding confirmed. Rejected: an outdated category list (already fixed), and in-game coverage of the link path and of another player's hook (beyond the ACs; the tables cover them).
-- [ ] **T3.6 feat(fishing): hotspot detection + ring [brief 3.6]** (M, deps T3.0b, T3.0n, T3.0f, T1.9). Recognises hotspot stands whose name tag vanilla displays (R2) on every SkyBlock island, then reads the buff line and finds the liquid surface. Draws a depth-tested ring, with an optional fill, in the buff colour.
+- [x] **T3.6 feat(fishing): hotspot detection + ring [brief 3.6]** (M, deps T3.0b, T3.0n, T3.0f, T1.9). Recognises hotspot stands whose name tag vanilla displays (R2) on every SkyBlock island, then reads the buff line and finds the liquid surface. Draws a depth-tested ring, with an optional fill, in the buff colour.
   - Req: REQ-HOT-01, REQ-HOT-02, REQ-HOT-03, REQ-HOT-04, REQ-HOT-05, REQ-HOT-06, REQ-HOT-12, REQ-HOT-13
   - Radius: the most frequent ring-particle distance, in 0.5-block steps, from a read-only `handleParticleEvent` observer (T3.0f). Capped per island, with a fallback radius otherwise. The buff patterns live in one place, and unknown text is logged once.
   - Lifecycle: 10-tick grace period; a re-sent stand within 4.0 blocks continues the same hotspot; everything clears on a world or server change.
   - Toggles: "Fishing Hotspots" ON, "Highlight ring" ON, "Filled area" ON, plus opacity. The card can show "radius estimation unavailable".
   - Accept: AC-HOT-01, AC-HOT-02, AC-HOT-06, AC-HOT-07 (observer part), AC-HOT-11 (ring and fill). AC-HOT-10 (tier D) and AC-HOT-08 are checked at G3.
   - Ring opacity (T3.0n review): the outline is always opaque and a disc needs an alpha above 0, so an opacity setting of 0% must map to an outline-only ring, not to a disc with alpha 0 (which MarkerRing refuses). The provider anchors rings only on hologram stands whose name tag vanilla displays (R2; see MarkerRing).
+  - Done (2026-10-09):
+    - **Code:** `module/hotspot/`.
+      - `HotspotText`: the HOTSPOT name and the buff patterns in one place; unknown text is logged once.
+      - `HotspotRadius`: mode in 0.5 steps, island caps (5 Crimson Isle and Torrhus Canyon, 4 Jerry and Lotus Atoll, 3 elsewhere; UNVERIFIED); the fallback is the cap; never below 0.5.
+      - `HotspotSurface`: SPEC's surface, the first water or lava within 3 blocks below, up to the top of a column the stand is in.
+      - `HotspotTracker`: shown stands only; the buff is the displayed name tag at the same X/Z up to a block below, a recognised line first; 10-tick grace. A stand sent again within 4 blocks (also in the same tick) continues the nearest removed hotspot with its samples; everything clears on a world, server or location change.
+      - `HotspotParticles`: pink dust anywhere, smoke on the Crimson Isle (UNVERIFIED).
+      - `HotspotModule`: the per-tick scan, the ring provider (entity-anchored, so depth-tested; only while vanilla shows the name tag, by flag and NAME_TAG_DISTANCE), and the Fishing card. Toggles: "Fishing Hotspots", "Highlight ring", "Filled area", "Fill opacity" 0–100 % (25). 0 % gives the outline only; neither part gives no ring.
+      - `mixin/ParticleObserverMixin` (hook `hotspot.particles`): an `@Inject` right after `ensureRunningOnSameThread`, so once per packet on the client thread. It never cancels. When it is skipped, the card shows PARTIAL "Radius estimation unavailable" and rings use the fallback.
+    - **Tests:**
+      - HotspotRulesTest: AC-HOT-01 and AC-HOT-02, the surface rule.
+      - HotspotTrackerTest (12): lifecycle, same-tick re-send, nearest match, buff line, particles, surface retry, clear.
+      - HotspotModuleTest: ring styles and alpha, particle filter, card, AC-HOT-07 [R] source scan.
+      - MainHookPluginTest: the hook id.
+      - Gametest HotspotGameTest, in a forced-SkyBlock world with the two named stands over water:
+        - the observer is applied and saw each of 24 `/particle` dust packets exactly once, so the radius is 2.5;
+        - AC-HOT-06 [C]: about 770 dark aqua ring pixels in the open at radius 2.5, 0 behind a stone wall;
+        - AC-HOT-11 [B]: ring, fill, opacity 0 % and module change the drawn rings on the next frame, and the values are stored.
+    - **Left for T3.6b:** the fished-in time (REQ-HOT-07) and the warning. The tracker's `removedAt` and grace period are its base.
+    - **Field checks for G3:** AC-HOT-08 (radius ±0.5, caps, the pink and smoke filters), AC-HOT-10 at the tier D boot.
+    - **Review:** two angles with two verifiers each. Fixed, confirmed:
+      - a stand re-sent in the same tick started a new hotspot (and would have warned in T3.6b);
+      - a 0.0 radius would have thrown;
+      - the surface search did not follow SPEC.
+      Also fixed, with split votes: the name-tag distance gate (R2), a recognised buff line wins over a passing name tag, the exact once-per-packet count, and the screenshot radius.
 - [ ] **T3.6b feat(fishing): "hotspot gone" warning** (M, deps T3.6, T2.3d). Fires once per hotspot, at the end of the grace period, under two conditions (no line-of-sight gate, R2):
   - you fished in it within the last 30 s: your own bobber was in its area, sampled at least every 10 ticks (R9)
   - you were within 40 blocks when its stand was removed

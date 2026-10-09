@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.screen;
 import com.google.gson.Gson;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig;
+import com.k8bas.skyblockutility.module.hotspot.HotspotConfig;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
@@ -54,6 +55,7 @@ class ConfigPageTest {
 	private final NpcSearchConfig npcs = new NpcSearchConfig();
 	private final MineshaftAlertConfig shaft = new MineshaftAlertConfig();
 	private final BobberFixConfig bobber = new BobberFixConfig();
+	private final HotspotConfig hotspots = new HotspotConfig();
 	private final Map<String, String> keys = new HashMap<>();
 	private final List<Overlay> opened = new ArrayList<>();
 	private final OverlayHost host = new OverlayHost() {
@@ -71,7 +73,7 @@ class ConfigPageTest {
 	private List<Card> catalog() {
 		// As the modules do: switching one stores it in its config.
 		return OptionCatalog.build(general, mobs, npcs, enabled -> mobs.enabled = enabled, enabled -> npcs.enabled = enabled, shaft, enabled -> shaft.enabled = enabled,
-				bobber);
+				bobber, hotspots);
 	}
 
 	private Widget control(Option option) {
@@ -98,7 +100,7 @@ class ConfigPageTest {
 
 	/** The state every setting is in: the configs (module switches included) and the keys. */
 	private String state() {
-		return GSON.toJson(general) + GSON.toJson(mobs) + GSON.toJson(npcs) + GSON.toJson(shaft) + GSON.toJson(bobber) + keys;
+		return GSON.toJson(general) + GSON.toJson(mobs) + GSON.toJson(npcs) + GSON.toJson(shaft) + GSON.toJson(bobber) + GSON.toJson(hotspots) + keys;
 	}
 
 	/** As WidgetScreen routes a press: topmost first, only inside a widget's clip region. */
@@ -232,6 +234,7 @@ class ConfigPageTest {
 				GeneralConfig was = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class);
 				general.mobScanRangeBlocks = was.mobScanRangeBlocks;
 				general.noticeSeconds = was.noticeSeconds;
+				hotspots.fillOpacity = HotspotConfig.DEFAULT_OPACITY;
 				assertEquals(before, state(), slider.id() + ": nothing else changed");
 			}
 		}
