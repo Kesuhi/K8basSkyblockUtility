@@ -122,6 +122,14 @@ class OptionCatalogTest {
 		expected.put("modules.fishing_hotspots.ring", true);
 		expected.put("modules.fishing_hotspots.fill", true);
 		expected.put("modules.fishing_hotspots.fillOpacity", 25);
+		// REQ-HOT-10/12 (D-6, R12): the warning with title, sound and chat ON, the notice OFF; the pling at full volume (T3.6b).
+		expected.put("modules.fishing_hotspots.warning", true);
+		expected.put("modules.fishing_hotspots.warnTitle", true);
+		expected.put("modules.fishing_hotspots.warnSound", true);
+		expected.put("modules.fishing_hotspots.sound", com.k8bas.skyblockutility.module.hotspot.HotspotSound.PLING);
+		expected.put("modules.fishing_hotspots.soundVolume", 100);
+		expected.put("modules.fishing_hotspots.warnChat", true);
+		expected.put("modules.fishing_hotspots.warnNotice", false);
 		expected.put("options.txt:key.k8bas_skyblock_utility.open_settings", UNBOUND);
 		expected.put("options.txt:key.k8bas_skyblock_utility.mob_highlighter_toggle", UNBOUND);
 		expected.put("options.txt:key.k8bas_skyblock_utility.npc_search_toggle", UNBOUND);

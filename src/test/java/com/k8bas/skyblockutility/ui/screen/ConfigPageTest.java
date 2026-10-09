@@ -234,7 +234,12 @@ class ConfigPageTest {
 				GeneralConfig was = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class);
 				general.mobScanRangeBlocks = was.mobScanRangeBlocks;
 				general.noticeSeconds = was.noticeSeconds;
-				hotspots.fillOpacity = HotspotConfig.DEFAULT_OPACITY;
+				// Only the pressed slider's own field is put back, so a slider bound to another field still shows.
+				switch (slider.id()) {
+					case "fishing_hotspots.fill_opacity" -> hotspots.fillOpacity = HotspotConfig.DEFAULT_OPACITY;
+					case "fishing_hotspots.sound_volume" -> hotspots.soundVolume = new HotspotConfig().soundVolume;
+					default -> { }
+				}
 				assertEquals(before, state(), slider.id() + ": nothing else changed");
 			}
 		}

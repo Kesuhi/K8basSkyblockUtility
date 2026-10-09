@@ -12,11 +12,20 @@ import com.k8bas.skyblockutility.render.marker.WorldMarkers
 import com.k8bas.skyblockutility.ui.option.Binding
 import com.k8bas.skyblockutility.ui.option.Card
 import com.k8bas.skyblockutility.ui.option.Category
+import com.k8bas.skyblockutility.ui.option.Choice
 import com.k8bas.skyblockutility.ui.option.IntSlider
 import com.k8bas.skyblockutility.ui.option.Option
 import com.k8bas.skyblockutility.ui.option.OptionStatus
 import com.k8bas.skyblockutility.ui.option.OptionText
 import com.k8bas.skyblockutility.ui.option.Toggle
+import com.k8bas.skyblockutility.ui.notice.Notice
+import com.k8bas.skyblockutility.ui.notice.NoticeChannel
+import com.k8bas.skyblockutility.ui.notice.Notices
+import com.k8bas.skyblockutility.util.ChatUtils
+import net.minecraft.ChatFormatting
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
@@ -33,7 +42,10 @@ import org.slf4j.LoggerFactory
 import java.util.function.Consumer
 import java.util.function.Supplier
 
-/** The hotspot settings (REQ-HOT-12, T3.6 part): all ON in a fresh config (D-6); the fill at 25 % opacity. */
+/**
+ * The hotspot settings (REQ-HOT-12): the rings (T3.6) and the "hotspot gone" warning with its channels (T3.6b), ON in
+ * a fresh config (D-6) except the notice (R12); the fill at 25 % opacity, the sound at full volume.
+ */
 class HotspotConfig {
 	@JvmField
 	var enabled = true
@@ -47,6 +59,28 @@ class HotspotConfig {
 	@JvmField
 	var fillOpacity = DEFAULT_OPACITY
 
+	@JvmField
+	var warning = true
+
+	@JvmField
+	var warnTitle = true
+
+	@JvmField
+	var warnSound = true
+
+	@JvmField
+	var warnChat = true
+
+	@JvmField
+	var warnNotice = false
+
+	/** Null only in a file Gson could not map (an unknown name); played as the default. */
+	@JvmField
+	var sound: HotspotSound? = HotspotSound.PLING
+
+	@JvmField
+	var soundVolume = 100
+
 	companion object {
 		const val DEFAULT_OPACITY = 25
 	}
@@ -56,14 +90,19 @@ class HotspotConfig {
  * Fishing hotspots (T3.6, REQ-HOT-01..REQ-HOT-06, REQ-HOT-12, REQ-HOT-13): on SkyBlock, every hotspot stand whose
  * name tag vanilla displays gets a depth-tested ring at the liquid surface in its buff's colour, with an optional
  * filled disc. The radius comes from the server's ring particles, observed read-only (`mixin/ParticleObserverMixin`);
- * without them the island's fallback is used. Display only: nothing is sent (REQ-HOT-11).
+ * without them the island's fallback is used. When a hotspot you were fishing in is gone, a local warning (T3.6b,
+ * REQ-HOT-07..REQ-HOT-10). Display only: nothing is sent (REQ-HOT-11).
  */
 class HotspotModule : Module {
 	private var config: HotspotConfig? = null
 	private val cfg: HotspotConfig
 		get() = config!!
 
-	private val tracker = HotspotTracker(HotspotText { LOGGER.info("Fishing hotspot: unknown buff text '{}', shown white", it) }) { x, y, z -> surface(x, y, z) }
+	private val tracker = HotspotTracker(
+		HotspotText { LOGGER.info("Fishing hotspot: unknown buff text '{}', shown white", it) },
+		{ x, y, z -> surface(x, y, z) },
+		{ spot -> gone(spot) },
+	)
 	private var ticks = 0L
 
 	override fun id(): String = ID
@@ -115,7 +154,17 @@ class HotspotModule : Module {
 				stands.add(HotspotTracker.Stand(entity.id, entity.x, entity.y, entity.z, name?.string ?: "", name != null && entity.isCustomNameVisible))
 			}
 		}
-		tracker.scan(stands, ticks)
+		val player = client.player
+		tracker.scan(stands, ticks, player?.let { HotspotTracker.Position(it.x, it.y, it.z) })
+		// Your own bobber only (R9); every tick, so at least every 10 (REQ-HOT-07).
+		player?.fishing?.let { tracker.fished(it.x, it.y, it.z, ticks, IslandTracker.getCurrentIsland()) }
+	}
+
+	/** A hotspot you were fishing in is gone: the warning, if it and the module are on, on SkyBlock (REQ-HOT-08 (1)). */
+	private fun gone(spot: HotspotTracker.Hotspot) {
+		if (cfg.warning && active()) {
+			HotspotAlert.fire(spot.buff, cfg, GAME_OUTPUT)
+		}
 	}
 
 	private fun particle(options: ParticleOptions, x: Double, y: Double, z: Double) {
@@ -172,6 +221,37 @@ class HotspotModule : Module {
 
 		@Volatile
 		private var instance: HotspotModule? = null
+
+		/** The game's local channels (REQ-HOT-10, REQ-HOT-11): the HUD title, a UI sound, the chat helper, a notice. */
+		private val GAME_OUTPUT = object : HotspotAlert.Output {
+			override fun title(title: String, subtitle: String) {
+				val hud = Minecraft.getInstance().gui.hud
+				// Vanilla's own timings (3.5 s on screen, so at least 2 s, REQ-HOT-10); the shared title timings are left at
+				// vanilla's defaults for every later title, as the NPC Search title does.
+				hud.resetTitleTimes()
+				hud.setSubtitle(Component.literal(subtitle).withStyle(ChatFormatting.YELLOW))
+				hud.setTitle(Component.literal(title).withStyle(ChatFormatting.GOLD))
+			}
+
+			override fun sound(sound: HotspotSound, volume: Float) {
+				val event = when (sound) {
+					HotspotSound.PLING -> SoundEvents.NOTE_BLOCK_PLING.value()
+					HotspotSound.BELL -> SoundEvents.NOTE_BLOCK_BELL.value()
+					HotspotSound.CHIME -> SoundEvents.NOTE_BLOCK_CHIME.value()
+					HotspotSound.EXPERIENCE -> SoundEvents.EXPERIENCE_ORB_PICKUP
+					HotspotSound.ANVIL -> SoundEvents.ANVIL_LAND
+				}
+				Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(event, 1.0f, volume))
+			}
+
+			override fun chat(line: String) {
+				ChatUtils.chat(line)
+			}
+
+			override fun notice(title: String, body: String) {
+				Notices.post(Notice(title, java.util.List.of(body)))
+			}
+		}
 
 		private val PROVIDER = object : MarkerProvider {
 			override fun isActive(): Boolean = instance?.let { it.active() && (it.cfg.ring || it.cfg.fill) } == true
@@ -244,6 +324,7 @@ class HotspotModule : Module {
 				),
 				true, Binding.of({ config.enabled }, setEnabled),
 			).withStatus(status)
+			val warnings = java.util.List.of("hotspot", "fishing", "warning", "gone", "alert")
 			val options: List<Option> = java.util.List.of(
 				Toggle.of(
 					"$ID.ring", "modules.$ID.ring",
@@ -261,8 +342,39 @@ class HotspotModule : Module {
 					HotspotConfig.DEFAULT_OPACITY, 0, 100, 5, "%", "",
 					Binding.of({ config.fillOpacity }, { value -> config.fillOpacity = value; changed.run() }),
 				),
+				Toggle.of(
+					"$ID.warning", "modules.$ID.warning",
+					OptionText(
+						"Hotspot gone warning", "Tells you when the hotspot you are fishing in disappears.",
+						"Only for a hotspot your bobber was in during the last 30 seconds, while you are within 40 blocks of it. " +
+							"Leaving the island or the server is not counted. Only you see or hear it.",
+						warnings,
+					),
+					true, Binding.of({ config.warning }, { value -> config.warning = value; changed.run() }),
+				),
+				channel("$ID.warn_title", "modules.$ID.warnTitle", "Warning title", "\"Hotspot gone!\" on screen for a few seconds, with the buff.",
+					warnings, true, Binding.of({ config.warnTitle }, { value -> config.warnTitle = value; changed.run() })),
+				channel("$ID.warn_sound", "modules.$ID.warnSound", "Warning sound", "A short sound that only you hear.",
+					warnings, true, Binding.of({ config.warnSound }, { value -> config.warnSound = value; changed.run() })),
+				Choice.of(
+					"$ID.sound", "modules.$ID.sound", OptionText("Sound", "Which sound the warning plays.", "", warnings),
+					HotspotSound.PLING, java.util.List.of(*HotspotSound.entries.toTypedArray()), java.util.function.Function { it.label },
+					Binding.of({ config.sound ?: HotspotSound.PLING }, { value -> config.sound = value; changed.run() }),
+				),
+				IntSlider.of(
+					"$ID.sound_volume", "modules.$ID.soundVolume", OptionText("Sound volume", "How loud the warning sound is.", "", warnings),
+					100, 0, 100, 5, "%", "", Binding.of({ config.soundVolume }, { value -> config.soundVolume = value; changed.run() }),
+				),
+				channel("$ID.warn_chat", "modules.$ID.warnChat", "Warning chat message", "A chat line that only you see.",
+					warnings, true, Binding.of({ config.warnChat }, { value -> config.warnChat = value; changed.run() })),
+				// The shared "also show as a notice" channel (T2.3d, REQ-UI-21), OFF (R12).
+				NoticeChannel.option("$ID.warn_notice", "modules.$ID.warnNotice", "the hotspot you are fishing in is gone",
+					Binding.of({ config.warnNotice }, { value -> config.warnNotice = value; changed.run() })),
 			)
 			return java.util.List.of(Card(ID, Category.FISHING, "Fishing Hotspots", enabled, options))
 		}
+
+		private fun channel(id: String, key: String, title: String, description: String, keywords: List<String>, default: Boolean,
+			binding: Binding<Boolean>): Toggle = Toggle.of(id, key, OptionText(title, description, "", keywords), default, binding)
 	}
 }

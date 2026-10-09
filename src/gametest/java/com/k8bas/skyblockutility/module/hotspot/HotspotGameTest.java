@@ -108,7 +108,7 @@ public class HotspotGameTest implements FabricClientGameTest {
 				ConfigManager.save();
 				ConfigManager.flush();
 			});
-			check(configFile(context).replaceAll("\\s", "").contains("\"fishing_hotspots\":{\"enabled\":false,\"ring\":true,\"fill\":true,\"fillOpacity\":25}"),
+			check(configFile(context).replaceAll("\\s", "").contains("\"fishing_hotspots\":{\"enabled\":false,\"ring\":true,\"fill\":true,\"fillOpacity\":25,"),
 					"the values are stored");
 			set(context, "fishing_hotspots.enabled", true);
 			check(rings(context) == 1, "and back");

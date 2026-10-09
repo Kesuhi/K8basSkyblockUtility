@@ -1043,12 +1043,30 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - a 0.0 radius would have thrown;
       - the surface search did not follow SPEC.
       Also fixed, with split votes: the name-tag distance gate (R2), a recognised buff line wins over a passing name tag, the exact once-per-packet count, and the screenshot radius.
-- [ ] **T3.6b feat(fishing): "hotspot gone" warning** (M, deps T3.6, T2.3d). Fires once per hotspot, at the end of the grace period, under two conditions (no line-of-sight gate, R2):
+- [x] **T3.6b feat(fishing): "hotspot gone" warning** (M, deps T3.6, T2.3d). Fires once per hotspot, at the end of the grace period, under two conditions (no line-of-sight gate, R2):
   - you fished in it within the last 30 s: your own bobber was in its area, sampled at least every 10 ticks (R9)
   - you were within 40 blocks when its stand was removed
   - Req: REQ-HOT-07, REQ-HOT-08, REQ-HOT-09, REQ-HOT-10, REQ-HOT-11, REQ-HOT-12
   - Channels, all ON: the title "Hotspot gone!" with the buff as subtitle, for at least 2 s; one local sound (volume setting, short vanilla list); a local chat line. Toast OFF (R12, REQ-UI-21). Nothing is sent to the server.
   - Accept: AC-HOT-03, AC-HOT-04, AC-HOT-05, AC-HOT-07 (no sends), AC-HOT-11 (warning and channels). AC-HOT-09 is checked at G3, including the distance at which the stand disappears.
+  - Done (2026-10-09):
+    - **Tracker** (`HotspotTracker`):
+      - `fished(...)` sets a hotspot's fished-in tick while the own bobber (`player.fishing`, every tick) is in SPEC's area: radius + 0.5 horizontally, less than 3 from the surface.
+      - At the removal it records whether a "gone" would count: fished within 600 ticks, and the player within 40.0 blocks (3D, to the centre at the surface).
+      - When the grace period ends with no stand back, `gone` hears of it. A re-send within 4 blocks cancels it and keeps the fished-in time; `clear()` (world, server or location change, disconnect, module off) drops everything silently.
+    - **Warning:** `HotspotAlert` sends to the channels that are on, through a local `Output`:
+      - title "Hotspot gone!" with "<buff> hotspot" as subtitle, at vanilla's title timings (3.5 s);
+      - a UI sound from five vanilla sounds, with volume;
+      - the chat line "[KSU] <buff> hotspot is gone.";
+      - the shared T2.3d notice channel.
+      The module checks the module, the warning toggle and SkyBlock when it fires (EC-HOT-11).
+    - **Settings** on the Fishing Hotspots card: "Hotspot gone warning", "Warning title", "Warning sound", "Sound", "Sound volume" and "Warning chat message" (all ON), and "Also show as a notice" (OFF, R12).
+    - **Tests:**
+      - HotspotGoneTest: AC-HOT-03 boundaries (600/601 ticks, 40.0/40.1 blocks, 3.9/4.1 re-send, world change, second removal, two at once) and AC-HOT-04 (3.5/dy 2.9 in, 3.6 or dy 3.0 out).
+      - HotspotModuleTest: AC-HOT-05 with a recording output; each channel toggle switches only its channel and is stored; the source scan allows only the local chat helper.
+      - Gametest HotspotGoneGameTest [B]: a real rod cast, a hotspot placed under the bobber and then removed give exactly one local chat line; with the warning off, none.
+    - **Field check for G3:** AC-HOT-09, including the distance at which Hypixel's stand disappears (EC-HOT-01).
+    - **Review:** two angles with two verifiers each. Fixed (confirmed): the title changed vanilla's shared title timings for later server titles. Also taken from split votes: the shared notice channel helper, a per-slider restore in ConfigPageTest, and the channel toggle test.
 - [ ] **T3.7 feat(mining): drill re-equip fix [brief 3.8]** (S, deps T3.0f, T1.9). A `@ModifyReturnValue` on `ItemInHandRenderer.shouldInstantlyReplaceVisibleItem` skips the hand dip only when all of these hold (D-4 (a)):
   - both stacks are the same SkyBlock drill: same item, same component types, same id, same non-empty uuid, drill-fuel data present
   - the player is on SkyBlock and the toggle is on
