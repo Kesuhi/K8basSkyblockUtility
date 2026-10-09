@@ -29,6 +29,7 @@ object GameStateReaders {
 			TabReader.tick()
 			SidebarReader.tick()
 			InventoryReader.tick()
+			MenuReader.tick()
 			ChatReader.tick()
 			MineshaftState.tick()
 			ProfileService.tick()
@@ -51,12 +52,15 @@ object GameStateReaders {
 		MineshaftState.register()
 		// The profile service (T3.0d) reads the tab and chat readers above.
 		ProfileService.register()
+		// The menu reader (T3.0e) drops its snapshots on a profile switch.
+		MenuReader.register()
 	}
 
 	private fun clearAll() {
 		TabReader.clear()
 		SidebarReader.clear()
 		InventoryReader.clear()
+		MenuReader.clear()
 		MineshaftState.clear()
 	}
 }
