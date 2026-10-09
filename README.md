@@ -37,54 +37,93 @@ version **1.2.0**.
    **Waypoints**: an NPC at a fixed spot gets a waypoint, a moving NPC gets an outline rule. Changes
    apply at once and are saved when you close the screen; there is no Save button.
 
-Coming from an older version? Read [Upgrading](#upgrading) first.
+## Settings
 
-## Features and defaults
+The settings screen has a category list down the side and a search box at the top that finds every
+option and rule (`/ksu <text>` opens it with the text searched). Each category shows its sections as
+cards, in this order. A fresh install has no rules, so nothing is outlined or marked until you add one.
 
-A fresh install has no rules, so nothing is outlined or marked until you add one. Every option is
-on the settings screen; its search box (or `/ksu <text>`) finds options and rules by name.
+### General
 
-| Feature | Where | Default | What it does |
-|---|---|---|---|
-| **Mob Highlighter** | Highlights | ON, no rules | Outlines the mobs your rules match, in each rule's colour, only where you can see them. |
-| Mob scan range | Highlights | 64 blocks | How far mobs and moving NPCs are checked (0 = unlimited, 0–128). |
-| **NPC Search** | Waypoints | ON, no rules | Outlines the moving NPCs your rules match while they are in view, and turns the NPC waypoints on. |
-| NPC waypoints | Waypoints | ON for each NPC you add | A white name label with a yellow distance line at the NPC's fixed spot. |
-| Show beacon beams | Waypoints | ON | A vanilla-style beam from each waypoint, in its island's colour; terrain hides it. |
-| Show distance | Waypoints | ON | The distance line under each waypoint label. |
-| "You found" title | Waypoints | ON | "You found \<NPC>" the first time you see Trinity, Tomioka, Duncan, Xalx or Pete, once per run, after you add them to NPC Search. |
-| Accent colour | General › Interface | teal `#29B6B2` | The colour of selections, focus and section titles. |
-| Smooth corners | General › Interface | OFF | Anti-aliased rounded corners on the mod's screens and notices. |
-| Notice position, duration | General › Interface | top right, 5 s | Where the mod's notices appear and how long they stay. |
-| Edit HUD layout | General › HUD | | Opens the HUD editor. 1.2.0 has no HUD elements yet, so it opens empty. |
-| Keybinds | General › Keybinds | unbound | Open Settings, Toggle Mob Highlighter, Toggle NPC Search (also in Controls › Key Binds). |
-| Check for updates (notify) | General › Updates | ON | One chat line when a newer version is out. Nothing is downloaded. |
-| Rule warnings | every rule | always on | A rule that cannot work shows ⚠ and the reason on its card, and stays inactive. |
-| Settings backups | none | always on | A broken or newer settings file is copied to a `.bak` file first; chat tells you. |
-| Debug dumps | `/ksu debug` | off until run | Write what the game already shows into `logs/latest.log` for bug reports. |
+*Look of this screen, notices, keybinds and updates.*
 
-Rules you add from a database show only what you can change (on/off, and type and colour for a
-mob); **Remove** on the rule's header deletes it. Where two mob rules match, the first one wins. The
-settings screen also works from the keyboard (Tab, arrows, Space/Enter, Esc).
+**Interface**
 
-> **[Screenshot placeholder: the settings screen]** · **[Screenshot placeholder: an outlined mob]** ·
-> **[Screenshot placeholder: an NPC waypoint with its beacon beam]** ·
-> **[Screenshot placeholder: the "You found \<NPC>" title]** ·
-> **[Screenshot placeholder: the HUD editor]**
+| Setting | Default | What it does |
+|---|---|---|
+| Accent colour | teal `#29B6B2` | The colour of selections, focus and section titles. |
+| Smooth corners | OFF | Draws rounded corners with soft edges, on this screen, the HUD editor and notices. |
+| Notice position | Top right | Where the mod's notices appear on the screen. |
+| Notice duration | 5 s | How long a notice stays on screen (1–15 s). |
+
+**HUD**
+
+| Setting | Default | What it does |
+|---|---|---|
+| Edit HUD layout | | Opens the HUD editor (also `/ksu hud`). 1.2.0 has no HUD elements yet, so it opens empty. |
+
+**Keybinds**
+
+| Setting | Default | What it does |
+|---|---|---|
+| Open Settings Key | unbound | Opens this screen. |
+| Toggle Mob Highlighter Key | unbound | Turns Mob Highlighter on or off. |
+| Toggle NPC Search Key | unbound | Turns NPC Search on or off. |
+
+The keys are also in Minecraft's Options › Controls › Key Binds, under "K8bas Skyblock Utility".
+
+**Updates**
+
+| Setting | Default | What it does |
+|---|---|---|
+| Check for updates (notify) | ON | Tells you in chat when a newer version is out. Nothing is downloaded or installed. |
+
+### Highlights
+
+*Outlines for the mobs you choose, seen only where they are in view.*
+
+**Mob Highlighter**
+
+| Setting | Default | What it does |
+|---|---|---|
+| Mob Highlighter | ON | Outlines mobs that match your rules while you can see them, in each rule's colour. |
+| Mob scan range | 64 blocks | How far around you mobs are checked (0 = unlimited, 0–128). |
+| Add from database | | Pick a mob from the Mob Database; its rule joins the list below. |
+
+Each rule is a card you open to edit: on/off, and for a mob from the database its entity type and
+colour. **Remove** on the rule's header deletes it. Where two rules match the same mob, the first one
+wins. A rule that cannot work shows ⚠ and the reason on its card, and stays inactive.
+
+### Waypoints
+
+*Find NPCs: waypoints at fixed spots, outlines on NPCs by name, and the "You found" title.*
+
+**NPC Search**
+
+| Setting | Default | What it does |
+|---|---|---|
+| NPC Search | ON | Outlines the moving NPCs from your list while you can see them, and marks fixed NPC positions with waypoints. |
+| "You found" title | ON | A title the first time you see Trinity, Tomioka, Duncan, Xalx or Pete, once per run, after you add them here. |
+| Show beacon beams | ON | A beacon beam rises from each waypoint, in its island's colour; terrain hides it. |
+| Show distance | ON | A second line under each waypoint label with your distance in metres. |
+| Add from database | | Pick an NPC from the NPC Database; its rule joins the list below. |
+
+An NPC at a fixed spot gets a waypoint: a white name label with a yellow distance line at its spot,
+and the beam. A moving NPC gets a white outline. Each NPC's card has its own on/off switch and a
+**Remove** button.
+
+The settings screen also works from the keyboard: Tab and Shift+Tab move through it, Space or Enter
+switches or opens, the arrow keys change sliders, dropdowns and categories, and Esc closes it. Your
+settings are saved to `config/k8bas_skyblock_utility.json`; a broken file is copied to a `.bak`
+file first, and a chat message tells you.
 
 ## Commands
 
 | Command | What it does |
 |---|---|
 | `/ksu` (also `/kskyblockutility`) | Opens the settings. |
-| `/ksu <text>` | Opens the settings with `<text>` searched, for example `/ksu beam`. Text starting with `hud`, `debug`, `update` or `sbxp` is read as a subcommand instead. |
+| `/ksu <text>` | Opens the settings with `<text>` searched, for example `/ksu beam`. |
 | `/ksu hud` | Opens the HUD editor. |
-| `/ksu debug dump tab` / `sidebar` / `entities` | Writes the tab list, the sidebar, or the name tags within about 8 blocks to `logs/latest.log`. |
-| `/ksu debug dump containers on` / `off` | While on, each supported SkyBlock menu you open is written to `logs/latest.log`; it switches itself off after 60 minutes. |
-
-Dump lines are tagged `[K8BAS-DUMP]` and nothing is sent anywhere. Your name and the names of the
-players in your tab list or near you are replaced by Self, Player1, Player2 and so on; other names in
-menu or sidebar text stay, so check a dump before you share it.
 
 ## Supported version
 
@@ -92,70 +131,6 @@ menu or sidebar text stay, so check a dump before you share it.
 Fabric Language Kotlin 1.14.1 or newer, Hypixel Mod API 1.0.2 or newer (its build labelled `mc26.1`
 also runs on 26.2), Mod Menu optional. Render Chest 1.0.3 is bundled inside the jar. Minecraft
 26.1.x is no longer supported; 1.0.1 was the last build for it.
-
-## Upgrading
-
-**From 1.1.0:**
-- Install [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) 1.14.1 or
-  newer; without it, Fabric stops the game with a message naming it. Cloth Config is no longer
-  needed, so you can remove it unless another mod needs it.
-- Install 1.2.0 by hand: 1.1.0's update check only tells you about it. Replace the jar and restart.
-- Your settings and rules are kept. What behaves differently:
-  - Settings apply as you change them and are saved when the screen closes, also with Esc.
-  - The categories are General, Highlights and Waypoints; the mob scan range is on the Mob
-    Highlighter card.
-  - Waypoint labels are always white with a yellow distance line, without a dark background, on the
-    centre of the NPC's block (up to half a block from before). "White waypoint labels" is gone.
-  - NPCs have no colour of their own: their outlines, labels and the "You found" title are white.
-    The beam carries the island's colour.
-  - A waypoint added from the NPC list follows that NPC's corrected position in the list.
-  - New rules come from **Add from database**; rules you wrote by hand keep every field.
-
-**From 1.0.x:** move your instance to Minecraft 26.2 first (see [Supported version](#supported-version)),
-with the mods listed there, then install 1.2.0 by hand: 1.0.x's updater asks a Modrinth project
-that returns 404 (not found), so it never finds a newer version. Your
-settings migrate on the first start, and the old file is kept as
-`config/k8bas_skyblock_utility.json.v0.bak`. Everything under "From 1.1.0" applies to you too. Since
-1.1.0, the outline is visible-only, invisible mobs are never outlined, the "You found" title waits for
-line of sight and is shown only for Trinity, Tomioka, Duncan, Xalx and Pete, the dungeon lobby is its
-own island ("Dungeon Hub"), and the update check only notifies. The [changelog](CHANGELOG.md) lists
-every change with its reason.
-
-## Fair play and compliance
-
-K8bas Skyblock Utility is client-side and display-only: it changes what your own game shows and
-never plays for you.
-
-1. **No hidden entity is outlined.** Blocks hide every outline, and there is no option to change
-   that. Glow the server itself adds is left as the game shows it.
-2. **Invisible entities are never highlighted or announced**, whatever your rules say.
-3. **Alerts about entities wait for line of sight.** The "You found" title appears only once you
-   can see the NPC.
-4. **Only fixed coordinates show behind blocks.** NPC waypoint labels and their distance sit at known,
-   fixed spots; they are the only thing drawn behind blocks. Terrain hides the beams.
-5. **Network packets are only read**, never cancelled, delayed or changed. The mod never sends chat
-   messages or commands on its own.
-6. **Every feature that shows something has its own switch**, and the ones that need care explain
-   themselves in a tooltip. Every default is listed above.
-7. **Plain wording:** no feature name suggests seeing hidden things, unfair advantages or betting.
-
-Left out on purpose, now and later: a glow option for mobs out of line of sight, showing invisible
-entities, keeping drill mining progress by holding back the packets the game sends, automatic party
-chat messages, cancelling particle packets, and filtering possible corpse spots by entities you
-cannot see.
-
-## Network access
-
-| Host | When | What for | How to stop it |
-|---|---|---|---|
-| `api.github.com` | at game start and while you play: at most 4 times a day, and not again for 6 hours after a successful check | the update check: reads this repository's release list; nothing is downloaded | General › Updates, "Check for updates (notify)" OFF |
-| `gist.githubusercontent.com` | once per game start; gives up after 10 seconds | downloads the mob and NPC lists behind **Add from database** | no switch yet; the lists will be bundled with the mod later |
-| the Hypixel server, through the Hypixel Mod API | while you are on Hypixel | reads which server and mode you are on, over your normal game connection | no switch; part of your game connection |
-
-Nothing else is contacted. The requests carry a User-Agent naming the mod (for the update check also
-its version) and nothing about you: no player name, no UUID, no telemetry. The links in the update
-message open `github.com` in your browser; while the game's "Prompt on Links" chat setting is on (the
-default), it asks you to confirm first.
 
 ## Licensing and credits
 
@@ -171,7 +146,7 @@ default), it asks you to confirm first.
 
 Open an [issue](https://github.com/Kesuhi/K8basSkyblockUtility/issues) or message me on Discord
 (@disable.rx). Say which version you run, and if the game crashed, attach the crash report or
-`logs/latest.log`. For display problems, a [debug dump](#commands) helps.
+`logs/latest.log`.
 
 ## Building
 

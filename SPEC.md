@@ -3568,8 +3568,9 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
 - **REQ-REL-01** The README must contain:
   - **Supported version:** "Minecraft 26.2 (Fabric)", with the requirements: Java 25, the minimum Fabric Loader, Fabric API, Fabric Language Kotlin (from 1.2.0, R29, R33) and the Hypixel Mod API mod. It also states that 26.1.x is no longer supported and that 1.0.1 was the last 26.1 build.
   - **Feature list:** every shipped feature with a one-line description, its config category and its default (ON/OFF).
-  - **Screenshot placeholders:** one per user-visible feature (config screen, HUD editor, each HUD, waypoints and beams, mineshaft alert, hotspot ring, optimizer screen). None may render as a broken image on GitHub: use either a committed placeholder image or a visible text marker.
-  - **Commands:** every user-facing command.
+  - [README part dropped, R34] **Screenshot placeholders:** one per user-visible feature (config screen, HUD editor, each HUD, waypoints and beams, mineshaft alert, hotspot ring, optimizer screen). None may render as a broken image on GitHub: use either a committed placeholder image or a visible text marker.
+  - **Commands:** every user-facing command, except the `/ksu debug` commands, which are left out [decided R34].
+  - **Feature list** laid out like the settings screen: each category with its description, its cards in screen order, and each setting with its default [decided R34].
   - **SkyBlock XP Optimizer:** how to use it, its data sources and its limitations.
 
   *(Brief: Phase 6 bullet 1; Addendum: Done when)*
@@ -3579,13 +3580,13 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   - Neither file uses any word banned by policy P7 (word list in REQ-XC-RULES).
 
   *(Brief: Phase 6; Derived: documentation drift at README.md:16 and fabric.mod.json:6; REQ-XC-RULES P7)*
-- **REQ-REL-03** README disclosures:
-  - **Compliance section:**
+- **REQ-REL-03** README disclosures (from R34 the README keeps only the non-affiliation statement and the licensing; the compliance section and the network-access list are dropped from it at the maintainer's request):
+  - [README part dropped, R34] **Compliance section:**
     - client-side and display-only
     - policies P1–P7 in plain words
     - the behaviours deliberately not implemented: a glow option for mobs out of line of sight, showing invisible entities, the packet-suppressing drill fix, automatic party chat, particle-packet cancelling, and "filtering possible corpse spots by entities you cannot see" (this line stays after R22 dropped the corpse spots)
   - **Non-affiliation:** the statement that the mod is not affiliated with or endorsed by Hypixel.
-  - **Network access:** every host the mod contacts, when, and the toggle that stops it:
+  - [README part dropped, R34] **Network access:** every host the mod contacts, when, and the toggle that stops it:
     - `api.github.com` and the GitHub download hosts, for updates
     - `api.hypixel.net`, for Bazaar prices, only if opted in
   - **Licensing:**
@@ -3595,7 +3596,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
     - courtesy credits for the reference mods
 
   *(Brief: ground rules 4 and 5; Derived: Hypixel API policy of 2026-09-30 requires the non-affiliation statement; REQ-XC-LICENSE)*
-- **REQ-REL-04** Upgrade notes, in the README and in the release notes:
+- **REQ-REL-04** Upgrade notes, in the release notes (the CHANGELOG section of each release); from R34 not in the README:
   - Users of 1.0.x must install the new jar by hand once, because their updater asks a Modrinth project that returns 404. Users of 1.1.0 get a chat line about the new release, but its check is notify-only, so they too install by hand once (REQ-UPD-01) [decided R4].
   - Settings migrate automatically, with a backup.
   - The behaviour changes:
@@ -3720,18 +3721,18 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
 - **AC-REL-01** (REQ-REL-01, REQ-REL-02) *Given* the README on the release commit:
   - it has the version line and the requirements
   - every toggleable feature appears with a default that matches the config defaults in code
-  - every visible feature has a placeholder, with no broken images in the GitHub preview
+  - [README part dropped, R34] every visible feature has a placeholder, with no broken images in the GitHub preview
   - a search of the README and `fabric.mod.json` finds neither "Modrinth" (as the update source) nor any P7 word
 
   — [R]
 - **AC-REL-02** (REQ-REL-03) The README contains:
   - the non-affiliation sentence
-  - a compliance section listing every excluded behaviour
-  - a network-access list whose hosts equal the hosts in REQ-UPD-20 plus the Bazaar host
+  - [README part dropped, R34] a compliance section listing every excluded behaviour
+  - [README part dropped, R34] a network-access list whose hosts equal the hosts in REQ-UPD-20 plus the Bazaar host
   - the licensing note
 
   — [R]
-- **AC-REL-03** (REQ-REL-04) The upgrade note appears in both the README and the release body, and lists every behaviour change named in REQ-REL-04. — [R]
+- **AC-REL-03** (REQ-REL-04) The upgrade note appears in the release body (from R34 not in the README) and lists every behaviour change named in REQ-REL-04. — [R]
 - **AC-REL-04** (REQ-REL-05) A script check of `CHANGELOG.md`:
   - every heading matches `## [x.y.z] - YYYY-MM-DD` or `## [Unreleased]`
   - only the standard subsections are used
@@ -3923,6 +3924,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R31 | 2026-10-05, after the hand checks of the Kotlin build (it also amends REQ-UI-16 and AC-UI-15: those fields are off the screen and kept in the file): (a) a rule added from the Mob or NPC Database (it has a `sourceId`) shows a slim card: enabled, plus entity type and colour for a mob, and the position for a fixed NPC; its label, island, name match and name pattern are not shown, while a hand-made rule keeps every field, as does a database rule that already does nothing (so it can be fixed); (b) every rule header has a destructive Remove button at its right end, which replaces the Delete field inside the card; it acts once per double click, since the next rule's button slides under the cursor; (c) NPC Search has no per-NPC colour any more: waypoint labels are always white with a yellow distance line, moving NPCs are outlined in white, the header dot and the "You found" title are white, and the "White waypoint labels" setting is removed (superseding R21). The stored `color` of NPC rules is kept in the file, unused, so a downgrade keeps it | REQ-UI-11, AC-UI-10, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-07, REQ-NPCWP-08, AC-NPCWP-03, AC-NPCWP-05, EC-NPCWP-06, REQ-PORT-06, REQ-UI-16, AC-UI-15, npc-waypoints out of scope, §12.H; PLAN §3, T2.11 |
 | R32 | 2026-10-05, T2.9d: the anti-aliased corners are the opt-in setting "Smooth corners" in General › Interface, OFF until picked (the key is absent from the file until then, so a 1.0.1 file saves back unchanged), so the fill-based corners stay the default. When it is ON, rounded rectangles and outlines draw each corner from a white alpha mask baked per radius at screen-pixel resolution and tinted with the shape's colour (public render APIs only, REQ-UI-17); the straight parts stay plain fills. A shape the mask cannot draw (radius 0 or above 256 screen px, an outline thicker than its radius, a box too small for its outline) and a session in which a mask texture could not be made fall back to the fill-based corners. Every place that draws rounded shapes follows the setting, the HUD notices included | REQ-UI-18, REQ-UI-17, §12.H; PLAN T2.9d |
 | R33 | 2026-10-09: after T2.9–T2.9d, the work on `update/26.2` ships as v1.2.0 (the maintainer: "create a new release with the changes up till then"), an intermediate release in the REQ-REL-14 flow (a PR to `main` merged after the maintainer's approval, then tag and publish after a separate "ship"); its PR summary starts at v1.1.0, which `main` already holds. It includes the waypoint path (T3.0b, T3.0n, T3.4) before T3.4b, superseding R25(b): beams use the island colours, not changeable in game yet, and the R8 colour migration (REQ-NPCWP-09) runs when T3.4b lands, because the stored colours are kept (R31); the [D] parts of AC-NPCWP-11 and AC-MARK-08 run at the release's tier D boot, their [E] parts are known issues (EC-REL-13). Its README is compacted to what 1.2.0 ships: Fabric Language Kotlin required, Cloth Config and "White waypoint labels" gone | REQ-REL-14, AC-REL-12, AC-REL-06, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, R25, REQ-NPCWP-09; PLAN §6 waypoint path, T3.4, T2.12, T2.13, T2.14, G2r |
+| R34 | 2026-10-09, the maintainer: the README's feature list is laid out like the in-game settings menu (categories with their descriptions, cards in screen order, each setting with its default); the screenshot placeholders, the `/ksu debug` commands, the upgrade notes, the fair-play and compliance section and the network-access list are removed from the README. Upgrade notes stay in each release's CHANGELOG section; the README keeps the non-affiliation statement, the requirements, the commands and the licensing | REQ-REL-01, REQ-REL-03, REQ-REL-04, AC-REL-01, AC-REL-02, AC-REL-03 |
 
 ### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28 and R32)
 
