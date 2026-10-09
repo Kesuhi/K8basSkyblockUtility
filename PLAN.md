@@ -1067,7 +1067,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - Gametest HotspotGoneGameTest [B]: a real rod cast, a hotspot placed under the bobber and then removed give exactly one local chat line; with the warning off, none.
     - **Field check for G3:** AC-HOT-09, including the distance at which Hypixel's stand disappears (EC-HOT-01).
     - **Review:** two angles with two verifiers each. Fixed (confirmed): the title changed vanilla's shared title timings for later server titles. Also taken from split votes: the shared notice channel helper, a per-slider restore in ConfigPageTest, and the channel toggle test.
-- [ ] **T3.7 feat(mining): drill re-equip fix [brief 3.8]** (S, deps T3.0f, T1.9). A `@ModifyReturnValue` on `ItemInHandRenderer.shouldInstantlyReplaceVisibleItem` skips the hand dip only when all of these hold (D-4 (a)):
+- [x] **T3.7 feat(mining): drill re-equip fix [brief 3.8]** (S, deps T3.0f, T1.9). A `@ModifyReturnValue` on `ItemInHandRenderer.shouldInstantlyReplaceVisibleItem` skips the hand dip only when all of these hold (D-4 (a)):
   - both stacks are the same SkyBlock drill: same item, same component types, same id, same non-empty uuid, drill-fuel data present
   - the player is on SkyBlock and the toggle is on
 
@@ -1075,6 +1075,29 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Req: REQ-DRILL-01, REQ-DRILL-02, REQ-DRILL-03, REQ-DRILL-04, REQ-DRILL-05, REQ-DRILL-06, REQ-DRILL-07, REQ-DRILL-08
   - Card "Drill re-equip fix" (Mining), ON. Its tooltip names the Skyblocker and NoFrills equivalents. No block-breaking, game-mode or packet code. (B) is excluded and no fuel HUD is built (D-4).
   - Accept: AC-DRILL-01, AC-DRILL-02 (review plus CI grep), AC-DRILL-05, AC-DRILL-06. AC-DRILL-04 (tier D) and AC-DRILL-03 are checked at G3.
+  - Done (2026-10-09):
+    - **Hook:** `mixin/DrillReequipMixin` (hook `drill.refresh`) is a `@ModifyReturnValue` on `ItemInHandRenderer.shouldInstantlyReplaceVisibleItem` (both hands go through it). It returns `original || sameDrill`, so it never forces the dip.
+    - **Decision** (`drillfix/DrillRefresh`, a pure table) only reads the stacks when on SkyBlock with the toggle on. A refreshed copy must have:
+      - the same item and component types;
+      - the same `id` and the same non-empty `uuid`;
+      - `drill_fuel` on both;
+      - every other component value equal (only custom data, lore and damage may differ).
+      The key names come from a real drill's custom data (Skyblocker's test dump). Whether a drill at 0 fuel keeps `drill_fuel` is UNVERIFIED; if not, its refresh simply dips as in vanilla.
+    - **Card** "Drill re-equip fix" (Mining, ON): the tooltip names Skyblocker's "Cancel Component Update Animation" and NoFrills' "No Equip Animation", and says turning this one off does not turn theirs off. It shows unavailable if the hook was skipped. No fuel HUD, parser or warning (D-4).
+    - **Tests:**
+      - DrillRefreshTest: AC-DRILL-01's table, one-sided fuel, a renamed copy, stacks not read when gated, the card, and AC-DRILL-02/06 [R] as a source scan (no game mode, block breaking, packet, fuel parser or HUD; one hook only).
+      - Gametest DrillFixGameTest [B], which reads the first-person hand height:
+        - off SkyBlock, a fuel refresh dips (AC-DRILL-05);
+        - forced SkyBlock: no dip;
+        - another uuid: dip;
+        - toggle off: dip.
+    - **Open for G3:** AC-DRILL-03 (50 blocks in the Dwarven Mines with Skyblocker's and NoFrills' options off), and whether a drill at 0 fuel keeps `drill_fuel`; AC-DRILL-04 at the tier D boot.
+    - **Review:** two angles with two verifiers each. Fixed (confirmed):
+      - other component values were not compared (REQ-DRILL-01 allows only lore, custom data and damage to change);
+      - one-sided fuel was untested;
+      - the game used a different gate than the table tested;
+      - the card was untested.
+      Rejected (split): a Pickonimbus gametest step (the unit table covers it).
 
 *T3.9 Rare Drop Odds [brief 3.7]: split into T3.9a–h and built last in Phase 3. D-3 = A (numeric odds, five cases), R10 = b. Reveal animations and the later candidates listed in SPEC rare-drop-odds are not in v1.*
 

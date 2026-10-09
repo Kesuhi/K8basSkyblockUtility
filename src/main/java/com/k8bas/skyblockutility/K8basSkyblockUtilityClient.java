@@ -10,6 +10,7 @@ import com.k8bas.skyblockutility.highlight.HighlightManager;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule;
+import com.k8bas.skyblockutility.module.drillfix.DrillFixModule;
 import com.k8bas.skyblockutility.module.hotspot.HotspotModule;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertModule;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
@@ -76,6 +77,7 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		ModuleManager.register(new MineshaftAlertModule());
 		ModuleManager.register(new BobberFixModule());
 		ModuleManager.register(new HotspotModule());
+		ModuleManager.register(new DrillFixModule());
 		// Future modules get registered here, one line each.
 
 		SettingsKeybind.register();

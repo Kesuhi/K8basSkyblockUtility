@@ -33,6 +33,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   its own switch; a notice can be added. It only counts a hotspot your bobber was in during the
   last 30 seconds while you are within 40 blocks, so leaving the island or flying away is not a
   warning. Only you see or hear it.
+- Drill re-equip fix (Mining, ON by default): on SkyBlock, your drill no longer dips out of view and
+  back each time its fuel changes. Switching to another item or another drill still shows the
+  swap. Skyblocker and NoFrills offer the same; turning this one off does not turn theirs off.
 
 ### Changed
 

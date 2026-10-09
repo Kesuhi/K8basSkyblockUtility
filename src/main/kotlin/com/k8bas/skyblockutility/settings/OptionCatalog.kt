@@ -5,6 +5,8 @@ import com.k8bas.skyblockutility.config.GeneralConfig
 import com.k8bas.skyblockutility.module.ModuleManager
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule
+import com.k8bas.skyblockutility.module.drillfix.DrillFixConfig
+import com.k8bas.skyblockutility.module.drillfix.DrillFixModule
 import com.k8bas.skyblockutility.module.hotspot.HotspotConfig
 import com.k8bas.skyblockutility.module.hotspot.HotspotModule
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig
@@ -32,11 +34,13 @@ object OptionCatalog {
 		setMineshaftAlertEnabled: Consumer<Boolean> = Consumer { mineshaftAlert.enabled = it },
 		bobberFix: BobberFixConfig = BobberFixConfig(),
 		hotspots: HotspotConfig = HotspotConfig(),
+		drillFix: DrillFixConfig = DrillFixConfig(),
 	): List<Card> = sorted(
 		GeneralOptions.cards(general) +
 			MobHighlighterOptions.cards(mobHighlighter, general, setMobHighlighterEnabled) +
 			NpcSearchOptions.cards(npcSearch, setNpcSearchEnabled) +
 			MineshaftAlertModule.cards(mineshaftAlert, setMineshaftAlertEnabled) +
+			DrillFixModule.cards(drillFix, Consumer { drillFix.enabled = it }) +
 			BobberFixModule.cards(bobberFix, Consumer { bobberFix.enabled = it }) +
 			HotspotModule.cards(hotspots, Consumer { hotspots.enabled = it }),
 	)

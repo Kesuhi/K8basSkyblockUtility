@@ -9,13 +9,15 @@ import java.util.List;
 public final class MainHookPlugin extends HookPlugin {
 	@Override
 	protected List<Hook> hooks() {
-		// Plain strings: the plugin runs before the mods are initialised, so it loads no feature class (BobberFixModule, HotspotModule ids).
+		// Plain strings: the plugin runs before the mods are initialised, so it loads no feature class (BobberFixModule, HotspotModule, DrillFixModule ids).
 		String fishingHook = "net.minecraft.world.entity.projectile.FishingHook";
 		String mixin = "com.k8bas.skyblockutility.mixin.FishingHookMixin";
 		return List.of(
 				new Hook("bobber.link", mixin, fishingHook, "k8bas$skipTimerStand", ""),
 				new Hook("bobber.lava", mixin, fishingHook, "k8bas$floatOnLava", ""),
 				new Hook("hotspot.particles", "com.k8bas.skyblockutility.mixin.ParticleObserverMixin",
-						"net.minecraft.client.multiplayer.ClientPacketListener", "k8bas$observeParticles", ""));
+						"net.minecraft.client.multiplayer.ClientPacketListener", "k8bas$observeParticles", ""),
+				new Hook("drill.refresh", "com.k8bas.skyblockutility.mixin.DrillReequipMixin",
+						"net.minecraft.client.renderer.ItemInHandRenderer", "k8bas$keepDrillInHand", ""));
 	}
 }
