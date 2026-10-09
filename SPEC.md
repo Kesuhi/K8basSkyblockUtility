@@ -835,7 +835,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - an open animation (scale 0.90 → 1.00 over 220 ms)
   - a 200 ms slide-and-fade on category switch
   - keyboard focus navigation
-  - anti-aliased (shader) rounded corners
+  - anti-aliased rounded corners (built in T2.9d from alpha-mask textures, no shader, as the opt-in "Smooth corners" setting, OFF until picked; the fill-based corners stay the default and the fallback) [decided R32]
 
   None of them is required for 2.0.0, and no acceptance criterion or checkpoint may wait for them. If one is built, it must not break any other REQ-UI requirement. The T2.9 multi-select dropdown is not a ui-config item: it is built with the optimizer table (sbxp-optimizer, PLAN T6.7). HUD snapping is REQ-HUD-14.
 
@@ -3920,8 +3920,9 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R29 | 2026-10-05: the settings UI, the HUD editor and the settings glue move to Kotlin; players need Fabric Language Kotlin (no bundled copy); the conversion comes before T2.9–T2.9d, which are then written in Kotlin, and before the 1.2.0 release | REQ-UI-26, AC-UI-26, §3, §5; PLAN T2.10a–T2.10e, T2.9–T2.9d |
 | R30 | 2026-10-05: each file's language follows the best-fit criteria (`docs/language-classification.md`) instead of R29's "the whole settings UI in Kotlin": 73 files move to Kotlin across the mod, the rest stays Java; the work stays on `update/26.2` (no separate branch), one commit per batch, not pushed until asked | REQ-UI-26, AC-UI-26, §3, §5; PLAN T2.10b–T2.10i |
 | R31 | 2026-10-05, after the hand checks of the Kotlin build (it also amends REQ-UI-16 and AC-UI-15: those fields are off the screen and kept in the file): (a) a rule added from the Mob or NPC Database (it has a `sourceId`) shows a slim card: enabled, plus entity type and colour for a mob, and the position for a fixed NPC; its label, island, name match and name pattern are not shown, while a hand-made rule keeps every field, as does a database rule that already does nothing (so it can be fixed); (b) every rule header has a destructive Remove button at its right end, which replaces the Delete field inside the card; it acts once per double click, since the next rule's button slides under the cursor; (c) NPC Search has no per-NPC colour any more: waypoint labels are always white with a yellow distance line, moving NPCs are outlined in white, the header dot and the "You found" title are white, and the "White waypoint labels" setting is removed (superseding R21). The stored `color` of NPC rules is kept in the file, unused, so a downgrade keeps it | REQ-UI-11, AC-UI-10, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-07, REQ-NPCWP-08, AC-NPCWP-03, AC-NPCWP-05, EC-NPCWP-06, REQ-PORT-06, REQ-UI-16, AC-UI-15, npc-waypoints out of scope, §12.H; PLAN §3, T2.11 |
+| R32 | 2026-10-05, T2.9d: the anti-aliased corners are the opt-in setting "Smooth corners" in General › Interface, OFF until picked (the key is absent from the file until then, so a 1.0.1 file saves back unchanged), so the fill-based corners stay the default. When it is ON, rounded rectangles and outlines draw each corner from a white alpha mask baked per radius at screen-pixel resolution and tinted with the shape's colour (public render APIs only, REQ-UI-17); the straight parts stay plain fills. A shape the mask cannot draw (radius 0 or above 256 screen px, an outline thicker than its radius, a box too small for its outline) and a session in which a mask texture could not be made fall back to the fill-based corners. Every place that draws rounded shapes follows the setting, the HUD notices included | REQ-UI-18, REQ-UI-17, §12.H; PLAN T2.9d |
 
-### 12.H Defaults table (decided D-6, R1–R17, R20–R22 and R28)
+### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28 and R32)
 
 | Feature | Default | | Feature | Default |
 |---|---|---|---|---|
@@ -3935,6 +3936,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | Toast channel on warnings | **OFF** [R12]; notices top right, 5 s, set in General › Interface [R28] | | SkyBlock XP module / passive reading / live deltas | ON / ON / ON [R14] |
 | "Next best task" HUD | **OFF** | | Live Bazaar | **OFF** |
 | Coins per hour | 5,000,000 (global) [R14] | | Player stage | suggested from your level, per profile [R14] |
+| Smooth corners (General › Interface) | **OFF** [R32] | | | |
 
 ---
 

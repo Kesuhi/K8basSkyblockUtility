@@ -95,6 +95,8 @@ class OptionCatalogTest {
 		expected.put("general.mobScanRangeBlocks", 64);
 		// D-8: teal accent; R28: notices top right for 5 s until picked.
 		expected.put("general.accentColor", 0x29B6B2);
+		// R32: smooth corners OFF.
+		expected.put("general.smoothCorners", false);
 		expected.put("general.noticePosition", NoticePosition.TOP_RIGHT);
 		expected.put("general.noticeSeconds", 5);
 		expected.put("modules.mob_highlighter.enabled", true);

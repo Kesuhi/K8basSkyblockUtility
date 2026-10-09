@@ -629,9 +629,11 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 - [x] **T2.9c feat(hud): snapping + guide lines in the HUD editor** (S, stretch, deps T2.8). Edges snap within 4 px to the screen edges, the centre lines and other elements, with 1 px guide lines; holding Alt disables snapping.
   - Req: REQ-HUD-14
   - Accept: AC-HUD-14.
-- [ ] **T2.9d feat(ui): anti-aliased rounded corners** (S, stretch, deps T2.2). Uses public render APIs only (no accessor mixin, per REQ-UI-17 and AD-4). Fill-based corners remain the default and the fallback. Skipped if 26.2 offers no public path.
+- [x] **T2.9d feat(ui): anti-aliased rounded corners** (S, stretch, deps T2.2). Uses public render APIs only (no accessor mixin, per REQ-UI-17 and AD-4). Fill-based corners remain the default and the fallback. Skipped if 26.2 offers no public path.
   - Req: REQ-UI-18
   - Accept: screenshot comparison at scales 1–4; AC-UI-02 still passes.
+  - Decision R32: an opt-in "Smooth corners" toggle in General › Interface, OFF until picked; ON draws the corners from per-radius alpha-mask textures (GuiGraphics blit, DynamicTexture), anything else falls back to the fills.
+  - Done (2026-10-09): SmoothCornersGameTest compares fill and smooth screenshots at scales 1–4 (coverage per pixel, the same outside the corners, clips hold); RenderKitGameTest and AC-UI-02 pass with it on too.
 
 **Checkpoint G2:**
 - [x] tiers A–C green; per-commit worktree build since G1 (AC-XC-05)

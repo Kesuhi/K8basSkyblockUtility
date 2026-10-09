@@ -55,7 +55,14 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			context.waitTicks(3);
 			metrics(context);
 			everyCategory(context);
-			sizes(context);
+			sizes(context, "");
+			// T2.9d (R32): AC-UI-02 again with smooth corners on.
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = true);
+			try {
+				sizes(context, "-smooth");
+			} finally {
+				context.runOnClient(client -> ConfigManager.general().smoothCorners = null);
+			}
 			context.getInput().resizeWindow(1280, 960);
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
@@ -142,7 +149,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	}
 
 	/** AC-UI-02 and EC-UI-01, between two log markers: nothing may be logged as an error while drawing at any size. */
-	private static void sizes(ClientGameTestContext context) {
+	private static void sizes(ClientGameTestContext context, String look) {
 		String start = "k8bas config screen sizes start " + System.nanoTime();
 		String end = "k8bas config screen sizes end " + System.nanoTime();
 		LOGGER.info(start);
@@ -153,7 +160,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			resize(context, size[0], size[1], size[2]);
 			context.runOnClient(client -> screen(client).scrollTo(Integer.MAX_VALUE));
 			context.waitTicks(2);
-			String name = size[0] + "x" + size[1] + "-scale-" + size[2];
+			String name = size[0] + "x" + size[1] + "-scale-" + size[2] + look;
 			context.takeScreenshot("t2.4a-end-of-waypoints-" + name);
 			String problem = context.computeOnClient(client -> outsideThePanel(screen(client)));
 			check(problem.isEmpty(), name + ": " + problem);
@@ -168,7 +175,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		context.runOnClient(client -> screen(client).scrollTo(Integer.MAX_VALUE));
 		context.waitTicks(2);
 		int before = context.computeOnClient(client -> screen(client).scrollArea().scroll());
-		check(before > 0, "scrolled before the resize: " + before);
+		check(before > 0, look + " scrolled before the resize: " + before);
 		resize(context, 1920, 1080, 1);
 		int large = context.computeOnClient(client -> screen(client).scrollArea().scroll());
 		int largeMax = context.computeOnClient(client -> screen(client).scrollArea().maxScroll());
@@ -180,13 +187,13 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		check(kept == Category.WAYPOINTS && scroll <= max, "after the resizes: " + kept + ", scroll " + scroll + " of " + max);
 		String problem = context.computeOnClient(client -> outsideThePanel(screen(client)));
 		check(problem.isEmpty(), "after the resize: " + problem);
-		context.takeScreenshot("t2.4a-resized-to-854x480");
+		context.takeScreenshot("t2.4a-resized-to-854x480" + look);
 		context.waitTicks(5);
 		LOGGER.info(end);
 		List<String> errors = errorsBetween(context, start, end);
 		check(errors.isEmpty(), "no exception or render error logged at any size: " + errors);
-		LOGGER.info("config screen sizes:{}; resized: scroll {} at 854x480 scale 2, {} of {} at 1920x1080, {} of {} back at 854x480; no errors logged",
-				log, before, large, largeMax, scroll, max);
+		LOGGER.info("config screen sizes{}:{}; resized: scroll {} at 854x480 scale 2, {} of {} at 1920x1080, {} of {} back at 854x480; no errors logged",
+				look, log, before, large, largeMax, scroll, max);
 	}
 
 	private static void resize(ClientGameTestContext context, int width, int height, int scale) {

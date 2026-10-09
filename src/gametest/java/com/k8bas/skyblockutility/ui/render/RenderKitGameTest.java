@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.ui.render;
 
+import com.k8bas.skyblockutility.config.ConfigManager;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.loader.api.FabricLoader;
@@ -18,7 +19,8 @@ import java.util.List;
  * T2.2, the render kit in a real frame:
  * <ul>
  *   <li>a test panel (header with the accent line, tabs, cards, buttons, text styles, a clipped region)
- *       screenshotted at GUI scales 1-4;</li>
+ *       screenshotted at GUI scales 1-4, with "Smooth corners" off and, for T2.9d (R32), on: the corner
+ *       checks hold for both;</li>
  *   <li>at a 320×240 GUI, clips of zero and negative size draw nothing, log nothing and throw nothing
  *       (REQ-UI-02).</li>
  * </ul>
@@ -34,6 +36,9 @@ public class RenderKitGameTest implements FabricClientGameTest {
 			context.setScreen(RenderKitTestScreen::new);
 			context.waitForScreen(RenderKitTestScreen.class);
 			int[][] sizes = {{1280, 960}, {640, 480}, {427, 320}, {320, 240}};
+			for (boolean smooth : new boolean[] {false, true}) {
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = smooth ? Boolean.TRUE : null);
+			String look = smooth ? " (smooth)" : "";
 			for (int scale = 1; scale <= 4; scale++) {
 				int s = scale;
 				context.runOnClient(client -> client.options.guiScale().set(s));
@@ -42,15 +47,17 @@ public class RenderKitGameTest implements FabricClientGameTest {
 						client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()});
 				check(gui[0] == s && gui[1] == sizes[s - 1][0] && gui[2] == sizes[s - 1][1],
 						"GUI scale " + s + " gives " + sizes[s - 1][0] + "x" + sizes[s - 1][1] + ": " + gui[0] + " " + gui[1] + "x" + gui[2]);
-				Path shot = context.takeScreenshot("t2.2-render-kit-scale-" + s);
+				Path shot = context.takeScreenshot((smooth ? "t2.9d-render-kit-smooth-scale-" : "t2.2-render-kit-scale-") + s);
 				// The first card's corners are cut in screen pixels: its corner shows the panel, its edges the outline.
 				int[] card = context.computeOnClient(client -> ((RenderKitTestScreen) client.gui.screen()).firstCard);
 				int left = card[0] * s, top = card[1] * s, radius = Shapes.RADIUS_CARD * s;
-				check(pixel(shot, left, top) == (Theme.PANEL & 0xFFFFFF), "scale " + s + ": the corner pixel is cut");
-				check(pixel(shot, left + radius, top) == (Theme.SEPARATOR & 0xFFFFFF), "scale " + s + ": the top edge is drawn from the radius on");
-				check(pixel(shot, left, top + radius) == (Theme.SEPARATOR & 0xFFFFFF), "scale " + s + ": the left edge is drawn from the radius down");
-				check(pixel(shot, left + radius / 2, top + radius / 2) != (Theme.PANEL & 0xFFFFFF), "scale " + s + ": the curve is round, not square");
+				check(pixel(shot, left, top) == (Theme.PANEL & 0xFFFFFF), "scale " + s + look + ": the corner pixel is cut");
+				check(pixel(shot, left + radius, top) == (Theme.SEPARATOR & 0xFFFFFF), "scale " + s + look + ": the top edge is drawn from the radius on");
+				check(pixel(shot, left, top + radius) == (Theme.SEPARATOR & 0xFFFFFF), "scale " + s + look + ": the left edge is drawn from the radius down");
+				check(pixel(shot, left + radius / 2, top + radius / 2) != (Theme.PANEL & 0xFFFFFF), "scale " + s + look + ": the curve is round, not square");
 			}
+			}
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = null);
 
 			// GUI scale 4: a 320×240 GUI, the smallest vanilla allows.
 			// The probe frames sit between two log markers; the end marker in the file proves it is flushed.
@@ -84,6 +91,7 @@ public class RenderKitGameTest implements FabricClientGameTest {
 			Screen screen = context.computeOnClient(client -> client.gui.screen());
 			check(screen instanceof RenderKitTestScreen, "the screen is still open: " + screen);
 		} finally {
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = null);
 			context.setScreen(() -> null);
 			context.restoreDefaultGameOptions();
 			context.getInput().resizeWindow(854, 480);

@@ -29,6 +29,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   REQ-NPCWP-05). Like a vanilla beacon's, the beam is animated, terrain in front of it hides it,
   and it widens with distance so you can find it from far away (not while you look through a
   spyglass). New NPC Search options **Show beacon beams** and **Show distance** (both default ON).
+- **Smooth corners (optional).** A new **Smooth corners** setting in General › Interface (off by
+  default) draws the rounded corners of the settings screen, the HUD editor and the notices with soft,
+  anti-aliased edges instead of whole pixels.
 
 ### Changed
 

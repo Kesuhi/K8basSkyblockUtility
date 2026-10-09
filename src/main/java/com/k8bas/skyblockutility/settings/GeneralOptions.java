@@ -16,7 +16,7 @@ import com.k8bas.skyblockutility.ui.option.Toggle;
 import java.util.List;
 
 /**
- * The General category's declarations (T2.1, T2.4d, T2.8b): Interface (accent, notices), HUD, Keybinds and
+ * The General category's declarations (T2.1, T2.4d, T2.8b, T2.9d): Interface (accent, smooth corners, notices), HUD, Keybinds and
  * Updates. The key names are compile-time constants and the HUD editor is opened through the action given, so
  * this loads no Minecraft class.
  */
@@ -53,6 +53,12 @@ public final class GeneralOptions {
 								List.of("accent", "colour", "color", "theme")),
 						GeneralConfig.DEFAULT_ACCENT, false, Binding.of(() -> config.accentColor == null ? GeneralConfig.DEFAULT_ACCENT : config.accentColor & 0xFFFFFF,
 								value -> config.accentColor = value & 0xFFFFFF)),
+				Toggle.of("interface.smooth_corners", "general.smoothCorners",
+						new OptionText("Smooth corners", "Draws rounded corners with soft edges.",
+								"Softens the rounded corners of this screen, the HUD editor and notices. Off draws them from whole pixels, "
+										+ "as before.",
+								List.of("smooth", "corners", "rounded", "anti-aliasing", "look")),
+						false, Binding.of(config::smoothCorners, value -> config.smoothCorners = value)),
 				Choice.of("interface.notice_position", "general.noticePosition",
 						new OptionText("Notice position", "Where notices appear on the screen.",
 								"Notices are short messages, e.g. that an update is out. Vanilla toasts show top right too and are drawn "
