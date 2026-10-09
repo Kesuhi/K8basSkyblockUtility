@@ -115,12 +115,13 @@ check_checkout() { # <rev>
 		printf '%s\n' "$hidden" >&2
 		return 1
 	fi
-	if ! ignored=$(git status --porcelain --ignored --untracked-files=all -- src); then
+	# The jar packs src/ and, since T3.0j, the third-party licence texts in licenses/.
+	if ! ignored=$(git status --porcelain --ignored --untracked-files=all -- src licenses); then
 		echo "release-check: git status failed (see above)" >&2
 		return 1
 	fi
 	if [[ -n $ignored ]]; then
-		echo "release-check: ignored files under src/ would be packed into the jar; remove them and build again:" >&2
+		echo "release-check: ignored files under src/ or licenses/ would be packed into the jar; remove them and build again:" >&2
 		printf '%s\n' "$ignored" >&2
 		return 1
 	fi

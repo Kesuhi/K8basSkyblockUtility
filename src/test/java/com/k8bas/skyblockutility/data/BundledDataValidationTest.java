@@ -47,4 +47,15 @@ class BundledDataValidationTest {
 		assertTrue(entries >= 1, "the index ships in the jar");
 		assertTrue(compressed <= MAX_COMPRESSED, "the data folder adds at most 1 MB: " + compressed);
 	}
+
+	@Test
+	void theJarCarriesTheLicenceOfEveryUpstreamTheTablesUse() throws IOException {
+		// T3.0j, AC-DATA-03 (jar part): META-INF/licenses/<upstream>.txt for each third-party upstream in use.
+		DataValidator.Report report = DataValidator.validate(PROJECT.resolve(DataIndexer.DATA), PROJECT.resolve(DataIndexer.SCHEMAS));
+		try (ZipFile zip = new ZipFile(System.getProperty("k8bas.releaseJar"))) {
+			for (String upstream : report.getUpstreams()) {
+				assertTrue(zip.getEntry("META-INF/licenses/" + upstream + ".txt") != null, "the jar carries the licence of " + upstream);
+			}
+		}
+	}
 }

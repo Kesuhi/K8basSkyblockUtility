@@ -24,6 +24,13 @@ import kotlin.system.exitProcess
  * the schema's x-prose fields, and the index: an entry per file and a file per entry, one file per table id,
  * and the checksum, row count, schemaVersion, dataVersion and gameVersion the file has. Each problem names
  * the table and the offending key.
+ *
+ * Licences (T3.0j, REQ-DATA-05, REQ-XC-LICENSE-03, -05): a table not CC0-1.0 lives under
+ * `thirdparty/<upstream>/` of an upstream approved in data-schemas/upstreams.json, with that upstream's
+ * licence; each upstream used has a THIRD_PARTY_NOTICES.md section that names its files and its licence text in
+ * licenses/<upstream>.txt (the build copies it into the jar's META-INF/licenses/); an MIT or Apache source
+ * names an approved upstream as notice; no NC or SA licence anywhere, and no NEU george.json; a source on a
+ * wiki, Fandom, hypixel.net or Reddit page is one a person supplied (D-16, D-28).
  */
 object DataValidator {
 	/** One problem: the table (or file), the offending key or JSON pointer, and what is wrong. */
@@ -31,11 +38,23 @@ object DataValidator {
 		override fun toString() = "$table: $key: $message"
 	}
 
-	/** The problems and the size of each table file in bytes (REQ-DATA-12). */
-	data class Report(val problems: List<Problem>, val bytes: Map<String, Long>)
+	/** The problems, the size of each table file in bytes (REQ-DATA-12) and the upstreams whose licence texts the jar must carry. */
+	data class Report(val problems: List<Problem>, val bytes: Map<String, Long>, val upstreams: Set<String>)
 
 	private const val MAX_PROSE = 80
 	/** `<table id>:<key>`: a table id (dots allowed, as in `ref.skills`) and a key without spaces or colons. */
+	/** An NC or SA licence id, e.g. CC-BY-NC-SA-3.0: never shipped. */
+	private val NC_SA = Regex("(?i)(^|[-_ ])(NC|SA)([-_ ]|$)|NonCommercial|Non-Commercial|ShareAlike|Share-Alike")
+
+	/** Hosts used only as pages a person cited (D-16, D-28); the official API host is not one of them. */
+	private val CITED_ONLY = listOf("hypixel.net", "fandom.com", "minecraft.wiki", "reddit.com", "redd.it")
+
+	/** Source kinds that are wiki, forum or Reddit pages, with or without a url. */
+	private val CITED_KINDS = setOf("wiki_crosscheck", "forum", "reddit")
+	private const val OFFICIAL_API = "api.hypixel.net"
+	private const val CC0 = "CC0-1.0"
+	private val THIRD_PARTY = Regex("^thirdparty/([^/]+)/")
+
 	private val REFERENCE = Regex("^([a-z][a-z0-9_]*(?:\\.[a-z0-9_]+)*):([^\\s:]+)$")
 
 	private val REGISTRY: SchemaRegistry = SchemaRegistry.withDefaultDialect(
@@ -126,7 +145,8 @@ object DataValidator {
 		for (file in parsed) {
 			references(file.id, file.json!!, "", "", DataFiles.prose(schemasById[file.id]), keysByTable, problems)
 		}
-		return Report(java.util.List.copyOf(problems), files.associate { it.id to it.bytes.size.toLong() })
+		val upstreams = licences(files, schemas, problems)
+		return Report(java.util.List.copyOf(problems), files.associate { it.id to it.bytes.size.toLong() }, upstreams)
 	}
 
 	/**
@@ -149,6 +169,108 @@ object DataValidator {
 			}
 		}
 		return problems
+	}
+
+	/** The licence rules (T3.0j); returns the approved upstreams the tables use. */
+	private fun licences(files: List<TableFile>, schemas: Path, problems: MutableList<Problem>): Set<String> {
+		val upstreams = schemas.resolve("upstreams.json").takeIf { Files.isRegularFile(it) }
+			?.let { DataFiles.MAPPER.readTree(Files.readString(it)).get("upstreams") }
+			?.properties()?.associate { (id, upstream) -> id to upstream } ?: mapOf()
+		val project = schemas.toAbsolutePath().parent
+		val notices = project.resolve("THIRD_PARTY_NOTICES.md").takeIf { Files.isRegularFile(it) }?.let { Files.readString(it) } ?: ""
+		val licenses = project.resolve("licenses")
+		val used = sortedSetOf<String>()
+
+		fun requireNotice(table: String, upstream: String, path: String?) {
+			val name = upstreams[upstream]?.get("name")?.stringValue() ?: upstream
+			if (!Regex("(?m)^## " + Regex.escape(name) + "\\s*$").containsMatchIn(notices)) {
+				problems += Problem(table, "THIRD_PARTY_NOTICES", "no '## $name' section in THIRD_PARTY_NOTICES.md")
+			}
+			if (path != null && !notices.contains(path)) {
+				problems += Problem(table, "THIRD_PARTY_NOTICES", "THIRD_PARTY_NOTICES.md does not name $path")
+			}
+			if (!Files.isRegularFile(licenses.resolve("$upstream.txt"))) {
+				problems += Problem(table, "licenses", "licenses/$upstream.txt is missing (the build copies it into the jar's META-INF/licenses/)")
+			}
+		}
+
+		for (file in files) {
+			if (file.path.substringAfterLast('/').equals("george.json", ignoreCase = true)) {
+				problems += Problem(file.id, "path", "${file.path}: NEU's george.json is CC BY-NC-SA and is never bundled")
+			}
+			val json = file.json ?: continue
+			val license = json.get("license")?.takeIf { it.isString }?.stringValue()
+			val upstream = THIRD_PARTY.find(file.path)?.groupValues?.get(1)
+			if (upstream == null) {
+				if (license != null && license != CC0) {
+					problems += Problem(file.id, "license", "$license tables belong under thirdparty/<upstream>/")
+				}
+			} else {
+				val approved = upstreams[upstream]
+				if (approved == null) {
+					problems += Problem(file.id, "thirdparty", "$upstream is not an approved upstream (data-schemas/upstreams.json, PLAN §2)")
+				} else {
+					val expected = approved.get("license")?.stringValue()
+					if (license != expected) {
+						problems += Problem(file.id, "license", "$license, but $upstream data is $expected")
+					}
+					used += upstream
+					requireNotice(file.id, upstream, file.path)
+				}
+			}
+			// Every licence anywhere in the table: the envelope's, each source's and any row's.
+			licenceValues(json, "").forEach { (at, value) ->
+				if (NC_SA.containsMatchIn(value)) {
+					problems += Problem(file.id, at, "$value is NC or SA material, which is never shipped")
+				}
+			}
+			val sources = json.get("sources")?.takeIf { it.isObject } ?: continue
+			for ((name, source) in sources.properties()) {
+				val at = "/sources/$name"
+				val sourceLicense = source.get("license")?.takeIf { it.isString }?.stringValue()
+				val cites = listOf("url", "title").mapNotNull { source.get(it)?.takeIf { node -> node.isString }?.stringValue() }
+				if (cites.any { it.contains("george.json", ignoreCase = true) }) {
+					problems += Problem(file.id, at, "cites NEU's george.json, which is CC BY-NC-SA and never used")
+				}
+				if (sourceLicense == "MIT" || sourceLicense == "Apache-2.0") {
+					val notice = source.get("notice")?.takeIf { it.isString }?.stringValue()
+					when {
+						notice == null -> problems += Problem(file.id, "$at/notice", "an $sourceLicense source names its approved upstream as notice")
+						notice !in upstreams -> problems += Problem(file.id, "$at/notice", "$notice is not an approved upstream (data-schemas/upstreams.json)")
+						else -> {
+							used += notice
+							requireNotice(file.id, notice, null)
+						}
+					}
+				}
+				val url = source.get("url")?.takeIf { it.isString }?.stringValue()
+				val host = url?.let {
+					try {
+						java.net.URI(it).host?.lowercase()
+					} catch (e: java.net.URISyntaxException) {
+						null
+					}
+				}
+				if (url != null && host == null) {
+					problems += Problem(file.id, "$at/url", "$url is not an absolute URL")
+				}
+				val kind = source.get("kind")?.takeIf { it.isString }?.stringValue()
+				val citedOnly = host != null && host != OFFICIAL_API && CITED_ONLY.any { host == it || host.endsWith(".$it") } || kind in CITED_KINDS
+				if (citedOnly && source.get("access")?.stringValue() != "user_supplied") {
+					problems += Problem(file.id, "$at/access", "${host ?: kind} pages are used only as citations a person supplied (access user_supplied, D-16, D-28)")
+				}
+			}
+		}
+		return java.util.Collections.unmodifiableSet(used)
+	}
+
+	/** Every string under a `license` key in [node], with its pointer. */
+	private fun licenceValues(node: JsonNode, at: String): List<Pair<String, String>> = when {
+		node.isObject -> node.properties().flatMap { (name, child) ->
+			if (name == "license" && child.isString) listOf("$at/$name" to child.stringValue()) else licenceValues(child, "$at/$name")
+		}
+		node.isArray -> node.values().flatMapIndexed { i, child -> licenceValues(child, "$at/$i") }
+		else -> listOf()
 	}
 
 	private fun readIndex(data: Path, problems: MutableList<Problem>): Map<String, JsonNode> {

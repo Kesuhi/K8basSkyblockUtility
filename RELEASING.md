@@ -160,7 +160,7 @@ git cat-file -t v1.1.0                          # tag
 ```bash
 git switch --detach v1.1.0
 git status --porcelain --untracked-files=all    # prints nothing
-git status --porcelain --ignored --untracked-files=all -- src   # prints nothing
+git status --porcelain --ignored --untracked-files=all -- src licenses   # prints nothing
 git ls-files -v | grep -E '^([a-z]|S) '         # prints nothing
 ./gradlew clean build
 (cd build/libs && sha256sum -c "k8bas_skyblock_utility-1.1.0+26.2.jar.sha256")

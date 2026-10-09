@@ -125,6 +125,10 @@ test {
 	// For tests that read the source tree (RuntimeVersionsTest, BundledDataValidationTest): a schema-only
 	// change must rerun the data validation.
 	inputs.dir("data-schemas").withPropertyName("dataSchemas").withPathSensitivity(PathSensitivity.RELATIVE)
+	// The licence rules (T3.0j) read the notices and licences/, and check the built jar's META-INF/licenses/.
+	inputs.file("THIRD_PARTY_NOTICES.md").withPropertyName("thirdPartyNotices").withPathSensitivity(PathSensitivity.RELATIVE)
+	inputs.files(fileTree("licenses")).withPropertyName("licenceTexts").withPathSensitivity(PathSensitivity.RELATIVE)
+	inputs.file(tasks.named("jar").flatMap { it.archiveFile }).withPropertyName("releaseJar").withPathSensitivity(PathSensitivity.NAME_ONLY)
 	systemProperty "k8bas.projectDir", projectDir.absolutePath
 	// ReleaseArtifactTest checks the built jar and its sidecar against the release contract.
 	dependsOn "sha256Sidecar"
@@ -142,6 +146,15 @@ tasks.matching { it.name == "runClientGameTest" }.configureEach {
 }
 
 // The release sidecar (REQ-REL-07): "<64 lowercase hex>  <jar name>" and LF, UTF-8 without a BOM.
+// Third-party data licences (T3.0j, REQ-XC-LICENSE-03): each approved upstream's licence text from licenses/ ships in
+// the jar under META-INF/licenses/; the data validator requires one per upstream the bundled tables use.
+tasks.named("jar") {
+	from("licenses") {
+		include "*.txt"
+		into "META-INF/licenses"
+	}
+}
+
 def sha256Sidecar = tasks.register("sha256Sidecar") {
 	def jarFile = tasks.named("jar").flatMap { it.archiveFile }
 	def sidecar = jarFile.map { it.asFile.toPath().resolveSibling(it.asFile.name + ".sha256").toFile() }
