@@ -851,7 +851,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - NpcMobTablesTest (9): the real tables through the registry; positions; island sync with `Islands.kt` and the schemas (EC-NPCDB-03); alias lookup and clashes; a row skipped with one WARN (AC-DATA-05 [A]); no gist URL, raw gist URL or fetch helper in the main source set (AC-NPCDB-02/03 [R]).
       - Gametest BundledListsGameTest: each picker lists exactly its index's row count in island folders; the registry reports both tables loaded; no gist-fetch log line and no cache in the config folder (AC-NPCDB-02/03 [B]); both lists read one registry that lacks the mob file, and only the mob picker says unavailable while the NPC list loads (AC-DATA-05 [B], EC-UI-08).
     - **Review:** two angles with two verifiers each. Fixed: the fetch helper was still there; the NEU revision was recorded as the build source; the gametest's no-gist and no-cache checks could not fail; its "others still work" check passed by construction.
-- [ ] **T3.8b data(npcdb): NPC & mob data corrections** (S, deps T3.8). Applies the audit's outcomes; each content change bumps `dataVersion` by exactly 1 (by hand), then `dataIndex`.
+- [x] **T3.8b data(npcdb): NPC & mob data corrections** (S, deps T3.8). Applies the audit's outcomes; each content change bumps `dataVersion` by exactly 1 (by hand), then `dataIndex`.
   - Req: REQ-NPCDB-07, REQ-NPCDB-08
   - Changes:
     - NPCs standing in the Dungeon Hub get the island "Dungeon Hub"; Trinity, Tomioka and Duncan stay moving on "Catacombs" (D-2)
@@ -860,6 +860,31 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - merged or renamed entries keep their id or get an alias
     - Ghost, Fels, Sneaky Creeper and Invisibug are flagged invisible-by-design and kept
   - Accept: AC-NPCDB-06. No `entityType` data is added (R16).
+  - Done (2026-10-09): both tables are at data version 2.
+    - **NPCs (362):**
+      - The 6 fixed Dungeon Hub NPCs are filed under "Dungeon Hub"; the load-time normalisation stays (REQ-LOC-03).
+      - `bramass_beastslayer` (now at -272,113,-197, aliases `bramass_beastslayer_2`, `bestiary`), `hendrik` (16,62,-31, alias `hendrik_2`), `fishing_merchant` (alias `fishing_merchant_2`) and `forge_foreman` (alias `fred`) absorb their near-duplicates.
+      - `gemma` and `scoop` take NEU's current positions.
+    - **Mobs (313):**
+      - `ghost`, `fels`, `sneaky_creeper` and `invisibug` carry `invisible: true`, for T3.8c. Shadow Assassin is not flagged: it is invisible only at times.
+      - Five Glacite mobs are also listed under "Glacite Mineshafts", as "<name> (Mineshafts)" so their rule cards differ from the Dwarven Mines twins: Bowman, Caver, Mage and Mutt (NEU tags them island `mineshaft`), and Littlefoot (likely, through "Littlefoot's Den"; G3).
+      - Glacite Walker is the Great Ice Wall's Ice Walker and stays under Dwarven Mines only.
+    - **Code:**
+      - Entries carry `aliases` (and mobs `invisible`).
+      - The picker searches aliases, so "Bestiary" finds Bramass.
+      - The picker counts a rule linked to an old id as using the merged entry (`TableRows.usedIds`).
+      - `NpcWaypointMarkers.distinct` draws one waypoint when a 1.x config has rules on both halves of a merged pair; the config keeps both.
+    - **Decided, not changed:** the cross-island match overlaps that can meet (Blaze/Lava Blaze on the Crimson Isle, Tiki/Wiki Tiki if fished on Torrhus Canyon) stay as they are. Matching is unchanged in v1, and the Tiki case is a G3 check.
+    - **Tests:**
+      - NpcMobTablesTest (14): no fixed NPC under "Catacombs" in the data; every merged id resolves through its alias at the audit's position; the confirmed-distinct pairs stay; the exact mineshaft group; exactly the four invisible flags; alias search; used ids through aliases.
+      - NpcWaypointMarkersTest: one waypoint per data entry.
+    - **Review:** two angles with two verifiers each. Fixed:
+      - identical cards for the mineshaft twins (confirmed);
+      - a CHANGELOG line users could not see (confirmed);
+      - stacked waypoints for merged pairs (split);
+      - an untested alias path (split);
+      - an exact-group check (split);
+      - the overlap decision recorded (split).
 - [ ] **T3.8c feat(ui): invisible-by-design mobs greyed in the picker** (S, deps T3.8b, T2.5c). Flagged mobs stay listed, greyed and not addable, labelled "never highlighted (Hypixel rules)" (R5). The picker marks an entry as already added when a rule's pattern and island match it (EC-NPCDB-02). A rule whose sourceId is gone shows as a custom rule (EC-NPCDB-01).
   - Req: REQ-NPCDB-08, REQ-NPCDB-09, REQ-UI-11, REQ-XC-RULES-04
   - Accept: AC-NPCDB-07 ([C] for Ghost, Fels, Sneaky Creeper and Invisibug).

@@ -44,7 +44,9 @@ object MobTable {
 			entry.island = TableRows.text(row, "island")
 			entry.matchText = TableRows.text(row, "matchText")
 			entry.subfolder = TableRows.optionalText(row, "subfolder")
-			entry to TableRows.aliases(row)
+			entry.invisible = row.get("invisible")?.asBoolean ?: false
+			entry.aliases = java.util.List.copyOf(TableRows.aliases(row))
+			entry to entry.aliases
 		}
 		MobList(java.util.List.copyOf(rows.map { it.first }), TableRows.index(table, rows) { it.id })
 	}

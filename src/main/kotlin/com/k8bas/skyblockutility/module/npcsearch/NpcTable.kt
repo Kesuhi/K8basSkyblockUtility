@@ -48,7 +48,8 @@ object NpcTable {
 			} else {
 				entry.matchText = TableRows.text(row, "matchText")
 			}
-			entry to TableRows.aliases(row)
+			entry.aliases = java.util.List.copyOf(TableRows.aliases(row))
+			entry to entry.aliases
 		}
 		NpcList(java.util.List.copyOf(rows.map { it.first }), TableRows.index(table, rows) { it.id })
 	}

@@ -14,6 +14,8 @@ import com.k8bas.skyblockutility.module.mobhighlighter.MobTable;
 import com.k8bas.skyblockutility.module.npcsearch.NpcDatabaseEntry;
 import com.k8bas.skyblockutility.module.npcsearch.NpcList;
 import com.k8bas.skyblockutility.module.npcsearch.NpcTable;
+import com.k8bas.skyblockutility.ui.option.RuleDatabase;
+import com.k8bas.skyblockutility.ui.screen.PickerRows;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -91,10 +93,11 @@ class NpcMobTablesTest {
 	}
 
 	@Test
-	void theNpcTableHoldsTheFrozenListWithDungeonHubNormalised() {
+	void theNpcTableHoldsTheCorrectedList() {
 		NpcList npcs = bundled(NpcTable.SPEC);
-		assertEquals(367, npcs.getEntries().size());
-		assertEquals(362, npcs.getEntries().stream().filter(npc -> npc.fixed).count());
+		// The 367 frozen entries less the 5 merged into others (T3.8b).
+		assertEquals(362, npcs.getEntries().size());
+		assertEquals(357, npcs.getEntries().stream().filter(npc -> npc.fixed).count());
 		// REQ-LOC-03: the 6 fixed NPCs filed under "Catacombs" stand in the Dungeon Hub.
 		for (String id : List.of("adventurer_saul", "croesus", "guildford", "malik", "mort", "ophelia")) {
 			assertEquals(Islands.DUNGEON_HUB, npcs.byId(id).island, id);
@@ -106,6 +109,96 @@ class NpcMobTablesTest {
 		}
 		for (String id : List.of("xalx", "pete")) {
 			assertNotNull(npcs.byId(id), id);
+		}
+	}
+
+	private static JsonObject rawTable(String path) {
+		return JsonParser.parseString(new String(resource(path), StandardCharsets.UTF_8)).getAsJsonObject();
+	}
+
+	@Test
+	void noFixedNpcIsFiledUnderCatacombs() {
+		// AC-NPCDB-06 (D-2): in the data itself, not only after the load-time normalisation.
+		JsonObject table = rawTable("thirdparty/neu-repo/npcdb/npcs.json");
+		assertEquals(2, table.get("dataVersion").getAsInt(), "T3.8b's corrections are data version 2");
+		for (var row : table.getAsJsonArray("rows")) {
+			JsonObject npc = row.getAsJsonObject();
+			assertFalse(npc.get("fixed").getAsBoolean() && npc.get("island").getAsString().equals("Catacombs"), npc.toString());
+		}
+	}
+
+	@Test
+	void everyNearDuplicateIsResolvedAsTheAuditRecords() {
+		// AC-NPCDB-06, REQ-NPCDB-07(b)(d), docs/data-audit-npc-mob.md: each merged id resolves through its alias to
+		// the entry it was merged into, at the position the audit settled on.
+		NpcList npcs = bundled(NpcTable.SPEC);
+		Map<String, String> merged = Map.of("bramass_beastslayer_2", "bramass_beastslayer", "bestiary", "bramass_beastslayer",
+				"hendrik_2", "hendrik", "fishing_merchant_2", "fishing_merchant", "fred", "forge_foreman");
+		merged.forEach((old, into) -> {
+			assertEquals(into, npcs.byId(old).id, old);
+			assertTrue(npcs.getEntries().stream().noneMatch(npc -> npc.id.equals(old)), old + " is no entry of its own");
+		});
+		assertPosition(npcs.byId("bramass_beastslayer"), -272, 113, -197);
+		assertPosition(npcs.byId("hendrik"), 16, 62, -31);
+		assertPosition(npcs.byId("fishing_merchant"), 112, 71, -45);
+		assertPosition(npcs.byId("forge_foreman"), -3, 149, -69);
+		// Positions NEU corrected since the gist was compiled.
+		assertPosition(npcs.byId("gemma"), 475, 106, 513);
+		assertPosition(npcs.byId("scoop"), -54, 169, 70);
+		// Confirmed distinct: both stay.
+		for (String id : List.of("arba", "arbadak", "bobby_joe", "farm_merchant", "lukas_the_aquarist", "pig_shop", "grelius", "krevius",
+				"keran", "prie", "fear_mongerer", "oringo", "freddy")) {
+			assertEquals(id, npcs.byId(id).id, id);
+		}
+	}
+
+	@Test
+	void aMergedEntryIsFoundByItsOldName() {
+		// The picker searches an entry's aliases too (as the NPC Search module maps it): "bestiary" finds Bramass.
+		List<RuleDatabase.Entry> entries = bundled(NpcTable.SPEC).getEntries().stream()
+				.map(npc -> new RuleDatabase.Entry(npc.id, npc.displayName, npc.island, null, TableRows.INSTANCE.searchText(npc.matchText, npc.aliases)))
+				.toList();
+		List<String> found = PickerRows.rows(entries, Set.of(), "bestiary", Set.of()).stream()
+				.filter(row -> row.entry() != null).map(PickerRows.Row::label).toList();
+		assertEquals(List.of("Bramass Beastslayer"), found);
+		assertEquals("Trinity", TableRows.INSTANCE.searchText("Trinity", List.of()));
+		assertEquals("Trinity hendrik 2", TableRows.INSTANCE.searchText("Trinity", List.of("hendrik_2")));
+		assertNull(TableRows.INSTANCE.searchText(null, List.of()));
+	}
+
+	@Test
+	void aRuleLinkedToAnOldIdHidesTheEntryItWasMergedInto() {
+		// The picker hides entries a rule already uses; a rule on "fred" uses the Forge Foreman (REQ-UI-11).
+		NpcList npcs = bundled(NpcTable.SPEC);
+		Set<String> used = TableRows.usedIds(java.util.Arrays.asList("fred", "bestiary", "gone", null), id -> {
+			NpcDatabaseEntry entry = npcs.byId(id);
+			return entry == null ? null : entry.id;
+		});
+		assertEquals(Set.of("forge_foreman", "bramass_beastslayer", "gone"), used);
+	}
+
+	private static void assertPosition(NpcDatabaseEntry npc, int x, int y, int z) {
+		assertEquals(List.of((double) x, (double) y, (double) z), List.of(npc.x, npc.y, npc.z), npc.id);
+	}
+
+	@Test
+	void theMobCorrectionsAreInTheData() {
+		MobList mobs = bundled(MobTable.SPEC);
+		assertEquals(2, rawTable("npcdb/mobs.json").get("dataVersion").getAsInt(), "T3.8b's corrections are data version 2");
+		// REQ-NPCDB-08: exactly the four invisible-by-design mobs are flagged; Shadow Assassin is only invisible at times.
+		Set<String> invisible = mobs.getEntries().stream().filter(mob -> mob.invisible).map(mob -> mob.id).collect(Collectors.toSet());
+		assertEquals(Set.of("ghost", "fels", "sneaky_creeper", "invisibug"), invisible);
+		assertFalse(mobs.byId("shadow_assassin").invisible);
+		// AC-NPCDB-06: at least one "Glacite Mineshafts" group; each entry there matches a Glacite Tunnels mob too.
+		List<MobDatabaseEntry> shafts = mobs.getEntries().stream().filter(mob -> mob.island.equals("Glacite Mineshafts")).toList();
+		// The Glacite mobs NEU tags "mineshaft", and Littlefoot ("Littlefoot's Den"); not the Ice Wall's Glacite Walker.
+		assertEquals(Set.of("glacite_bowman_mineshafts", "glacite_caver_mineshafts", "glacite_mage_mineshafts", "glacite_mutt_mineshafts",
+				"littlefoot_mineshafts"), shafts.stream().map(mob -> mob.id).collect(Collectors.toSet()));
+		// Named apart from their Dwarven Mines twins, so the two rule cards can be told apart.
+		assertTrue(shafts.stream().allMatch(mob -> mob.displayName.endsWith(" (Mineshafts)")), shafts.toString());
+		for (MobDatabaseEntry mob : shafts) {
+			assertTrue(mobs.getEntries().stream().anyMatch(other -> other != mob && other.island.equals("Dwarven Mines") && other.matchText.equals(mob.matchText)),
+					mob.id + " is also listed under Dwarven Mines");
 		}
 	}
 
@@ -128,7 +221,8 @@ class NpcMobTablesTest {
 	@Test
 	void theMobTableHoldsTheFrozenListWithTheHiddenJerriesGroup() {
 		MobList mobs = bundled(MobTable.SPEC);
-		assertEquals(308, mobs.getEntries().size());
+		// The 308 frozen entries plus the 5 Glacite mobs also listed under "Glacite Mineshafts" (T3.8b).
+		assertEquals(313, mobs.getEntries().size());
 		Set<String> jerries = mobs.getEntries().stream().filter(mob -> mob.island.equals("Hidden Jerries")).map(mob -> mob.id).collect(Collectors.toSet());
 		assertEquals(Set.of("blue_jerry", "green_jerry", "purple_jerry", "golden_jerry"), jerries);
 		assertTrue(mobs.getEntries().stream().noneMatch(mob -> mob.island.equals("Jerry")), "no mob is gated to Jerry's Workshop by name collision");

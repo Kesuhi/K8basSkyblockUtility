@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.module.npcsearch
 import com.k8bas.skyblockutility.config.ConfigManager
 import com.k8bas.skyblockutility.highlight.HighlightManager
 import com.k8bas.skyblockutility.highlight.HighlightRule
+import com.k8bas.skyblockutility.module.TableRows
 import com.k8bas.skyblockutility.highlight.NameMatchMode
 import com.k8bas.skyblockutility.location.IslandTracker
 import com.k8bas.skyblockutility.module.Module
@@ -147,7 +148,7 @@ class NpcSearchModule : Module {
 				"NPC Database",
 				Supplier { NpcDatabase.state() },
 				Supplier { NpcDatabase.entries() },
-				Function { npc -> RuleDatabase.Entry(npc.id, npc.displayName, npc.island, null, npc.matchText) },
+				Function { npc -> RuleDatabase.Entry(npc.id, npc.displayName, npc.island, null, TableRows.searchText(npc.matchText, npc.aliases)) },
 				Supplier { usedSources() },
 				Consumer { npc ->
 					cfg.rules.add(createRuleForNpc(npc))
@@ -162,14 +163,7 @@ class NpcSearchModule : Module {
 
 	/** The database entries the rules already come from (the picker hides them). */
 	private fun usedSources(): Set<String> {
-		val ids = HashSet<String>()
-		for (rule in cfg.rules) {
-			val source = rule.sourceId
-			if (source != null) {
-				ids.add(source)
-			}
-		}
-		return ids
+		return TableRows.usedIds(cfg.rules.map { it.sourceId }) { NpcDatabase.byId(it)?.id }
 	}
 
 	/** A rule edited, added or deleted in the settings screen: stored in the section and applied at once (REQ-UI-15). */

@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.module.mobhighlighter
 import com.k8bas.skyblockutility.config.ConfigManager
 import com.k8bas.skyblockutility.highlight.HighlightManager
 import com.k8bas.skyblockutility.highlight.HighlightRule
+import com.k8bas.skyblockutility.module.TableRows
 import com.k8bas.skyblockutility.highlight.NameMatchMode
 import com.k8bas.skyblockutility.module.Module
 import com.k8bas.skyblockutility.settings.ListDatabase
@@ -62,7 +63,7 @@ class MobHighlighterModule : Module {
 				"Mob Database",
 				Supplier { MobDatabase.state() },
 				Supplier { MobDatabase.entries() },
-				Function { mob -> RuleDatabase.Entry(mob.id, mob.displayName, mob.island, mob.subfolder, mob.matchText) },
+				Function { mob -> RuleDatabase.Entry(mob.id, mob.displayName, mob.island, mob.subfolder, TableRows.searchText(mob.matchText, mob.aliases)) },
 				Supplier { usedSources() },
 				Consumer { mob ->
 					cfg.rules.add(createRuleForMob(mob))
@@ -77,14 +78,7 @@ class MobHighlighterModule : Module {
 
 	/** The database entries the rules already come from (the picker hides them). */
 	private fun usedSources(): Set<String> {
-		val ids = HashSet<String>()
-		for (rule in cfg.rules) {
-			val source = rule.sourceId
-			if (source != null) {
-				ids.add(source)
-			}
-		}
-		return ids
+		return TableRows.usedIds(cfg.rules.map { it.sourceId }) { MobDatabase.byId(it)?.id }
 	}
 
 	/** A rule edited, added or deleted in the settings screen: stored in the section and applied at once (REQ-UI-15). */

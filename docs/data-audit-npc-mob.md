@@ -226,7 +226,7 @@ The others stay open.
 |---|---|---|
 | Private Island | none | none |
 | The Farming Islands | none | none |
-| Glacite Mineshafts | none | none; T3.8b lists the 5 Glacite mobs here too |
+| Glacite Mineshafts | none | none; T3.8b lists the Glacite mobs that spawn there here too (Bowman, Caver, Mage, Mutt and Littlefoot; NEU tags them `mineshaft`, Littlefoot through "Littlefoot's Den"; Glacite Walker is the Great Ice Wall's Ice Walker and stays under Dwarven Mines only) |
 | Backwater Bayou | none | only its 6 sea creatures, under "Fishing" |
 | The Rift | none | none (13 until the current mob revision) |
 | Dark Auction | none | none |

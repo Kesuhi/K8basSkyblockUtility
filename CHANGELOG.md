@@ -17,6 +17,18 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - The NPC list is built from NotEnoughUpdates-REPO (MIT); `THIRD_PARTY_NOTICES.md` and the jar's
   `META-INF/licenses/` now carry its notice and licence.
 
+### Fixed
+
+- NPCs listed twice in the NPC list are merged: Bramass Beastslayer (also listed as "Bestiary"),
+  Hendrik, the Fishing Merchant (an old spot from before the Hub rebuild) and the Forge Foreman (also
+  listed as "Fred"). Waypoints you added from either entry keep working and now point at the right
+  block; searching the picker for the old name still finds the NPC.
+- Gemma's and Scoop's waypoints point at their current positions.
+- Glacite Bowman, Caver, Mage, Mutt and Littlefoot are also listed under "Glacite Mineshafts", as
+  "Glacite Bowman (Mineshafts)" and so on, so a rule added from there works inside a mineshaft.
+- If you added an NPC twice under two of its names (for example "Fred" and "Forge Foreman"), its
+  waypoint is drawn once. Both rules stay in your settings.
+
 ## [1.2.0] - 2026-10-09
 
 This release brings the mod's own settings screen, with a search that finds every option and rule,

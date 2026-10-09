@@ -44,6 +44,26 @@ class NpcWaypointMarkersTest {
 		return entry;
 	}
 
+	/**
+	 * T3.8b: a config with rules on both halves of a since-merged pair (Fred and the Forge Foreman) draws one waypoint;
+	 * the first enabled rule wins, a disabled one does not count, and rules without a data entry are all kept.
+	 */
+	@Test
+	void rulesOnTheSameDataEntryDrawOneWaypoint() {
+		NpcDatabaseEntry foreman = entry("forge_foreman", -3, 149, -69);
+		Map<String, NpcDatabaseEntry> data = Map.of("forge_foreman", foreman, "fred", foreman);
+		NpcRule first = fixedRule(0, 0, 0);
+		first.sourceId = "forge_foreman";
+		NpcRule fred = fixedRule(0, 0, 0);
+		fred.sourceId = "fred";
+		NpcRule own = fixedRule(1, 2, 3);
+		NpcRule ownToo = fixedRule(1, 2, 3);
+		assertEquals(java.util.List.of(first, own, ownToo), NpcWaypointMarkers.distinct(java.util.List.of(first, fred, own, ownToo), data::get));
+		first.enabled = false;
+		assertEquals(java.util.List.of(first, fred, own, ownToo), NpcWaypointMarkers.distinct(java.util.List.of(first, fred, own, ownToo), data::get),
+				"disabling the first shows the second");
+	}
+
 	/** AC-NPCWP-13: a rule from the NPC data follows that entry's current coordinates. */
 	@Test
 	void aRuleFromTheDataFollowsItsCurrentCoordinates() {

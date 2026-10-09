@@ -16,6 +16,21 @@ internal object TableRows {
 	fun aliases(row: JsonObject): List<String> = row.getAsJsonArray("aliases")?.map { it.asString } ?: listOf()
 
 	/**
+	 * The picker's search text for an entry (REQ-UI-11): its match text and its aliases as words, so a merged
+	 * entry is still found by its old name (searching "Bestiary" finds Bramass Beastslayer).
+	 */
+	fun searchText(matchText: String?, aliases: List<String>): String? =
+		(listOfNotNull(matchText) + aliases.map { it.replace('_', ' ') }).joinToString(" ").ifEmpty { null }
+
+	/**
+	 * The entry ids the rules already use, for the picker to hide (REQ-UI-11): a rule linked to a merged entry's old
+	 * id uses the entry it was merged into; an id the list no longer has stays as it is.
+	 */
+	@JvmStatic
+	fun usedIds(sourceIds: Iterable<String?>, resolve: (String) -> String?): Set<String> =
+		java.util.Set.copyOf(sourceIds.filterNotNull().map { resolve(it) ?: it })
+
+	/**
 	 * Entries by id and by alias (REQ-NPCDB-07(d)): a merged or renamed entry keeps its old id as an alias, so rules
 	 * linked to it still find it. An id always wins over an alias; an alias used twice or equal to an id is ignored
 	 * with one warning.

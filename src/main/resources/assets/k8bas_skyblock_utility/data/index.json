@@ -11,18 +11,18 @@
     },
     "npcdb.mobs": {
       "path": "npcdb/mobs.json",
-      "sha256": "b0dc79fe8007eb50cbe06176a36fc55b5bbd1338bed318c1489a96f0cfd463c4",
-      "rows": 308,
+      "sha256": "61c2b92b5c34235c1f55b825d806d11e6a15d535954b242975762dbeaf54bf2d",
+      "rows": 313,
       "schemaVersion": 1,
-      "dataVersion": 1,
+      "dataVersion": 2,
       "gameVersion": "0.27.1"
     },
     "npcdb.npcs": {
       "path": "thirdparty/neu-repo/npcdb/npcs.json",
-      "sha256": "6e4fbd141e2502aca335964fbb2f1fd15839fa943fe690bf088650ed7b21b864",
-      "rows": 367,
+      "sha256": "85a66741beb92aff8e6fcef0fd2fb99a84541b550af9bcde4848339e5c5dc564",
+      "rows": 362,
       "schemaVersion": 1,
-      "dataVersion": 1,
+      "dataVersion": 2,
       "gameVersion": "0.27.1"
     }
   }
