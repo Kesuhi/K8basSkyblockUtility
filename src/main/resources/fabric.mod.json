@@ -3,7 +3,7 @@
 	"id": "k8bas_skyblock_utility",
 	"version": "${version}",
 	"name": "K8bas Skyblock Utility",
-	"description": "A modular client-side toolkit for Hypixel SkyBlock: rule-based outlines for the mobs and NPCs you can see, searchable mob and NPC lists, island-aware waypoints for NPCs at fixed spots, and a notify-only update check on GitHub. Display only: no automation, and no packet is cancelled or changed. Not affiliated with or endorsed by Hypixel.",
+	"description": "A modular client-side toolkit for Hypixel SkyBlock: rule-based outlines for the mobs and NPCs you can see, island-aware waypoints with beacon beams for NPCs at fixed spots, a searchable settings screen with mob and NPC lists, and a notify-only update check on GitHub. Display only: no automation, and no packet is cancelled or changed. Not affiliated with or endorsed by Hypixel.",
 	"authors": [
 		"Kesuhi"
 	],
@@ -26,7 +26,7 @@
 		"minecraft": "~26.2",
 		"java": ">=25",
 		"fabric-api": ">=0.161.0",
-		"cloth-config": ">=26.2.155",
+		"fabric-language-kotlin": ">=1.14.1+kotlin.2.4.20",
 		"hypixel-mod-api": ">=1.0.2",
 		"render-chest": ">=1.0.3"
 	},

@@ -6,6 +6,121 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-09
+
+This release brings the mod's own settings screen, with a search that finds every option and rule,
+and beacon beams for NPC waypoints.
+
+**Requirements:** Minecraft 26.2 (Fabric) with Java 25, Fabric Loader 0.19.5 or newer, Fabric API
+0.161.0 or newer, Fabric Language Kotlin 1.14.1 or newer (new) and Hypixel Mod API 1.0.2 or newer
+(its build labelled `mc26.1` also runs on 26.2). Cloth Config is no longer needed. Render Chest
+1.0.3 is bundled. Mod Menu is optional.
+
+**Upgrading from 1.1.0:**
+- Install Fabric Language Kotlin 1.14.1 or newer. You can remove Cloth Config unless another mod
+  needs it.
+- Install this version by hand: 1.1.0's update check only notifies. Replace
+  `k8bas_skyblock_utility-1.1.0+26.2.jar` with `k8bas_skyblock_utility-1.2.0+26.2.jar` and restart.
+- Your settings, rules and keybinds are kept.
+- What behaves differently (details, reasons and effects under "Changed"): settings apply as you
+  change them; the categories are General, Highlights and Waypoints; waypoint labels are always
+  white with a yellow distance line and sit on the block's centre; NPCs have no colour of their own;
+  rule cards from a database are slimmer and have a Remove button; waypoints from the NPC list follow
+  its corrected positions.
+- Coming from 1.0.x: move to Minecraft 26.2 with the requirements above first; the README's
+  "Upgrading" section has the steps.
+
+**Defaults in this version:**
+- Mob Highlighter: ON, with the rules you add. Mob scan range: 64 blocks (0 = unlimited, 0–128).
+- NPC Search: ON, with the rules you add. NPC waypoints: ON for each NPC you add.
+- Show beacon beams: ON. Show distance: ON. "You found" title: ON (Trinity, Tomioka, Duncan, Xalx
+  and Pete once you add them to NPC Search, after line of sight, once per run).
+- Beam colour: each island's own (for example red on the Crimson Isle), green for a waypoint shown
+  on every island. It cannot be changed in game yet.
+- Accent colour: teal `#29B6B2`. Smooth corners: OFF. Notice position: top right. Notice duration:
+  5 s.
+- Check for updates (notify): ON. Channel: STABLE, or BETA when you run a pre-release build.
+- Keybinds (Open Settings, Toggle Mob Highlighter, Toggle NPC Search): unbound.
+
+### Added
+
+- **A new settings screen.** `/ksu`, the "Open Settings" key and Mod Menu open the mod's own
+  settings screen: categories down the side, a search box that finds every option and rule, rules
+  as cards you open and edit in place, and **Add from database** with island folders and a search
+  (mobs and NPCs you already added are not offered again).
+- **`/ksu <text>` opens the settings with `<text>` searched**, for example `/ksu glow`. Text that starts
+  with `hud`, `debug`, `update` or `sbxp` is read as a subcommand instead; search `updates` for the update
+  check.
+- **Look of the settings screen:** an **Accent colour** (default teal `#29B6B2`) in General ›
+  Interface colours selections, focus and section titles.
+- **Notices:** short messages in a corner of the screen, placed by **Notice position** (default top
+  right) and shown for **Notice duration** (default 5 s), both in General › Interface. In this
+  version, a notice tells you when the settings file was backed up as you open the settings.
+- **A little motion in the settings screen.** It opens with a short zoom, and switching category slides
+  and fades the new page in. Both take about a fifth of a second, and clicks land where things are drawn
+  while they play.
+- **The settings screen works from the keyboard.** Tab and Shift+Tab move through the sidebar, the search
+  box and every setting, which scrolls into view; Space or Enter switches, opens or presses it; the arrow keys
+  move a slider, pick in a dropdown, open or close a rule and change the category; Delete resets a key
+  binding. A ring in the accent colour shows where you are. Esc works as before.
+- **HUD editor**, for the on-screen elements of later versions. `/ksu hud` or **Edit HUD layout** in
+  General › HUD opens it: drag an element to move it, scroll to scale it (0.5–3.0), use the arrow keys to
+  nudge. Esc or Save keeps the layout; Cancel undoes the session. While you drag, an element snaps to the
+  screen's centre lines and edges and to the other elements' edges when it comes within 4 px, and a thin line
+  shows where; hold Alt to place it freely. This version has no HUD elements yet, so the editor opens empty.
+- **NPC waypoints get a beacon beam.** Each fixed NPC you add gets a beam from its block up to the
+  top of the world, in its island's colour (each island has its own; green for a waypoint shown on
+  every island). Like a vanilla beacon's, the beam is animated, terrain in front of it hides it,
+  and it widens with distance so you can find it from far away (not while you look through a
+  spyglass). New NPC Search options **Show beacon beams** and **Show distance** (both default ON).
+- **Smooth corners (optional).** A new **Smooth corners** setting in General › Interface (off by
+  default) draws the rounded corners of the settings screen, the HUD editor and the notices with soft,
+  anti-aliased edges instead of whole pixels.
+
+### Changed
+
+- **New requirement: [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin).** The settings
+  screen is now written in Kotlin, so the mod needs Fabric Language Kotlin 1.14.1 or newer; many SkyBlock
+  mods (SkyHanni, for example) already need it. Without it, Fabric stops the game with a message naming it.
+- **Cloth Config is no longer needed.** The settings screen is the mod's own, so the mod no longer
+  depends on Cloth Config. You can remove it unless another mod needs it.
+- **Behaviour change: new categories.** The settings are grouped as General, Highlights (Mob Highlighter)
+  and Waypoints (NPC Search), and the mob scan range moved from General to the Mob Highlighter card.
+  *Reason:* the screen groups features by what they help you do. *Effect:* the same settings, in new
+  places; the search box finds each of them.
+- **Behaviour change: settings apply as you change them.** Every change takes effect at once and is
+  saved when you close the screen; there is no Save or Cancel button. *Reason:* you see the effect
+  of a change while you make it. *Effect:* closing with Esc keeps your changes.
+- **Behaviour change: waypoints look like Skyblocker's.** The label has no dark background any
+  more and sits on the centre of the NPC's block, 1.5 blocks up. The label is always white and the
+  distance line below it yellow; the "White waypoint labels" option is gone. *Reason:* the beam now
+  carries the colour, and plain text over a beam reads better. *Effect:* your waypoints look
+  different after the update; their position moves by half a block to the block's centre.
+- **Behaviour change: NPCs have no colour of their own any more.** NPC Search draws everything in
+  white: waypoint labels, the outline of moving NPCs, the dot on a rule's card and the "You found"
+  title. *Reason:* the beam shows the island's colour, and one colour keeps the NPC list simple.
+  *Effect:* NPCs you had coloured are white now; the colour stays in your settings file, unused.
+- **Behaviour change: slimmer rule cards with a Remove button.** A mob or NPC you added from the
+  database shows only what you can usefully change: on or off, and for a mob its entity type and
+  colour. Its label, island, name match and name pattern come from the database. Every rule has a
+  **Remove** button at the right end of its header, in place of the Delete button inside the card.
+  *Reason:* the database already knows those fields, and removing a rule should not take a click to
+  open it first. *Effect:* rules you wrote by hand (no database entry) still show every field; new
+  rules are added with **Add from database**.
+- **Behaviour change: a waypoint from the NPC list follows its corrected position.** A waypoint you
+  added from the NPC list uses that NPC's current coordinates from the list, so a corrected entry
+  moves it; a waypoint whose NPC is no longer listed keeps its stored position. *Reason:* fixes to
+  the list should reach waypoints you already added. *Effect:* a few waypoints may move to their
+  NPC's corrected spot.
+
+### Fixed
+
+- `/ksu debug`, `/ksu debug dump` and `/ksu debug dump containers` on their own show how to go on;
+  before, they were sent to the server.
+- Waypoint labels behind water, stained glass or ice stay readable with **Improved Transparency**
+  (the Fabulous graphics preset) on; before, water and ice covered them. Waypoint labels are now
+  drawn over clouds and rain as well.
+
 ## [1.1.0] - 2026-10-02
 
 This release ports the mod to Minecraft 26.2 and makes the outlines follow Hypixel's rules: only

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01); all are listed in §12.3. Two field questions stay open for G3: the command and menu path that enable the Frozen Corpses widget (R24 a) and whether a key held only in the Dwarven Sack opens a corpse (R24 b). R22 drops the possible corpse spots (module corpse-waypoints). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped R22]` and keep their ids. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
+| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26–R27 at T2.3b (2026-10-03); all are listed in §12.3. Two field questions stay open for G3: the command and menu path that enable the Frozen Corpses widget (R24 a) and whether a key held only in the Dwarven Sack opens a corpse (R24 b). R22 drops the possible corpse spots (module corpse-waypoints). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped R22]` and keep their ids. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
 | Date | 2026-10-01 |
 | Inputs | Your original task prompt (verbatim) and the *SkyBlock XP Optimizer* addendum (verbatim), plus the research and decisions recorded in `PLAN.md` |
 | Relationship to PLAN.md | This file says **what** must be true and how we will know. `PLAN.md` says **how and in which order**. Every PLAN task names the requirement ids it implements (§13 Traceability). |
@@ -93,7 +93,8 @@ The map is acyclic. Every feature module also depends on `config-store` and `ui-
 | Area | Choice (verified for 26.2) |
 |---|---|
 | Game / loader | Minecraft **26.2** (unobfuscated, so no mappings), Fabric Loader **0.19.5**, Fabric API **0.161.0+26.2**, Loom **1.17** line pinned, Gradle **9.5.1**, Java **25** |
-| Required runtime mods | Hypixel Mod API (Fabric glue `1.0.2+build.1+mc26.1`, tagged 26.1–26.2); library `net.hypixel:mod-api:1.0.2` |
+| Required runtime mods | Hypixel Mod API (Fabric glue `1.0.2+build.1+mc26.1`, tagged 26.1–26.2); library `net.hypixel:mod-api:1.0.2`; Fabric Language Kotlin `[decided R29]` |
+| Languages | Java 25 and Kotlin, each file in its best-fit language (`docs/language-classification.md`) `[decided R29, R30]` |
 | Optional | Mod Menu **20.0.3** (compile-only) |
 | Removed in Phase 2 | Cloth Config (26.2.155 during the port only) |
 | Bundled library | Render Chest **1.0.3+26.2** (Apache-2.0, JiJ), for depth-tested glow `[decided D-1]` |
@@ -128,6 +129,8 @@ src/main/java/com/k8bas/skyblockutility/
   highlight/                        rule matching + glow (glow)
   module/<feature>/                 one package per feature: <Feature>Config, <Feature>Module, keybinds
   ui/  hud/                         new UI kit, config screen, HUD framework and editor (ui-config, hud)
+src/main/kotlin/com/k8bas/skyblockutility/
+  (same packages as Java)          the files whose best fit is Kotlin (R30, docs/language-classification.md)
   data/                             bundled-data registry and loaders (data-registry)
   skyblock/                         read-only game-state readers, profile service (game-state)
   render/                           world markers (world-markers)
@@ -326,7 +329,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - the Mod Menu config button
   - rule-based Mob Highlighter and NPC Search matching
   - NPC Search fixed waypoints: two lines (name, then "Nm" distance) on a dark background, see-through, and a constant on-screen size beyond 10 blocks. This is the 1.0.1 style; once T3.4 lands, the label style follows REQ-NPCWP-02/03 [decided R23]
-  - label colour [decided R21]: NPC Search has a setting "White waypoint labels", default ON. In v1.1.0 it draws both lines in white (the distance line follows the label). With it OFF, both lines are drawn in the rule's own `color` field, the 1.0.1 look. From T3.4 on, the colours follow REQ-NPCWP-02/03: with the setting ON the label is white and the distance line yellow; with it OFF both lines keep the rule's `color`
+  - label colour [decided R21]: NPC Search has a setting "White waypoint labels", default ON. In v1.1.0 it draws both lines in white (the distance line follows the label). With it OFF, both lines are drawn in the rule's own `color` field, the 1.0.1 look. From T3.4 on, the colours follow REQ-NPCWP-02/03: with the setting ON the label is white and the distance line yellow; with it OFF both lines keep the rule's `color`. From 1.2.0 the setting is gone: the label is always white and the distance line yellow [decided R31]
 
   *(Brief: Phase 1 bullet 2; Derived: read-npc current behaviour)*
 - **REQ-PORT-07** Waypoint labels at fixed coordinates must stay legible behind opaque blocks and behind translucent terrain (water, stained glass, ice). Translucent terrain must never draw over them. *(Derived: G4 risk (b) — see-through text submitted in the normal text phase is overdrawn by translucent terrain; PLAN T1.3; rules policy P4 allows see-through only for fixed coordinates)*
@@ -769,8 +772,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   *(Brief: Phase 2; Derived: the 1.0.1 entry points (read-ui), Alpaka's `/aa <term>` (research-alpaka-ui §5), subcommands from PLAN T0.4, T2.8, T4.4, T6.8; T3.3 dropped by R22)*
 - **REQ-UI-11** Rule lists.
   - The Mob Highlighter and NPC Search rules must be editable as collapsible rule cards, one per rule.
-  - The collapsed header shows the rule's label and a colour dot.
-  - The expanded card shows every editable field: label, enabled, entity type, island restriction, name match mode, name pattern, colour, and fields that later features add (e.g. the optional per-rule beam colour override from npc-waypoints, separate from the glow colour [decided D-15]). It also has a destructive Delete.
+  - The collapsed header shows the rule's label, a colour dot and, at its right end, a destructive Remove button that deletes the rule at once [decided R31].
+  - The expanded card shows every editable field: label, enabled, entity type, island restriction, name match mode, name pattern, colour, and fields that later features add (e.g. the optional per-rule beam colour override from npc-waypoints, separate from the glow colour [decided D-15]).
+  - A rule added from a database (it has a `sourceId`) shows a slim card: enabled, plus entity type and colour for a mob. Its label, island, name match and name pattern come from the database and are not shown; a hand-made rule (no `sourceId`) keeps every field, and so does a rule from a database that already does nothing when its card is made (one edited before 1.2.0, e.g. with an invalid pattern), so it can be fixed [decided R31].
+  - NPC rules have no colour field: NPC Search draws its labels and outlines in white (REQ-NPCWP-02, REQ-NPCWP-07) [decided R31].
   - Fixed NPC rules show their coordinates read-only.
   - "Add from database" opens a picker with a search field, island folders and an Add button per entry. Entries that already back a rule are hidden. Mobs that are invisible by design are shown greyed, cannot be added and are labelled "never highlighted (Hypixel rules)" (npc-db REQ-NPCDB-08) [decided R5].
   - Every add, edit and delete is kept (REQ-UI-15).
@@ -779,13 +784,14 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-UI-12** A REGEX name pattern that does not compile should be marked on its rule card with an error colour and a message, not silently dropped. *(Derived: read-ui bug #17)*
 - **REQ-UI-13** Colour picker. A colour swatch must open a modal over the settings screen containing:
   - a hue/saturation wheel and a brightness slider
-  - a hex field that accepts `#RRGGBB`, plus `#AARRGGBB` where the colour stores alpha
+  - a hex field that accepts `#RRGGBB` and `#AARRGGBB`; for a colour without alpha the alpha part is dropped, so `#80FF0000` gives opaque red (EC-NPCWP-06) [decided R27]
   - preset swatches
   - Cancel and Save buttons
 
   Its behaviour:
   - Alpha controls appear only for colours that store alpha; rule colours are RGB only.
   - Moving brightness to 0 and back must not lose the hue or saturation picked in the dialog.
+  - Nothing is applied before Save; Cancel, Esc and closing the screen discard the change.
   - Invalid hex input is not applied, and the last valid colour stays.
   - Cancel leaves the stored colour unchanged.
 
@@ -793,6 +799,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-UI-14** Keybind capture.
   - Each of the mod's keybinds (Open settings, Toggle Mob Highlighter, Toggle NPC Search, and later ones) has a capture widget that shows the current binding.
   - Click arms the widget and the next key binds. Esc unbinds, and right-click resets to the default.
+  - While armed, a left click cancels without changing the binding (so attack is never bound by accident), a right click resets to the default, and the middle and side mouse buttons bind as mouse keys [decided R27].
+  - The keys bound to Fullscreen and Screenshot (F11, F2 by default) cannot be captured: the game acts on them before any screen sees them, as in vanilla Controls. (Friends, O by default, is only taken first on the title and pause screens, so it can be bound here.)
   - Bindings are written to `options.txt` under the same key names as in 1.0.1, and they stay listed in vanilla Controls under the mod's category.
 
   *(Derived: parity with 1.0.1 (read-ui); Brief Phase 2 "users don't lose settings")*
@@ -805,7 +813,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   *(Derived: D-8; read-ui bugs #2, #4, #5)*
 - **REQ-UI-16** Migration, no setting lost.
-  - Every value in a valid 1.0.1 config must appear in the new screen with the same value.
+  - Every value in a valid 1.0.1 config must appear in the new screen with the same value. The exceptions are the fields R31 leaves off the screen: the label, island, name match and name pattern of a rule from a database (its header still names it) and the colour of NPC rules. They stay in the file with the same value [decided R31].
   - Opening and closing the screen without edits must leave every existing key with an equal value. The only exceptions are values changed by migration steps defined in other module specs (e.g. the location split, decided D-2, and the updater).
   - Existing field names and types are not changed; new settings are added as new keys with defaults.
   - A stored value outside a control's range (e.g. a hand-edited `mobScanRangeBlocks` of 200) is kept until the user changes that control.
@@ -827,7 +835,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - an open animation (scale 0.90 → 1.00 over 220 ms)
   - a 200 ms slide-and-fade on category switch
   - keyboard focus navigation
-  - anti-aliased (shader) rounded corners
+  - anti-aliased rounded corners (built in T2.9d from alpha-mask textures, no shader, as the opt-in "Smooth corners" setting, OFF until picked; the fill-based corners stay the default and the fallback) [decided R32]
 
   None of them is required for 2.0.0, and no acceptance criterion or checkpoint may wait for them. If one is built, it must not break any other REQ-UI requirement. The T2.9 multi-select dropdown is not a ui-config item: it is built with the optimizer table (sbxp-optimizer, PLAN T6.7). HUD snapping is REQ-HUD-14.
 
@@ -836,7 +844,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-UI-20** Long lists. Lists with many rows (the database picker with ~370 entries, long rule lists, the optimizer table with ~2,800 rows) must draw and hit-test only the visible rows, so cost does not grow with the row count. *(Derived: research GAP-1 §7–8 row volumes; T2.3c)*
 - **REQ-UI-21** Notices (toasts) [decided D-8; uses decided R12].
   - Shape: a notice has a title and up to 2 body lines.
-  - Position and duration: it appears in a configurable corner or top-centre and stays for a configurable 1–15 s. At most 4 are stacked, and the oldest is retired first.
+  - Position and duration: it appears in a configurable corner or top-centre and stays for a configurable 1–15 s; both are set in General › Interface, top right and 5 s until picked [decided R28]. At most 4 are stacked, and the oldest is retired first.
   - Input: notices never take focus or input.
   - Actions: a notice may point to a screen, but it must never itself start an install or any other consequential action.
   - Uses:
@@ -853,6 +861,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   *(Brief: Phase 2 "UI only … Do not copy any non-UI features"; ground rule 4; REQ-XC-LICENSE)*
 - **REQ-UI-25** Local only. The UI and its commands must not send packets, chat messages or server commands. All commands are client-side. *(Brief: ground rule 5; REQ-XC-RULES)*
+- **REQ-UI-26** Language [decided R29, R30]. Each source file is written in the language that fits it best by the criteria in `docs/language-classification.md`: Java where a hard constraint applies (reflection such as Gson, mixins, annotation processors), Kotlin for absent state, singletons, data holders, collection transforms, branch-heavy parsing and default arguments, Java for public API used by Java callers, hot loops and code that mostly calls Java APIs, and otherwise unchanged. A converted file keeps its Java-facing API, so its Java callers and the tests use it unchanged. Players need the Fabric Language Kotlin mod. *(Decided R29 and R30, 2026-10-05)*
 
 **Out of scope**
 - Copying anything from AlpakaAddons. Its non-UI features (chat blur, pause/main menu, viewmodel, item-size and block-overlay screens, command wheel, cosmetics).
@@ -910,9 +919,9 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   These are checked by runClient smoke — [B]. A production boot without Mod Menu logs no `NoClassDefFoundError`, and `/ksu` works — [D]
 - **AC-UI-10** (REQ-UI-11, REQ-UI-15) **Given** the Mob Highlighter rule list, **when**:
-  - a rule is added from the picker and its label, pattern and colour are changed
+  - a rule is added from the picker and its entity type and colour are changed [decided R31]
   - only the colour of a second rule is changed
-  - a third rule is deleted
+  - a third rule is removed with its header's Remove button [decided R31]
   - the game is restarted
 
   **then** all four changes are present, and the added entry no longer appears in the picker — [A] + [C]. Closing the picker never shows a "Changes not saved" prompt — [C]
@@ -945,7 +954,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   **when** the new build loads it and the screen is opened and closed without edits, **then**:
   - Every original key exists in the written file with an equal value. The only exceptions are migrations defined in other modules' specs, and the only other differences are added keys — [A].
-  - The screen shows each rule's original label, island, pattern and colour — [C].
+  - The screen shows each rule's original label (in its header), and for a hand-made rule its island and pattern; a mob rule shows its colour. A rule with a sourceId shows no label, island or pattern field, and an NPC rule no colour field [decided R31] — [C].
   - A hand-edited `mobScanRangeBlocks` of 200 is still 200 after open and close — [A].
   - The three keybind lines in `options.txt` are unchanged — [A].
 - **AC-UI-16** (REQ-UI-17) **Given** a fresh config, the accent is `#29B6B2` — [A]. **When** the accent is changed to `#FF5252` in General › Interface, **then** the header line, the selected tab label and focus borders use it immediately and after a restart, while destructive buttons and error text keep their fixed red — [C]
@@ -963,6 +972,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - THIRD_PARTY_NOTICES has no AlpakaAddons entry
 - **AC-UI-22** (REQ-UI-25) Review: UI and command code contains no call that sends chat, commands or packets — [R]
 - **AC-UI-23** (REQ-UI-01, REQ-UI-04, REQ-UI-08, REQ-UI-17) At G2 the user compares the screen with AlpakaAddons in their own instance. They confirm it "feels similar" in layout, structure, categories, search and style, or list the differences to fix — [E]
+- **AC-UI-26** (REQ-UI-26) Every file marked "move" in `docs/language-classification.md` is Kotlin and every other file is still Java; `fabric.mod.json` depends on `fabric-language-kotlin`; every unit test and gametest that passed before the conversion passes, unchanged apart from source scans that now also read `.kt` files and test hooks reached through their Kotlin names — [A] + [R]
 
 **Edge cases**
 - **EC-UI-01** The window is resized or the GUI scale changes while the screen is open → the layout is redone; scroll positions are clamped; the search query, focused field and expanded cards are kept.
@@ -975,7 +985,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-UI-08** The picker opens while the NPC or mob table failed to load (data-registry disabled it) → the picker shows "database unavailable" and Add is disabled; existing rules stay editable.
 - **EC-UI-09** Two rules have the same label → both are shown, and search finds both.
 - **EC-UI-10** A query has upper-case letters or surrounding spaces → it is trimmed and matched case-insensitively. Input past 35 characters is ignored.
-- **EC-UI-11** A captured key is already used by another mapping → it is accepted, as vanilla does, and the widget shows the binding in the error colour, as vanilla Controls does.
+- **EC-UI-11** A captured key is already used by another mapping → it is accepted, as vanilla does, and the widget marks the binding in yellow, as vanilla 26.2 Controls does [decided R26]. The error red stays for real errors.
 - **EC-UI-12** The scroll wheel is used over the sidebar versus over the content → only the region under the cursor scrolls.
 - **EC-UI-13** Another GUI mod in the user's instance (Alpaka, ImmediatelyFast, Skyblocker) transforms or batches screen rendering → the backdrop still covers the screen and clicks still hit the drawn controls (checked in the tier D boot).
 - **EC-UI-14** A colour-only change is followed by Esc → the change is saved, unlike 1.0.1.
@@ -1411,7 +1421,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-MARK-01** The toolkit provides three primitives:
   - a text label of 1–3 lines with a colour per line and an optional background
   - a beacon beam with a colour per marker
-  - a horizontal ring with centre, radius, colour and alpha, drawn as an outline, a filled disc, or both
+  - a horizontal ring with centre, radius, colour and alpha, drawn as an outline, a filled disc, or both. The outline is always opaque so it stays readable; the alpha applies to the disc, so a ring with a disc needs an alpha above 0 (an opacity setting of 0% means outline only) [T3.0n review]
 
   *(Brief: Phase 3 item 4 "white text labels with an individually colored beacon beam per waypoint"; item 3 "waypoints" (dropped by R22); item 6 "highlight active hotspots")*
 - **REQ-MARK-02** See-through policy:
@@ -1423,7 +1433,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   *(Brief: Ground rule 5; Derived: P1, P3, P4)* [decided D-6]
 - **REQ-MARK-03** Label legibility:
-  - See-through labels stay fully readable behind opaque blocks, glass, water and ice, with no overdraw or tint from translucent terrain.
+  - See-through labels stay fully readable behind opaque blocks, glass, water and ice, with no overdraw or tint from translucent terrain, with Improved Transparency (the Fabulous graphics preset) on and off.
   - Labels face the camera.
   - Labels have natural size within 10 blocks and a constant on-screen size beyond 10 blocks.
   - The default text colour is white.
@@ -1435,7 +1445,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - No beacon block is needed.
 
   *(Brief: Phase 3 item 4 "individually colored beacon beam per waypoint")*
-- **REQ-MARK-05** If the caller enables it, a fixed-coordinate label shows a line with the distance in whole metres from the player's position (not the camera) to the marker, updated every frame. Markers anchored to entities have no distance line. *(Derived: P4; research read-npc bug 17; the toggle belongs to npc-waypoints)*
+- **REQ-MARK-05** If the caller enables it, a fixed-coordinate label shows a line with the distance in whole metres from the player's position (not the camera) to the label's position (the anchor plus the label's rise above it), updated every frame. Markers anchored to entities have no distance line. *(Derived: P4; research read-npc bug 17; the toggle belongs to npc-waypoints)*
 - **REQ-MARK-06** Several features supply markers at once (NPC waypoints, hotspots). Each feature's markers follow its own toggle and island gating, and turning one feature off never hides another's markers. *(Brief: Ground rule 6; Derived: research read-npc §3b — the current single static list blocks reuse)*
 - **REQ-MARK-07** Markers outside the view frustum are not submitted. With 150 label-plus-beam markers active (about every Hub NPC), the marker pass should average at most 1 ms CPU per frame on the dev machine. *(Derived: Hub has 113 NPC entries; research read-npc performance)*
 - **REQ-MARK-08** All markers are dropped on world change, server switch and disconnect. A marker from the previous world is never drawn in the next one. *(Derived: correctness across islands)*
@@ -1450,17 +1460,17 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 **Acceptance criteria**
 - **AC-MARK-01** (REQ-MARK-01, REQ-MARK-03, REQ-MARK-04)
   - Setup: a superflat gametest with a fixed marker (white label plus red beam) 30 blocks away.
-  - Screenshots behind a stone wall, a glass pane, a 3-block water column and ice show the label fully legible with no tint, and the beam visible above the obstacle.
+  - Screenshots behind a stone wall, a glass pane, a 3-block water column and ice show the label fully legible with no tint, and the beam visible above the obstacle. Behind the water column and ice also with Improved Transparency on.
   - The label's pixel height at 20 m and at 60 m matches within ±10%.
 
   Verified by [C].
 - **AC-MARK-02** (REQ-MARK-02)
   - Unit test: a see-through request for an entity-anchored marker is refused, so it renders depth-tested — [A].
   - Gametest: an entity-anchored label behind stone is not visible, while a fixed-coordinate label in the same spot is — [C].
-- **AC-MARK-03** (REQ-MARK-01, REQ-MARK-02) A gametest ring of radius 3 on a water surface is visible in the open and hidden behind a stone wall — [C].
+- **AC-MARK-03** (REQ-MARK-01, REQ-MARK-02) A gametest ring of radius 3 on a water surface is visible in the open, untinted, and hidden behind a stone wall, with Improved Transparency on and off — [C].
 - **AC-MARK-04** (REQ-MARK-05) Given the player at (0,64,0), the camera in third person 4 blocks behind, and a marker at (0,64,100), then the distance line reads `100m` — [A] and [C].
 - **AC-MARK-05** (REQ-MARK-06) Given an NPC waypoint provider and a second provider (a test provider until the hotspot ring exists) both active, when NPC waypoints are turned off, then the second provider's markers are still drawn — [A]/[C]. (The second provider was the corpse-spot provider until R22 dropped it.)
-- **AC-MARK-06** (REQ-MARK-07) A gametest with 150 markers logs an average marker-pass time of at most 1 ms over 600 frames, and markers behind the camera are counted as not submitted — [C].
+- **AC-MARK-06** (REQ-MARK-07) A gametest with 150 markers logs an average marker-pass time of at most 1 ms over 600 frames, and markers behind the camera are counted as not submitted — [C]. The marker pass is measured both as its submit step and as what the markers add to the CPU frame time (A/B against no markers); the gametest runs one frame per tick, so GPU time is not part of it.
 - **AC-MARK-07** (REQ-MARK-08) After a world change, the first frame of the new world has 0 markers from the old one — [A]/[C].
 - **AC-MARK-08** (REQ-MARK-09)
   - User smoke test: a Hub NPC label and beam, and a hotspot ring, are visible with shaders on and off and next to Skyblocker waypoints — [E].
@@ -1965,14 +1975,14 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   *(Brief: item 4; Derived: existing NPC Search behaviour, PLAN T1.9)*
 - **REQ-NPCWP-02** Label.
   - The rule's label is drawn in white (#FFFFFF), with no drop shadow and no background plate, and always faces the camera.
-  - White is the default of the NPC Search setting "White waypoint labels" (default ON). With it OFF, the label and its distance line are drawn in the rule's own `color` field, the 1.0.1 look, not in the resolved beam colour [decided R21]. The setting ships in v1.1.0 on the 1.0.1-style label (REQ-PORT-06), where the distance line follows the label (white while the setting is ON). It stays when the beams arrive; the beam then carries the colour (REQ-NPCWP-04, REQ-NPCWP-05), and with the setting ON the distance line turns yellow (REQ-NPCWP-03). T3.4 updates the toggle tooltip to say so.
+  - From 1.2.0 the label is always white and has no setting: "White waypoint labels" and the rule's own colour are gone [decided R31]. Before (v1.1.0 and the T3.4 builds): white is the default of the NPC Search setting "White waypoint labels" (default ON). With it OFF, the label and its distance line are drawn in the rule's own `color` field, the 1.0.1 look, not in the resolved beam colour [decided R21]. The setting ships in v1.1.0 on the 1.0.1-style label (REQ-PORT-06), where the distance line follows the label (white while the setting is ON). It stays when the beams arrive; the beam then carries the colour (REQ-NPCWP-04, REQ-NPCWP-05), and with the setting ON the distance line turns yellow (REQ-NPCWP-03). T3.4 updates the toggle tooltip to say so.
   - It is centred horizontally on the block centre (x + 0.5, z + 0.5), 1.5 blocks above the stored y.
   - It keeps a constant on-screen size from 10 blocks out, and true world size when closer.
   - It is visible through terrain, including behind water, glass and other translucent blocks, because it marks a fixed coordinate.
 
   *(Brief: item 4 "white text labels", "Skyblocker style"; Derived: PLAN §3 P4, T1.3, research Skyblocker (a), read-npc bug 14)*
 - **REQ-NPCWP-03** Distance line [decided D-6].
-  - An optional second line below the label reads `<d>m` in yellow (Skyblocker style) while "White waypoint labels" is ON. With it OFF it is drawn in the rule's own `color` field, like the label, not in the resolved beam colour [decided R21]. This applies from T3.4 on; in v1.1.0 the distance line follows the label (white while the setting is ON).
+  - An optional second line below the label reads `<d>m` in yellow (Skyblocker style), always from 1.2.0 [decided R31]. Before, yellow while "White waypoint labels" was ON. With it OFF it is drawn in the rule's own `color` field, like the label, not in the resolved beam colour [decided R21]. This applies from T3.4 on; in v1.1.0 the distance line follows the label (white while the setting is ON).
   - d is the distance from the **player's** position (not the camera) to the label anchor, rounded half-up to whole metres.
   - Own toggle "Show distance", default ON.
   - Distance is never shown for live entities.
@@ -1992,6 +2002,22 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
     3. otherwise the global default beam colour (for a blank island or an island without a colour).
   - Every island in the NPC data has an editable colour with a documented default.
   - "Use island colour" clears a rule's override.
+  - Documented defaults (T3.4; chosen by Claude to fill a gap in this spec, kept by R25). Every island name of the location table has one; the global default is `0x0AA351`, the mod's long-standing NPC green:
+
+    | Island | Default | Island | Default |
+    |---|---|---|---|
+    | Hub | `0x55FFFF` | Dwarven Mines | `0x00AAAA` |
+    | Private Island | `0x55FF55` | Crystal Hollows | `0xB266FF` |
+    | Garden | `0x00AA00` | Glacite Mineshafts | `0xAEEBFF` |
+    | The Farming Islands | `0xFFFF55` | Backwater Bayou | `0x3C8DBC` |
+    | The Park | `0x2E8B57` | Lotus Atoll | `0xFF88CC` |
+    | Moonglade Marsh | `0x6B8E23` | Critter Safari | `0xD2B48C` |
+    | Torrhus Canyon | `0xCD853F` | Kuudra | `0xAA0000` |
+    | Spider's Den | `0xAA00AA` | Jerry | `0xFFFFFF` |
+    | The End | `0xFF55FF` | The Rift | `0xBF40BF` |
+    | Crimson Isle | `0xFF5555` | Dark Auction | `0x8B008B` |
+    | Gold Mine | `0xFFAA00` | Dungeon Hub | `0xAAAAAA` |
+    | Deep Caverns | `0x5555FF` | Catacombs | `0x555555` |
 
   *(Brief: item 4 "color configurable per NPC/category"; PLAN D-15)*
 - **REQ-NPCWP-06** Colour settings UI. The Waypoints category of the new config screen must offer:
@@ -2000,12 +2026,11 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - the beam toggle and the distance toggle.
 
   Changes apply to rendered waypoints within 1 s, with no restart or rejoin. *(Brief: item 4 "configurable"; Brief Phase 2; REQ-XC-TOGGLE)*
-- **REQ-NPCWP-07** Separate glow colour. Changing island colours or per-rule beam colours never changes the glow colour of moving-NPC rules, and changing a glow colour never changes a beam. *(Derived: PLAN D-15)*
+- **REQ-NPCWP-07** Separate glow colour. Changing island colours or per-rule beam colours never changes the glow colour of moving-NPC rules, and changing a glow colour never changes a beam. From 1.2.0 moving NPCs are outlined in white, with no per-rule colour [decided R31]. *(Derived: PLAN D-15)*
 - **REQ-NPCWP-08** Toggles.
   - The existing NPC Search module toggle, default ON.
   - "Show beacon beams", default ON. When OFF, beams are hidden and labels stay.
   - "Show distance" (REQ-NPCWP-03).
-  - "White waypoint labels", default ON (REQ-NPCWP-02) [decided R21].
   - The existing per-rule enabled flag.
   - A per-rule beam on/off may be offered.
 
@@ -2017,7 +2042,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - A fixed rule with the old default follows its island colour.
 
   *(Brief Phase 2 "Migrate existing config values so users don't lose settings"; Derived)*
-- **REQ-NPCWP-10** Performance. With 100 enabled waypoints on one island, the mean frame time should rise by at most 1.0 ms against 0 waypoints. It is measured over 600 frames in a client gametest at 854×480. *(Derived: an island can hold about 100 NPC entries; read-npc performance notes)*
+- **REQ-NPCWP-10** Performance. With 100 enabled waypoints on one island, the mean frame time should rise by at most 1.0 ms against 0 waypoints. It is measured over 600 frames in a client gametest at 854×480, as CPU frame time (the gametest runs one frame per tick, so the GPU never backs up into the frame); GPU cost is judged in the G3 field check. *(Derived: an island can hold about 100 NPC entries; read-npc performance notes)*
 - **REQ-NPCWP-11** Licensing. Skyblocker (LGPL-3.0) is a behaviour reference only: the look is reimplemented from scratch and no code is copied. *(Brief ground rule 4; REQ-XC-LICENSE; PLAN §2)*
 - **REQ-NPCWP-12** Compliance. Labels, beams and distance lines are drawn only at fixed coordinates from NPC rules or NPC data, never at a live entity's position. *(Brief ground rule 5; PLAN §3 P4)*
 
@@ -2026,7 +2051,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - Labels, beams or distance for moving NPCs (Trinity, Tomioka, Duncan, Pete, Xalx).
 - User-created non-NPC waypoints, editing coordinates, and import or export of Skyblocker waypoint groups.
 - Hide-when-near and a maximum render distance (not requested).
-- Label colours other than white and the rule's colour. White stays the default (the brief says white text labels); the rule's colour is the opt-out of REQ-NPCWP-02 [decided R21]. Until R21 this line read "Label colours other than white".
+- Label colours other than white and the rule's colour. White stays the default (the brief says white text labels); the rule's colour was the opt-out of REQ-NPCWP-02 [decided R21] until 1.2.0, when the option was removed and labels became always white [decided R31]. Until R21 this line read "Label colours other than white".
 - A new NPC "type" category field in the NPC data [decided D-15].
 
 **Acceptance criteria**
@@ -2054,7 +2079,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Given: a client gametest with one fixed waypoint whose rule `color` differs from its island colour.
   - When: screenshots are taken.
   - Then:
-    - the label is white with no background, the distance line is yellow, and the beam is in the island colour; with "White waypoint labels" OFF the label and the distance line are in the rule's `color`, not the beam colour, and the beam is unchanged [decided R21];
+    - the label is white with no background, the distance line is yellow, and the beam is in the island colour [decided R31];
     - the label stays visible behind stone, glass and water;
     - the part of the beam behind an opaque wall in front of the camera is hidden.
   - — [C]
@@ -2065,8 +2090,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **AC-NPCWP-05** (REQ-NPCWP-08, REQ-NPCWP-03, REQ-NPCWP-02)
   - "Show beacon beams" OFF: the label is drawn, the beam is not.
   - "Show distance" OFF: only one text line.
-  - A fresh config has the module, beams, distance and white labels ON.
-  - "White waypoint labels" ON gives a white label and a yellow distance line; OFF gives both lines the rule's `color`, also when the resolved beam colour differs. The toggle tooltip says this [decided R21].
+  - A fresh config has the module, beams and distance ON (labels are always white, there is no setting for them) [decided R31].
+  - The label is always white and the distance line yellow, also when the resolved beam colour differs; there is no label colour setting [decided R31].
   - — [C] + [A]
 - **AC-NPCWP-06** (REQ-NPCWP-03)
   - Given: the player at (0, 64, 0) and a waypoint at (10, 64, 0), so the anchor is (10.5, 65.5, 0.5).
@@ -2107,9 +2132,9 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-NPCWP-01** Fixed rule with a blank island: drawn on every island at its coordinates, using the global default colour (existing behaviour).
 - **EC-NPCWP-02** Island missing from the colour map (a new Hypixel island or unknown mode): uses the global default. An entry is created when the user edits it.
 - **EC-NPCWP-03** Two rules at the same coordinates (NPC data near-duplicates): both are drawn, labels may overlap, no crash.
-- **EC-NPCWP-04** Player within 1 block: the distance shows "0m" or "1m" and the label sits at its true position.
+- **EC-NPCWP-04** Player within 1 block of the label (which floats 1.5 blocks above the NPC's block, so standing next to the NPC reads about "2m"): the distance shows "0m" or "1m" and the label sits at its true position.
 - **EC-NPCWP-05** Waypoint beyond render distance: the label is still drawn at constant size, and the beam is drawn while its column is in view.
-- **EC-NPCWP-06** Hex colour entered with alpha (e.g. `#80FF0000`): the beam is opaque red and the label stays white (with "White waypoint labels" ON).
+- **EC-NPCWP-06** Hex colour entered with alpha (e.g. `#80FF0000`): the beam is opaque red and the label stays white.
 - **EC-NPCWP-07** Dungeon run vs Dungeon Hub: Dungeon Hub waypoints do not appear inside runs [decided D-2].
 - **EC-NPCWP-08** Module turned OFF, or a warp to another island: the old waypoints disappear and the new island's appear within 1 s of the change or location update.
 - **EC-NPCWP-09** Config file corrupt: config-store backs it up and loads defaults. No waypoints show until rules are re-added or the backup is restored; there is no crash.
@@ -2119,6 +2144,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **Q-NPCWP-01** What is a "category" for beam colours? → decided D-15 (category = island, optional per-rule beam override, glow colour separate)
 - **Q-NPCWP-02** How should existing fixed-rule colours migrate? → decided R8
 - **Q-NPCWP-03** Should the waypoint distance line default to ON? → decided D-6 (distance line ON)
+- **Q-NPCWP-04** Are the documented island colour defaults (the table under REQ-NPCWP-05, chosen by Claude in T3.4 to fill a gap) the ones to ship? → decided R25 (keep them)
 
 ---
 
@@ -3534,13 +3560,13 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
 
 ### release — Repository & release
 
-**Origin:** Brief Phase 6; Brief ground rules 2–4; Addendum "Done when" (README and CHANGELOG) | **Depends on:** all modules; in particular updater (format contract), port-26-2, ui-config, sbxp-optimizer | **Plan tasks:** T0.5, T1.14, T1.15, T1.16, T1.17, T1.18, T1.19, T4.4b, T6.11, T7.1, T7.1b, T7.2, T7.2b, T7.2c, T7.3, T7.4, T7.4b; checkpoint G7 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Brief Phase 6; Brief ground rules 2–4; Addendum "Done when" (README and CHANGELOG) | **Depends on:** all modules; in particular updater (format contract), port-26-2, ui-config, sbxp-optimizer | **Plan tasks:** T0.5, T1.14, T1.15, T1.16, T1.17, T1.18, T1.19, T2.12, T2.13, T2.14, T4.4b, T6.11, T7.1, T7.1b, T7.2, T7.2b, T7.2c, T7.3, T7.4, T7.4b; checkpoint G7 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
 **Purpose:** Ship the 26.2 work as a documented, correctly versioned GitHub release, merged into `main` only after the user's approval. The release must be in exactly the format the updater can find, verify and install, and must stay that way for later releases.
 
 **Functional requirements**
 - **REQ-REL-01** The README must contain:
-  - **Supported version:** "Minecraft 26.2 (Fabric)", with the requirements: Java 25, the minimum Fabric Loader, Fabric API, and the Hypixel Mod API mod. It also states that 26.1.x is no longer supported and that 1.0.1 was the last 26.1 build.
+  - **Supported version:** "Minecraft 26.2 (Fabric)", with the requirements: Java 25, the minimum Fabric Loader, Fabric API, Fabric Language Kotlin (from 1.2.0, R29, R33) and the Hypixel Mod API mod. It also states that 26.1.x is no longer supported and that 1.0.1 was the last 26.1 build.
   - **Feature list:** every shipped feature with a one-line description, its config category and its default (ON/OFF).
   - **Screenshot placeholders:** one per user-visible feature (config screen, HUD editor, each HUD, waypoints and beams, mineshaft alert, hotspot ring, optimizer screen). None may render as a broken image on GitHub: use either a committed placeholder image or a visible text marker.
   - **Commands:** every user-facing command.
@@ -3576,7 +3602,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
     - glow is visible-only
     - invisible mobs are never highlighted
     - "You found X" appears only after line of sight, and only for Trinity, Tomioka, Duncan, Xalx and Pete [decided R20]
-    - NPC waypoint labels are white by default; "White waypoint labels" OFF restores each NPC's colour [decided R21]
+    - NPC waypoint labels are white by default; "White waypoint labels" OFF restores each NPC's colour [decided R21] (1.1.0; from 1.2.0 they are always white, R31)
     - Catacombs and Dungeon Hub are split
     - Cloth Config is no longer required
     - the updater now notifies and asks for confirmation
@@ -3663,6 +3689,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   - **Git flow:** an intermediate PR from `update/26.2` to `main` at G1, merged after the user's approval, with the tag on `main`. Approval, "ship" and order are the same as for 2.0.0 (REQ-REL-08 to REQ-REL-10) [decided R4].
   - Its README and CHANGELOG state at least: 26.2 support, the behaviour changes and the upgrade note.
   - Its update behaviour follows REQ-UPD-01: a notify-only GitHub check shown as a chat line, with no toast yet [decided R4].
+  - v1.2.0 follows the same flow after T2.9–T2.9d, with its PR summary starting at v1.1.0 [decided R33].
 
   *(Derived: PLAN D-13; risk "users keep running rule-breaking 1.0.1")*
 - **REQ-REL-15** Warning on the old releases [decided D-13]:
@@ -3737,7 +3764,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   - A production boot of the exact jar with the user's mod set reaches the title screen with no new ERROR lines. — [D]
 - **AC-REL-10** (REQ-REL-12) *Given* the test install on the lower version, *when* the client starts, *then* a toast and a chat line show v2.0.0; after confirming and quitting, the next launch shows "Updated to v2.0.0", and exactly one k8bas jar remains in `mods/`, with the release's digest. — [D] or [E]
 - **AC-REL-11** (REQ-REL-13) Before publishing, `gh api repos/Kesuhi/K8basSkyblockUtility/immutable-releases` returns `enabled: true`; after publishing, `gh release verify v2.0.0` passes [decided R4]. — [R]
-- **AC-REL-12** (REQ-REL-14) The v1.1.0 release passes AC-REL-04, AC-REL-05, AC-REL-08 and AC-REL-09 with its own version. — [A] + [R] + [D]
+- **AC-REL-12** (REQ-REL-14) The v1.1.0 release, and the v1.2.0 release [decided R33], each pass AC-REL-04, AC-REL-05, AC-REL-08 and AC-REL-09 with their own version. — [A] + [R] + [D]
 - **AC-REL-13** (REQ-REL-15) `gh release view v1.0.1 --json body` (and the same for v1.0.0) starts with the approved warning, and the asset digest is unchanged (`sha256:5396068…` for v1.0.1). Both edits are later than the user's message approving the wording. — [R]
 - **AC-REL-14** (REQ-REL-16) The release document exists. A dry run of its steps against a throwaway draft, deleted afterwards, succeeds. — [R]
 - **AC-REL-15** (REQ-REL-17) The Phase 7 report is present, with the URL, digests and end-to-end result. — [R]
@@ -3874,7 +3901,7 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.3 Decisions after G1 — R18–R24
+### 12.3 Decisions after G1 — R18–R30
 
 You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 drops carry `[dropped R22]` and keep their ids.
 
@@ -3883,25 +3910,35 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R18 | A rule that ignores names (NONE) needs an entity type. Without one it would outline every visible entity, so it is inert, logged once and marked in the rule editors with a warning sign and a line saying why | REQ-GLOW-10, AC-GLOW-09; PLAN T1.8c |
 | R19 | Captures mask real player names, yours included, as Self, Player1, …; NPC names and Hypixel's tab-widget entries stay | REQ-GS-13, AC-GS-13; PLAN T0.4d |
 | R20 | In v1.1.0, the "You found <NPC>" title fires only for five special moving NPCs: Trinity, Tomioka and Duncan (Catacombs), and Xalx and Pete (Crystal Hollows). A rule qualifies when its NPC data sourceId is `trinity`, `tomioka`, `duncan`, `xalx` or `pete`, or, for a hand-made rule without a sourceId, when its label equals one of those five names, ignoring case and surrounding spaces. Other NPC Search rules still outline their NPC but never trigger the title. The other title rules stay: line of sight, once per rule per server, reset on a location change, its own toggle (default ON), never for invisible entities | REQ-GLOW-14, REQ-GLOW-15, AC-GLOW-13, Q-GLOW-03, REQ-REL-04, §12.H; PLAN §3, T1.11b, T7.1, §9 (D-6) |
-| R21 | In v1.1.0, NPC Search gets the setting "White waypoint labels", default ON: waypoint labels and their distance line are drawn white. OFF draws them in the rule's colour (the 1.0.1 and 1.1.0-dev look). This replaces the npc-waypoints out-of-scope line "Label colours other than white": white stays the default, and the rule's colour becomes an opt-out. When the beacon beams arrive (T3.4), the setting stays and the beam carries the colour. In v1.1.0 the distance line follows the label (white while the setting is ON). From T3.4 on, ON gives a white label and a yellow distance line (Skyblocker style), and T3.4 updates the toggle tooltip to say so; OFF still draws both lines in the rule's own `color` field, not in the resolved beam colour | REQ-PORT-06, AC-PORT-06, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-08, npc-waypoints out of scope, AC-NPCWP-03, AC-NPCWP-05, EC-NPCWP-06, REQ-REL-04, §12.H; PLAN §3, T1.3b, T3.4, T7.1, §9 (D-6) |
+| R21 | In v1.1.0, NPC Search gets the setting "White waypoint labels", default ON: waypoint labels and their distance line are drawn white. OFF draws them in the rule's colour (the 1.0.1 and 1.1.0-dev look). This replaces the npc-waypoints out-of-scope line "Label colours other than white": white stays the default, and the rule's colour becomes an opt-out. When the beacon beams arrive (T3.4), the setting stays and the beam carries the colour. In v1.1.0 the distance line follows the label (white while the setting is ON). From T3.4 on, ON gives a white label and a yellow distance line (Skyblocker style), and T3.4 updates the toggle tooltip to say so; OFF still draws both lines in the rule's own `color` field, not in the resolved beam colour. Superseded from 1.2.0 by R31: the setting is gone and labels are always white | REQ-PORT-06, AC-PORT-06, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-08, npc-waypoints out of scope, AC-NPCWP-03, AC-NPCWP-05, EC-NPCWP-06, REQ-REL-04, §12.H; PLAN §3, T1.3b, T3.4, T7.1, §9 (D-6) |
 | R22 | The possible corpse spots (brief Phase 3 item 3) are dropped from the plan entirely: the corpse-waypoints module, PLAN T3.3a (spot table) and T3.3 (markers and `/ksu corpses`), their defaults row, the `corpses` reserved word, D-5's corpse-spot data (SkyHanni-REPO PR #759 + meowdding spots) and the corpse-spot points of R7. Ids are kept and marked dropped. What stays: the mineshaft entry alert (T3.2), the Frozen Corpses widget reading (T3.0m), the corpse odds (T3.9d, T3.9e) and D-5's NEU bestiary and RNG-weight data. The README's excluded-behaviour line "filtering possible corpse spots by entities you cannot see" stays (REQ-REL-03) | corpse-waypoints (all ids), REQ-GS-16, AC-GS-16, REQ-REL-03, §11, REQ-GS-17, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T2.5b, T3.0m, T3.3a, T3.3, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
 | R23 | Order after the v1.1.0 merge: the first Phase 3 work is the waypoint path T3.0b (marker toolkit) → T3.0n (beacon beams) → T3.4 (Skyblocker-style NPC waypoints: white label plus coloured beacon beam), so beams come right after v1.1.0. Reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used (REQ-NPCWP-11). Whether this ships as an intermediate release is decided then | §2 (build order), REQ-PORT-06, AC-PORT-06, AC-PORT-14 ("once T3.4 lands"); PLAN §6, Phase 3 intro, T3.0b, T3.4, T3.8 |
 | R24 | G1 field answers. (a) Q-MSA-04: you believe the Frozen Corpses tab widget is on by default and ask for a failsafe that tells the player when it is off. The once-per-launch widget hint (REQ-MSA-08, REQ-GS-18) is that failsafe. The command and menu path that enable the widget were not given, so the hint wording stays UNVERIFIED and is checked at G3. (b) Whether a Tungsten or Umber key held only in the Dwarven Sack opens a corpse could not be tested: D-7 (inventory only) stands, the REQ-MSA-05 sack fallback is not triggered, and the question stays open for G3. (c) Every area of the game counts as a Bestiary area except the Dungeon Hub | Status, §10 intro, REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-BEST-12, AC-BEST-11, §13.3; PLAN G1, T3.0m, T3.2, T5.3, G3 |
+| R25 | After T3.4 (2026-10-03): (a) Q-NPCWP-04, keep the documented island colour defaults under REQ-NPCWP-05 as they are. (b) The waypoint path (T3.0b, T3.0n, T3.4) does not ship as an intermediate release; it ships with the next regular release, so T3.4b (colour settings and the R8 migration) lands first. (b) is superseded by R33: the path ships in v1.2.0 before T3.4b | REQ-NPCWP-05, Q-NPCWP-04; PLAN §6 waypoint path, T3.4 |
+| R26 | T2.3b (2026-10-03): a keybind conflict is marked in yellow, as vanilla 26.2 Controls does, not in the error red (EC-UI-11 had assumed vanilla used red) | EC-UI-11; PLAN T2.3b |
+| R27 | T2.3b (2026-10-03): (a) while a keybind widget is armed, a left click cancels, a right click resets to the default, other mouse buttons bind; (b) the colour hex field accepts 8 digits for colours without alpha and drops the alpha | REQ-UI-13, REQ-UI-14, EC-NPCWP-06; PLAN T2.3b |
+| R28 | T2.4d (2026-10-04): where notices appear and how long they stay is the player's choice in General › Interface; until a value is picked, top right and 5 s | REQ-UI-21, §12.H; PLAN T2.4d |
+| R29 | 2026-10-05: the settings UI, the HUD editor and the settings glue move to Kotlin; players need Fabric Language Kotlin (no bundled copy); the conversion comes before T2.9–T2.9d, which are then written in Kotlin, and before the 1.2.0 release | REQ-UI-26, AC-UI-26, §3, §5; PLAN T2.10a–T2.10e, T2.9–T2.9d |
+| R30 | 2026-10-05: each file's language follows the best-fit criteria (`docs/language-classification.md`) instead of R29's "the whole settings UI in Kotlin": 73 files move to Kotlin across the mod, the rest stays Java; the work stays on `update/26.2` (no separate branch), one commit per batch, not pushed until asked | REQ-UI-26, AC-UI-26, §3, §5; PLAN T2.10b–T2.10i |
+| R31 | 2026-10-05, after the hand checks of the Kotlin build (it also amends REQ-UI-16 and AC-UI-15: those fields are off the screen and kept in the file): (a) a rule added from the Mob or NPC Database (it has a `sourceId`) shows a slim card: enabled, plus entity type and colour for a mob, and the position for a fixed NPC; its label, island, name match and name pattern are not shown, while a hand-made rule keeps every field, as does a database rule that already does nothing (so it can be fixed); (b) every rule header has a destructive Remove button at its right end, which replaces the Delete field inside the card; it acts once per double click, since the next rule's button slides under the cursor; (c) NPC Search has no per-NPC colour any more: waypoint labels are always white with a yellow distance line, moving NPCs are outlined in white, the header dot and the "You found" title are white, and the "White waypoint labels" setting is removed (superseding R21). The stored `color` of NPC rules is kept in the file, unused, so a downgrade keeps it | REQ-UI-11, AC-UI-10, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-07, REQ-NPCWP-08, AC-NPCWP-03, AC-NPCWP-05, EC-NPCWP-06, REQ-PORT-06, REQ-UI-16, AC-UI-15, npc-waypoints out of scope, §12.H; PLAN §3, T2.11 |
+| R32 | 2026-10-05, T2.9d: the anti-aliased corners are the opt-in setting "Smooth corners" in General › Interface, OFF until picked (the key is absent from the file until then, so a 1.0.1 file saves back unchanged), so the fill-based corners stay the default. When it is ON, rounded rectangles and outlines draw each corner from a white alpha mask baked per radius at screen-pixel resolution and tinted with the shape's colour (public render APIs only, REQ-UI-17); the straight parts stay plain fills. A shape the mask cannot draw (radius 0 or above 256 screen px, an outline thicker than its radius, a box too small for its outline) and a session in which a mask texture could not be made fall back to the fill-based corners. Every place that draws rounded shapes follows the setting, the HUD notices included | REQ-UI-18, REQ-UI-17, §12.H; PLAN T2.9d |
+| R33 | 2026-10-09: after T2.9–T2.9d, the work on `update/26.2` ships as v1.2.0 (the maintainer: "create a new release with the changes up till then"), an intermediate release in the REQ-REL-14 flow (a PR to `main` merged after the maintainer's approval, then tag and publish after a separate "ship"); its PR summary starts at v1.1.0, which `main` already holds. It includes the waypoint path (T3.0b, T3.0n, T3.4) before T3.4b, superseding R25(b): beams use the island colours, not changeable in game yet, and the R8 colour migration (REQ-NPCWP-09) runs when T3.4b lands, because the stored colours are kept (R31); the [D] parts of AC-NPCWP-11 and AC-MARK-08 run at the release's tier D boot, their [E] parts are known issues (EC-REL-13). Its README is compacted to what 1.2.0 ships: Fabric Language Kotlin required, Cloth Config and "White waypoint labels" gone | REQ-REL-14, AC-REL-12, AC-REL-06, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, R25, REQ-NPCWP-09; PLAN §6 waypoint path, T3.4, T2.12, T2.13, T2.14, G2r |
 
-### 12.H Defaults table (decided D-6, R1–R17 and R20–R22)
+### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28 and R32)
 
 | Feature | Default | | Feature | Default |
 |---|---|---|---|---|
 | Mob Highlighter / NPC Search modules | ON (rules user-added) | | Mineshaft entry alert | ON; key counts ON |
 | Trinity/Tomioka/Duncan glow | your rules (fresh install: none) [R1] | | Possible corpse spots | [dropped R22]: no toggle (was **OFF**; hide when all looted ON [R7]) |
 | "You found X" title | ON, after line of sight, once per run; only for Trinity, Tomioka, Duncan, Xalx and Pete [R20] | | Bobber fix | ON (own bobber) [R9] |
-| NPC waypoints | ON; beacon beams ON; distance line ON; white labels ON [R21] | | Hotspot ring / filled area | ON / ON [R2] |
+| NPC waypoints | ON; beacon beams ON; distance line ON; labels always white [R31] | | Hotspot ring / filled area | ON / ON [R2] |
 | Fixed-coordinate labels see-through | yes | | Hotspot-gone warning | ON (title + sound + chat) [R2] |
 | Drill re-equip fix | ON (drills only) | | Rare Drop Odds | **OFF**; once enabled all cases ON, chat lines ON, rare threshold 2 % |
 | Bestiary HUD | **OFF**; lines when enabled: tier, kills, to next tier, rate, session kills, milestone (when known) ON; to max, ETA OFF; reset on island change OFF [R11] | | Update check / channel | ON (notify) / STABLE |
-| Toast channel on warnings | **OFF** [R12] | | SkyBlock XP module / passive reading / live deltas | ON / ON / ON [R14] |
+| Toast channel on warnings | **OFF** [R12]; notices top right, 5 s, set in General › Interface [R28] | | SkyBlock XP module / passive reading / live deltas | ON / ON / ON [R14] |
 | "Next best task" HUD | **OFF** | | Live Bazaar | **OFF** |
 | Coins per hour | 5,000,000 (global) [R14] | | Player stage | suggested from your level, per profile [R14] |
+| Smooth corners (General › Interface) | **OFF** [R32] | | | |
 
 ---
 
@@ -3909,7 +3946,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 
 Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check script that runs both ways (the `Was Req:` and `Was Accept:` bullets of the dropped tasks T3.3a and T3.3 are excluded; §13.1 and §13.2 show them as "was …"):
 - 384 requirements: 363 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), 6 not built by decision, and 10 dropped after G1 (REQ-CORPSE-01 to REQ-CORPSE-10, R22). **None uncovered.**
-- 151 tasks: 149 active and 2 dropped (T3.3a, T3.3, R22). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. This update (R20–R24) added T1.11b and T1.3b, and also added the rows for T0.4c, T0.4d and T1.8c, which were missing here.
+- 152 tasks: 150 active and 2 dropped (T3.3a, T3.3, R22). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. This update (R20–R24) added T1.11b and T1.3b, and also added the rows for T0.4c, T0.4d and T1.8c, which were missing here.
 - 342 acceptance criteria (withdrawn ones excluded): 332 are each named by a task or a checkpoint, and 10 are dropped (AC-CORPSE-01 to AC-CORPSE-10, R22).
 
 ### 13.1 Requirement → PLAN tasks, by module
@@ -4000,7 +4037,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-UI-08 | T2.1, T2.4b |
 | REQ-UI-09 | T2.5a |
 | REQ-UI-10 | T2.5b, T2.8b, T4.4 |
-| REQ-UI-11 | T2.5a, T2.5c, T3.8c |
+| REQ-UI-11 | T2.5a, T2.5c, T3.8c, T2.11 |
 | REQ-UI-12 | T2.5a |
 | REQ-UI-13 | T2.3b |
 | REQ-UI-14 | T2.3b, T2.4d, T2.6 |
@@ -4015,6 +4052,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-UI-23 | T2.5b, T2.6 |
 | REQ-UI-24 | T2.2 |
 | REQ-UI-25 | T2.5b |
+| REQ-UI-26 | T2.10a, T2.10b, T2.10c, T2.10d, T2.10e, T2.10f, T2.10g, T2.10h, T2.10i |
 
 **hud** (14)
 
@@ -4142,13 +4180,13 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | Requirement | PLAN tasks |
 |---|---|
 | REQ-NPCWP-01 | T3.4 |
-| REQ-NPCWP-02 | T1.3b, T3.4 |
-| REQ-NPCWP-03 | T3.4 |
+| REQ-NPCWP-02 | T1.3b, T3.4, T2.11 |
+| REQ-NPCWP-03 | T3.4, T2.11 |
 | REQ-NPCWP-04 | T3.4 |
 | REQ-NPCWP-05 | T3.4, T3.4b |
 | REQ-NPCWP-06 | T3.4b |
-| REQ-NPCWP-07 | T3.4 |
-| REQ-NPCWP-08 | T1.3b, T3.4 |
+| REQ-NPCWP-07 | T3.4, T2.11 |
+| REQ-NPCWP-08 | T1.3b, T3.4, T2.11 |
 | REQ-NPCWP-09 | T3.4b |
 | REQ-NPCWP-10 | T3.4 |
 | REQ-NPCWP-11 | T3.4 |
@@ -4367,20 +4405,20 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 
 | Requirement | PLAN tasks |
 |---|---|
-| REQ-REL-01 | T1.16, T6.11, T7.1 |
-| REQ-REL-02 | T1.16, T7.1, T7.2 |
-| REQ-REL-03 | T1.16, T7.1, T7.1b |
-| REQ-REL-04 | T1.16, T7.1, T7.1b |
-| REQ-REL-05 | T1.14, T1.16, T1.17, T4.4b, T6.11, T7.1b, T7.2b |
+| REQ-REL-01 | T1.16, T2.12, T6.11, T7.1 |
+| REQ-REL-02 | T1.16, T2.12, T7.1, T7.2 |
+| REQ-REL-03 | T1.16, T2.12, T7.1, T7.1b |
+| REQ-REL-04 | T1.16, T2.12, T7.1, T7.1b |
+| REQ-REL-05 | T1.14, T1.16, T1.17, T2.12, T4.4b, T6.11, T7.1b, T7.2b |
 | REQ-REL-06 | T1.15, T7.2, T7.2c |
 | REQ-REL-07 | T1.15, T1.17, T7.2, T7.2b, T7.4 |
-| REQ-REL-08 | T1.18, T7.3 |
-| REQ-REL-09 | T1.18, T7.3 |
-| REQ-REL-10 | T1.19, T7.4 |
-| REQ-REL-11 | T1.17, T1.19, T7.2b, T7.4 |
+| REQ-REL-08 | T1.18, T2.13, T7.3 |
+| REQ-REL-09 | T1.18, T2.13, T7.3 |
+| REQ-REL-10 | T1.19, T2.14, T7.4 |
+| REQ-REL-11 | T1.17, T1.19, T2.14, T7.2b, T7.4 |
 | REQ-REL-12 | T7.4b |
 | REQ-REL-13 | T7.2c, T7.4 |
-| REQ-REL-14 | T1.15, T1.16, T1.18, T1.19 |
+| REQ-REL-14 | T1.15, T1.16, T1.18, T1.19, T2.12, T2.13, T2.14 |
 | REQ-REL-15 | T0.5 |
 | REQ-REL-16 | T1.17, T7.2c |
 | REQ-REL-17 | G7 (checkpoint) |
@@ -4405,7 +4443,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-XC-TOGGLE-02 | T1.11, T1.3b, T2.1, T4.4b, T5.3, T6.8, T7.1 |
 | REQ-XC-PLAN-01 | T0.1, T6.0 |
 | REQ-XC-GIT-01 | T0.0, T7.3 |
-| REQ-XC-GIT-02 | T0.0, T1.18, T6.10, T7.3, T7.4 |
+| REQ-XC-GIT-02 | T0.0, T1.18, T2.13, T6.10, T7.3, T7.4 |
 | REQ-XC-BUILD-01 | T0.0, T6.2b, T7.3 |
 | REQ-XC-VERIFY-01 | T0.4, T0.4c |
 | REQ-XC-VERIFY-02 | T0.2, T0.3, T0.4, T0.4c, T0.4b, T1.5, T1.6, T3.0m |
@@ -4478,6 +4516,19 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T2.9b | feat(ui): keyboard focus navigation | REQ-UI-18 |
 | T2.9c | feat(hud): snapping + guide lines in the HUD editor | REQ-HUD-14 |
 | T2.9d | feat(ui): anti-aliased rounded corners | REQ-UI-18 |
+| T2.10a | build(ui): Kotlin and Fabric Language Kotlin | REQ-UI-26 |
+| T2.10b | refactor: HUD value types and pure logic in Kotlin | REQ-UI-26 |
+| T2.10c | refactor(ui): option model, theme and notices in Kotlin | REQ-UI-26 |
+| T2.10d | refactor(ui): settings-screen helpers and widgets in Kotlin | REQ-UI-26 |
+| T2.10e | refactor(render): marker value types in Kotlin | REQ-UI-26 |
+| T2.10f | refactor: location, debug and updater runtime in Kotlin | REQ-UI-26 |
+| T2.10g | refactor: feature modules in Kotlin | REQ-UI-26 |
+| T2.10h | refactor(config): config manager and migrator in Kotlin | REQ-UI-26 |
+| T2.10i | refactor(test): test helpers in Kotlin | REQ-UI-26 |
+| T2.11 | feat(ui)!: slim database rules, a Remove button per rule, white NPC labels | REQ-UI-11, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-07, REQ-NPCWP-08 |
+| T2.12 | docs(release): README, CHANGELOG, mod description and version for v1.2.0 | REQ-REL-14, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-REL-05 |
+| T2.13 | chore(release): intermediate PR `update/26.2` → `main` for v1.2.0 | REQ-REL-14, REQ-REL-08, REQ-REL-09, REQ-XC-GIT-02 |
+| T2.14 | chore(release): tag and publish v1.2.0 | REQ-REL-14, REQ-REL-11, REQ-REL-10 |
 | T3.0a | feat(skyblock): reader base + tab-widget and sidebar readers | REQ-XC-PRIVACY-01, REQ-GS-12, REQ-GS-01, REQ-GS-02, REQ-GS-03, REQ-GS-10, REQ-GS-11, REQ-GS-14, REQ-GS-15, REQ-GS-16 |
 | T3.0g | feat(skyblock): chat + action-bar listener | REQ-XC-RULES-02, REQ-GS-14, REQ-GS-04, REQ-GS-05 |
 | T3.0h | feat(skyblock): inventory counter by SkyBlock id | REQ-GS-07 |

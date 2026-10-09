@@ -258,6 +258,11 @@ diff <(errors build/tier-d-baseline.log) <(errors build/run/prodClientStack/logs
 bash scripts/release-check.sh v1.1.0
 ```
 
+- Check that the first run really left this mod out: its log must have no
+  `- k8bas_skyblock_utility` line. (Loom adds the project's jar to every production run by default;
+  until `-Pk8bas.prodBaseline=true` cleared it, the baseline still loaded the mod.)
+- Compare the ERROR lines without their thread names and object hashes (`Download-1` against
+  `Download-3`, `@6ef037e4`), which differ from boot to boot.
 - The first run boots the mod set without this mod. Copy its log first, because Gradle may empty
   the run directory before the next run.
 - The second run must reach the title screen.
@@ -325,6 +330,31 @@ assets:
 
 Immutable releases (REQ-REL-13) are switched on, with the maintainer's OK, before v2.0.0 is
 published. The 2.0.0 steps extend this document (PLAN T7.2c).
+
+## Release records
+
+### v1.1.0, published 2026-10-02
+
+- **PR #1** was merged as merge commit `0588945` after the maintainer's approval. The annotated tag
+  `v1.1.0` is on that commit, with the noreply identity.
+- **Build:** `./gradlew clean build` ran from the detached tag. All 204 unit tests passed.
+  - Jar: `sha256:395294938f1eb0f85539b025d9ae9edffef16d96453c2a30c0bf27791b41877e` (227,417 bytes).
+  - Sidecar: `sha256:fb23fc470b1110cb2e31615c4a89dcda030f3021dc3325e7451ec6dd6da237b7`.
+- **Draft checks:** `release-check.sh v1.1.0` printed PASS, with all five steps `[ok]`. It ran
+  before and after the tier D boot.
+- **Tier D:** the maintainer's 51-jar 26.2 mod set (from the `Testing` instance). The baseline ran
+  without this mod, and both boots reached the title screen. Each had the same 8 distinct ERROR
+  messages: offline-account log-ins of other mods, and an AlpakaAddons mixin note. The release jar
+  added none.
+- **Published** as Latest, not as a pre-release. The assets are only the jar and the sidecar, and
+  the body equals the CHANGELOG section. An anonymous `GET …/releases` lists v1.1.0 first, and
+  `…/releases/latest` is v1.1.0.
+- **Notify check (T1.19):** a never-published `1.1.0-test.1` build booted (tier D, update check ON,
+  no saved check state) into a singleplayer world. It wrote exactly one chat line, `[KSU] K8bas
+  Skyblock Utility v1.1.0 is available; you have v1.1.0-test.1. [Changelog] [Open release page]`,
+  and no jar file appeared in the run directory.
+  - Quick play needs `onboardAccessibility:false` in the run directory's `options.txt`.
+  - It also needs a world saved by 26.2: an older world first shows the backup and upgrade prompt.
 
 ## The sidecar pitfall (EC-REL-06, EC-REL-08)
 

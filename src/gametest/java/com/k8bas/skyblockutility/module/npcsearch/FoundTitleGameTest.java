@@ -64,6 +64,7 @@ public class FoundTitleGameTest implements FabricClientGameTest {
 				server.runCommand("fill -4 -60 4 4 -56 5 minecraft:air");
 				context.waitTicks(5);
 				String inView = title(context);
+				Integer inViewColour = titleColour(context);
 
 				context.runOnClient(client -> client.gui.hud.clearTitles());
 				context.waitTicks(10);
@@ -104,6 +105,9 @@ public class FoundTitleGameTest implements FabricClientGameTest {
 						behindWall, Integer.toHexString(matched), inView, again, nextRun, behindScreen, afterScreen, notSpecial,
 						Integer.toHexString(otherMatched));
 				check(matched != 0, "the NPC behind the wall is matched");
+				// R31: NPCs have no colour of their own; the rule's stored green shows nowhere.
+				check(matched == 0xFFFFFFFF, "outlined in white, not the stored colour: " + Integer.toHexString(matched));
+				check(inViewColour != null && inViewColour == 0xFFFFFF, "the title is white: " + inViewColour);
 				check(behindWall == null, "no title while the NPC is behind a wall");
 				check(FOUND.equals(inView), "the title shows once the NPC is in view");
 				check(again == null, "the title shows once per server");
@@ -122,6 +126,20 @@ public class FoundTitleGameTest implements FabricClientGameTest {
 				server.runCommand("kill @e[type=!minecraft:player]");
 			}
 		}
+	}
+
+	/** The RGB colour of the HUD title, or null when there is none or it has no colour. */
+	private static Integer titleColour(ClientGameTestContext context) {
+		return context.computeOnClient(client -> {
+			try {
+				Field field = Hud.class.getDeclaredField("title");
+				field.setAccessible(true);
+				Component title = (Component) field.get(client.gui.hud);
+				return title == null || title.getStyle().getColor() == null ? null : title.getStyle().getColor().getValue();
+			} catch (ReflectiveOperationException e) {
+				throw new AssertionError("cannot read the HUD title", e);
+			}
+		});
 	}
 
 	private static String title(ClientGameTestContext context) {

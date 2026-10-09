@@ -9,8 +9,16 @@ import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
+import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
+import com.k8bas.skyblockutility.hud.HudRenderer;
+import com.k8bas.skyblockutility.hud.ShippedHud;
+import com.k8bas.skyblockutility.ui.screen.HudEditorScreen;
+import com.k8bas.skyblockutility.ui.widget.SavesOnClose;
+import net.minecraft.client.Minecraft;
+import com.k8bas.skyblockutility.ui.notice.NoticeHooks;
+import com.k8bas.skyblockutility.ui.screen.ConfigScreen;
 import com.k8bas.skyblockutility.update.Updates;
 import com.k8bas.skyblockutility.util.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
@@ -35,7 +43,13 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		ConfigManager.load();
 		// Queued like the load notices, so a failure before joining a world is still shown.
 		ConfigManager.setSaveFailureNotice(ConfigManager::queueNotice);
-		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.flush());
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+			// The game removes an open screen only after this event: a screen that saves on close saves first.
+			if (client.gui.screen() instanceof SavesOnClose screen) {
+				screen.saveBeforeShutdown();
+			}
+			ConfigManager.flush();
+		});
 		// Backup notices from loading are shown once the player is in a world (REQ-CFG-06).
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player != null && ConfigManager.hasNotices()) {
@@ -46,6 +60,8 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		// Rule matching runs once per tick on the client thread; rendering only reads the results.
 		ClientTickEvents.END_CLIENT_TICK.register(HighlightManager::tick);
 		GlowHandler.register();
+		// The world marker toolkit; features add their marker providers as they register.
+		WorldMarkers.register();
 
 		ModuleManager.register(new MobHighlighterModule());
 		ModuleManager.register(new NpcSearchModule());
@@ -56,6 +72,10 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		DebugCommand.register();
 		ContainerDump.register();
 		Updates.register();
+		NoticeHooks.register();
+		ShippedHud.register();
+		HudRenderer.register();
+		HudRenderer.setEditorOpen(() -> Minecraft.getInstance().gui.screen() instanceof HudEditorScreen);
 
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
 	}

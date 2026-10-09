@@ -1,5 +1,7 @@
 plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	// The settings UI and the HUD editor are Kotlin (R29); Fabric Language Kotlin brings the runtime.
+	id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
 	id 'maven-publish'
 }
 
@@ -12,10 +14,6 @@ repositories {
 	maven {
 		name = "Hypixel"
 		url = "https://repo.hypixel.net/repository/Hypixel/"
-	}
-	maven {
-		name = "Shedaniel"
-		url = "https://maven.shedaniel.me/"
 	}
 	maven {
 		name = "TerraformersMC"
@@ -56,10 +54,8 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// Cloth Config powers the settings screen; a real (non-optional) dependency.
-	implementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
+	// Fabric Language Kotlin: the Kotlin standard library at runtime, a required mod (R29). Not bundled.
+	implementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
 	// Mod Menu integration is optional: compiled against, but not required at runtime.
 	compileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
@@ -94,8 +90,9 @@ dependencies {
 // Opens a game window, so it is not part of check.
 tasks.register("prodClientStack", net.fabricmc.loom.task.prod.ClientProductionRunTask) {
 	def prodMods = providers.gradleProperty("k8bas.prodMods")
-	if (!providers.gradleProperty("k8bas.prodBaseline").map { it.toBoolean() }.getOrElse(false)) {
-		mods.from(tasks.named("jar"))
+	// Loom adds this project's jar to every production run by default; the baseline removes it.
+	if (providers.gradleProperty("k8bas.prodBaseline").map { it.toBoolean() }.getOrElse(false)) {
+		mods.setFrom()
 	}
 	if (prodMods.isPresent()) {
 		mods.from(fileTree(prodMods.get()) {
@@ -134,8 +131,10 @@ test {
 
 // Gametests never contact GitHub: the update check goes to a closed local port (one WARN line).
 // The update-notice gametest points the updater at its own local test server.
+// They also run without the settings screen's motion (T2.9), as they click at the settled layout;
+// ConfigMotionGameTest turns it on for its own screen on a manual clock.
 tasks.matching { it.name == "runClientGameTest" }.configureEach {
-	jvmArgs "-Dk8bas.update.source=http://127.0.0.1:1/updates-disabled-in-gametests"
+	jvmArgs "-Dk8bas.update.source=http://127.0.0.1:1/updates-disabled-in-gametests", "-Dk8bas.ui.motion=off"
 }
 
 // The release sidecar (REQ-REL-07): "<64 lowercase hex>  <jar name>" and LF, UTF-8 without a BOM.
@@ -196,6 +195,13 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.release = 25
+}
+
+// The same target as Java; set here rather than taken from the JDK Gradle runs on.
+kotlin {
+	compilerOptions {
+		jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_25
+	}
 }
 
 java {

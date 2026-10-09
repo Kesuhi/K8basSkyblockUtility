@@ -2,7 +2,7 @@ package com.k8bas.skyblockutility.gametest;
 
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.npcsearch.NpcRule;
-import com.k8bas.skyblockutility.module.npcsearch.NpcWaypointRenderer;
+import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
@@ -23,12 +23,15 @@ import java.util.Map;
 /**
  * AC-PORT-06 / REQ-PORT-07: a fixed waypoint label stays fully legible behind nothing, stone, glass
  * and water, at 5 and 30 blocks, and keeps its 10-block size beyond 10 blocks. Each label screenshot
- * is paired with the same view without the label; their difference is the label. R21: labels are
- * white by default and take the rule's colour once "White waypoint labels" is off.
+ * is paired with the same view without the label; their difference is the label. R31: labels are
+ * always white, whatever colour the rule has stored. The beams are off
+ * here, so only the label is measured (beams: MarkerBeamRingGameTest, NpcWaypointGameTest).
  */
 public class WaypointLabelGameTest implements FabricClientGameTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas-gametest");
 	private static final int TEXT_COLOR = 0xFFFFFF;
+	/** With white labels, the distance line is yellow (REQ-NPCWP-03, from T3.4). */
+	private static final int DISTANCE_COLOR = 0xFFFF55;
 	private static final Map<String, String> OBSTACLES = new LinkedHashMap<>();
 
 	static {
@@ -46,6 +49,8 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			server.runCommand("weather clear");
 			server.runCommand("tp @a 0.5 -60 0.5 0 0");
 			context.runOnClient(client -> {
+				// The screenshots hide the HUD; labels would hide with it, like name tags (EC-MARK-06).
+				WorldMarkers.setHideLabelsWithHud(false);
 				setHudHidden(client, true);
 				client.options.cloudStatus().set(CloudStatus.OFF);
 				IslandTracker.forceIsland("Hub");
@@ -72,9 +77,9 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 					Label behind = labels.get(distance + "-" + obstacle);
 					check(Math.abs(behind.height - open.height) <= 2 && Math.abs(behind.width - open.width) <= 2,
 							"same label box behind " + obstacle + " at " + distance + ": " + behind + " vs " + open);
-					// Glyphs land slightly differently on the pixel grid from frame to frame; a label that
-					// translucent terrain draws over keeps none of its exact text colour.
-					check(behind.textPixels >= open.textPixels * 0.6,
+					// A label that translucent terrain draws over keeps none of its exact text colour; a little
+					// slack for glyphs landing differently on the pixel grid.
+					check(behind.textPixels >= open.textPixels * 0.9,
 							"text keeps its exact colour behind " + obstacle + " at " + distance + ": " + behind + " vs " + open);
 				}
 			}
@@ -83,12 +88,13 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			check(Math.abs(at30 - at10) <= 2, "height at 30 blocks (" + at30 + ") equals height at 10 blocks (" + at10 + ") +-2 px");
 
 			waypointsFollowTheIsland(context, singleplayer, server);
-			labelColourFollowsTheSetting(context, singleplayer, server);
+			labelsAreWhiteWhateverTheRuleColour(context, singleplayer, server);
 
 			context.runOnClient(client -> {
 				setHudHidden(client, false);
+				WorldMarkers.setHideLabelsWithHud(true);
 				IslandTracker.forceIsland(null);
-				NpcWaypointRenderer.setActiveWaypoints(List.of());
+				TestWaypoints.clear();
 			});
 		}
 	}
@@ -98,7 +104,7 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 		server.runCommand("fill -8 -60 1 8 -50 40 minecraft:air");
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
 		context.runOnClient(client -> {
-			NpcWaypointRenderer.setActiveWaypoints(List.of());
+			TestWaypoints.clear();
 			IslandTracker.forceIsland(null);
 		});
 		singleplayer.getConnection().waitForChunksRender();
@@ -106,15 +112,8 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 		Path none = context.takeScreenshot("t1.9b-no-waypoint");
 
 		context.runOnClient(client -> {
-			NpcRule croesus = new NpcRule();
-			croesus.label = "Croesus";
-			croesus.island = "Dungeon Hub";
-			croesus.fixed = true;
-			croesus.color = TEXT_COLOR;
-			croesus.x = 0.5;
-			croesus.y = -60;
-			croesus.z = 5.5;
-			NpcWaypointRenderer.setActiveWaypoints(List.of(croesus));
+			NpcRule croesus = TestWaypoints.fixedRule("Croesus", "Dungeon Hub", TEXT_COLOR, 0, -60, 5);
+			TestWaypoints.show(List.of(croesus), TestWaypoints.LABELS_ONLY);
 			IslandTracker.forceIsland("Dungeon Hub");
 		});
 		context.waitTicks(5);
@@ -128,45 +127,26 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 		context.runOnClient(client -> IslandTracker.forceIsland("Hub"));
 	}
 
-	/** R21: a red rule's label is white by default and red with "White waypoint labels" off. */
-	private static void labelColourFollowsTheSetting(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
+	/** R31: a red rule's label is white; the rule's colour never shows (there is no setting for it). */
+	private static void labelsAreWhiteWhateverTheRuleColour(ClientGameTestContext context, TestSingleplayerContext singleplayer, TestServerContext server) {
 		int red = 0xFF5555;
 		server.runCommand("fill -8 -60 1 8 -50 40 minecraft:air");
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
-		context.runOnClient(client -> NpcWaypointRenderer.setActiveWaypoints(List.of()));
+		context.runOnClient(client -> TestWaypoints.clear());
 		singleplayer.getConnection().waitForChunksRender();
 		context.waitTicks(10);
 		Path none = context.takeScreenshot("r21-no-waypoint");
 		try {
-			context.runOnClient(client -> {
-				NpcRule rule = new NpcRule();
-				rule.label = "Colour Test";
-				rule.island = "Hub";
-				rule.fixed = true;
-				rule.color = red;
-				rule.x = 0.5;
-				rule.y = -60;
-				rule.z = 5.5;
-				NpcWaypointRenderer.setWhiteLabels(true);
-				NpcWaypointRenderer.setActiveWaypoints(List.of(rule));
-			});
+			NpcRule rule = TestWaypoints.fixedRule("Colour Test", "Hub", red, 0, -60, 5);
+			context.runOnClient(client -> TestWaypoints.show(List.of(rule), TestWaypoints.LABELS_ONLY));
 			context.waitTicks(5);
 			Path white = context.takeScreenshot("r21-white-labels");
-			context.runOnClient(client -> NpcWaypointRenderer.setWhiteLabels(false));
-			context.waitTicks(5);
-			Path ruleColour = context.takeScreenshot("r21-rule-colour");
 			Label whiteAsWhite = Label.of(white, none, TEXT_COLOR);
 			Label whiteAsRed = Label.of(white, none, red);
-			Label ruleAsWhite = Label.of(ruleColour, none, TEXT_COLOR);
-			Label ruleAsRed = Label.of(ruleColour, none, red);
-			LOGGER.info("label colour: default white {} / red {}, setting off white {} / red {}", whiteAsWhite, whiteAsRed, ruleAsWhite, ruleAsRed);
-			check(whiteAsWhite.textPixels > 50 && whiteAsRed.textPixels == 0, "labels are white by default (R21)");
-			check(ruleAsRed.textPixels > 50 && ruleAsWhite.textPixels == 0, "with the setting off, labels take the rule's colour");
+			LOGGER.info("label colour of a red rule: white {} / red {}", whiteAsWhite, whiteAsRed);
+			check(whiteAsWhite.textPixels > 50 && whiteAsRed.textPixels == 0, "a red rule's label is white (R31)");
 		} finally {
-			context.runOnClient(client -> {
-				NpcWaypointRenderer.setWhiteLabels(true);
-				NpcWaypointRenderer.setActiveWaypoints(List.of());
-			});
+			context.runOnClient(client -> TestWaypoints.clear());
 		}
 	}
 
@@ -183,43 +163,35 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			server.runCommand("fill -8 -60 " + wallZ + " 8 -52 " + wallZ + " " + obstacle);
 		}
 		server.runCommand("tp @a 0.5 -60 0.5 0 0");
-		context.runOnClient(client -> NpcWaypointRenderer.setActiveWaypoints(List.of()));
+		context.runOnClient(client -> TestWaypoints.clear());
 		singleplayer.getConnection().waitForChunksRender();
 		context.waitTicks(10);
 		Path without = context.takeScreenshot("t1.3-" + name + "-without");
 
-		context.runOnClient(client -> {
-			NpcRule rule = new NpcRule();
-			rule.label = "Label Test";
-			rule.island = "Hub";
-			rule.fixed = true;
-			rule.color = TEXT_COLOR;
-			rule.x = 0.5;
-			rule.y = -60;
-			rule.z = distance + 0.5;
-			NpcWaypointRenderer.setActiveWaypoints(List.of(rule));
-		});
+		context.runOnClient(client -> TestWaypoints.show(
+				List.of(TestWaypoints.fixedRule("Label Test", "Hub", TEXT_COLOR, 0, -60, distance)), TestWaypoints.LABELS_ONLY));
 		context.waitTicks(5);
 		Path with = context.takeScreenshot("t1.3-" + name);
 		return Label.of(with, without);
 	}
 
-	/** The label's text, found as the pixels that have exactly the text colour with the label and
+	/** The label's text, found as the pixels that have exactly a text colour with the label and
 	 *  not without it: their bounding box and count. Animated water and the sky do not affect it. */
 	private record Label(int width, int height, int textPixels) {
+		/** Both lines of a white label: the white name and the yellow distance. */
 		static Label of(Path with, Path without) {
-			return of(with, without, TEXT_COLOR);
+			return of(with, without, TEXT_COLOR, DISTANCE_COLOR);
 		}
 
-		static Label of(Path with, Path without, int textColor) {
+		static Label of(Path with, Path without, int... textColors) {
 			try {
 				BufferedImage a = ImageIO.read(with.toFile());
 				BufferedImage b = ImageIO.read(without.toFile());
 				int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = -1, maxY = -1, text = 0;
 				for (int y = 0; y < a.getHeight(); y++) {
 					for (int x = 0; x < a.getWidth(); x++) {
-						boolean textWith = (a.getRGB(x, y) & 0xFFFFFF) == textColor;
-						boolean textWithout = (b.getRGB(x, y) & 0xFFFFFF) == textColor;
+						boolean textWith = isText(a.getRGB(x, y) & 0xFFFFFF, textColors);
+						boolean textWithout = isText(b.getRGB(x, y) & 0xFFFFFF, textColors);
 						if (textWith && !textWithout) {
 							minX = Math.min(minX, x);
 							minY = Math.min(minY, y);
@@ -233,6 +205,15 @@ public class WaypointLabelGameTest implements FabricClientGameTest {
 			} catch (IOException e) {
 				throw new AssertionError("cannot read screenshots", e);
 			}
+		}
+
+		private static boolean isText(int rgb, int[] textColors) {
+			for (int color : textColors) {
+				if (rgb == color) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 

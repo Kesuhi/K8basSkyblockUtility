@@ -4,6 +4,7 @@ import com.google.gson.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,6 +29,22 @@ class NpcDatabaseParseTest {
 		assertFalse(entries.get(1).fixed);
 		assertEquals("Catacombs", entries.get(1).island);
 		assertEquals("Trinity", entries.get(1).matchText);
+	}
+
+	/** T3.4: waypoints look their entry up by sourceId; a repeated id keeps its first entry. */
+	@Test
+	void entriesAreIndexedByIdAndTheFirstOfARepeatedIdWins() {
+		Map<String, NpcDatabaseEntry> index = NpcDatabase.index(NpcDatabase.parse("""
+				[
+				  {"id": "udel", "displayName": "Udel", "island": "Crimson Isle", "fixed": true, "x": -79, "y": 108, "z": -788},
+				  {"id": "udel", "displayName": "Udel again", "island": "Crimson Isle", "fixed": true, "x": 1, "y": 2, "z": 3},
+				  {"id": "elizabeth", "displayName": "Elizabeth", "island": "Hub", "fixed": true, "x": -3, "y": 70, "z": -90}
+				]
+				"""));
+		assertEquals(2, index.size());
+		assertEquals("Udel", index.get("udel").displayName);
+		assertEquals(-79.0, index.get("udel").x);
+		assertEquals(null, NpcDatabase.byId(null), "a hand-made rule has no sourceId");
 	}
 
 	/** AC-LOC-03 (T1.9b): fixed NPCs listed on Catacombs stand in the lobby; moving ones stay in runs. */
