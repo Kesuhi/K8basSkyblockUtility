@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.screen;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.gametest.ModuleStates;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.ui.option.Category;
@@ -46,6 +47,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
+		ModuleStates modules = context.computeOnClient(client -> ModuleStates.capture());
 		context.getInput().resizeWindow(1920, 1080);
 		try {
 			context.runOnClient(client -> client.options.guiScale().set(1));
@@ -81,7 +83,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			generalCategory(context);
 		} finally {
 			context.runOnClient(client -> {
-				ModuleManager.modules().forEach(module -> module.setEnabled(true));
+				modules.restore();
 				ConfigManager.general().mobScanRangeBlocks = 64;
 				ConfigManager.save();
 			});
@@ -119,7 +121,8 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	/** AC-UI-04: each category opens with its cards; a feature switched off dims its sub-options. */
 	private static void everyCategory(ClientGameTestContext context) {
 		List<Category> categories = context.computeOnClient(client -> screen(client).categories());
-		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS)), "the categories with cards: " + categories);
+		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING)),
+				"the categories with cards: " + categories);
 		for (Category category : categories) {
 			context.runOnClient(client -> screen(client).select(category));
 			context.waitTicks(2);
@@ -131,6 +134,12 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			}
 		}
 		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		// Put back each module's own state afterwards: not every feature need be ON by default.
+		java.util.Map<String, Boolean> before = context.computeOnClient(client -> {
+			java.util.Map<String, Boolean> states = new java.util.HashMap<>();
+			ModuleManager.modules().forEach(module -> states.put(module.id(), module.isEnabled()));
+			return states;
+		});
 		context.runOnClient(client -> ModuleManager.modules().forEach(module -> {
 			if (module.id().equals("mob_highlighter")) {
 				module.setEnabled(false);
@@ -144,7 +153,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		});
 		check(dimmed, "Mob Highlighter off: its sub-options are dimmed");
 		context.takeScreenshot("t2.4a-feature-off-dimmed");
-		context.runOnClient(client -> ModuleManager.modules().forEach(module -> module.setEnabled(true)));
+		context.runOnClient(client -> ModuleManager.modules().forEach(module -> module.setEnabled(before.get(module.id()))));
 		LOGGER.info("config screen categories: {}; a feature off dims its sub-options", categories);
 	}
 
@@ -404,7 +413,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 
 		click(context, cross);
 		check(context.computeOnClient(client -> screen(client).query()).isEmpty(), "× empties the box");
-		check(context.computeOnClient(client -> screen(client).view().categories().size()) == 3, "and every category is back");
+		check(context.computeOnClient(client -> screen(client).view().categories().equals(screen(client).categories())), "and every category is back");
 		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "and the box has the keyboard again");
 
 		// A query matching several categories survives a click on another tab.

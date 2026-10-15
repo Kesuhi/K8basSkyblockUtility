@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.module.npcsearch
 import com.k8bas.skyblockutility.config.ConfigManager
 import com.k8bas.skyblockutility.highlight.HighlightManager
 import com.k8bas.skyblockutility.highlight.HighlightRule
+import com.k8bas.skyblockutility.module.TableRows
 import com.k8bas.skyblockutility.highlight.NameMatchMode
 import com.k8bas.skyblockutility.location.IslandTracker
 import com.k8bas.skyblockutility.module.Module
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.Entity
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 import java.util.function.Function
+import java.util.function.Predicate
 import java.util.function.Supplier
 
 /**
@@ -65,9 +67,8 @@ class NpcSearchModule : Module {
 		)
 		ClientTickEvents.END_CLIENT_TICK.register { showPendingTitle(it) }
 		rebuildDerived()
-		// Fetched at startup rather than lazily on first picker-open, so opening the picker for
-		// the first time doesn't show the "still loading" message / a moment of an empty list.
-		NpcDatabase.fetchIfNeeded()
+		// The bundled NPC table (T3.8): registered before the registry starts, so it loads with the others.
+		NpcDatabase.register()
 		NpcWaypointMarkers.register()
 		ModKeybinds.register(this)
 	}
@@ -140,18 +141,19 @@ class NpcSearchModule : Module {
 			ruleCards = NpcRuleCards(
 				cfg, Function { rule -> HighlightManager.inertReason(toHighlightRule(rule)) }, Function { positionText(it) },
 				Runnable { rulesChanged() },
+				Predicate { id ->
+					// While the list loads every link counts as known; once loaded, a gone id makes a custom rule (EC-NPCDB-01).
+					NpcDatabase.state() != RuleDatabase.State.READY || NpcDatabase.byId(id) != null
+				},
 			)
 			ruleCardsConfig = config
 		}
 		if (database == null) {
 			database = ListDatabase<NpcDatabaseEntry>(
 				"NPC Database",
-				Supplier {
-					NpcDatabase.fetchIfNeeded()
-					NpcDatabase.state()
-				},
+				Supplier { NpcDatabase.state() },
 				Supplier { NpcDatabase.entries() },
-				Function { npc -> RuleDatabase.Entry(npc.id, npc.displayName, npc.island, null, npc.matchText) },
+				Function { npc -> RuleDatabase.Entry(npc.id, npc.displayName, npc.island, null, TableRows.searchText(npc.matchText, npc.aliases)) },
 				Supplier { usedSources() },
 				Consumer { npc ->
 					cfg.rules.add(createRuleForNpc(npc))
@@ -161,19 +163,17 @@ class NpcSearchModule : Module {
 		}
 		// Bound now, as Java's ruleCards::groups was: a card keeps the rule cards it was made with.
 		val cards = ruleCards!!
-		return NpcSearchOptions.cards(cfg, Consumer { setEnabled(it) }, Runnable { rebuildDerived() }, Supplier { cards.groups() }, database)
+		// A display setting or island colour: stored in the section first, so the screen's commit writes it (REQ-UI-15).
+		return NpcSearchOptions.cards(cfg, Consumer { setEnabled(it) }, Runnable { rulesChanged() }, Supplier { cards.groups() }, database)
 	}
 
 	/** The database entries the rules already come from (the picker hides them). */
 	private fun usedSources(): Set<String> {
-		val ids = HashSet<String>()
-		for (rule in cfg.rules) {
-			val source = rule.sourceId
-			if (source != null) {
-				ids.add(source)
-			}
-		}
-		return ids
+		val linked = TableRows.usedIds(cfg.rules.map { it.sourceId }) { NpcDatabase.byId(it)?.id }
+		// A moving NPC is also covered by a rule with its pattern and island (EC-NPCDB-02); a fixed one has no pattern.
+		val patterns = cfg.rules.filter { !it.fixed }.map { it.namePattern to it.island }
+		val entries = NpcDatabase.entries().filter { !it.fixed }.associate { it.id to (it.matchText to ruleIsland(it)) }
+		return linked + TableRows.coveredByPattern(patterns, entries)
 	}
 
 	/** A rule edited, added or deleted in the settings screen: stored in the section and applied at once (REQ-UI-15). */
@@ -188,10 +188,13 @@ class NpcSearchModule : Module {
 		rebuildDerived()
 	}
 
+	/** The island a rule made from [npc] gets: none for the "Unknown" folder. */
+	private fun ruleIsland(npc: NpcDatabaseEntry): String? = if (UNKNOWN_ISLAND == npc.island) null else npc.island
+
 	private fun createRuleForNpc(npc: NpcDatabaseEntry): NpcRule {
 		val rule = NpcRule()
 		rule.label = npc.displayName
-		rule.island = if (UNKNOWN_ISLAND == npc.island) null else npc.island
+		rule.island = ruleIsland(npc)
 		rule.fixed = npc.fixed
 		rule.sourceId = npc.id
 		if (npc.fixed) {

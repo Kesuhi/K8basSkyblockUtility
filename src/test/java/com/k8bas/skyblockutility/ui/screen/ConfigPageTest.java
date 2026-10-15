@@ -2,6 +2,10 @@ package com.k8bas.skyblockutility.ui.screen;
 
 import com.google.gson.Gson;
 import com.k8bas.skyblockutility.config.GeneralConfig;
+import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig;
+import com.k8bas.skyblockutility.module.hotspot.HotspotConfig;
+import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsConfig;
+import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.settings.OptionCatalog;
@@ -50,6 +54,10 @@ class ConfigPageTest {
 	private final GeneralConfig general = new GeneralConfig();
 	private final MobHighlighterConfig mobs = new MobHighlighterConfig();
 	private final NpcSearchConfig npcs = new NpcSearchConfig();
+	private final MineshaftAlertConfig shaft = new MineshaftAlertConfig();
+	private final BobberFixConfig bobber = new BobberFixConfig();
+	private final HotspotConfig hotspots = new HotspotConfig();
+	private final CorpseSpotsConfig corpses = new CorpseSpotsConfig();
 	private final Map<String, String> keys = new HashMap<>();
 	private final List<Overlay> opened = new ArrayList<>();
 	private final OverlayHost host = new OverlayHost() {
@@ -66,7 +74,8 @@ class ConfigPageTest {
 
 	private List<Card> catalog() {
 		// As the modules do: switching one stores it in its config.
-		return OptionCatalog.build(general, mobs, npcs, enabled -> mobs.enabled = enabled, enabled -> npcs.enabled = enabled);
+		return OptionCatalog.build(general, mobs, npcs, enabled -> mobs.enabled = enabled, enabled -> npcs.enabled = enabled, shaft, enabled -> shaft.enabled = enabled,
+				bobber, hotspots, corpses);
 	}
 
 	private Widget control(Option option) {
@@ -93,7 +102,7 @@ class ConfigPageTest {
 
 	/** The state every setting is in: the configs (module switches included) and the keys. */
 	private String state() {
-		return GSON.toJson(general) + GSON.toJson(mobs) + GSON.toJson(npcs) + keys;
+		return GSON.toJson(general) + GSON.toJson(mobs) + GSON.toJson(npcs) + GSON.toJson(shaft) + GSON.toJson(bobber) + GSON.toJson(hotspots) + GSON.toJson(corpses) + keys;
 	}
 
 	/** As WidgetScreen routes a press: topmost first, only inside a widget's clip region. */
@@ -227,6 +236,12 @@ class ConfigPageTest {
 				GeneralConfig was = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class);
 				general.mobScanRangeBlocks = was.mobScanRangeBlocks;
 				general.noticeSeconds = was.noticeSeconds;
+				// Only the pressed slider's own field is put back, so a slider bound to another field still shows.
+				switch (slider.id()) {
+					case "fishing_hotspots.fill_opacity" -> hotspots.fillOpacity = HotspotConfig.DEFAULT_OPACITY;
+					case "fishing_hotspots.sound_volume" -> hotspots.soundVolume = new HotspotConfig().soundVolume;
+					default -> { }
+				}
 				assertEquals(before, state(), slider.id() + ": nothing else changed");
 			}
 		}

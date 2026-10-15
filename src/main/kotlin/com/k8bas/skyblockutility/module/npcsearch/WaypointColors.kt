@@ -54,15 +54,24 @@ object WaypointColors {
 		if (beam != null) {
 			return beam and 0xFFFFFF
 		}
+		return islandColor(rule.island, islandColors)
+	}
+
+	/**
+	 * The colour of [island]'s waypoints: the player's edited one, else its default, else the global default (a
+	 * blank island, or one without a colour). What "Use island colour" goes back to.
+	 */
+	@JvmStatic
+	fun islandColor(island: String?, islandColors: Map<String, Int?>?): Int {
 		// Java's String.trim: code points up to U+0020.
-		val island = rule.island?.trim { it <= ' ' } ?: ""
-		if (island.isEmpty()) {
+		val name = island?.trim { it <= ' ' } ?: ""
+		if (name.isEmpty()) {
 			return GLOBAL_DEFAULT
 		}
-		val edited = islandColors!![island]
+		val edited = islandColors!![name]
 		if (edited != null) {
 			return edited and 0xFFFFFF
 		}
-		return ISLAND_DEFAULTS.getOrDefault(island, GLOBAL_DEFAULT)
+		return ISLAND_DEFAULTS.getOrDefault(name, GLOBAL_DEFAULT)
 	}
 }

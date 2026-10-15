@@ -153,10 +153,25 @@ object NpcWaypointMarkers {
 		return Marker(MarkerAnchor.fixed(block.x, block.y, block.z), label, beam, null)
 	}
 
+	/**
+	 * The rules to draw: a later enabled fixed rule whose data entry an earlier enabled one already marks is left
+	 * out, so rules a 1.x config made from both halves of a since-merged pair (Fred and the Forge Foreman) give one
+	 * waypoint instead of two on the same block. The config keeps both; disabling the first shows the second.
+	 */
+	@JvmStatic
+	fun distinct(rules: List<NpcRule>, data: Function<String, NpcDatabaseEntry?>): List<NpcRule> {
+		val marked = HashSet<String>()
+		return rules.filter { rule ->
+			val sourceId = rule.sourceId
+			val entry = if (rule.enabled && rule.fixed && sourceId != null) data.apply(sourceId) else null
+			entry == null || marked.add(entry.id)
+		}
+	}
+
 	private fun rebuild() {
 		val current = settings
 		val built = ArrayList<Waypoint>()
-		for (rule in activeWaypoints) {
+		for (rule in distinct(activeWaypoints) { NpcDatabase.byId(it) }) {
 			built.add(Waypoint(rule, markerFor(rule, current) { NpcDatabase.byId(it) }))
 		}
 		waypoints = java.util.List.copyOf(built)

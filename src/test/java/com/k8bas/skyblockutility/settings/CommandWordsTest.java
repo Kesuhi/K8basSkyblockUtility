@@ -21,6 +21,7 @@ class CommandWordsTest {
 		assertEquals("update", CommandWords.reserved("  UPDATE now"), "the first word, in any case");
 		assertEquals("sbxp", CommandWords.reserved("sbxp"));
 		assertEquals("debug", CommandWords.reserved("debug dump tab"));
+		assertEquals("corpses", CommandWords.reserved("corpses"), "back with R40");
 	}
 
 	@Test
@@ -28,7 +29,6 @@ class CommandWordsTest {
 		assertNull(CommandWords.reserved("glow"));
 		assertNull(CommandWords.reserved("hudson"), "a word that only begins like one is a search");
 		assertNull(CommandWords.reserved("show hud"), "only the first word counts");
-		assertNull(CommandWords.reserved("corpses"), "dropped with R22");
 		assertNull(CommandWords.reserved(""));
 	}
 
@@ -41,7 +41,7 @@ class CommandWordsTest {
 
 	@Test
 	void theListIsTheOneCentralPlace() {
-		assertEquals(List.of("hud", "debug", "update", "sbxp"), CommandWords.RESERVED);
+		assertEquals(List.of("hud", "debug", "update", "sbxp", "corpses"), CommandWords.RESERVED);
 	}
 
 	/** AC-UI-22 [R], made repeatable: the settings, UI and command code send nothing to the server. */

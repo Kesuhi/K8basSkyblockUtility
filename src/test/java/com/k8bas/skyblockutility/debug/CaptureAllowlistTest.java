@@ -28,6 +28,7 @@ class CaptureAllowlistTest {
 	@Test
 	void dungeonRewardsAndRngMeters() {
 		assertTrue(CaptureAllowlist.matches("Croesus"));
+		assertTrue(CaptureAllowlist.matches("Catacombs - Floor I"), "a run's chests from Croesus, as captured at G3");
 		assertTrue(CaptureAllowlist.matches("Bedrock Chest"));
 		assertTrue(CaptureAllowlist.matches("The Catacombs - Floor VII"));
 		assertTrue(CaptureAllowlist.matches("Master Mode The Catacombs - Floor III"));
@@ -35,6 +36,17 @@ class CaptureAllowlistTest {
 		assertTrue(CaptureAllowlist.matches("Slayer RNG Meter"));
 		assertFalse(CaptureAllowlist.matches("Large Chest"));
 		assertFalse(CaptureAllowlist.matches("Chest"));
+	}
+
+	@Test
+	void sackMenusMatch() {
+		// The corpse keys in sacks (T3.2b, R39): the sack overview and each sack. "Dwarven Mines Sack" is the captured
+		// title (G3, fixtures/captures/g3-2026-10-15/containers/dwarven-mines-sack-*.txt); the others are UNVERIFIED.
+		for (String title : new String[]{"Dwarven Mines Sack", "Sacks", "Dwarven Sack", "Mining Sack", "Enchanted Mining Sack", "Large Dwarven Sack"}) {
+			assertTrue(CaptureAllowlist.matches(title), title);
+		}
+		assertFalse(CaptureAllowlist.matches("Sack of Sacks ➜ Upgrades"));
+		assertFalse(CaptureAllowlist.matches("Backpack"));
 	}
 
 	@Test

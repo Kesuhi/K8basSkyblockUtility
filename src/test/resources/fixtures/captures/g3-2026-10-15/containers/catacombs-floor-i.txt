@@ -1,0 +1,81 @@
+[K8BAS-DUMP] container 3 title=Catacombs - Floor I slots=36 state=48
+[K8BAS-DUMP] container 3 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 4 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 10 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 11 item=minecraft:player_head sbid=- count=1 | Wood
+[K8BAS-DUMP] container 3 slot 11 lore 0 | Contents
+[K8BAS-DUMP] container 3 slot 11 lore 1 | Enchanted Book (Rejuvenate I)
+[K8BAS-DUMP] container 3 slot 11 lore 2 | Undead Essence x5
+[K8BAS-DUMP] container 3 slot 11 lore 3 | Wither Essence x8
+[K8BAS-DUMP] container 3 slot 11 lore 4 | 
+[K8BAS-DUMP] container 3 slot 11 lore 5 | Cost
+[K8BAS-DUMP] container 3 slot 11 lore 6 | FREE
+[K8BAS-DUMP] container 3 slot 11 lore 7 | 
+[K8BAS-DUMP] container 3 slot 11 lore 8 | Click to open!
+[K8BAS-DUMP] container 3 slot 12 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 13 item=minecraft:player_head sbid=- count=1 | Gold
+[K8BAS-DUMP] container 3 slot 13 lore 0 | Contents
+[K8BAS-DUMP] container 3 slot 13 lore 1 | Enchanted Book (Infinite Quiver VI)
+[K8BAS-DUMP] container 3 slot 13 lore 2 | Enchanted Book (Rejuvenate I)
+[K8BAS-DUMP] container 3 slot 13 lore 3 | Undead Essence x11
+[K8BAS-DUMP] container 3 slot 13 lore 4 | Wither Essence x6
+[K8BAS-DUMP] container 3 slot 13 lore 5 | 
+[K8BAS-DUMP] container 3 slot 13 lore 6 | Cost
+[K8BAS-DUMP] container 3 slot 13 lore 7 | 20,000 Coins
+[K8BAS-DUMP] container 3 slot 13 lore 8 | 
+[K8BAS-DUMP] container 3 slot 13 lore 9 | NOTE: Coins are withdrawn from your
+[K8BAS-DUMP] container 3 slot 13 lore 10 | bank if you don't have enough in
+[K8BAS-DUMP] container 3 slot 13 lore 11 | your purse.
+[K8BAS-DUMP] container 3 slot 13 lore 12 | 
+[K8BAS-DUMP] container 3 slot 13 lore 13 | Click to open!
+[K8BAS-DUMP] container 3 slot 14 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 15 item=minecraft:player_head sbid=- count=1 | Diamond
+[K8BAS-DUMP] container 3 slot 15 lore 0 | Contents
+[K8BAS-DUMP] container 3 slot 15 lore 1 | Enchanted Book (Feather Falling VI)
+[K8BAS-DUMP] container 3 slot 15 lore 2 | Enchanted Book (Infinite Quiver VI)
+[K8BAS-DUMP] container 3 slot 15 lore 3 | Undead Essence x16
+[K8BAS-DUMP] container 3 slot 15 lore 4 | Wither Essence x11
+[K8BAS-DUMP] container 3 slot 15 lore 5 | 
+[K8BAS-DUMP] container 3 slot 15 lore 6 | Cost
+[K8BAS-DUMP] container 3 slot 15 lore 7 | 40,000 Coins
+[K8BAS-DUMP] container 3 slot 15 lore 8 | 
+[K8BAS-DUMP] container 3 slot 15 lore 9 | NOTE: Coins are withdrawn from your
+[K8BAS-DUMP] container 3 slot 15 lore 10 | bank if you don't have enough in
+[K8BAS-DUMP] container 3 slot 15 lore 11 | your purse.
+[K8BAS-DUMP] container 3 slot 15 lore 12 | 
+[K8BAS-DUMP] container 3 slot 15 lore 13 | Click to open!
+[K8BAS-DUMP] container 3 slot 16 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 19 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 20 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 21 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 22 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 23 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 24 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 25 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 30 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 3 slot 30 lore 0 | To Croesus
+[K8BAS-DUMP] container 3 slot 31 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 3 slot 32 item=minecraft:redstone_torch sbid=- count=1 | Chest Modifiers
+[K8BAS-DUMP] container 3 slot 32 lore 0 | These consumables can be used on
+[K8BAS-DUMP] container 3 slot 32 lore 1 | your chests once per run!
+[K8BAS-DUMP] container 3 slot 32 lore 2 | 
+[K8BAS-DUMP] container 3 slot 32 lore 3 | Available Modifiers:
+[K8BAS-DUMP] container 3 slot 32 lore 4 |  Kismet Feather
+[K8BAS-DUMP] container 3 slot 32 lore 5 |  Dungeon Chest Key
+[K8BAS-DUMP] container 3 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 3 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 

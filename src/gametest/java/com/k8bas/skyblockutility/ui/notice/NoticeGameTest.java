@@ -89,9 +89,11 @@ public class NoticeGameTest implements FabricClientGameTest {
 	/** Gone after its duration plus the slide time, to within a client tick (50 ms) and a frame. */
 	private static void lifetime(ClientGameTestContext context) {
 		context.runOnClient(client -> ConfigManager.general().noticeSeconds = 3);
+		// The clock is read before posting: the notice starts its own clock inside post(), never earlier than this.
 		long posted = context.computeOnClient(client -> {
+			long now = Util.getMillis();
 			Notices.post(new Notice("Three seconds", List.of()));
-			return Util.getMillis();
+			return now;
 		});
 		long expected = 3000 + NoticeQueue.SLIDE_TIME_MS;
 		long gone = -1;

@@ -1,0 +1,60 @@
+{
+  "table": "mining_shafts",
+  "schemaVersion": 1,
+  "dataVersion": 1,
+  "gameVersion": "0.27.1",
+  "generatedAt": "2026-10-09T15:00:00Z",
+  "license": "CC0-1.0",
+  "sources": {
+    "miningqol": {
+      "title": "MiningQOL ShaftType.java (CC0-1.0): all 34 codes",
+      "url": "https://github.com/Rinity9801/MiningQOL",
+      "revision": "235849dcd410c7728ff729bbf10ac5c8b9e16b29",
+      "license": "CC0-1.0",
+      "access": "git"
+    },
+    "crosscheck": {
+      "title": "Same 34 codes in SkyHanni, skydiao, waypointer and Eurybium (facts only)",
+      "url": "https://github.com/hannibal002/SkyHanni",
+      "revision": "1741dc154c4cd702f275487201b06f37f1652beb",
+      "license": "facts",
+      "access": "git"
+    }
+  },
+  "rows": [
+    {"code": "TOPA_1", "name": "Topaz 1"},
+    {"code": "TOPA_2", "name": "Topaz 2"},
+    {"code": "SAPP_1", "name": "Sapphire 1"},
+    {"code": "SAPP_2", "name": "Sapphire 2"},
+    {"code": "AMET_1", "name": "Amethyst 1"},
+    {"code": "AMET_2", "name": "Amethyst 2"},
+    {"code": "AMBE_1", "name": "Amber 1"},
+    {"code": "AMBE_2", "name": "Amber 2"},
+    {"code": "JADE_1", "name": "Jade 1"},
+    {"code": "JADE_2", "name": "Jade 2"},
+    {"code": "TITA_1", "name": "Titanium 1"},
+    {"code": "UMBE_1", "name": "Umber 1"},
+    {"code": "TUNG_1", "name": "Tungsten 1"},
+    {"code": "FAIR_1", "name": "Vanguard"},
+    {"code": "RUBY_1", "name": "Ruby 1"},
+    {"code": "RUBY_2", "name": "Ruby 2"},
+    {"code": "RUBY_C", "name": "Ruby Crystal"},
+    {"code": "ONYX_1", "name": "Onyx 1"},
+    {"code": "ONYX_2", "name": "Onyx 2"},
+    {"code": "ONYX_C", "name": "Onyx Crystal"},
+    {"code": "AQUA_1", "name": "Aquamarine 1"},
+    {"code": "AQUA_2", "name": "Aquamarine 2"},
+    {"code": "AQUA_C", "name": "Aquamarine Crystal"},
+    {"code": "CITR_1", "name": "Citrine 1"},
+    {"code": "CITR_2", "name": "Citrine 2"},
+    {"code": "CITR_C", "name": "Citrine Crystal"},
+    {"code": "PERI_1", "name": "Peridot 1"},
+    {"code": "PERI_2", "name": "Peridot 2"},
+    {"code": "PERI_C", "name": "Peridot Crystal"},
+    {"code": "JASP_1", "name": "Jasper 1"},
+    {"code": "JASP_C", "name": "Jasper Crystal"},
+    {"code": "OPAL_1", "name": "Opal 1"},
+    {"code": "OPAL_C", "name": "Opal Crystal"},
+    {"code": "LITT_L", "name": "Littlefoot's Den"}
+  ]
+}

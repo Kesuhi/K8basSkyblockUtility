@@ -1,0 +1,19 @@
+{
+	"required": false,
+	"minVersion": "0.8",
+	"package": "com.k8bas.skyblockutility.gametest.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"plugin": "com.k8bas.skyblockutility.gametest.hook.GametestHookPlugin",
+	"injectors": {
+		"defaultRequire": 0
+	},
+	"client": [
+		"ForeignBadMixin",
+		"ForeignGoodMixin",
+		"HookTargetMixin",
+		"MissingTargetMixin",
+		"OwnBadLateMixin",
+		"RevertedTargetMixin",
+		"UnmatchedHookMixin"
+	]
+}

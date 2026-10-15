@@ -9,7 +9,7 @@ package com.k8bas.skyblockutility.ui.option
  * @param title       the card or row title; searched
  * @param description at most two card lines; searched
  * @param tooltip     the full text on hover, "\n" for a line break, empty for none; not searched
- * @param keywords    hidden search words (e.g. "gambling" for Rare Drop Odds, REQ-XC-RULES-07)
+ * @param keywords    hidden search words (e.g. "rubber band" for the Bobber Fix)
  */
 class OptionText(
 	@get:JvmName("title") val title: String,

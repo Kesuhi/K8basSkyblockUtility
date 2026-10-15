@@ -174,7 +174,7 @@ Two checks were run:
 | Heart of the Forest | **captured:** `containers/heart-of-the-forest.txt` (default view only) |
 | Pets | **captured:** `containers/pets-page-1-of-3.txt` (page 1 of 3 only) |
 | Accessory Bag | not captured |
-| Croesus and dungeon reward chests (AC-ODDS-13) | not captured |
+| Croesus and dungeon reward chests (AC-ODDS-13) | not captured at G1. Croesus and an F1 run's chest menu were captured at G3 (`../g3-2026-10-15/README.md`); opened reward chest screens stay UNVERIFIED |
 | "* RNG Meter" menu | not captured. The HOTM menu only has a "Crystal Nucleus RNG Meter" item. |
 | Name tags over NPCs (AC-GLOW-08, T3.1) | **captured:** `entities-dungeon-hub.txt` |
 | PET DROP chat format (EC-ODDS-07) | not captured (the dumps do not include chat) |

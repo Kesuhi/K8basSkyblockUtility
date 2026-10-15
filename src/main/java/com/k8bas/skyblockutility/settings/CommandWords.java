@@ -10,7 +10,7 @@ import java.util.Locale;
  */
 public final class CommandWords {
 	/** The subcommand words, in one place; a later module that adds a subcommand adds its word here. */
-	public static final List<String> RESERVED = List.of("hud", "debug", "update", "sbxp");
+	public static final List<String> RESERVED = List.of("hud", "debug", "update", "sbxp", "corpses");
 
 	private CommandWords() {
 	}

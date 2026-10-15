@@ -25,7 +25,7 @@ import java.util.Set;
  * "Add from database" (REQ-UI-11): a modal with a search field, the entries in island folders on the
  * virtual list (REQ-UI-20), and an Add button per entry. An entry that already backs a rule is hidden,
  * so one just added leaves the list at once. Each add is written at once; closing never asks about
- * unsaved changes (AC-UI-10). While the list loads, or when it could not be fetched, it says so and
+ * unsaved changes (AC-UI-10). While the list loads, or when its table could not be read, it says so and
  * nothing can be added (EC-UI-08).
  */
 public final class DatabasePickerOverlay extends Overlay {
@@ -144,7 +144,7 @@ public final class DatabasePickerOverlay extends Overlay {
 			return;
 		}
 		int[] add = addButton(width, height);
-		if (x >= add[0] && x < add[0] + add[2] && y >= add[1] && y < add[1] + add[3]) {
+		if (row.entry().addable() && x >= add[0] && x < add[0] + add[2] && y >= add[1] && y < add[1] + add[3]) {
 			database.add(row.entry());
 			commit.run();
 			refresh();
@@ -168,7 +168,7 @@ public final class DatabasePickerOverlay extends Overlay {
 	String message() {
 		return switch (database.state()) {
 			case LOADING -> "Loading the database...";
-			case UNAVAILABLE -> "Database unavailable: it could not be fetched";
+			case UNAVAILABLE -> "Database unavailable: its bundled data could not be read";
 			case READY -> !rows.isEmpty() ? null
 					: database.entries().isEmpty() ? "The database is empty"
 					: search.model().text().isBlank() ? "Every entry already has a rule" : "No entry matches";
@@ -195,6 +195,17 @@ public final class DatabasePickerOverlay extends Overlay {
 		}
 		int[] add = addButton(width, height);
 		int addX = x + add[0];
+		String note = row.entry().note();
+		if (note != null) {
+			// Not addable (REQ-NPCDB-08): greyed, with the reason where Add would be.
+			// The note takes what it needs; the name keeps at least 60 px (or its own width, if less).
+			int nameMin = Math.min(font.width(row.label()), 60);
+			int noteWidth = Math.max(0, Math.min(font.width(note), x + width - 12 - nameMin - (indent + 12)));
+			UiText.rightAligned(graphics, font, Ellipsis.fit(note, noteWidth, font::width), x + width - 6, textY, Theme.TEXT_SECONDARY);
+			UiText.draw(graphics, font, Ellipsis.fit(row.label(), x + width - 12 - noteWidth - (indent + 12), font::width), indent + 12, textY,
+					Theme.TEXT_SECONDARY);
+			return;
+		}
 		UiText.draw(graphics, font, Ellipsis.fit(row.label(), addX - 6 - (indent + 12), font::width), indent + 12, textY, Theme.TEXT_PRIMARY);
 		Theme theme = Theme.current();
 		Shapes.roundedRect(graphics, addX, y + add[1], add[2], add[3], Shapes.RADIUS_CONTROL, hovered ? theme.accent() : ColorMath.lerp(Theme.CARD, theme.accent(), 0.6F));

@@ -1,0 +1,27 @@
+{
+  "description": "The third-party data upstreams approved in PLAN §2 (D-5). A table licensed MIT or Apache-2.0 lives under data/thirdparty/<upstream id>/ with the upstream's licence, has a '## <name>' section in THIRD_PARTY_NOTICES.md that names the file, and the upstream's licence text in licenses/<upstream id>.txt, which the build copies into the jar's META-INF/licenses/. An MIT source record names its upstream as notice. Checked by the data validator (T3.0j, REQ-DATA-05).",
+  "upstreams": {
+    "neu-repo": {
+      "name": "NotEnoughUpdates-REPO",
+      "license": "MIT",
+      "source": "https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO"
+    },
+    "skyhanni-repo": {
+      "name": "SkyHanni-REPO",
+      "license": "MIT",
+      "source": "https://github.com/hannibal002/SkyHanni-REPO"
+    },
+    "skyocean": {
+      "name": "SkyOcean",
+      "license": "MIT",
+      "source": "https://github.com/meowdding/SkyOcean",
+      "note": "Only the MIT part of its custom licence (code and src/repo/**) may be used; its other files are all rights reserved."
+    },
+    "meowdding-repo": {
+      "name": "meowdding-repo",
+      "license": "MIT",
+      "source": "https://github.com/meowdding/meowdding-repo",
+      "note": "MIT since its LICENSE was added (71f731f237, 2026-08-22); pin a commit that has it."
+    }
+  }
+}

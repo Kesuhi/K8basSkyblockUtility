@@ -1,11 +1,13 @@
 package com.k8bas.skyblockutility.render.marker;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +17,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -34,11 +38,29 @@ import java.util.function.Consumer;
  *   <li>REQ-MARK-03 with Improved Transparency (the Fabulous preset): the label stays pure white behind
  *       water and ice, the ring on water stays untinted, and stone still hides the ring.</li>
  *   <li>EC-MARK-06: beams stay with F1; EC-MARK-11: no beam above the build height.</li>
+ *   <li>The ring pipeline is vanilla's debug quads under this mod's id, setting for setting (RingPipeline, so
+ *       Iris can be given it; the Iris check itself runs with Iris and a shaderpack at G3).</li>
  * </ul>
  */
 public class MarkerBeamRingGameTest implements FabricClientGameTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas-gametest");
 	private static final int WHITE = 0xFFFFFF;
+
+	/** Every setting of the ring pipeline equals vanilla's debug quads except its id. */
+	private static void checkRingPipeline() {
+		RenderPipeline ring = RingPipeline.PIPELINE;
+		RenderPipeline vanilla = RenderPipelines.DEBUG_QUADS;
+		check(ring != vanilla && ring.getLocation().equals(RingPipeline.LOCATION), "the ring has its own pipeline: " + ring.getLocation());
+		check(ring.getVertexShader().equals(vanilla.getVertexShader()) && ring.getFragmentShader().equals(vanilla.getFragmentShader()), "the same shaders");
+		check(ring.getShaderDefines().equals(vanilla.getShaderDefines()), "the same defines: " + ring.getShaderDefines());
+		check(ring.getBindGroupLayouts().equals(vanilla.getBindGroupLayouts()), "the same bind groups");
+		check(Arrays.equals(ring.getVertexFormatBindings(), vanilla.getVertexFormatBindings()), "the same vertex format");
+		check(Arrays.equals(ring.getColorTargetStates(), vanilla.getColorTargetStates()), "the same blending");
+		check(Objects.equals(ring.getDepthStencilState(), vanilla.getDepthStencilState()), "the same depth test, no depth write");
+		check(ring.getPolygonMode() == vanilla.getPolygonMode() && ring.isCull() == vanilla.isCull()
+				&& ring.getPrimitiveTopology() == vanilla.getPrimitiveTopology() && ring.wantsDepthTexture() == vanilla.wantsDepthTexture(),
+				"the same polygon mode, culling, topology and depth texture use");
+	}
 
 	private static final class TestProvider implements MarkerProvider {
 		volatile List<Marker> markers = List.of();
@@ -61,6 +83,7 @@ public class MarkerBeamRingGameTest implements FabricClientGameTest {
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
+		context.runOnClient(client -> checkRingPipeline());
 		TestProvider provider = new TestProvider();
 		try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
 			TestServerContext server = singleplayer.getServer();

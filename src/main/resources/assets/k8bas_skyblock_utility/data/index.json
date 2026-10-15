@@ -1,0 +1,37 @@
+{
+  "indexVersion": 1,
+  "tables": {
+    "mining.corpse_spots": {
+      "path": "thirdparty/skyhanni-repo/mining/corpse_spots.json",
+      "sha256": "c5ce6ff90602891b018e148d25893737ed107fde840eba8d8ee2ca890b5d2995",
+      "rows": 29,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
+    },
+    "mining_shafts": {
+      "path": "mining/shafts.json",
+      "sha256": "20cb5106a7e78a2985ca32df1c1fb3e12b331eaa7a5ad316dda080f7b1790cc1",
+      "rows": 34,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
+    },
+    "npcdb.mobs": {
+      "path": "npcdb/mobs.json",
+      "sha256": "3f5ead88aa5c85fac3cc9cdc2c0cb8b1b6f6f069063282e0596a1e343de2a00e",
+      "rows": 309,
+      "schemaVersion": 1,
+      "dataVersion": 3,
+      "gameVersion": "0.27.1"
+    },
+    "npcdb.npcs": {
+      "path": "thirdparty/neu-repo/npcdb/npcs.json",
+      "sha256": "85a66741beb92aff8e6fcef0fd2fb99a84541b550af9bcde4848339e5c5dc564",
+      "rows": 362,
+      "schemaVersion": 1,
+      "dataVersion": 2,
+      "gameVersion": "0.27.1"
+    }
+  }
+}

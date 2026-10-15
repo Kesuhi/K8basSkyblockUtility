@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.module.npcsearch;
 
+import java.util.List;
+
 public class NpcDatabaseEntry {
 	public String id;
 	public String displayName;
@@ -14,4 +16,6 @@ public class NpcDatabaseEntry {
 	public Double z;
 	/** Only meaningful when fixed == false — core name text to match with CONTAINS. */
 	public String matchText;
+	/** Former ids of entries merged into this one (REQ-NPCDB-07(d)): rules linked to them still find it. */
+	public List<String> aliases = List.of();
 }

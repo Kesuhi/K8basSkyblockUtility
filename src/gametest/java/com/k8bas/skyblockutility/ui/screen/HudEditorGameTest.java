@@ -11,6 +11,7 @@ import com.k8bas.skyblockutility.hud.HudPositions;
 import com.k8bas.skyblockutility.hud.HudRect;
 import com.k8bas.skyblockutility.hud.HudSnap;
 import com.k8bas.skyblockutility.hud.HudRegistry;
+import com.k8bas.skyblockutility.hud.ShippedHud;
 import com.k8bas.skyblockutility.hud.HudText;
 import com.k8bas.skyblockutility.hud.TextMeasure;
 import com.k8bas.skyblockutility.ui.widget.Widget;
@@ -60,6 +61,8 @@ public class HudEditorGameTest implements FabricClientGameTest {
 			context.runOnClient(client -> {
 				client.options.guiScale().set(2);
 				ConfigManager.general().hud = null;
+				// Only this test's elements: the shipped ones (the corpse ding) are put back afterwards.
+				ShippedHud.elements().forEach(element -> HudRegistry.unregister(element.id()));
 				HudRegistry.register(new Element(A, "Box A", true, new Box(60, 30, 0xFFC03030), A_DEFAULT));
 				HudRegistry.register(new Element(B, "Box B", false, null, B_DEFAULT));
 				HudRegistry.register(new Element(C, "Text C", true, null, C_DEFAULT));
@@ -80,6 +83,7 @@ public class HudEditorGameTest implements FabricClientGameTest {
 				HudRegistry.unregister(A);
 				HudRegistry.unregister(B);
 				HudRegistry.unregister(C);
+				ShippedHud.register();
 				ConfigManager.general().hud = hudBefore;
 				ConfigManager.save();
 				ConfigManager.flush();

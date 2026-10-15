@@ -36,6 +36,7 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 			islandCanBeForced(context);
 			tabAndSidebarAreDumped(context, server);
 			containerDumpCapturesOnlyArmedAllowlistedMenus(context, server);
+			soundDumpWritesOnlyWhileArmed(context, server);
 			entityDumpListsOnlyDisplayedNameTags(context, server);
 			waypointBaselineScreenshots(context, singleplayer, server);
 		}
@@ -48,11 +49,15 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 			check(dispatcher != null, "client command dispatcher available");
 			for (List<String> path : List.of(
 					List.of("ksu", "debug", "dump", "tab"),
+					List.of("ksu", "debug", "data"),
+					List.of("ksu", "debug", "shaft"),
 					List.of("ksu", "debug", "dump", "sidebar"),
 					List.of("ksu", "debug", "island"),
 					List.of("ksu", "debug", "dump", "entities"),
 					List.of("ksu", "debug", "dump", "containers", "on"),
 					List.of("ksu", "debug", "dump", "containers", "off"),
+					List.of("ksu", "debug", "dump", "sounds", "on"),
+					List.of("ksu", "debug", "dump", "sounds", "off"),
 					List.of("kskyblockutility", "debug", "dump", "tab"))) {
 				check(dispatcher.findNode(path) != null, "command registered: /" + String.join(" ", path));
 			}
@@ -125,6 +130,25 @@ public class DebugToolsGameTest implements FabricClientGameTest {
 
 		server.runCommand("setblock 2 -60 2 minecraft:air");
 		server.runCommand("setblock 4 -60 2 minecraft:air");
+	}
+
+	/** AC-GS-19 [B] (T3.3c): while armed, a sound the server plays is one line with its id, category, position (playsound centres x and z on the block) and
+	 *  pitch; nothing is written before arming or after disarming. */
+	private static void soundDumpWritesOnlyWhileArmed(ClientGameTestContext context, TestServerContext server) {
+		server.runCommand("playsound minecraft:block.note_block.harp record @a 3 -59 3 1 2");
+		context.waitTicks(5);
+		check(!latestLog().contains(" sound 1 "), "nothing written while disarmed");
+		runClientCommand(context, "ksu debug dump sounds on");
+		server.runCommand("playsound minecraft:block.note_block.harp record @a 3 -59 3 1 2");
+		context.waitTicks(5);
+		String line = latestLog().lines().filter(l -> l.contains(DebugCommand.DUMP_TAG + " sound ") && l.contains("id=minecraft:block.note_block.harp"))
+				.findFirst().orElse("");
+		check(line.contains(" src=record pos=3.50,-59.00,3.50 ") && line.contains(" pitch=2.000 ") && line.contains(" player="), "the harp line: " + line);
+		runClientCommand(context, "ksu debug dump sounds off");
+		long before = latestLog().lines().filter(l -> l.contains(DebugCommand.DUMP_TAG + " sound ")).count();
+		server.runCommand("playsound minecraft:block.note_block.harp record @a 3 -59 3 1 2");
+		context.waitTicks(5);
+		check(latestLog().lines().filter(l -> l.contains(DebugCommand.DUMP_TAG + " sound ")).count() == before, "nothing written after disarming");
 	}
 
 	/** T0.4b: displayed name tags are listed with the entity below them; hidden names and an

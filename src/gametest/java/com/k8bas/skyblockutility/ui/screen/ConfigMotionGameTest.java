@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.screen;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.gametest.ModuleStates;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.settings.OptionCatalog;
 import com.k8bas.skyblockutility.ui.option.Category;
@@ -41,6 +42,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
+		ModuleStates modules = context.computeOnClient(client -> ModuleStates.capture());
 		String start = "k8bas config motion start " + System.nanoTime();
 		String end = "k8bas config motion end " + System.nanoTime();
 		AtomicLong clock = new AtomicLong(10_000);
@@ -70,7 +72,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			check(errors.isEmpty(), "no exception or render error logged during the motion: " + errors);
 		} finally {
 			context.runOnClient(client -> {
-				ModuleManager.modules().forEach(module -> module.setEnabled(true));
+				modules.restore();
 				ConfigManager.save();
 			});
 			context.setScreen(() -> null);

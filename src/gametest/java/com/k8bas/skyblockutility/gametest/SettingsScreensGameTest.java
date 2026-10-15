@@ -63,12 +63,14 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 			closingReturnsToTheOpener(context);
 
 			for (Module module : ModuleManager.modules()) {
-				toggleKeyFlipsAndSaves(context, module);
+				if (toggleKey(module) != null) {
+					toggleKeyFlipsAndSaves(context, module);
+				}
 			}
 
 			keybindNamesAreTranslated(context);
 
-			String log = latestLog();
+			String log = withoutDeliberateFailures(latestLog());
 			check(!log.contains("at com.k8bas") && !log.contains("at knot//com.k8bas"), "no exception from com.k8bas in latest.log");
 		}
 	}
@@ -195,6 +197,14 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 		return switch (module.id()) {
 			case "mob_highlighter" -> com.k8bas.skyblockutility.module.mobhighlighter.ModKeybinds.TOGGLE_KEY;
 			case "npc_search" -> com.k8bas.skyblockutility.module.npcsearch.ModKeybinds.TOGGLE_KEY;
+			// REQ-MSA-11 gives the mineshaft alert two settings toggles and no toggle key.
+			case "mineshaft_alert" -> null;
+			// REQ-BOB-07: the bobber fix has its settings toggle and no toggle key.
+			case "bobber_fix" -> null;
+			// REQ-HOT-12: Fishing Hotspots has its settings toggle and no toggle key.
+			case "fishing_hotspots" -> null;
+			// REQ-CORPSE-08: the possible corpse spots have their settings toggle and no toggle key.
+			case "corpse_spots" -> null;
 			default -> throw new AssertionError("no toggle key known for " + module.id());
 		};
 	}
@@ -240,6 +250,21 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 		} else {
 			waitForTitle(context, expectedTitle);
 		}
+	}
+
+	/**
+	 * The log without the failures fixtures cause on purpose: HookStatusGameTest's ForeignBadMixin and OwnBadLateMixin
+	 * (T3.0f) fail when the hook check loads their target classes, so their stack traces pass through com.k8bas.
+	 * Every other entry, stack traces included, stays.
+	 */
+	private static String withoutDeliberateFailures(String log) {
+		StringBuilder kept = new StringBuilder();
+		for (String entry : log.split("\r?\n(?=\\[\\d{2}:\\d{2}:\\d{2}])")) {
+			if (!entry.contains("ForeignBadMixin") && !entry.contains("OwnBadLateMixin")) {
+				kept.append(entry).append('\n');
+			}
+		}
+		return kept.toString();
 	}
 
 	private static String latestLog() {

@@ -8,7 +8,12 @@ import com.google.gson.JsonParser;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.highlight.GlowBehaviourText;
 import com.k8bas.skyblockutility.ui.notice.NoticePosition;
+import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig;
+import com.k8bas.skyblockutility.module.hotspot.HotspotConfig;
+import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsConfig;
+import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
+import com.k8bas.skyblockutility.module.npcsearch.WaypointColors;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
@@ -59,7 +64,8 @@ class OptionCatalogTest {
 	private static final Pattern COMPLIANCE_TOGGLE = Pattern.compile("(?i)(invisible|through.?walls?|x-?ray|see.?through|depth)");
 
 	private static List<Card> catalog() {
-		return OptionCatalog.build(new GeneralConfig(), new MobHighlighterConfig(), new NpcSearchConfig(), enabled -> { }, enabled -> { });
+		return OptionCatalog.build(new GeneralConfig(), new MobHighlighterConfig(), new NpcSearchConfig(), enabled -> { }, enabled -> { },
+				new MineshaftAlertConfig(), enabled -> { });
 	}
 
 	private static List<Option> options() {
@@ -105,6 +111,33 @@ class OptionCatalogTest {
 		expected.put("modules.npc_search.foundTitleEnabled", true);
 		expected.put("modules.npc_search.showBeams", true);
 		expected.put("modules.npc_search.showDistance", true);
+		// REQ-NPCWP-05 (T3.4b): one swatch per island, at its documented default; stored only once changed.
+		WaypointColors.ISLAND_DEFAULTS.forEach((island, colour) -> expected.put("modules.npc_search.islandBeamColors." + island, colour));
+		// REQ-MSA-11 (D-6): the mineshaft entry alert and its key counts ON.
+		expected.put("modules.mineshaft_alert.enabled", true);
+		expected.put("modules.mineshaft_alert.showKeys", true);
+		// REQ-CORPSE-05/08 (R40): the possible corpse spots ON, hidden once every corpse is looted.
+		expected.put("modules.corpse_spots.enabled", true);
+		expected.put("modules.corpse_spots.hideWhenLooted", true);
+		expected.put("modules.corpse_spots.dingHint", true);
+		expected.put("modules.corpse_spots.ruleOutSpots", true);
+		// REQ-BOB-07 (D-6): the bobber fix ON.
+		expected.put("modules.bobber_fix.enabled", true);
+		// REQ-HOT-12 (D-6): Fishing Hotspots, its ring and fill ON; the fill at 25 % (T3.6).
+		expected.put("modules.fishing_hotspots.enabled", true);
+		expected.put("modules.fishing_hotspots.ring", true);
+		expected.put("modules.fishing_hotspots.fill", true);
+		expected.put("modules.fishing_hotspots.fillOpacity", 25);
+		// REQ-HOT-14 (R41 (b)): Hypixel's ring particles hidden.
+		expected.put("modules.fishing_hotspots.hideParticles", true);
+		// REQ-HOT-10/12 (D-6, R12): the warning with title, sound and chat ON, the notice OFF; the pling at full volume (T3.6b).
+		expected.put("modules.fishing_hotspots.warning", true);
+		expected.put("modules.fishing_hotspots.warnTitle", true);
+		expected.put("modules.fishing_hotspots.warnSound", true);
+		expected.put("modules.fishing_hotspots.sound", com.k8bas.skyblockutility.module.hotspot.HotspotSound.PLING);
+		expected.put("modules.fishing_hotspots.soundVolume", 100);
+		expected.put("modules.fishing_hotspots.warnChat", true);
+		expected.put("modules.fishing_hotspots.warnNotice", false);
 		expected.put("options.txt:key.k8bas_skyblock_utility.open_settings", UNBOUND);
 		expected.put("options.txt:key.k8bas_skyblock_utility.mob_highlighter_toggle", UNBOUND);
 		expected.put("options.txt:key.k8bas_skyblock_utility.npc_search_toggle", UNBOUND);
@@ -165,7 +198,8 @@ class OptionCatalogTest {
 				assertFalse(option.text().tooltip().isBlank(), "an AMBER option has a tooltip: " + option.id());
 			}
 		}
-		assertEquals(Set.of("npc_search.enabled", "npc_search.show_distance"), amber);
+		// REQ-BOB-07: the bobber fix is AMBER in PLAN §3 (P6).
+		assertEquals(Set.of("npc_search.enabled", "npc_search.show_distance", "bobber_fix.enabled"), amber);
 	}
 
 	/**
@@ -200,6 +234,8 @@ class OptionCatalogTest {
 		SearchIndex.Result range = index.search("range");
 		assertEquals(List.of("mob_highlighter.scan_range"), range.hits().stream().map(SearchIndex.Entry::id).toList());
 		assertEquals(range.hits(), index.search("  RANGE ").hits());
+		// The wording of `/ksu corpses` finds the toggle that removes those spots (R44).
+		assertTrue(index.search("ruled out").hits().stream().anyMatch(hit -> hit.id().equals("corpse_spots.rule_out")));
 		SearchIndex.Result none = index.search("zzzz");
 		assertTrue(none.hits().isEmpty() && none.categoriesWithHits().isEmpty());
 	}
@@ -210,7 +246,12 @@ class OptionCatalogTest {
 		GeneralConfig general = new GeneralConfig();
 		MobHighlighterConfig mob = new MobHighlighterConfig();
 		NpcSearchConfig npc = new NpcSearchConfig();
-		List<Card> cards = OptionCatalog.build(general, mob, npc, value -> mob.enabled = value, value -> npc.enabled = value);
+		MineshaftAlertConfig shaft = new MineshaftAlertConfig();
+		BobberFixConfig bobber = new BobberFixConfig();
+		HotspotConfig hotspots = new HotspotConfig();
+		CorpseSpotsConfig corpses = new CorpseSpotsConfig();
+		List<Card> cards = OptionCatalog.build(general, mob, npc, value -> mob.enabled = value, value -> npc.enabled = value, shaft, value -> shaft.enabled = value,
+				bobber, hotspots, corpses);
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		for (Card card : cards) {
 			for (Option option : card.all()) {
@@ -218,19 +259,22 @@ class OptionCatalogTest {
 				if (option instanceof Keybind || option instanceof ActionOption) {
 					continue;
 				}
-				Map<String, String> before = leaves(gson, general, mob, npc);
+				Map<String, String> before = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
 				Object original = current(option);
 				change(option);
-				Map<String, String> after = leaves(gson, general, mob, npc);
+				Map<String, String> after = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
 				Set<String> changed = new TreeSet<>();
-				before.forEach((key, value) -> {
-					if (!value.equals(after.get(key))) {
+				// Both ways: an island colour is a map entry that exists only once it differs from its default.
+				Set<String> keys = new TreeSet<>(before.keySet());
+				keys.addAll(after.keySet());
+				for (String key : keys) {
+					if (!java.util.Objects.equals(before.get(key), after.get(key))) {
 						changed.add(key);
 					}
-				});
+				}
 				assertEquals(Set.of(option.storageKey()), changed, option.id());
 				restore(option, original);
-				Map<String, String> restored = leaves(gson, general, mob, npc);
+				Map<String, String> restored = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
 				// A setting absent until picked (R28, the accent) now holds its default: picked, so it is written.
 				if ("null".equals(before.get(option.storageKey()))) {
 					assertEquals(gson.toJson(option.defaultValue()), restored.get(option.storageKey()), option.id() + " holds its default");
@@ -279,7 +323,7 @@ class OptionCatalogTest {
 		Set<String> cardIds = new TreeSet<>();
 		catalog().forEach(card -> cardIds.add(card.id()));
 		assertTrue(cardIds.containsAll(moduleIds), "modules " + moduleIds + " vs cards " + cardIds);
-		assertEquals(2, moduleIds.size());
+		assertEquals(6, moduleIds.size());
 	}
 
 	/** REQ-XC-RULES-07 (P7): no forbidden word in what is shown; "gambling" only as a keyword. */
@@ -368,10 +412,21 @@ class OptionCatalogTest {
 		Map<String, JsonObject> roots = Map.of(
 				"general", gson.toJsonTree(new GeneralConfig()).getAsJsonObject(),
 				"modules.mob_highlighter", gson.toJsonTree(new MobHighlighterConfig()).getAsJsonObject(),
-				"modules.npc_search", gson.toJsonTree(new NpcSearchConfig()).getAsJsonObject());
+				"modules.npc_search", gson.toJsonTree(new NpcSearchConfig()).getAsJsonObject(),
+				"modules.mineshaft_alert", gson.toJsonTree(new MineshaftAlertConfig()).getAsJsonObject(),
+				"modules.bobber_fix", gson.toJsonTree(new BobberFixConfig()).getAsJsonObject(),
+				"modules.fishing_hotspots", gson.toJsonTree(new HotspotConfig()).getAsJsonObject(),
+				"modules.corpse_spots", gson.toJsonTree(new CorpseSpotsConfig()).getAsJsonObject());
 		for (Option option : storedOptions()) {
 			String key = option.storageKey();
 			if (key.startsWith("options.txt:")) {
+				continue;
+			}
+			// An island colour is an entry of the islandBeamColors map, one per documented island.
+			String islands = "modules.npc_search.islandBeamColors.";
+			if (key.startsWith(islands)) {
+				assertTrue(roots.get("modules.npc_search").has("islandBeamColors"), "the map is a real field: " + key);
+				assertTrue(WaypointColors.ISLAND_DEFAULTS.containsKey(key.substring(islands.length())), "a documented island: " + key);
 				continue;
 			}
 			int dot = key.lastIndexOf('.');
@@ -408,13 +463,18 @@ class OptionCatalogTest {
 		}
 	}
 
-	private static Map<String, String> leaves(Gson gson, GeneralConfig general, MobHighlighterConfig mob, NpcSearchConfig npc) {
+	private static Map<String, String> leaves(Gson gson, GeneralConfig general, MobHighlighterConfig mob, NpcSearchConfig npc, MineshaftAlertConfig shaft,
+			BobberFixConfig bobber, HotspotConfig hotspots, CorpseSpotsConfig corpses) {
 		Set<String> keys = new TreeSet<>();
 		Map<String, String> values = new LinkedHashMap<>();
 		JsonObject root = new JsonObject();
 		root.add("general", gson.toJsonTree(general));
 		JsonObject modules = new JsonObject();
 		modules.add("mob_highlighter", gson.toJsonTree(mob));
+		modules.add("mineshaft_alert", gson.toJsonTree(shaft));
+		modules.add("bobber_fix", gson.toJsonTree(bobber));
+		modules.add("fishing_hotspots", gson.toJsonTree(hotspots));
+		modules.add("corpse_spots", gson.toJsonTree(corpses));
 		modules.add("npc_search", gson.toJsonTree(npc));
 		root.add("modules", modules);
 		flatten("", root, keys);

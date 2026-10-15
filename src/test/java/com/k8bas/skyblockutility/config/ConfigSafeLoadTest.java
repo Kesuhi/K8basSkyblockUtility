@@ -196,6 +196,12 @@ class ConfigSafeLoadTest {
 				.getAsJsonObject().addProperty("island", "Dungeon Hub");
 		// Step 2 drops the automatic-download flag; the check flag keeps its value.
 		expected.getAsJsonObject("general").remove("autoUpdateDownloadEnabled");
+		// Step 3: the fixed Croesus and Elizabeth rules are 0x0AA751, not the old green 0x0AA351, so they keep it as
+		// their beam colour.
+		for (int fixed : new int[] {3, 4}) {
+			expected.getAsJsonObject("modules").getAsJsonObject("npc_search").getAsJsonArray("rules").get(fixed)
+					.getAsJsonObject().addProperty("beamColor", 0x0AA751);
+		}
 		JsonObject saved = json(file);
 		assertEquals(expected.get("general"), saved.get("general"));
 		assertEquals(expected.get("modules"), saved.get("modules"));

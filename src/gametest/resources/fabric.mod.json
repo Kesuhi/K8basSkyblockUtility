@@ -20,20 +20,40 @@
 			"com.k8bas.skyblockutility.ui.screen.KeyboardNavGameTest",
 			"com.k8bas.skyblockutility.ui.screen.RuleCardsGameTest",
 			"com.k8bas.skyblockutility.ui.screen.DatabasePickerGameTest",
+			"com.k8bas.skyblockutility.ui.screen.BundledListsGameTest",
 			"com.k8bas.skyblockutility.ui.screen.OpenCloseGameTest",
 			"com.k8bas.skyblockutility.hud.HudGameTest",
 			"com.k8bas.skyblockutility.ui.screen.HudEditorGameTest",
 			"com.k8bas.skyblockutility.highlight.HighlightGameTest",
 			"com.k8bas.skyblockutility.highlight.GlowGameTest",
+			"com.k8bas.skyblockutility.highlight.DungeonNpcGlowGameTest",
 			"com.k8bas.skyblockutility.module.npcsearch.FoundTitleGameTest",
 			"com.k8bas.skyblockutility.module.npcsearch.NpcWaypointGameTest",
+			"com.k8bas.skyblockutility.ui.screen.BeamColorSettingsGameTest",
 			"com.k8bas.skyblockutility.update.UpdateNoticeGameTest",
 			"com.k8bas.skyblockutility.gametest.DebugToolsGameTest",
+			"com.k8bas.skyblockutility.skyblock.GameStateReadersGameTest",
+			"com.k8bas.skyblockutility.skyblock.ChatReaderGameTest",
+			"com.k8bas.skyblockutility.skyblock.InventoryReaderGameTest",
+			"com.k8bas.skyblockutility.skyblock.MineshaftStateGameTest",
+			"com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertGameTest",
+			"com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsGameTest",
+			"com.k8bas.skyblockutility.module.bobberfix.BobberFixGameTest",
+			"com.k8bas.skyblockutility.module.hotspot.HotspotGameTest",
+			"com.k8bas.skyblockutility.module.hotspot.HotspotGoneGameTest",
+			"com.k8bas.skyblockutility.skyblock.ProfileServiceGameTest",
+			"com.k8bas.skyblockutility.skyblock.MenuReaderGameTest",
+			"com.k8bas.skyblockutility.gametest.hook.HookStatusGameTest",
+			"com.k8bas.skyblockutility.data.BundledDataGameTest",
 			"com.k8bas.skyblockutility.gametest.SettingsScreensGameTest"
 		]
 	},
 	"depends": {
+		"fabricloader": ">=0.19.5",
 		"k8bas_skyblock_utility": "*",
 		"fabric-client-gametest-api-v1": "*"
-	}
+	},
+	"mixins": [
+		"k8bas_skyblock_utility_gametest.mixins.json"
+	]
 }

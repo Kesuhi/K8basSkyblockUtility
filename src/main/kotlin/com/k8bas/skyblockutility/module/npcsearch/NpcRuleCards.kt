@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.module.npcsearch
 import com.k8bas.skyblockutility.settings.RuleFields
 import com.k8bas.skyblockutility.ui.option.ActionOption
 import com.k8bas.skyblockutility.ui.option.Binding
+import com.k8bas.skyblockutility.ui.option.ColorOption
 import com.k8bas.skyblockutility.ui.option.InfoOption
 import com.k8bas.skyblockutility.ui.option.Option
 import com.k8bas.skyblockutility.ui.option.OptionText
@@ -13,6 +14,7 @@ import java.util.Collections
 import java.util.IdentityHashMap
 import java.util.function.Consumer
 import java.util.function.Function
+import java.util.function.Predicate
 import java.util.function.IntSupplier
 import java.util.function.Supplier
 
@@ -20,19 +22,22 @@ import java.util.function.Supplier
  * NPC Search's rule cards (REQ-UI-11): enabled, label, island, name match and pattern for a moving NPC,
  * the position read-only for a fixed one, and a destructive Remove in the header. A rule from the NPC
  * Database (it has a `sourceId`) shows only enabled and, when fixed, its position: the database gave it
- * the rest. NPCs have no colour of their own: NPC Search draws them in white (R31). Every edit is stored
+ * the rest. A fixed NPC also has its beam colour, with "Use island colour" (T3.4b, REQ-NPCWP-06). NPCs
+ * have no label or outline colour of their own: NPC Search draws them in white (R31). Every edit is stored
  * at once and `changed` applies it (outlines and waypoints follow live); Remove is written at once by
  * the screen. Kept per rule object, so a card keeps its widgets while the rule lives.
  *
  * @param problem  why a moving NPC's rule does nothing, or null (a fixed one always works)
  * @param position a fixed NPC's position as shown, e.g. "12, 70, -34"
  * @param changed  stores the section and rebuilds the outlines and waypoints after an edit
+ * @param known    whether a rule's sourceId is still in the database; one that is not shows as a custom rule (EC-NPCDB-01)
  */
-class NpcRuleCards(
+class NpcRuleCards @JvmOverloads constructor(
 	private val config: NpcSearchConfig,
 	private val problem: Function<NpcRule, String?>,
 	private val position: Function<NpcRule, String>,
 	private val changed: Runnable,
+	private val known: Predicate<String> = Predicate { true },
 ) {
 	private val groups = IdentityHashMap<NpcRule, RuleGroup>()
 
@@ -54,7 +59,7 @@ class NpcRuleCards(
 		val memo = ProblemMemo(rule)
 		// A rule from the database: its label, island, name match and pattern are the database's (R31). One that
 		// already does nothing (edited before 1.2.0, e.g. an invalid pattern) keeps its full card, so it can be fixed.
-		val fromDatabase = rule.sourceId != null && memo.get() == null
+		val fromDatabase = rule.sourceId?.let { known.test(it) } == true && memo.get() == null
 		val fields = ArrayList<Option>()
 		fields.add(
 			Toggle.of(
@@ -79,6 +84,31 @@ class NpcRuleCards(
 					Supplier { position.apply(rule) },
 				),
 			)
+			fields.add(
+				ColorOption.of(
+					"$id.beam_color", KEY + "beamColor",
+					OptionText(
+						"Beam colour", "This NPC's own beam colour; without one it follows its island's.",
+						"Changing it gives the NPC its own colour. \"Use island colour\" goes back to the island's.",
+						java.util.List.of("beam", "colour", "color"),
+					),
+					WaypointColors.GLOBAL_DEFAULT, false,
+					Binding.of({ WaypointColors.beamColor(rule, config.islandBeamColors) }, { value ->
+						val rgb = value and 0xFFFFFF
+						// Saving the island's own colour unchanged keeps following the island.
+						if (rule.beamColor != null || rgb != WaypointColors.islandColor(rule.island, config.islandBeamColors)) {
+							edit { rule.beamColor = rgb }
+						}
+					}),
+				),
+			)
+			fields.add(
+				ActionOption(
+					"$id.use_island_color",
+					OptionText("Use island colour", "Drops the NPC's own colour.", "Its beam follows its island's colour again.", java.util.List.of()),
+					"Reset", false, Runnable { edit { rule.beamColor = null } },
+				),
+			)
 		} else if (!fromDatabase) {
 			fields.add(
 				RuleFields.matchMode(
@@ -94,7 +124,7 @@ class NpcRuleCards(
 				).invalidWhen { RuleFields.aboutPattern(memo.get()) },
 			)
 		}
-		// No colour field and a white dot: NPC Search draws every NPC in white; the stored colour is kept, unused (R31).
+		// No label colour field and a white dot: NPC Search draws every NPC in white; the stored colour is kept, unused (R31).
 		return RuleGroup(
 			id, Supplier { rule.label }, IntSupplier { WHITE }, Supplier { memo.get() },
 			Supplier { java.util.List.of(nullToEmpty(rule.label), nullToEmpty(rule.namePattern)) }, fields,

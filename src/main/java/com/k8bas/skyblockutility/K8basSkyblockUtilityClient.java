@@ -1,17 +1,26 @@
 package com.k8bas.skyblockutility;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.data.BundledData;
 import com.k8bas.skyblockutility.debug.ContainerDump;
 import com.k8bas.skyblockutility.debug.DebugCommand;
+import com.k8bas.skyblockutility.debug.SoundDump;
+import com.k8bas.skyblockutility.hook.HookStatus;
 import com.k8bas.skyblockutility.highlight.GlowHandler;
 import com.k8bas.skyblockutility.highlight.HighlightManager;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
+import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule;
+import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsModule;
+import com.k8bas.skyblockutility.module.hotspot.HotspotModule;
+import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertModule;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
+import com.k8bas.skyblockutility.render.marker.RingPipeline;
 import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
+import com.k8bas.skyblockutility.skyblock.GameStateReaders;
 import com.k8bas.skyblockutility.hud.HudRenderer;
 import com.k8bas.skyblockutility.hud.ShippedHud;
 import com.k8bas.skyblockutility.ui.screen.HudEditorScreen;
@@ -57,26 +66,41 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 			}
 		});
 		IslandTracker.register();
+		// Read-only tab and sidebar readers; they read only while an enabled feature subscribes.
+		GameStateReaders.register();
 		// Rule matching runs once per tick on the client thread; rendering only reads the results.
 		ClientTickEvents.END_CLIENT_TICK.register(HighlightManager::tick);
 		GlowHandler.register();
 		// The world marker toolkit; features add their marker providers as they register.
 		WorldMarkers.register();
+		// Rings get a shaderpack program under Iris (their pipeline is ours, so Iris can be given it).
+		RingPipeline.registerWithIris();
 
 		ModuleManager.register(new MobHighlighterModule());
 		ModuleManager.register(new NpcSearchModule());
+		ModuleManager.register(new MineshaftAlertModule());
+		ModuleManager.register(new CorpseSpotsModule());
+		ModuleManager.register(new BobberFixModule());
+		ModuleManager.register(new HotspotModule());
 		// Future modules get registered here, one line each.
 
 		SettingsKeybind.register();
 		SettingsCommand.register();
 		DebugCommand.register();
 		ContainerDump.register();
+		SoundDump.register();
 		Updates.register();
 		NoticeHooks.register();
 		ShippedHud.register();
 		HudRenderer.register();
 		HudRenderer.setEditorOpen(() -> Minecraft.getInstance().gui.screen() instanceof HudEditorScreen);
 
+		// The optional cosmetic hooks (AD-9): their target classes are loaded now, so each card knows whether its
+		// hook went in; one warning per hook that did not.
+		HookStatus.settle();
+		// Bundled tables load off the client thread, once every feature has registered its tables, so the startup
+		// log lists what they use; a table registered later still loads.
+		BundledData.start();
 		LOGGER.info("K8bas Skyblock Utility initialized with {} module(s)", ModuleManager.modules().size());
 	}
 }

@@ -8,13 +8,26 @@ import java.util.Set;
  * client thread each time the picker draws, so it follows the fetch and the rules as they change.
  */
 public interface RuleDatabase {
-	/** Whether the list is still loading, ready, or could not be fetched (then nothing can be added, EC-UI-08). */
+	/** Whether the list is still loading, ready, or could not be read (then nothing can be added, EC-UI-08). */
 	enum State {
 		LOADING, READY, UNAVAILABLE
 	}
 
-	/** One entry: its folder is the island it belongs to, and an optional sub-folder (e.g. an event). */
-	record Entry(String id, String name, String folder, String subfolder, String searchText) {
+	/** What the picker shows instead of Add for a mob that is invisible by design (REQ-NPCDB-08, R5). */
+	String NEVER_HIGHLIGHTED = "never highlighted (Hypixel rules)";
+
+	/**
+	 * One entry: its folder is the island it belongs to, and an optional sub-folder (e.g. an event). An entry with
+	 * a note is listed greyed with the note instead of Add and cannot be added (REQ-NPCDB-08).
+	 */
+	record Entry(String id, String name, String folder, String subfolder, String searchText, String note) {
+		public Entry(String id, String name, String folder, String subfolder, String searchText) {
+			this(id, name, folder, subfolder, searchText, null);
+		}
+
+		public boolean addable() {
+			return note == null;
+		}
 	}
 
 	/** The picker's title, e.g. "Mob Database". */

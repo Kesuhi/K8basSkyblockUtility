@@ -1,87 +1,58 @@
 package com.k8bas.skyblockutility.module.mobhighlighter
 
-import com.k8bas.skyblockutility.K8basSkyblockUtilityClient
-import com.k8bas.skyblockutility.net.SharedHttpClient
+import com.k8bas.skyblockutility.data.BundledData
+import com.k8bas.skyblockutility.data.TableHandle
+import com.k8bas.skyblockutility.data.TableState
 import com.k8bas.skyblockutility.ui.option.RuleDatabase
-import com.k8bas.skyblockutility.util.JsonEntries
-import java.net.URI
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.function.Consumer
-import java.util.function.Predicate
 
 /**
- * Fetched fresh from a public Gist — deliberately not cached to disk, so entries added to the
- * Gist show up next launch without shipping a mod update. If the fetch hasn't completed yet (or
- * failed), the picker says so (state()).
- *
- * Fetched at module registration (mod startup), not lazily on first picker-open — opening the
- * picker for the first time in a session should never show the "still loading" message if it can
- * be helped, so the fetch gets a head start before the player is likely to have opened it.
+ * The mob list for Mob Highlighter (T3.8, REQ-NPCDB-03, REQ-NPCDB-04): the bundled `npcdb.mobs` table, so the
+ * picker works offline from the first launch and nothing is fetched or cached. It is loading until the registry
+ * has read the table, then ready, or unavailable if the table could not be read (the picker says so, EC-UI-08).
  */
 object MobDatabase {
-	private const val RAW_URL = "https://gist.githubusercontent.com/Kesuhi/f68f11d96e15342f36c2402fde8d5ac1/raw/mob_database.json"
-	private val fetchStarted = AtomicBoolean(false)
+	private val table: TableHandle<MobList> by lazy { BundledData.table(MobTable.SPEC) }
 
+	/** Set by gametests: a list and state in place of the bundled table. */
 	@Volatile
-	private var entries: List<MobDatabaseEntry> = java.util.List.of()
+	private var testList: Pair<MobList, RuleDatabase.State>? = null
 
-	/** Loading until the fetch ends; then ready, or unavailable if it failed (the picker says so, EC-UI-08). */
+	/** Set by gametests: another registry's table in place of the bundled one (AC-DATA-05). */
 	@Volatile
-	private var state: RuleDatabase.State = RuleDatabase.State.LOADING
+	private var testTable: TableHandle<MobList>? = null
 
-	/** Idempotent — only actually starts the fetch the first time this is called. */
+	/** Registers the table with the registry; called once from the module, before the registry starts. */
 	@JvmStatic
-	fun fetchIfNeeded() {
-		if (!fetchStarted.compareAndSet(false, true)) {
-			return
-		}
-		Thread.ofVirtual().name("k8bas-mob-database-fetch").start {
-			val body = SharedHttpClient.fetchText(URI.create(RAW_URL), "Mob database fetch", Consumer { K8basSkyblockUtilityClient.LOGGER.warn(it) })
-			if (body == null) {
-				state = RuleDatabase.State.UNAVAILABLE
-				return@start
-			}
-			try {
-				entries = parse(body)
-				state = RuleDatabase.State.READY
-				K8basSkyblockUtilityClient.LOGGER.info("Loaded {} mob database entries", entries.size)
-			} catch (e: RuntimeException) {
-				state = RuleDatabase.State.UNAVAILABLE
-				K8basSkyblockUtilityClient.LOGGER.warn("Mob database is not a list of entries: {}", e.toString())
-			}
-		}
+	fun register() {
+		table
 	}
 
-	/**
-	 * The gist's JSON array as an immutable list; an empty document gives an empty list, and
-	 * malformed entries are skipped with one warning (REQ-NPCDB-05).
-	 */
 	@JvmStatic
-	fun parse(json: String?): List<MobDatabaseEntry> {
-		val parsed = JsonEntries.parse(json, MobDatabaseEntry::class.java, Predicate { valid(it) })
-		if (parsed.skipped > 0) {
-			K8basSkyblockUtilityClient.LOGGER.warn("Skipped {} malformed mob database entries", parsed.skipped)
-		}
-		return parsed.entries
+	fun state(): RuleDatabase.State = testList?.second ?: when ((testTable ?: table).state()) {
+		is TableState.Loaded -> RuleDatabase.State.READY
+		is TableState.Unavailable -> RuleDatabase.State.UNAVAILABLE
+		else -> RuleDatabase.State.LOADING
 	}
 
-	/** An id, a name, an island and a match text. */
-	@JvmStatic
-	fun valid(entry: MobDatabaseEntry): Boolean =
-		entry.id != null && entry.displayName != null && entry.island != null && !JsonEntries.isBlank(entry.matchText)
+	private fun list(): MobList = testList?.first ?: (testTable ?: table).value() ?: MobList.EMPTY
 
+	/** Every entry, in table order (empty until loaded). */
 	@JvmStatic
-	fun state(): RuleDatabase.State = state
+	fun entries(): List<MobDatabaseEntry> = list().entries
 
-	/** Every entry, in the gist's order (empty until loaded). */
+	/** The entry with this id or alias, or null if there is none (also while the list is still loading). */
 	@JvmStatic
-	fun entries(): List<MobDatabaseEntry> = entries
+	fun byId(id: String?): MobDatabaseEntry? = list().byId(id)
 
-	/** For gametests, which have no network: the list as if it had been fetched (or had failed). */
+	/** For gametests: the list as if the table held it (or had failed); null goes back to the bundled table. */
 	@JvmStatic
-	fun useForTest(list: List<MobDatabaseEntry>, newState: RuleDatabase.State) {
-		fetchStarted.set(true)
-		entries = java.util.List.copyOf(list)
-		state = newState
+	fun useForTest(list: List<MobDatabaseEntry>?, newState: RuleDatabase.State?) {
+		testList = if (list == null || newState == null) null else MobList.of(list) to newState
+	}
+
+	/** For gametests: read the list from [handle] (e.g. a registry without the mob table); null goes back. */
+	@JvmStatic
+	fun useTableForTest(handle: TableHandle<MobList>?) {
+		testTable = handle
 	}
 }

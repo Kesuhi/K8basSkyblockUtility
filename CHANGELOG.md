@@ -6,6 +6,134 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-10-15
+
+This release brings helpers for mining in Glacite Mineshafts (an entry alert with your corpse keys,
+possible corpse spots and an Organ Donor ding hint) and for fishing (hotspot rings with a warning when
+yours disappears, and a smoother bobber), and beam colours you can change.
+
+**Requirements:** Minecraft 26.2 (Fabric) with Java 25, Fabric Loader 0.19.5 or newer, Fabric API
+0.161.0 or newer, Fabric Language Kotlin 1.14.1 or newer and Hypixel Mod API 1.0.2 or newer (its
+build labelled `mc26.1` also runs on 26.2), the same as for 1.2.0. Render Chest 1.0.3 is bundled.
+Mod Menu is optional.
+
+**Upgrading from 1.2.0:**
+- Install this version by hand: 1.2.0's update check only notifies. Replace
+  `k8bas_skyblock_utility-1.2.0+26.2.jar` with `k8bas_skyblock_utility-1.2.1+26.2.jar` and restart.
+  No other mod needs to change.
+- Your settings, rules and keybinds are kept. The new features start ON (see the defaults below);
+  they live in the new Mining and Fishing categories of the settings, where each can be turned off.
+- On the first start, a fixed NPC whose colour from 1.0.x or 1.1.0 was not the default green gets
+  that colour back as its beam colour. "Use island colour" on its card undoes it.
+- What behaves differently (details under "Changed"): the NPC and mob lists ship inside the mod and
+  are no longer downloaded; the hidden Jerries have their own "Hidden Jerries" folder; Ghost, Fels,
+  Sneaky Creeper and Invisibug are no longer in the mob list; the pickers no longer offer an entry
+  you already made a rule for yourself; a rule whose list entry is gone shows all its fields.
+- If you go back to 1.2.0 later, it first copies the newer settings file to a `.bak` file and tells
+  you in chat.
+
+**Defaults in this version:**
+- Mineshaft entry alert (Mining): ON. Show corpse key counts: ON.
+- Possible corpse spots (Mining): ON. Hide spots when all corpses are looted: ON. Organ Donor ding
+  hint: ON, with its "Corpse ding" HUD line at the top centre, below the boss bar. Remove ruled-out
+  spots: ON.
+- Bobber Fix (Fishing): ON.
+- Fishing Hotspots (Fishing): ON. Highlight ring: ON. Filled area: ON. Fill opacity: 25 % (0–100 %).
+  Hide Hypixel's hotspot particles: ON.
+- Hotspot gone warning: ON. Warning title: ON. Warning sound: ON, with Sound "Note block pling" at
+  Sound volume 100 %. Warning chat message: ON. Also show as a notice: OFF.
+- Island beam colours: each island's own, as in 1.2.0 (for example red on the Crimson Isle), and
+  green `#0AA351` for a waypoint shown on every island. A fixed NPC's beam follows its island's
+  colour until you give it its own (or it kept one from 1.0.x or 1.1.0, see above).
+- Every option that 1.2.0 had keeps its 1.2.0 default.
+
+### Added
+
+- Mineshaft entry alert (Mining, ON by default): when you enter a Glacite Mineshaft, one chat line
+  that only you see names the shaft, lists its frozen corpses (Lapis, Tungsten, Umber, Vanguard, with
+  any already looted) and shows how many of each needed key are in your inventory and offhand, with ⚠
+  in red when you have too few. A corpse added by a Dead Man's Chest within 30 s gives one update. It
+  reads Hypixel's Frozen Corpses tab widget; if the widget is off or cut off, the line says so and
+  tells you once how to turn it on. A key in a sack or in storage does not open a corpse, so it is
+  not counted; when you are short and your Dwarven Mines Sack held keys the last time you opened it,
+  the line adds how many to take out and a [Take out n] button: clicking it runs /getfromsacks for
+  just the missing keys. The mod never runs it by itself. "Show corpse key counts" (ON) turns the key
+  part off.
+- Possible corpse spots (Mining, ON by default): in a Glacite Mineshaft, a "Possible corpse #n"
+  label at every place a frozen corpse can spawn in that layout (spots are known for 29 of the 34
+  shaft types), shown even behind blocks. These are known spawn spots from community data
+  (SkyHanni-REPO, meowdding-repo, ShaftUtils), not detected corpses. "Hide spots when all corpses are
+  looted" (ON) removes them once the Frozen Corpses tab widget lists every corpse as looted. `/ksu
+  corpses` lists the spots by distance. With an Organ Donor accessory, a "Corpse ding" HUD line
+  (movable in the HUD editor) says "far", "close" or "very close" from how high its ding sounds
+  ("Organ Donor ding hint", ON). Once it has dinged in a shaft, a spot you spent 4 s within 16 blocks
+  of without a ding is removed, since the ding plays for every unlooted corpse within 20 blocks;
+  removed spots come back when the widget lists a new corpse or in another shaft, and `/ksu corpses`
+  marks them "ruled out" ("Remove ruled-out spots", ON).
+- Beam colours you can change: Waypoints › "Island beam colours" has a colour per island (picker
+  and hex), and a fixed NPC's card has its own "Beam colour" and "Use island colour". Changes show
+  on the beams at once.
+- Bobber Fix (Fishing, ON by default): on SkyBlock, your own bobber floats smoothly instead of
+  jumping back every moment, and it floats on lava as it does on water. Only how your bobber is
+  drawn changes; the server still decides bites and catches. Other players' bobbers and other
+  servers are unchanged. If a game update or another mod blocks it, the game still starts and the
+  card says it is unavailable. Thanks to SkyOcean for finding the cause.
+- `/ksu corpses` is a command now: text after `/ksu` that starts with `corpses` runs it instead of
+  searching the settings; search `corpse` to find the corpse settings.
+- `/ksu debug data`: lists the data tables bundled in the mod and their versions, in chat only.
+- `/ksu debug dump sounds on|off`: for 10 minutes, every sound the game plays is written to the log
+  with its name, place, volume and pitch, to identify sounds such as the Organ Donor ding. It only
+  listens; no sound is changed and nothing is sent.
+- Fishing Hotspots (Fishing, ON by default): on every SkyBlock island, each fishing hotspot whose
+  name you can see gets a ring on the water or lava in its buff's colour (Sea Creature Chance dark
+  aqua, Fishing Speed aqua, Double Hook Chance blue, Treasure and Trophy Fish gold, Shards yellow),
+  with a see-through filled area. Walls hide the ring. Its size comes from the hotspot's own
+  particles. "Highlight ring", "Filled area" and "Fill opacity" change the look. Rings also show with
+  Iris shaderpacks. "Hide Hypixel's hotspot particles" (ON) stops drawing Hypixel's own pink or smoke
+  particle ring around a hotspot with a ring; the game still receives them, and the ring's size is
+  still measured from them.
+- Hotspot gone warning (ON): when the hotspot you are fishing in disappears, you get "Hotspot
+  gone!" on screen with its buff, a sound (choose one and its volume) and a chat line, each with
+  its own switch; a notice can be added. It only counts a hotspot your bobber was in during the
+  last 30 seconds while you are within 40 blocks, so leaving the island or flying away is not a
+  warning. Only you see or hear it.
+
+### Changed
+
+- A fixed NPC whose colour from 1.0.x or 1.1.0 was not the default green now uses that colour for
+  its beam (in 1.2.0 its beam had the island colour), so no colour you picked is lost; NPCs on the
+  default green keep their island's colour. "Use island colour" on its card undoes it.
+- The NPC and mob lists for "Add from database" now ship inside the mod. They are no longer
+  downloaded at start, so both pickers work offline and on the first launch, and the mod makes no
+  request to GitHub gists any more. Apart from the corrections in this section (merged duplicates,
+  updated positions, the Hidden Jerries folder, the mineshaft entries and the removed invisible mobs),
+  they hold the same entries as the lists 1.2.0 downloaded.
+- The four hidden Jerries (Blue, Green, Purple and Golden Jerry) are now in a mob folder called
+  "Hidden Jerries" instead of "Jerry", which is also the name of Jerry's Workshop. Rules you made
+  from them keep working on every island.
+- The NPC list is built from NotEnoughUpdates-REPO (MIT); `THIRD_PARTY_NOTICES.md` and the jar's
+  `META-INF/licenses/` now carry its notice and licence.
+- Ghost, Fels, Sneaky Creeper and Invisibug are no longer in the mob list: they are invisible by
+  design, and the mod never outlines invisible mobs, so a rule for them would do nothing.
+- The pickers treat an entry as already added when one of your own rules has the same name pattern
+  and island (for example a Trinity rule you made yourself), and no longer offer it again.
+- A rule whose list entry no longer exists shows all its fields again, like a rule you made yourself;
+  it keeps working with the values it has.
+
+### Fixed
+
+- NPCs listed twice in the NPC list are merged: Bramass Beastslayer (also listed as "Bestiary"),
+  Hendrik, the Fishing Merchant (an old spot from before the Hub rebuild) and the Forge Foreman (also
+  listed as "Fred"). Waypoints you added from either entry keep working and now point at the right
+  block; searching the picker for the old name still finds the NPC.
+- Gemma's and Scoop's waypoints point at their current positions.
+- When the mod reads a mob's or NPC's name, it skips "CLICK" labels, empty lines and hidden names, so an
+  NPC is matched by its name even where its "CLICK" label floats nearer than the name.
+- Glacite Bowman, Caver, Mage, Mutt and Littlefoot are also listed under "Glacite Mineshafts", as
+  "Glacite Bowman (Mineshafts)" and so on, so a rule added from there works inside a mineshaft.
+- If you added an NPC twice under two of its names (for example "Fred" and "Forge Foreman"), its
+  waypoint is drawn once. Both rules stay in your settings.
+
 ## [1.2.0] - 2026-10-09
 
 This release brings the mod's own settings screen, with a search that finds every option and rule,
