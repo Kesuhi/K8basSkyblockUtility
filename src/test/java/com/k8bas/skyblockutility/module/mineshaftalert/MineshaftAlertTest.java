@@ -3,6 +3,8 @@ package com.k8bas.skyblockutility.module.mineshaftalert;
 import com.k8bas.skyblockutility.skyblock.Corpse;
 import com.k8bas.skyblockutility.skyblock.CorpseList;
 import com.k8bas.skyblockutility.skyblock.InventoryCounts;
+import com.k8bas.skyblockutility.skyblock.MenuSlot;
+import com.k8bas.skyblockutility.skyblock.MenuSnapshot;
 import com.k8bas.skyblockutility.skyblock.MineshaftSnapshot;
 import com.k8bas.skyblockutility.skyblock.SlotItem;
 import com.k8bas.skyblockutility.skyblock.WidgetPresence;
@@ -22,13 +24,13 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The mineshaft entry alert (T3.2, REQ-MSA-01..REQ-MSA-12; AC-MSA-01, AC-MSA-03..AC-MSA-09, AC-MSA-13, AC-MSA-14 [A]).
  * The widget lines and the sidebar code follow the G1 captures (tab-mineshaft.txt, sidebar-mineshaft.txt); the
- * key ids and the sack rule are SPEC's (D-7, R24), the sack check is UNVERIFIED until G3.
+ * key ids and the inventory-only rule are SPEC's (D-7, restored by R41); the sack reminder follows the G3 capture of the
+ * Dwarven Mines Sack (SackKeysTest).
  */
 class MineshaftAlertTest {
 	private static final String HINT = "TEST HINT";
@@ -60,14 +62,14 @@ class MineshaftAlertTest {
 	void theLineListsTheShaftCorpsesAndKeys() {
 		// AC-MSA-01.
 		Component line = MineshaftAlertText.alert("Opal 1", List.of(corpse("Lapis", false), corpse("Tungsten", false), corpse("Umber", false)),
-				keys(Map.of("TUNGSTEN_KEY", 2)), true, false);
+				keys(Map.of("TUNGSTEN_KEY", 2)), true);
 		assertEquals("Opal 1 · 1 Lapis, 1 Tungsten, 1 Umber · Tungsten Key: 2 in inventory · Umber Key: 0 in inventory ⚠", text(line));
 	}
 
 	@Test
 	void typesAreInTheFixedOrderWithLootedOnesNoted() {
 		Component line = MineshaftAlertText.alert("Vanguard", List.of(corpse("Vanguard", false), corpse("Umber", true), corpse("Lapis", false),
-				corpse("Umber", false)), keys(Map.of("UMBER_KEY", 5, "SKELETON_KEY", 1)), true, false);
+				corpse("Umber", false)), keys(Map.of("UMBER_KEY", 5, "SKELETON_KEY", 1)), true);
 		assertEquals("Vanguard · 1 Lapis, 2 Umber (1 looted), 1 Vanguard · Umber Key: 5 in inventory · Skeleton Key: 1 in inventory", text(line));
 	}
 
@@ -75,17 +77,17 @@ class MineshaftAlertTest {
 	void theShortageMarkerFollowsTheKeysNeeded() {
 		// AC-MSA-04.
 		Component short1 = MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false), corpse("Tungsten", false)),
-				keys(Map.of("TUNGSTEN_KEY", 1)), true, false);
+				keys(Map.of("TUNGSTEN_KEY", 1)), true);
 		assertTrue(text(short1).endsWith("Tungsten Key: 1 in inventory ⚠"), text(short1));
 		assertEquals(TextColor.fromLegacyFormat(ChatFormatting.RED), countColour(short1));
 		Component enough = MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false), corpse("Tungsten", false)),
-				keys(Map.of("TUNGSTEN_KEY", 2)), true, false);
+				keys(Map.of("TUNGSTEN_KEY", 2)), true);
 		assertTrue(text(enough).endsWith("Tungsten Key: 2 in inventory"), text(enough));
 		assertEquals(TextColor.fromLegacyFormat(ChatFormatting.GREEN), countColour(enough));
 		Component halfLooted = MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", true), corpse("Tungsten", false)),
-				keys(Map.of("TUNGSTEN_KEY", 1)), true, false);
+				keys(Map.of("TUNGSTEN_KEY", 1)), true);
 		assertEquals("Tungsten 1 · 2 Tungsten (1 looted) · Tungsten Key: 1 in inventory", text(halfLooted));
-		Component lapis = MineshaftAlertText.alert("Opal 1", List.of(corpse("Lapis", false)), InventoryCounts.EMPTY, true, false);
+		Component lapis = MineshaftAlertText.alert("Opal 1", List.of(corpse("Lapis", false)), InventoryCounts.EMPTY, true);
 		assertEquals("Opal 1 · 1 Lapis · no keys needed", text(lapis));
 	}
 
@@ -93,11 +95,11 @@ class MineshaftAlertTest {
 	void anUnknownTypeIsListedByNameAfterTheKnownOnesWithNoKeyEntry() {
 		// EC-MSA-07: a type not known yet comes after Lapis..Vanguard, by its raw name, with no key entry.
 		Component mixed = MineshaftAlertText.alert("Opal 1", List.of(corpse("Glacite", false), corpse("Umber", false), corpse("Glacite", true)),
-				keys(Map.of("UMBER_KEY", 1)), true, false);
+				keys(Map.of("UMBER_KEY", 1)), true);
 		assertEquals("Opal 1 · 1 Umber, 2 Glacite (1 looted) · Umber Key: 1 in inventory", text(mixed));
-		Component only = MineshaftAlertText.alert("Opal 1", List.of(corpse("Glacite", false)), InventoryCounts.EMPTY, true, false);
+		Component only = MineshaftAlertText.alert("Opal 1", List.of(corpse("Glacite", false)), InventoryCounts.EMPTY, true);
 		assertEquals("Opal 1 · 1 Glacite", text(only), "no 'no keys needed' for a type that may need one");
-		Component withLapis = MineshaftAlertText.alert("Opal 1", List.of(corpse("Glacite", false), corpse("Lapis", false)), InventoryCounts.EMPTY, true, false);
+		Component withLapis = MineshaftAlertText.alert("Opal 1", List.of(corpse("Glacite", false), corpse("Lapis", false)), InventoryCounts.EMPTY, true);
 		assertEquals("Opal 1 · 1 Lapis, 1 Glacite", text(withLapis));
 		assertEquals(List.of("Glacite"), MineshaftAlertText.unknownTypes(List.of(corpse("Lapis", false), corpse("Glacite", false), corpse("Glacite", true))));
 	}
@@ -105,7 +107,7 @@ class MineshaftAlertTest {
 	@Test
 	void theBodyIsYellowSoTheGoldTagStandsApart() {
 		// The chat helper's [KSU] tag is gold; a body with no colour of its own would inherit it.
-		Component line = MineshaftAlertText.alert("Opal 1", List.of(corpse("Lapis", false), corpse("Umber", false)), InventoryCounts.EMPTY, true, false);
+		Component line = MineshaftAlertText.alert("Opal 1", List.of(corpse("Lapis", false), corpse("Umber", false)), InventoryCounts.EMPTY, true);
 		Component wrapped = Component.literal("[KSU] ").withStyle(ChatFormatting.GOLD).append(line);
 		TextColor yellow = TextColor.fromLegacyFormat(ChatFormatting.YELLOW);
 		for (Component part : List.of(wrapped, Component.literal("[KSU] ").withStyle(ChatFormatting.GOLD).append(MineshaftAlertText.unavailable("Opal 1")),
@@ -133,8 +135,8 @@ class MineshaftAlertTest {
 	}
 
 	@Test
-	void hoveringAKeyEntrySaysSacksAreNotCounted() {
-		Component line = MineshaftAlertText.alert("Opal 1", List.of(corpse("Umber", false)), InventoryCounts.EMPTY, true, false);
+	void hoveringAKeyEntrySaysSackKeysDoNotOpenACorpse() {
+		Component line = MineshaftAlertText.alert("Opal 1", List.of(corpse("Umber", false)), InventoryCounts.EMPTY, true);
 		List<String> hovers = new ArrayList<>();
 		line.visit((style, part) -> {
 			if (style.getHoverEvent() instanceof HoverEvent.ShowText show) {
@@ -142,22 +144,41 @@ class MineshaftAlertTest {
 			}
 			return java.util.Optional.empty();
 		}, net.minecraft.network.chat.Style.EMPTY);
-		assertTrue(hovers.stream().anyMatch(hover -> hover.contains("sacks") && hover.contains("storage") && hover.contains("not counted")), hovers.toString());
+		assertTrue(hovers.stream().anyMatch(hover -> hover.contains("sack") && hover.contains("storage") && hover.contains("does not open a corpse")), hovers.toString());
 	}
 
 	@Test
 	void withoutKeyCountsTheLineHasNoKeyPart() {
 		// AC-MSA-09: "Show corpse key counts" OFF.
-		Component line = MineshaftAlertText.alert("Opal 1", List.of(corpse("Umber", false)), InventoryCounts.EMPTY, false, false);
+		Component line = MineshaftAlertText.alert("Opal 1", List.of(corpse("Umber", false)), InventoryCounts.EMPTY, false);
 		assertEquals("Opal 1 · 1 Umber", text(line));
 	}
 
 	@Test
-	void underTheSackFallbackNoShortageIsShown() {
-		// AC-MSA-13, with the build constant switched on; off, AC-MSA-04 holds (above).
-		Component line = MineshaftAlertText.alert("Umber 1", List.of(corpse("Umber", false)), InventoryCounts.EMPTY, true, true);
-		assertEquals("Umber 1 · 1 Umber · Umber Key: 0 in inventory (sack keys also work)", text(line));
-		assertFalse(MineshaftAlertText.SACK_KEYS_WORK, "D-7 stands until the G3 sack check (R24)");
+	void aShortEntryNamesTheKeysInTheSack() {
+		// AC-MSA-13 (R41 (a)): the sack as last seen in the Dwarven Mines Sack menu: 3 Tungsten Keys, no Umber Key slot.
+		SackKeys sack = new SackKeys();
+		sack.menu(new MenuSnapshot("Dwarven Mines Sack", 58, 36, List.of(new MenuSlot(22, "minecraft:paper", 1, "Tungsten Key",
+				List.of("Dwarven Mines Sack", "", "Stored: 3/22.2k"), "TUNGSTEN_KEY"))));
+		Component line = MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false), corpse("Umber", false)), InventoryCounts.EMPTY, true, sack);
+		assertEquals("Tungsten 1 · 1 Tungsten, 1 Umber · Tungsten Key: 0 in inventory ⚠ (3 in your sack: take them out) · Umber Key: 0 in inventory ⚠",
+				text(line), "a known 0 in the sack adds nothing");
+		assertEquals(TextColor.fromLegacyFormat(ChatFormatting.RED), countColour(line), "the reminder keeps the shortage marker");
+		// No sack seen yet: no reminder.
+		assertEquals("Tungsten 1 · 1 Tungsten · Tungsten Key: 0 in inventory ⚠",
+				text(MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false)), InventoryCounts.EMPTY, true, SackKeys.read(null))));
+		// Enough in the inventory: no reminder.
+		List<SlotItem> own = new ArrayList<>(List.of(new SlotItem("TUNGSTEN_KEY", 1)));
+		while (own.size() < InventoryCounts.SLOTS) {
+			own.add(SlotItem.EMPTY);
+		}
+		InventoryCounts held = InventoryCounts.of(own);
+		Component covered = MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false)), held, true, sack);
+		assertEquals("Tungsten 1 · 1 Tungsten · Tungsten Key: 1 in inventory", text(covered));
+		assertEquals(TextColor.fromLegacyFormat(ChatFormatting.GREEN), countColour(covered));
+		// The Skeleton Key fits no sack: never a reminder.
+		assertEquals("Vanguard · 1 Vanguard · Skeleton Key: 0 in inventory ⚠",
+				text(MineshaftAlertText.alert("Vanguard", List.of(corpse("Vanguard", false)), InventoryCounts.EMPTY, true, sack)));
 	}
 
 	@Test
@@ -178,7 +199,7 @@ class MineshaftAlertTest {
 		}
 		own.add(new SlotItem("UMBER_KEY", 1)); // the offhand, the last slot
 		InventoryCounts counts = InventoryCounts.of(own);
-		Component line = MineshaftAlertText.alert("Umber 1", List.of(corpse("Umber", false)), counts, true, false);
+		Component line = MineshaftAlertText.alert("Umber 1", List.of(corpse("Umber", false)), counts, true);
 		assertTrue(text(line).endsWith("Umber Key: 6 in inventory"), text(line));
 	}
 
@@ -466,6 +487,5 @@ class MineshaftAlertTest {
 			}
 		}
 		assertEquals(List.of(), hits);
-		assertNotNull(MineshaftAlertText.SACK_KEYS_WORK);
 	}
 }

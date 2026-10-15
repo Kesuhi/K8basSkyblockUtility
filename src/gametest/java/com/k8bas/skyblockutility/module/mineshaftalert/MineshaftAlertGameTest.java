@@ -20,7 +20,9 @@ import java.util.List;
  * the dev-only shaft simulation gives code OPAL_1 and three corpses, and one Umber Key sits in the hotbar by its
  * SkyBlock id. Once the list has settled, exactly one local `[KSU]` line names the shaft, the corpses and the key
  * shortage, through the real module, mineshaft state and inventory counts; nothing repeats it. Before that, an
- * alert switched off at entry and on inside the shaft posts nothing until the next entry (REQ-GS-16).
+ * alert switched off at entry and on inside the shaft posts nothing until the next entry (REQ-GS-16). Then the sack
+ * reminder (T3.2b, AC-MSA-13, R41 (a)): a menu titled "Dwarven Mines Sack" with an Umber Key slot "Stored: 3/22.2k",
+ * read through the real menu reader, sets the sack amount the reminder names.
  */
 public class MineshaftAlertGameTest implements FabricClientGameTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas-gametest");
@@ -55,6 +57,29 @@ public class MineshaftAlertGameTest implements FabricClientGameTest {
 			context.waitTicks(60);
 			check(alerts(context).size() == 1, "and no second one: " + alerts(context));
 			LOGGER.info("mineshaft alert: {}", lines.get(0));
+
+			// The sack reminder: the player opens the Dwarven Mines Sack (here a chest with that title, as on Hypixel), on
+			// SkyBlock (the island is still forced), where the sack is read.
+			server.runCommand("setblock 2 -60 2 minecraft:chest{CustomName:\"Dwarven Mines Sack\"}");
+			server.runCommand("item replace block 2 -60 2 container.23 with minecraft:dead_bush[minecraft:custom_data={id:\"UMBER_KEY\"},"
+					+ "minecraft:custom_name=\"Umber Key\",minecraft:lore=[\"Dwarven Mines Sack\",\"\",\"Stored: 3/22.2k\"]]");
+			// Opened by the server, as Hypixel opens its menus; the mod only reads the screen.
+			server.runOnServer(minecraftServer -> {
+				net.minecraft.server.level.ServerPlayer player = minecraftServer.getPlayerList().getPlayers().get(0);
+				if (player.level().getBlockEntity(new net.minecraft.core.BlockPos(2, -60, 2)) instanceof net.minecraft.world.MenuProvider provider) {
+					player.openMenu(provider);
+				}
+			});
+			context.waitFor(client -> client.gui.screen() instanceof net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<?>);
+			context.waitTicks(10);
+			context.runOnClient(client -> client.player.closeContainer());
+			context.waitFor(client -> client.gui.screen() == null);
+			// The alert itself posts once per shaft server (the simulator has one), so the text is AlertText's test (AC-MSA-13).
+			check(context.computeOnClient(client -> ((MineshaftAlertModule) ModuleManager.modules().stream().filter(m -> m.id().equals(MineshaftAlertModule.ID))
+					.findFirst().orElseThrow()).sackForTest().amount("UMBER_KEY")) == 3, "the menu reader gave the sack 3 Umber Keys");
+			server.runCommand("setblock 2 -60 2 minecraft:air");
+			command(context, "ksu debug shaft clear");
+			command(context, "ksu debug island clear");
 		} finally {
 			context.runOnClient(client -> {
 				if (client.player != null) {

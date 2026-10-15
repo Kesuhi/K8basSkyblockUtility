@@ -13,17 +13,12 @@ import java.util.function.Function
  * The mineshaft entry alert's lines (T3.2, REQ-MSA-05, REQ-MSA-06, REQ-MSA-09): the shaft, its corpses in the order
  * Lapis, Tungsten, Umber, Vanguard (a type not known yet after them, by its raw name, EC-MSA-07), and the matching
  * keys in the inventory, e.g.
- * `Opal 1 · 1 Lapis, 1 Tungsten, 1 Umber · Tungsten Key: 2 in inventory · Umber Key: 0 in inventory ⚠`. The
+ * `Opal 1 · 1 Lapis, 1 Tungsten, 1 Umber · Tungsten Key: 2 in inventory · Umber Key: 0 in inventory ⚠`, with the sack
+ * reminder `(3 in your sack: take them out)` after a short entry when keys were seen in the Dwarven Mines Sack. The
  * chat helper adds the gold `[KSU] ` tag; the body is yellow like the mod's other lines. Pure, so it is tested
  * without a game.
  */
 object MineshaftAlertText {
-	/**
-	 * Whether a key held only in the Dwarven Sack opens a corpse (Q-MSA-04). The G1 check could not be run, so D-7
-	 * (inventory only) stands and this stays off until the G3 check (R24). A build constant, not a user toggle.
-	 */
-	const val SACK_KEYS_WORK = false
-
 	private const val SEPARATOR = " · "
 	private val ORDER = listOf("Lapis", "Tungsten", "Umber", "Vanguard")
 
@@ -31,18 +26,16 @@ object MineshaftAlertText {
 	private val KEYS = mapOf("Tungsten" to ("Tungsten Key" to "TUNGSTEN_KEY"), "Umber" to ("Umber Key" to "UMBER_KEY"),
 		"Vanguard" to ("Skeleton Key" to "SKELETON_KEY"))
 
-	/** The types whose sack keys would count under the fallback (the Dwarven Sack holds these two). */
-	private val SACK_TYPES = setOf("Tungsten", "Umber")
-
 	private val HOVER: Style = Style.EMPTY.withHoverEvent(
-		HoverEvent.ShowText(Component.literal("Only your inventory and offhand are counted: keys in sacks or storage are not counted.")))
+		HoverEvent.ShowText(Component.literal("Only your inventory and offhand are counted: a key in a sack or in storage does not open a corpse.")))
 
 	/**
-	 * The alert for [name] with [corpses]; [showKeys] off leaves out the key part (REQ-MSA-11), [sackFallback] is
-	 * [SACK_KEYS_WORK] (a parameter, so both answers are tested).
+	 * The alert for [name] with [corpses]; [showKeys] off leaves out the key part (REQ-MSA-11). [sack] is the Dwarven
+	 * Mines Sack as last seen, for the reminder (REQ-MSA-05, R41 (a)); null or not seen yet adds nothing.
 	 */
 	@JvmStatic
-	fun alert(name: String, corpses: List<Corpse>, keys: InventoryCounts, showKeys: Boolean, sackFallback: Boolean): Component {
+	@JvmOverloads
+	fun alert(name: String, corpses: List<Corpse>, keys: InventoryCounts, showKeys: Boolean, sack: SackKeys? = null): Component {
 		val line = Component.literal(name).withStyle(ChatFormatting.YELLOW)
 		val present = ORDER.filter { type -> corpses.any { it.type == type } }
 		val counts = (present + unknownTypes(corpses)).joinToString(", ") { type ->
@@ -64,10 +57,12 @@ object MineshaftAlertText {
 			val needed = corpses.count { it.type == type && !it.looted }
 			val held = keys.count(keyId)
 			val entry: MutableComponent = Component.empty().withStyle(HOVER).append("$keyName: ")
-			when {
-				sackFallback && type in SACK_TYPES -> entry.append("$held in inventory (sack keys also work)")
-				held < needed -> entry.append(Component.literal("$held in inventory ⚠").withStyle(ChatFormatting.RED))
-				else -> entry.append(Component.literal("$held in inventory").withStyle(ChatFormatting.GREEN))
+			if (held < needed) {
+				entry.append(Component.literal("$held in inventory ⚠").withStyle(ChatFormatting.RED))
+				// The keys are there, only in the wrong place: a sack key does not open a corpse.
+				sack?.amount(keyId)?.takeIf { it > 0 }?.let { entry.append(Component.literal(" ($it in your sack: take them out)").withStyle(ChatFormatting.RED)) }
+			} else {
+				entry.append(Component.literal("$held in inventory").withStyle(ChatFormatting.GREEN))
 			}
 			line.append(SEPARATOR).append(entry)
 		}
