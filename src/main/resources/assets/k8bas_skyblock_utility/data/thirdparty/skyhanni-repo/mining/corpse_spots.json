@@ -1,0 +1,317 @@
+{
+  "table": "mining.corpse_spots",
+  "schemaVersion": 1,
+  "dataVersion": 1,
+  "gameVersion": "0.27.1",
+  "generatedAt": "2026-10-15T15:00:00Z",
+  "license": "MIT",
+  "sources": {
+    "skyhanni_repo_pr759": {
+      "title": "SkyHanni-REPO PR #759 constants/FrozenCorpses.json (open), by GrowlingGrizzly",
+      "url": "https://github.com/GrowlingGrizzly/SkyHanni-REPO",
+      "revision": "e2c8edb93240b0852d9b42e614f3c80a5476916c",
+      "license": "MIT",
+      "notice": "skyhanni-repo",
+      "access": "git"
+    },
+    "meowdding_repo": {
+      "title": "meowdding-repo repo/mining/mineshaft_corpses (data as of 42d01278a8)",
+      "url": "https://github.com/meowdding/meowdding-repo",
+      "revision": "20524eb3255da52653957dfd39b22a02e56b82ad",
+      "license": "MIT",
+      "notice": "meowdding-repo",
+      "access": "git"
+    },
+    "shaftutils": {
+      "title": "ShaftUtils corpse_spawns.json, by DeveloperGr3y (spots credited to Michelzz)",
+      "url": "https://github.com/DeveloperGr3y/ShaftUtils",
+      "revision": "c9a38786f61533e63d9fef20f320c70b02072c4f",
+      "license": "CC0-1.0",
+      "access": "git"
+    }
+  },
+  "mergeRadius": 2,
+  "noData": [
+    "TOPA_2",
+    "SAPP_2",
+    "AMET_2",
+    "AMBE_2",
+    "JADE_2"
+  ],
+  "rows": [
+    {
+      "code": "TOPA_1",
+      "spots": [
+        {"x": -196, "y": 22, "z": -159, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -123, "y": 8, "z": -171, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -131, "y": 27, "z": -192, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -160, "y": 5, "z": -157, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -190, "y": 6, "z": -178, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "SAPP_1",
+      "spots": [
+        {"x": -144, "y": 20, "z": -160, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -155, "y": 4, "z": -172, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -126, "y": 2, "z": -176, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -156, "y": 8, "z": -198, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -189, "y": 6, "z": -164, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "AMET_1",
+      "spots": [
+        {"x": -113, "y": 17, "z": -173, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -158, "y": 21, "z": -165, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -178, "y": 4, "z": -163, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -184, "y": 10, "z": -178, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -141, "y": 18, "z": -181, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "AMBE_1",
+      "spots": [
+        {"x": -123, "y": 24, "z": -160, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -192, "y": 26, "z": -161, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -172, "y": 17, "z": -186, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -116, "y": 10, "z": -167, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -113, "y": 18, "z": -170, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "JADE_1",
+      "spots": [
+        {"x": -155, "y": 13, "z": -174, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -137, "y": 21, "z": -192, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -152, "y": 28, "z": -175, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -144, "y": 13, "z": -186, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -107, "y": 18, "z": -181, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "TITA_1",
+      "spots": [
+        {"x": -186, "y": 10, "z": -183, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -150, "y": 20, "z": -179, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -160, "y": 8, "z": -175, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -171, "y": 25, "z": -192, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -143, "y": 12, "z": -158, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "UMBE_1",
+      "spots": [
+        {"x": -175, "y": 4, "z": -184, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -141, "y": 27, "z": -164, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -140, "y": 7, "z": -188, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -126, "y": 21, "z": -191, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -164, "y": 22, "z": -181, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "TUNG_1",
+      "spots": [
+        {"x": -177, "y": 11, "z": -170, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -127, "y": 8, "z": -170, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -113, "y": 14, "z": -187, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -186, "y": 2, "z": -196, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -114, "y": 20, "z": -166, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "FAIR_1",
+      "spots": [
+        {"x": -139, "y": 4, "z": -171, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "RUBY_1",
+      "spots": [
+        {"x": -165, "y": 9, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -184, "y": 5, "z": -184, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -161, "y": 20, "z": -162, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -136, "y": 9, "z": -156, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -173, "y": 4, "z": -174, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "RUBY_2",
+      "spots": [
+        {"x": -108, "y": 5, "z": -183, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -175, "y": 20, "z": -161, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -130, "y": 7, "z": -194, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -182, "y": 17, "z": -172, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -160, "y": 6, "z": -194, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "RUBY_C",
+      "spots": [
+        {"x": -181, "y": 15, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "shaftutils"]},
+        {"x": -162, "y": 11, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "shaftutils"]},
+        {"x": -109, "y": 8, "z": -159, "sourceRefs": ["skyhanni_repo_pr759", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "ONYX_1",
+      "spots": [
+        {"x": -131, "y": 24, "z": -172, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -176, "y": 5, "z": -178, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -162, "y": 6, "z": -157, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -196, "y": 15, "z": -195, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -119, "y": 1, "z": -193, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "ONYX_2",
+      "spots": [
+        {"x": -163, "y": 8, "z": -162, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -106, "y": 11, "z": -181, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo"]},
+        {"x": -137, "y": 21, "z": -179, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -192, "y": 11, "z": -198, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -134, "y": 1, "z": -170, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "ONYX_C",
+      "spots": [
+        {"x": -181, "y": 15, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -162, "y": 11, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -109, "y": 8, "z": -159, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "AQUA_1",
+      "spots": [
+        {"x": -154, "y": 21, "z": -174, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -128, "y": 4, "z": -182, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -111, "y": 12, "z": -166, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -149, "y": 4, "z": -188, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -193, "y": 7, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "AQUA_2",
+      "spots": [
+        {"x": -154, "y": 19, "z": -167, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -123, "y": 29, "z": -190, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -174, "y": 22, "z": -163, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -183, "y": 16, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -119, "y": 7, "z": -174, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -153, "y": 20, "z": -194, "sourceRefs": ["meowdding_repo"]}
+      ]
+    },
+    {
+      "code": "AQUA_C",
+      "spots": [
+        {"x": -181, "y": 15, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -162, "y": 11, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -109, "y": 8, "z": -159, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "CITR_1",
+      "spots": [
+        {"x": -122, "y": 5, "z": -188, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -146, "y": 12, "z": -185, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -172, "y": 22, "z": -197, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -159, "y": 23, "z": -187, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -144, "y": 22, "z": -193, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "CITR_2",
+      "spots": [
+        {"x": -143, "y": 12, "z": -181, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -132, "y": 28, "z": -166, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -118, "y": 4, "z": -169, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -163, "y": 12, "z": -178, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -142, "y": 11, "z": -187, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "CITR_C",
+      "spots": [
+        {"x": -181, "y": 15, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -162, "y": 11, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -109, "y": 8, "z": -159, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "PERI_1",
+      "spots": [
+        {"x": -156, "y": 14, "z": -157, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -137, "y": 15, "z": -186, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -118, "y": 26, "z": -156, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -188, "y": 8, "z": -173, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -169, "y": 20, "z": -183, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -131, "y": 16, "z": -166, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -150, "y": 19, "z": -161, "sourceRefs": ["meowdding_repo"]}
+      ]
+    },
+    {
+      "code": "PERI_2",
+      "spots": [
+        {"x": -190, "y": 23, "z": -191, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -155, "y": 2, "z": -166, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo"]},
+        {"x": -117, "y": 22, "z": -162, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -112, "y": 4, "z": -177, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo"]},
+        {"x": -169, "y": 5, "z": -197, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo"]}
+      ]
+    },
+    {
+      "code": "PERI_C",
+      "spots": [
+        {"x": -181, "y": 15, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -162, "y": 11, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -109, "y": 8, "z": -159, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "JASP_1",
+      "spots": [
+        {"x": -109, "y": 21, "z": -154, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -153, "y": 21, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -177, "y": 1, "z": -172, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -108, "y": 4, "z": -162, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -107, "y": 8, "z": -186, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "JASP_C",
+      "spots": [
+        {"x": -181, "y": 15, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -162, "y": 11, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -109, "y": 8, "z": -159, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "OPAL_1",
+      "spots": [
+        {"x": -136, "y": 3, "z": -167, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -192, "y": 7, "z": -161, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -128, "y": 9, "z": -188, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -185, "y": 5, "z": -174, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -117, "y": 12, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "OPAL_C",
+      "spots": [
+        {"x": -181, "y": 15, "z": -189, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -162, "y": 11, "z": -155, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]},
+        {"x": -109, "y": 8, "z": -159, "sourceRefs": ["skyhanni_repo_pr759", "meowdding_repo", "shaftutils"]}
+      ]
+    },
+    {
+      "code": "LITT_L",
+      "spots": [
+        {"x": -134, "y": 5, "z": -198, "sourceRefs": ["skyhanni_repo_pr759", "shaftutils"]},
+        {"x": -106, "y": 4, "z": -194, "sourceRefs": ["skyhanni_repo_pr759", "shaftutils"]},
+        {"x": -163, "y": 5, "z": -166, "sourceRefs": ["skyhanni_repo_pr759", "shaftutils"]},
+        {"x": -154, "y": 2, "z": -192, "sourceRefs": ["skyhanni_repo_pr759", "shaftutils"]}
+      ]
+    }
+  ]
+}

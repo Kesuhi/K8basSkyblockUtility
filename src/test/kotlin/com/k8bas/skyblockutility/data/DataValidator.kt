@@ -53,6 +53,8 @@ object DataValidator {
 	private val CITED_KINDS = setOf("wiki_crosscheck", "forum", "reddit")
 	private const val OFFICIAL_API = "api.hypixel.net"
 	private const val CC0 = "CC0-1.0"
+	private const val CORPSE_SPOTS = "mining.corpse_spots"
+	private const val SHAFTS = "mining_shafts"
 	private val THIRD_PARTY = Regex("^thirdparty/([^/]+)/")
 
 	/** How a page a person supplied or found is marked (D-28 (i)); never an origin of its own for a verified number. */
@@ -154,6 +156,9 @@ object DataValidator {
 		for (file in parsed) {
 			references(file.id, file.json!!, "", "", DataFiles.prose(schemasById[file.id]), keysByTable, problems)
 			rowSources(file.id, file.json!!, problems)
+			if (file.id == CORPSE_SPOTS) {
+				corpseSpots(file.json!!, keysByTable[SHAFTS], problems)
+			}
 		}
 		val upstreams = licences(files, schemas, problems)
 		return Report(java.util.List.copyOf(problems), files.associate { it.id to it.bytes.size.toLong() }, upstreams)
@@ -340,6 +345,44 @@ object DataValidator {
 			node.properties().forEach { (key, child) -> if (key != "sources") walk(child, "$at/$key") }
 		}
 		walk(json, "")
+	}
+
+	/**
+	 * The corpse spot rules (T3.3a, REQ-CORPSE-10, AC-CORPSE-01) the schema cannot state: every code, listed or under
+	 * noData, is a mining_shafts code, each once, and together they are all of them; no two spots of a code are closer
+	 * than the merge radius (a duplicate); and every crystal (`_C`) code has the shared list, the one most of them have.
+	 */
+	private fun corpseSpots(json: JsonNode, shaftCodes: Set<String>?, problems: MutableList<Problem>) {
+		val rows = json.get("rows")?.takeIf { it.isArray } ?: return
+		val radius = json.get("mergeRadius")?.takeIf { it.isNumber }?.doubleValue() ?: 0.0
+		val listed = rows.mapNotNull { it.get("code")?.takeIf { code -> code.isString }?.stringValue() }
+		val none = json.get("noData")?.takeIf { it.isArray }?.mapNotNull { it.takeIf { code -> code.isString }?.stringValue() } ?: listOf()
+		none.filter { it in listed }.forEach { problems += Problem(CORPSE_SPOTS, "noData/$it", "listed with spots and under noData") }
+		if (shaftCodes != null) {
+			(listed + none).filter { it !in shaftCodes }.forEach { problems += Problem(CORPSE_SPOTS, it, "not a $SHAFTS code") }
+			(shaftCodes - (listed + none).toSet()).sorted().forEach { problems += Problem(CORPSE_SPOTS, it, "a $SHAFTS code with no row and not under noData") }
+		}
+		val crystal = LinkedHashMap<String, List<List<Int>>>()
+		rows.forEachIndexed { i, row ->
+			val code = row.get("code")?.stringValue() ?: return@forEachIndexed
+			val spots: List<List<Int>> = row.get("spots")?.takeIf { it.isArray }?.values()?.map { spot ->
+				listOf("x", "y", "z").map { axis -> spot.get(axis)?.intValue() ?: 0 }
+			} ?: listOf()
+			for (a in spots.indices) {
+				for (b in a + 1 until spots.size) {
+					val d = Math.sqrt((0..2).sumOf { k -> ((spots[a][k] - spots[b][k]) * (spots[a][k] - spots[b][k])).toDouble() })
+					if (d <= radius) {
+						problems += Problem(CORPSE_SPOTS, "/rows/$i/spots/$b", "$code: within $radius of spot ${a + 1}, a duplicate")
+					}
+				}
+			}
+			if (code.endsWith("_C")) {
+				crystal[code] = spots
+			}
+		}
+		// The shared list is the one most crystal codes have (the first such in file order on a tie), so the odd one is named.
+		val shared = crystal.values.groupingBy { it }.eachCount().maxByOrNull { it.value }?.key
+		crystal.filter { it.value != shared }.keys.sorted().forEach { problems += Problem(CORPSE_SPOTS, it, "a crystal code whose spots differ from the shared list") }
 	}
 
 	/** Every string under a `license` key in [node], with its pointer. */

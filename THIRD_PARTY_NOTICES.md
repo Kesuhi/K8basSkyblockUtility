@@ -50,3 +50,40 @@ this repository.
 - Distribution: the table `thirdparty/skyocean/odds/vanguard.json` in the jar's bundled data.
   The licence text is `META-INF/licenses/skyocean.txt` in the jar and `licenses/skyocean.txt`
   in this repository.
+
+## SkyHanni-REPO
+
+- Copyright (c) 2022 hannibal2
+- Source: https://github.com/hannibal002/SkyHanni-REPO. The corpse spots come from its open pull
+  request #759 by GrowlingGrizzly (`constants/FrozenCorpses.json` in the fork
+  https://github.com/GrowlingGrizzly/SkyHanni-REPO, revision
+  e2c8edb93240b0852d9b42e614f3c80a5476916c).
+- Licence: MIT
+- Use (Possible corpse spots): the possible Frozen Corpse spots per Glacite Mineshaft layout, merged
+  with the meowdding-repo and ShaftUtils spots below into one table.
+- Distribution: the table `thirdparty/skyhanni-repo/mining/corpse_spots.json` in the jar's bundled
+  data (`assets/k8bas_skyblock_utility/data/`). The licence text is
+  `META-INF/licenses/skyhanni-repo.txt` in the jar and `licenses/skyhanni-repo.txt` in this
+  repository.
+
+## meowdding-repo
+
+- Copyright (c) 2026 meowdding
+- Source: https://github.com/meowdding/meowdding-repo (`repo/mining/mineshaft_corpses/`, revision
+  20524eb3255da52653957dfd39b22a02e56b82ad; the data is unchanged since
+  42d01278a862cf41ff4b5041d8ca3bf3aa1ab8f5)
+- Licence: MIT
+- Use (Possible corpse spots): its corpse spots, one block higher to match the frame above, merged
+  into `thirdparty/skyhanni-repo/mining/corpse_spots.json`.
+- Distribution: in that table. The licence text is `META-INF/licenses/meowdding-repo.txt` in the
+  jar and `licenses/meowdding-repo.txt` in this repository.
+
+## ShaftUtils
+
+- Author: DeveloperGr3y; its added spots are credited to Michelzz
+- Source: https://github.com/DeveloperGr3y/ShaftUtils
+  (`src/main/resources/assets/shaftutils/corpse_spawns.json`, revision
+  c9a38786f61533e63d9fef20f320c70b02072c4f)
+- Licence: CC0-1.0 (no notice required; credited with thanks)
+- Use (Possible corpse spots): its corpse spots, one block higher to match the frame above, merged
+  into `thirdparty/skyhanni-repo/mining/corpse_spots.json`.

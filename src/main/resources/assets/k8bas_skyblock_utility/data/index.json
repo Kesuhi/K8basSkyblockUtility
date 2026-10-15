@@ -1,6 +1,14 @@
 {
   "indexVersion": 1,
   "tables": {
+    "mining.corpse_spots": {
+      "path": "thirdparty/skyhanni-repo/mining/corpse_spots.json",
+      "sha256": "c5ce6ff90602891b018e148d25893737ed107fde840eba8d8ee2ca890b5d2995",
+      "rows": 29,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
+    },
     "mining_shafts": {
       "path": "mining/shafts.json",
       "sha256": "20cb5106a7e78a2985ca32df1c1fb3e12b331eaa7a5ad316dda080f7b1790cc1",

@@ -16,6 +16,12 @@
       "license": "MIT",
       "source": "https://github.com/meowdding/SkyOcean",
       "note": "Only the MIT part of its custom licence (code and src/repo/**) may be used; its other files are all rights reserved."
+    },
+    "meowdding-repo": {
+      "name": "meowdding-repo",
+      "license": "MIT",
+      "source": "https://github.com/meowdding/meowdding-repo",
+      "note": "MIT since its LICENSE was added (71f731f237, 2026-08-22); pin a commit that has it."
     }
   }
 }
