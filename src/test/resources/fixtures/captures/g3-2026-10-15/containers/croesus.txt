@@ -1,0 +1,64 @@
+[K8BAS-DUMP] container 1 title=Croesus slots=54 state=39
+[K8BAS-DUMP] container 1 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 4 item=minecraft:player_head sbid=- count=1 | Croesus
+[K8BAS-DUMP] container 1 slot 4 lore 0 | After completing a Catacombs or
+[K8BAS-DUMP] container 1 slot 4 lore 1 | Kuudra run, if you don't open a
+[K8BAS-DUMP] container 1 slot 4 lore 2 | chest, I'll save it here for you!
+[K8BAS-DUMP] container 1 slot 4 lore 3 | 
+[K8BAS-DUMP] container 1 slot 4 lore 4 | But beware, I can only hold 60 runs
+[K8BAS-DUMP] container 1 slot 4 lore 5 | worth of chests, and will discard
+[K8BAS-DUMP] container 1 slot 4 lore 6 | them after 72 hours!
+[K8BAS-DUMP] container 1 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 10 item=minecraft:player_head sbid=- count=1 | The Catacombs
+[K8BAS-DUMP] container 1 slot 10 lore 0 | Floor I
+[K8BAS-DUMP] container 1 slot 10 lore 1 | 
+[K8BAS-DUMP] container 1 slot 10 lore 2 | Players:
+[K8BAS-DUMP] container 1 slot 10 lore 3 |  Self: Archer (35)
+[K8BAS-DUMP] container 1 slot 10 lore 4 | 
+[K8BAS-DUMP] container 1 slot 10 lore 5 | Completed: 32 secs ago
+[K8BAS-DUMP] container 1 slot 10 lore 6 | 
+[K8BAS-DUMP] container 1 slot 10 lore 7 | No chests opened yet!
+[K8BAS-DUMP] container 1 slot 10 lore 8 | Chests expire in 2d 23h!
+[K8BAS-DUMP] container 1 slot 10 lore 9 | 
+[K8BAS-DUMP] container 1 slot 10 lore 10 | Available Modifiers:
+[K8BAS-DUMP] container 1 slot 10 lore 11 |  Kismet Feather
+[K8BAS-DUMP] container 1 slot 10 lore 12 |  Dungeon Chest Key
+[K8BAS-DUMP] container 1 slot 10 lore 13 | 
+[K8BAS-DUMP] container 1 slot 10 lore 14 | Click to view chests!
+[K8BAS-DUMP] container 1 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 36 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 44 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 45 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 46 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 47 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 48 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 49 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 1 slot 50 item=minecraft:ender_eye sbid=- count=1 | Filter
+[K8BAS-DUMP] container 1 slot 50 lore 0 | 
+[K8BAS-DUMP] container 1 slot 50 lore 1 | ▶ All
+[K8BAS-DUMP] container 1 slot 50 lore 2 |   The Catacombs
+[K8BAS-DUMP] container 1 slot 50 lore 3 |   Kuudra
+[K8BAS-DUMP] container 1 slot 50 lore 4 | 
+[K8BAS-DUMP] container 1 slot 50 lore 5 | Click to switch filter!
+[K8BAS-DUMP] container 1 slot 50 lore 6 | Right-Click to go backwards!
+[K8BAS-DUMP] container 1 slot 51 item=minecraft:ender_eye sbid=- count=1 | Filter
+[K8BAS-DUMP] container 1 slot 51 lore 0 | 
+[K8BAS-DUMP] container 1 slot 51 lore 1 | ▶ All
+[K8BAS-DUMP] container 1 slot 51 lore 2 |   Opened
+[K8BAS-DUMP] container 1 slot 51 lore 3 |   Unopened
+[K8BAS-DUMP] container 1 slot 51 lore 4 | 
+[K8BAS-DUMP] container 1 slot 51 lore 5 | Click to switch filter!
+[K8BAS-DUMP] container 1 slot 51 lore 6 | Right-Click to go backwards!
+[K8BAS-DUMP] container 1 slot 52 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 1 slot 53 item=minecraft:black_stained_glass_pane sbid=- count=1 | 

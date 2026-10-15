@@ -35,6 +35,17 @@ class SidebarParserTest {
 	}
 
 	@Test
+	void theG3MineshaftCaptureReadsAsShown() {
+		// sidebar-mineshaft-onyx.txt (G3, 2026-10-15): here Hypixel split the server id after three characters.
+		SidebarSnapshot sidebar = SidebarParser.parse(CaptureFixtures.sidebar(CaptureFixtures.G3, "sidebar-mineshaft-onyx.txt"));
+		assertEquals("SKYBLOCK", sidebar.getTitle());
+		assertEquals("10/15/26 m000XX ONYX_1", sidebar.getLines().get(0));
+		assertTrue(sidebar.getLines().contains("Late Spring 22nd"), sidebar.getLines().toString());
+		assertTrue(sidebar.getLines().contains("Cold: -2❄"), sidebar.getLines().toString());
+		assertEquals("www.hypixel.net", sidebar.getLines().get(sidebar.getLines().size() - 1));
+	}
+
+	@Test
 	void wordsAndNumbersSplitByFillerTokensAreJoined() {
 		SidebarSnapshot sidebar = SidebarParser.parse(CaptureFixtures.sidebar("sidebar-dungeon-hub.txt"));
 		assertEquals(List.of("10/01/26 m000XX", "", "Autumn 10th", "3:10am ☽", " Dungeon Hub", "",
@@ -44,8 +55,9 @@ class SidebarParserTest {
 
 	@Test
 	void noFormattingOrInvisibleCharacterSurvives() {
-		for (String file : List.of("sidebar-mineshaft.txt", "sidebar-dungeon-hub.txt")) {
-			for (String line : SidebarParser.parse(CaptureFixtures.sidebar(file)).getLines()) {
+		for (String file : List.of(CaptureFixtures.G1 + "sidebar-mineshaft.txt", CaptureFixtures.G1 + "sidebar-dungeon-hub.txt",
+				CaptureFixtures.G3 + "sidebar-mineshaft-onyx.txt")) {
+			for (String line : SidebarParser.parse(CaptureFixtures.sidebar("", file)).getLines()) {
 				assertTrue(line.indexOf('§') < 0, file + ": " + line);
 				assertEquals(line.strip(), line, file + ": trimmed: '" + line + "'");
 			}

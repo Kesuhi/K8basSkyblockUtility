@@ -70,6 +70,12 @@ class MineshaftCodesTest {
 		tracker.enter(0);
 		tracker.sidebar(SidebarParser.parse(CaptureFixtures.sidebar("sidebar-mineshaft.txt")).getLines(), 500);
 		assertEquals("Umber 1", tracker.snapshot().getName());
+		// sidebar-mineshaft-onyx.txt (G3): `10/15/26 m000XX ONYX_1`, the shaft of the G3 entry alert (R36 (d)).
+		MineshaftTracker g3 = new MineshaftTracker(table()::get, line -> { });
+		g3.enter(0);
+		g3.sidebar(SidebarParser.parse(CaptureFixtures.sidebar(CaptureFixtures.G3, "sidebar-mineshaft-onyx.txt")).getLines(), 500);
+		assertEquals("ONYX_1", g3.snapshot().getCode());
+		assertEquals("Onyx 1", g3.snapshot().getName());
 	}
 
 	@Test

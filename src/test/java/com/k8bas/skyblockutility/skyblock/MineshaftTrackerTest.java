@@ -88,6 +88,15 @@ class MineshaftTrackerTest {
 	}
 
 	@Test
+	void theG3CapturedWidgetReads() {
+		// tab-mineshaft-onyx.txt (G3, Onyx 1): three Lapis corpses, none looted, as the entry alert counted them (R36 (d)).
+		tracker.enter(0);
+		tracker.tab(TabParser.parse(CaptureFixtures.tabRows(CaptureFixtures.G3, "tab-mineshaft-onyx.txt")));
+		assertEquals(WidgetPresence.PRESENT, tracker.snapshot().getCorpses().getPresence());
+		assertEquals(List.of(new Corpse("Lapis", false), new Corpse("Lapis", false), new Corpse("Lapis", false)), tracker.snapshot().getCorpses().getCorpses());
+	}
+
+	@Test
 	void anUnknownCorpseLineMakesTheListPartialNotWrong() {
 		// REQ-GS-10: never a wrong count; the shape is logged.
 		tracker.enter(0);

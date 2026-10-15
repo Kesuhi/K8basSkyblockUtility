@@ -1,0 +1,119 @@
+[K8BAS-DUMP] container 5 title=Dwarven Mines Sack slots=36 state=58
+[K8BAS-DUMP] container 5 slot 0 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 1 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 2 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 3 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 4 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 5 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 6 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 7 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 8 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 9 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 10 item=minecraft:green_dye sbid=BIOFUEL count=1 | Biofuel
+[K8BAS-DUMP] container 5 slot 10 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 10 lore 1 | 
+[K8BAS-DUMP] container 5 slot 10 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 10 lore 3 | 
+[K8BAS-DUMP] container 5 slot 10 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 11 item=minecraft:paper sbid=GOBLIN_EGG_BLUE count=1 | Blue Goblin Egg
+[K8BAS-DUMP] container 5 slot 11 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 11 lore 1 | 
+[K8BAS-DUMP] container 5 slot 11 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 11 lore 3 | 
+[K8BAS-DUMP] container 5 slot 11 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 12 item=minecraft:paper sbid=GLACITE_JEWEL count=1 | Glacite Jewel
+[K8BAS-DUMP] container 5 slot 12 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 12 lore 1 | 
+[K8BAS-DUMP] container 5 slot 12 lore 2 | Stored: 2/22.2k
+[K8BAS-DUMP] container 5 slot 12 lore 3 | 
+[K8BAS-DUMP] container 5 slot 12 lore 4 | Right-Click for stack!
+[K8BAS-DUMP] container 5 slot 12 lore 5 | Click to pickup!
+[K8BAS-DUMP] container 5 slot 13 item=minecraft:paper sbid=GOBLIN_EGG count=1 | Goblin Egg
+[K8BAS-DUMP] container 5 slot 13 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 13 lore 1 | 
+[K8BAS-DUMP] container 5 slot 13 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 13 lore 3 | 
+[K8BAS-DUMP] container 5 slot 13 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 14 item=minecraft:paper sbid=GOBLIN_EGG_GREEN count=1 | Green Goblin Egg
+[K8BAS-DUMP] container 5 slot 14 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 14 lore 1 | 
+[K8BAS-DUMP] container 5 slot 14 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 14 lore 3 | 
+[K8BAS-DUMP] container 5 slot 14 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 15 item=minecraft:paper sbid=OIL_BARREL count=1 | Oil Barrel
+[K8BAS-DUMP] container 5 slot 15 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 15 lore 1 | 
+[K8BAS-DUMP] container 5 slot 15 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 15 lore 3 | 
+[K8BAS-DUMP] container 5 slot 15 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 16 item=minecraft:paper sbid=PLASMA count=1 | Plasma
+[K8BAS-DUMP] container 5 slot 16 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 16 lore 1 | 
+[K8BAS-DUMP] container 5 slot 16 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 16 lore 3 | 
+[K8BAS-DUMP] container 5 slot 16 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 17 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 18 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 19 item=minecraft:paper sbid=GOBLIN_EGG_RED count=1 | Red Goblin Egg
+[K8BAS-DUMP] container 5 slot 19 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 19 lore 1 | 
+[K8BAS-DUMP] container 5 slot 19 lore 2 | Stored: 2/22.2k
+[K8BAS-DUMP] container 5 slot 19 lore 3 | 
+[K8BAS-DUMP] container 5 slot 19 lore 4 | Right-Click for stack!
+[K8BAS-DUMP] container 5 slot 19 lore 5 | Click to pickup!
+[K8BAS-DUMP] container 5 slot 20 item=minecraft:ghast_tear sbid=SORROW count=1 | Sorrow
+[K8BAS-DUMP] container 5 slot 20 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 20 lore 1 | 
+[K8BAS-DUMP] container 5 slot 20 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 20 lore 3 | 
+[K8BAS-DUMP] container 5 slot 20 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 21 item=minecraft:paper sbid=SUSPICIOUS_SCRAP count=1 | Suspicious Scrap
+[K8BAS-DUMP] container 5 slot 21 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 21 lore 1 | 
+[K8BAS-DUMP] container 5 slot 21 lore 2 | Stored: 1/22.2k
+[K8BAS-DUMP] container 5 slot 21 lore 3 | 
+[K8BAS-DUMP] container 5 slot 21 lore 4 | Right-Click for stack!
+[K8BAS-DUMP] container 5 slot 21 lore 5 | Click to pickup!
+[K8BAS-DUMP] container 5 slot 22 item=minecraft:paper sbid=TUNGSTEN_KEY count=1 | Tungsten Key
+[K8BAS-DUMP] container 5 slot 22 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 22 lore 1 | 
+[K8BAS-DUMP] container 5 slot 22 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 22 lore 3 | 
+[K8BAS-DUMP] container 5 slot 22 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 23 item=minecraft:dead_bush sbid=UMBER_KEY count=1 | Umber Key
+[K8BAS-DUMP] container 5 slot 23 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 23 lore 1 | 
+[K8BAS-DUMP] container 5 slot 23 lore 2 | Stored: 1/22.2k
+[K8BAS-DUMP] container 5 slot 23 lore 3 | 
+[K8BAS-DUMP] container 5 slot 23 lore 4 | Right-Click for stack!
+[K8BAS-DUMP] container 5 slot 23 lore 5 | Click to pickup!
+[K8BAS-DUMP] container 5 slot 24 item=minecraft:paper sbid=VOLTA count=1 | Volta
+[K8BAS-DUMP] container 5 slot 24 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 24 lore 1 | 
+[K8BAS-DUMP] container 5 slot 24 lore 2 | Stored: 0/22.2k
+[K8BAS-DUMP] container 5 slot 24 lore 3 | 
+[K8BAS-DUMP] container 5 slot 24 lore 4 | Empty sack!
+[K8BAS-DUMP] container 5 slot 25 item=minecraft:paper sbid=GOBLIN_EGG_YELLOW count=1 | Yellow Goblin Egg
+[K8BAS-DUMP] container 5 slot 25 lore 0 | Dwarven Mines Sack
+[K8BAS-DUMP] container 5 slot 25 lore 1 | 
+[K8BAS-DUMP] container 5 slot 25 lore 2 | Stored: 2/22.2k
+[K8BAS-DUMP] container 5 slot 25 lore 3 | 
+[K8BAS-DUMP] container 5 slot 25 lore 4 | Right-Click for stack!
+[K8BAS-DUMP] container 5 slot 25 lore 5 | Click to pickup!
+[K8BAS-DUMP] container 5 slot 26 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 27 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 28 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 29 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 30 item=minecraft:arrow sbid=- count=1 | Go Back
+[K8BAS-DUMP] container 5 slot 30 lore 0 | To Sack of Sacks
+[K8BAS-DUMP] container 5 slot 31 item=minecraft:barrier sbid=- count=1 | Close
+[K8BAS-DUMP] container 5 slot 32 item=minecraft:cauldron sbid=- count=1 | Pickup All
+[K8BAS-DUMP] container 5 slot 32 lore 0 | Attempts to pickup all items in this
+[K8BAS-DUMP] container 5 slot 32 lore 1 | sack.
+[K8BAS-DUMP] container 5 slot 32 lore 2 | 
+[K8BAS-DUMP] container 5 slot 32 lore 3 | Total items: 8
+[K8BAS-DUMP] container 5 slot 32 lore 4 | 
+[K8BAS-DUMP] container 5 slot 32 lore 5 | Click to pickup!
+[K8BAS-DUMP] container 5 slot 33 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 34 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
+[K8BAS-DUMP] container 5 slot 35 item=minecraft:black_stained_glass_pane sbid=- count=1 | 
