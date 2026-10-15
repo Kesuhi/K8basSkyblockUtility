@@ -1161,9 +1161,10 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 
 *After the G3 field checks (R36–R40, 2026-10-15), in this order:*
 
-- [ ] **T3.2c fix(mining): widget hint says `/widgets`** (S, deps T3.0m, T3.2). R36: the Frozen Corpses widget is enabled with `/widgets`. The one shared widget-hint string changes from `/widget` to `/widgets`; mineshaft-alert, bestiary-hud and sbxp-optimizer keep using its key.
+- [x] **T3.2c fix(mining): widget hint says `/widgets`** (S, deps T3.0m, T3.2). R36: the Frozen Corpses widget is enabled with `/widgets`. The one shared widget-hint string changes from `/widget` to `/widgets`; mineshaft-alert, bestiary-hud and sbxp-optimizer keep using its key.
   - Req: REQ-GS-18, REQ-MSA-08
   - Accept: AC-GS-18 ([R]; its [E] part passed at G3, R36).
+  - Done (2026-10-15): the shared hint (`lang/en_us.json`, `WidgetHint`) says `/widgets`; MineshaftCodesTest checks the wording. Review: one batch review of T3.8d, T3.2c, T3.3c, T3.3a and T3.3 in three angles (rules and licences, correctness, tests and style), each finding checked by two verifiers; none for this task.
 - [ ] **T3.8d data(npcdb): drop the four invisible mobs** (S, deps T3.8b, T3.8c). R38: Ghost, Fels, Sneaky Creeper and Invisibug leave the bundled mob table (`dataVersion` +1 by hand, then `dataIndex`), so the picker cannot find them. The 1.0.x mob gist stays as it is. A rule that already targets one of them still never outlines an invisible mob (REQ-GLOW-03, EC-GLOW-09).
   - Req: REQ-NPCDB-08
   - Accept: AC-NPCDB-07 (amended, R38).

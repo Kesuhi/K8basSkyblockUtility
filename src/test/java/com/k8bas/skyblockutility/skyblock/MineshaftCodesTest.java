@@ -77,5 +77,7 @@ class MineshaftCodesTest {
 		JsonObject lang = JsonParser.parseString(new String(resource("lang/en_us.json"), StandardCharsets.UTF_8)).getAsJsonObject();
 		assertTrue(lang.has(WidgetHint.KEY), WidgetHint.KEY);
 		assertTrue(lang.get(WidgetHint.KEY).getAsString().contains("%s"), "names the widget");
+		// The command Hypixel opens the widget settings with (G3, R36).
+		assertTrue(lang.get(WidgetHint.KEY).getAsString().endsWith("Turn it on with /widgets."), lang.get(WidgetHint.KEY).getAsString());
 	}
 }
