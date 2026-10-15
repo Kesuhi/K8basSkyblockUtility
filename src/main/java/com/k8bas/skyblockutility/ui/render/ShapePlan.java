@@ -27,6 +27,9 @@ public final class ShapePlan {
 		static final Result EMPTY = new Result(List.of(), -1, -1);
 	}
 
+	/** A GUI pixel fraction below anything a 1/scale grid can produce. */
+	private static final float NOISE = 1e-4F;
+
 	private ShapePlan() {
 	}
 
@@ -37,24 +40,30 @@ public final class ShapePlan {
 	 * game clips its own elements; a shape wholly outside it gives no element.
 	 */
 	public static Result of(Matrix3x2fc outer, int x, int y, int w, int h, int radius, int thickness, int scale, boolean smooth, int[] scissor) {
-		if (w <= 0 || h <= 0) {
+		return ofPixels(outer, x, y, w * scale, h * scale, radius * scale, thickness * scale, Corners.ALL, scale, smooth, scissor);
+	}
+
+	/**
+	 * As {@link #of}, in screen pixels: an sw×sh shape with radius sr and outline thickness st (0 = filled) whose
+	 * corner sits at GUI (x, y), a multiple of 1/scale; for a filled shape only the {@link Corners} {@code corners} are
+	 * round (an outline rounds all four).
+	 */
+	public static Result ofPixels(Matrix3x2fc outer, float x, float y, int sw, int sh, int sr, int st, int corners, int scale, boolean smooth,
+			int[] scissor) {
+		if (sw <= 0 || sh <= 0) {
 			return Result.EMPTY;
 		}
-		int[] box = clip(bounds(outer, x, y, x + w, y + h), scissor);
+		int[] box = clip(bounds(outer, x, y, x + (float) sw / scale, y + (float) sh / scale), scissor);
 		if (box == null) {
 			return Result.EMPTY;
 		}
-		int sw = w * scale;
-		int sh = h * scale;
-		int sr = radius * scale;
-		int st = thickness * scale;
 		if (smooth) {
-			Result masked = masked(box, sw, sh, sr, st);
+			Result masked = masked(box, sw, sh, sr, st, corners);
 			if (masked != null) {
 				return masked;
 			}
 		}
-		List<Corners.Span> spans = st == 0 ? Corners.fill(sw, sh, sr) : Corners.ring(sw, sh, sr, st);
+		List<Corners.Span> spans = st == 0 ? Corners.fill(sw, sh, sr, corners) : Corners.ring(sw, sh, sr, st);
 		if (spans.isEmpty()) {
 			return Result.EMPTY;
 		}
@@ -70,10 +79,11 @@ public final class ShapePlan {
 	}
 
 	/** The smooth shape (REQ-UI-18), or null where a mask cannot draw it (the fill-based corners do). */
-	private static Result masked(int[] box, int w, int h, int r, int t) {
-		int radius = CornerPieces.clampRadius(w, h, r);
+	private static Result masked(int[] box, int w, int h, int r, int t, int corners) {
+		// A one-cap pill keeps its cap however short it is; one shorter than two caps is drawn from fills (REQ-UI-30).
+		int radius = Corners.oneCap(corners) ? Math.max(0, Math.min(r, h / 2)) : CornerPieces.clampRadius(w, h, r);
 		int[] pieces = new int[CornerPieces.MAX_PIECES * CornerPieces.STRIDE];
-		int n = t == 0 ? CornerPieces.fill(w, h, radius, pieces) : CornerPieces.ring(w, h, radius, t, pieces);
+		int n = t == 0 ? CornerPieces.fill(w, h, radius, corners, pieces) : CornerPieces.ring(w, h, radius, t, pieces);
 		if (n < 0) {
 			return null;
 		}
@@ -101,9 +111,12 @@ public final class ShapePlan {
 				uvs[at + 3] = (pieces[o + 6] + radius) / size;
 			}
 		}
-		Element corners = element(true, maskQuads, uvs, box);
-		List<Element> elements = fillQuads.length == 0 ? List.of(corners) : List.of(corners, element(false, fillQuads, null, box));
-		return new Result(elements, radius, t);
+		Element straight = element(false, fillQuads, null, box);
+		if (masks == 0) {
+			return new Result(List.of(straight), -1, -1);
+		}
+		Element round = element(true, maskQuads, uvs, box);
+		return new Result(fillQuads.length == 0 ? List.of(round) : List.of(round, straight), radius, t);
 	}
 
 	private static Element element(boolean textured, int[] quads, float[] uvs, int[] box) {
@@ -125,17 +138,18 @@ public final class ShapePlan {
 	/**
 	 * The rectangle (x0, y0)-(x1, y1) under {@code pose} rounded outward: floor of the minimum and ceiling of the
 	 * maximum of its four transformed corners, as {left, top, right, bottom}; null when it covers no pixel. Not the
-	 * game's own rounding, which takes the ceiling of the size and so can come out a pixel short.
+	 * game's own rounding, which takes the ceiling of the size and so can come out a pixel short. Float noise below
+	 * {@link #NOISE} (1/3 is not exact) does not round a whole pixel up.
 	 */
 	public static int[] bounds(Matrix3x2fc pose, float x0, float y0, float x1, float y1) {
 		Vector2f a = pose.transformPosition(x0, y0, new Vector2f());
 		Vector2f b = pose.transformPosition(x1, y0, new Vector2f());
 		Vector2f c = pose.transformPosition(x0, y1, new Vector2f());
 		Vector2f d = pose.transformPosition(x1, y1, new Vector2f());
-		int left = (int) Math.floor(Math.min(Math.min(a.x, b.x), Math.min(c.x, d.x)));
-		int top = (int) Math.floor(Math.min(Math.min(a.y, b.y), Math.min(c.y, d.y)));
-		int right = (int) Math.ceil(Math.max(Math.max(a.x, b.x), Math.max(c.x, d.x)));
-		int bottom = (int) Math.ceil(Math.max(Math.max(a.y, b.y), Math.max(c.y, d.y)));
+		int left = (int) Math.floor(Math.min(Math.min(a.x, b.x), Math.min(c.x, d.x)) + NOISE);
+		int top = (int) Math.floor(Math.min(Math.min(a.y, b.y), Math.min(c.y, d.y)) + NOISE);
+		int right = (int) Math.ceil(Math.max(Math.max(a.x, b.x), Math.max(c.x, d.x)) - NOISE);
+		int bottom = (int) Math.ceil(Math.max(Math.max(a.y, b.y), Math.max(c.y, d.y)) - NOISE);
 		return right > left && bottom > top ? new int[] {left, top, right, bottom} : null;
 	}
 }

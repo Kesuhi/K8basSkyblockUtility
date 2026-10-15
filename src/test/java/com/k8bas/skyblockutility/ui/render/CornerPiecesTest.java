@@ -71,6 +71,36 @@ class CornerPiecesTest {
 		}
 	}
 
+	/**
+	 * REQ-UI-28 (T3.16): a one-cap pill, round on one side and square on the other, still covers its box exactly once, and
+	 * matches the fill-based one-cap shape; its square corners are fills.
+	 */
+	@Test
+	void oneCapPillsTileAndMatchTheFillShape() {
+		for (int corners : new int[] {Corners.LEFT, Corners.RIGHT}) {
+			for (int r = 1; r <= 8; r++) {
+				int[] fillMask = CornerMask.bakeFill(r);
+				for (int w = 2 * r; w <= 24; w++) {
+					int h = 2 * r;
+					int n = CornerPieces.fill(w, h, r, corners, pieces);
+					int[][] count = count(n, w, h);
+					for (int y = 0; y < h; y++) {
+						for (int x = 0; x < w; x++) {
+							assertEquals(1, count[y][x], w + "x" + h + " radius " + r + " corners " + corners + ", pixel " + x + "," + y);
+						}
+					}
+					assertSameShape(draw(n, fillMask, r, w, h), CornerMaskTest.cover(Corners.fill(w, h, r, corners), w, h),
+							w + "x" + h + " radius " + r + " corners " + corners);
+					int masks = 0;
+					for (int i = 0; i < n; i++) {
+						masks += pieces[i * CornerPieces.STRIDE] == CornerPieces.KIND_MASK ? 1 : 0;
+					}
+					assertEquals(2, masks, "only the round side's two corners are masks");
+				}
+			}
+		}
+	}
+
 	@Test
 	void maskQuadsUseTheirOwnQuadrant() {
 		int n = CornerPieces.fill(30, 20, 6, pieces);

@@ -119,6 +119,32 @@ class ShapeBoundsTest {
 		}
 	}
 
+	/** T3.16: a bar in screen pixels at a GUI position on the 1/scale grid, and a one-cap pill too short for its mask. */
+	@Test
+	void pixelShapesAtFractionalPositions() {
+		for (int scale = 1; scale <= 4; scale++) {
+			for (int j = 0; j < scale; j++) {
+				float x = 10 + (float) j / scale;
+				for (int sw = 1; sw <= 30; sw++) {
+					for (boolean smooth : new boolean[] {false, true}) {
+						for (int corners : new int[] {Corners.LEFT, Corners.RIGHT, 0}) {
+							ShapePlan.Result plan = ShapePlan.ofPixels(new Matrix3x2f(), x, 4, sw, 4 * scale, 2 * scale, 0, corners, scale, smooth, null);
+							String what = "scale " + scale + ", x " + x + ", width " + sw + (smooth ? " smooth" : "") + ", corners " + corners;
+							assertFalse(plan.elements().isEmpty(), what);
+							for (ShapePlan.Element element : plan.elements()) {
+								assertArrayEquals(new int[] {10, 4, (int) Math.ceil((10 * scale + j + sw) / (double) scale - 1e-9), 8}, box(element), what);
+							}
+							if (corners == 0 || sw < 4 * scale) {
+								assertEquals(1, plan.elements().size(), what + ": no round corner, or too short for the mask: one plain element");
+								assertEquals(-1, plan.maskRadius(), what);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@Test
 	void boundsRoundOutwardWhereTheGameWouldComeOutShort() {
 		// From x 2.5 to 6.5: the game's floor(min) + ceil(size) gives 2..6 and misses the last half pixel.

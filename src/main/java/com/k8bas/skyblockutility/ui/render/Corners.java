@@ -15,6 +15,15 @@ public final class Corners {
 	public record Span(int x0, int y0, int x1, int y1) {
 	}
 
+	/** Which corners are round, for {@link #fill(int, int, int, int)}: any of these or-ed together. */
+	public static final int TOP_LEFT = 1;
+	public static final int TOP_RIGHT = 2;
+	public static final int BOTTOM_LEFT = 4;
+	public static final int BOTTOM_RIGHT = 8;
+	public static final int LEFT = TOP_LEFT | BOTTOM_LEFT;
+	public static final int RIGHT = TOP_RIGHT | BOTTOM_RIGHT;
+	public static final int ALL = LEFT | RIGHT;
+
 	private Corners() {
 	}
 
@@ -39,14 +48,26 @@ public final class Corners {
 
 	/** A w×h rect with corners of radius r (clamped to half the shorter side); empty if w or h is not positive. */
 	public static List<Span> fill(int w, int h, int r) {
+		return fill(w, h, r, ALL);
+	}
+
+	/**
+	 * As {@link #fill(int, int, int)}, with only the given {@code corners} round and the others square. A one-cap pill
+	 * ({@link #LEFT} or {@link #RIGHT}) keeps its radius up to half its height however short it is, and a pill shorter
+	 * than its cap shows only the part of the cap before its square end (REQ-UI-30).
+	 */
+	public static List<Span> fill(int w, int h, int r, int corners) {
 		if (w <= 0 || h <= 0) {
 			return List.of();
 		}
-		int[] insets = insets(clampRadius(w, h, r));
+		int[] insets = insets(oneCap(corners) ? Math.max(0, Math.min(r, h / 2)) : clampRadius(w, h, r));
 		List<int[][]> rows = new ArrayList<>(h);
 		for (int y = 0; y < h; y++) {
 			int inset = inset(insets, y, h);
-			rows.add(new int[][] {{inset, w - inset}});
+			boolean top = y < insets.length;
+			int left = (corners & (top ? TOP_LEFT : BOTTOM_LEFT)) != 0 ? inset : 0;
+			int right = (corners & (top ? TOP_RIGHT : BOTTOM_RIGHT)) != 0 ? inset : 0;
+			rows.add(new int[][] {{left, w - right}});
 		}
 		return merge(rows);
 	}
@@ -74,6 +95,11 @@ public final class Corners {
 			}
 		}
 		return merge(rows);
+	}
+
+	/** Round on one side only. */
+	public static boolean oneCap(int corners) {
+		return corners == LEFT || corners == RIGHT;
 	}
 
 	private static int clampRadius(int w, int h, int r) {

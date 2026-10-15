@@ -42,32 +42,48 @@ public final class Shapes {
 	}
 
 	public static void roundedRect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
-		draw(graphics, x, y, w, h, radius, 0, argb);
+		int scale = guiScale();
+		draw(graphics, x, y, w * scale, h * scale, radius * scale, 0, Corners.ALL, argb);
+	}
+
+	/**
+	 * A horizontal bar of a track (REQ-UI-28, T3.16): from GUI x0 to x1, both snapped to the nearest screen pixel, h
+	 * GUI pixels high at y, with radius h/2 at the given {@link Corners} corners and square ends elsewhere.
+	 */
+	public static void bar(GuiGraphicsExtractor graphics, float x0, float x1, int y, int h, int corners, int argb) {
+		int scale = guiScale();
+		int from = Math.round(x0 * scale);
+		int to = Math.round(x1 * scale);
+		if (to > from) {
+			draw(graphics, (float) from / scale, y, to - from, h * scale, h * scale / 2, 0, corners, argb);
+		}
 	}
 
 	/** A rounded outline, {@code thickness} GUI pixels wide, inside the w×h box. */
 	public static void roundedOutline(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int thickness, int argb) {
 		if (thickness > 0) {
-			draw(graphics, x, y, w, h, radius, thickness, argb);
+			int scale = guiScale();
+			draw(graphics, x, y, w * scale, h * scale, radius * scale, thickness * scale, Corners.ALL, argb);
 		}
 	}
 
 	/**
-	 * A rounded shape as one GUI element, or two back to back with identical bounds (REQ-UI-27, {@link ShapePlan}):
-	 * its pieces in screen pixels under a 1/scale pose, so corners are as round at GUI scale 4 as at 1. With
-	 * "Smooth corners" the corners are tinted quads of an anti-aliased mask; without a mask the fill-based corners.
+	 * A rounded shape, w×h with radius and thickness in screen pixels at GUI (x, y), as one GUI element, or two back to
+	 * back with identical bounds (REQ-UI-27, {@link ShapePlan}): its pieces in screen pixels under a 1/scale pose, so
+	 * corners are as round at GUI scale 4 as at 1. With "Smooth corners" the corners are tinted quads of an
+	 * anti-aliased mask; without a mask the fill-based corners. Only the {@link Corners} {@code corners} are round.
 	 */
-	private static void draw(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int thickness, int argb) {
+	private static void draw(GuiGraphicsExtractor graphics, float x, float y, int w, int h, int radius, int thickness, int corners, int argb) {
 		int scale = guiScale();
 		Matrix3x2fStack outer = graphics.pose();
 		ScreenRectangle scissor = graphics.scissorStack.peek();
 		int[] clip = scissor == null ? null : new int[] {scissor.left(), scissor.top(), scissor.right(), scissor.bottom()};
-		ShapePlan.Result plan = ShapePlan.of(outer, x, y, w, h, radius, thickness, scale, smooth(), clip);
+		ShapePlan.Result plan = ShapePlan.ofPixels(outer, x, y, w, h, radius, thickness, corners, scale, smooth(), clip);
 		Identifier mask = null;
 		if (plan.maskRadius() >= 0) {
 			mask = CornerTextures.mask(scale, plan.maskRadius(), plan.maskThickness());
 			if (mask == null) {
-				plan = ShapePlan.of(outer, x, y, w, h, radius, thickness, scale, false, clip);
+				plan = ShapePlan.ofPixels(outer, x, y, w, h, radius, thickness, corners, scale, false, clip);
 			}
 		}
 		if (plan.elements().isEmpty()) {

@@ -53,6 +53,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 				context.takeScreenshot("t2.3a-widgets-scale-" + s);
 			}
 			outlineCornersKeepTheirColour(context);
+			knobsKeepTheirOwnColour(context);
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
 			knobHasNoFillLine(context);
@@ -144,6 +145,162 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		} finally {
 			context.runOnClient(client -> ConfigManager.general().smoothCorners = before);
 		}
+	}
+
+	/**
+	 * AC-UI-28 in full (T3.16), at GUI scales 2-4 with Smooth corners OFF and ON, on the sliders at 0, 64 and 128,
+	 * the hovered one and the dimmed one (its card idle and hovered):
+	 * <ul>
+	 *   <li>the knob's interior (every pixel it fully covers) has the colour of the knob's centre: no fill shows;</li>
+	 *   <li>no pixel of a dimmed knob's box has the dimmed fill's colour;</li>
+	 *   <li>at 64 and on the hovered slider, the track's top and bottom rows show no backdrop next to the knob;</li>
+	 *   <li>with Smooth corners ON, the knob's outermost pixels left and right match on every row above and below
+	 *       the track;</li>
+	 *   <li>with the knob at either end (Smooth corners OFF), nothing of the fill or the track shows outside the full
+	 *       track pill and the knob: the short bar beside the knob keeps its rounded end.</li>
+	 * </ul>
+	 */
+	private static void knobsKeepTheirOwnColour(ClientGameTestContext context) {
+		Boolean before = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
+		try {
+			for (int scale = 2; scale <= 4; scale++) {
+				for (boolean smooth : new boolean[] {false, true}) {
+					for (boolean cardHover : new boolean[] {false, true}) {
+						int s = scale;
+						context.runOnClient(client -> {
+							client.options.guiScale().set(s);
+							ConfigManager.general().smoothCorners = smooth;
+							screen(client.gui.screen()).dimmedCardHover = cardHover;
+						});
+						context.waitTicks(3);
+						String pass = "scale " + scale + (smooth ? " smooth" : "") + (cardHover ? " card hovered" : "");
+						BufferedImage shot = read(context.takeScreenshot("t3.16-knobs-scale-" + scale + (smooth ? "-smooth" : "-off")
+								+ (cardHover ? "-card-hover" : "")));
+						int[][] sliders = context.computeOnClient(client -> screen(client.gui.screen()).knobSliders());
+						for (int i = 0; i < sliders.length; i++) {
+							checkKnob(shot, scale, smooth, sliders[i], i == 1 || i == 3, pass + ", slider " + i);
+							if (!smooth && (i == 0 || i == 2)) {
+								checkTrackEnds(shot, scale, sliders[i], pass + ", slider " + i);
+							}
+						}
+					}
+				}
+			}
+		} finally {
+			context.runOnClient(client -> {
+				ConfigManager.general().smoothCorners = before;
+				screen(client.gui.screen()).dimmedCardHover = false;
+			});
+		}
+	}
+
+	private static void checkKnob(BufferedImage shot, int scale, boolean smooth, int[] slider, boolean notchCheck, String what) {
+		int size = Slider.KNOB_SIZE * scale;
+		int r = size / 2;
+		int left = slider[3] * scale;
+		int top = slider[4] * scale;
+		boolean dimmed = slider[5] == 1;
+		int centre = shot.getRGB(left + r, top + r);
+		int interior = 0;
+		int wrong = 0;
+		int[] insets = Corners.insets(r);
+		for (int y = 0; y < size; y++) {
+			for (int x = 0; x < size; x++) {
+				boolean full = smooth ? CornerMask.alpha(r, x, y) == 255 : covered(insets, size, x, y);
+				if (full) {
+					interior++;
+					if (!near(shot.getRGB(left + x, top + y), centre)) {
+						wrong++;
+					}
+				}
+			}
+		}
+		check(interior > 0 && wrong == 0, what + ": " + wrong + " of " + interior + " knob pixels differ from its centre");
+		int trackTop = slider[1] * scale;
+		if (dimmed) {
+			int fill = shot.getRGB(slider[0] * scale + 2 * scale, trackTop + Slider.TRACK_HEIGHT * scale / 2);
+			int fillPixels = 0;
+			for (int y = 0; y < size; y++) {
+				for (int x = 0; x < size; x++) {
+					if (near(shot.getRGB(left + x, top + y), fill)) {
+						fillPixels++;
+					}
+				}
+			}
+			check(fillPixels == 0, what + ": " + fillPixels + " pixels of the dimmed fill inside the knob's box");
+		}
+		if (notchCheck) {
+			int backdrop = shot.getRGB(left + r, top - 2 * scale);
+			for (int y : new int[] {trackTop, trackTop + Slider.TRACK_HEIGHT * scale - 1}) {
+				for (int x = left - scale; x < left + size + scale; x++) {
+					check(!near(shot.getRGB(x, y), backdrop), what + ": the backdrop shows on the track's row " + (y - top) + " at x " + (x - left));
+				}
+			}
+		}
+		if (smooth) {
+			int trackRows = Slider.TRACK_HEIGHT * scale;
+			for (int y = 0; y < size; y++) {
+				int row = top + y;
+				if (row >= trackTop && row < trackTop + trackRows) {
+					continue;
+				}
+				int a = -1;
+				int b = -1;
+				for (int x = 0; x < size; x++) {
+					if (CornerMask.alpha(r, x, y) > 0) {
+						if (a < 0) {
+							a = x;
+						}
+						b = x;
+					}
+				}
+				if (a >= 0) {
+					int la = shot.getRGB(left + a, row);
+					int rb = shot.getRGB(left + b, row);
+					check(near(la, rb), what + ": the rim differs left and right on knob row " + y + ": " + Integer.toHexString(la) + " vs "
+							+ Integer.toHexString(rb));
+				}
+			}
+		}
+	}
+
+	/** Next to a knob at either end, every pixel outside both the full track pill and the knob's disc is backdrop. */
+	private static void checkTrackEnds(BufferedImage shot, int scale, int[] slider, String what) {
+		int size = Slider.KNOB_SIZE * scale;
+		int left = slider[3] * scale;
+		int top = slider[4] * scale;
+		int trackX = slider[0] * scale;
+		int trackTop = slider[1] * scale;
+		int trackW = slider[2] * scale;
+		int trackH = Slider.TRACK_HEIGHT * scale;
+		int backdrop = shot.getRGB(left + size / 2, top - 2 * scale);
+		boolean[][] pill = new boolean[trackH][trackW];
+		for (Corners.Span span : Corners.fill(trackW, trackH, trackH / 2)) {
+			for (int y = span.y0(); y < span.y1(); y++) {
+				for (int x = span.x0(); x < span.x1(); x++) {
+					pill[y][x] = true;
+				}
+			}
+		}
+		int[] insets = Corners.insets(size / 2);
+		for (int y = 0; y < trackH; y++) {
+			for (int x = left - scale; x < left + size + scale; x++) {
+				int px = x - trackX;
+				boolean inPill = px >= 0 && px < trackW && pill[y][px];
+				int ky = trackTop + y - top;
+				boolean inDisc = x >= left && x < left + size && ky >= 0 && ky < size && covered(insets, size, x - left, ky);
+				if (!inPill && !inDisc) {
+					check(near(shot.getRGB(x, trackTop + y), backdrop), what + ": fill or track outside the pill and the knob at track row " + y
+							+ ", x " + (x - left) + " from the knob");
+				}
+			}
+		}
+	}
+
+	/** Whether the fill-based disc covers pixel (x, y) of a size×size knob (as Corners draws it). */
+	private static boolean covered(int[] insets, int size, int x, int y) {
+		int inset = y < insets.length ? insets[y] : y >= size - insets.length ? insets[size - 1 - y] : 0;
+		return x >= inset && x < size - inset;
 	}
 
 	/** Whether the 1 GUI px outline fully covers screen pixel (x, y) of the w×h button with radius r. */

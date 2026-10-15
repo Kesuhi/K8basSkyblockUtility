@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.render.ColorMath;
+import com.k8bas.skyblockutility.ui.render.Corners;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
@@ -49,6 +50,11 @@ public final class Slider extends Widget {
 
 	public boolean isDragging() {
 		return dragging;
+	}
+
+	/** The knob's left edge in GUI pixels, for the stored value. */
+	public int knobX() {
+		return x + (int) Math.round(model.fraction(get.getAsLong()) * (width - KNOB_SIZE));
 	}
 
 	/** Draws the hovered look regardless of the mouse, for screenshots of every state. */
@@ -146,14 +152,19 @@ public final class Slider extends Widget {
 		Theme theme = Theme.current();
 		long value = get.getAsLong();
 		int trackY = y + (height - TRACK_HEIGHT) / 2;
-		int knobX = x + (int) Math.round(model.fraction(value) * (width - KNOB_SIZE));
+		int knobX = knobX();
 		boolean hot = enabled && (forcedHot || dragging || contains(mouseX, mouseY));
 		float hover = forcedHot ? 1F : hoverAmount(hot);
-		Shapes.roundedRect(graphics, x, trackY, width, TRACK_HEIGHT, TRACK_HEIGHT / 2, faded(Theme.SEPARATOR));
-		int filled = knobX - x + KNOB_SIZE / 2;
-		if (enabled) {
-			Shapes.roundedRect(graphics, x, trackY, filled, TRACK_HEIGHT, TRACK_HEIGHT / 2, faded(ColorMath.lerp(theme.accent(), theme.accentHover(), hover)));
-		}
+		// REQ-UI-28: nothing that shows lies under the knob. The fill (the track's colour while disabled) ends, and the
+		// rest of the track starts, where the knob's disc meets the track's top and bottom edges; the opaque knob covers
+		// the sliver under its middle rows. A dimmed knob is translucent, so they stop at its box instead.
+		float radius = KNOB_SIZE / 2F;
+		float half = TRACK_HEIGHT / 2F;
+		float reach = dimmed ? radius : (float) Math.sqrt(radius * radius - half * half);
+		float centre = knobX + radius;
+		int fill = enabled ? ColorMath.lerp(theme.accent(), theme.accentHover(), hover) : Theme.SEPARATOR;
+		Shapes.bar(graphics, x, centre - reach, trackY, TRACK_HEIGHT, Corners.LEFT, faded(fill));
+		Shapes.bar(graphics, centre + reach, x + width, trackY, TRACK_HEIGHT, Corners.RIGHT, faded(Theme.SEPARATOR));
 		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, hover) : Theme.TEXT_DISABLED;
 		Shapes.roundedRect(graphics, knobX, y + (height - KNOB_SIZE) / 2, KNOB_SIZE, KNOB_SIZE, KNOB_SIZE / 2, faded(knobColor));
 		UiText.draw(graphics, font, label.apply(value), x + width + 6, y + (height - font.lineHeight) / 2 + 1,

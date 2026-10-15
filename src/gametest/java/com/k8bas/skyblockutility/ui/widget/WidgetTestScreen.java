@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.option.Binding;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
 import net.minecraft.client.Minecraft;
@@ -35,6 +36,10 @@ public final class WidgetTestScreen extends WidgetScreen {
 	private final TextField probeField;
 	private final Slider liveSlider;
 	private Slider middleSlider;
+	/** The sliders AC-UI-28 looks at (T3.16): 0, 64 and 128, the hovered one and the dimmed one. */
+	private final List<Slider> knobSliders = new ArrayList<>();
+	/** The dimmed slider's card shows its hovered colour (T3.16). */
+	volatile boolean dimmedCardHover;
 
 	public WidgetTestScreen() {
 		super(Component.literal("Widget test"));
@@ -53,15 +58,20 @@ public final class WidgetTestScreen extends WidgetScreen {
 			if (value == middle) {
 				middleSlider = slider;
 			}
+			knobSliders.add(slider);
 		}
 		liveSlider = place(new Slider(decimalModel, () -> decimalValue, v -> decimalValue = v, () -> decimalCommits++, decimalModel::format, () -> { }),
 				8, 48, 80, 12);
 		long[] disabled = {32};
 		place(new Slider(range, () -> disabled[0], v -> disabled[0] = v, () -> { }, range::format, () -> { }), 140, 48, 60, 12).setEnabled(false);
 		long[] hot = {96};
-		place(new Slider(range, () -> hot[0], v -> hot[0] = v, () -> { }, range::format, () -> { }), 232, 48, 50, 12).forceHot(true);
+		Slider hotSlider = place(new Slider(range, () -> hot[0], v -> hot[0] = v, () -> { }, range::format, () -> { }), 232, 48, 50, 12);
+		hotSlider.forceHot(true);
+		knobSliders.add(hotSlider);
 		long[] dimmed = {48};
-		place(new Slider(range, () -> dimmed[0], v -> dimmed[0] = v, () -> { }, range::format, () -> { }), 8, 214, 80, 12).setDimmed(true);
+		Slider dimmedSlider = place(new Slider(range, () -> dimmed[0], v -> dimmed[0] = v, () -> { }, range::format, () -> { }), 8, 214, 80, 12);
+		dimmedSlider.setDimmed(true);
+		knobSliders.add(dimmedSlider);
 
 		int row = 0;
 		for (Button.Style style : Button.Style.values()) {
@@ -112,6 +122,8 @@ public final class WidgetTestScreen extends WidgetScreen {
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		graphics.fill(0, 0, width, height, Theme.PANEL);
+		// The dimmed slider sits on a card, idle or hovered, as on a settings page (T3.16).
+		Shapes.roundedRect(graphics, 4, 210, 120, 20, Shapes.RADIUS_CARD, dimmedCardHover ? Theme.CARD_HOVER : Theme.CARD);
 	}
 
 	@Override
@@ -157,6 +169,17 @@ public final class WidgetTestScreen extends WidgetScreen {
 	int[] middleKnob() {
 		int knobX = middleSlider.x + (int) Math.round(0.5 * (middleSlider.width - Slider.KNOB_SIZE));
 		return new int[] {knobX, middleSlider.y + (middleSlider.height - Slider.KNOB_SIZE) / 2};
+	}
+
+	/** Per AC-UI-28 slider: its x, track top, width, knob left and top edge, and 1 if dimmed (GUI pixels). */
+	int[][] knobSliders() {
+		int[][] out = new int[knobSliders.size()][];
+		for (int i = 0; i < out.length; i++) {
+			Slider s = knobSliders.get(i);
+			out[i] = new int[] {s.x, s.y + (s.height - Slider.TRACK_HEIGHT) / 2, s.width, s.knobX(), s.y + (s.height - Slider.KNOB_SIZE) / 2,
+					s.isDimmed() ? 1 : 0};
+		}
+		return out;
 	}
 
 	boolean sliderDragging() {
