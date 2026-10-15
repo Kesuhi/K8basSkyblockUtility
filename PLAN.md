@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, R25 after T3.4 and R26–R35 during Phases 2 and 3, see SPEC §12.3; R35 runs G3 before T3.9b–f; R36 records the G3 field results; R37 drops the drill re-equip fix, T3.7; R38 leaves the four invisible-by-design mobs out of the bundled mob table; R39 counted corpse keys in sacks too (D-7 changed, T3.2b); R40 reinstates the possible corpse spots, T3.3a and T3.3, which R22 had dropped, and adds T3.3b and T3.3c; R41 records the second G3 field session: a key only in the sack does not open a corpse, so D-7 is restored with a sack reminder (R39 replaced, T3.2b rescoped), Hypixel's hotspot particles are hidden on the client (T3.6c), and the ding hint is made concrete from your capture (T3.3b); R42 drops the Rare Drop Odds feature: T3.9b–f are dropped, and the built T3.9a, T3.9g and T3.9h are removed from the code; R43 records the third G3 session: the ding hint moves to a HUD element (T3.3d), and the sack reminder gets a "[Take out k]" button that runs one `/getfromsacks` command per click (T3.2d; P5 amended)). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped tasks T3.7 and T3.9a–T3.9h keep their ids as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
+| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, R25 after T3.4 and R26–R35 during Phases 2 and 3, see SPEC §12.3; R35 runs G3 before T3.9b–f; R36 records the G3 field results; R37 drops the drill re-equip fix, T3.7; R38 leaves the four invisible-by-design mobs out of the bundled mob table; R39 counted corpse keys in sacks too (D-7 changed, T3.2b); R40 reinstates the possible corpse spots, T3.3a and T3.3, which R22 had dropped, and adds T3.3b and T3.3c; R41 records the second G3 field session: a key only in the sack does not open a corpse, so D-7 is restored with a sack reminder (R39 replaced, T3.2b rescoped), Hypixel's hotspot particles are hidden on the client (T3.6c), and the ding hint is made concrete from your capture (T3.3b); R42 drops the Rare Drop Odds feature: T3.9b–f are dropped, and the built T3.9a, T3.9g and T3.9h are removed from the code; R43 records the third G3 session: the ding hint moves to a HUD element (T3.3d), and the sack reminder gets a "[Take out k]" button that runs one `/getfromsacks` command per click (T3.2d; P5 amended); R44 records the fourth G3 session (the "Corpse ding" HUD element, the "[Take out k]" button and the privacy check pass) and rules out corpse spots by the Organ Donor ding's silence (T3.3e)). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped tasks T3.7 and T3.9a–T3.9h keep their ids as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
 | Date | 2026-10-01 |
 | Branch | `update/26.2` (from `main` @ `bc0f2f6`, v1.0.1) |
 | Baseline | `./gradlew build` on `main` is green (26.1.2) |
@@ -142,7 +142,7 @@ Authoritative per-feature defaults: `SPEC.md` §12.H.
 | NPC waypoints: white label + coloured beacon beam | 🟡→🟢 | Fixed coordinates only; labels always white with a yellow distance line (R31; R21's option removed) | module ON |
 | Waypoint distance "Nm" line | 🟡 | Only to fixed coordinates; own toggle | ON |
 | Mineshaft entry alert (corpse types + keys in inventory, sack reminder, R41) | 🟢 | Reads the server's *Frozen Corpses* tab widget and your inventory; reminds you of keys it has seen in your Dwarven Sack (the sack menu you open, "[Sacks]" and "Moved …" lines); never opens a menu; local message only. R39's sack count is replaced by R41. The reminder's "[Take out k]" button runs one `/getfromsacks` command, only when you click it (R43, P5) | ON |
-| Possible-corpse-spot waypoints | 🟡 **[reinstated R40]** | Every known spot for the shaft variant, never filtered by unseen entities; text only. The Organ Donor ding hint shows on a HUD element "Corpse ding" (R43; it highlighted spots until then), from a sound the player hears and the player's own position, never from entity data or the sound's position | **ON** [R40] (was OFF) |
+| Possible-corpse-spot waypoints | 🟡 **[reinstated R40]** | Every known spot for the shaft variant, never filtered by unseen entities; text only. The Organ Donor ding hint shows on a HUD element "Corpse ding" (R43; it highlighted spots until then), from a sound the player hears and the player's own position, never from entity data or the sound's position. One exception (R44, borderline, approved by your explicit request): once the ding has been heard in the visit, spots where it stays silent for 4 s within 16 blocks are removed ("Remove ruled-out spots", ON), from the same sound and your position only | **ON** [R40] (was OFF) |
 | Bobber rubber-band fix | 🟡→🟢 | Client presentation only; no packets, timing or reel behaviour changed | ON |
 | Hotspot highlight | 🟢 | Depth-tested ring; read-only detection; no particle-packet cancelling. Hypixel's ring particles around a tracked hotspot are not drawn on the client (R41); the packets stay untouched | ON; hide Hypixel's hotspot particles ON (R41) |
 | "Hotspot gone" warning | 🟢 | Only if you fished it in the last 30 s and are within 40 blocks | ON |
@@ -160,7 +160,7 @@ Authoritative per-feature defaults: `SPEC.md` §12.H.
 - automatic party-chat announcements (SkyOcean)
 - particle-packet cancelling (still true after R41: "Hide Hypixel's hotspot particles" only skips drawing them on the client, T3.6c)
 - a through-wall glow option
-- filtering static corpse spots by unseen entities (the corpse spots themselves are back since R40; the README line "filtering possible corpse spots by entities you cannot see" stays as an exclusion, REQ-REL-03)
+- filtering static corpse spots by unseen entities (the corpse spots themselves are back since R40; the README line "filtering possible corpse spots by entities you cannot see" stays as an exclusion, REQ-REL-03; still true after R44: spots are ruled out only by the ding's silence and your position, T3.3e)
 - drill (B)
 
 ---
@@ -1160,7 +1160,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - **Gametest hygiene:** ConfigScreenGameTest, ConfigMotionGameTest and KeyboardNavGameTest switched every module ON after themselves. With a feature that is OFF by default this kept the profile service reading for later gametests, so they now put each module back (`gametest/ModuleStates`).
     - **Review:** two angles with two verifiers each. Fixed (confirmed): counts made while the profile was unknown or unsettled were shown as zeros and lost; the session reset on a reconnect, on the id arriving or on a toggle; AC-ODDS-09's real table state and the once-per-session log were untested; the notice's case names were cut off. The all-modules-ON cleanup (split vote) is fixed too.
 
-*After the G3 field checks (R36–R43, 2026-10-15), in this order:*
+*After the G3 field checks (R36–R44, 2026-10-15), in this order:*
 
 - [x] **T3.2c fix(mining): widget hint says `/widgets`** (S, deps T3.0m, T3.2). R36: the Frozen Corpses widget is enabled with `/widgets`. The one shared widget-hint string changes from `/widget` to `/widgets`; mineshaft-alert, bestiary-hud and sbxp-optimizer keep using its key.
   - Req: REQ-GS-18, REQ-MSA-08
@@ -1210,6 +1210,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - **Rules:** FixedAnchorSourceTest allows the module (positions from the bundled table only); the send scan covers it; no entity is read and no network call made (AC-CORPSE-04 [R], AC-CORPSE-09 [R]).
     - **Tests:** CorpseSpotRulesTest (AC-CORPSE-05 table, AC-CORPSE-06 sorting and replies, the waiting request); CorpseSpotsGameTest in a simulated OPAL_1 (5 labels; walled in by stone the labels ahead are on screen, cyan pixels against a shot with the feature off; hidden when all looted and back; none within 1 s off or after leaving; `/ksu corpses` with both features OFF answers once the shaft is read; passes). Settings tests count the module (7) and its two defaults.
     - Review: one batch review of T3.8d, T3.2c, T3.3c, T3.3a and T3.3 in three angles (rules and licences, correctness, tests and style), each finding checked by two verifiers; confirmed and fixed here: `/ksu corpses` answered "Not in a Glacite Mineshaft" when no shaft feature was on (now it waits for the state); the gametest's "through the stone" check only counted labels in view (now a pixel check); the CHANGELOG's "29 layouts" (29 shaft codes).
+  - R44 (2026-10-15, after the fourth G3 session): the marker set may also lose the spots that the Organ Donor ding's silence rules out, and `/ksu corpses` marks them "· ruled out". T3.3e builds it; this task stays done as it is.
 - [x] **T3.2b feat(mining): sack reminder for corpse keys** (M, deps T3.2, T3.0d, T3.0e, T3.0g). R41 (a), replacing R39: the key count stays the inventory (36 slots + offhand, D-7, as T3.2 built it), with the REQ-MSA-06 marker. When a keyed type is short and the mod has seen keys of that type in the Dwarven Sack, the entry adds "(n in your sack: take them out)".
   - Req: REQ-MSA-05, REQ-MSA-06
   - The sack amount of `TUNGSTEN_KEY` and `UMBER_KEY` comes only from what the server shows: the Dwarven Mines Sack menu the player opens (its title and the item's Stored lore line, from your capture "Dwarven Mines Sack", on the T3.0e menu reader). It is kept current by "[Sacks]" hover lines (the format is known from your Chat Patches log) and by "Moved N <Item> from your Sacks to your inventory." lines (from your logs), where readable (T3.0g). It is kept per SkyBlock profile in the T3.0d store.
@@ -1251,6 +1252,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Accept: AC-CORPSE-11 (rewritten, R43), AC-HUD-12 (re-run). AC-CORPSE-12 [E] (rewritten, R43) is checked at the next field check.
   - Done (2026-10-15): `corpsespots/CorpseDingHud` (id `corpse_ding`, "Corpse ding", top centre 40 px down, preview "Corpse ding: very close") is the first shipped HUD element (`ShippedHud`). The module works its `HudText` out each tick from `DingHint` (`hudLine`: "§6Corpse ding: §e<warmth>"), only with the feature and "Organ Donor ding hint" on and in a shaft; it goes 2 s after the last ding. The spot labels are plain again (the label ding code is gone). The live card gains "Edit position" (`HudOptions.editPosition`); the catalogue built for tests leaves it out, as General's "Edit HUD layout". Tests: DingHintTest (the HUD line), CorpseSpotsGameTest (a 1.968 harp gives "very close" while every label stays plain; the editor lists the element with its preview; cleared after 2 s; nothing with the hint or the feature off; passes), HudEditorGameTest (takes the shipped elements out for its own run and puts them back), HudLayoutTest (the default does not overlap).
     - Review: two angles with two verifiers each; confirmed and fixed: no test showed the labels stay plain during a ding, that the editor lists the element with its preview, or that the feature off shows nothing; the button's hover was untested and the command helper hid a doubled button; a KDoc wrap and the scan test's doc.
+    - Field check (R44): the "Corpse ding" HUD element and its "Edit position" button work in game (AC-CORPSE-12 passed).
 - [x] **T3.2d feat(mining): take-out button for sack keys** (S, deps T3.2b). R43 (c): when the T3.2b reminder shows (a keyed type is short and the Dwarven Mines Sack holds keys of it), the entry adds a clickable "[Take out k]" right after it, with k = min(keys needed − keys in the inventory, keys in the sack). Its click event (`ClickEvent.RunCommand`) holds `/getfromsacks Tungsten Key k` or `/getfromsacks Umber Key k` (your command format), and vanilla's chat click handling runs it, on that click only. Its hover says which command a click runs. The Skeleton Key never has a reminder, so it never gets the button.
   - Req: REQ-MSA-05, REQ-XC-RULES-02
   - The mod itself still never sends anything on its own. This is the one click-to-run button (P5, §3). The shared send scan (`SendScan`, `FeatureSendScanTest`) allows `ClickEvent.RunCommand` only in `MineshaftAlertText` and only for `getfromsacks`; anywhere else it fails.
@@ -1258,6 +1260,15 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Accept: AC-MSA-13 (cases (a) and (e)–(g), R43), AC-XC-13. AC-MSA-15 [E] (with the button, R43) is checked at the next field check.
   - Done (2026-10-15): `MineshaftAlertText.takeOutButton` adds "[Take out k]" (aqua) after the sack reminder, k = keys needed − keys in the inventory, at most what the sack holds; its `ClickEvent.RunCommand` is "getfromsacks <Key Name> k" and its hover "Click to run /getfromsacks …". Vanilla runs it only on the player's click (`sendUnattendedCommand`, which shows a confirm screen when the command does not check out client-side); the mod sends nothing by itself. Tests: MineshaftAlertTest (2 needed, none held, 5 in the sack → 2; 1 held → 1; 1 in the sack → 1; not short → no button; the hover; each button counted), FeatureSendScanTest (the only RunCommand or SuggestCommand in the mod is this one, for getfromsacks: AC-XC-13 [A]).
     - Review: two angles with two verifiers each; confirmed and fixed: no test showed the labels stay plain during a ding, that the editor lists the element with its preview, or that the feature off shows nothing; the button's hover was untested and the command helper hid a doubled button; a KDoc wrap and the scan test's doc.
+    - Field check (R44): a click on "[Take out k]" works on Hypixel (AC-MSA-15 passed). This settles the UNVERIFIED click above.
+- [ ] **T3.3e feat(mining): rule out spots by ding silence** (S, deps T3.3d). R44 (your request): with the Organ Donor ding, the possible corpse spots that cannot hold an unlooted corpse are removed, by silence only. Once a ding (the `DingHint` ding: harp, block category, within 4 blocks, in a shaft) has been heard in the current shaft visit, a spot is ruled out when the player spent 4 s within 16 blocks of it (3-D, to the spot's block centre, at every tick of that window, sampled back to back) without any ding. A ding starts the window over, and so does a pause of more than 250 ms in the samples. For the rule-out a ding counts within 8 blocks of the player (the HUD keeps 4).
+  - Req: REQ-CORPSE-04, REQ-CORPSE-06, REQ-CORPSE-12
+  - Why 16 blocks and 4 s: the ding fires for an unlooted corpse within 20 blocks, and dings repeat every 0.55–1.0 s in range; both are safety margins, and 4 s leaves room for a lag spike (review, 3 s at first).
+  - A ding never rules out a spot, also not a far one (there can be several corpses). The pitch is not used to rule out. The sound's position is never used, and no entity is read.
+  - Ruled-out spots stay removed for the shaft visit. All come back when the Frozen Corpses widget lists more corpses than before in the visit (a Dead Man's Chest) and on entering another shaft.
+  - Own toggle "Remove ruled-out spots" on the corpse spots card, default ON, effective only with "Organ Donor ding hint" ON. `/ksu corpses` still lists every spot and marks the ruled-out ones "· ruled out".
+  - This is the borderline behaviour of SPEC REQ-XC-RULES-06, approved by your explicit request (R44). FixedAnchorSourceTest and the send scan must still pass for the module (AC-CORPSE-04 [R] stays true).
+  - Accept: AC-CORPSE-13, AC-CORPSE-14. AC-CORPSE-15 [E] is checked at the next field check.
 - **T3.9b feat(odds): Scatha case** [dropped R42] **Dropped (R42, 2026-10-15, your decision): never built; the record below is kept.** Was: (M, deps T3.9h, T2.8). A Crystal Hollows HUD panel showing:
   - the base and the MF + Pet Luck-adjusted pet chances: any, Rare, Epic, Legendary
   - kills this session and kills since the last pet
@@ -1351,14 +1362,22 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - Hypixel's hotspot particles are hidden ("Hide Hypixel's hotspot particles", T3.6c): pass.
     - Rare Drop Odds is gone from the settings (R42): pass.
     - New from this round: the ding hint moves to a HUD element "Corpse ding" (R43 (b), T3.3d), and the sack reminder gets a "[Take out k]" button (R43 (c), T3.2d).
-  - **Still open (after R43):**
-    - the sack-reminder field check, AC-MSA-15, now with the "[Take out k]" button (after T3.2d);
-    - the ding check AC-CORPSE-12, now on the "Corpse ding" HUD element (after T3.3d);
-    - not reported in R36: the privacy check (AC-GS-12 [E]) (the corpse loot lines, AC-ODDS-16, were here; dropped, R42);
-    - the opportunistic items: a party summon (AC-MSA-10) and the rare-room glow (AC-GLOW-11) (Scatha, slayer and a Vanguard corpse were here; dropped, R42).
+  - Done (2026-10-15), your fourth round with the jar at `95635db` (R44):
+    - The "Corpse ding" HUD element and its "Edit position" button work: AC-CORPSE-12 passed.
+    - The "[Take out k]" button works: AC-MSA-15 passed.
+    - Privacy, AC-GS-12 [E]: passed. After your sessions with capture off, the mod's config files hold no chat, tab, sidebar or dump text. The profile store folder holds only its `profile.json` (profile id and name, the SPEC REQ-GS-12 exception).
+    - Observed limit: the per-profile store writes only once the profile id is known in that session (by design, T3.0d). In a session without the "Profile ID:" line, the sack amounts were kept in memory only.
+    - Every commit since G2 builds alone (the AC-XC-05 part of the push item below).
+    - New from this round: spots are ruled out by the ding's silence (R44 (b), T3.3e); its field check AC-CORPSE-15 comes at the next field check.
+  - **Still open (after R44):**
+    - the opportunistic items: a party summon (AC-MSA-10) and the rare-room glow (AC-GLOW-11) (Scatha, slayer and a Vanguard corpse were here; dropped, R42);
+    - the rule-out check AC-CORPSE-15 [E] for T3.3e (R44), at the next session with the new jar;
+    - the push and CI item below.
+  - Closed by R44: the sack-reminder check AC-MSA-15 with the "[Take out k]" button, the ding check AC-CORPSE-12 on the "Corpse ding" HUD element, and the privacy check AC-GS-12 [E].
 - [dropped R38] *(the mob gist stays as it is)* you have removed Ghost, Fels, Sneaky Creeper and Invisibug from the 1.0.x mob gist (any time before this, e.g. together with T0.5); Claude checks that the raw URL still parses (AC-NPCDB-09 pre-check)
 - [ ] every commit since G2, including fixture commits from the G3 captures, builds in a worktree (AC-XC-05); then push `update/26.2` (D-10 checkpoint push); CI green on the pushed head
   - So far (2026-10-15): all 26 commits from `b92bbfd` to `10ddc84` build alone, with conforming subjects and noreply authors. Run again over the G3 commits before the push.
+  - Again (2026-10-15, R44): all 50 commits from `b92bbfd` to `fbb0c56` (the head at the time of the check) build alone, with conforming subjects, the noreply author and the co-author line (AC-XC-05). Commits after `fbb0c56` are checked again before the push. The push itself, and CI on the pushed head, wait for your "push".
 - [ ] Phase 3 report:
   - opportunistic criteria not yet seen (§11)
   - UNVERIFIED fixtures (REQ-GS-14)
@@ -1371,7 +1390,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - the mineshaft entry alert (T3.2), beam colour settings and migration (T3.4b);
       - the bobber fix (T3.5), hotspot rings and the "hotspot gone" warning (T3.6, T3.6b).
       Each has a CHANGELOG entry under [Unreleased]. The drill re-equip fix (T3.7) was built and then removed with its CHANGELOG entry (R37). So were the odds math, tables and module (T3.9a, T3.9g, T3.9h; R42).
-    - **Open:** T3.3d and T3.2d (R43). Done since R36: T3.2c, T3.8d, T3.3c, T3.3a, T3.3, T3.10, T3.2b, T3.3b and T3.6c. T3.9b–f, held back by R35, are dropped (R42).
+    - **Open:** T3.3e (R44). Done since R36: T3.2c, T3.8d, T3.3c, T3.3a, T3.3, T3.10, T3.2b, T3.3b, T3.6c, T3.3d and T3.2d. T3.9b–f, held back by R35, are dropped (R42).
     - **UNVERIFIED until your checks** (the sack formats and the Organ Donor ding came from your captures and logs, R41):
       - the Bestiary glyphs, the `Profile ID:` line and the ☀/Ⓑ profile glyphs;
       - the hotspot island caps and the pink-dust and smoke filters;
@@ -1939,7 +1958,7 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
 
   → *MIT with notices, pinned commit, ship now with credit.*
 - **D-6 Defaults policy (§3):** P1–P7, plus these per-item defaults:
-  - ON: distance line, hotspot ring, hotspot-gone warning, hiding Hypixel's hotspot particles (added at G3, R41), bobber fix, drill animation (dropped at G3, R37), corpse spots (from R40) with the Organ Donor ding hint (a HUD element since R43), the "You found X" title (current behaviour; limited to five NPCs after G1, R20), white waypoint labels (added after G1, R21: "White waypoint labels" ON)
+  - ON: distance line, hotspot ring, hotspot-gone warning, hiding Hypixel's hotspot particles (added at G3, R41), bobber fix, drill animation (dropped at G3, R37), corpse spots (from R40) with the Organ Donor ding hint (a HUD element since R43) and "Remove ruled-out spots" (R44, only with the ding hint ON), the "You found X" title (current behaviour; limited to five NPCs after G1, R20), white waypoint labels (added after G1, R21: "White waypoint labels" ON)
   - OFF: corpse spots (dropped after G1, R22; ON since R40), odds HUD (dropped at G3, R42), bestiary HUD
   - SkyBlock XP: module and passive `/sblevels` / action-bar reading ON, "next best task" HUD OFF, live Bazaar OFF (D-22)
 
