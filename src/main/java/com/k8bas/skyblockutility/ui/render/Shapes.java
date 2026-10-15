@@ -3,11 +3,13 @@ package com.k8bas.skyblockutility.ui.render;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.Identifier;
+import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
-
-import java.util.List;
 
 /**
  * Rects and rounded rects from plain fills (REQ-UI-17, D-8; no direct GL, REQ-PORT-12). Corners are cut in
@@ -21,9 +23,6 @@ public final class Shapes {
 	public static final int RADIUS_CARD = 6;
 	public static final int RADIUS_TAB = 5;
 	public static final int RADIUS_CONTROL = 4;
-
-	/** The smooth shape's pieces, reused: drawing runs on the render thread only. */
-	private static final int[] PIECES = new int[CornerPieces.MAX_PIECES * CornerPieces.STRIDE];
 
 	private Shapes() {
 	}
@@ -43,73 +42,51 @@ public final class Shapes {
 	}
 
 	public static void roundedRect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
-		int scale = guiScale();
-		if (smooth() && drawSmooth(graphics, x, y, scale, w * scale, h * scale, radius * scale, 0, argb)) {
-			return;
-		}
-		drawSpans(graphics, x, y, scale, Corners.fill(w * scale, h * scale, radius * scale), argb);
+		draw(graphics, x, y, w, h, radius, 0, argb);
 	}
 
 	/** A rounded outline, {@code thickness} GUI pixels wide, inside the w×h box. */
 	public static void roundedOutline(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int thickness, int argb) {
-		int scale = guiScale();
-		if (thickness > 0 && smooth() && drawSmooth(graphics, x, y, scale, w * scale, h * scale, radius * scale, thickness * scale, argb)) {
-			return;
+		if (thickness > 0) {
+			draw(graphics, x, y, w, h, radius, thickness, argb);
 		}
-		drawSpans(graphics, x, y, scale, Corners.ring(w * scale, h * scale, radius * scale, thickness * scale), argb);
-	}
-
-	/** Spans in screen pixels, drawn at (x, y) in GUI pixels. */
-	private static void drawSpans(GuiGraphicsExtractor graphics, int x, int y, int scale, List<Corners.Span> spans, int argb) {
-		if (spans.isEmpty()) {
-			return;
-		}
-		Matrix3x2fStack pose = graphics.pose();
-		pose.pushMatrix();
-		pose.translate(x, y);
-		pose.scale(1F / scale, 1F / scale);
-		for (Corners.Span span : spans) {
-			graphics.fill(span.x0(), span.y0(), span.x1(), span.y1(), argb);
-		}
-		pose.popMatrix();
 	}
 
 	/**
-	 * The smooth shape, w×h with radius r and outline thickness t (0 = filled) in screen pixels, drawn at (x, y)
-	 * in GUI pixels: one texel per screen pixel, tinted with the colour, so a faded colour fades the edge too.
-	 *
-	 * @return false if a mask cannot draw it, so the caller draws the fill-based shape
+	 * A rounded shape as one GUI element, or two back to back with identical bounds (REQ-UI-27, {@link ShapePlan}):
+	 * its pieces in screen pixels under a 1/scale pose, so corners are as round at GUI scale 4 as at 1. With
+	 * "Smooth corners" the corners are tinted quads of an anti-aliased mask; without a mask the fill-based corners.
 	 */
-	private static boolean drawSmooth(GuiGraphicsExtractor graphics, int x, int y, int scale, int w, int h, int r, int t, int argb) {
-		if (w <= 0 || h <= 0) {
-			return true;
-		}
-		int radius = CornerPieces.clampRadius(w, h, r);
-		int n = t == 0 ? CornerPieces.fill(w, h, radius, PIECES) : CornerPieces.ring(w, h, radius, t, PIECES);
-		if (n < 0) {
-			return false;
-		}
-		Identifier mask = CornerTextures.mask(scale, radius, t);
-		if (mask == null) {
-			return false;
-		}
-		int size = 2 * radius;
-		Matrix3x2fStack pose = graphics.pose();
-		pose.pushMatrix();
-		pose.translate(x, y);
-		pose.scale(1F / scale, 1F / scale);
-		for (int i = 0; i < n; i++) {
-			int o = i * CornerPieces.STRIDE;
-			int x0 = PIECES[o + 1];
-			int y0 = PIECES[o + 2];
-			if (PIECES[o] == CornerPieces.KIND_MASK) {
-				graphics.blit(RenderPipelines.GUI_TEXTURED, mask, x0, y0, PIECES[o + 5], PIECES[o + 6], radius, radius, size, size, argb);
-			} else {
-				graphics.fill(x0, y0, PIECES[o + 3], PIECES[o + 4], argb);
+	private static void draw(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int thickness, int argb) {
+		int scale = guiScale();
+		Matrix3x2fStack outer = graphics.pose();
+		ScreenRectangle scissor = graphics.scissorStack.peek();
+		int[] clip = scissor == null ? null : new int[] {scissor.left(), scissor.top(), scissor.right(), scissor.bottom()};
+		ShapePlan.Result plan = ShapePlan.of(outer, x, y, w, h, radius, thickness, scale, smooth(), clip);
+		Identifier mask = null;
+		if (plan.maskRadius() >= 0) {
+			mask = CornerTextures.mask(scale, plan.maskRadius(), plan.maskThickness());
+			if (mask == null) {
+				plan = ShapePlan.of(outer, x, y, w, h, radius, thickness, scale, false, clip);
 			}
 		}
-		pose.popMatrix();
-		return true;
+		if (plan.elements().isEmpty()) {
+			return;
+		}
+		Matrix3x2f pose = new Matrix3x2f(outer).translate(x, y).scale(1F / scale, 1F / scale);
+		for (ShapePlan.Element element : plan.elements()) {
+			ScreenRectangle bounds = new ScreenRectangle(element.left(), element.top(), element.right() - element.left(),
+					element.bottom() - element.top());
+			graphics.guiRenderState.addGuiElement(element.textured()
+					? new ShapeRenderState(RenderPipelines.GUI_TEXTURED, texture(mask), pose, element.quads(), element.uvs(), argb, scissor, bounds)
+					: new ShapeRenderState(RenderPipelines.GUI, TextureSetup.noTexture(), pose, element.quads(), null, argb, scissor, bounds));
+		}
+	}
+
+	/** The mask texture as the game's blit sets it up. */
+	private static TextureSetup texture(Identifier mask) {
+		AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(mask);
+		return TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler());
 	}
 
 	/** "Smooth corners" (General › Interface, R32), read on each draw so a change applies at once. */

@@ -34,6 +34,7 @@ public final class WidgetTestScreen extends WidgetScreen {
 	private final TextEditModel probeModel = new TextEditModel(64, GAME_CLIPBOARD);
 	private final TextField probeField;
 	private final Slider liveSlider;
+	private Slider middleSlider;
 
 	public WidgetTestScreen() {
 		super(Component.literal("Widget test"));
@@ -48,7 +49,10 @@ public final class WidgetTestScreen extends WidgetScreen {
 		long[] low = {0}, middle = {64}, high = {128};
 		for (long[] value : List.of(low, middle, high)) {
 			int column = value == low ? 0 : value == middle ? 1 : 2;
-			place(new Slider(range, () -> value[0], v -> value[0] = v, () -> { }, range::format, () -> { }), 8 + column * 102, 28, 50, 12);
+			Slider slider = place(new Slider(range, () -> value[0], v -> value[0] = v, () -> { }, range::format, () -> { }), 8 + column * 102, 28, 50, 12);
+			if (value == middle) {
+				middleSlider = slider;
+			}
 		}
 		liveSlider = place(new Slider(decimalModel, () -> decimalValue, v -> decimalValue = v, () -> decimalCommits++, decimalModel::format, () -> { }),
 				8, 48, 80, 12);
@@ -147,6 +151,12 @@ public final class WidgetTestScreen extends WidgetScreen {
 
 	boolean probeFocused() {
 		return keyboardFocus() == probeField;
+	}
+
+	/** The knob of the 0-128 slider at 64, in GUI pixels: its left and top edge (T3.15). */
+	int[] middleKnob() {
+		int knobX = middleSlider.x + (int) Math.round(0.5 * (middleSlider.width - Slider.KNOB_SIZE));
+		return new int[] {knobX, middleSlider.y + (middleSlider.height - Slider.KNOB_SIZE) / 2};
 	}
 
 	boolean sliderDragging() {

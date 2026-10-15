@@ -1,6 +1,11 @@
 package com.k8bas.skyblockutility.ui.widget;
 
+import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
+import com.k8bas.skyblockutility.ui.render.CornerMask;
+import com.k8bas.skyblockutility.ui.render.Corners;
+import com.k8bas.skyblockutility.ui.render.Shapes;
+import com.k8bas.skyblockutility.ui.render.Theme;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -10,6 +15,11 @@ import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * T2.3a, the basic widgets in a real client:
@@ -42,8 +52,10 @@ public class WidgetsGameTest implements FabricClientGameTest {
 				context.waitTicks(3);
 				context.takeScreenshot("t2.3a-widgets-scale-" + s);
 			}
+			outlineCornersKeepTheirColour(context);
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
+			knobHasNoFillLine(context);
 			wheelSteps(context);
 			dragCommitsOnce(context);
 			typingAndShortcuts(context);
@@ -53,6 +65,116 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			context.setScreen(() -> null);
 			context.restoreDefaultGameOptions();
 			context.getInput().resizeWindow(854, 480);
+		}
+	}
+
+	/**
+	 * AC-UI-28's Prove-It (T3.15, the 1.2.1 knob line): at GUI scale 2 with Smooth corners OFF, the knob of the
+	 * 0-128 slider at 64 is a 20 px disc whose seventh physical row is the track's first. Every pixel of that row
+	 * inside the disc must have the knob's own colour, not the accent fill's.
+	 */
+	private static void knobHasNoFillLine(ClientGameTestContext context) {
+		Boolean before = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
+		context.runOnClient(client -> ConfigManager.general().smoothCorners = Boolean.FALSE);
+		try {
+			context.waitTicks(3);
+			int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+			int[] knob = context.computeOnClient(client -> screen(client.gui.screen()).middleKnob());
+			BufferedImage shot = read(context.takeScreenshot("t3.15-knob-scale-2-off"));
+			int size = Slider.KNOB_SIZE * scale;
+			int left = knob[0] * scale;
+			int top = knob[1] * scale;
+			int centre = shot.getRGB(left + size / 2, top + size / 2);
+			int row = top + 6;
+			int inset = Corners.insets(size / 2)[6];
+			int wrong = 0;
+			for (int x = left + inset; x < left + size - inset; x++) {
+				if (!near(shot.getRGB(x, row), centre)) {
+					wrong++;
+				}
+			}
+			LOGGER.info("knob row 7 at scale {}: {} of {} pixels differ from the knob colour {}", scale, wrong, size - 2 * inset,
+					Integer.toHexString(centre));
+			check(scale == 2, "the check runs at GUI scale 2: " + scale);
+			check(wrong == 0, "no fill pixel in the knob's seventh row: " + wrong + " differ");
+		} finally {
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = before);
+		}
+	}
+
+	/**
+	 * AC-UI-29's outline corners (T3.15): the idle "Cancel" button (GUI 8, 68, 46x16, radius 4, 1 px outline) at GUI
+	 * scales 3 and 4, Smooth corners OFF and ON. Every corner pixel the outline fully covers shows the outline colour;
+	 * in 1.2.1 the fill was drawn over some of them.
+	 */
+	private static void outlineCornersKeepTheirColour(ClientGameTestContext context) {
+		Boolean before = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
+		try {
+			for (int scale = 3; scale <= 4; scale++) {
+				for (boolean smooth : new boolean[] {false, true}) {
+					int s = scale;
+					context.runOnClient(client -> {
+						client.options.guiScale().set(s);
+						ConfigManager.general().smoothCorners = smooth;
+					});
+					context.waitTicks(3);
+					BufferedImage shot = read(context.takeScreenshot("t3.15-outline-scale-" + scale + (smooth ? "-smooth" : "-off")));
+					int wrong = 0;
+					int checked = 0;
+					int w = 46 * scale;
+					int h = 16 * scale;
+					int r = Shapes.RADIUS_CONTROL * scale;
+					for (int y = 0; y < h; y++) {
+						for (int x = 0; x < w; x++) {
+							boolean corner = (x < r || x >= w - r) && (y < r || y >= h - r);
+							if (corner && outlineCovers(smooth, w, h, r, scale, x, y)) {
+								checked++;
+								if (!near(shot.getRGB(8 * scale + x, 68 * scale + y), Theme.SEPARATOR)) {
+									wrong++;
+								}
+							}
+						}
+					}
+					LOGGER.info("outline corners at scale {}{}: {} of {} pixels lack the outline colour", scale, smooth ? " smooth" : "", wrong,
+							checked);
+					check(checked > 0 && wrong == 0, "outline corners at scale " + scale + (smooth ? " smooth" : "") + ": " + wrong + " of "
+							+ checked + " covered by the fill");
+				}
+			}
+		} finally {
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = before);
+		}
+	}
+
+	/** Whether the 1 GUI px outline fully covers screen pixel (x, y) of the w×h button with radius r. */
+	private static boolean outlineCovers(boolean smooth, int w, int h, int r, int t, int x, int y) {
+		if (smooth) {
+			int mx = x < r ? x : x - (w - 2 * r);
+			int my = y < r ? y : y - (h - 2 * r);
+			return CornerMask.ringAlpha(r, t, mx, my) == 255;
+		}
+		for (Corners.Span span : Corners.ring(w, h, r, t)) {
+			if (x >= span.x0() && x < span.x1() && y >= span.y0() && y < span.y1()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean near(int a, int b) {
+		for (int shift = 0; shift <= 16; shift += 8) {
+			if (Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF)) > 8) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static BufferedImage read(Path shot) {
+		try {
+			return ImageIO.read(shot.toFile());
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
 		}
 	}
 
