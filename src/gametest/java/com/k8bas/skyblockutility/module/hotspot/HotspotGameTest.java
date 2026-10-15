@@ -86,12 +86,12 @@ public class HotspotGameTest implements FabricClientGameTest {
 
 			// AC-HOT-12: hidden by default, still sampled; drawn with the option off; dust far from the hotspot always drawn.
 			int hidden = addedParticles(context, server, CX + 2.5, CZ);
-			check(hidden < 10 && context.computeOnClient(client -> spot.sampleCount()) == 25, "hidden but sampled: " + hidden + " added");
+			check(hidden < 30 && context.computeOnClient(client -> spot.sampleCount()) == 25, "hidden but sampled: " + hidden + " added");
 			int far = addedParticles(context, server, CX + 12.0, CZ);
-			check(far >= 20, "the same dust 12 blocks out is drawn: " + far);
+			check(far >= 70, "the same dust 12 blocks out is drawn: " + far);
 			set(context, "fishing_hotspots.hide_particles", false);
 			int shown = addedParticles(context, server, CX + 2.5, CZ);
-			check(shown >= 20 && context.computeOnClient(client -> spot.sampleCount()) == 26, "the option off: drawn and sampled: " + shown);
+			check(shown >= 70 && context.computeOnClient(client -> spot.sampleCount()) == 26, "the option off: drawn and sampled: " + shown);
 			set(context, "fishing_hotspots.hide_particles", true);
 
 			// AC-HOT-06.
@@ -137,12 +137,12 @@ public class HotspotGameTest implements FabricClientGameTest {
 	}
 
 	/**
-	 * How many particles the client added for one server packet of 30 ring-coloured dust particles at x, z (on the water),
+	 * How many particles the client added for one server packet of 100 ring-coloured dust particles at x, z (on the water),
 	 * against the count just before: the engine counts per render group, and a few other particles are always about.
 	 */
 	private static int addedParticles(ClientGameTestContext context, TestServerContext server, double x, double z) {
 		int before = context.computeOnClient(client -> particles(client));
-		server.runCommand(String.format(Locale.ROOT, "particle minecraft:dust{color:[1.0,0.41,0.71],scale:1.0} %.3f -60.0 %.3f 0 0 0 0 30 force", x, z));
+		server.runCommand(String.format(Locale.ROOT, "particle minecraft:dust{color:[1.0,0.41,0.71],scale:1.0} %.3f -60.0 %.3f 0 0 0 0 100 force", x, z));
 		context.waitTicks(2);
 		return context.computeOnClient(client -> particles(client)) - before;
 	}
