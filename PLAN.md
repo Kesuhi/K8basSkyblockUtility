@@ -1284,6 +1284,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 *Done (2026-10-15): R42 drops Rare Drop Odds, so the odds acceptance items below (AC-ODDS-02, AC-ODDS-03, AC-ODDS-12, AC-ODDS-13, AC-ODDS-16 and AC-ODDS-17) are dropped with it; nothing in G3 waits for T3.9b–f any more.*
 
 - [x] tiers A–C green (the full build with all gametests, 2026-10-10)
+  - Again on 2026-10-15 at 44a1001 (after R36–R42): the full build and every gametest, the two frame-time checks with your game closed (150 markers +0.37 ms, 100 waypoints +0.20 ms against the 1 ms budget).
 - [x] `code-reviewer` review:
   - the rules review (AC-XC-01): no packet cancelling, no sends, nothing see-through that comes from an entity
   - the module review items AC-MSA-08, AC-NPCWP-12, AC-BOB-06, AC-HOT-07 (AC-ODDS-02 was here; dropped, R42. AC-DRILL-02 was here; dropped, R37. AC-CORPSE-04, dropped by R22 and back with R40, is reviewed with T3.3)
@@ -1838,6 +1839,10 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
 
 - **REQ-UI-18**: Optional stretch goals after G2 [decided D-8, Q-UI-04]: open/tab animations, keyboard focus navigation, anti-aliased corners. Planned as stretch tasks T2.9, T2.9b and T2.9d, but not required for 2.0.0, and no AC or checkpoint waits for them.
 - **REQ-HUD-14**: An optional 'may' (HUD editor snapping and guide lines) [decided D-8], not required for 2.0.0. Planned as stretch task T2.9c; AC-HUD-14 applies only if it is built.
+
+**Marked for later (your request, 2026-10-15).** No task yet; it becomes one, with SPEC requirements, when you start it.
+
+- A review of the settings UI with improvements: a sharper, higher-resolution look; sliders that sometimes clip; and an overall smoother, nicer experience.
 
 **Partial "may" items and module out-of-scope lines.** Listed so that nothing is dropped silently.
 
