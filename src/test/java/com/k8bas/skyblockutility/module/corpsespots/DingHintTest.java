@@ -29,6 +29,13 @@ class DingHintTest {
 	}
 
 	@Test
+	void theHudLineNamesTheWarmth() {
+		// R43 (b): the "Corpse ding" HUD element's line.
+		assertEquals("§6Corpse ding: §every close", DingHint.hudLine(DingHint.Warmth.VERY_CLOSE));
+		assertEquals("§6Corpse ding: §efar", DingHint.hudLine(DingHint.Warmth.FAR));
+	}
+
+	@Test
 	void aDingAtThePlayerHoldsForTwoSeconds() {
 		DingHint hint = new DingHint();
 		assertNull(hint.warmth(0));
@@ -56,8 +63,7 @@ class DingHintTest {
 
 	@Test
 	void theWarmthIgnoresWhereTheDingWasPlayed() {
-		// Two dings with the same pitch, one at the player and one 3 blocks off: the same warmth. Spots are chosen by the
-		// player's position only (CorpseSpotRules.label takes no sound position).
+		// Two dings with the same pitch, one at the player and one 3 blocks off: the same warmth (R43: the HUD shows it).
 		DingHint a = new DingHint();
 		DingHint b = new DingHint();
 		ding(a, HARP, "block", PLAYER[0], PLAYER[1], PLAYER[2], 1.73f, true, 0);

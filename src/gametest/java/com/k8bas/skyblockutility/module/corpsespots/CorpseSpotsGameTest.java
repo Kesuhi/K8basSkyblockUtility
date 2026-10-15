@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.module.corpsespots;
 
+import com.k8bas.skyblockutility.hud.HudRegistry;
+import com.k8bas.skyblockutility.hud.HudText;
 import com.k8bas.skyblockutility.module.Module;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertModule;
@@ -28,8 +30,9 @@ import java.util.List;
  *       labels ahead are still on screen (their cyan pixels, against a shot with the feature off), and none within 1 s
  *       with the feature OFF or after leaving;</li>
  *   <li>AC-CORPSE-05 [C]: the widget listing every corpse LOOTED hides them, a NOT LOOTED one brings them back;</li>
- *   <li>AC-CORPSE-11 [C] (R41 (c)): a block-category harp the server plays at the player with the captured pitch 1.968
- *       makes the spots within 20 blocks read "ding nearby: very close", the others not, and it clears 2 s later;</li>
+ *   <li>AC-CORPSE-11 [C] (R43 (b)): a block-category harp the server plays at the player with the captured pitch 1.968
+ *       gives the "Corpse ding" HUD element "very close" while the labels stay plain; it clears 2 s later, and with the
+ *       hint off a ding shows nothing;</li>
  *   <li>AC-CORPSE-06 [C]: `/ksu corpses` lists the 5 spots with the feature and the mineshaft entry alert both OFF: the
  *       command keeps the shaft read and answers once the code is in (here when the shaft is simulated again).</li>
  * </ul>
@@ -71,17 +74,29 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 
 			server.runCommand("playsound minecraft:block.note_block.harp block @a -150 12 -170 1 1.968");
 			context.waitTicks(3);
-			List<String> dinged = texts(context, module);
-			check(dinged.contains("Possible corpse #1 · ding nearby: very close") && dinged.contains("Possible corpse #2"),
-					"#1 (17 blocks) has the ding line, #2 (43 blocks) not: " + dinged);
+			check("§6Corpse ding: §every close".equals(dingLine(context, module)), "the HUD line: " + dingLine(context, module));
+			check(context.computeOnClient(client -> CorpseDingHud.INSTANCE.content()) != null, "the shipped element shows it");
+			check(texts(context, module).equals(List.of("Possible corpse #1", "Possible corpse #2", "Possible corpse #3", "Possible corpse #4",
+					"Possible corpse #5")), "the labels stay plain while it dings: " + texts(context, module));
+			// Registered for the HUD editor, with its preview.
+			check(context.computeOnClient(client -> HudRegistry.elements().stream().anyMatch(element -> element.id().equals(CorpseDingHud.ID)
+					&& element.displayName().equals("Corpse ding") && element.preview() instanceof HudText text
+					&& text.lines().equals(List.of("§6Corpse ding: §every close")))), "the editor lists Corpse ding with its preview");
 			context.waitTicks(45);
-			check(texts(context, module).stream().noneMatch(text -> text.contains("ding")), "cleared 2 s after the ding");
+			check(dingLine(context, module) == null, "cleared 2 s after the ding");
 			// The hint OFF: a ding changes nothing.
 			option(context, "corpse_spots.ding_hint", false);
 			server.runCommand("playsound minecraft:block.note_block.harp block @a -150 12 -170 1 1.968");
 			context.waitTicks(3);
-			check(texts(context, module).stream().noneMatch(text -> text.contains("ding")), "the hint off: no ding line");
+			check(dingLine(context, module) == null && !context.computeOnClient(client -> CorpseDingHud.INSTANCE.enabled()), "the hint off: nothing");
 			option(context, "corpse_spots.ding_hint", true);
+			// The corpse spots OFF: a ding shows nothing either.
+			context.runOnClient(client -> module.setEnabled(false));
+			server.runCommand("playsound minecraft:block.note_block.harp block @a -150 12 -170 1 1.968");
+			context.waitTicks(3);
+			check(dingLine(context, module) == null && !context.computeOnClient(client -> CorpseDingHud.INSTANCE.enabled()), "the feature off: nothing");
+			context.runOnClient(client -> module.setEnabled(true));
+			context.waitTicks(45);
 
 			context.runOnClient(client -> {
 				module.setEnabled(false);
@@ -165,7 +180,15 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 
 	/** The text of each shown label, as the markers draw it. */
 	private static List<String> texts(ClientGameTestContext context, Module module) {
-		return context.computeOnClient(client -> ((CorpseSpotsModule) module).labels().stream().map(pair -> pair.getSecond().text()).toList());
+		return context.computeOnClient(client -> ((CorpseSpotsModule) module).labels().stream().map(pair -> pair.getSecond()).toList());
+	}
+
+	/** The "Corpse ding" HUD line now, or null. */
+	private static String dingLine(ClientGameTestContext context, Module module) {
+		return context.computeOnClient(client -> {
+			var text = ((CorpseSpotsModule) module).dingText();
+			return text == null ? null : text.lines().getFirst();
+		});
 	}
 
 	/** The mod's chat lines, without their "[KSU] " prefix. */

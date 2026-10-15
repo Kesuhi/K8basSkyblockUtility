@@ -5,13 +5,13 @@ import kotlin.math.sqrt
 /**
  * The Organ Donor ding (T3.3b, REQ-CORPSE-11, R41 (c)): the accessory plays a harp note when an unlooted Frozen
  * Corpse is within 20 blocks, at the player's own position, higher the closer the corpse is (captured at G3: pitch
- * about 1.1 at 17 blocks, 1.73 at 10, 1.97 within 3). A sound counts as a ding when it is that harp, in the block
- * category, within [NEAR] blocks of the player, in a Glacite Mineshaft. Only its pitch is kept, as a warmth; its
- * position is never used to pick a spot. The warmth holds [HOLD_MS] after the last ding (dings repeat every
- * 0.55–1.0 s). Not thread-safe: the client thread drives it.
+ * about 1.1 at 17 blocks, 1.73 at 10, 1.97 within 3); the "Corpse ding" HUD element shows it (R43 (b)). A sound counts
+ * as a ding when it is that harp, in the block category, within [NEAR] blocks of the player, in a Glacite Mineshaft.
+ * Only its pitch is kept, as a warmth; its position is never used to pick a spot. The warmth holds [HOLD_MS] after the
+ * last ding (dings repeat every 0.55–1.0 s). Not thread-safe: the client thread drives it.
  */
 class DingHint {
-	/** How warm the last ding was, from its pitch, with the word the labels show. */
+	/** How warm the last ding was, from its pitch, with the word the HUD shows. */
 	enum class Warmth(val label: String) {
 		FAR("far"),
 		CLOSE("close"),
@@ -49,8 +49,9 @@ class DingHint {
 		const val NEAR = 4.0
 		const val HOLD_MS = 2_000L
 
-		/** The ding's reach (the accessory's lore): spots within it are marked. */
-		const val REACH = 20.0
+		/** The HUD line for [warmth]: "Corpse ding: very close", the warmth in yellow. */
+		@JvmStatic
+		fun hudLine(warmth: Warmth): String = "§6Corpse ding: §e${warmth.label}"
 
 		@JvmStatic
 		fun warmth(pitch: Float): Warmth = when {

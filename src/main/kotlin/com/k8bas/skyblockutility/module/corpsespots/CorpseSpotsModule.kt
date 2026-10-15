@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.module.corpsespots
 
 import com.k8bas.skyblockutility.config.ConfigManager
+import com.k8bas.skyblockutility.hud.HudText
 import com.k8bas.skyblockutility.location.IslandTracker
 import com.k8bas.skyblockutility.module.Module
 import com.k8bas.skyblockutility.render.marker.Marker
@@ -9,6 +10,7 @@ import com.k8bas.skyblockutility.render.marker.MarkerLabel
 import com.k8bas.skyblockutility.render.marker.MarkerProvider
 import com.k8bas.skyblockutility.render.marker.WorldMarkers
 import com.k8bas.skyblockutility.skyblock.MineshaftState
+import com.k8bas.skyblockutility.settings.HudOptions
 import com.k8bas.skyblockutility.ui.option.Binding
 import com.k8bas.skyblockutility.ui.option.Card
 import com.k8bas.skyblockutility.ui.option.Category
@@ -43,8 +45,9 @@ class CorpseSpotsConfig {
  * label at every known spawn spot of the shaft's layout, from the bundled table (CorpseSpotTable), and `/ksu corpses`
  * with the list by distance. The labels mark fixed coordinates from static data, so they show through blocks
  * (REQ-MARK-02); which ones show depends only on the shaft code and the Frozen Corpses widget, never on entities
- * (REQ-CORPSE-04). While the Organ Donor's ding is heard, the spots within its reach say how warm it is (DingHint,
- * REQ-CORPSE-11): from the sound only, read the way vanilla subtitles read sounds. Nothing is sent (REQ-XC-RULES-02).
+ * (REQ-CORPSE-04). While the Organ Donor's ding is heard, the "Corpse ding" HUD element says how warm it is (DingHint,
+ * CorpseDingHud, REQ-CORPSE-11, R43): from the sound only, read the way vanilla subtitles read sounds. Nothing is sent
+ * (REQ-XC-RULES-02).
  */
 class CorpseSpotsModule : Module {
 	private var config: CorpseSpotsConfig? = null
@@ -57,6 +60,10 @@ class CorpseSpotsModule : Module {
 	private var notedCode: String? = null
 	private val loggedCodes = HashSet<String>()
 	private val ding = DingHint()
+
+	/** The HUD element's content, worked out each tick (REQ-HUD-11); null when there is nothing to show. */
+	@Volatile
+	private var dingText: HudText? = null
 
 	override fun id(): String = ID
 
@@ -77,6 +84,7 @@ class CorpseSpotsModule : Module {
 		ClientTickEvents.END_CLIENT_TICK.register {
 			noteMissingData()
 			answerRequest()
+			dingText = if (cfg.enabled && cfg.dingHint) ding.warmth(now())?.let { HudText(listOf(DingHint.hudLine(it))) } else null
 		}
 		ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
 			for (root in ROOTS) {
@@ -96,7 +104,7 @@ class CorpseSpotsModule : Module {
 		ConfigManager.save()
 	}
 
-	override fun cards(): List<Card> = cards(cfg, Consumer { setEnabled(it) })
+	override fun cards(): List<Card> = cards(cfg, Consumer { setEnabled(it) }, true)
 
 	override fun onSettingsClosed() {
 		ConfigManager.putModuleSection(ID, cfg)
@@ -146,16 +154,16 @@ class CorpseSpotsModule : Module {
 		}
 	}
 
-	/** For gametests and the markers: each shown spot's label text. */
-	fun labels(): List<Pair<CorpseSpot, SpotLabel>> {
-		val player = Minecraft.getInstance().player?.let { doubleArrayOf(it.x, it.y, it.z) }
-		val warmth = if (cfg.dingHint) ding.warmth(now()) else null
-		return CorpseSpotRules.visible(cfg, MineshaftState.snapshot(), CorpseSpotTable.current()).map { it to CorpseSpotRules.label(it, player, warmth) }
-	}
+	/** For gametests and the HUD element: what the "Corpse ding" element shows now, or null. */
+	fun dingText(): HudText? = dingText
+
+	/** Each shown spot with its label text, always plain "Possible corpse #n" (R43: the ding is on the HUD). */
+	fun labels(): List<Pair<CorpseSpot, String>> =
+		CorpseSpotRules.visible(cfg, MineshaftState.snapshot(), CorpseSpotTable.current()).map { it to "Possible corpse #${it.number}" }
 
 	private fun markers(out: Consumer<Marker>) {
 		for ((spot, text) in labels()) {
-			val label = MarkerLabel.of(MarkerLabel.Line(Component.literal(text.text), if (text.ding) DING_COLOR else LABEL_COLOR)).asSeeThrough()
+			val label = MarkerLabel.of(MarkerLabel.Line(Component.literal(text), LABEL_COLOR)).asSeeThrough()
 			out.accept(Marker(MarkerAnchor.fixed(spot.x + 0.5, spot.y + 0.5, spot.z + 0.5), label))
 		}
 	}
@@ -165,13 +173,20 @@ class CorpseSpotsModule : Module {
 		const val COMMAND = "corpses"
 		private val ROOTS = arrayOf("ksu", "kskyblockutility")
 		private const val LABEL_COLOR = 0x55FFFF
-		private const val DING_COLOR = 0xFFAA00
 		private val LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility")
 
 		private fun now(): Long = System.nanoTime() / 1_000_000
 
 		@Volatile
 		private var instance: CorpseSpotsModule? = null
+
+		/** For the HUD element: whether its feature and toggle are on. */
+		@JvmStatic
+		fun dingHudEnabled(): Boolean = instance?.let { it.cfg.enabled && it.cfg.dingHint } == true
+
+		/** For the HUD element: its content now, or null. */
+		@JvmStatic
+		fun dingHudText(): HudText? = instance?.dingText
 
 		private val PROVIDER = object : MarkerProvider {
 			override fun isActive(): Boolean = instance?.cfg?.enabled == true
@@ -185,9 +200,14 @@ class CorpseSpotsModule : Module {
 			}
 		}
 
-		/** The Mining card (REQ-CORPSE-08): found by "corpse", "spot", "mineshaft" and "waypoint". */
+		/**
+		 * The Mining card (REQ-CORPSE-08); [editPosition] adds "Edit position" for the Corpse ding element (REQ-HUD-06), which
+		 * opens a screen, so only the running game's card has it (as General's "Edit HUD layout"). Found by "corpse", "spot",
+		 * "mineshaft" and "waypoint".
+		 */
 		@JvmStatic
-		fun cards(config: CorpseSpotsConfig, setEnabled: Consumer<Boolean>): List<Card> {
+		@JvmOverloads
+		fun cards(config: CorpseSpotsConfig, setEnabled: Consumer<Boolean>, editPosition: Boolean = false): List<Card> {
 			val keywords = java.util.List.of("corpse", "spot", "mineshaft", "glacite", "waypoint")
 			val enabled = Toggle.of(
 				"$ID.enabled", "modules.$ID.enabled",
@@ -210,14 +230,15 @@ class CorpseSpotsModule : Module {
 			val ding = Toggle.of(
 				"$ID.ding_hint", "modules.$ID.dingHint",
 				OptionText(
-					"Organ Donor ding hint", "While your Organ Donor dings, the spots within 20 blocks say how warm the ding is.",
-					"The ding plays when an unlooted corpse is within 20 blocks, and gets higher the closer it is. The labels read " +
-						"\"ding nearby: far\", \"close\" or \"very close\" from that pitch alone; no spot is picked for you.",
+					"Organ Donor ding hint", "While your Organ Donor dings, a \"Corpse ding\" HUD line says how warm the ding is.",
+					"The ding plays when an unlooted corpse is within 20 blocks, and gets higher the closer it is. The HUD line reads " +
+						"\"far\", \"close\" or \"very close\" from that pitch alone and goes 2 s after the last ding; move it in the HUD editor.",
 					java.util.List.of("corpse", "ding", "organ donor", "sound", "mineshaft"),
 				),
 				true, Binding.of({ config.dingHint }, { value -> config.dingHint = value }),
 			)
-			return java.util.List.of(Card(ID, Category.MINING, "Possible corpse spots", enabled, java.util.List.of(hide, ding)))
+			val options = if (editPosition) java.util.List.of(hide, ding, HudOptions.editPosition(ID, CorpseDingHud.ID)) else java.util.List.of(hide, ding)
+			return java.util.List.of(Card(ID, Category.MINING, "Possible corpse spots", enabled, options))
 		}
 	}
 }

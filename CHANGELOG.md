@@ -21,9 +21,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   shaft types), visible through walls. These are known spawn spots from community data
   (SkyHanni-REPO, meowdding-repo, ShaftUtils), not detected corpses. "Hide spots when all corpses are
   looted" (ON) removes them once the Frozen Corpses tab widget lists every corpse as looted. `/ksu
-  corpses` lists the spots by distance. With an Organ Donor accessory, its ding marks the spots
-  within 20 blocks of you with "ding nearby: far", "close" or "very close", from how high the ding
-  sounds ("Organ Donor ding hint", ON).
+  corpses` lists the spots by distance. With an Organ Donor accessory, a "Corpse ding" HUD line
+  (movable in the HUD editor) says "far", "close" or "very close" from how high its ding sounds
+  ("Organ Donor ding hint", ON).
 - Beam colours you can change: Waypoints › "Island beam colours" has a colour per island (picker
   and hex), and a fixed NPC's card has its own "Beam colour" and "Use island colour". Changes show
   on the beams at once.
