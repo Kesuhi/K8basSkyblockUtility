@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Which optional hooks went in (T3.0f, REQ-BOB-08, REQ-HOT-13, REQ-DRILL-07). A hook starts pending. It is
+ * Which optional hooks went in (T3.0f, REQ-BOB-08, REQ-HOT-13). A hook starts pending. It is
  * applied when its target class, fully transformed (late MixinExtras injections included), calls its handler,
  * and stays so only if the class the game then loads has the handler merged in (Mixin defines the original
  * class when a step after ours fails). It is skipped when its target class is missing, its mixin failed, the

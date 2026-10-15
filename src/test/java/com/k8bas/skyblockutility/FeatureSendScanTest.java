@@ -13,8 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * The review items AC-MSA-08, AC-NPCWP-12, AC-BOB-06, AC-HOT-07, AC-DRILL-02 and AC-ODDS-02 [R], as one scan (G3): no
- * feature module and no mixin clicks, closes or opens a menu, or sends a command, chat or packet, in the 26.2 names.
+ * The review items AC-MSA-08, AC-NPCWP-12, AC-BOB-06, AC-HOT-07 and AC-ODDS-02 [R] (AC-DRILL-02 went with the drill
+ * fix, R37), as one scan (G3): no feature module and no mixin clicks, closes or opens a menu, or sends a command, chat
+ * or packet, in the 26.2 names.
  * Each module's own test checks what is particular to it (its hooks, its packet reads).
  */
 class FeatureSendScanTest {
@@ -25,7 +26,7 @@ class FeatureSendScanTest {
 		List<Path> files = SendScan.sources(PROJECT,
 				"src/main/kotlin/com/k8bas/skyblockutility/module/mineshaftalert", "src/main/kotlin/com/k8bas/skyblockutility/module/npcsearch",
 				"src/main/java/com/k8bas/skyblockutility/module/npcsearch", "src/main/kotlin/com/k8bas/skyblockutility/module/bobberfix",
-				"src/main/kotlin/com/k8bas/skyblockutility/module/hotspot", "src/main/kotlin/com/k8bas/skyblockutility/module/drillfix",
+				"src/main/kotlin/com/k8bas/skyblockutility/module/hotspot",
 				"src/main/kotlin/com/k8bas/skyblockutility/module/odds", "src/main/java/com/k8bas/skyblockutility/mixin");
 		assertTrue(files.size() >= 25, "the scan sees the feature sources: " + files.size());
 		assertEquals(List.of(), SendScan.violations(PROJECT, files, SendScan.SENDS));

@@ -9,7 +9,6 @@ import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.highlight.GlowBehaviourText;
 import com.k8bas.skyblockutility.ui.notice.NoticePosition;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig;
-import com.k8bas.skyblockutility.module.drillfix.DrillFixConfig;
 import com.k8bas.skyblockutility.module.hotspot.HotspotConfig;
 import com.k8bas.skyblockutility.module.odds.OddsConfig;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
@@ -123,8 +122,6 @@ class OptionCatalogTest {
 			expected.put("modules.rare_drop_odds." + c, true);
 		}
 		expected.put("modules.rare_drop_odds.rareThreshold", 2.0);
-		// REQ-DRILL-06 (D-4, D-6): the drill re-equip fix ON.
-		expected.put("modules.drill_fix.enabled", true);
 		// REQ-BOB-07 (D-6): the bobber fix ON.
 		expected.put("modules.bobber_fix.enabled", true);
 		// REQ-HOT-12 (D-6): Fishing Hotspots, its ring and fill ON; the fill at 25 % (T3.6).
@@ -249,10 +246,9 @@ class OptionCatalogTest {
 		MineshaftAlertConfig shaft = new MineshaftAlertConfig();
 		BobberFixConfig bobber = new BobberFixConfig();
 		HotspotConfig hotspots = new HotspotConfig();
-		DrillFixConfig drill = new DrillFixConfig();
 		OddsConfig odds = new OddsConfig();
 		List<Card> cards = OptionCatalog.build(general, mob, npc, value -> mob.enabled = value, value -> npc.enabled = value, shaft, value -> shaft.enabled = value,
-				bobber, hotspots, drill, odds);
+				bobber, hotspots, odds);
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		for (Card card : cards) {
 			for (Option option : card.all()) {
@@ -260,10 +256,10 @@ class OptionCatalogTest {
 				if (option instanceof Keybind || option instanceof ActionOption) {
 					continue;
 				}
-				Map<String, String> before = leaves(gson, general, mob, npc, shaft, bobber, hotspots, drill, odds);
+				Map<String, String> before = leaves(gson, general, mob, npc, shaft, bobber, hotspots, odds);
 				Object original = current(option);
 				change(option);
-				Map<String, String> after = leaves(gson, general, mob, npc, shaft, bobber, hotspots, drill, odds);
+				Map<String, String> after = leaves(gson, general, mob, npc, shaft, bobber, hotspots, odds);
 				Set<String> changed = new TreeSet<>();
 				// Both ways: an island colour is a map entry that exists only once it differs from its default.
 				Set<String> keys = new TreeSet<>(before.keySet());
@@ -275,7 +271,7 @@ class OptionCatalogTest {
 				}
 				assertEquals(Set.of(option.storageKey()), changed, option.id());
 				restore(option, original);
-				Map<String, String> restored = leaves(gson, general, mob, npc, shaft, bobber, hotspots, drill, odds);
+				Map<String, String> restored = leaves(gson, general, mob, npc, shaft, bobber, hotspots, odds);
 				// A setting absent until picked (R28, the accent) now holds its default: picked, so it is written.
 				if ("null".equals(before.get(option.storageKey()))) {
 					assertEquals(gson.toJson(option.defaultValue()), restored.get(option.storageKey()), option.id() + " holds its default");
@@ -324,7 +320,7 @@ class OptionCatalogTest {
 		Set<String> cardIds = new TreeSet<>();
 		catalog().forEach(card -> cardIds.add(card.id()));
 		assertTrue(cardIds.containsAll(moduleIds), "modules " + moduleIds + " vs cards " + cardIds);
-		assertEquals(7, moduleIds.size());
+		assertEquals(6, moduleIds.size());
 	}
 
 	/** REQ-XC-RULES-07 (P7): no forbidden word in what is shown; "gambling" only as a keyword. */
@@ -417,7 +413,6 @@ class OptionCatalogTest {
 				"modules.mineshaft_alert", gson.toJsonTree(new MineshaftAlertConfig()).getAsJsonObject(),
 				"modules.bobber_fix", gson.toJsonTree(new BobberFixConfig()).getAsJsonObject(),
 				"modules.fishing_hotspots", gson.toJsonTree(new HotspotConfig()).getAsJsonObject(),
-				"modules.drill_fix", gson.toJsonTree(new DrillFixConfig()).getAsJsonObject(),
 				"modules.rare_drop_odds", gson.toJsonTree(new OddsConfig()).getAsJsonObject());
 		for (Option option : storedOptions()) {
 			String key = option.storageKey();
@@ -466,7 +461,7 @@ class OptionCatalogTest {
 	}
 
 	private static Map<String, String> leaves(Gson gson, GeneralConfig general, MobHighlighterConfig mob, NpcSearchConfig npc, MineshaftAlertConfig shaft,
-			BobberFixConfig bobber, HotspotConfig hotspots, DrillFixConfig drill, OddsConfig odds) {
+			BobberFixConfig bobber, HotspotConfig hotspots, OddsConfig odds) {
 		Set<String> keys = new TreeSet<>();
 		Map<String, String> values = new LinkedHashMap<>();
 		JsonObject root = new JsonObject();
@@ -476,7 +471,6 @@ class OptionCatalogTest {
 		modules.add("mineshaft_alert", gson.toJsonTree(shaft));
 		modules.add("bobber_fix", gson.toJsonTree(bobber));
 		modules.add("fishing_hotspots", gson.toJsonTree(hotspots));
-		modules.add("drill_fix", gson.toJsonTree(drill));
 		modules.add("rare_drop_odds", gson.toJsonTree(odds));
 		modules.add("npc_search", gson.toJsonTree(npc));
 		root.add("modules", modules);

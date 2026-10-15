@@ -8,7 +8,6 @@
 		"defaultRequire": 0
 	},
 	"client": [
-		"DrillReequipMixin",
 		"FishingHookMixin",
 		"ParticleObserverMixin"
 	]

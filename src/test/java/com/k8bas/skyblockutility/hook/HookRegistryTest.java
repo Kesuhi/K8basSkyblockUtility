@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * The hook-status registry (T3.0f, REQ-BOB-08, REQ-HOT-13, REQ-DRILL-07): a hook is applied, or skipped with one
+ * The hook-status registry (T3.0f, REQ-BOB-08, REQ-HOT-13): a hook is applied, or skipped with one
  * WARN and "unavailable" on its card when its target class is missing, its mixin failed, its handler is not
  * called in the fully transformed class, or the class was loaded without it. The class nodes are synthetic;
  * the handler names follow Mixin's renaming (MethodMapper.getHandlerName) and MixinExtras' bridges.

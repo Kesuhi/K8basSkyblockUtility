@@ -3,7 +3,6 @@ package com.k8bas.skyblockutility.ui.screen;
 import com.google.gson.Gson;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig;
-import com.k8bas.skyblockutility.module.drillfix.DrillFixConfig;
 import com.k8bas.skyblockutility.module.hotspot.HotspotConfig;
 import com.k8bas.skyblockutility.module.odds.OddsConfig;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
@@ -58,7 +57,6 @@ class ConfigPageTest {
 	private final MineshaftAlertConfig shaft = new MineshaftAlertConfig();
 	private final BobberFixConfig bobber = new BobberFixConfig();
 	private final HotspotConfig hotspots = new HotspotConfig();
-	private final DrillFixConfig drill = new DrillFixConfig();
 	private final OddsConfig odds = new OddsConfig();
 	private final Map<String, String> keys = new HashMap<>();
 	private final List<Overlay> opened = new ArrayList<>();
@@ -77,7 +75,7 @@ class ConfigPageTest {
 	private List<Card> catalog() {
 		// As the modules do: switching one stores it in its config.
 		return OptionCatalog.build(general, mobs, npcs, enabled -> mobs.enabled = enabled, enabled -> npcs.enabled = enabled, shaft, enabled -> shaft.enabled = enabled,
-				bobber, hotspots, drill, odds);
+				bobber, hotspots, odds);
 	}
 
 	private Widget control(Option option) {
@@ -104,7 +102,7 @@ class ConfigPageTest {
 
 	/** The state every setting is in: the configs (module switches included) and the keys. */
 	private String state() {
-		return GSON.toJson(general) + GSON.toJson(mobs) + GSON.toJson(npcs) + GSON.toJson(shaft) + GSON.toJson(bobber) + GSON.toJson(hotspots) + GSON.toJson(drill) + GSON.toJson(odds) + keys;
+		return GSON.toJson(general) + GSON.toJson(mobs) + GSON.toJson(npcs) + GSON.toJson(shaft) + GSON.toJson(bobber) + GSON.toJson(hotspots) + GSON.toJson(odds) + keys;
 	}
 
 	/** As WidgetScreen routes a press: topmost first, only inside a widget's clip region. */

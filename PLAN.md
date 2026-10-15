@@ -1067,7 +1067,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - Gametest HotspotGoneGameTest [B]: a real rod cast, a hotspot placed under the bobber and then removed give exactly one local chat line; with the warning off, none.
     - **Field check for G3:** AC-HOT-09, including the distance at which Hypixel's stand disappears (EC-HOT-01).
     - **Review:** two angles with two verifiers each. Fixed (confirmed): the title changed vanilla's shared title timings for later server titles. Also taken from split votes: the shared notice channel helper, a per-slider restore in ConfigPageTest, and the channel toggle test.
-- [x] **T3.7 feat(mining): drill re-equip fix [brief 3.8]** (S, deps T3.0f, T1.9). A `@ModifyReturnValue` on `ItemInHandRenderer.shouldInstantlyReplaceVisibleItem` skips the hand dip only when all of these hold (D-4 (a)):
+- [x] **T3.7 feat(mining): drill re-equip fix [brief 3.8]** **Removed at G3 (R37, 2026-10-15, your decision): the module, its mixin and hook `drill.refresh`, its card, tests and CHANGELOG entry are gone; the record below is kept.** (S, deps T3.0f, T1.9). A `@ModifyReturnValue` on `ItemInHandRenderer.shouldInstantlyReplaceVisibleItem` skips the hand dip only when all of these hold (D-4 (a)):
   - both stacks are the same SkyBlock drill: same item, same component types, same id, same non-empty uuid, drill-fuel data present
   - the player is on SkyBlock and the toggle is on
 
