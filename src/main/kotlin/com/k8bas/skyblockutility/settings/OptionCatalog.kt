@@ -5,6 +5,8 @@ import com.k8bas.skyblockutility.config.GeneralConfig
 import com.k8bas.skyblockutility.module.ModuleManager
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule
+import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsConfig
+import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsModule
 import com.k8bas.skyblockutility.module.hotspot.HotspotConfig
 import com.k8bas.skyblockutility.module.hotspot.HotspotModule
 import com.k8bas.skyblockutility.module.odds.OddsConfig
@@ -35,11 +37,13 @@ object OptionCatalog {
 		bobberFix: BobberFixConfig = BobberFixConfig(),
 		hotspots: HotspotConfig = HotspotConfig(),
 		odds: OddsConfig = OddsConfig(),
+		corpseSpots: CorpseSpotsConfig = CorpseSpotsConfig(),
 	): List<Card> = sorted(
 		GeneralOptions.cards(general) +
 			MobHighlighterOptions.cards(mobHighlighter, general, setMobHighlighterEnabled) +
 			NpcSearchOptions.cards(npcSearch, setNpcSearchEnabled) +
 			MineshaftAlertModule.cards(mineshaftAlert, setMineshaftAlertEnabled) +
+			CorpseSpotsModule.cards(corpseSpots, Consumer { corpseSpots.enabled = it }) +
 			BobberFixModule.cards(bobberFix, Consumer { bobberFix.enabled = it }) +
 			HotspotModule.cards(hotspots, Consumer { hotspots.enabled = it }) +
 			RareDropOddsModule.cards(odds, Consumer { odds.enabled = it }),

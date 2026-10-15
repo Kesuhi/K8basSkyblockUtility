@@ -26,7 +26,7 @@ class FeatureSendScanTest {
 		List<Path> files = SendScan.sources(PROJECT,
 				"src/main/kotlin/com/k8bas/skyblockutility/module/mineshaftalert", "src/main/kotlin/com/k8bas/skyblockutility/module/npcsearch",
 				"src/main/java/com/k8bas/skyblockutility/module/npcsearch", "src/main/kotlin/com/k8bas/skyblockutility/module/bobberfix",
-				"src/main/kotlin/com/k8bas/skyblockutility/module/hotspot",
+				"src/main/kotlin/com/k8bas/skyblockutility/module/hotspot", "src/main/kotlin/com/k8bas/skyblockutility/module/corpsespots",
 				"src/main/kotlin/com/k8bas/skyblockutility/module/odds", "src/main/java/com/k8bas/skyblockutility/mixin");
 		assertTrue(files.size() >= 25, "the scan sees the feature sources: " + files.size());
 		assertEquals(List.of(), SendScan.violations(PROJECT, files, SendScan.SENDS));

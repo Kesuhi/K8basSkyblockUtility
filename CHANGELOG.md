@@ -15,6 +15,12 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   update. It reads Hypixel's Frozen Corpses tab widget; if the widget is off or cut off, the line
   says so and tells you once how to turn it on. Keys in sacks or storage are not counted. "Show
   corpse key counts" (ON) turns the key part off.
+- Possible corpse spots (Mining, ON by default): in a Glacite Mineshaft, a "Possible corpse #n"
+  label at every place a frozen corpse can spawn in that layout (spots are known for 29 of the 34
+  shaft types), visible through walls. These are known spawn spots from community data
+  (SkyHanni-REPO, meowdding-repo, ShaftUtils), not detected corpses. "Hide spots when all corpses are
+  looted" (ON) removes them once the Frozen Corpses tab widget lists every corpse as looted. `/ksu
+  corpses` lists the spots by distance.
 - Beam colours you can change: Waypoints › "Island beam colours" has a colour per island (picker
   and hex), and a fixed NPC's card has its own "Beam colour" and "Use island colour". Changes show
   on the beams at once.

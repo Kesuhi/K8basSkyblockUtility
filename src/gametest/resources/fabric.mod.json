@@ -37,6 +37,7 @@
 			"com.k8bas.skyblockutility.skyblock.InventoryReaderGameTest",
 			"com.k8bas.skyblockutility.skyblock.MineshaftStateGameTest",
 			"com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertGameTest",
+			"com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsGameTest",
 			"com.k8bas.skyblockutility.module.odds.RareDropOddsGameTest",
 			"com.k8bas.skyblockutility.module.bobberfix.BobberFixGameTest",
 			"com.k8bas.skyblockutility.module.hotspot.HotspotGameTest",

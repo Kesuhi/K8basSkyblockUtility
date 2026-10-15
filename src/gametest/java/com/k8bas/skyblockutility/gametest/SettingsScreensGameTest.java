@@ -205,6 +205,8 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 			case "fishing_hotspots" -> null;
 			// REQ-ODDS-01: Rare Drop Odds has its settings toggle and no toggle key.
 			case "rare_drop_odds" -> null;
+			// REQ-CORPSE-08: the possible corpse spots have their settings toggle and no toggle key.
+			case "corpse_spots" -> null;
 			default -> throw new AssertionError("no toggle key known for " + module.id());
 		};
 	}
