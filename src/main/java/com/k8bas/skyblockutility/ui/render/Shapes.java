@@ -1,6 +1,11 @@
 package com.k8bas.skyblockutility.ui.render;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.systems.SamplerCache;
+import com.mojang.blaze3d.textures.AddressMode;
+import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
@@ -15,8 +20,9 @@ import org.joml.Matrix3x2fStack;
  * Rects and rounded rects from plain fills (REQ-UI-17, D-8; no direct GL, REQ-PORT-12). Corners are cut in
  * screen pixels, so at GUI scale 3 or 4 they are as round as at scale 1. With "Smooth corners" on (REQ-UI-18,
  * T2.9d, R32) each corner is instead a tinted quad of an anti-aliased mask texture and the straight parts stay
- * fills; a shape a mask cannot draw keeps the fill-based corners. Written from SPEC REQ-UI-17 and REQ-UI-18; no
- * AlpakaAddons code (REQ-UI-24).
+ * fills; a shape a mask cannot draw keeps the fill-based corners. Discs, pills and one-cap pills always take their
+ * round ends from a disc mask (REQ-UI-30, T3.18). Every mask is sampled linear and clamped to its edge (REQ-UI-31).
+ * Written from SPEC REQ-UI-17, REQ-UI-18 and REQ-UI-30; no AlpakaAddons code (REQ-UI-24).
  */
 public final class Shapes {
 	/** Corner radii in GUI pixels: cards, tabs, and small controls. */
@@ -43,7 +49,7 @@ public final class Shapes {
 
 	public static void roundedRect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
 		int scale = guiScale();
-		draw(graphics, x, y, w * scale, h * scale, radius * scale, 0, Corners.ALL, argb);
+		draw(graphics, x, y, w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, 0, scale), 0, Corners.ALL, argb);
 	}
 
 	/**
@@ -52,10 +58,9 @@ public final class Shapes {
 	 */
 	public static void bar(GuiGraphicsExtractor graphics, float x0, float x1, int y, int h, int corners, int argb) {
 		int scale = guiScale();
-		int from = Math.round(x0 * scale);
-		int to = Math.round(x1 * scale);
-		if (to > from) {
-			draw(graphics, (float) from / scale, y, to - from, h * scale, h * scale / 2, 0, corners, argb);
+		int[] span = ShapePlan.barSpan(x0, x1, scale);
+		if (span != null) {
+			draw(graphics, (float) span[0] / scale, y, span[1], h * scale, ShapePlan.barRadius(h, scale), 0, corners, argb);
 		}
 	}
 
@@ -63,30 +68,26 @@ public final class Shapes {
 	public static void roundedOutline(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int thickness, int argb) {
 		if (thickness > 0) {
 			int scale = guiScale();
-			draw(graphics, x, y, w * scale, h * scale, radius * scale, thickness * scale, Corners.ALL, argb);
+			draw(graphics, x, y, w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, thickness, scale), thickness * scale, Corners.ALL, argb);
 		}
 	}
 
 	/**
 	 * A rounded shape, w×h with radius and thickness in screen pixels at GUI (x, y), as one GUI element, or two back to
 	 * back with identical bounds (REQ-UI-27, {@link ShapePlan}): its pieces in screen pixels under a 1/scale pose, so
-	 * corners are as round at GUI scale 4 as at 1. With "Smooth corners" the corners are tinted quads of an
-	 * anti-aliased mask; without a mask the fill-based corners. Only the {@link Corners} {@code corners} are round.
+	 * corners are as round at GUI scale 4 as at 1. With "Smooth corners", and always for discs and pills, the round parts
+	 * are tinted quads of an anti-aliased mask; without a mask the fill spans. Only the {@link Corners} {@code corners}
+	 * are round.
 	 */
 	private static void draw(GuiGraphicsExtractor graphics, float x, float y, int w, int h, int radius, int thickness, int corners, int argb) {
 		int scale = guiScale();
 		Matrix3x2fStack outer = graphics.pose();
 		ScreenRectangle scissor = graphics.scissorStack.peek();
 		int[] clip = scissor == null ? null : new int[] {scissor.left(), scissor.top(), scissor.right(), scissor.bottom()};
-		boolean smooth = ShapePlan.alwaysSmooth(w, h, radius, corners) || smooth();
-		ShapePlan.Result plan = ShapePlan.ofPixels(outer, x, y, w, h, radius, thickness, corners, scale, smooth, clip);
-		Identifier mask = null;
-		if (plan.maskRadius() >= 0) {
-			mask = CornerTextures.mask(scale, plan.maskRadius(), plan.maskThickness());
-			if (mask == null) {
-				plan = ShapePlan.ofPixels(outer, x, y, w, h, radius, thickness, corners, scale, false, clip);
-			}
-		}
+		boolean smooth = ShapePlan.alwaysSmooth(w, h, radius, thickness, corners) || smooth();
+		ShapePlan.Drawn<Identifier> drawn = ShapePlan.resolve(outer, x, y, w, h, radius, thickness, corners, scale, smooth, clip,
+				key -> CornerTextures.mask(scale, key));
+		ShapePlan.Result plan = drawn.plan();
 		if (plan.elements().isEmpty()) {
 			return;
 		}
@@ -95,15 +96,25 @@ public final class Shapes {
 			ScreenRectangle bounds = new ScreenRectangle(element.left(), element.top(), element.right() - element.left(),
 					element.bottom() - element.top());
 			graphics.guiRenderState.addGuiElement(element.textured()
-					? new ShapeRenderState(RenderPipelines.GUI_TEXTURED, texture(mask), pose, element.quads(), element.uvs(), argb, scissor, bounds)
+					? new ShapeRenderState(RenderPipelines.GUI_TEXTURED, texture(drawn.mask()), pose, element.quads(), element.uvs(), argb, scissor,
+							bounds)
 					: new ShapeRenderState(RenderPipelines.GUI, TextureSetup.noTexture(), pose, element.quads(), null, argb, scissor, bounds));
 		}
 	}
 
-	/** The mask texture as the game's blit sets it up. */
 	private static TextureSetup texture(Identifier mask) {
 		AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(mask);
-		return TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler());
+		return maskTexture(texture.getTextureView(), RenderSystem.getSamplerCache());
+	}
+
+	/**
+	 * A mask's texture setup (REQ-UI-31): its view with the sampler cache's shared linear, clamp-to-edge sampler, not the
+	 * texture's own nearest, repeating one (no texture subclass), so a mask at a fractional position or under the open
+	 * animation's scale resamples smoothly and never reads the opposite edge. Drawn 1:1, it reads each texel exactly.
+	 */
+	static TextureSetup maskTexture(GpuTextureView view, SamplerCache samplers) {
+		return TextureSetup.singleTexture(view, samplers.getSampler(AddressMode.CLAMP_TO_EDGE, AddressMode.CLAMP_TO_EDGE, FilterMode.LINEAR,
+				FilterMode.LINEAR, false));
 	}
 
 	/**

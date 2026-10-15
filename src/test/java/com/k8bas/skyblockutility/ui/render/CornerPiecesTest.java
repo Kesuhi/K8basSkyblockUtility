@@ -2,9 +2,6 @@ package com.k8bas.skyblockutility.ui.render;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -158,16 +155,6 @@ class CornerPiecesTest {
 		assertEquals(CornerMask.MAX_RADIUS, CornerPieces.clampRadius(1000, 1000, CornerMask.MAX_RADIUS));
 		assertEquals(4, CornerPieces.clampRadius(9, 9, 6), "half the shorter side");
 		assertEquals(0, CornerPieces.clampRadius(9, 9, -2));
-	}
-
-	@Test
-	void keysAreDistinct() {
-		Set<Integer> keys = new HashSet<>();
-		for (int r = 1; r <= CornerMask.MAX_RADIUS; r++) {
-			for (int t = 0; t <= r; t++) {
-				assertTrue(keys.add(CornerPieces.key(r, t)), r + "/" + t);
-			}
-		}
 	}
 
 	private int[][] count(int n, int w, int h) {

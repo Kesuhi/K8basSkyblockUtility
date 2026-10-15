@@ -37,6 +37,8 @@ import java.nio.file.Path;
  */
 public class WidgetsGameTest implements FabricClientGameTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas-gametest");
+	/** A blend computed from the image's own colours matches to rounding; a wrong coverage is off by more. */
+	private static final int BLEND_TOLERANCE = 3;
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
@@ -57,6 +59,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
 			knobHasNoFillLine(context);
+			knobsAreAntiAliased(context);
 			wheelSteps(context);
 			dragCommitsOnce(context);
 			typingAndShortcuts(context);
@@ -89,9 +92,9 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			int row = top + 6;
 			int wrong = 0;
 			int inside = 0;
-			// The knob is a smooth disc whatever the setting (REQ-UI-29): its fully covered pixels of that row.
+			// The knob is a smooth disc whatever the setting (REQ-UI-29): the pixels of that row its disc mask fully covers.
 			for (int x = 0; x < size; x++) {
-				if (CornerMask.alpha(size / 2, x, 6) == 255) {
+				if (CornerMask.discAlpha(size, x, 6) == 255) {
 					inside++;
 					if (!near(shot.getRGB(left + x, row), centre)) {
 						wrong++;
@@ -105,6 +108,99 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		} finally {
 			context.runOnClient(client -> ConfigManager.general().smoothCorners = before);
 		}
+	}
+
+	/**
+	 * AC-UI-31 [C] (T3.18): at GUI scale 2, with Smooth corners OFF and ON, the knob of the 0-128 slider at 64 and the knobs
+	 * of the "on" and "off" toggles (GUI 8, 8 and 40, 8, a 22x12 track with an 8 px knob 2 px inside it) are discs of the
+	 * disc mask: each pixel is the knob's colour over its backdrop by the mask's coverage, within {@link #BLEND_TOLERANCE},
+	 * so the rim is anti-aliased with no staircase. The slider knob's rows over the track are left out, since the fill and
+	 * the track lie there. The knobs before T3.18, four corner quadrants of the ramp mask, are off by 4 to 8 in 12 to 20
+	 * pixels a knob, so the check sees the exact disc.
+	 */
+	private static void knobsAreAntiAliased(ClientGameTestContext context) {
+		Boolean before = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
+		try {
+			for (boolean smooth : new boolean[] {false, true}) {
+				context.runOnClient(client -> ConfigManager.general().smoothCorners = smooth);
+				context.waitTicks(3);
+				check(context.computeOnClient(client -> ConfigManager.general().smoothCorners()) == smooth, "the pass renders with Smooth corners "
+						+ (smooth ? "ON" : "OFF"));
+				int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+				check(scale == 2, "the check runs at GUI scale 2: " + scale);
+				String pass = "scale 2" + (smooth ? " smooth" : " off");
+				BufferedImage shot = read(context.takeScreenshot("t3.18-knobs-scale-2" + (smooth ? "-smooth" : "-off")));
+				int[] knob = context.computeOnClient(client -> screen(client.gui.screen()).middleKnob());
+				int trackTop = context.computeOnClient(client -> screen(client.gui.screen()).knobSliders()[1][1]) * scale;
+				int panel = shot.getRGB(knob[0] * scale + Slider.KNOB_SIZE * scale / 2, (knob[1] - 2) * scale);
+				int blended = checkDisc(shot, scale, knob[0], knob[1], Slider.KNOB_SIZE, panel, trackTop, trackTop + Slider.TRACK_HEIGHT * scale,
+						pass + ", slider knob");
+				int knobSize = ToggleSwitch.HEIGHT - 4;
+				// On: the knob at the track's right end over the accent; off: at its left end over the track's grey.
+				int onTrack = shot.getRGB((8 + 6) * scale, (8 + 6) * scale);
+				blended += checkDisc(shot, scale, 8 + ToggleSwitch.WIDTH - 2 - knobSize, 10, knobSize, onTrack, 0, 0, pass + ", on toggle knob");
+				int offTrack = shot.getRGB((40 + 16) * scale, (8 + 6) * scale);
+				blended += checkDisc(shot, scale, 40 + 2, 10, knobSize, offTrack, 0, 0, pass + ", off toggle knob");
+				LOGGER.info("knob discs at {}: {} rim pixels blend the knob over its backdrop", pass, blended);
+			}
+		} finally {
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = before);
+		}
+	}
+
+	/**
+	 * One knob, {@code size} GUI px at GUI (left, top), against the disc mask: every pixel outside the screen rows from
+	 * {@code skipFrom} to {@code skipTo} is the knob's centre colour over {@code backdrop} by the mask's coverage. Returns how
+	 * many of them must show a blend that differs from both colours, so that a staircase could not pass.
+	 */
+	private static int checkDisc(BufferedImage shot, int scale, int left, int top, int size, int backdrop, int skipFrom, int skipTo, String what) {
+		int d = size * scale;
+		int x0 = left * scale;
+		int y0 = top * scale;
+		int knob = shot.getRGB(x0 + d / 2, y0 + d / 2);
+		int blended = 0;
+		int wrong = 0;
+		String first = "";
+		for (int y = 0; y < d; y++) {
+			if (y0 + y >= skipFrom && y0 + y < skipTo) {
+				continue;
+			}
+			for (int x = 0; x < d; x++) {
+				int expected = blend(knob, backdrop, CornerMask.discAlpha(d, x, y));
+				int actual = shot.getRGB(x0 + x, y0 + y);
+				if (!within(actual, expected, BLEND_TOLERANCE)) {
+					if (wrong++ == 0) {
+						first = " (first at " + x + "," + y + ": " + Integer.toHexString(actual) + ", expected " + Integer.toHexString(expected) + ")";
+					}
+				}
+				if (!near(expected, knob) && !near(expected, backdrop)) {
+					blended++;
+				}
+			}
+		}
+		check(wrong == 0, what + ": " + wrong + " pixels differ from the disc mask's coverage" + first);
+		check(blended > 0, what + ": no rim pixel blends the knob " + Integer.toHexString(knob) + " over " + Integer.toHexString(backdrop));
+		return blended;
+	}
+
+	/** Whether each colour channel of a and b differs by at most {@code tolerance}. */
+	private static boolean within(int a, int b, int tolerance) {
+		for (int shift = 0; shift <= 16; shift += 8) {
+			if (Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF)) > tolerance) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/** {@code top} over {@code bottom} at coverage {@code alpha} (0-255), per colour channel, as the GUI blend draws it. */
+	private static int blend(int top, int bottom, int alpha) {
+		int out = 0xFF000000;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			int value = Math.round(((top >> shift & 0xFF) * alpha + (bottom >> shift & 0xFF) * (255 - alpha)) / 255F);
+			out |= value << shift;
+		}
+		return out;
 	}
 
 	/**
@@ -209,7 +305,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		int wrong = 0;
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
-				boolean full = CornerMask.alpha(r, x, y) == 255;
+				boolean full = CornerMask.discAlpha(size, x, y) == 255;
 				if (full) {
 					interior++;
 					if (!near(shot.getRGB(left + x, top + y), centre)) {
@@ -249,7 +345,6 @@ public class WidgetsGameTest implements FabricClientGameTest {
 	 */
 	private static void checkRimSymmetry(BufferedImage shot, int scale, int left, int top, int trackTop, String what) {
 		int size = Slider.KNOB_SIZE * scale;
-		int r = size / 2;
 		int trackRows = Slider.TRACK_HEIGHT * scale;
 		for (int y = 0; y < size; y++) {
 			int row = top + y;
@@ -259,7 +354,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			int a = -1;
 			int b = -1;
 			for (int x = 0; x < size; x++) {
-				if (CornerMask.alpha(r, x, y) > 0) {
+				if (CornerMask.discAlpha(size, x, y) > 0) {
 					if (a < 0) {
 						a = x;
 					}
@@ -286,14 +381,15 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		int trackH = Slider.TRACK_HEIGHT * scale;
 		int backdrop = shot.getRGB(left + size / 2, top - 2 * scale);
 		// Discs and pills are smooth whatever the setting (REQ-UI-29): a pixel any of their masks touches may be tinted.
+		// The pill's caps are the outer halves of the disc mask of its height (REQ-UI-30).
 		int cap = trackH / 2;
 		for (int y = 0; y < trackH; y++) {
 			for (int x = left - scale; x < left + size + scale; x++) {
 				int px = x - trackX;
 				boolean inPill = px >= 0 && px < trackW && (px >= cap && px < trackW - cap
-						|| CornerMask.alpha(cap, px < cap ? px : px - (trackW - 2 * cap), y) > 0);
+						|| CornerMask.discAlpha(trackH, px < cap ? px : px - (trackW - trackH), y) > 0);
 				int ky = trackTop + y - top;
-				boolean inDisc = x >= left && x < left + size && ky >= 0 && ky < size && CornerMask.alpha(size / 2, x - left, ky) > 0;
+				boolean inDisc = x >= left && x < left + size && ky >= 0 && ky < size && CornerMask.discAlpha(size, x - left, ky) > 0;
 				if (!inPill && !inDisc) {
 					check(near(shot.getRGB(x, trackTop + y), backdrop), what + ": fill or track outside the pill and the knob at track row " + y
 							+ ", x " + (x - left) + " from the knob");

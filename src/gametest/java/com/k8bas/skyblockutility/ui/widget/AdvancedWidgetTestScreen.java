@@ -88,6 +88,11 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 		return new int[] {windowX(wheel.x + (int) (fx * (wheel.width - 1))), windowY(wheel.y + (int) (fy * (wheel.height - 1)))};
 	}
 
+	/** The centre of the picker wheel's marker, in GUI pixels (T3.18). */
+	int[] wheelMarker() {
+		return picker().wheel().marker();
+	}
+
 	/** A point inside the picker's wheel, at a fraction of its radius to the right of the centre. */
 	int[] wheelPoint(double fraction) {
 		Widget wheel = picker().wheel();

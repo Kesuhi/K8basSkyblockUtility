@@ -119,7 +119,7 @@ class ShapeBoundsTest {
 		}
 	}
 
-	/** T3.16: a bar in screen pixels at a GUI position on the 1/scale grid, and a one-cap pill too short for its mask. */
+	/** T3.16: a bar in screen pixels at a GUI position on the 1/scale grid; T3.18: however short, its cap is the disc mask's. */
 	@Test
 	void pixelShapesAtFractionalPositions() {
 		for (int scale = 1; scale <= 4; scale++) {
@@ -134,9 +134,13 @@ class ShapeBoundsTest {
 							for (ShapePlan.Element element : plan.elements()) {
 								assertArrayEquals(new int[] {10, 4, (int) Math.ceil((10 * scale + j + sw) / (double) scale - 1e-9), 8}, box(element), what);
 							}
-							if (corners == 0 || sw < 4 * scale) {
-								assertEquals(1, plan.elements().size(), what + ": no round corner, or too short for the mask: one plain element");
-								assertEquals(-1, plan.maskRadius(), what);
+							if (corners == 0 || !smooth) {
+								assertEquals(1, plan.elements().size(), what + ": no round corner, or no mask: one plain element");
+								assertFalse(plan.elements().get(0).textured(), what);
+								assertEquals(-1, plan.maskKey(), what);
+							} else {
+								assertTrue(plan.elements().get(0).textured(), what + ": the cap is a mask quad, also when short");
+								assertEquals(MaskKey.disc(4 * scale), plan.maskKey(), what + ": the disc mask of the bar's height");
 							}
 						}
 					}
@@ -145,15 +149,24 @@ class ShapeBoundsTest {
 		}
 	}
 
-	/** REQ-UI-29: "Smooth corners" decides only rectangle and outline corners; discs and pills are always smooth. */
+	/**
+	 * REQ-UI-29: "Smooth corners" decides only rectangle and outline corners; filled discs and pills are always smooth. An
+	 * outline follows the setting even when it is shaped like a pill or a disc (EC-UI-21, T3.18's review).
+	 */
 	@Test
 	void discsAndPillsAreSmoothWhateverTheSetting() {
-		assertTrue(ShapePlan.alwaysSmooth(20, 20, 10, Corners.ALL), "a disc");
-		assertTrue(ShapePlan.alwaysSmooth(44, 24, 12, Corners.ALL), "a pill");
-		assertTrue(ShapePlan.alwaysSmooth(30, 8, 4, Corners.LEFT), "a one-cap pill");
-		assertTrue(ShapePlan.alwaysSmooth(30, 8, 4, Corners.RIGHT), "a one-cap pill");
-		assertFalse(ShapePlan.alwaysSmooth(92, 32, 8, Corners.ALL), "a button: the setting decides");
-		assertFalse(ShapePlan.alwaysSmooth(200, 40, 12, Corners.ALL), "a card: the setting decides");
+		assertTrue(ShapePlan.alwaysSmooth(20, 20, 10, 0, Corners.ALL), "a disc");
+		assertTrue(ShapePlan.alwaysSmooth(44, 24, 12, 0, Corners.ALL), "a pill");
+		assertTrue(ShapePlan.alwaysSmooth(30, 8, 4, 0, Corners.LEFT), "a one-cap pill");
+		assertTrue(ShapePlan.alwaysSmooth(30, 8, 4, 0, Corners.RIGHT), "a one-cap pill");
+		assertFalse(ShapePlan.alwaysSmooth(92, 32, 8, 0, Corners.ALL), "a button: the setting decides");
+		assertFalse(ShapePlan.alwaysSmooth(200, 40, 12, 0, Corners.ALL), "a card: the setting decides");
+		for (int scale = 1; scale <= 4; scale++) {
+			assertFalse(ShapePlan.alwaysSmooth(26 * scale, 16 * scale, 8 * scale, scale, Corners.ALL),
+					"scale " + scale + ": the toggle's focus ring, a pill-shaped outline: the setting decides");
+			assertFalse(ShapePlan.alwaysSmooth(9 * scale, 9 * scale, 6 * scale, scale, Corners.ALL),
+					"scale " + scale + ": a disc-shaped outline: the setting decides");
+		}
 	}
 
 	@Test

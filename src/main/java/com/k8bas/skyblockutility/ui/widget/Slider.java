@@ -158,16 +158,26 @@ public final class Slider extends Widget {
 		// REQ-UI-28: nothing that shows lies under the knob. The fill (the track's colour while disabled) ends, and the
 		// rest of the track starts, where the knob's disc meets the track's top and bottom edges; the opaque knob covers
 		// the sliver under its middle rows. A dimmed knob is translucent, so they stop at its box instead.
-		float radius = KNOB_SIZE / 2F;
-		float half = TRACK_HEIGHT / 2F;
-		float reach = dimmed ? radius : (float) Math.sqrt(radius * radius - half * half);
-		float centre = knobX + radius;
+		float[] gap = trackGap(knobX, KNOB_SIZE, TRACK_HEIGHT, dimmed);
 		int fill = enabled ? ColorMath.lerp(theme.accent(), theme.accentHover(), hover) : Theme.SEPARATOR;
-		Shapes.bar(graphics, x, centre - reach, trackY, TRACK_HEIGHT, Corners.LEFT, faded(fill));
-		Shapes.bar(graphics, centre + reach, x + width, trackY, TRACK_HEIGHT, Corners.RIGHT, faded(Theme.SEPARATOR));
+		Shapes.bar(graphics, x, gap[0], trackY, TRACK_HEIGHT, Corners.LEFT, faded(fill));
+		Shapes.bar(graphics, gap[1], x + width, trackY, TRACK_HEIGHT, Corners.RIGHT, faded(Theme.SEPARATOR));
 		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, hover) : Theme.TEXT_DISABLED;
 		Shapes.roundedRect(graphics, knobX, y + (height - KNOB_SIZE) / 2, KNOB_SIZE, KNOB_SIZE, KNOB_SIZE / 2, faded(knobColor));
 		UiText.draw(graphics, font, label.apply(value), x + width + 6, y + (height - font.lineHeight) / 2 + 1,
 				faded(enabled ? Theme.TEXT_PRIMARY : Theme.TEXT_DISABLED));
+	}
+
+	/**
+	 * Where the fill ends and the rest of the track starts (REQ-UI-28), in GUI pixels, for a knob {@code knob} GUI pixels wide
+	 * at {@code knobX} over a track {@code trackHeight} high: knob centre ∓ sqrt(r² − (h/2)²) for an opaque knob, centre ∓ r
+	 * for a dimmed one.
+	 */
+	static float[] trackGap(float knobX, int knob, int trackHeight, boolean dimmed) {
+		float radius = knob / 2F;
+		float half = trackHeight / 2F;
+		float reach = dimmed ? radius : (float) Math.sqrt(radius * radius - half * half);
+		float centre = knobX + radius;
+		return new float[] {centre - reach, centre + reach};
 	}
 }

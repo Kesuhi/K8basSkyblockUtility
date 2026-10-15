@@ -1,9 +1,16 @@
 package com.k8bas.skyblockutility.ui.render;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.AddressMode;
+import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.blaze3d.textures.GpuSampler;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.state.gui.GuiRenderState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +30,7 @@ import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.FILLED
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.H;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.OUTLINE;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.SMALL;
+import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.SMALL_OUTLINE;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.SMALL_SIZE;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.TOP;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.W;
@@ -30,10 +38,15 @@ import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.W;
 /**
  * T2.9d (REQ-UI-18, R32), the screenshot comparison at GUI scales 1-4, with "Smooth corners" off and on:
  * <ul>
- *   <li>off, every probe pixel is fully drawn or not at all, as before, except the clamped box: a disc, which is
- *       smooth whatever the setting (REQ-UI-29, R46);</li>
- *   <li>on, each corner pixel's coverage is the mask's at screen-pixel resolution (filled, faded, outline, a
- *       clamped odd radius), and the pixels outside the corners are the same as with it off;</li>
+ *   <li>off, every probe pixel is fully drawn or not at all, as before, except the 9×9 box with radius 6: a disc,
+ *       which is smooth whatever the setting (REQ-UI-29, R46), each pixel the disc mask's (REQ-UI-30, T3.18), and
+ *       the same with it on;</li>
+ *   <li>on, each corner pixel's coverage is the mask's at screen-pixel resolution (filled, faded, outline, and a 9×9
+ *       outline with radius 6, whose clamped radius leaves a 1 px middle between its corner masks at odd scales), and
+ *       the pixels outside the corners are the same as with it off; the 9×9 outline is shaped like a disc but follows
+ *       the setting, as every outline does (EC-UI-21);</li>
+ *   <li>a disc drawn into a fresh render state submits its mask quad with the sampler cache's linear, clamp-to-edge
+ *       sampler (REQ-UI-31, T3.18);</li>
  *   <li>a clip cuts the smooth shape as it cuts fills, an empty clip shows nothing, and nothing is logged
  *       across the scale changes, the toggling and the mask textures made and released.</li>
  * </ul>
@@ -68,11 +81,14 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 				for (Probe probe : probes(s)) {
 					soft += probe.compare(on, true, s);
 					int offSoft = probe.compare(off, false, s);
-					boolean disc = ShapePlan.alwaysSmooth(probe.w, probe.h, Shapes.RADIUS_CARD * s, Corners.ALL);
-					check(disc ? offSoft > 0 : offSoft == 0, "scale " + s + ", " + probe.name + (disc ? ": a disc stays smooth with it off" : ": off draws whole pixels only"));
+					boolean always = probe.alwaysSmooth(s);
+					check(always ? offSoft > 0 : offSoft == 0, "scale " + s + ", " + probe.name
+							+ (always ? ": stays smooth with it off" : ": off draws whole pixels only"));
 					probe.sameOutsideTheCorners(on, off, s);
 				}
 				check(soft > 0, "scale " + s + ": smooth corners have soft pixels");
+				check(context.computeOnClient(client -> drawnWithTheLinearClampSampler()), "scale " + s
+						+ ": a mask quad samples with the sampler cache's linear, clamp-to-edge sampler, not the texture's own");
 				for (BufferedImage image : List.of(off, on)) {
 					check(clippedAway(image, s), "scale " + s + ": nothing of the clipped probe shows right of its clip");
 					check(noMagenta(image), "scale " + s + ": nothing drawn in an empty clip shows");
@@ -118,22 +134,45 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 		int r = Shapes.RADIUS_CARD * s;
 		int small = SMALL_SIZE * s;
 		return List.of(
-				new Probe("filled", FILLED * s, TOP * s, W * s, H * s, r, 0, 255, W * s),
-				new Probe("faded", FADED * s, TOP * s, W * s, H * s, r, 0, FADED_ALPHA, W * s),
-				new Probe("outline", OUTLINE * s, TOP * s, W * s, H * s, r, s, 255, W * s),
-				new Probe("clipped", CLIPPED * s, TOP * s, W * s, H * s, r, 0, 255, CLIP_WIDTH * s),
-				new Probe("clamped " + small + " px box", SMALL * s, TOP * s, small, small, CornerPieces.clampRadius(small, small, r), 0, 255, small));
+				new Probe("filled", FILLED * s, TOP * s, W * s, H * s, r, 0, 255, W * s, false),
+				new Probe("faded", FADED * s, TOP * s, W * s, H * s, r, 0, FADED_ALPHA, W * s, false),
+				new Probe("outline", OUTLINE * s, TOP * s, W * s, H * s, r, s, 255, W * s, false),
+				new Probe("clipped", CLIPPED * s, TOP * s, W * s, H * s, r, 0, 255, CLIP_WIDTH * s, false),
+				new Probe(small + " px disc", SMALL * s, TOP * s, small, small, 0, 0, 255, small, true),
+				new Probe(small + " px outline", SMALL_OUTLINE * s, TOP * s, small, small, CornerPieces.clampRadius(small, small, r), s, 255, small,
+						false));
 	}
 
 	/**
-	 * One probe in screen pixels: a w×h shape at (x, y) with radius r and outline thickness t (0 = filled),
-	 * drawn in green at the given alpha on black, of which the first {@code visibleW} columns are inside its clip.
+	 * REQ-UI-31 (T3.18): the 9×9 disc drawn into a fresh render state submits its mask quad with the sampler cache's shared
+	 * linear, clamp-to-edge sampler, not the mask texture's own. On the client thread, after a frame drew the same disc, so
+	 * its mask already exists at this scale.
 	 */
-	private record Probe(String name, int x, int y, int w, int h, int r, int t, int alpha, int visibleW) {
+	private static boolean drawnWithTheLinearClampSampler() {
+		GuiRenderState state = new GuiRenderState();
+		Shapes.roundedRect(new GuiGraphicsExtractor(Minecraft.getInstance(), state, 0, 0), SMALL, TOP, SMALL_SIZE, SMALL_SIZE, Shapes.RADIUS_CARD,
+				0xFFFFFFFF);
+		List<GpuSampler> samplers = new ArrayList<>();
+		state.forEachElement(element -> {
+			if (element instanceof ShapeRenderState shape && shape.uvs() != null) {
+				samplers.add(shape.textureSetup().sampler0());
+			}
+		}, GuiRenderState.TraverseRange.ALL);
+		GpuSampler linear = RenderSystem.getSamplerCache().getSampler(AddressMode.CLAMP_TO_EDGE, AddressMode.CLAMP_TO_EDGE, FilterMode.LINEAR,
+				FilterMode.LINEAR, false);
+		return linear != null && !samplers.isEmpty() && samplers.stream().allMatch(sampler -> sampler == linear);
+	}
+
+	/**
+	 * One probe in screen pixels: a w×h shape at (x, y) with radius r and outline thickness t (0 = filled), or a
+	 * w×w disc, drawn in green at the given alpha on black, of which the first {@code visibleW} columns are inside
+	 * its clip.
+	 */
+	private record Probe(String name, int x, int y, int w, int h, int r, int t, int alpha, int visibleW, boolean disc) {
 		/** Every visible pixel against the expected coverage; returns how many are soft (neither 0 nor full). */
 		int compare(BufferedImage image, boolean smooth, int s) {
 			int soft = 0;
-			boolean drawnSmooth = smooth || ShapePlan.alwaysSmooth(w, h, Shapes.RADIUS_CARD * s, Corners.ALL);
+			boolean drawnSmooth = smooth || alwaysSmooth(s);
 			for (int ly = 0; ly < h; ly++) {
 				for (int lx = 0; lx < visibleW; lx++) {
 					int coverage = coverage(lx, ly);
@@ -149,11 +188,17 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 			return soft;
 		}
 
-		/** Outside the corner squares the smooth shape is the same plain fills. */
+		/** Smooth whatever the setting (REQ-UI-29): filled, with a radius of at least half the shorter side, as {@link Shapes} decides. */
+		boolean alwaysSmooth(int s) {
+			return ShapePlan.alwaysSmooth(w, h, Shapes.RADIUS_CARD * s, t, Corners.ALL);
+		}
+
+		/** Outside the corner squares the smooth shape is the same plain fills; one always smooth is the same everywhere. */
 		void sameOutsideTheCorners(BufferedImage on, BufferedImage off, int s) {
+			boolean always = alwaysSmooth(s);
 			for (int ly = 0; ly < h; ly++) {
 				for (int lx = 0; lx < visibleW; lx++) {
-					if (corner(lx, ly)) {
+					if (!always && corner(lx, ly)) {
 						continue;
 					}
 					check(on.getRGB(x + lx, y + ly) == off.getRGB(x + lx, y + ly), "scale " + s + ", " + name + " pixel " + lx + "," + ly
@@ -163,11 +208,14 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 		}
 
 		private boolean corner(int lx, int ly) {
-			return (lx < r || lx >= w - r) && (ly < r || ly >= h - r);
+			return !disc && (lx < r || lx >= w - r) && (ly < r || ly >= h - r);
 		}
 
 		/** The mask's coverage (0-255) of the shape's pixel (lx, ly), each corner square showing its quadrant. */
 		private int coverage(int lx, int ly) {
+			if (disc) {
+				return CornerMask.discAlpha(w, lx, ly);
+			}
 			if (corner(lx, ly)) {
 				int mx = lx < r ? lx : lx - w + 2 * r;
 				int my = ly < r ? ly : ly - h + 2 * r;

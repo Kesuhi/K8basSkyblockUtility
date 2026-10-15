@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.ui.option.Keybind;
+import com.k8bas.skyblockutility.ui.render.CornerMask;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -28,6 +29,7 @@ import java.nio.file.Path;
  *       (absent before), F2 is not captured, Esc unbinds and is written, a left click while armed
  *       cancels, a right click resets (to a real default on a second widget); E binds and shows the
  *       conflict with the inventory key; F3 binds without toggling the debug overlay.</li>
+ *   <li>REQ-UI-30 (T3.18): the colour wheel's marker is two discs of the disc mask at GUI scale 2.</li>
  * </ul>
  */
 public class AdvancedWidgetsGameTest implements FabricClientGameTest {
@@ -254,6 +256,7 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		float saturation = context.computeOnClient(client -> screen(client).picker().state().hsv().s());
 		check(Math.abs(hue - 200F / 360F) <= 1F / 360F && Math.abs(saturation - 0.8F) <= 0.01F,
 				"and back to full keeps hue 200 and saturation 0.8: " + hue * 360 + ", " + saturation);
+		wheelMarkerIsADisc(context);
 		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 		context.waitTick();
 
@@ -349,6 +352,88 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			throw new AssertionError("FAILED: the test screen is not open: " + client.gui.screen());
 		}
 		return screen;
+	}
+
+	/**
+	 * REQ-UI-30 (T3.18), at GUI scale 2 with the picker at hue 200, saturation 0.8 and full brightness: the wheel's marker is
+	 * an 8 GUI px white disc with a 6 GUI px disc of the picked colour inside it, both of the disc mask. Where the white disc
+	 * covers at most three quarters of a pixel (its box's corners and its rim), the wheel shows, not white; the colour disc's
+	 * rim, over the opaque white, is the colour over white by its coverage, to within 3 per channel. A square marker is white
+	 * in its box's corners and has no blended rim.
+	 */
+	private static void wheelMarkerIsADisc(ClientGameTestContext context) {
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		check(scale == 2, "the marker check runs at GUI scale 2: " + scale);
+		int[] marker = context.computeOnClient(client -> screen(client).wheelMarker());
+		int colour = context.computeOnClient(client -> screen(client).picker().state().hsv().toRgb());
+		Path shot = context.takeScreenshot("t3.18-wheel-marker-scale-2");
+		java.awt.image.BufferedImage image;
+		try {
+			image = javax.imageio.ImageIO.read(shot.toFile());
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
+		int d = 8 * scale;
+		int inner = 6 * scale;
+		int x0 = (marker[0] - 4) * scale;
+		int y0 = (marker[1] - 4) * scale;
+		int wheel = 0;
+		int blended = 0;
+		int wrong = 0;
+		String first = "";
+		for (int y = 0; y < d; y++) {
+			for (int x = 0; x < d; x++) {
+				int white = CornerMask.discAlpha(d, x, y);
+				int ix = x - scale;
+				int iy = y - scale;
+				int dot = ix >= 0 && iy >= 0 && ix < inner && iy < inner ? CornerMask.discAlpha(inner, ix, iy) : 0;
+				int actual = image.getRGB(x0 + x, y0 + y) & 0xFFFFFF;
+				boolean ok = true;
+				if (dot == 0 && white <= 192) {
+					ok = !near(actual, 0xFFFFFF);
+					wheel++;
+				} else if (dot == 0 && white == 255) {
+					ok = near(actual, 0xFFFFFF);
+				} else if (white == 255) {
+					int expected = blend(colour, 0xFFFFFF, dot);
+					ok = within(actual, expected, 3);
+					if (!near(expected, colour) && !near(expected, 0xFFFFFF)) {
+						blended++;
+					}
+				}
+				if (!ok && wrong++ == 0) {
+					first = " (first at " + x + "," + y + ": " + Integer.toHexString(actual) + ", white " + white + ", dot " + dot + ")";
+				}
+			}
+		}
+		LOGGER.info("wheel marker at scale 2: {} pixels show the wheel past the white disc, {} blend the colour disc over white, {} wrong", wheel,
+				blended, wrong);
+		check(wrong == 0, "the wheel's marker is two discs of the disc mask: " + wrong + " pixels differ" + first);
+		check(wheel > 0 && blended > 0, "the marker's rims are anti-aliased: " + wheel + " wheel pixels, " + blended + " blended");
+	}
+
+	/** {@code top} over {@code bottom} (both 0xRRGGBB) at coverage {@code alpha} (0-255), as the GUI blend draws it. */
+	private static int blend(int top, int bottom, int alpha) {
+		int out = 0;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			out |= Math.round(((top >> shift & 0xFF) * alpha + (bottom >> shift & 0xFF) * (255 - alpha)) / 255F) << shift;
+		}
+		return out;
+	}
+
+	/** Within 8 per colour channel. */
+	private static boolean near(int a, int b) {
+		return within(a, b, 8);
+	}
+
+	/** Whether each colour channel of a and b differs by at most {@code tolerance}. */
+	private static boolean within(int a, int b, int tolerance) {
+		for (int shift = 0; shift <= 16; shift += 8) {
+			if (Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF)) > tolerance) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static int pixel(Path screenshot, int[] point) {

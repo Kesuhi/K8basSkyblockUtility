@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.color.ColorPickerState;
 import com.k8bas.skyblockutility.ui.color.WheelGeometry;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -60,11 +61,16 @@ final class ColorWheel extends Widget {
 		// The whole texture, scaled onto the wheel's bounds.
 		graphics.blit(RenderPipelines.GUI_TEXTURED, WheelTexture.ID, x, y, 0F, 0F, width, height, WheelTexture.SIZE, WheelTexture.SIZE,
 				WheelTexture.SIZE, WheelTexture.SIZE);
+		// REQ-UI-30: a white disc with a disc of the picked colour inside it, both from the disc mask.
+		int[] marker = marker();
+		Shapes.roundedRect(graphics, marker[0] - 4, marker[1] - 4, 8, 8, 4, 0xFFFFFFFF);
+		Shapes.roundedRect(graphics, marker[0] - 3, marker[1] - 3, 6, 6, 3, 0xFF000000 | state.hsv().toRgb());
+	}
+
+	/** The marker's centre in GUI pixels: where the picked hue and saturation lie on the wheel. */
+	int[] marker() {
 		double radius = width / 2.0;
 		double[] puck = WheelGeometry.puck(state.hsv().h(), state.hsv().s(), radius);
-		int px = (int) Math.round(x + radius + puck[0]);
-		int py = (int) Math.round(y + radius + puck[1]);
-		graphics.fill(px - 4, py - 4, px + 4, py + 4, 0xFFFFFFFF);
-		graphics.fill(px - 3, py - 3, px + 3, py + 3, 0xFF000000 | state.hsv().toRgb());
+		return new int[] {(int) Math.round(x + radius + puck[0]), (int) Math.round(y + radius + puck[1])};
 	}
 }

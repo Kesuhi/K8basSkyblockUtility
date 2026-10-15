@@ -57,11 +57,6 @@ public final class CornerPieces {
 		return straight(out, n, w - t, r, w, h - r);
 	}
 
-	/** The mask's cache key: a fill has thickness 0. */
-	public static int key(int r, int t) {
-		return r << 9 | t;
-	}
-
 	private static int corners(int w, int h, int r, int round, int[] out) {
 		int n = corner(out, 0, round & Corners.TOP_LEFT, 0, 0, r, 0, 0);
 		n = corner(out, n, round & Corners.TOP_RIGHT, w - r, 0, r, r, 0);

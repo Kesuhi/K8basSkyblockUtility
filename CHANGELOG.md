@@ -11,6 +11,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - "Smooth corners" (General › Interface) is now ON by default, so rounded corners have soft edges. The
   option changes only how the corners of boxes, buttons and fields are drawn: round knobs and pill shapes
   are always smooth now. If you switched it off before, it stays off.
+- Slider and toggle knobs, toggle switches, slider tracks, colour dots and the colour picker's marker are
+  drawn as true circles and pill shapes, with evenly soft edges at every GUI scale, odd sizes included.
+  The colour picker's marker was a square before.
 
 ### Fixed
 
