@@ -11,10 +11,10 @@
     },
     "npcdb.mobs": {
       "path": "npcdb/mobs.json",
-      "sha256": "61c2b92b5c34235c1f55b825d806d11e6a15d535954b242975762dbeaf54bf2d",
-      "rows": 313,
+      "sha256": "3f5ead88aa5c85fac3cc9cdc2c0cb8b1b6f6f069063282e0596a1e343de2a00e",
+      "rows": 309,
       "schemaVersion": 1,
-      "dataVersion": 2,
+      "dataVersion": 3,
       "gameVersion": "0.27.1"
     },
     "npcdb.npcs": {

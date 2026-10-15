@@ -200,10 +200,13 @@ class NpcMobTablesTest {
 	@Test
 	void theMobCorrectionsAreInTheData() {
 		MobList mobs = bundled(MobTable.SPEC);
-		assertEquals(2, rawTable("npcdb/mobs.json").get("dataVersion").getAsInt(), "T3.8b's corrections are data version 2");
-		// REQ-NPCDB-08: exactly the four invisible-by-design mobs are flagged; Shadow Assassin is only invisible at times.
-		Set<String> invisible = mobs.getEntries().stream().filter(mob -> mob.invisible).map(mob -> mob.id).collect(Collectors.toSet());
-		assertEquals(Set.of("ghost", "fels", "sneaky_creeper", "invisibug"), invisible);
+		assertEquals(3, rawTable("npcdb/mobs.json").get("dataVersion").getAsInt(), "R38 left the invisible mobs out: data version 3");
+		// REQ-NPCDB-08 (R38): the four invisible-by-design mobs are not in the table, and no row is flagged invisible;
+		// Shadow Assassin stays, as it is only invisible at times.
+		for (String id : List.of("ghost", "fels", "sneaky_creeper", "invisibug")) {
+			assertNull(mobs.byId(id), id);
+		}
+		assertTrue(mobs.getEntries().stream().noneMatch(mob -> mob.invisible), "no row is flagged invisible");
 		assertFalse(mobs.byId("shadow_assassin").invisible);
 		// AC-NPCDB-06: at least one "Glacite Mineshafts" group; each entry there matches a Glacite Tunnels mob too.
 		List<MobDatabaseEntry> shafts = mobs.getEntries().stream().filter(mob -> mob.island.equals("Glacite Mineshafts")).toList();
@@ -237,15 +240,12 @@ class NpcMobTablesTest {
 	@Test
 	void theMobTableHoldsTheFrozenListWithTheHiddenJerriesGroup() {
 		MobList mobs = bundled(MobTable.SPEC);
-		// The 308 frozen entries plus the 5 Glacite mobs also listed under "Glacite Mineshafts" (T3.8b).
-		assertEquals(313, mobs.getEntries().size());
+		// The 308 frozen entries plus the 5 Glacite mobs also listed under "Glacite Mineshafts" (T3.8b), less the four
+		// invisible-by-design mobs (R38).
+		assertEquals(309, mobs.getEntries().size());
 		Set<String> jerries = mobs.getEntries().stream().filter(mob -> mob.island.equals("Hidden Jerries")).map(mob -> mob.id).collect(Collectors.toSet());
 		assertEquals(Set.of("blue_jerry", "green_jerry", "purple_jerry", "golden_jerry"), jerries);
 		assertTrue(mobs.getEntries().stream().noneMatch(mob -> mob.island.equals("Jerry")), "no mob is gated to Jerry's Workshop by name collision");
-		// REQ-NPCDB-08: the invisible-by-design mobs stay in the data (T3.8b flags them).
-		for (String id : List.of("ghost", "fels", "sneaky_creeper", "invisibug")) {
-			assertNotNull(mobs.byId(id), id);
-		}
 	}
 
 	@Test

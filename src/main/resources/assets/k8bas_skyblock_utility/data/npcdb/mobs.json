@@ -1,9 +1,9 @@
 {
   "table": "npcdb.mobs",
   "schemaVersion": 1,
-  "dataVersion": 2,
+  "dataVersion": 3,
   "gameVersion": "0.27.1",
-  "generatedAt": "2026-10-09T19:00:00Z",
+  "generatedAt": "2026-10-15T12:00:00Z",
   "license": "CC0-1.0",
   "sources": {
     "gist": {
@@ -44,7 +44,6 @@
     {"id":"miner_skeleton","displayName":"Miner Skeleton","island":"Deep Caverns","matchText":"Miner Skeleton"},
     {"id":"miner_zombie","displayName":"Miner Zombie","island":"Deep Caverns","matchText":"Miner Zombie"},
     {"id":"redstone_pigman","displayName":"Redstone Pigman","island":"Deep Caverns","matchText":"Redstone Pigman"},
-    {"id":"sneaky_creeper","displayName":"Sneaky Creeper","island":"Deep Caverns","matchText":"Sneaky Creeper","invisible":true},
     {"id":"automaton","displayName":"Automaton","island":"Crystal Hollows","matchText":"Automaton"},
     {"id":"bal","displayName":"Bal","island":"Crystal Hollows","matchText":"Bal"},
     {"id":"boss_corleone","displayName":"Boss Corleone","island":"Crystal Hollows","matchText":"Boss Corleone"},
@@ -97,7 +96,6 @@
     {"id":"crypt_dreadlord","displayName":"Crypt Dreadlord","island":"Catacombs","matchText":"Crypt Dreadlord"},
     {"id":"crypt_lurker","displayName":"Crypt Lurker","island":"Catacombs","matchText":"Crypt Lurker"},
     {"id":"crypt_souleater","displayName":"Crypt Souleater","island":"Catacombs","matchText":"Crypt Souleater"},
-    {"id":"fels","displayName":"Fels","island":"Catacombs","matchText":"Fels","invisible":true},
     {"id":"golem","displayName":"Golem","island":"Catacombs","matchText":"Golem"},
     {"id":"king_midas","displayName":"King Midas","island":"Catacombs","matchText":"King Midas"},
     {"id":"lost_adventurer","displayName":"Lost Adventurer","island":"Catacombs","matchText":"Lost Adventurer"},
@@ -150,7 +148,6 @@
     {"id":"tewtil","displayName":"Tewtil","island":"Lotus Atoll","matchText":"Tewtil"},
     {"id":"gorf","displayName":"gorF","island":"Lotus Atoll","matchText":"gorF"},
     {"id":"diamond_goblin","displayName":"Diamond Goblin","island":"Dwarven Mines","matchText":"Diamond Goblin"},
-    {"id":"ghost","displayName":"Ghost","island":"Dwarven Mines","matchText":"Ghost","invisible":true},
     {"id":"glacite_bowman","displayName":"Glacite Bowman","island":"Dwarven Mines","matchText":"Glacite Bowman"},
     {"id":"glacite_bowman_mineshafts","displayName":"Glacite Bowman (Mineshafts)","island":"Glacite Mineshafts","matchText":"Glacite Bowman"},
     {"id":"glacite_caver","displayName":"Glacite Caver","island":"Dwarven Mines","matchText":"Glacite Caver"},
@@ -223,7 +220,6 @@
     {"id":"hideonleaf","displayName":"Hideonleaf","island":"Moonglade Marsh","matchText":"Hideonleaf"},
     {"id":"honeyhog","displayName":"Honeyhog","island":"Moonglade Marsh","matchText":"Honeyhog"},
     {"id":"honeymite","displayName":"Honeymite","island":"Moonglade Marsh","matchText":"Honeymite"},
-    {"id":"invisibug","displayName":"Invisibug","island":"Moonglade Marsh","matchText":"Invisibug","invisible":true},
     {"id":"joydive","displayName":"Joydive","island":"Moonglade Marsh","matchText":"Joydive"},
     {"id":"lumisquid","displayName":"Lumisquid","island":"Moonglade Marsh","matchText":"Lumisquid"},
     {"id":"mochibear","displayName":"Mochibear","island":"Moonglade Marsh","matchText":"Mochibear"},

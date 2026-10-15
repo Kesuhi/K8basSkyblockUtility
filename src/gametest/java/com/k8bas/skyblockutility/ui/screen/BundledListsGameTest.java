@@ -74,9 +74,9 @@ public class BundledListsGameTest implements FabricClientGameTest {
 			checkPickerLists(context, Category.HIGHLIGHTS, MOB_PICKER, mobRows);
 			checkPickerLists(context, Category.WAYPOINTS, NPC_PICKER, npcRows);
 
-			// AC-NPCDB-07 [C]: each invisible-by-design mob is found, greyed with its note, and Add does nothing.
+			// AC-NPCDB-07 [C] (R38): the picker finds none of the invisible-by-design mobs.
 			for (String name : List.of("Ghost", "Fels", "Sneaky Creeper", "Invisibug")) {
-				neverAddable(context, name);
+				notListed(context, name);
 			}
 			moduleWiring(context);
 
@@ -203,8 +203,8 @@ public class BundledListsGameTest implements FabricClientGameTest {
 				.fields().stream().map(option -> option.id().substring(groupId.length() + 1)).toList());
 	}
 
-	/** Searches the mob picker for {@code name}: the entry is listed with the note, and a click where Add would be adds nothing. */
-	private static void neverAddable(ClientGameTestContext context, String name) {
+	/** Searches the mob picker for {@code name}: no entry has that name (R38 left the invisible-by-design mobs out). */
+	private static void notListed(ClientGameTestContext context, String name) {
 		openPicker(context, Category.HIGHLIGHTS, MOB_PICKER);
 		int[] field = context.computeOnClient(client -> centreOf(picker(client).searchField()));
 		click(context, field);
@@ -212,30 +212,8 @@ public class BundledListsGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 		PickerRows.Row row = context.computeOnClient(client -> picker(client).rows().stream()
 				.filter(r -> r.entry() != null && name.equals(r.label())).findFirst().orElse(null));
-		check(row != null && RuleDatabase.NEVER_HIGHLIGHTED.equals(row.entry().note()), name + " is listed with its note: " + row);
-		if (name.equals("Ghost")) {
-			context.takeScreenshot("t3.8c-picker-never-highlighted");
-		}
-		int rules = context.computeOnClient(client -> MobRulesForTests.rules().size());
-		click(context, addArea(context, name));
-		check(context.computeOnClient(client -> MobRulesForTests.rules().size()) == rules, name + " cannot be added");
+		check(row == null, name + " is not in the picker: " + row);
 		closePicker(context);
-	}
-
-	/** Where an entry's Add button would be, in GUI pixels. */
-	private static int[] addArea(ClientGameTestContext context, String name) {
-		return context.computeOnClient(client -> {
-			DatabasePickerOverlay picker = picker(client);
-			List<PickerRows.Row> rows = picker.rows();
-			for (int i = 0; i < rows.size(); i++) {
-				if (rows.get(i).entry() != null && name.equals(rows.get(i).label())) {
-					Widget list = picker.list();
-					int[] add = DatabasePickerOverlay.addButton(list.width() - (picker.list().rows().overflows() ? 6 : 0), DatabasePickerOverlay.ROW_HEIGHT);
-					return new int[] {list.x() + add[0] + add[2] / 2, list.y() + picker.list().rows().rowTop(i) + add[1] + add[3] / 2};
-				}
-			}
-			throw new AssertionError("FAILED: no row " + name);
-		});
 	}
 
 	private static void click(ClientGameTestContext context, int[] gui) {

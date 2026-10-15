@@ -1165,9 +1165,10 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Req: REQ-GS-18, REQ-MSA-08
   - Accept: AC-GS-18 ([R]; its [E] part passed at G3, R36).
   - Done (2026-10-15): the shared hint (`lang/en_us.json`, `WidgetHint`) says `/widgets`; MineshaftCodesTest checks the wording. Review: one batch review of T3.8d, T3.2c, T3.3c, T3.3a and T3.3 in three angles (rules and licences, correctness, tests and style), each finding checked by two verifiers; none for this task.
-- [ ] **T3.8d data(npcdb): drop the four invisible mobs** (S, deps T3.8b, T3.8c). R38: Ghost, Fels, Sneaky Creeper and Invisibug leave the bundled mob table (`dataVersion` +1 by hand, then `dataIndex`), so the picker cannot find them. The 1.0.x mob gist stays as it is. A rule that already targets one of them still never outlines an invisible mob (REQ-GLOW-03, EC-GLOW-09).
+- [x] **T3.8d data(npcdb): drop the four invisible mobs** (S, deps T3.8b, T3.8c). R38: Ghost, Fels, Sneaky Creeper and Invisibug leave the bundled mob table (`dataVersion` +1 by hand, then `dataIndex`), so the picker cannot find them. The 1.0.x mob gist stays as it is. A rule that already targets one of them still never outlines an invisible mob (REQ-GLOW-03, EC-GLOW-09).
   - Req: REQ-NPCDB-08
   - Accept: AC-NPCDB-07 (amended, R38).
+  - Done (2026-10-15): `npcdb/mobs.json` without the four rows, data version 3, 309 rows, index rewritten. NpcMobTablesTest: none of the four ids, no row flagged invisible, 309 rows. BundledListsGameTest: the picker finds none of the four (AC-NPCDB-07 [C], passes). CHANGELOG and the data audit say so. The `invisible` flag and the greyed picker note stay for any later row. Review: one batch review of T3.8d, T3.2c, T3.3c, T3.3a and T3.3 in three angles (rules and licences, correctness, tests and style), each finding checked by two verifiers; none for this task.
 - [ ] **T3.10 test(fixtures): G3 captures as fixtures** (S, deps T3.0a, T3.0e). The G3 captures become sanitised fixtures (player names, server ids and UUIDs removed): the Croesus chest, the `/sblevels` page, and the mineshaft tab and sidebar dumps. The UNVERIFIED list is updated.
   - Req: REQ-GS-14
   - Accept: AC-GS-06 (the [E] capture: the `/sblevels` page equals its G1 capture), AC-ODDS-13 (fixture part: the Croesus capture replaces the provisional chest fixture).
