@@ -25,7 +25,10 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   looted" (ON) removes them once the Frozen Corpses tab widget lists every corpse as looted. `/ksu
   corpses` lists the spots by distance. With an Organ Donor accessory, a "Corpse ding" HUD line
   (movable in the HUD editor) says "far", "close" or "very close" from how high its ding sounds
-  ("Organ Donor ding hint", ON).
+  ("Organ Donor ding hint", ON). Once it has dinged in a shaft, a spot you spent 4 s within 16 blocks
+  of without a ding is removed, since the ding plays for every unlooted corpse within 20 blocks;
+  removed spots come back when the widget lists a new corpse or in another shaft, and `/ksu corpses`
+  marks them "ruled out" ("Remove ruled-out spots", ON).
 - Beam colours you can change: Waypoints › "Island beam colours" has a colour per island (picker
   and hex), and a fixed NPC's card has its own "Beam colour" and "Use island colour". Changes show
   on the beams at once.

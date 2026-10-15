@@ -98,6 +98,15 @@ class CorpseSpotRulesTest {
 	}
 
 	@Test
+	void ruledOutSpotsAreLeftOutAndMarkedInTheList() {
+		// REQ-CORPSE-12, REQ-CORPSE-06 (R44).
+		assertEquals(List.of(SPOTS.spots("OPAL_1").get(0), SPOTS.spots("OPAL_1").get(2)),
+				CorpseSpotRules.visible(config(true, true), shaft("OPAL_1", widget(false, false)), SPOTS, Set.of(2)));
+		assertEquals(List.of("Opal 1: 3 possible corpse spots", "#1 -100, 10, -150", "#2 -120, 10, -150 · ruled out", "#3 -110, 10, -150"),
+				CorpseSpotRules.list(shaft("OPAL_1", CorpseList.ABSENT), SPOTS, false, null, Set.of(2)));
+	}
+
+	@Test
 	void withoutAPlayerTheListKeepsTheDataOrder() {
 		assertEquals(List.of("Opal 1: 3 possible corpse spots", "#1 -100, 10, -150", "#2 -120, 10, -150", "#3 -110, 10, -150"),
 				CorpseSpotRules.list(shaft("OPAL_1", CorpseList.ABSENT), SPOTS, false, null));

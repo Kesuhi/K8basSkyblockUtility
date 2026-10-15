@@ -10,6 +10,7 @@ import com.k8bas.skyblockutility.render.marker.MarkerLabel
 import com.k8bas.skyblockutility.render.marker.MarkerProvider
 import com.k8bas.skyblockutility.render.marker.WorldMarkers
 import com.k8bas.skyblockutility.skyblock.MineshaftState
+import com.k8bas.skyblockutility.skyblock.WidgetPresence
 import com.k8bas.skyblockutility.settings.HudOptions
 import com.k8bas.skyblockutility.ui.option.Binding
 import com.k8bas.skyblockutility.ui.option.Card
@@ -38,6 +39,10 @@ class CorpseSpotsConfig {
 
 	@JvmField
 	var dingHint = true
+
+	/** Spots the ding's silence rules out are removed (REQ-CORPSE-12, R44); only with the ding hint on. */
+	@JvmField
+	var ruleOutSpots = true
 }
 
 /**
@@ -60,6 +65,8 @@ class CorpseSpotsModule : Module {
 	private var notedCode: String? = null
 	private val loggedCodes = HashSet<String>()
 	private val ding = DingHint()
+	private val ruleOut = SpotRuleOut()
+	private var ruleOutCode: String? = null
 
 	/** The HUD element's content, worked out each tick (REQ-HUD-11); null when there is nothing to show. */
 	@Volatile
@@ -76,6 +83,8 @@ class CorpseSpotsModule : Module {
 			if (location.island != MineshaftState.ISLAND) {
 				commandHold = false
 				ding.clear()
+				ruleOut.reset()
+				ruleOutCode = null
 				// A request still waiting is answered: "Not in a Glacite Mineshaft".
 				answerRequest()
 				notedCode = null
@@ -85,6 +94,7 @@ class CorpseSpotsModule : Module {
 			noteMissingData()
 			answerRequest()
 			dingText = if (cfg.enabled && cfg.dingHint) ding.warmth(now())?.let { HudText(listOf(DingHint.hudLine(it))) } else null
+			tickRuleOut()
 		}
 		ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
 			for (root in ROOTS) {
@@ -143,23 +153,52 @@ class CorpseSpotsModule : Module {
 		}
 		request = null
 		val player = Minecraft.getInstance().player?.let { doubleArrayOf(it.x, it.y, it.z) }
-		CorpseSpotRules.list(shaft, CorpseSpotTable.current(), CorpseSpotTable.unavailable(), player).forEach { ChatUtils.chat(it) }
+		CorpseSpotRules.list(shaft, CorpseSpotTable.current(), CorpseSpotTable.unavailable(), player, ruledOut()).forEach { ChatUtils.chat(it) }
 	}
 
 	private fun heard(sound: SoundInstance) {
 		val player = Minecraft.getInstance().player ?: return
-		if (cfg.enabled && cfg.dingHint) {
-			ding.heard(sound.identifier.toString(), sound.source.getName(), sound.x, sound.y, sound.z, sound.pitch,
-				doubleArrayOf(player.x, player.y, player.z), MineshaftState.snapshot().inShaft, now())
+		if (!cfg.enabled || !cfg.dingHint) {
+			return
+		}
+		val id = sound.identifier.toString()
+		val source = sound.source.getName()
+		val at = doubleArrayOf(player.x, player.y, player.z)
+		val inShaft = MineshaftState.snapshot().inShaft
+		ding.heard(id, source, sound.x, sound.y, sound.z, sound.pitch, at, inShaft, now())
+		if (DingHint.isDing(id, source, sound.x, sound.y, sound.z, at, inShaft, SpotRuleOut.DING_NEAR)) {
+			ruleOut.ding(now())
 		}
 	}
+
+	/** REQ-CORPSE-12: the player's position and the widget's corpse count each tick; a new shaft code starts over. */
+	private fun tickRuleOut() {
+		val shaft = MineshaftState.snapshot()
+		val player = Minecraft.getInstance().player
+		if (!shaft.inShaft || shaft.code != ruleOutCode) {
+			ruleOut.reset()
+			ruleOutCode = shaft.code
+		}
+		val spots = CorpseSpotTable.current()?.spots(shaft.code) ?: return
+		if (!ruleOutActive() || player == null || spots.isEmpty()) {
+			return
+		}
+		// A cut-off widget still shows a new corpse among the lines it has; the count only rising matters.
+		val corpses = shaft.corpses.takeIf { it.presence == WidgetPresence.PRESENT || it.presence == WidgetPresence.PARTIAL }?.corpses?.size ?: 0
+		ruleOut.tick(now(), doubleArrayOf(player.x, player.y, player.z), spots, corpses)
+	}
+
+	private fun ruleOutActive(): Boolean = cfg.enabled && cfg.dingHint && cfg.ruleOutSpots
+
+	/** The spots ruled out now, or none while the rule-out is off. */
+	private fun ruledOut(): Set<Int> = if (ruleOutActive()) ruleOut.ruledOut() else setOf()
 
 	/** For gametests and the HUD element: what the "Corpse ding" element shows now, or null. */
 	fun dingText(): HudText? = dingText
 
 	/** Each shown spot with its label text, always plain "Possible corpse #n" (R43: the ding is on the HUD). */
 	fun labels(): List<Pair<CorpseSpot, String>> =
-		CorpseSpotRules.visible(cfg, MineshaftState.snapshot(), CorpseSpotTable.current()).map { it to "Possible corpse #${it.number}" }
+		CorpseSpotRules.visible(cfg, MineshaftState.snapshot(), CorpseSpotTable.current(), ruledOut()).map { it to "Possible corpse #${it.number}" }
 
 	private fun markers(out: Consumer<Marker>) {
 		for ((spot, text) in labels()) {
@@ -237,7 +276,18 @@ class CorpseSpotsModule : Module {
 				),
 				true, Binding.of({ config.dingHint }, { value -> config.dingHint = value }),
 			)
-			val options = if (editPosition) java.util.List.of(hide, ding, HudOptions.editPosition(ID, CorpseDingHud.ID)) else java.util.List.of(hide, ding)
+			val ruleOut = Toggle.of(
+				"$ID.rule_out", "modules.$ID.ruleOutSpots",
+				OptionText(
+					"Remove ruled-out spots", "With the ding hint: spots where your Organ Donor stayed silent are removed.",
+					"The ding plays while an unlooted corpse is within 20 blocks. Once it has dinged in this shaft, a spot goes when you " +
+						"spent 4 s within 16 blocks of it without a ding. Removed spots come back with a new corpse or in another shaft; " +
+						"/ksu corpses still lists them.",
+					java.util.List.of("corpse", "ding", "organ donor", "remove", "spot", "ruled out", "rule out", "silence", "mineshaft"),
+				),
+				true, Binding.of({ config.ruleOutSpots }, { value -> config.ruleOutSpots = value }),
+			)
+			val options = if (editPosition) java.util.List.of(hide, ding, ruleOut, HudOptions.editPosition(ID, CorpseDingHud.ID)) else java.util.List.of(hide, ding, ruleOut)
 			return java.util.List.of(Card(ID, Category.MINING, "Possible corpse spots", enabled, options))
 		}
 	}

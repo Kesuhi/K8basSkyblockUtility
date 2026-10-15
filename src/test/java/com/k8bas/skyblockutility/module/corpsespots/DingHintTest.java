@@ -62,6 +62,16 @@ class DingHintTest {
 	}
 
 	@Test
+	void theRuleOutTakesDingsFromFurtherAway() {
+		// REQ-CORPSE-12: a ding the HUD misses (6 blocks off, e.g. while moving with latency) still stops a rule-out.
+		double[] at = PLAYER;
+		assertEquals(true, DingHint.isDing(HARP, "block", at[0] + 6, at[1], at[2], at, true, SpotRuleOut.DING_NEAR));
+		assertEquals(false, DingHint.isDing(HARP, "block", at[0] + 6, at[1], at[2], at, true, DingHint.NEAR));
+		assertEquals(false, DingHint.isDing(HARP, "block", at[0] + 9, at[1], at[2], at, true, SpotRuleOut.DING_NEAR));
+		assertEquals(false, DingHint.isDing(HARP, "block", at[0], at[1], at[2], at, false, SpotRuleOut.DING_NEAR), "outside a shaft");
+	}
+
+	@Test
 	void theWarmthIgnoresWhereTheDingWasPlayed() {
 		// Two dings with the same pitch, one at the player and one 3 blocks off: the same warmth (R43: the HUD shows it).
 		DingHint a = new DingHint();

@@ -33,6 +33,9 @@ import java.util.List;
  *   <li>AC-CORPSE-11 [C] (R43 (b)): a block-category harp the server plays at the player with the captured pitch 1.968
  *       gives the "Corpse ding" HUD element "very close" while the labels stay plain; it clears 2 s later, and with the
  *       hint off a ding shows nothing;</li>
+ *   <li>AC-CORPSE-14 [C] (R44): next to spot #1, one ding and then 4 s of silence remove #1's label (the other spots,
+ *       more than 16 blocks away, stay), `/ksu corpses` marks it ruled out, "Remove ruled-out spots" or the ding hint OFF
+ *       shows it again, and a new corpse on the widget brings it back;</li>
  *   <li>AC-CORPSE-06 [C]: `/ksu corpses` lists the 5 spots with the feature and the mineshaft entry alert both OFF: the
  *       command keeps the shaft read and answers once the code is in (here when the shaft is simulated again).</li>
  * </ul>
@@ -98,19 +101,54 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 			context.runOnClient(client -> module.setEnabled(true));
 			context.waitTicks(45);
 
+			// AC-CORPSE-14: next to spot #1 (-136, 3, -167); the other OPAL_1 spots are more than 16 blocks from it.
+			server.runCommand("tp @a -136 4 -167");
+			context.waitTicks(5);
+			server.runCommand("playsound minecraft:block.note_block.harp block @a -136 4 -167 1 1.968");
+			context.waitTicks(60);
+			check(texts(context, module).contains("Possible corpse #1"), "3 s after the ding #1 is still there");
+			context.waitTicks(30);
+			List<String> left = texts(context, module);
+			check(left.equals(List.of("Possible corpse #2", "Possible corpse #3", "Possible corpse #4", "Possible corpse #5")),
+					"4 s of silence next to #1 removes it, and only it: " + left);
+			command(context, "ksu corpses");
+			check(chat(context).stream().anyMatch(line -> line.startsWith("#1 -136, 3, -167 · ") && line.endsWith(" · ruled out")),
+					"/ksu corpses marks #1 ruled out: " + chat(context));
+			for (String toggle : List.of("corpse_spots.rule_out", "corpse_spots.ding_hint")) {
+				option(context, toggle, false);
+				context.waitTicks(2);
+				check(texts(context, module).size() == 5, toggle + " OFF shows every spot: " + texts(context, module));
+				option(context, toggle, true);
+				context.waitTicks(2);
+				check(texts(context, module).equals(left), toggle + " ON again: #1 still ruled out: " + texts(context, module));
+			}
+			// A Dead Man's Chest corpse: a third one on the widget brings every spot back.
+			command(context, "ksu debug shaft OPAL_1 Lapis:LOOTED Umber:NOT_LOOTED Umber:NOT_LOOTED");
+			context.waitTicks(5);
+			check(texts(context, module).size() == 5, "a new corpse brings #1 back: " + texts(context, module));
+			// The command keeps the shaft read for the rest of the visit; leaving the island ends that for the steps below.
+			command(context, "ksu debug island clear");
+			command(context, "ksu debug island Glacite Mineshafts");
+			command(context, "ksu debug shaft OPAL_1 Lapis:LOOTED Umber:NOT_LOOTED");
+			server.runCommand("tp @a -150 12 -170 -78 32");
+			context.waitTicks(5);
+
 			context.runOnClient(client -> {
 				module.setEnabled(false);
 				alert.setEnabled(false);
 			});
 			context.waitTicks(20);
 			check(labels(context) == 0, "the feature off: none within 1 s");
-			// With nothing reading the shaft the simulation is gone; the command waits for the shaft to be read again.
+			// With nothing reading the shaft the simulation is gone; the command waits for the shaft to be read again. Only the
+			// lines after this point count (the chat is newest first, and the rule-out step above asked once already).
+			int before = chat(context).size();
 			command(context, "ksu corpses");
 			context.waitTicks(5);
-			check(chat(context).stream().noneMatch(line -> line.startsWith("Opal 1: ") || line.equals("Not in a Glacite Mineshaft")), "no answer yet: " + chat(context));
+			List<String> waiting = since(chat(context), before);
+			check(waiting.stream().noneMatch(line -> line.startsWith("Opal 1: ") || line.equals("Not in a Glacite Mineshaft")), "no answer yet: " + waiting);
 			command(context, "ksu debug shaft OPAL_1 Lapis:NOT_LOOTED Umber:NOT_LOOTED");
 			context.waitTicks(5);
-			List<String> lines = chat(context);
+			List<String> lines = since(chat(context), before);
 			check(lines.contains("Opal 1: 5 possible corpse spots") && lines.stream().filter(line -> line.startsWith("#")).count() == 5,
 					"/ksu corpses lists the 5 spots with the feature off: " + lines);
 			context.runOnClient(client -> {
@@ -189,6 +227,11 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 			var text = ((CorpseSpotsModule) module).dingText();
 			return text == null ? null : text.lines().getFirst();
 		});
+	}
+
+	/** The lines of [chat] (newest first) added since it held [before] lines. */
+	private static List<String> since(List<String> chat, int before) {
+		return chat.subList(0, chat.size() - before);
 	}
 
 	/** The mod's chat lines, without their "[KSU] " prefix. */

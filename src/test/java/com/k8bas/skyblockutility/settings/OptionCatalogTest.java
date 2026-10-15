@@ -120,6 +120,7 @@ class OptionCatalogTest {
 		expected.put("modules.corpse_spots.enabled", true);
 		expected.put("modules.corpse_spots.hideWhenLooted", true);
 		expected.put("modules.corpse_spots.dingHint", true);
+		expected.put("modules.corpse_spots.ruleOutSpots", true);
 		// REQ-BOB-07 (D-6): the bobber fix ON.
 		expected.put("modules.bobber_fix.enabled", true);
 		// REQ-HOT-12 (D-6): Fishing Hotspots, its ring and fill ON; the fill at 25 % (T3.6).
@@ -233,6 +234,8 @@ class OptionCatalogTest {
 		SearchIndex.Result range = index.search("range");
 		assertEquals(List.of("mob_highlighter.scan_range"), range.hits().stream().map(SearchIndex.Entry::id).toList());
 		assertEquals(range.hits(), index.search("  RANGE ").hits());
+		// The wording of `/ksu corpses` finds the toggle that removes those spots (R44).
+		assertTrue(index.search("ruled out").hits().stream().anyMatch(hit -> hit.id().equals("corpse_spots.rule_out")));
 		SearchIndex.Result none = index.search("zzzz");
 		assertTrue(none.hits().isEmpty() && none.categoriesWithHits().isEmpty());
 	}

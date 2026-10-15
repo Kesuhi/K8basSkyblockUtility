@@ -13,25 +13,29 @@ object CorpseSpotRules {
 	/**
 	 * The spots to show (REQ-CORPSE-03, REQ-CORPSE-05): every spot of the shaft's code while the feature is on and the
 	 * player is in a shaft whose code is known and has data; none once the widget lists only looted corpses, if
-	 * "Hide spots when all corpses are looted" is on. A missing, cut-off or unreadable widget never hides them.
+	 * "Hide spots when all corpses are looted" is on. A missing, cut-off or unreadable widget never hides them. The
+	 * spots in [ruledOut] (SpotRuleOut, REQ-CORPSE-12) are left out.
 	 */
 	@JvmStatic
-	fun visible(config: CorpseSpotsConfig, shaft: MineshaftSnapshot, spots: CorpseSpots?): List<CorpseSpot> {
+	@JvmOverloads
+	fun visible(config: CorpseSpotsConfig, shaft: MineshaftSnapshot, spots: CorpseSpots?, ruledOut: Set<Int> = setOf()): List<CorpseSpot> {
 		if (!config.enabled || !shaft.inShaft || spots == null) {
 			return listOf()
 		}
 		val corpses = shaft.corpses
 		val allLooted = corpses.presence == WidgetPresence.PRESENT && corpses.corpses.isNotEmpty() && corpses.corpses.all { it.looted }
-		return if (config.hideWhenLooted && allLooted) listOf() else spots.spots(shaft.code)
+		return if (config.hideWhenLooted && allLooted) listOf() else spots.spots(shaft.code).filter { it.number !in ruledOut }
 	}
 
 	/**
 	 * The `/ksu corpses` reply (REQ-CORPSE-06): a header with the shaft and its spot count, then `#n x, y, z · d m` per
 	 * spot, nearest first, d the distance from [player] to the spot's block centre in whole metres rounded half-up;
-	 * without a player, in the data's order and with no distance. Or one of the special replies.
+	 * without a player, in the data's order and with no distance; a spot in [ruledOut] ends with " · ruled out". Or one
+	 * of the special replies.
 	 */
 	@JvmStatic
-	fun list(shaft: MineshaftSnapshot, spots: CorpseSpots?, unavailable: Boolean, player: DoubleArray?): List<String> {
+	@JvmOverloads
+	fun list(shaft: MineshaftSnapshot, spots: CorpseSpots?, unavailable: Boolean, player: DoubleArray?, ruledOut: Set<Int> = setOf()): List<String> {
 		if (!shaft.inShaft) {
 			return listOf("Not in a Glacite Mineshaft")
 		}
@@ -42,11 +46,13 @@ object CorpseSpotRules {
 		val list = spots.spots(code).takeIf { it.isNotEmpty() } ?: return listOf("No spot data for $code")
 		val header = "${shaft.name ?: code}: ${list.size} possible corpse spots"
 		if (player == null) {
-			return listOf(header) + list.map { "#${it.number} ${it.x}, ${it.y}, ${it.z}" }
+			return listOf(header) + list.map { "#${it.number} ${it.x}, ${it.y}, ${it.z}" + mark(it, ruledOut) }
 		}
 		val sorted = list.map { it to metres(it, player) }.sortedWith(compareBy({ it.second }, { it.first.number }))
-		return listOf(header) + sorted.map { (spot, d) -> "#${spot.number} ${spot.x}, ${spot.y}, ${spot.z} · $d m" }
+		return listOf(header) + sorted.map { (spot, d) -> "#${spot.number} ${spot.x}, ${spot.y}, ${spot.z} · $d m" + mark(spot, ruledOut) }
 	}
+
+	private fun mark(spot: CorpseSpot, ruledOut: Set<Int>): String = if (spot.number in ruledOut) " · ruled out" else ""
 
 	private fun distance(spot: CorpseSpot, player: DoubleArray): Double {
 		val dx = spot.x + 0.5 - player[0]

@@ -23,10 +23,7 @@ class DingHint {
 
 	/** A sound the client plays; true when it is a ding (then the warmth is updated). */
 	fun heard(id: String, source: String, x: Double, y: Double, z: Double, pitch: Float, player: DoubleArray, inShaft: Boolean, nowMs: Long): Boolean {
-		val dx = x - player[0]
-		val dy = y - player[1]
-		val dz = z - player[2]
-		if (!inShaft || id != SOUND || source != SOURCE || sqrt(dx * dx + dy * dy + dz * dz) > NEAR) {
+		if (!isDing(id, source, x, y, z, player, inShaft, NEAR)) {
 			return false
 		}
 		lastWarmth = warmth(pitch)
@@ -52,6 +49,15 @@ class DingHint {
 		/** The HUD line for [warmth]: "Corpse ding: very close", the warmth in yellow. */
 		@JvmStatic
 		fun hudLine(warmth: Warmth): String = "§6Corpse ding: §e${warmth.label}"
+
+		/** A ding: the harp, in the block category, within [near] blocks of the player, in a Glacite Mineshaft. */
+		@JvmStatic
+		fun isDing(id: String, source: String, x: Double, y: Double, z: Double, player: DoubleArray, inShaft: Boolean, near: Double): Boolean {
+			val dx = x - player[0]
+			val dy = y - player[1]
+			val dz = z - player[2]
+			return inShaft && id == SOUND && source == SOURCE && sqrt(dx * dx + dy * dy + dz * dz) <= near
+		}
 
 		@JvmStatic
 		fun warmth(pitch: Float): Warmth = when {
