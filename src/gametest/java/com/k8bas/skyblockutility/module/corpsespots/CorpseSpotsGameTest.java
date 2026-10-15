@@ -28,6 +28,8 @@ import java.util.List;
  *       labels ahead are still on screen (their cyan pixels, against a shot with the feature off), and none within 1 s
  *       with the feature OFF or after leaving;</li>
  *   <li>AC-CORPSE-05 [C]: the widget listing every corpse LOOTED hides them, a NOT LOOTED one brings them back;</li>
+ *   <li>AC-CORPSE-11 [C] (R41 (c)): a block-category harp the server plays at the player with the captured pitch 1.968
+ *       makes the spots within 20 blocks read "ding nearby: very close", the others not, and it clears 2 s later;</li>
  *   <li>AC-CORPSE-06 [C]: `/ksu corpses` lists the 5 spots with the feature and the mineshaft entry alert both OFF: the
  *       command keeps the shaft read and answers once the code is in (here when the shaft is simulated again).</li>
  * </ul>
@@ -67,6 +69,20 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 			context.waitTicks(20);
 			check(labels(context) == 5, "one not looted again: back");
 
+			server.runCommand("playsound minecraft:block.note_block.harp block @a -150 12 -170 1 1.968");
+			context.waitTicks(3);
+			List<String> dinged = texts(context, module);
+			check(dinged.contains("Possible corpse #1 · ding nearby: very close") && dinged.contains("Possible corpse #2"),
+					"#1 (17 blocks) has the ding line, #2 (43 blocks) not: " + dinged);
+			context.waitTicks(45);
+			check(texts(context, module).stream().noneMatch(text -> text.contains("ding")), "cleared 2 s after the ding");
+			// The hint OFF: a ding changes nothing.
+			option(context, "corpse_spots.ding_hint", false);
+			server.runCommand("playsound minecraft:block.note_block.harp block @a -150 12 -170 1 1.968");
+			context.waitTicks(3);
+			check(texts(context, module).stream().noneMatch(text -> text.contains("ding")), "the hint off: no ding line");
+			option(context, "corpse_spots.ding_hint", true);
+
 			context.runOnClient(client -> {
 				module.setEnabled(false);
 				alert.setEnabled(false);
@@ -76,7 +92,7 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 			// With nothing reading the shaft the simulation is gone; the command waits for the shaft to be read again.
 			command(context, "ksu corpses");
 			context.waitTicks(5);
-			check(chat(context).stream().noneMatch(line -> line.startsWith("Opal 1") || line.equals("Not in a Glacite Mineshaft")), "no answer yet: " + chat(context));
+			check(chat(context).stream().noneMatch(line -> line.startsWith("Opal 1: ") || line.equals("Not in a Glacite Mineshaft")), "no answer yet: " + chat(context));
 			command(context, "ksu debug shaft OPAL_1 Lapis:NOT_LOOTED Umber:NOT_LOOTED");
 			context.waitTicks(5);
 			List<String> lines = chat(context);
@@ -140,6 +156,16 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 	private static int labels(ClientGameTestContext context) {
 		context.waitTicks(2);
 		return context.computeOnClient(client -> WorldMarkers.lastFrame().submitted() + WorldMarkers.lastFrame().culled());
+	}
+
+	private static void option(ClientGameTestContext context, String id, boolean value) {
+		context.runOnClient(client -> ((com.k8bas.skyblockutility.ui.option.Toggle) com.k8bas.skyblockutility.settings.OptionCatalog.live().stream()
+				.flatMap(card -> card.all().stream()).filter(option -> option.id().equals(id)).findFirst().orElseThrow()).binding().set(value));
+	}
+
+	/** The text of each shown label, as the markers draw it. */
+	private static List<String> texts(ClientGameTestContext context, Module module) {
+		return context.computeOnClient(client -> ((CorpseSpotsModule) module).labels().stream().map(pair -> pair.getSecond().text()).toList());
 	}
 
 	/** The mod's chat lines, without their "[KSU] " prefix. */

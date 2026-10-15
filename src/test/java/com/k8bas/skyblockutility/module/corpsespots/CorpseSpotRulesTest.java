@@ -98,6 +98,22 @@ class CorpseSpotRulesTest {
 	}
 
 	@Test
+	void aDingMarksTheSpotsWithinTwentyBlocks() {
+		// REQ-CORPSE-11 (R41 (c)): to each block centre, #1 is 7.5 blocks from [near]; from [far], #1 is 18.8 blocks away
+		// (within the 20-block reach) and #2 20.8 (outside it).
+		double[] near = {-107.0, 10.5, -149.5};
+		double[] far = {-97.0 - 10.5, 10.5, -149.5 + 17};
+		CorpseSpot first = SPOTS.spots("OPAL_1").get(0);
+		assertEquals("Possible corpse #1", CorpseSpotRules.label(first, near, null).text());
+		assertEquals("Possible corpse #1 · ding nearby: close", CorpseSpotRules.label(first, near, DingHint.Warmth.CLOSE).text());
+		assertEquals("Possible corpse #1 · ding nearby: very close", CorpseSpotRules.label(first, near, DingHint.Warmth.VERY_CLOSE).text());
+		CorpseSpot second = SPOTS.spots("OPAL_1").get(1);
+		assertEquals("Possible corpse #1 · ding nearby: far", CorpseSpotRules.label(first, far, DingHint.Warmth.FAR).text(), "18.8 blocks: within the reach");
+		assertEquals("Possible corpse #2", CorpseSpotRules.label(second, far, DingHint.Warmth.FAR).text(), "20.8 blocks: outside it");
+		assertEquals("Possible corpse #1", CorpseSpotRules.label(first, null, DingHint.Warmth.FAR).text(), "no player, no hint");
+	}
+
+	@Test
 	void withoutAPlayerTheListKeepsTheDataOrder() {
 		assertEquals(List.of("Opal 1: 3 possible corpse spots", "#1 -100, 10, -150", "#2 -120, 10, -150", "#3 -110, 10, -150"),
 				CorpseSpotRules.list(shaft("OPAL_1", CorpseList.ABSENT), SPOTS, false, null));

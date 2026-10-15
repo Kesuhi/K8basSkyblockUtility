@@ -126,6 +126,7 @@ class OptionCatalogTest {
 		// REQ-CORPSE-05/08 (R40): the possible corpse spots ON, hidden once every corpse is looted.
 		expected.put("modules.corpse_spots.enabled", true);
 		expected.put("modules.corpse_spots.hideWhenLooted", true);
+		expected.put("modules.corpse_spots.dingHint", true);
 		// REQ-BOB-07 (D-6): the bobber fix ON.
 		expected.put("modules.bobber_fix.enabled", true);
 		// REQ-HOT-12 (D-6): Fishing Hotspots, its ring and fill ON; the fill at 25 % (T3.6).

@@ -17,19 +17,25 @@ import com.k8bas.skyblockutility.ui.option.Toggle
 import com.k8bas.skyblockutility.util.ChatUtils
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.sounds.SoundInstance
+import net.minecraft.client.sounds.SoundEventListener
 import net.minecraft.network.chat.Component
 import org.slf4j.LoggerFactory
 import java.util.function.Consumer
 
-/** The possible corpse spots' settings (REQ-CORPSE-05, REQ-CORPSE-08): both ON in a fresh config (R40). */
+/** The possible corpse spots' settings (REQ-CORPSE-05, REQ-CORPSE-08, REQ-CORPSE-11): all ON in a fresh config (R40). */
 class CorpseSpotsConfig {
 	@JvmField
 	var enabled = true
 
 	@JvmField
 	var hideWhenLooted = true
+
+	@JvmField
+	var dingHint = true
 }
 
 /**
@@ -37,7 +43,8 @@ class CorpseSpotsConfig {
  * label at every known spawn spot of the shaft's layout, from the bundled table (CorpseSpotTable), and `/ksu corpses`
  * with the list by distance. The labels mark fixed coordinates from static data, so they show through blocks
  * (REQ-MARK-02); which ones show depends only on the shaft code and the Frozen Corpses widget, never on entities
- * (REQ-CORPSE-04). Nothing is sent (REQ-XC-RULES-02).
+ * (REQ-CORPSE-04). While the Organ Donor's ding is heard, the spots within its reach say how warm it is (DingHint,
+ * REQ-CORPSE-11): from the sound only, read the way vanilla subtitles read sounds. Nothing is sent (REQ-XC-RULES-02).
  */
 class CorpseSpotsModule : Module {
 	private var config: CorpseSpotsConfig? = null
@@ -49,6 +56,7 @@ class CorpseSpotsModule : Module {
 	private var request: CorpseListRequest? = null
 	private var notedCode: String? = null
 	private val loggedCodes = HashSet<String>()
+	private val ding = DingHint()
 
 	override fun id(): String = ID
 
@@ -60,6 +68,7 @@ class CorpseSpotsModule : Module {
 		IslandTracker.onChange { location ->
 			if (location.island != MineshaftState.ISLAND) {
 				commandHold = false
+				ding.clear()
 				// A request still waiting is answered: "Not in a Glacite Mineshaft".
 				answerRequest()
 				notedCode = null
@@ -74,6 +83,8 @@ class CorpseSpotsModule : Module {
 				dispatcher.register(ClientCommands.literal(root).then(ClientCommands.literal(COMMAND).executes { listSpots() }))
 			}
 		}
+		// The sound manager exists once the client has started; the listener only reads (like vanilla subtitles).
+		ClientLifecycleEvents.CLIENT_STARTED.register { client -> client.soundManager.addListener(SoundEventListener { sound, _, _ -> heard(sound) }) }
 		WorldMarkers.add(PROVIDER)
 	}
 
@@ -127,9 +138,24 @@ class CorpseSpotsModule : Module {
 		CorpseSpotRules.list(shaft, CorpseSpotTable.current(), CorpseSpotTable.unavailable(), player).forEach { ChatUtils.chat(it) }
 	}
 
+	private fun heard(sound: SoundInstance) {
+		val player = Minecraft.getInstance().player ?: return
+		if (cfg.enabled && cfg.dingHint) {
+			ding.heard(sound.identifier.toString(), sound.source.getName(), sound.x, sound.y, sound.z, sound.pitch,
+				doubleArrayOf(player.x, player.y, player.z), MineshaftState.snapshot().inShaft, now())
+		}
+	}
+
+	/** For gametests and the markers: each shown spot's label text. */
+	fun labels(): List<Pair<CorpseSpot, SpotLabel>> {
+		val player = Minecraft.getInstance().player?.let { doubleArrayOf(it.x, it.y, it.z) }
+		val warmth = if (cfg.dingHint) ding.warmth(now()) else null
+		return CorpseSpotRules.visible(cfg, MineshaftState.snapshot(), CorpseSpotTable.current()).map { it to CorpseSpotRules.label(it, player, warmth) }
+	}
+
 	private fun markers(out: Consumer<Marker>) {
-		for (spot in CorpseSpotRules.visible(cfg, MineshaftState.snapshot(), CorpseSpotTable.current())) {
-			val label = MarkerLabel.of(MarkerLabel.Line(Component.literal("Possible corpse #${spot.number}"), LABEL_COLOR)).asSeeThrough()
+		for ((spot, text) in labels()) {
+			val label = MarkerLabel.of(MarkerLabel.Line(Component.literal(text.text), if (text.ding) DING_COLOR else LABEL_COLOR)).asSeeThrough()
 			out.accept(Marker(MarkerAnchor.fixed(spot.x + 0.5, spot.y + 0.5, spot.z + 0.5), label))
 		}
 	}
@@ -139,6 +165,7 @@ class CorpseSpotsModule : Module {
 		const val COMMAND = "corpses"
 		private val ROOTS = arrayOf("ksu", "kskyblockutility")
 		private const val LABEL_COLOR = 0x55FFFF
+		private const val DING_COLOR = 0xFFAA00
 		private val LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility")
 
 		private fun now(): Long = System.nanoTime() / 1_000_000
@@ -180,7 +207,17 @@ class CorpseSpotsModule : Module {
 				),
 				true, Binding.of({ config.hideWhenLooted }, { value -> config.hideWhenLooted = value }),
 			)
-			return java.util.List.of(Card(ID, Category.MINING, "Possible corpse spots", enabled, java.util.List.of(hide)))
+			val ding = Toggle.of(
+				"$ID.ding_hint", "modules.$ID.dingHint",
+				OptionText(
+					"Organ Donor ding hint", "While your Organ Donor dings, the spots within 20 blocks say how warm the ding is.",
+					"The ding plays when an unlooted corpse is within 20 blocks, and gets higher the closer it is. The labels read " +
+						"\"ding nearby: far\", \"close\" or \"very close\" from that pitch alone; no spot is picked for you.",
+					java.util.List.of("corpse", "ding", "organ donor", "sound", "mineshaft"),
+				),
+				true, Binding.of({ config.dingHint }, { value -> config.dingHint = value }),
+			)
+			return java.util.List.of(Card(ID, Category.MINING, "Possible corpse spots", enabled, java.util.List.of(hide, ding)))
 		}
 	}
 }

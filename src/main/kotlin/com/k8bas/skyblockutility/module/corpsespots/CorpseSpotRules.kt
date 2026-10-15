@@ -5,6 +5,10 @@ import com.k8bas.skyblockutility.skyblock.WidgetPresence
 import kotlin.math.floor
 import kotlin.math.sqrt
 
+/** A spot's label text, and whether it carries the ding line. */
+@JvmRecord
+data class SpotLabel(val text: String, val ding: Boolean)
+
 /**
  * The possible corpse spots' rules without a game (T3.3, R40). The shown set depends only on the toggles, the shaft
  * code and the Frozen Corpses widget, never on entities (REQ-CORPSE-04).
@@ -48,10 +52,27 @@ object CorpseSpotRules {
 		return listOf(header) + sorted.map { (spot, d) -> "#${spot.number} ${spot.x}, ${spot.y}, ${spot.z} · $d m" }
 	}
 
-	private fun metres(spot: CorpseSpot, player: DoubleArray): Long {
+	/**
+	 * A spot's label (REQ-CORPSE-03, REQ-CORPSE-11): "Possible corpse #n", and while a ding holds, "· ding nearby:
+	 * <warmth>" on every spot within the ding's 20-block reach of [player]. Which spots get it depends only on the
+	 * player's position, never on where the sound was played.
+	 */
+	@JvmStatic
+	fun label(spot: CorpseSpot, player: DoubleArray?, warmth: DingHint.Warmth?): SpotLabel {
+		val text = "Possible corpse #${spot.number}"
+		return if (warmth != null && player != null && distance(spot, player) <= DingHint.REACH) {
+			SpotLabel("$text · ding nearby: ${warmth.label}", true)
+		} else {
+			SpotLabel(text, false)
+		}
+	}
+
+	private fun distance(spot: CorpseSpot, player: DoubleArray): Double {
 		val dx = spot.x + 0.5 - player[0]
 		val dy = spot.y + 0.5 - player[1]
 		val dz = spot.z + 0.5 - player[2]
-		return floor(sqrt(dx * dx + dy * dy + dz * dz) + 0.5).toLong()
+		return sqrt(dx * dx + dy * dy + dz * dz)
 	}
+
+	private fun metres(spot: CorpseSpot, player: DoubleArray): Long = floor(distance(spot, player) + 0.5).toLong()
 }
