@@ -25,7 +25,8 @@ class BobberFixConfig {
  * (`mixin/FishingHookMixin`); they ask [enabled] and [onSkyBlock] each time, so a change applies at the next data
  * update or cast.
  * Presentation only: the entity data is applied unchanged, nothing is sent (REQ-BOB-04, REQ-XC-RULES-02).
- * Courtesy credit: SkyOcean has the same fix; no code is copied.
+ * The approach follows SkyOcean's FishingHookMixin (MIT; the same hook points and the "timer stand = hook id + 1"
+ * rule), written anew around this mod's own decision code; see THIRD_PARTY_NOTICES.md.
  */
 class BobberFixModule : Module {
 	private var config: BobberFixConfig? = null

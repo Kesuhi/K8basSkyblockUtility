@@ -1204,12 +1204,28 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Accept: AC-ODDS-04 (slayer panel), AC-ODDS-17. The slayer check is at G3.
 
 **Checkpoint G3:**
-- [ ] tiers A–C green
-- [ ] `code-reviewer` review:
+
+*R35 (2026-10-10, your answer): G3 runs now, before T3.9b–f. Those five odds cases wait for your wiki pages (Scatha, Lapis/Umber/Tungsten, the Vanguard corpse page with its roll counts and the Frostbitten Dye) and for chat and menu captures (corpse-loot blocks, a Scatha PET DROP line, slayer RNG meter lines, a reward-chest dump), so their acceptance items below stay open.*
+
+- [x] tiers A–C green (the full build with all gametests, 2026-10-10)
+- [x] `code-reviewer` review:
   - the rules review (AC-XC-01): no packet cancelling, no sends, nothing see-through that comes from an entity
   - the module review items AC-MSA-08, AC-NPCWP-12, AC-BOB-06, AC-HOT-07, AC-DRILL-02, AC-ODDS-02 (AC-CORPSE-04 was here; dropped, R22)
   - licences and notices (AC-XC-03)
-- [ ] tier D boot of the jar with a copy of your mod set and the mixin export: AC-BOB-07, AC-HOT-10, AC-DRILL-04, AC-MSA-12, AC-ODDS-03, AC-NPCWP-11, AC-MARK-08 (D); AC-GS-13 [D] for `/ksu debug shaft` (absent from the production jar, REQ-LOC-08). The injection order is recorded.
+  - Done (2026-10-15): three reviews, each finding checked by two verifiers.
+    - **Rules:** no finding.
+    - **Module items:** one finding confirmed. AC-MSA-08's scan missed the 26.2 click and command names. It is replaced by one shared scan (`SendScan`, the names ReaderArchitectureTest checks against the 26.2 jar), run over every feature module and mixin by `FeatureSendScanTest`, with a test that each pattern catches a real 26.2 call.
+    - **Licences:** no finding confirmed. One split finding is taken: the SkyOcean notice now states its licence split exactly, and that the Bobber Fix follows SkyOcean's `FishingHookMixin` approach, written anew.
+- [x] tier D boot of the jar with a copy of your mod set and the mixin export: AC-BOB-07, AC-HOT-10, AC-DRILL-04, AC-MSA-12, AC-ODDS-03, AC-NPCWP-11, AC-MARK-08 (D); AC-GS-13 [D] for `/ksu debug shaft` (absent from the production jar, REQ-LOC-08). The injection order is recorded.
+  - Done (2026-10-10), with your 51 other jars from "26.2 Skyblock" (copied):
+    - "Optional hooks: 4 of 4 active" (`bobber.link`, `bobber.lava`, `hotspot.particles`, `drill.refresh`).
+    - Against the baseline, the only new ERROR line is Aaron's Mod failing its online profile-key fetch, which is not this mod. The only WARN from this mod is its one-time config backup.
+    - `/ksu debug island|shaft` are registered only in a dev environment.
+    - Other mods on our three target classes, all still applied together with ours:
+      - `FishingHook`: Skyblocker, Lithium, Debugify.
+      - `ItemInHandRenderer`: Alpaka (14 handlers), NoFrills (7), Iris, Skyblocker, Debugify, Collective.
+      - `ClientPacketListener`: Skyblocker, NoFrills, SkyHanni, Architectury, Bobby, SBO, Odin and others.
+    - AC-ODDS-03 needs T3.9d and waits with it.
 - [ ] your batched field checks (E, R17):
   - mineshaft: AC-MSA-10 (party summon opportunistic), AC-MSA-11, AC-MSA-12 [E], corpse loot lines (AC-ODDS-16); AC-GS-02, AC-GS-03, AC-GS-07 and AC-GS-17 [E] (the reported code, corpse list and key counts equal a `/ksu debug dump tab|sidebar` taken there). AC-CORPSE-10 was here; dropped (R22)
   - mineshaft, carried over from G1 (R24): the command and menu path that enable the Frozen Corpses widget, which fix the hint wording (AC-GS-18 [E], Q-MSA-04); and whether a Tungsten or Umber key held only in the Dwarven Sack opens a corpse (REQ-MSA-05 fallback; D-7 stands until then)
@@ -1222,11 +1238,30 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - privacy: AC-GS-12 [E] (after a session of at least 30 min with capture off, Claude checks that the config folder holds no raw chat, tab or sidebar text)
 - [ ] you have removed Ghost, Fels, Sneaky Creeper and Invisibug from the 1.0.x mob gist (any time before this, e.g. together with T0.5); Claude checks that the raw URL still parses (AC-NPCDB-09 pre-check)
 - [ ] every commit since G2, including fixture commits from the G3 captures, builds in a worktree (AC-XC-05); then push `update/26.2` (D-10 checkpoint push); CI green on the pushed head
+  - So far (2026-10-15): all 26 commits from `b92bbfd` to `10ddc84` build alone, with conforming subjects and noreply authors. Run again over the G3 commits before the push.
 - [ ] Phase 3 report:
   - opportunistic criteria not yet seen (§11)
   - UNVERIFIED fixtures (REQ-GS-14)
   - the sack-key result from the G3 check (REQ-MSA-05; not testable at G1, R24)
   - the CHANGELOG entry for each feature
+  - Draft (2026-10-15), to complete after your field checks:
+    - **Built:**
+      - game-state readers, the data registry, profile service and menu reader (T3.0a–T3.0n);
+      - the NPC and mob lists bundled (T3.8–T3.8c), the dungeon NPC name lines (T3.1);
+      - the mineshaft entry alert (T3.2), beam colour settings and migration (T3.4b);
+      - the bobber fix (T3.5), hotspot rings and the "hotspot gone" warning (T3.6, T3.6b), the drill re-equip fix (T3.7);
+      - the odds math, tables and module (T3.9a, T3.9g, T3.9h).
+      Each has a CHANGELOG entry under [Unreleased].
+    - **Open:** T3.9b–f (R35).
+    - **UNVERIFIED until your checks:**
+      - the widget hint's command (`/widget`) and the sack-key question (D-7 stands);
+      - the Bestiary glyphs, the `Profile ID:` line and the ☀/Ⓑ profile glyphs;
+      - the hotspot island caps and the pink-dust and smoke filters;
+      - whether Hypixel's timer stand is hook id + 1 on the client;
+      - whether a drill at 0 fuel keeps `drill_fuel`;
+      - the dye placeholder scores;
+      - the NPC positions listed at T3.8a.
+    - **Opportunistic, not yet seen:** a party summon into a shaft (AC-MSA-10), the rare-room glow (AC-GLOW-11), Scatha, slayer and a Vanguard corpse.
 
 ### Phase 4 — Auto-updater on GitHub Releases
 

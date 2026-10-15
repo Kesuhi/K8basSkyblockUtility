@@ -39,10 +39,14 @@ this repository.
   762ec36eb5b6d9e881e783126952cc7175712465), also published unchanged in
   https://github.com/meowdding/meowdding-repo (`repo/skyocean/vanguard.jsonc`, revision
   d010ae02cf87fc6ca619430e33d176672ff43789)
-- Licence: MIT. SkyOcean's own licence puts `src/repo/**` under MIT and keeps its other files
-  all rights reserved; only that MIT file is used. No code, art, sound or text of SkyOcean is copied.
-- Use (Rare Drop Odds): the Vanguard corpse loot weights per roll. SkyOcean's assumed weight for
-  the Frostbitten Dye is not used.
+- Licence: MIT for what SkyOcean License v1 calls code (its `.java`, `.kt` and `.kts` files,
+  shaders, `src/repo/**` and `buildSrc/**`); everything else of SkyOcean is all rights reserved.
+- Use (Rare Drop Odds): the Vanguard corpse loot weights per roll, from the MIT file above.
+  SkyOcean's assumed weight for the Frostbitten Dye is not used.
+- Approach (Bobber Fix): the fix follows SkyOcean's `FishingHookMixin`, with the same two hook
+  points in `FishingHook` and the same rule that Hypixel's bite-timer stand has the hook's id + 1.
+  It is written anew here around this mod's own decision code; no SkyOcean file is copied, and no
+  art, sound or text of SkyOcean is used.
 - Distribution: the table `thirdparty/skyocean/odds/vanguard.json` in the jar's bundled data.
   The licence text is `META-INF/licenses/skyocean.txt` in the jar and `licenses/skyocean.txt`
   in this repository.

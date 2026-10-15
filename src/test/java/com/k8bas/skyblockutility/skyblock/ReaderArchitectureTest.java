@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.skyblock;
 
+import com.k8bas.skyblockutility.SendScan;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -21,16 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * to disk. A reader only reads what the server already shows.
  */
 class ReaderArchitectureTest {
-	/** The 26.2 names (checked with javap on minecraft-merged-deobf-26.2.jar), plus every Serverbound packet. */
-	private static final Map<String, Pattern> FORBIDDEN = Map.of(
-			"slot click", Pattern.compile("handleInventoryMouseClick|handleInventoryButtonClick|handleSlotStateChanged|handlePlaceRecipe"
-					+ "|handleContainerInput|ContainerInput\\.|ServerboundContainer\\w*"),
-			"container close", Pattern.compile("(?i)closeContainer|ServerboundContainerClose|\\.onClose\\(|setScreen\\("),
-			"command or chat send", Pattern.compile("\\bsend[A-Z]\\w*Command\\b|\\bsendCommand\\b|\\bsendChat\\b|ServerboundChat\\w*"),
-			"packet send", Pattern.compile("\\.send\\(|\\.connection\\.send|getConnection\\(\\)\\.send|ServerboundPacket|Serverbound\\w+Packet"),
-			// ALLOW_GAME is allowed only in ChatReader, whose listener always lets the message through (below).
-			"cancellation", Pattern.compile("CallbackInfo|\\.cancel\\(|@Inject|@WrapOperation|@Redirect|MODIFY_GAME|MODIFY_CHAT|ALLOW_CHAT"),
-			"disk write", Pattern.compile("Files\\.write|Files\\.newBufferedWriter|Files\\.newOutputStream|FileWriter|FileOutputStream|AtomicFileStore|PrintWriter"));
+	/** The shared send scan (the 26.2 names, SendScan), plus cancelling anything and writing to disk. */
+	private static final Map<String, Pattern> FORBIDDEN = new java.util.LinkedHashMap<>(SendScan.SENDS);
+
+	static {
+		// ALLOW_GAME is allowed only in ChatReader, whose listener always lets the message through (below).
+		FORBIDDEN.put("cancellation", Pattern.compile("CallbackInfo|\\.cancel\\(|@Inject|@WrapOperation|@Redirect|MODIFY_GAME|MODIFY_CHAT|ALLOW_CHAT"));
+		FORBIDDEN.put("disk write", Pattern.compile("Files\\.write|Files\\.newBufferedWriter|Files\\.newOutputStream|FileWriter|FileOutputStream|AtomicFileStore|PrintWriter"));
+	}
 
 	@Test
 	void readerPackagesOnlyRead() throws IOException {
@@ -125,6 +124,6 @@ class ReaderArchitectureTest {
 
 	/** Drops line and block comments, so KDoc that explains what is never done does not trip the scan. */
 	private static String withoutComments(String source) {
-		return source.replaceAll("(?s)/\\*.*?\\*/", "").replaceAll("(?m)//.*$", "");
+		return SendScan.withoutComments(source);
 	}
 }
