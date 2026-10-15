@@ -32,12 +32,15 @@ public class RenderKitGameTest implements FabricClientGameTest {
 	public void runTest(ClientGameTestContext context) {
 		// 1280×960 gives GUI sizes 1280×960, 640×480, 427×320 and 320×240 at scales 1 to 4.
 		context.getInput().resizeWindow(1280, 960);
+		// Absent means ON from 1.3.0 (R46): the OFF pass sets false, and the value found here is put back.
+		Boolean before = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
 		try {
 			context.setScreen(RenderKitTestScreen::new);
 			context.waitForScreen(RenderKitTestScreen.class);
 			int[][] sizes = {{1280, 960}, {640, 480}, {427, 320}, {320, 240}};
 			for (boolean smooth : new boolean[] {false, true}) {
-			context.runOnClient(client -> ConfigManager.general().smoothCorners = smooth ? Boolean.TRUE : null);
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = smooth);
+			check(context.computeOnClient(client -> ConfigManager.general().smoothCorners()) == smooth, "the pass really renders with Smooth corners " + (smooth ? "ON" : "OFF"));
 			String look = smooth ? " (smooth)" : "";
 			for (int scale = 1; scale <= 4; scale++) {
 				int s = scale;
@@ -57,7 +60,7 @@ public class RenderKitGameTest implements FabricClientGameTest {
 				check(pixel(shot, left + radius / 2, top + radius / 2) != (Theme.PANEL & 0xFFFFFF), "scale " + s + look + ": the curve is round, not square");
 			}
 			}
-			context.runOnClient(client -> ConfigManager.general().smoothCorners = null);
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = before);
 
 			// GUI scale 4: a 320×240 GUI, the smallest vanilla allows.
 			// The probe frames sit between two log markers; the end marker in the file proves it is flushed.
@@ -91,7 +94,7 @@ public class RenderKitGameTest implements FabricClientGameTest {
 			Screen screen = context.computeOnClient(client -> client.gui.screen());
 			check(screen instanceof RenderKitTestScreen, "the screen is still open: " + screen);
 		} finally {
-			context.runOnClient(client -> ConfigManager.general().smoothCorners = null);
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = before);
 			context.setScreen(() -> null);
 			context.restoreDefaultGameOptions();
 			context.getInput().resizeWindow(854, 480);

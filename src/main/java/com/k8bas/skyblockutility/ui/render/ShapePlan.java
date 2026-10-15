@@ -123,6 +123,14 @@ public final class ShapePlan {
 		return new Element(textured, quads, uvs, box[0], box[1], box[2], box[3]);
 	}
 
+	/**
+	 * Whether a shape is smooth whatever "Smooth corners" says (REQ-UI-29): the setting decides only the corners of
+	 * rounded rectangles and outlines, so a disc, a pill (radius half its shorter side) and a one-cap pill always are.
+	 */
+	public static boolean alwaysSmooth(int w, int h, int r, int corners) {
+		return corners != Corners.ALL || 2 * r >= Math.min(w, h);
+	}
+
 	/** {@code box} cut to {@code scissor} (null for none), or null when nothing of it is left. */
 	static int[] clip(int[] box, int[] scissor) {
 		if (box == null || scissor == null) {

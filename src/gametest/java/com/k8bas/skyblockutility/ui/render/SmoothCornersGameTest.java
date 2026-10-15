@@ -30,7 +30,8 @@ import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.W;
 /**
  * T2.9d (REQ-UI-18, R32), the screenshot comparison at GUI scales 1-4, with "Smooth corners" off and on:
  * <ul>
- *   <li>off, every probe pixel is fully drawn or not at all, as before;</li>
+ *   <li>off, every probe pixel is fully drawn or not at all, as before, except the clamped box: a disc, which is
+ *       smooth whatever the setting (REQ-UI-29, R46);</li>
  *   <li>on, each corner pixel's coverage is the mask's at screen-pixel resolution (filled, faded, outline, a
  *       clamped odd radius), and the pixels outside the corners are the same as with it off;</li>
  *   <li>a clip cuts the smooth shape as it cuts fills, an empty clip shows nothing, and nothing is logged
@@ -46,6 +47,8 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 	public void runTest(ClientGameTestContext context) {
 		// 1280×960 gives GUI sizes 1280×960, 640×480, 427×320 and 320×240 at scales 1 to 4.
 		context.getInput().resizeWindow(1280, 960);
+		// Absent means ON from 1.3.0 (R46): each pass sets its value, and the value found here is put back.
+		Boolean before = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
 		try {
 			context.setScreen(SmoothCornersTestScreen::new);
 			context.waitForScreen(SmoothCornersTestScreen.class);
@@ -64,7 +67,9 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 				int soft = 0;
 				for (Probe probe : probes(s)) {
 					soft += probe.compare(on, true, s);
-					check(probe.compare(off, false, s) == 0, "scale " + s + ", " + probe.name + ": off draws whole pixels only");
+					int offSoft = probe.compare(off, false, s);
+					boolean disc = ShapePlan.alwaysSmooth(probe.w, probe.h, Shapes.RADIUS_CARD * s, Corners.ALL);
+					check(disc ? offSoft > 0 : offSoft == 0, "scale " + s + ", " + probe.name + (disc ? ": a disc stays smooth with it off" : ": off draws whole pixels only"));
 					probe.sameOutsideTheCorners(on, off, s);
 				}
 				check(soft > 0, "scale " + s + ": smooth corners have soft pixels");
@@ -88,7 +93,7 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 			check(lines.isEmpty(), "nothing is logged while drawing, toggling and rescaling: " + lines);
 			LOGGER.info("smooth corners: {}", report);
 		} finally {
-			context.runOnClient(client -> ConfigManager.general().smoothCorners = null);
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = before);
 			context.setScreen(() -> null);
 			context.restoreDefaultGameOptions();
 			context.getInput().resizeWindow(854, 480);
@@ -98,6 +103,9 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 	private static BufferedImage shot(ClientGameTestContext context, boolean smooth, String name) {
 		context.runOnClient(client -> ConfigManager.general().smoothCorners = smooth);
 		context.waitTicks(2);
+		if (context.computeOnClient(client -> ConfigManager.general().smoothCorners()) != smooth) {
+			throw new AssertionError("FAILED: the pass does not render with Smooth corners " + (smooth ? "ON" : "OFF"));
+		}
 		Path path = context.takeScreenshot(name);
 		try {
 			return ImageIO.read(path.toFile());
@@ -125,10 +133,11 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 		/** Every visible pixel against the expected coverage; returns how many are soft (neither 0 nor full). */
 		int compare(BufferedImage image, boolean smooth, int s) {
 			int soft = 0;
+			boolean drawnSmooth = smooth || ShapePlan.alwaysSmooth(w, h, Shapes.RADIUS_CARD * s, Corners.ALL);
 			for (int ly = 0; ly < h; ly++) {
 				for (int lx = 0; lx < visibleW; lx++) {
 					int coverage = coverage(lx, ly);
-					int expected = Math.round((smooth ? coverage : coverage >= 128 ? 255 : 0) * alpha / 255F);
+					int expected = Math.round((drawnSmooth ? coverage : coverage >= 128 ? 255 : 0) * alpha / 255F);
 					int green = green(image, x + lx, y + ly);
 					check(Math.abs(green - expected) <= TOLERANCE, "scale " + s + (smooth ? " smooth" : " fill") + ", " + name + " pixel "
 							+ lx + "," + ly + ": green " + green + ", expected " + expected);

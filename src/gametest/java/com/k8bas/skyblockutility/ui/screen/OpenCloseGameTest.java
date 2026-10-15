@@ -45,6 +45,7 @@ public class OpenCloseGameTest implements FabricClientGameTest {
 		List<HighlightRule> mobsBefore = context.computeOnClient(client -> MobRulesForTests.rules());
 		List<NpcRule> npcsBefore = context.computeOnClient(client -> NpcRulesForTests.rules());
 		int rangeBefore = context.computeOnClient(client -> ConfigManager.general().mobScanRangeBlocks);
+		Boolean smoothBefore = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
 		List<KeyMapping> keys = List.of(SettingsKeybind.OPEN_SETTINGS_KEY, com.k8bas.skyblockutility.module.mobhighlighter.ModKeybinds.TOGGLE_KEY,
 				com.k8bas.skyblockutility.module.npcsearch.ModKeybinds.TOGGLE_KEY);
 		JsonObject fixture = RuleCardsGameTest.migratedFixture(context);
@@ -59,6 +60,8 @@ public class OpenCloseGameTest implements FabricClientGameTest {
 				MobRulesForTests.use(mobs);
 				NpcRulesForTests.use(npcs);
 				ConfigManager.general().mobScanRangeBlocks = 200;
+				// AC-UI-30 (R46): Smooth corners never picked, so its key is absent from the file.
+				ConfigManager.general().smoothCorners = null;
 				int[] glfw = {GLFW.GLFW_KEY_KP_1, GLFW.GLFW_KEY_KP_2, GLFW.GLFW_KEY_KP_3};
 				for (int i = 0; i < keys.size(); i++) {
 					keys.get(i).setKey(InputConstants.Type.KEYSYM.getOrCreate(glfw[i]));
@@ -101,6 +104,9 @@ public class OpenCloseGameTest implements FabricClientGameTest {
 			check(differences.isEmpty(), "every key of the 1.0.1 rules is in the file with its value: " + differences);
 			int range = after.getAsJsonObject("general").get("mobScanRangeBlocks").getAsInt();
 			check(range == 200, "the hand-edited range stays 200 (EC-UI-05): " + range);
+			check(!before.getAsJsonObject("general").has("smoothCorners") && !after.getAsJsonObject("general").has("smoothCorners")
+					&& context.computeOnClient(client -> ConfigManager.general().smoothCorners) == null,
+					"Smooth corners, never picked, stays absent after opening and closing the screen (AC-UI-30)");
 			List<String> keyLinesAfter = keyLines(context);
 			check(keyLinesAfter.equals(keyLinesBefore), "the three key lines are unchanged: " + keyLinesBefore + " -> " + keyLinesAfter);
 			LOGGER.info("open and close: {} mob and {} NPC rules of the 1.0.1 fixture, the range 200 and the key lines {} came through unchanged",
@@ -113,6 +119,7 @@ public class OpenCloseGameTest implements FabricClientGameTest {
 				MobRulesForTests.storeSection();
 				NpcRulesForTests.storeSection();
 				ConfigManager.general().mobScanRangeBlocks = rangeBefore;
+				ConfigManager.general().smoothCorners = smoothBefore;
 				keys.forEach(key -> key.setKey(InputConstants.UNKNOWN));
 				KeyMapping.resetMapping();
 				client.options.save();

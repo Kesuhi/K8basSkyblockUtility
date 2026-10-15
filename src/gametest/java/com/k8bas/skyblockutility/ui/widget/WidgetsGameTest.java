@@ -87,14 +87,18 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			int top = knob[1] * scale;
 			int centre = shot.getRGB(left + size / 2, top + size / 2);
 			int row = top + 6;
-			int inset = Corners.insets(size / 2)[6];
 			int wrong = 0;
-			for (int x = left + inset; x < left + size - inset; x++) {
-				if (!near(shot.getRGB(x, row), centre)) {
-					wrong++;
+			int inside = 0;
+			// The knob is a smooth disc whatever the setting (REQ-UI-29): its fully covered pixels of that row.
+			for (int x = 0; x < size; x++) {
+				if (CornerMask.alpha(size / 2, x, 6) == 255) {
+					inside++;
+					if (!near(shot.getRGB(left + x, row), centre)) {
+						wrong++;
+					}
 				}
 			}
-			LOGGER.info("knob row 7 at scale {}: {} of {} pixels differ from the knob colour {}", scale, wrong, size - 2 * inset,
+			LOGGER.info("knob row 7 at scale {}: {} of {} pixels differ from the knob colour {}", scale, wrong, inside,
 					Integer.toHexString(centre));
 			check(scale == 2, "the check runs at GUI scale 2: " + scale);
 			check(wrong == 0, "no fill pixel in the knob's seventh row: " + wrong + " differ");
@@ -154,11 +158,11 @@ public class WidgetsGameTest implements FabricClientGameTest {
 	 *   <li>the knob's interior (every pixel it fully covers) has the colour of the knob's centre: no fill shows;</li>
 	 *   <li>no pixel of a dimmed knob's box has the dimmed fill's colour;</li>
 	 *   <li>at 64 and on the hovered slider, the track's top and bottom rows show no backdrop next to the knob;</li>
-	 *   <li>with Smooth corners ON, the knob's outermost pixels left and right match on every row above and below
-	 *       the track;</li>
-	 *   <li>with the knob at either end (Smooth corners OFF), nothing of the fill or the track shows outside the full
-	 *       track pill and the knob: the short bar beside the knob keeps its rounded end.</li>
+	 *   <li>the knob's outermost pixels left and right match on every row above and below the track;</li>
+	 *   <li>with the knob at either end, nothing of the fill or the track shows outside the full track pill and the
+	 *       knob: the short bar beside the knob keeps its rounded end.</li>
 	 * </ul>
+	 * Knobs and pills are smooth discs whatever the setting (REQ-UI-29), so their pixels are judged by mask coverage.
 	 */
 	private static void knobsKeepTheirOwnColour(ClientGameTestContext context) {
 		Boolean before = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
@@ -179,7 +183,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 						int[][] sliders = context.computeOnClient(client -> screen(client.gui.screen()).knobSliders());
 						for (int i = 0; i < sliders.length; i++) {
 							checkKnob(shot, scale, smooth, sliders[i], i == 1 || i == 3, pass + ", slider " + i);
-							if (!smooth && (i == 0 || i == 2)) {
+							if (i == 0 || i == 2) {
 								checkTrackEnds(shot, scale, sliders[i], pass + ", slider " + i);
 							}
 						}
@@ -203,10 +207,9 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		int centre = shot.getRGB(left + r, top + r);
 		int interior = 0;
 		int wrong = 0;
-		int[] insets = Corners.insets(r);
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
-				boolean full = smooth ? CornerMask.alpha(r, x, y) == 255 : covered(insets, size, x, y);
+				boolean full = CornerMask.alpha(r, x, y) == 255;
 				if (full) {
 					interior++;
 					if (!near(shot.getRGB(left + x, top + y), centre)) {
@@ -237,29 +240,37 @@ public class WidgetsGameTest implements FabricClientGameTest {
 				}
 			}
 		}
-		if (smooth) {
-			int trackRows = Slider.TRACK_HEIGHT * scale;
-			for (int y = 0; y < size; y++) {
-				int row = top + y;
-				if (row >= trackTop && row < trackTop + trackRows) {
-					continue;
-				}
-				int a = -1;
-				int b = -1;
-				for (int x = 0; x < size; x++) {
-					if (CornerMask.alpha(r, x, y) > 0) {
-						if (a < 0) {
-							a = x;
-						}
-						b = x;
+		checkRimSymmetry(shot, scale, left, top, trackTop, what);
+	}
+
+	/**
+	 * Above and below the track the knob's outermost pixels left and right match: the knob is a smooth disc whatever
+	 * the setting (REQ-UI-29), so its rim is anti-aliased in both passes and must blend over the same backdrop.
+	 */
+	private static void checkRimSymmetry(BufferedImage shot, int scale, int left, int top, int trackTop, String what) {
+		int size = Slider.KNOB_SIZE * scale;
+		int r = size / 2;
+		int trackRows = Slider.TRACK_HEIGHT * scale;
+		for (int y = 0; y < size; y++) {
+			int row = top + y;
+			if (row >= trackTop && row < trackTop + trackRows) {
+				continue;
+			}
+			int a = -1;
+			int b = -1;
+			for (int x = 0; x < size; x++) {
+				if (CornerMask.alpha(r, x, y) > 0) {
+					if (a < 0) {
+						a = x;
 					}
+					b = x;
 				}
-				if (a >= 0) {
-					int la = shot.getRGB(left + a, row);
-					int rb = shot.getRGB(left + b, row);
-					check(near(la, rb), what + ": the rim differs left and right on knob row " + y + ": " + Integer.toHexString(la) + " vs "
-							+ Integer.toHexString(rb));
-				}
+			}
+			if (a >= 0) {
+				int la = shot.getRGB(left + a, row);
+				int rb = shot.getRGB(left + b, row);
+				check(near(la, rb), what + ": the rim differs left and right on knob row " + y + ": " + Integer.toHexString(la) + " vs "
+						+ Integer.toHexString(rb));
 			}
 		}
 	}
@@ -274,33 +285,21 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		int trackW = slider[2] * scale;
 		int trackH = Slider.TRACK_HEIGHT * scale;
 		int backdrop = shot.getRGB(left + size / 2, top - 2 * scale);
-		boolean[][] pill = new boolean[trackH][trackW];
-		for (Corners.Span span : Corners.fill(trackW, trackH, trackH / 2)) {
-			for (int y = span.y0(); y < span.y1(); y++) {
-				for (int x = span.x0(); x < span.x1(); x++) {
-					pill[y][x] = true;
-				}
-			}
-		}
-		int[] insets = Corners.insets(size / 2);
+		// Discs and pills are smooth whatever the setting (REQ-UI-29): a pixel any of their masks touches may be tinted.
+		int cap = trackH / 2;
 		for (int y = 0; y < trackH; y++) {
 			for (int x = left - scale; x < left + size + scale; x++) {
 				int px = x - trackX;
-				boolean inPill = px >= 0 && px < trackW && pill[y][px];
+				boolean inPill = px >= 0 && px < trackW && (px >= cap && px < trackW - cap
+						|| CornerMask.alpha(cap, px < cap ? px : px - (trackW - 2 * cap), y) > 0);
 				int ky = trackTop + y - top;
-				boolean inDisc = x >= left && x < left + size && ky >= 0 && ky < size && covered(insets, size, x - left, ky);
+				boolean inDisc = x >= left && x < left + size && ky >= 0 && ky < size && CornerMask.alpha(size / 2, x - left, ky) > 0;
 				if (!inPill && !inDisc) {
 					check(near(shot.getRGB(x, trackTop + y), backdrop), what + ": fill or track outside the pill and the knob at track row " + y
 							+ ", x " + (x - left) + " from the knob");
 				}
 			}
 		}
-	}
-
-	/** Whether the fill-based disc covers pixel (x, y) of a size×size knob (as Corners draws it). */
-	private static boolean covered(int[] insets, int size, int x, int y) {
-		int inset = y < insets.length ? insets[y] : y >= size - insets.length ? insets[size - 1 - y] : 0;
-		return x >= inset && x < size - inset;
 	}
 
 	/** Whether the 1 GUI px outline fully covers screen pixel (x, y) of the w×h button with radius r. */

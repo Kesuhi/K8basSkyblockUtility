@@ -145,6 +145,17 @@ class ShapeBoundsTest {
 		}
 	}
 
+	/** REQ-UI-29: "Smooth corners" decides only rectangle and outline corners; discs and pills are always smooth. */
+	@Test
+	void discsAndPillsAreSmoothWhateverTheSetting() {
+		assertTrue(ShapePlan.alwaysSmooth(20, 20, 10, Corners.ALL), "a disc");
+		assertTrue(ShapePlan.alwaysSmooth(44, 24, 12, Corners.ALL), "a pill");
+		assertTrue(ShapePlan.alwaysSmooth(30, 8, 4, Corners.LEFT), "a one-cap pill");
+		assertTrue(ShapePlan.alwaysSmooth(30, 8, 4, Corners.RIGHT), "a one-cap pill");
+		assertFalse(ShapePlan.alwaysSmooth(92, 32, 8, Corners.ALL), "a button: the setting decides");
+		assertFalse(ShapePlan.alwaysSmooth(200, 40, 12, Corners.ALL), "a card: the setting decides");
+	}
+
 	@Test
 	void boundsRoundOutwardWhereTheGameWouldComeOutShort() {
 		// From x 2.5 to 6.5: the game's floor(min) + ceil(size) gives 2..6 and misses the last half pixel.

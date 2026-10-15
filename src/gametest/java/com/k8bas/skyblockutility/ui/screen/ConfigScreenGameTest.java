@@ -48,8 +48,12 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
 		ModuleStates modules = context.computeOnClient(client -> ModuleStates.capture());
+		// Absent means ON from 1.3.0 (R46): the plain passes set OFF, and the value found here is put back.
+		Boolean smoothBefore = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
 		context.getInput().resizeWindow(1920, 1080);
 		try {
+			context.runOnClient(client -> ConfigManager.general().smoothCorners = false);
+			check(!context.computeOnClient(client -> ConfigManager.general().smoothCorners()), "the plain passes render with Smooth corners OFF");
 			context.runOnClient(client -> client.options.guiScale().set(1));
 			context.setScreen(() -> new ConfigScreen(Minecraft.getInstance().gui.screen()));
 			context.waitForScreen(ConfigScreen.class);
@@ -63,7 +67,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			try {
 				sizes(context, "-smooth");
 			} finally {
-				context.runOnClient(client -> ConfigManager.general().smoothCorners = null);
+				context.runOnClient(client -> ConfigManager.general().smoothCorners = false);
 			}
 			context.getInput().resizeWindow(1280, 960);
 			context.runOnClient(client -> client.options.guiScale().set(2));
@@ -84,6 +88,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		} finally {
 			context.runOnClient(client -> {
 				modules.restore();
+				ConfigManager.general().smoothCorners = smoothBefore;
 				ConfigManager.general().mobScanRangeBlocks = 64;
 				ConfigManager.save();
 			});

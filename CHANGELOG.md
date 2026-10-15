@@ -6,6 +6,18 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+### Changed
+
+- "Smooth corners" (General › Interface) is now ON by default, so rounded corners have soft edges. The
+  option changes only how the corners of boxes, buttons and fields are drawn: round knobs and pill shapes
+  are always smooth now. If you switched it off before, it stays off.
+
+### Fixed
+
+- A slider no longer shows a thin line of its coloured fill across the knob at GUI scale 2 and above,
+  and the knob of a dimmed slider no longer shows the fill and the track through it. The rounded
+  corners of buttons and fields keep their whole outline at GUI scale 4.
+
 ## [1.2.1] - 2026-10-15
 
 This release brings helpers for mining in Glacite Mineshafts (an entry alert with your corpse keys,

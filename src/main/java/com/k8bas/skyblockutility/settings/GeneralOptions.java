@@ -55,10 +55,9 @@ public final class GeneralOptions {
 								value -> config.accentColor = value & 0xFFFFFF)),
 				Toggle.of("interface.smooth_corners", "general.smoothCorners",
 						new OptionText("Smooth corners", "Draws rounded corners with soft edges.",
-								"Softens the rounded corners of this screen, the HUD editor and notices. Off draws them from whole pixels, "
-										+ "as before.",
+								"Changes only how rounded corners are drawn. Off cuts them from whole pixels, as in 1.2.",
 								List.of("smooth", "corners", "rounded", "anti-aliasing", "look")),
-						false, Binding.of(config::smoothCorners, value -> config.smoothCorners = value)),
+						true, Binding.of(config::smoothCorners, value -> config.smoothCorners = value)),
 				Choice.of("interface.notice_position", "general.noticePosition",
 						new OptionText("Notice position", "Where notices appear on the screen.",
 								"Notices are short messages, e.g. that your settings file was backed up. Vanilla toasts show top right too and are drawn "

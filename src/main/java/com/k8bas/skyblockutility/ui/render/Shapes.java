@@ -78,7 +78,8 @@ public final class Shapes {
 		Matrix3x2fStack outer = graphics.pose();
 		ScreenRectangle scissor = graphics.scissorStack.peek();
 		int[] clip = scissor == null ? null : new int[] {scissor.left(), scissor.top(), scissor.right(), scissor.bottom()};
-		ShapePlan.Result plan = ShapePlan.ofPixels(outer, x, y, w, h, radius, thickness, corners, scale, smooth(), clip);
+		boolean smooth = ShapePlan.alwaysSmooth(w, h, radius, corners) || smooth();
+		ShapePlan.Result plan = ShapePlan.ofPixels(outer, x, y, w, h, radius, thickness, corners, scale, smooth, clip);
 		Identifier mask = null;
 		if (plan.maskRadius() >= 0) {
 			mask = CornerTextures.mask(scale, plan.maskRadius(), plan.maskThickness());
@@ -105,7 +106,10 @@ public final class Shapes {
 		return TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler());
 	}
 
-	/** "Smooth corners" (General › Interface, R32), read on each draw so a change applies at once. */
+	/**
+	 * "Smooth corners" (General › Interface, REQ-UI-29), read on each draw so a change applies at once; asked only for
+	 * the corners of rounded rectangles and outlines ({@link ShapePlan#alwaysSmooth}).
+	 */
 	private static boolean smooth() {
 		return ConfigManager.general().smoothCorners();
 	}
