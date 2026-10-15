@@ -27,7 +27,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   name you can see gets a ring on the water or lava in its buff's colour (Sea Creature Chance dark
   aqua, Fishing Speed aqua, Double Hook Chance blue, Treasure and Trophy Fish gold, Shards yellow),
   with a see-through filled area. Walls hide the ring. Its size comes from the hotspot's own
-  particles. "Highlight ring", "Filled area" and "Fill opacity" change the look.
+  particles. "Highlight ring", "Filled area" and "Fill opacity" change the look. Rings also show
+  with Iris shaderpacks.
 - Hotspot gone warning (ON): when the hotspot you are fishing in disappears, you get "Hotspot
   gone!" on screen with its buff, a sound (choose one and its volume) and a chat line, each with
   its own switch; a notice can be added. It only counts a hotspot your bobber was in during the

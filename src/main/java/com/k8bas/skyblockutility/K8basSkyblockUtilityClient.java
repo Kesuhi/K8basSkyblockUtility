@@ -16,6 +16,7 @@ import com.k8bas.skyblockutility.module.odds.RareDropOddsModule;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertModule;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
+import com.k8bas.skyblockutility.render.marker.RingPipeline;
 import com.k8bas.skyblockutility.render.marker.WorldMarkers;
 import com.k8bas.skyblockutility.settings.SettingsCommand;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
@@ -72,6 +73,8 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		GlowHandler.register();
 		// The world marker toolkit; features add their marker providers as they register.
 		WorldMarkers.register();
+		// Rings get a shaderpack program under Iris (their pipeline is ours, so Iris can be given it).
+		RingPipeline.registerWithIris();
 
 		ModuleManager.register(new MobHighlighterModule());
 		ModuleManager.register(new NpcSearchModule());

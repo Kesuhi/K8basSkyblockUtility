@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.feature.CustomFeatureRenderer;
@@ -80,14 +79,15 @@ public final class WorldMarkers {
 	private static final double RING_LIFT = 0.02;
 	private static final double RING_OUTLINE_WIDTH = 0.08;
 	/**
-	 * Rings: vanilla's debug quads (translucent, depth-tested, no depth write), drawn into the target
+	 * Rings: vanilla's debug quads under this mod's id ({@link RingPipeline}, so an Iris shaderpack draws
+	 * them too; translucent, depth-tested, no depth write), drawn into the target
 	 * translucent terrain uses. With Improved Transparency that is its own target, which holds the opaque
 	 * depth plus the water's, so a ring on water is drawn after the water inside that layer and blends
 	 * over it, while opaque terrain still hides it. Without Improved Transparency the supplier gives null
 	 * and the main target is used, as for vanilla's debug quads.
 	 */
 	private static final RenderType RING = RenderType.create("k8bas_marker_ring",
-			RenderSetup.builder(RenderPipelines.DEBUG_QUADS).sortOnUpload()
+			RenderSetup.builder(RingPipeline.PIPELINE).sortOnUpload()
 					.setOutputTarget(new OutputTarget("k8bas_translucent_terrain", () -> Minecraft.getInstance().levelRenderer.translucentTarget()))
 					.createRenderSetup());
 

@@ -30,6 +30,8 @@ class HotspotRulesTest {
 		assertEquals(HotspotText.Buff.DOUBLE_HOOK_CHANCE, text.buff("+2⚓ Double Hook Chance"));
 		assertEquals(HotspotText.Buff.TREASURE_CHANCE, text.buff("+1⛃ Treasure Chance"));
 		assertEquals(HotspotText.Buff.TROPHY_FISH_CHANCE, text.buff("+5♔ Trophy Fish Chance"));
+		// The text the Crimson Isle showed at G3, with its private-use icon glyph.
+		assertEquals(HotspotText.Buff.TROPHY_FISH_CHANCE, text.buff("+5 Trophy Chance"));
 		assertEquals(HotspotText.Buff.SHARD, text.buff("Chance of Lava Shard"));
 		assertEquals(HotspotText.Buff.SHARD, text.buff("§bChance of Mossybit Shard"));
 		assertEquals(List.of(), logged);

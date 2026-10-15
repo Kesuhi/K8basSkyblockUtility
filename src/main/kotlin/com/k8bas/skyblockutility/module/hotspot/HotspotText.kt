@@ -40,7 +40,8 @@ class HotspotText(private val unknown: Consumer<String>) {
 			Regex("Fishing Speed$") to Buff.FISHING_SPEED,
 			Regex("Double Hook Chance$") to Buff.DOUBLE_HOOK_CHANCE,
 			Regex("Treasure Chance$") to Buff.TREASURE_CHANCE,
-			Regex("Trophy Fish Chance$") to Buff.TROPHY_FISH_CHANCE,
+			// Hypixel shows "+5 Trophy Chance" (an icon glyph) (G3, 2026-10-15); "Trophy Fish Chance" is kept.
+			Regex("Trophy (Fish )?Chance$") to Buff.TROPHY_FISH_CHANCE,
 			Regex("^Chance of .+ Shard$") to Buff.SHARD,
 		)
 
