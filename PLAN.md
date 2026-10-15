@@ -1269,6 +1269,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Own toggle "Remove ruled-out spots" on the corpse spots card, default ON, effective only with "Organ Donor ding hint" ON. `/ksu corpses` still lists every spot and marks the ruled-out ones "· ruled out".
   - This is the borderline behaviour of SPEC REQ-XC-RULES-06, approved by your explicit request (R44). FixedAnchorSourceTest and the send scan must still pass for the module (AC-CORPSE-04 [R] stays true).
   - Accept: AC-CORPSE-13, AC-CORPSE-14. AC-CORPSE-15 [E] is checked at the next field check.
+  - Field check (2026-10-15): AC-CORPSE-15 passed with the jar at `e3a19b3`.
   - Done (2026-10-15): `SpotRuleOut` (pure) keeps the quiet window of back-to-back samples, arms on the first ding, rules out spots within 16 blocks for the whole 4 s and starts over when the widget's corpse count (present or cut off) grows; `CorpseSpotsModule` resets it on leaving or a new shaft code, feeds it dings within 8 blocks (`DingHint.isDing`) and the player each tick, and passes the ruled-out set to `CorpseSpotRules.visible` and `list` (" · ruled out") only while the toggle and the ding hint are ON. Toggle "Remove ruled-out spots" (`corpse_spots.rule_out`, ON) on the card before "Edit position". Tests: SpotRuleOutTest (7), DingHintTest, CorpseSpotRulesTest, OptionCatalogTest (default and search "ruled out"); CorpseSpotsGameTest AC-CORPSE-14 (removal, the list mark, both toggles OFF and ON again, a third corpse brings it back). Full gametest suite green.
     - Review: two angles with two verifiers each; confirmed and fixed: a cut-off widget counted as no corpses, no test of the toggles OFF, the settings search missed "ruled out"; split votes also fixed as each could hide a real corpse: a pause in the samples counted as silence, 3 s left little room for a lag spike (now 4 s), dings 4–8 blocks off under latency were missed (rule-out now takes 8). Refuted: a re-simulated shaft with the same code, the toggle order.
 - **T3.9b feat(odds): Scatha case** [dropped R42] **Dropped (R42, 2026-10-15, your decision): never built; the record below is kept.** Was: (M, deps T3.9h, T2.8). A Crystal Hollows HUD panel showing:
@@ -1373,8 +1374,8 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - New from this round: spots are ruled out by the ding's silence (R44 (b), T3.3e); its field check AC-CORPSE-15 comes at the next field check.
   - **Still open (after R44):**
     - the opportunistic items: a party summon (AC-MSA-10) and the rare-room glow (AC-GLOW-11) (Scatha, slayer and a Vanguard corpse were here; dropped, R42);
-    - the rule-out check AC-CORPSE-15 [E] for T3.3e (R44), at the next session with the new jar;
     - the push and CI item below.
+  - Closed (2026-10-15, your fifth round with the jar at `e3a19b3`): the rule-out check AC-CORPSE-15 [E] for T3.3e passed ("All worked").
   - Closed by R44: the sack-reminder check AC-MSA-15 with the "[Take out k]" button, the ding check AC-CORPSE-12 on the "Corpse ding" HUD element, and the privacy check AC-GS-12 [E].
 - [dropped R38] *(the mob gist stays as it is)* you have removed Ghost, Fels, Sneaky Creeper and Invisibug from the 1.0.x mob gist (any time before this, e.g. together with T0.5); Claude checks that the raw URL still parses (AC-NPCDB-09 pre-check)
 - [ ] every commit since G2, including fixture commits from the G3 captures, builds in a worktree (AC-XC-05); then push `update/26.2` (D-10 checkpoint push); CI green on the pushed head
@@ -1392,7 +1393,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - the mineshaft entry alert (T3.2), beam colour settings and migration (T3.4b);
       - the bobber fix (T3.5), hotspot rings and the "hotspot gone" warning (T3.6, T3.6b).
       Each has a CHANGELOG entry under [Unreleased]. The drill re-equip fix (T3.7) was built and then removed with its CHANGELOG entry (R37). So were the odds math, tables and module (T3.9a, T3.9g, T3.9h; R42).
-    - **Open:** T3.3e (R44). Done since R36: T3.2c, T3.8d, T3.3c, T3.3a, T3.3, T3.10, T3.2b, T3.3b, T3.6c, T3.3d and T3.2d. T3.9b–f, held back by R35, are dropped (R42).
+    - **Open:** none. Done since R36: T3.2c, T3.8d, T3.3c, T3.3a, T3.3, T3.10, T3.2b, T3.3b, T3.6c, T3.3d, T3.2d and T3.3e (field-checked). T3.9b–f, held back by R35, are dropped (R42).
     - **UNVERIFIED until your checks** (the sack formats and the Organ Donor ding came from your captures and logs, R41):
       - the Bestiary glyphs, the `Profile ID:` line and the ☀/Ⓑ profile glyphs;
       - the hotspot island caps and the pink-dust and smoke filters;
