@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, R25 after T3.4 and R26–R35 during Phases 2 and 3, see SPEC §12.3; R35 runs G3 before T3.9b–f; R36 records the G3 field results; R37 drops the drill re-equip fix, T3.7; R38 leaves the four invisible-by-design mobs out of the bundled mob table; R39 counted corpse keys in sacks too (D-7 changed, T3.2b); R40 reinstates the possible corpse spots, T3.3a and T3.3, which R22 had dropped, and adds T3.3b and T3.3c; R41 records the second G3 field session: a key only in the sack does not open a corpse, so D-7 is restored with a sack reminder (R39 replaced, T3.2b rescoped), Hypixel's hotspot particles are hidden on the client (T3.6c), and the ding hint is made concrete from your capture (T3.3b); R42 drops the Rare Drop Odds feature: T3.9b–f are dropped, and the built T3.9a, T3.9g and T3.9h are removed from the code; R43 records the third G3 session: the ding hint moves to a HUD element (T3.3d), and the sack reminder gets a "[Take out k]" button that runs one `/getfromsacks` command per click (T3.2d; P5 amended); R44 records the fourth G3 session (the "Corpse ding" HUD element, the "[Take out k]" button and the privacy check pass) and rules out corpse spots by the Organ Donor ding's silence (T3.3e)). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped tasks T3.7 and T3.9a–T3.9h keep their ids as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
+| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, R25 after T3.4 and R26–R35 during Phases 2 and 3, see SPEC §12.3; R35 runs G3 before T3.9b–f; R36 records the G3 field results; R37 drops the drill re-equip fix, T3.7; R38 leaves the four invisible-by-design mobs out of the bundled mob table; R39 counted corpse keys in sacks too (D-7 changed, T3.2b); R40 reinstates the possible corpse spots, T3.3a and T3.3, which R22 had dropped, and adds T3.3b and T3.3c; R41 records the second G3 field session: a key only in the sack does not open a corpse, so D-7 is restored with a sack reminder (R39 replaced, T3.2b rescoped), Hypixel's hotspot particles are hidden on the client (T3.6c), and the ding hint is made concrete from your capture (T3.3b); R42 drops the Rare Drop Odds feature: T3.9b–f are dropped, and the built T3.9a, T3.9g and T3.9h are removed from the code; R43 records the third G3 session: the ding hint moves to a HUD element (T3.3d), and the sack reminder gets a "[Take out k]" button that runs one `/getfromsacks` command per click (T3.2d; P5 amended); R44 records the fourth G3 session (the "Corpse ding" HUD element, the "[Take out k]" button and the privacy check pass) and rules out corpse spots by the Organ Donor ding's silence (T3.3e); R45, after Phase 3 and the G3 push, releases the Phase 3 changes as v1.2.1 (T3.11–T3.13, Checkpoint G3r; a PATCH number by your choice, although the changes add features) and puts a UI review, released as 1.3.0, before Phase 4 (Phase 3u, spec pending, T3.14)). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped tasks T3.7 and T3.9a–T3.9h keep their ids as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
 | Date | 2026-10-01 |
 | Branch | `update/26.2` (from `main` @ `bc0f2f6`, v1.0.1) |
 | Baseline | `./gradlew build` on `main` is green (26.1.2) |
@@ -235,6 +235,8 @@ Phase 0 seams + tests + dev runtime (on 26.1.2)
  ─► Phase 2 UI: option model ─► render kit ─► widgets ─► screen ─► rule lists + switch ─► drop Cloth
                HUD framework ─► HUD editor                          ─► [G2]
  ─► Phase 3 features: the other 3.0 shared services first; odds (T3.9) last, after D-3 (dropped at G3, R42) ─► [G3]
+ ─► release v1.2.1 (the Phase 3 changes) via PR to main ─► [G3r]  [decided R45]
+ ─► Phase 3u UI review (spec with you first) ─► release 1.3.0  [decided R45]
  ─► Phase 4 updater ─► [G4]  ─► Phase 5 bestiary HUD ─► [G5]
  ─► Phase 6 SkyBlock XP Optimizer: calculator core ─► data tool + reference tables ─► task table + research
                ─► prices ─► progress detection ─► planner ─► table UI + screen ─► HUD ─► update skill ─► [G6]
@@ -1402,9 +1404,46 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       (The dye placeholder scores were on this list; they left with the odds tables, R42.)
     - **Opportunistic, not yet seen:** a party summon into a shaft (AC-MSA-10) and the rare-room glow (AC-GLOW-11). (Scatha, slayer and a Vanguard corpse were on this list; dropped, R42.)
 
+**Release 1.2.1 [decided R45].** After Phase 3 and the G3 push (CI green on `5978261`), the work on `update/26.2` ships as v1.2.1, an intermediate release in the v1.1.0 and v1.2.0 flow (REQ-REL-14): a release PR `update/26.2` → `main`, merged on your "merge", then tag, draft, checks, tier D boot and publish on your separate "ship", as `RELEASING.md` says. The number is your choice: the changes add features, which SemVer would number 1.3.0; you chose 1.2.1, and 1.3.0 goes to the UI review (Phase 3u). `mod_version=1.2.1` is already set in `gradle.properties`, not committed yet. The UI review follows on `update/26.2` afterwards.
+
+- [ ] **T3.11 docs(release): README, CHANGELOG and mod description for v1.2.1** (S, deps T3.3e). `[Unreleased]` becomes `## [1.2.1] - YYYY-MM-DD` (the planned publish day), self-contained so that it works word for word as the release notes: requirements, the upgrade note from 1.2.0, the behaviour changes and the defaults, within the lint rules of `RELEASING.md` ("The CHANGELOG and the release notes"). The README keeps the R34 layout and adds what 1.2.1 ships:
+  - the mineshaft entry alert with key counts, the sack reminder and its "[Take out k]" button;
+  - the possible corpse spots, `/ksu corpses`, the "Corpse ding" HUD element and "Remove ruled-out spots";
+  - the beam colour settings, the bobber fix, the hotspot rings with "Hide Hypixel's hotspot particles", and the "hotspot gone" warning;
+  - `/ksu corpses` in Commands, and the reserved words of `/ksu <text>`.
+
+  The R34 README has no network or compliance section, so the debug commands (`/ksu debug data`, `/ksu debug dump sounds`), the bundled lists replacing the gists, the one command a click runs (REQ-XC-RULES-02) and the rule-out by the ding's silence (REQ-REL-03) are stated in the CHANGELOG `[1.2.1]` section (the release notes) instead.
+
+  The `fabric.mod.json` description names the new features. `mod_version=1.2.1` (already in the working tree) is committed with this task. Every README and CHANGELOG claim is checked against the code.
+  - Req: REQ-REL-14, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-REL-05, REQ-REL-06
+  - Accept: AC-REL-01, AC-REL-02 and AC-REL-03 (README and the `[1.2.1]` release body) for what 1.2.1 ships; AC-REL-04 (`changelog-lint.sh --require 1.2.1` and `--extract 1.2.1` pass); AC-REL-05 with 1.2.1 (`1.2.1+26.2` in `fabric.mod.json` and the jar name, `1.2.1` in the CHANGELOG heading); AC-XC-04 (README defaults = code defaults, SPEC §12.H); T0.6's check passes.
+- [ ] **T3.12 chore(release): intermediate PR `update/26.2` → `main` for v1.2.1** (S, deps T3.11). As T2.13, following "Before opening a release PR" in `RELEASING.md`. Before opening:
+  - every commit in `main..update/26.2` builds alone (`scripts/build-each-commit.sh`; from `b92bbfd`, the first commit after the v1.2.0 merge `c33ba20`), with conforming subjects and the co-author line (AC-XC-05);
+  - `git log --format=%ae main..update/26.2 | sort -u` shows only noreply addresses (AC-XC-12);
+  - `scripts/privacy-scan.sh --range main..update/26.2 --body build/pr-body.md` is clean, and the diff, the PR body and every binary file are checked by hand for player names;
+  - CI is green on the head.
+
+  The body has the change summary since v1.2.0 (`main` already holds it), test evidence per tier, the G3 field-check results, known issues (the opportunistic [E] checks AC-MSA-10 and AC-GLOW-11 and the UNVERIFIED items of the Phase 3 report; EC-REL-13) and the decisions after those in PR #2, R34–R45. Pushing and opening the PR each need your OK. **Then wait for your "merge"**, and merge with a merge commit (D-10).
+  - Req: REQ-REL-14, REQ-REL-08, REQ-REL-09, REQ-XC-GIT-02
+  - Accept: AC-REL-06 (summary from v1.2.0, R45) and AC-REL-07 for this PR; AC-XC-05, AC-XC-12; you accept the known issues (EC-REL-13); CI green on its head; a commit added after the approval voids it (EC-REL-12).
+- [ ] **T3.13 chore(release): tag and publish v1.2.1** (S, deps T3.12). Starts only after the merge **and** your "ship". The order of T2.14 and the `RELEASING.md` procedure: preflight (EC-REL-03, -04 and -07) → annotated tag `v1.2.1` on the merge commit → `./gradlew clean build` from that commit → push the tag → `gh release create v1.2.1 --verify-tag --draft` with the jar, the sidecar and the `[1.2.1]` body → `release-check.sh v1.2.1` PASS → tier D boot of the exact jar with your mod set against a baseline without this mod (no new ERROR or WARN line) → `release-check.sh v1.2.1` PASS again → publish as Latest, not as a pre-release. Any failed check stops before publishing and is reported; fixes happen only inside the draft (EC-REL-05), then all checks rerun.
+  - Req: REQ-REL-14, REQ-REL-10, REQ-REL-11
+  - Accept: AC-REL-12 with v1.2.1 (AC-REL-04, -05, -08 and -09, R45); the published body equals the CHANGELOG section; the release record "v1.2.1, published YYYY-MM-DD" in `RELEASING.md`, as for v1.2.0 (PR and merge commit, tag, build and tests, jar and sidecar digests, draft checks, tier D, publish time).
+
+**Checkpoint G3r:**
+- [ ] v1.2.1 is public and marked Latest; `main` and its README match the release
+
+### Phase 3u — UI review, released as 1.3.0 [decided R45]
+
+*Spec pending.* Your request from 2026-10-15, marked "for later" until R45: a review of the settings UI with improvements: a sharper, higher-resolution look; sliders that sometimes clip; and an overall smoother, nicer experience. It starts after v1.2.1 (Checkpoint G3r), comes before Phase 4, and ships as 1.3.0. Its requirements and acceptance criteria are written with you first, as SPEC requirements with their own ids, and nothing is built before you approve them. Until then this phase has only T3.14; the build tasks, the checkpoint and the 1.3.0 release tasks are added with the spec.
+
+- [ ] **T3.14 docs(spec): UI review spec for 1.3.0, written with you (spec pending)** (S, deps T3.13). With you: what "higher resolution" means on screen, which sliders clip and where, and what "smoother, nicer" covers. Then the requirements and acceptance criteria in SPEC, a decision in SPEC §12.3, and this phase's tasks and checkpoint in PLAN, with the SPEC §13 counts updated.
+  - Req: REQ-XC-PLAN-01 (until the UI review has its own requirements)
+  - Accept: your approval of the UI review requirements and of the Phase 3u tasks comes before the first Phase 3u `src/` commit (as AC-XC-09 for the first spec).
+
 ### Phase 4 — Auto-updater on GitHub Releases
 
-*T1.4 already ships the release source and selection as v1.1.0's notify-only check (REQ-UPD-01, R4). Phase 4 completes that check and adds the confirmed, staged install (D-14). No Hypixel play is needed in this phase.*
+*T1.4 already ships the release source and selection as v1.1.0's notify-only check (REQ-UPD-01, R4). Phase 4 completes that check and adds the confirmed, staged install (D-14). No Hypixel play is needed in this phase. It starts after the UI review (Phase 3u, released as 1.3.0) [decided R45].*
 
 - [ ] **T4.1 feat(update): check outcomes, manual checks and state** (M, deps T1.4, T1.18). Extends T1.4a's `GitHubReleaseSource` and T1.4b's `AssetSelector` into the REQ-UPD-08 outcome model, which the notices, the card and the install path all read.
   - Req: REQ-UPD-04, REQ-UPD-08, REQ-UPD-09, REQ-UPD-19, REQ-CFG-12
@@ -1883,9 +1922,9 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
 - **REQ-UI-18**: Optional stretch goals after G2 [decided D-8, Q-UI-04]: open/tab animations, keyboard focus navigation, anti-aliased corners. Planned as stretch tasks T2.9, T2.9b and T2.9d, but not required for 2.0.0, and no AC or checkpoint waits for them.
 - **REQ-HUD-14**: An optional 'may' (HUD editor snapping and guide lines) [decided D-8], not required for 2.0.0. Planned as stretch task T2.9c; AC-HUD-14 applies only if it is built.
 
-**Marked for later (your request, 2026-10-15).** No task yet; it becomes one, with SPEC requirements, when you start it.
+**Planned since R45 (your request, 2026-10-15, first marked for later):** Phase 3u, T3.14.
 
-- A review of the settings UI with improvements: a sharper, higher-resolution look; sliders that sometimes clip; and an overall smoother, nicer experience.
+- A review of the settings UI with improvements: a sharper, higher-resolution look; sliders that sometimes clip; and an overall smoother, nicer experience. Planned by R45 as Phase 3u, released as 1.3.0 before Phase 4; its spec is pending (T3.14).
 
 **Partial "may" items and module out-of-scope lines.** Listed so that nothing is dropped silently.
 
