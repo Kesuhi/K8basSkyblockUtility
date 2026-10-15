@@ -37,6 +37,8 @@ import java.util.Locale;
  *   <li>AC-HOT-06: the ring is drawn at the water surface in dark aqua, and a stone wall between camera and ring hides
  *       it (depth-tested);</li>
  *   <li>AC-HOT-11: the module, ring and fill toggles change the drawn ring at once, and each value is stored.</li>
+ *   <li>AC-HOT-12 (T3.6c, R41 (b)): with "Hide Hypixel's hotspot particles" on, the server's ring dust is not added to
+ *       the client while the radius still samples it; with it off it is; the same dust far from a hotspot always is.</li>
  * </ul>
  */
 public class HotspotGameTest implements FabricClientGameTest {
@@ -48,6 +50,8 @@ public class HotspotGameTest implements FabricClientGameTest {
 	public void runTest(ClientGameTestContext context) {
 		check(context.computeOnClient(client -> HookStatus.REGISTRY.state(HotspotModule.PARTICLE_HOOK)) == HookRegistry.State.APPLIED,
 				"the particle observer is in the game's packet handler");
+		check(context.computeOnClient(client -> HookStatus.REGISTRY.state(HotspotModule.HIDE_HOOK)) == HookRegistry.State.APPLIED,
+				"the particle hiding hook is in the game's packet handler");
 		HotspotModule module = context.computeOnClient(client -> ModuleManager.modules().stream().filter(HotspotModule.class::isInstance)
 				.map(HotspotModule.class::cast).findFirst().orElseThrow());
 		try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
@@ -79,6 +83,16 @@ public class HotspotGameTest implements FabricClientGameTest {
 			context.waitTicks(5);
 			check(context.computeOnClient(client -> spot.sampleCount()) == 24, "the observer saw each ring particle packet once: " + spot.sampleCount());
 			check(context.computeOnClient(client -> spot.radius("Hub")) == 2.5, "their distance is the radius: " + spot.radius("Hub"));
+
+			// AC-HOT-12: hidden by default, still sampled; drawn with the option off; dust far from the hotspot always drawn.
+			int hidden = addedParticles(context, server, CX + 2.5, CZ);
+			check(hidden < 10 && context.computeOnClient(client -> spot.sampleCount()) == 25, "hidden but sampled: " + hidden + " added");
+			int far = addedParticles(context, server, CX + 12.0, CZ);
+			check(far >= 20, "the same dust 12 blocks out is drawn: " + far);
+			set(context, "fishing_hotspots.hide_particles", false);
+			int shown = addedParticles(context, server, CX + 2.5, CZ);
+			check(shown >= 20 && context.computeOnClient(client -> spot.sampleCount()) == 26, "the option off: drawn and sampled: " + shown);
+			set(context, "fishing_hotspots.hide_particles", true);
 
 			// AC-HOT-06.
 			int open = ringPixels(context, "t3.6-hotspot-ring");
@@ -120,6 +134,22 @@ public class HotspotGameTest implements FabricClientGameTest {
 				}
 			});
 		}
+	}
+
+	/**
+	 * How many particles the client added for one server packet of 30 ring-coloured dust particles at x, z (on the water),
+	 * against the count just before: the engine counts per render group, and a few other particles are always about.
+	 */
+	private static int addedParticles(ClientGameTestContext context, TestServerContext server, double x, double z) {
+		int before = context.computeOnClient(client -> particles(client));
+		server.runCommand(String.format(Locale.ROOT, "particle minecraft:dust{color:[1.0,0.41,0.71],scale:1.0} %.3f -60.0 %.3f 0 0 0 0 30 force", x, z));
+		context.waitTicks(2);
+		return context.computeOnClient(client -> particles(client)) - before;
+	}
+
+	/** The client's particles: the sum of the per-group counts the debug screen shows (e.g. "SQ 3 T 3"). */
+	private static int particles(Minecraft client) {
+		return java.util.regex.Pattern.compile("\\d+").matcher(client.particleEngine.countParticles()).results().mapToInt(m -> Integer.parseInt(m.group())).sum();
 	}
 
 	/** The added dark aqua pixels with the ring against without it (ring and fill off for that shot, the hotspot kept). */

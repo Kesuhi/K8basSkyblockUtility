@@ -129,6 +129,23 @@ class HotspotTrackerTest {
 	}
 
 	@Test
+	void aRingParticleIsWithinTheEstimatedRadiusOfAnActiveHotspot() {
+		// REQ-HOT-14 (T3.6c, R41 (b), review): only inside the area, not the wider sampling zone.
+		assertNull(tracker.ringParticleOf(2.5, 71.0, 0, "Hub"), "no hotspot yet");
+		tracker.scan(List.of(hotspot(1, 0, 0)), 0);
+		HotspotTracker.Hotspot spot = tracker.hotspots().getFirst();
+		// The Hub fallback radius is 3 until particles are seen: the area reaches 3.5 blocks.
+		assertSame(spot, tracker.ringParticleOf(2.5, 71.0, 0, "Hub"));
+		assertSame(spot, tracker.ringParticleOf(0, 70.9, 3.5, "Hub"));
+		assertNull(tracker.ringParticleOf(0, 70.9, 3.6, "Hub"), "outside the area");
+		assertNull(tracker.ringParticleOf(0, 70.9, 5.5, "Hub"), "inside the sampling zone, outside the ring");
+		assertSame(spot, tracker.ringParticleOf(0, 70.9, 5.5, "Crimson Isle"), "a wider island cap");
+		assertNull(tracker.ringParticleOf(2.5, 73.5, 0, "Hub"), "more than 2 blocks above the surface");
+		tracker.scan(List.of(), 1);
+		assertNull(tracker.ringParticleOf(2.5, 71.0, 0, "Hub"), "a removed stand's hotspot in its grace period hides nothing");
+	}
+
+	@Test
 	void particlesNearAHotspotGiveItsRadius() {
 		// REQ-HOT-04: the horizontal distance to the nearest hotspot within the cap and a block, near its surface.
 		tracker.scan(List.of(hotspot(1, 0, 0)), 0);

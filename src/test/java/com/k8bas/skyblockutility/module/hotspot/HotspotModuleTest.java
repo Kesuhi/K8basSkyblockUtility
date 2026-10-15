@@ -62,8 +62,10 @@ class HotspotModuleTest {
 		var card = cards.getFirst();
 		assertEquals(Category.FISHING, card.category());
 		assertEquals("Fishing Hotspots", card.toggle().text().title());
-		assertEquals(List.of("Highlight ring", "Filled area", "Fill opacity", "Hotspot gone warning", "Warning title", "Warning sound", "Sound",
+		assertEquals(List.of("Highlight ring", "Filled area", "Fill opacity", "Hide Hypixel's hotspot particles", "Hotspot gone warning", "Warning title", "Warning sound", "Sound",
 				"Sound volume", "Warning chat message", "Also show as a notice"), card.options().stream().map(option -> option.text().title()).toList());
+		// REQ-HOT-14 (R41 (b)): Hypixel's ring particles hidden by default.
+		assertTrue(config.hideParticles);
 		// REQ-HOT-12: warning, title, sound and chat ON (D-6), the notice OFF (R12).
 		assertTrue(config.warning && config.warnTitle && config.warnSound && config.warnChat);
 		assertFalse(config.warnNotice);

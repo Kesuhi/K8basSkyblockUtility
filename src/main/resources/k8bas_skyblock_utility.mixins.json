@@ -9,6 +9,7 @@
 	},
 	"client": [
 		"FishingHookMixin",
+		"HotspotParticleHideMixin",
 		"ParticleObserverMixin"
 	]
 }

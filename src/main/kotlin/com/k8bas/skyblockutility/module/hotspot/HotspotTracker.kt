@@ -138,12 +138,22 @@ class HotspotTracker @JvmOverloads constructor(
 
 	/** A server particle at this point: a radius sample of the nearest hotspot it can belong to (REQ-HOT-04). */
 	fun particle(x: Double, y: Double, z: Double) {
-		val spot = hotspots.filter { it.removedAt == null }.minByOrNull { it.horizontal(x, z) } ?: return
-		val distance = spot.horizontal(x, z)
+		ringOf(x, y, z)?.let { spot -> spot.sample(spot.horizontal(x, z)) }
+	}
+
+	/**
+	 * The active hotspot whose area a ring particle here is in (REQ-HOT-14): within its estimated radius on [island] and
+	 * half a block (the area, as [Hotspot.contains]), and 2 blocks of its surface; else null. Narrower than the zone
+	 * [particle] samples, which must also take a ring wider than the estimate so far.
+	 */
+	fun ringParticleOf(x: Double, y: Double, z: Double, island: String?): Hotspot? =
+		ringOf(x, y, z)?.takeIf { it.horizontal(x, z) <= it.radius(island) + AREA_MARGIN }
+
+	/** The nearest active hotspot a particle here can belong to, or null. */
+	private fun ringOf(x: Double, y: Double, z: Double): Hotspot? {
+		val spot = hotspots.filter { it.removedAt == null }.minByOrNull { it.horizontal(x, z) } ?: return null
 		// Past the largest island cap (and a block) it is no ring particle; the island's own cap applies in the estimate.
-		if (distance <= MAX_CAP + 1.0 && Math.abs(y - spot.surfaceY()) <= MAX_DY) {
-			spot.sample(distance)
-		}
+		return spot.takeIf { it.horizontal(x, z) <= MAX_CAP + 1.0 && Math.abs(y - it.surfaceY()) <= MAX_DY }
 	}
 
 	/** [spot]'s radius on [island], or the island fallback for none. */
@@ -185,6 +195,7 @@ class HotspotTracker @JvmOverloads constructor(
 		private const val MAX_CAP = 5.0
 		private const val MAX_DY = 2.0
 		private const val MAX_SAMPLES = 256
+
 
 		private fun square(value: Double): Double = value * value
 	}

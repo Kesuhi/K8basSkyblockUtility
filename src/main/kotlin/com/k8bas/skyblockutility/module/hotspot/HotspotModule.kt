@@ -59,6 +59,10 @@ class HotspotConfig {
 	@JvmField
 	var fillOpacity = DEFAULT_OPACITY
 
+	/** Hypixel's own ring particles are not drawn (REQ-HOT-14, R41 (b)). */
+	@JvmField
+	var hideParticles = true
+
 	@JvmField
 	var warning = true
 
@@ -129,7 +133,8 @@ class HotspotModule : Module {
 		ConfigManager.save()
 	}
 
-	override fun cards(): List<Card> = cards(cfg, Consumer { setEnabled(it) }, Supplier { status() }, Runnable { ConfigManager.putModuleSection(ID, cfg) })
+	override fun cards(): List<Card> = cards(cfg, Consumer { setEnabled(it) }, Supplier { status() }, Runnable { ConfigManager.putModuleSection(ID, cfg) },
+		Supplier { HookStatus.REGISTRY.status(HIDE_HOOK) })
 
 	override fun onSettingsClosed() {
 		ConfigManager.putModuleSection(ID, cfg)
@@ -168,18 +173,40 @@ class HotspotModule : Module {
 	}
 
 	private fun particle(options: ParticleOptions, x: Double, y: Double, z: Double) {
-		if (!active()) {
-			return
+		if (active() && ringKind(options)) {
+			tracker.particle(x, y, z)
 		}
+	}
+
+	/**
+	 * REQ-HOT-14: a ring particle of a hotspot whose ring this client draws now (ring or disc on, its name tag shown),
+	 * while "Hide Hypixel's hotspot particles" is on. Without a drawn ring the particles stay, so the area never vanishes.
+	 */
+	private fun hides(options: ParticleOptions, x: Double, y: Double, z: Double): Boolean {
+		if (!cfg.hideParticles || !active() || !ringKind(options)) {
+			return false
+		}
+		val island = IslandTracker.getCurrentIsland()
+		val spot = tracker.ringParticleOf(x, y, z, island) ?: return false
+		return ringDrawn(spot, island)
+	}
+
+	/** Whether [markers] draws [spot]'s ring this frame: a ring or disc is on and vanilla shows its name tag (R2). */
+	private fun ringDrawn(spot: HotspotTracker.Hotspot, island: String?): Boolean {
+		val client = Minecraft.getInstance()
+		val stand = client.level?.getEntity(spot.standId) as? ArmorStand ?: return false
+		val camera = client.cameraEntity ?: return false
+		return nameTagShown(stand, camera) && ring(cfg, spot.buff.color, spot.radius(island)) != null
+	}
+
+	private fun ringKind(options: ParticleOptions): Boolean {
 		val kind = when (options.type) {
 			ParticleTypes.DUST -> HotspotParticles.Kind.DUST
 			ParticleTypes.SMOKE, ParticleTypes.LARGE_SMOKE -> HotspotParticles.Kind.SMOKE
 			else -> HotspotParticles.Kind.OTHER
 		}
 		val colour = (options as? DustParticleOptions)?.color
-		if (HotspotParticles.isRing(kind, colour?.x ?: 0f, colour?.y ?: 0f, colour?.z ?: 0f, IslandTracker.getCurrentIsland())) {
-			tracker.particle(x, y, z)
-		}
+		return HotspotParticles.isRing(kind, colour?.x ?: 0f, colour?.y ?: 0f, colour?.z ?: 0f, IslandTracker.getCurrentIsland())
 	}
 
 	/** The water or lava surface under a stand (REQ-HOT-03, HotspotSurface); null while none is loaded. */
@@ -203,6 +230,7 @@ class HotspotModule : Module {
 				continue
 			}
 			// Only on the hologram itself, while vanilla shows its name tag (R2, MarkerRing): its flag and its distance.
+			// The particle hiding asks the same (ringDrawn).
 			val stand = level.getEntity(spot.standId) as? ArmorStand ?: continue
 			if (!nameTagShown(stand, camera)) {
 				continue
@@ -217,6 +245,9 @@ class HotspotModule : Module {
 
 		/** The read-only particle observer (REQ-HOT-13). */
 		const val PARTICLE_HOOK = "hotspot.particles"
+
+		/** The hook that skips drawing Hypixel's ring particles (REQ-HOT-14). */
+		const val HIDE_HOOK = "hotspot.hide"
 		private val LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/hotspot")
 
 		@Volatile
@@ -281,6 +312,13 @@ class HotspotModule : Module {
 		}
 
 		/**
+		 * From the particle hook, on the client thread, for each particle a packet would add: true to skip drawing it
+		 * (REQ-HOT-14). The packet itself was handled and observed as always; only the client's particle is not made.
+		 */
+		@JvmStatic
+		fun hidesParticle(options: ParticleOptions, x: Double, y: Double, z: Double): Boolean = instance?.hides(options, x, y, z) == true
+
+		/**
 		 * The ring a hotspot gets (REQ-HOT-05): the outline when "Highlight ring" is on, the disc when "Filled area" is
 		 * on at an opacity above 0 % (a disc at alpha 0 would be refused); null when neither is drawn.
 		 */
@@ -312,6 +350,7 @@ class HotspotModule : Module {
 			setEnabled: Consumer<Boolean>,
 			status: Supplier<OptionStatus> = Supplier { OptionStatus.OK },
 			changed: Runnable = Runnable { },
+			hideStatus: Supplier<OptionStatus> = Supplier { OptionStatus.OK },
 		): List<Card> {
 			val keywords = java.util.List.of("hotspot", "fishing", "ring", "buff")
 			val enabled = Toggle.of(
@@ -342,6 +381,16 @@ class HotspotModule : Module {
 					HotspotConfig.DEFAULT_OPACITY, 0, 100, 5, "%", "",
 					Binding.of({ config.fillOpacity }, { value -> config.fillOpacity = value; changed.run() }),
 				),
+				Toggle.of(
+					"$ID.hide_particles", "modules.$ID.hideParticles",
+					OptionText(
+						"Hide Hypixel's hotspot particles", "The pink (or smoke) particle ring around a hotspot is not drawn; the ring shows the area.",
+						"Only the ring particles of a hotspot whose ring or filled area is drawn are skipped, on your screen only: with both " +
+							"off they show again. The game still receives them, and the ring's size is still measured from them.",
+						keywords,
+					),
+					true, Binding.of({ config.hideParticles }, { value -> config.hideParticles = value; changed.run() }),
+				).withStatus(hideStatus),
 				Toggle.of(
 					"$ID.warning", "modules.$ID.warning",
 					OptionText(

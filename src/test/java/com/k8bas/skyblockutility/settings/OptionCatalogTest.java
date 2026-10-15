@@ -134,6 +134,8 @@ class OptionCatalogTest {
 		expected.put("modules.fishing_hotspots.ring", true);
 		expected.put("modules.fishing_hotspots.fill", true);
 		expected.put("modules.fishing_hotspots.fillOpacity", 25);
+		// REQ-HOT-14 (R41 (b)): Hypixel's ring particles hidden.
+		expected.put("modules.fishing_hotspots.hideParticles", true);
 		// REQ-HOT-10/12 (D-6, R12): the warning with title, sound and chat ON, the notice OFF; the pling at full volume (T3.6b).
 		expected.put("modules.fishing_hotspots.warning", true);
 		expected.put("modules.fishing_hotspots.warnTitle", true);
