@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26–R27 at T2.3b (2026-10-03), R28–R34 during Phase 2 and the v1.2.0 release (2026-10-04 to 2026-10-09), R35 before G3 (2026-10-10) and R36–R40 after the G3 field checks (2026-10-15); all are listed in §12.3. R36 answers both field questions that R24 left for G3: the Frozen Corpses widget is enabled with `/widgets`, and a key held only in the Dwarven Sack opens a corpse. R37 drops the drill re-equip fix (module drill-fix). R38 leaves the four invisible-by-design mobs out of the bundled mob table. R39 changes D-7: corpse keys are counted in the inventory and in sacks. R40 reinstates the possible corpse spots (module corpse-waypoints), which R22 had dropped. Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped Rn]` and keep their ids; reinstated ones carry `[reinstated R40]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
+| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26–R27 at T2.3b (2026-10-03), R28–R34 during Phase 2 and the v1.2.0 release (2026-10-04 to 2026-10-09), R35 before G3 (2026-10-10) and R36–R41 after the G3 field checks (2026-10-15); all are listed in §12.3. R36 answers both field questions that R24 left for G3: the Frozen Corpses widget is enabled with `/widgets`, and a key held only in the Dwarven Sack opens a corpse. R41 corrects the second answer: a key held only in the Dwarven Sack does not open a corpse. R37 drops the drill re-equip fix (module drill-fix). R38 leaves the four invisible-by-design mobs out of the bundled mob table. R39 changed D-7 to count sack keys too; R41 replaces R39: keys are counted in the inventory only again, with a reminder about keys seen in the sack. R40 reinstates the possible corpse spots (module corpse-waypoints), which R22 had dropped. R41 also hides Hypixel's hotspot particles on the client (REQ-HOT-14) and makes the Organ Donor ding hint concrete from your sound capture. Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped Rn]` and keep their ids; reinstated ones carry `[reinstated R40]`; R39's replaced changes carry `[replaced R41]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
 | Date | 2026-10-01 |
 | Inputs | Your original task prompt (verbatim) and the *SkyBlock XP Optimizer* addendum (verbatim), plus the research and decisions recorded in `PLAN.md` |
 | Relationship to PLAN.md | This file says **what** must be true and how we will know. `PLAN.md` says **how and in which order**. Every PLAN task names the requirement ids it implements (§13 Traceability). |
@@ -66,7 +66,7 @@ The mod is client-side and display-only. Its own code is CC0; bundled third-part
 | `corpse-waypoints` | Possible corpse locations with waypoints, plus the Organ Donor ding hint. **[reinstated R40]**: dropped after G1 (R22), built again after G3 | world-markers, data-registry, game-state, location |
 | `npc-waypoints` | Skyblocker-style NPC waypoints (white label, coloured beam) | world-markers, npc-mob-data, ui-config |
 | `bobber-fix` | Fishing bobber rubber-band fix | port-26-2, location |
-| `fishing-hotspot` | Hotspot highlight + "hotspot gone" warning | world-markers, location |
+| `fishing-hotspot` | Hotspot highlight + "hotspot gone" warning, plus hiding Hypixel's ring particles on the client [R41] | world-markers, location |
 | `rare-drop-odds` | Rare-drop odds overlay ("gambling overlay") | game-state, data-registry, hud, location |
 | `drill-fix` | Drill fuel / re-equip fix. **[dropped R37]**: the maintainer removed it at G3; the module text is kept as a record | port-26-2, location (+ hud if a fuel HUD is chosen) |
 | `updater` | GitHub-Releases updater with confirmation | config-store, ui-config |
@@ -305,7 +305,7 @@ These apply to every module. Module sections reference them instead of repeating
 
 ## 10. Module specifications
 
-Each module lists its origin, dependencies, purpose, functional requirements (REQ), out-of-scope items, acceptance criteria (AC, with verification tier), edge cases (EC) and module-level open questions (Q). Each module question points to its decision: `→ decided D-xx` (your approved plan decision) or `→ §12 Rn` (still open). `[decided D-xx]` / `[decided Rn]` mark requirements fixed by your answers (§12). The two field questions that R24 left open for G3, the widget hint wording (Q-MSA-04) and the sack-key check (REQ-MSA-05), are answered by R36. Still UNVERIFIED until captured: the sack menu and "[Sacks]" formats (REQ-MSA-05, R39) and the Organ Donor ding sound (REQ-CORPSE-11, R40). `[dropped Rn]` marks dropped items, `[reinstated R40]` reinstated ones.
+Each module lists its origin, dependencies, purpose, functional requirements (REQ), out-of-scope items, acceptance criteria (AC, with verification tier), edge cases (EC) and module-level open questions (Q). Each module question points to its decision: `→ decided D-xx` (your approved plan decision) or `→ §12 Rn` (still open). `[decided D-xx]` / `[decided Rn]` mark requirements fixed by your answers (§12). The two field questions that R24 left open for G3, the widget hint wording (Q-MSA-04) and the sack-key check (REQ-MSA-05), are answered by R36; R41 corrects the sack-key answer (a key held only in the sack does not open a corpse). The sack menu, "[Sacks]" and "Moved …" formats (REQ-MSA-05) come from your capture and logs, and the Organ Donor ding (REQ-CORPSE-11) from your sound capture (R41). `[dropped Rn]` marks dropped items, `[reinstated R40]` reinstated ones.
 
 ### port-26-2 — Port to Minecraft 26.2
 **Origin:** Brief Phase 1 (all three bullets); Ground rules 2–3 | **Depends on:** none | **Plan tasks:** T0.6, T1.1, T1.2, T1.3, T1.3b, T1.13, T1.10, T1.4, T1.14, T1.16 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
@@ -1307,7 +1307,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   The capture is read-only and covers only allowlisted menu titles.
 
-  Sound capture [decided R40]: `/ksu debug dump sounds` arms a capture for 10 minutes (enough to walk to a corpse and loot it; `off` ends it sooner). While armed, it logs every sound the client plays with its id, category, position, volume, pitch and game tick, plus the player's position and the distance between the two. It never changes or cancels a sound. It exists to identify the Organ Donor ding (REQ-CORPSE-11).
+  Sound capture [decided R40]: `/ksu debug dump sounds` arms a capture for 10 minutes (enough to walk to a corpse and loot it; `off` ends it sooner). While armed, it logs every sound the client plays with its id, category, position, volume, pitch and game tick, plus the player's position and the distance between the two. It never changes or cancels a sound. It exists to identify the Organ Donor ding (REQ-CORPSE-11), which your capture at the second G3 session identified [decided R41].
 
   The capture commands (`/ksu debug dump tab|sidebar`, `/ksu debug dump containers on|off`, `/ksu debug dump sounds`) must ship in production builds, because the G1 captures are made on Hypixel in the user's Prism copy. Only the simulators `/ksu debug island` and `/ksu debug shaft` are dev-only (REQ-LOC-08). *(Derived: PLAN §5 "formats UNVERIFIED until captured", T0.4 "available in production", D-17)*
 - **REQ-GS-14** Every parser has unit tests on sanitised fixtures. A fixture not yet confirmed by an in-game capture is marked UNVERIFIED, and the phase report lists it until G1 captures replace it. *(Derived: PLAN §5; REQ-XC-VERIFY)*
@@ -1327,7 +1327,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 **Out of scope**
 - Any active acquisition: sending `/profileid`, `/tablist` or `/widget`, opening, paging or hovering menus (other mods send `/profileid`; excluded by P5).
 - Calls to the Hypixel API with player data.
-- Caches of sacks, ender chest, backpacks, storage or museum contents [decided D-7]. One exception: the per-profile sack amounts of the three corpse keys (REQ-MSA-05) [decided R39].
+- Caches of sacks, ender chest, backpacks, storage or museum contents [decided D-7]. One exception: the per-profile Dwarven Sack amounts of the Tungsten and Umber Keys, used only for the sack reminder (REQ-MSA-05) [decided R41]. Was: the sack amounts of the three corpse keys, counted into the key total [decided R39] [replaced R41].
 - Messages that another mod hides below Fabric's message events (e.g. packet-level mixins). This is a documented limitation.
 - Location mode, map and server detection (owned by location).
 - Reading prices from Auction House screens (D-20: later option).
@@ -1420,7 +1420,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-GS-16** The GUI scale or window size changes while a menu is open → the snapshot is unaffected.
 
 **Open questions**
-- **Q-GS-01** Which storage counts toward "keys the player owns"? → decided D-7 (inventory only); changed by R39: the inventory plus the sack amounts of the three corpse keys (REQ-MSA-05)
+- **Q-GS-01** Which storage counts toward "keys the player owns"? → decided D-7 (inventory only); changed by R39: the inventory plus the sack amounts of the three corpse keys [replaced R41]; restored by R41: the inventory only, with a reminder about keys seen in the Dwarven Sack (REQ-MSA-05)
 
 ---
 
@@ -1468,7 +1468,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - Tracer lines from the player to targets; filled block boxes or highlights; entity outlines (owned by glow).
 - See-through rings or beams; any see-through marker on a live entity.
 - Textures, shaders or render types copied from SkyOcean, meowdding-lib or Skyblocker (ARR, attribution-clause or LGPL).
-- Hiding particles; minimaps or radar HUDs; a UI for players to create their own waypoints (not requested).
+- Hiding particles; minimaps or radar HUDs; a UI for players to create their own waypoints (not requested). The fishing-hotspot module hides Hypixel's hotspot ring particles itself (REQ-HOT-14) [decided R41]; the toolkit does not.
 
 **Acceptance criteria**
 - **AC-MARK-01** (REQ-MARK-01, REQ-MARK-03, REQ-MARK-04)
@@ -1644,28 +1644,30 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   *(Brief: item 2 "listing the corpse types found"; Brief ground rule 5; Derived: PLAN §3 P3, research G3 row H, G6 §1, critic)*
 - **REQ-MSA-04** Settling. The first alert must be posted once the widget's corpse list has been non-empty and unchanged for 1.5 s. Expected arrival is 1–5 s after the server switch, and 1–2 s when party-summoned. *(Derived: avoid posting a partial list; research G6 §1, §5)*
-- **REQ-MSA-05** Key mapping and count [decided D-7; changed by R39].
+- **REQ-MSA-05** Key mapping and count [decided D-7; decided R41].
   - Every corpse type present gets a key entry: Tungsten → Tungsten Key (`TUNGSTEN_KEY`), Umber → Umber Key (`UMBER_KEY`), Vanguard → Skeleton Key (`SKELETON_KEY`). Lapis needs no key and gets no entry.
   - Keys are recognised by the SkyBlock item id in the item's custom data, never by display name. Stack sizes are summed.
-  - **Counted [decided R39]:** the player's own inventory, meaning the 36 hotbar + main slots and the offhand slot, read when the message is built, plus the sack amount of that key (`TUNGSTEN_KEY`, `UMBER_KEY`, `SKELETON_KEY`).
-  - **Sack amount [decided R39]:**
-    - It is read only from what the server shows the player: the sack menus the player opens (REQ-GS-06), and "[Sacks]" chat messages whose item detail is readable (REQ-GS-04).
+  - **Counted [decided R41]:** only the player's own inventory, meaning the 36 hotbar + main slots and the offhand slot, read when the message is built.
+  - **Not counted:** sacks (including the Dwarven Sack), ender chest, backpacks, storage, the cursor stack, and slots of any open container. A key held only in the Dwarven Sack does not open a corpse (your correction at the second G3 session [decided R41]).
+  - The entry must say the count is "in inventory".
+  - **Sack reminder [decided R41]:**
+    - When a keyed type is short (REQ-MSA-06) and the mod has seen keys of that type in the Dwarven Sack, the entry adds "(n in your sack: take them out)", where n is the last known sack amount of that key.
+    - The sack amount is read only from what the server shows the player: the Dwarven Mines Sack menu the player opens (REQ-GS-06; its dump title is "Dwarven Mines Sack", and the amount is the item's "Stored" lore line). It is kept current by "[Sacks]" hover lines and by "Moved N <Item> from your Sacks to your inventory." lines, where they are readable (REQ-GS-04).
     - It is kept per SkyBlock profile, with the profile service and its per-profile store (REQ-GS-08, REQ-GS-09).
-    - When the loot line of a keyed corpse arrives and the inventory count of its key did not drop, one key is subtracted from that type's sack amount. When the inventory count did drop, the sack amount stays.
+    - With no sack amount known, nothing is added.
+    - The Skeleton Key fits no sack (NEU `constants/sacks.json`), so its entry never gets the reminder.
+    - Nothing is subtracted when a corpse is looted: a sack key is never used.
     - The mod never opens a menu and never sends anything to read or refresh it (REQ-MSA-10).
-    - The exact sack menu and "[Sacks]" message formats are UNVERIFIED until a capture or research step supplies them.
-  - **Not counted:** ender chest, backpacks, storage, the cursor stack, and slots of any open container.
-  - **Entry text [decided R39]:**
-    - Until a sack amount is known for a type, its entry reads "n in inventory, sack not seen yet" and shows no shortage marker.
-    - With a known sack amount, it reads "n (i inventory + s sack)", where n = i + s, and the shortage marker of REQ-MSA-06 applies to n.
-  - **History:** D-7 counted the inventory only, with a build-constant fallback in case sack keys work. G1 could not test it [decided R24]. At G3 a Tungsten or Umber key held only in the Dwarven Sack opened a corpse [decided R36], so D-7 was put to you again, and R39 replaces the fallback with the sack count above.
+  - **R39 sack count [replaced R41]:** R39 added the sack amount of the three keys to the count ("n (i inventory + s sack)", or "n in inventory, sack not seen yet" without a marker) and subtracted a used key on loot.
+  - **History:** D-7 counted the inventory only, with a build-constant fallback in case sack keys work. G1 could not test it [decided R24]. At G3 a key held only in the Dwarven Sack seemed to open a corpse [decided R36], so R39 counted sack keys. At the second G3 session you corrected this: a key only in the sack does not open a corpse. R41 restores D-7 and replaces the fallback and R39 with the sack reminder above.
 
-  *(Brief: item 2 "how many of the matching keys the player owns"; Derived: Hypixel 0.20.6 "consumes from inventory", PLAN D-7, research G6 §2; review coverage#4; the G3 sack check, R36, R39)*
+  *(Brief: item 2 "how many of the matching keys the player owns"; Derived: Hypixel 0.20.6 "consumes from inventory", PLAN D-7, research G6 §2; review coverage#4; the G3 sack check, R36, R39, R41)*
 - **REQ-MSA-06** Shortage marker.
   - For each keyed type, *keys needed* = the number of that type's corpses in state NOT LOOTED.
-  - If the counted keys (REQ-MSA-05) are fewer than keys needed (including 0 keys), the entry must show the number, the warning sign U+26A0 and red text.
+  - If the inventory count is lower than keys needed (including 0 keys), the entry must show the number, the warning sign U+26A0 and red text [decided R41].
   - Otherwise it shows the number in green with no warning sign.
-  - A type whose sack amount is not known yet never shows the warning sign or red text (REQ-MSA-05) [decided R39].
+  - The sack reminder of REQ-MSA-05 never removes the warning sign or the red text [decided R41].
+  - Was: a type whose sack amount was not known yet showed no warning sign or red text [decided R39] [replaced R41].
 
   *(Derived: purpose of the key count; PLAN T3.2 example)*
 - **REQ-MSA-07** Late corpses (Dead Man's Chest) [decided R7].
@@ -1687,9 +1689,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
     1. shaft name;
     2. corpse counts per type, in the fixed order Lapis, Tungsten, Umber, Vanguard, with types not in the widget omitted;
     3. key entries in the same order, or "no keys needed" when no keyed type is present.
-  - Example, with both sack amounts known as 0: `[KSU] Opal 1 · 1 Lapis, 1 Tungsten, 1 Umber · Tungsten Key: 2 (2 inventory + 0 sack) · Umber Key: 0 (0 inventory + 0 sack) ⚠` [decided R39].
+  - Example: `[KSU] Opal 1 · 1 Lapis, 1 Tungsten, 1 Umber · Tungsten Key: 2 in inventory · Umber Key: 0 in inventory ⚠` [decided R41]. With 3 Umber Keys seen in the Dwarven Sack, the Umber entry reads `Umber Key: 0 in inventory ⚠ (3 in your sack: take them out)` (REQ-MSA-05).
+  - Was: `Tungsten Key: 2 (2 inventory + 0 sack) · Umber Key: 0 (0 inventory + 0 sack) ⚠` [decided R39] [replaced R41].
   - Corpses already LOOTED when the message is built are shown as "(n looted)" after that type's count, e.g. "2 Lapis (1 looted)".
-  - Hovering a key entry should show that keys in the ender chest, backpacks or storage are not counted [decided R39; was: sacks or storage].
+  - Hovering a key entry should show that keys in sacks or storage are not counted [decided R41; R39's "ender chest, backpacks or storage" replaced R41].
 
   *(Brief: item 2 "post a chat alert listing ..."; Derived)*
 - **REQ-MSA-10** Display-only. The feature must never:
@@ -1710,7 +1713,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   *(Derived)*
 
 **Out of scope**
-- Counting keys in the ender chest, backpacks or storage, and any per-profile storage cache (v1) [decided D-7]. Sacks are counted since R39, from what the server shows (REQ-MSA-05); no other sack item is cached.
+- Counting keys in sacks, the ender chest, backpacks or storage, and any per-profile storage cache (v1) [decided D-7; decided R41]. One exception: the Dwarven Sack amounts of the Tungsten and Umber Keys, kept only for the sack reminder (REQ-MSA-05); no other sack item is cached. Was: sacks counted from R39 [replaced R41].
 - Automatic party, guild or all-chat announcements (SkyOcean's default PARTY mode): excluded by ground rule 5. A click-to-fill share button is not in v1 [decided R7].
 - Finding, highlighting or marking corpses or the invisible portal armor stand from entity data.
 - Title, sound, notice (toast) or HUD versions of the alert (the brief asks for a chat alert; REQ-UI-21), and a live key-count HUD.
@@ -1720,9 +1723,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
 **Acceptance criteria**
 - **AC-MSA-01** (REQ-MSA-03, REQ-MSA-05, REQ-MSA-09)
-  - Given: a sanitised widget fixture with ` Lapis: NOT LOOTED`, ` Tungsten: NOT LOOTED`, ` Umber: NOT LOOTED`, sidebar code `OPAL_1`, an inventory of 2 `TUNGSTEN_KEY` and 0 `UMBER_KEY`, and both sack amounts known as 0 [decided R39].
+  - Given: a sanitised widget fixture with ` Lapis: NOT LOOTED`, ` Tungsten: NOT LOOTED`, ` Umber: NOT LOOTED`, sidebar code `OPAL_1`, and an inventory of 2 `TUNGSTEN_KEY` and 0 `UMBER_KEY`; no sack seen [decided R41].
   - When: the message is built.
-  - Then: the line starts with `[KSU] `, and its text after the tag equals `Opal 1 · 1 Lapis, 1 Tungsten, 1 Umber · Tungsten Key: 2 (2 inventory + 0 sack) · Umber Key: 0 (0 inventory + 0 sack) ⚠`.
+  - Then: the line starts with `[KSU] `, and its text after the tag equals `Opal 1 · 1 Lapis, 1 Tungsten, 1 Umber · Tungsten Key: 2 in inventory · Umber Key: 0 in inventory ⚠`.
+  - Was: both sack amounts known as 0, with the text `… Tungsten Key: 2 (2 inventory + 0 sack) · Umber Key: 0 (0 inventory + 0 sack) ⚠` [decided R39] [replaced R41].
   - — [A] (the fixture is replaced by the real G1 capture and is marked UNVERIFIED until then)
 - **AC-MSA-02** (REQ-MSA-02, REQ-GS-17)
   - Given: a table of all 34 known codes inside a sidebar line shaped like `<date> <server> OPAL_1`, plus `ABCD_1`, plus no code line.
@@ -1734,7 +1738,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - When: keys are counted.
   - Then: the Umber count is 6.
   - — [A]
-- **AC-MSA-04** (REQ-MSA-06, REQ-MSA-09). Given each case below, with the sack amount known (Keys = inventory + sack, R39), when the message is built, then:
+- **AC-MSA-04** (REQ-MSA-06, REQ-MSA-09). Given each case below, with Keys = the inventory count [decided R41] (R39's "inventory + sack" [replaced R41]), when the message is built, then:
 
   | Corpses | Keys | Result |
   |---|---|---|
@@ -1784,29 +1788,30 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - When: the alert pipeline runs.
   - Then: there is no crash and no new ERROR line. In-game, the corpse list still appears while those mods restyle the tab list and sidebar.
   - — [D] + [E]
-- **AC-MSA-13** (REQ-MSA-05, REQ-MSA-06) [decided R39]. Given a simulated profile, then:
-  - **(a)** A sack menu fixture listing 3 `UMBER_KEY` and 1 `TUNGSTEN_KEY`, with 1 `UMBER_KEY` in the inventory: the entries read `Umber Key: 4 (1 inventory + 3 sack)` and `Tungsten Key: 1 (0 inventory + 1 sack)`.
-  - **(b)** An Umber loot line while the inventory count stays 1: the Umber sack amount becomes 2.
-  - **(c)** An Umber loot line while the inventory count drops from 1 to 0: the Umber sack amount stays 3.
-  - **(d)** No sack amount seen for Tungsten, 0 `TUNGSTEN_KEY` in the inventory, 1 Tungsten corpse NOT LOOTED: the entry reads `Tungsten Key: 0 in inventory, sack not seen yet`, with no warning sign and no red text.
-  - Was (until R39): the entry read `Umber Key: 0 in inventory (sack keys also work)` with the sack-keys fallback constant switched on.
-  - — [A] (the sack menu and "[Sacks]" fixtures stay UNVERIFIED until a capture replaces them)
+- **AC-MSA-13** (REQ-MSA-05, REQ-MSA-06) [decided R41]. Given a simulated profile, then:
+  - **(a)** A "Dwarven Mines Sack" menu fixture with 3 `UMBER_KEY` stored, 0 `UMBER_KEY` in the inventory and 1 Umber corpse NOT LOOTED: the entry reads `Umber Key: 0 in inventory ⚠ (3 in your sack: take them out)`, with the warning sign and red text.
+  - **(b)** The same shaft with no sack menu seen: the entry reads `Umber Key: 0 in inventory ⚠`, with no reminder.
+  - **(c)** A Vanguard corpse NOT LOOTED and 0 `SKELETON_KEY` in the inventory: the Skeleton Key entry never has a reminder.
+  - **(d)** 1 `UMBER_KEY` in the inventory for 1 Umber corpse NOT LOOTED, with 3 seen in the sack: green, no reminder.
+  - Was (R39) [replaced R41]: a sack menu fixture gave `Umber Key: 4 (1 inventory + 3 sack)`, a loot line lowered the sack amount, and an unseen sack read "sack not seen yet". Was (until R39): `Umber Key: 0 in inventory (sack keys also work)` with the sack-keys fallback constant switched on.
+  - — [A] (the sack menu fixture comes from your "Dwarven Mines Sack" capture, sanitised)
 - **AC-MSA-14** (REQ-MSA-08)
   - Given: the shared widget-hint string of REQ-GS-18 replaced by a test value.
   - When: the missing-widget hint is built.
   - Then: the hint contains the test value. Code review finds no literal `/tablist`, `/widget` or `/widgets` in this module.
   - — [A] + [R]
-- **AC-MSA-15** (REQ-MSA-05) [decided R39]
-  - Given: the user has opened the sack that holds their corpse keys once, then loots a keyed corpse in a shaft using a key from that sack.
-  - When: they enter the next shaft, before opening the sack again.
-  - Then: the alert's sack amount for that key equals what the sack menu shows when opened afterwards, and its inventory amount equals the inventory.
+- **AC-MSA-15** (REQ-MSA-05) [decided R41]
+  - Given: the user has opened the Dwarven Mines Sack once, with Tungsten or Umber Keys stored, and carries fewer keys of that type in the inventory than a shaft's corpses need.
+  - When: they enter that shaft.
+  - Then: the entry shows the shortage marker and the reminder "(n in your sack: take them out)", and n equals what the sack menu shows when opened afterwards.
+  - Was (R39) [replaced R41]: the alert's sack amount after looting with a sack key equals the sack menu.
   - — [E]
 
 **Edge cases**
 - **EC-MSA-01** Party summon or warp into another player's shaft: the alert fires for the joiner (widget filled 1–2 s after arrival). LOOTED reflects the player's own looting, which is per player since Hypixel's Apr 11 2024 fix.
 - **EC-MSA-02** Dead Man's Chest corpse appears after the first alert: one follow-up line (REQ-MSA-07).
-- **EC-MSA-03** 0 keys of a needed type, with the sack amount known: "Key: 0 (0 inventory + 0 sack)" plus the warning sign, in red. It is never hidden. With the sack amount not known yet, the entry reads "0 in inventory, sack not seen yet", with no warning sign [decided R39].
-- **EC-MSA-04** Keys only in the Dwarven Sack: they open a corpse (G3 check [decided R36]) and are counted once the sack amount has been seen (REQ-MSA-05) [decided R39]. Until then the entry says "sack not seen yet". Was: counted as 0 with the warning sign, by design [decided D-7].
+- **EC-MSA-03** 0 keys of a needed type: "Key: 0 in inventory" plus the warning sign, in red. It is never hidden. If keys of that type were seen in the Dwarven Sack, the sack reminder follows (REQ-MSA-05) [decided R41]. Was: "Key: 0 (0 inventory + 0 sack)", or "0 in inventory, sack not seen yet" with no warning sign [decided R39] [replaced R41].
+- **EC-MSA-04** Keys only in the Dwarven Sack: they do not open a corpse (your correction at the second G3 session [decided R41]; the first G3 report, R36, said they do). They are counted as 0 with the warning sign, and the sack reminder tells the player to take them out once the sack amount has been seen [decided R41]. Was: counted once the sack amount had been seen [decided R39] [replaced R41].
 - **EC-MSA-05** Widget disabled, or cut off because the tab list has more than 80 entries (UNVERIFIED): handled by REQ-MSA-08.
 - **EC-MSA-06** Widget header present but no corpse lines after 8 s: "no corpses listed", without the hint (the widget is visible).
 - **EC-MSA-07** Unknown corpse type line (a new type): listed by its raw name after the known types, with no key entry. Logged once per launch.
@@ -1818,19 +1823,19 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-MSA-13** Not on Hypixel SkyBlock (singleplayer or dev run): the feature stays inactive and nothing is logged.
 
 **Open questions**
-- **Q-MSA-01** Should the key count be inventory-only, or include sacks and storage? → decided D-7 (inventory only; asked again only if the sack check triggers the REQ-MSA-05 fallback). The check could not be tested at G1, so D-7 stood and the check moved to G3 [decided R24]. At G3 sack keys opened a corpse [decided R36], D-7 was put to you again, and R39 changes it: inventory plus sacks, with a used key subtracted automatically
+- **Q-MSA-01** Should the key count be inventory-only, or include sacks and storage? → decided D-7 (inventory only; asked again only if the sack check triggers the REQ-MSA-05 fallback). The check could not be tested at G1, so D-7 stood and the check moved to G3 [decided R24]. At G3 sack keys opened a corpse [decided R36], D-7 was put to you again, and R39 changed it: inventory plus sacks, with a used key subtracted automatically [replaced R41]. At the second G3 session you corrected the result: a key only in the sack does not open a corpse. R41 restores D-7 (inventory only) and adds the sack reminder (REQ-MSA-05)
 - **Q-MSA-02** Dead Man's Chest corpses that appear after the first alert: a follow-up line, one delayed message, or editing the earlier line? → decided R7
 - **Q-MSA-03** Should a user-clicked "share" button exist, one that only fills the chat box? → decided R7
 - **Q-MSA-04** Will you run two short in-game checks at G1? → decided R17
   - The widget's default state, and the command and menu path that enable it (`/tablist` vs `/widgets`; becomes the REQ-GS-18 string). → G1 answer [decided R24]: the maintainer believes the widget is on by default and asks for a failsafe that says when it is off; the REQ-MSA-08 hint is that failsafe. The command and menu path were not given, so the hint wording stays UNVERIFIED and is checked at G3. → G3 answer [decided R36]: the widget is enabled with `/widgets`, and the shared hint string names `/widgets`.
-  - Whether a key held only in the Dwarven Sack opens a corpse (decides the REQ-MSA-05 fallback). → G1 answer [decided R24]: not testable at G1. D-7 stands, the fallback is not triggered, and the question stays open for G3. → G3 answer [decided R36]: yes, a Tungsten or Umber key held only in the Dwarven Sack opens a corpse. D-7 was put to you again → R39 (REQ-MSA-05).
+  - Whether a key held only in the Dwarven Sack opens a corpse (decides the REQ-MSA-05 fallback). → G1 answer [decided R24]: not testable at G1. D-7 stands, the fallback is not triggered, and the question stays open for G3. → G3 answer [decided R36]: yes, a Tungsten or Umber key held only in the Dwarven Sack opens a corpse. D-7 was put to you again → R39 (REQ-MSA-05). → Corrected at the second G3 session [decided R41]: no, a key that is only inside the sack does not open a corpse; the R36 answer was a misconception. R41 restores D-7 with a sack reminder.
 
 ---
 
 ### corpse-waypoints — Possible corpse spots (waypoints + list) [reinstated R40]
 **Origin:** Brief Phase 3 item 3 | **Depends on:** world-markers, data-registry, game-state (shaft code and Frozen Corpses state, REQ-GS-17; sound capture, REQ-GS-13), location | **Plan tasks:** T3.3a, T3.3, T3.3b, T7.1, T7.1b (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
-**Status: [reinstated R40].** The maintainer dropped corpse-spot waypoints after G1 (R22, 2026-10-01) and reinstated them after the G3 field checks (R40, 2026-10-15). Every requirement, acceptance criterion, edge case and open question that carried `[dropped R22]` now carries `[reinstated R40]` and keeps its id. R40 also changes the spot data (REQ-CORPSE-01, REQ-CORPSE-09), turns the default ON (REQ-CORPSE-08) and adds the Organ Donor ding hint (REQ-CORPSE-11). The README's excluded-behaviour line "filtering possible corpse spots by entities you cannot see" stays in REQ-REL-03 as an exclusion.
+**Status: [reinstated R40].** The maintainer dropped corpse-spot waypoints after G1 (R22, 2026-10-01) and reinstated them after the G3 field checks (R40, 2026-10-15). Every requirement, acceptance criterion, edge case and open question that carried `[dropped R22]` now carries `[reinstated R40]` and keeps its id. R40 also changes the spot data (REQ-CORPSE-01, REQ-CORPSE-09), turns the default ON (REQ-CORPSE-08) and adds the Organ Donor ding hint (REQ-CORPSE-11), which R41 makes concrete from your sound capture. The README's excluded-behaviour line "filtering possible corpse spots by entities you cannot see" stays in REQ-REL-03 as an exclusion.
 
 **Purpose:** Inside a Glacite Mineshaft, the mod shows every known possible corpse spawn spot for the current shaft layout. The spots appear as in-world waypoints and as a chat list on request. They come only from bundled static data, so the player can search the shaft systematically without the mod ever revealing live corpse entities. When the player's Organ Donor accessory dings, the spots near the player are highlighted (REQ-CORPSE-11).
 
@@ -1910,14 +1915,18 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Any violation fails `./gradlew check`.
 
   *(Derived: REQ-XC-BUILD, data-registry validator)*
-- **REQ-CORPSE-11** Organ Donor ding hint [decided R40].
+- **REQ-CORPSE-11** Organ Donor ding hint [decided R40; decided R41].
   - The Organ Donor accessory (talisman, ring or artifact) plays a "Ding" when the player is within 20 blocks of an unlooted Frozen Corpse (its item lore).
-  - When the mod hears that ding, the spot labels within 20 blocks of the **player's** position read "Possible corpse #n · ding nearby", in a highlight colour, for a hold time after the last ding. All other spots stay as they are.
-  - The ding is identified by its sound id, pitch and source. These come from your sound capture (`/ksu debug dump sounds`, REQ-GS-13) and are UNVERIFIED until then; the only code source says `block.note_block.harp`. The hold time is set from the same capture.
-  - The sound's own position is never used to place, choose or filter a spot.
+  - **The ding [decided R41]:** the sound `block.note_block.harp`, category block, played within 4 blocks of the player's position, while the player is in a Glacite Mineshaft. A harp of another category, a harp more than 4 blocks from the player, and any sound outside a shaft are ignored.
+  - When the mod hears the ding, the spot labels within 20 blocks of the **player's** position read "Possible corpse #n · ding nearby: <warmth>", in a highlight colour. All other spots stay as they are. No spot is singled out.
+  - **Warmth [decided R41]:** from the last ding's pitch: "very close" for pitch ≥ 1.9, "close" for pitch ≥ 1.6, "far" otherwise.
+  - **Hold time [decided R41]:** 2 s after the last ding (dings repeat every 0.55–1.0 s). Then the labels read "Possible corpse #n" again.
+  - The sound's own position is never used to place, choose or filter a spot. It is only checked to be within 4 blocks of the player.
   - The hint has its own toggle "Organ Donor ding hint" on the "Possible corpse spots" card, default ON.
+  - **Your capture (R41):** `/ksu debug dump sounds` with an Organ Donor recorded `minecraft:block.note_block.harp`, category block, volume 1.0, file note/harp2, played at your own position (0–3.5 blocks off, never at the corpse). The pitch rises as you get closer to the nearest unlooted corpse: about 1.05–1.2 at 16–17 blocks, about 1.3–1.5 at 13–14, about 1.73 at 10, about 1.97 within 3. The interval between dings shrinks from about 0.95 s far to about 0.55 s close. After the corpse is looted, the dings move to the next corpse.
+  - Was (R40): the sound id, pitch, source and hold time were UNVERIFIED until your capture.
 
-  *(Derived: R40; the Organ Donor item lore; ground rule 5 via REQ-CORPSE-04)*
+  *(Derived: R40, R41; the Organ Donor item lore; your sound capture; ground rule 5 via REQ-CORPSE-04)*
 
 **Out of scope**
 - Detecting real corpses from armor stands, even after line of sight. Skyblocker already does this, and the brief does not ask for it.
@@ -1991,11 +2000,13 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - When: Skyblocker reports "Found a … Corpse at x, y, z".
   - Then: that position lies within 1.5 blocks of a displayed marker, and `/ksu corpses` lists the same spots.
   - — [E]
-- **AC-CORPSE-11** (REQ-CORPSE-11) [decided R40]. Given a simulated `OPAL_1` with spots near and far from the player, the hint ON and the captured ding values, then:
-  - a ding played at the player's position highlights only the spots within 20 blocks of the player, as "Possible corpse #n · ding nearby", and the highlight clears after the hold time;
-  - a ding whose sound position is far away from the player gives the same result as one at the player (the position is ignored);
-  - a harp sound with another pitch or source changes nothing;
+- **AC-CORPSE-11** (REQ-CORPSE-11) [decided R40; decided R41]. Given a simulated `OPAL_1` with spots near and far from the player and the hint ON, then:
+  - a `block.note_block.harp` of the block category at the player's position with pitch 1.968 labels only the spots within 20 blocks of the player, as "Possible corpse #n · ding nearby: very close";
+  - the same ding with pitch 1.73 gives "close", and with pitch 1.159 "far";
+  - a harp more than 4 blocks from the player, a harp of another category, or a harp outside a shaft changes nothing;
+  - 2 s after the last ding with no new one, the labels read "Possible corpse #n" again;
   - with the hint OFF, a ding changes nothing.
+  - Was (R40): a ding far from the player gave the same result as one at the player.
   - — [A]
 - **AC-CORPSE-12** (REQ-CORPSE-11) [decided R40]
   - Given: a real Glacite Mineshaft, the corpse spots and the ding hint ON, and an Organ Donor in the accessory bag.
@@ -2262,7 +2273,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
 ### fishing-hotspot — Fishing hotspot highlight + "hotspot gone" warning
 
-**Origin:** Brief Phase 3 item 6 (reference: SkyOcean) | **Depends on:** world-markers (depth-tested ring); location (on-SkyBlock signal, island, world/server-change events); config-store + ui-config (toggles); no game-state dependency, because "fishing in" is bobber-based, not catch-based **[decided R9]** | **Plan tasks:** T3.0f, T3.6, T3.6b (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Brief Phase 3 item 6 (reference: SkyOcean) | **Depends on:** world-markers (depth-tested ring); location (on-SkyBlock signal, island, world/server-change events); config-store + ui-config (toggles); no game-state dependency, because "fishing in" is bobber-based, not catch-based **[decided R9]** | **Plan tasks:** T3.0f, T3.6, T3.6b, T3.6c (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
 **Purpose:** Show every active fishing hotspot as a ring on the water or lava surface in the colour of its buff. Warn the player when the hotspot they are fishing in disappears, by title, sound and chat, each configurable. Community data (2026-07) lists hotspots in the Hub (3), Spider's Den (1), The Park (1), Backwater Bayou (2), Jerry's Workshop (2), Lotus Atoll (2), Torrhus Canyon (2) and the Crimson Isle (3, in lava). They appear only after the player has talked to Hattie.
 
@@ -2310,13 +2321,22 @@ The numbers are the research defaults (research-skyocean §(b), research-domain-
   - "Filled area": ON
   - "Hotspot gone warning": ON **[decided D-6]**
   - the four channel toggles from REQ-HOT-10 (title, sound, chat ON; toast OFF **[decided R12]**)
+  - "Hide Hypixel's hotspot particles": ON (REQ-HOT-14) **[decided R41]**
 
   All of them apply live without a restart. Feature names avoid the words banned by P7. *(Brief: Ground rule 6; REQ-XC-TOGGLE)*
 - **REQ-HOT-13** If the particle observation cannot be hooked, the game must still start. Rings then use the fallback radius, and the card shows "radius estimation unavailable". If the entity-based detection cannot run, the whole feature shows as unavailable and logs one warning. *(Derived: PLAN AD-9)*
+- **REQ-HOT-14** Hide Hypixel's hotspot particles **[decided R41]**.
+  - The option "Hide Hypixel's hotspot particles" sits on the Fishing Hotspots card, default ON.
+  - With the module and the option ON, the client does not draw the server's ring particles around a tracked hotspot: pink dust on water islands, smoke on the Crimson Isle (the REQ-HOT-04 filters), within that hotspot's area (REQ-HOT terms).
+  - The particle packets are still received and read by the observer (REQ-HOT-04, REQ-HOT-13), and are never cancelled, delayed or changed. Only the client's creation of those particles is skipped, which is presentation under REQ-XC-RULES-02.
+  - Every other particle draws as before, including particles of the same colour outside a tracked hotspot's area. With the module or the option OFF, nothing is hidden.
+  - If the hook cannot be applied, the game still starts, the option shows as unavailable and the particles draw as before.
+
+  *(Derived: R41, your request after the second G3 session; P5 via REQ-XC-RULES-02; PLAN AD-9)*
 
 **Out of scope**
 - Announcing hotspots to party or public chat, automatically or by a click-to-share button (P5; research recommends leaving it out of v1).
-- Hiding the server's hotspot particles. Packet cancelling is forbidden (P5, PLAN §3), and client-side hiding was not requested.
+- Cancelling, delaying or changing the server's particle packets (P5, PLAN §3). Since R41 the ring particles of a tracked hotspot are hidden on the client only, with the packets untouched (REQ-HOT-14) **[decided R41]**; hiding any other particle stays out of scope. Was: client-side hiding was not requested.
 - See-through rings, sky-high columns, distance labels or waypoints to far-away hotspots, and a hotspot-radar "guesser" (not requested; P1/P4).
 - Lifetime countdowns or "moves in N s" predictions (the lifetime is UNVERIFIED, about 2 or 4 minutes depending on the source).
 - Wormholes, sea-creature or catch tracking, and a hotspot-status HUD element (not requested).
@@ -2334,6 +2354,13 @@ The numbers are the research defaults (research-skyocean §(b), research-domain-
 - **AC-HOT-09** (REQ-HOT-08, REQ-HOT-09, REQ-HOT-10) Given the user fishes in a hotspot until it moves (about 4 min), then exactly one warning appears on the configured channels. Given the user stops fishing and flies more than 40 blocks away, then no warning appears. Given the user warps away while fishing, then no warning appears. The user also records the distance at which the stand disappears when walking away; it must be above 40 blocks, otherwise the warning distance is lowered. — [E] **[decided R17]**
 - **AC-HOT-10** (REQ-HOT-13) Given the production jar with the user's mod set (SkyHanni, Skyblocker and others), when it boots, then the particle observer is applied with no new ERROR lines. If another mod cancels the particle packets, rings still show with the fallback radius. — [D]
 - **AC-HOT-11** (REQ-HOT-12) Given the config screen, when each hotspot toggle is switched, then the ring, fill or warning channel changes within one second without a restart, and the value is saved. — [B]
+- **AC-HOT-12** (REQ-HOT-14) **[decided R41]** Given a forced-SkyBlock gametest with a tracked hotspot and server dust particles sent in its ring, then:
+  - with the option ON, the ring particles are not drawn;
+  - with the option OFF, they are drawn;
+  - in both cases the radius estimate still receives them;
+  - particles of the same colour away from the hotspot's area still draw.
+  - — [C]
+- **AC-HOT-13** (REQ-HOT-14) **[decided R41]** Given the hook's source, when it is reviewed, then no packet is cancelled or changed, and the hook skips only the client's particle creation. — [R]
 
 **Edge cases**
 - **EC-HOT-01** The player walks out of the stand's tracking range within 30 s of fishing → the stand is removed. If the player is more than 40 blocks away, no warning. If Hypixel's tracking range is under 40 blocks, false warnings are possible; AC-HOT-09 measures this and the threshold is adjusted.
@@ -3648,7 +3675,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   - [README part dropped, R34] **Compliance section:**
     - client-side and display-only
     - policies P1–P7 in plain words
-    - the behaviours deliberately not implemented: a glow option for mobs out of line of sight, showing invisible entities, the packet-suppressing drill fix, automatic party chat, particle-packet cancelling, and "filtering possible corpse spots by entities you cannot see" (this line stays after R22 dropped the corpse spots)
+    - the behaviours deliberately not implemented: a glow option for mobs out of line of sight, showing invisible entities, the packet-suppressing drill fix, automatic party chat, particle-packet cancelling (still true after R41: the packets are never cancelled; the "Hide Hypixel's hotspot particles" option only skips drawing the ring particles on the client, REQ-HOT-14), and "filtering possible corpse spots by entities you cannot see" (this line stays after R22 dropped the corpse spots)
   - **Non-affiliation:** the statement that the mod is not affiliated with or endorsed by Hypixel.
   - [README part dropped, R34] **Network access:** every host the mod contacts, when, and the toggle that stops it:
     - `api.github.com` and the GitHub download hosts, for updates
@@ -3919,7 +3946,7 @@ You approved **all plan decisions D-1–D-29 with the recommended option** ("Pla
 |---|---|
 | Rules | D-1 visible-only glow (Render Chest), invisible entities never highlighted, no through-wall option · D-6 defaults policy P1–P7 (below) and the defaults table §12.H |
 | Data & licensing | D-5 MIT data with notices (pinned PR #759 commit, credit); its corpse-spot part (SkyHanni-REPO PR #759 + meowdding spots) was dropped by R22 and is reinstated by R40, now merged with the CC0 ShaftUtils spots; the NEU bestiary and RNG weights stay · D-12 NPC/mob lists bundled only, gists frozen · D-16 (a) wiki = human cross-check; XP and maxima need a non-wiki source; an unverified rate or drop chance may rest on one page you supplied. This overrides the addendum's "fill XP values from the official wiki", which closed on 2026-07-21. No consent request to Weird Gloop. · D-25 delete wiki copies + parsed data after plan approval · D-26 "Phase 3.9 internal database" = shared data registry (T3.0c) · D-28 (i) Claude reads wiki/forum/reddit pages only when you supply them |
-| Features | D-2 split Catacombs / Dungeon Hub · D-3 numeric "Rare Drop Odds", 5 v1 cases (Scatha, Croesus/dungeon chests = relative rarity, Vanguard, Lapis/Umber/Tungsten, Slayer RNG) · D-4 drill hand re-equip fix only, drills only (the fix is dropped by R37) · D-7 corpse keys counted from inventory (changed by R39: inventory plus sacks) · D-15 beam colour = island colour + optional per-NPC override, glow colour separate |
+| Features | D-2 split Catacombs / Dungeon Hub · D-3 numeric "Rare Drop Odds", 5 v1 cases (Scatha, Croesus/dungeon chests = relative rarity, Vanguard, Lapis/Umber/Tungsten, Slayer RNG) · D-4 drill hand re-equip fix only, drills only (the fix is dropped by R37) · D-7 corpse keys counted from inventory (changed by R39: inventory plus sacks; restored by R41: inventory only, with a sack reminder) · D-15 beam colour = island colour + optional per-NPC override, glow colour separate |
 | UI | D-8 no UI library, vanilla font, corners from fills, accent configurable (default teal `#29B6B2`), live-apply + save on close, Cloth Config removed, toasts, T2.9 items as stretch goals |
 | Updater & release | D-9 final 2.0.0 · D-10 repo-local identity `Kesuhi <…noreply…>`, push at checkpoints, merge commit · D-13 early v1.1.0+26.2 after G1, rules warning on old release notes, no 26.1.2 hotfix · D-14 confirm → staged install |
 | Optimizer | D-17 `/sblevels` and component-menu captures — **all at G1** (you moved the "now" capture on 2026-10-01) · D-18 blended research priority · D-19 gross costs · D-20 one keyless AH scan per data update (asks first, aggregates only), no third-party LBIN · D-21 next step per instance · D-22 live Bazaar opt-in, ≤ 1/15 min, instant-buy · D-23 skill: you supply patch notes, `disable-model-invocation: true`, gates, Java data tool, venv for the eval loop · D-24 max level from your capture · D-27 component-menu parsers · D-29 free/waiting group, carries excluded |
@@ -3966,9 +3993,9 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.3 Decisions after G1 — R18–R40
+### 12.3 Decisions after G1 — R18–R41
 
-You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. R25–R35 followed during Phases 2 and 3 (2026-10-03 to 2026-10-10), and R36–R40 after the G3 field checks (2026-10-15). Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 dropped carry `[reinstated R40]` since R40, the items R37 and R38 drop carry `[dropped R37]` or `[dropped R38]`, and all keep their ids.
+You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. R25–R35 followed during Phases 2 and 3 (2026-10-03 to 2026-10-10), R36–R40 after the G3 field checks and R41 after the second G3 field session (2026-10-15). Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 dropped carry `[reinstated R40]` since R40, the items R37 and R38 drop carry `[dropped R37]` or `[dropped R38]`, the requirement changes of R39 that R41 replaces carry `[replaced R41]`, and all keep their ids.
 
 | # | Decision | Recorded in |
 |---|---|---|
@@ -3990,20 +4017,21 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R33 | 2026-10-09: after T2.9–T2.9d, the work on `update/26.2` ships as v1.2.0 (the maintainer: "create a new release with the changes up till then"), an intermediate release in the REQ-REL-14 flow (a PR to `main` merged after the maintainer's approval, then tag and publish after a separate "ship"); its PR summary starts at v1.1.0, which `main` already holds. It includes the waypoint path (T3.0b, T3.0n, T3.4) before T3.4b, superseding R25(b): beams use the island colours, not changeable in game yet, and the R8 colour migration (REQ-NPCWP-09) runs when T3.4b lands, because the stored colours are kept (R31); the [D] parts of AC-NPCWP-11 and AC-MARK-08 run at the release's tier D boot, their [E] parts are known issues (EC-REL-13). Its README is compacted to what 1.2.0 ships: Fabric Language Kotlin required, Cloth Config and "White waypoint labels" gone | REQ-REL-14, AC-REL-12, AC-REL-06, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, R25, REQ-NPCWP-09; PLAN §6 waypoint path, T3.4, T2.12, T2.13, T2.14, G2r |
 | R34 | 2026-10-09, the maintainer: the README's feature list is laid out like the in-game settings menu (categories with their descriptions, cards in screen order, each setting with its default); the screenshot placeholders, the `/ksu debug` commands, the upgrade notes, the fair-play and compliance section and the network-access list are removed from the README. Upgrade notes stay in each release's CHANGELOG section; the README keeps the non-affiliation statement, the requirements, the commands and the licensing | REQ-REL-01, REQ-REL-03, REQ-REL-04, AC-REL-01, AC-REL-02, AC-REL-03 |
 | R35 | 2026-10-10, your answer: G3 runs now, before T3.9b–f. Those five odds cases wait for your wiki pages (Scatha, Lapis/Umber/Tungsten, the Vanguard corpse page with its roll counts and the Frostbitten Dye) and for chat and menu captures (corpse-loot blocks, a Scatha PET DROP line, slayer RNG meter lines, a reward-chest dump), so their acceptance items stay open | Status; PLAN Checkpoint G3, T3.9b–T3.9f |
-| R36 | 2026-10-15, G3 field results. (a) The Frozen Corpses widget is enabled with `/widgets`; the shared widget-hint string names `/widgets` (closes Q-MSA-04 and the [E] part of AC-GS-18). (b) A Tungsten or Umber key held only in the Dwarven Sack opens a corpse, so the REQ-MSA-05 fallback condition is met and D-7 was put to you again (→ R39). (c) Bobber Fix works in water and lava (AC-BOB-04, AC-BOB-05 passed). (d) The mineshaft entry alert and its key counts matched the tab and sidebar dumps (Onyx 1, 3 Lapis): the [E] parts of AC-GS-02, AC-GS-03, AC-GS-07, AC-GS-17, AC-MSA-11 and AC-MSA-12 passed. (e) Hotspot rings did not show on Backwater Bayou, Lotus Atoll or the Crimson Isle: Iris with a shaderpack has no program for vanilla's debug_quads pipeline. Fixed in commit `40910ad`: rings use their own pipeline, given to Iris's basic program (probed with Sodium 0.9.2, Iris 1.11.4 and your shaderpack: no ring before, ring after). The "hotspot gone" warning could not be seen for the same reason. AC-HOT-08, AC-HOT-09 and the ring part of the [E] parts of AC-MARK-08 and AC-NPCWP-11 are re-checked at the next field check. Hypixel's buff text "+5 Trophy Chance" is now recognised. (f) The Croesus chest and one `/sblevels` page were captured with the dumps (the AC-ODDS-13 capture and the AC-GS-06 [E] capture); turning them into fixtures is still to do (T3.10). (g) Not seen, opportunistic: a party summon (AC-MSA-10), the rare-room glow (AC-GLOW-11), Scatha, slayer and Vanguard corpse loot. (h) The waypoint check (the [E] parts of AC-NPCWP-11 and AC-MARK-08) stays open: you asked for a fuller explanation. (i) The 150-marker performance gametest (AC-MARK-06) fails with or without the change while your game runs alongside; it is re-run with the game closed before the push | Status, §10 intro, REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-HOT-02; PLAN G1, T3.0m, T3.2, T3.2c, T3.10, Checkpoint G3 |
+| R36 | 2026-10-15, G3 field results. (a) The Frozen Corpses widget is enabled with `/widgets`; the shared widget-hint string names `/widgets` (closes Q-MSA-04 and the [E] part of AC-GS-18). (b) A Tungsten or Umber key held only in the Dwarven Sack opens a corpse, so the REQ-MSA-05 fallback condition is met and D-7 was put to you again (→ R39). (c) Bobber Fix works in water and lava (AC-BOB-04, AC-BOB-05 passed). (d) The mineshaft entry alert and its key counts matched the tab and sidebar dumps (Onyx 1, 3 Lapis): the [E] parts of AC-GS-02, AC-GS-03, AC-GS-07, AC-GS-17, AC-MSA-11 and AC-MSA-12 passed. (e) Hotspot rings did not show on Backwater Bayou, Lotus Atoll or the Crimson Isle: Iris with a shaderpack has no program for vanilla's debug_quads pipeline. Fixed in commit `40910ad`: rings use their own pipeline, given to Iris's basic program (probed with Sodium 0.9.2, Iris 1.11.4 and your shaderpack: no ring before, ring after). The "hotspot gone" warning could not be seen for the same reason. AC-HOT-08, AC-HOT-09 and the ring part of the [E] parts of AC-MARK-08 and AC-NPCWP-11 are re-checked at the next field check. Hypixel's buff text "+5 Trophy Chance" is now recognised. (f) The Croesus chest and one `/sblevels` page were captured with the dumps (the AC-ODDS-13 capture and the AC-GS-06 [E] capture); turning them into fixtures is still to do (T3.10). (g) Not seen, opportunistic: a party summon (AC-MSA-10), the rare-room glow (AC-GLOW-11), Scatha, slayer and Vanguard corpse loot. (h) The waypoint check (the [E] parts of AC-NPCWP-11 and AC-MARK-08) stays open: you asked for a fuller explanation. (i) The 150-marker performance gametest (AC-MARK-06) fails with or without the change while your game runs alongside; it is re-run with the game closed before the push. (b) is corrected by R41: a key held only in the Dwarven Sack does not open a corpse. The re-checks of (e) and (h) passed at the second session (R41) | Status, §10 intro, REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-HOT-02; PLAN G1, T3.0m, T3.2, T3.2c, T3.10, Checkpoint G3 |
 | R37 | 2026-10-15, at your request: the drill re-equip fix (module drill-fix, T3.7) is removed (commit `792ec9c`): the module, its mixin and hook `drill.refresh`, its card, tests and CHANGELOG entry. Ids are kept and marked dropped. The README and "not implemented" lines about the packet-suppressing drill fix stay (REQ-REL-03) | §1, §2, drill-fix (all ids), REQ-UI-04, §11, §12.1 (D-4), §12.H, §13; PLAN §3, T3.0f, T3.7, G3, "Not built in 2.0.0", §9 (D-4, D-6) |
 | R38 | 2026-10-15, you: "remove them when pulling the list into the jar". The invisible-by-design mobs Ghost, Fels, Sneaky Creeper and Invisibug are left out of the bundled mob table, instead of being listed greyed in the picker (amends R5). A rule that targets one of them still never outlines an invisible mob (REQ-GLOW-03, EC-GLOW-09). The 1.0.x mob gist stays as it is, so the gist removal and its check are dropped | REQ-NPCDB-08, REQ-NPCDB-10, AC-NPCDB-07, AC-NPCDB-09, Q-NPCDB-02, Q-NPCDB-03, EC-GLOW-09, REQ-UI-11, R5, §11; PLAN T3.8, T3.8b, T3.8c, T3.8d, G3, T7.4 |
-| R39 | 2026-10-15, after R36 (b): D-7 changes. Corpse keys are counted in the inventory and in sacks, and a used key is subtracted automatically. The sack amount of `TUNGSTEN_KEY`, `UMBER_KEY` and `SKELETON_KEY` is read only from what the server shows the player (sack menus the player opens, readable "[Sacks]" chat messages), kept per SkyBlock profile, and lowered by one when a keyed corpse is looted and the inventory count did not drop. Until a sack amount is known, the entry reads "n in inventory, sack not seen yet", without a shortage marker; then "n (i inventory + s sack)". The mod never opens a menu or sends anything. The formats are UNVERIFIED until a capture or research step supplies them. This replaces the REQ-MSA-05 build-constant fallback | REQ-MSA-05, REQ-MSA-06, REQ-MSA-09, mineshaft-alert out of scope, AC-MSA-01, AC-MSA-04, AC-MSA-13, AC-MSA-15, EC-MSA-03, EC-MSA-04, Q-MSA-01, game-state out of scope, Q-GS-01, §12.1 (D-7); PLAN T3.0h, T3.2, T3.2b, §9 (D-7) |
-| R40 | 2026-10-15: the possible corpse spots (module corpse-waypoints) are reinstated, reversing R22. The spot table merges SkyHanni-REPO PR #759, meowdding-repo and ShaftUtils into one frame (29 codes, 129 spots; 5 codes without spot data), the markers default ON, and the notices cover all three sources. New: the Organ Donor ding hint (REQ-CORPSE-11) highlights the spots within 20 blocks of the player for a while after the ding, using only the sound and the player's position, and `/ksu debug dump sounds` (REQ-GS-13) captures the ding's sound id, pitch and source, which stay UNVERIFIED until then | corpse-waypoints (all ids), REQ-GS-13, REQ-GS-16, REQ-GS-17, AC-GS-16, AC-GS-19, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §1, §2, §11, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T3.0m, T3.3a, T3.3, T3.3b, T3.3c, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
+| R39 | 2026-10-15, after R36 (b): D-7 changes. Corpse keys are counted in the inventory and in sacks, and a used key is subtracted automatically. The sack amount of `TUNGSTEN_KEY`, `UMBER_KEY` and `SKELETON_KEY` is read only from what the server shows the player (sack menus the player opens, readable "[Sacks]" chat messages), kept per SkyBlock profile, and lowered by one when a keyed corpse is looted and the inventory count did not drop. Until a sack amount is known, the entry reads "n in inventory, sack not seen yet", without a shortage marker; then "n (i inventory + s sack)". The mod never opens a menu or sends anything. The formats are UNVERIFIED until a capture or research step supplies them. This replaces the REQ-MSA-05 build-constant fallback. Replaced by R41 (a): sack keys do not open a corpse, so the count is the inventory again, with a sack reminder | REQ-MSA-05, REQ-MSA-06, REQ-MSA-09, mineshaft-alert out of scope, AC-MSA-01, AC-MSA-04, AC-MSA-13, AC-MSA-15, EC-MSA-03, EC-MSA-04, Q-MSA-01, game-state out of scope, Q-GS-01, §12.1 (D-7); PLAN T3.0h, T3.2, T3.2b, §9 (D-7) |
+| R40 | 2026-10-15: the possible corpse spots (module corpse-waypoints) are reinstated, reversing R22. The spot table merges SkyHanni-REPO PR #759, meowdding-repo and ShaftUtils into one frame (29 codes, 129 spots; 5 codes without spot data), the markers default ON, and the notices cover all three sources. New: the Organ Donor ding hint (REQ-CORPSE-11) highlights the spots within 20 blocks of the player for a while after the ding, using only the sound and the player's position, and `/ksu debug dump sounds` (REQ-GS-13) captures the ding's sound id, pitch and source, which stay UNVERIFIED until then. Captured at the second G3 session, R41 (c) | corpse-waypoints (all ids), REQ-GS-13, REQ-GS-16, REQ-GS-17, AC-GS-16, AC-GS-19, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §1, §2, §11, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T3.0m, T3.3a, T3.3, T3.3b, T3.3c, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
+| R41 | 2026-10-15, after the second G3 field session with the new jar. Field results: hotspot rings show, also with your Iris shaderpack, and the "hotspot gone" warning works (AC-HOT-08, AC-HOT-09 and the ring part of AC-MARK-08 passed); waypoints next to Skyblocker's look fine, shaders on and off (AC-NPCWP-11 and AC-MARK-08 [E] passed); possible corpse spots and `/ksu corpses` work in a real shaft, Littlefoot's Den (AC-CORPSE-10 passed); the Organ Donor ding was captured with `/ksu debug dump sounds`: `minecraft:block.note_block.harp`, category block, volume 1.0, at your own position, with a pitch that rises from about 1.05 at 17 blocks to about 1.97 within 3 blocks of the nearest unlooted corpse and dings every 0.95 s far to 0.55 s close. Correction of R36 (b): a Tungsten or Umber key held only in the Dwarven Sack does not open a corpse. Decisions: (a) D-7 is restored: corpse keys count the inventory only (36 slots + offhand), with the shortage marker. When a keyed type is short and the mod has seen keys of that type in the Dwarven Sack (the Dwarven Mines Sack menu you open, kept current by "[Sacks]" hover lines and "Moved N <Item> from your Sacks to your inventory." lines, per profile), the entry adds "(n in your sack: take them out)". With no sack amount known, nothing is added; the Skeleton Key fits no sack and never gets the reminder; nothing is subtracted on loot. This replaces R39. (b) A new option "Hide Hypixel's hotspot particles" on the Fishing Hotspots card, ON: the ring particles of a tracked hotspot are not drawn on the client; the packets are still received, read by the observer and never changed or cancelled. (c) The ding hint is made concrete: a harp of the block category within 4 blocks of the player, only in a shaft, labels the spots within 20 blocks of the player "Possible corpse #n · ding nearby: <warmth>" ("very close" at pitch ≥ 1.9, "close" at ≥ 1.6, "far" otherwise) until 2 s after the last ding; the sound's position never picks a spot | Status, §2, §10 intro, REQ-GS-13, game-state out of scope, Q-GS-01, world-markers out of scope, REQ-MSA-05, REQ-MSA-06, REQ-MSA-09, mineshaft-alert out of scope, AC-MSA-01, AC-MSA-04, AC-MSA-13, AC-MSA-15, EC-MSA-03, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-CORPSE-11, AC-CORPSE-11, REQ-HOT-12, REQ-HOT-14, AC-HOT-12, AC-HOT-13, fishing-hotspot out of scope, REQ-REL-03, R36, R39, R40, §12.1 (D-7), §12.H, §13; PLAN §3, G1, T3.0h, T3.2, T3.2b, T3.3b, T3.6c, Checkpoint G3, §9 (D-6, D-7) |
 
-### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28, R32, R37 and R40)
+### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28, R32, R37, R40 and R41)
 
 | Feature | Default | | Feature | Default |
 |---|---|---|---|---|
-| Mob Highlighter / NPC Search modules | ON (rules user-added) | | Mineshaft entry alert | ON; key counts ON (inventory + sacks [R39]) |
+| Mob Highlighter / NPC Search modules | ON (rules user-added) | | Mineshaft entry alert | ON; key counts ON (inventory only, with a sack reminder [R41]; R39's inventory + sacks replaced) |
 | Trinity/Tomioka/Duncan glow | your rules (fresh install: none) [R1] | | Possible corpse spots | ON [R40] (was **OFF**); hide when all looted ON [R7]; Organ Donor ding hint ON [R40] |
 | "You found X" title | ON, after line of sight, once per run; only for Trinity, Tomioka, Duncan, Xalx and Pete [R20] | | Bobber fix | ON (own bobber) [R9] |
-| NPC waypoints | ON; beacon beams ON; distance line ON; labels always white [R31] | | Hotspot ring / filled area | ON / ON [R2] |
+| NPC waypoints | ON; beacon beams ON; distance line ON; labels always white [R31] | | Hotspot ring / filled area / hide Hypixel's hotspot particles | ON / ON [R2] / ON [R41] |
 | Fixed-coordinate labels see-through | yes | | Hotspot-gone warning | ON (title + sound + chat) [R2] |
 | Drill re-equip fix | [dropped R37]: no toggle (was ON, drills only) | | Rare Drop Odds | **OFF**; once enabled all cases ON, chat lines ON, rare threshold 2 % |
 | Bestiary HUD | **OFF**; lines when enabled: tier, kills, to next tier, rate, session kills, milestone (when known) ON; to max, ETA OFF; reset on island change OFF [R11] | | Update check / channel | ON (notify) / STABLE |
@@ -4017,10 +4045,10 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 ## 13. Traceability (final)
 
 Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check script that runs both ways (the `Was Req:` and `Was Accept:` bullets of the dropped task T3.7 are excluded; §13.1 and §13.2 show them as "was …"):
-- 386 requirements: 367 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), 2 not built by decision (REQ-ODDS-25, REQ-ODDS-26), and 12 dropped at G3 (REQ-DRILL-01 to REQ-DRILL-12, R37). **None uncovered.**
-- 170 tasks: 169 active and 1 dropped (T3.7, R37). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. This update (R36–R40) added T3.2c, T3.8d, T3.10, T3.3c, T3.2b and T3.3b, made T3.3a and T3.3 active again (R40) and dropped T3.7 (R37).
-- 347 acceptance criteria (withdrawn ones excluded): 341 are each named by a task or a checkpoint, and 6 are dropped (AC-DRILL-01 to AC-DRILL-06, R37). Within AC-NPCDB-09 the second bullet is dropped (R38); the criterion stays.
-- How these numbers were counted (2026-10-15): the requirement and criterion ids are the `- **REQ-…**` and `- **AC-…**` bullets in this file; the tasks are the `**T…**` items in PLAN §7 with their `Req:` and `Accept:` lines and the checkpoint lists. The summary before this update (384 requirements, 152 tasks, 342 criteria) dated from R20–R24 and missed later additions: the files held 385 requirements, 164 tasks and 343 criteria before this update. This update adds 1 requirement (REQ-CORPSE-11), 6 tasks and 4 criteria (AC-GS-19, AC-MSA-15, AC-CORPSE-11, AC-CORPSE-12); R37 moves 12 requirements (8 implemented, 4 not built) and 6 criteria to dropped; R40 moves 10 requirements and 10 criteria from dropped back to active.
+- 387 requirements: 368 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), 2 not built by decision (REQ-ODDS-25, REQ-ODDS-26), and 12 dropped at G3 (REQ-DRILL-01 to REQ-DRILL-12, R37). **None uncovered.**
+- 171 tasks: 170 active and 1 dropped (T3.7, R37). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. The R36–R40 update added T3.2c, T3.8d, T3.10, T3.3c, T3.2b and T3.3b, made T3.3a and T3.3 active again (R40) and dropped T3.7 (R37). R41 adds T3.6c and rescopes T3.2b.
+- 349 acceptance criteria (withdrawn ones excluded): 343 are each named by a task or a checkpoint, and 6 are dropped (AC-DRILL-01 to AC-DRILL-06, R37). Within AC-NPCDB-09 the second bullet is dropped (R38); the criterion stays.
+- How these numbers were counted (2026-10-15): the requirement and criterion ids are the `- **REQ-…**` and `- **AC-…**` bullets in this file; the tasks are the `**T…**` items in PLAN §7 with their `Req:` and `Accept:` lines and the checkpoint lists. The summary before this update (384 requirements, 152 tasks, 342 criteria) dated from R20–R24 and missed later additions: the files held 385 requirements, 164 tasks and 343 criteria before this update. This update adds 1 requirement (REQ-CORPSE-11), 6 tasks and 4 criteria (AC-GS-19, AC-MSA-15, AC-CORPSE-11, AC-CORPSE-12); R37 moves 12 requirements (8 implemented, 4 not built) and 6 criteria to dropped; R40 moves 10 requirements and 10 criteria from dropped back to active. R41 (same day, same method) adds 1 requirement (REQ-HOT-14), 1 task (T3.6c) and 2 criteria (AC-HOT-12, AC-HOT-13); its rewrites of REQ-MSA-05, AC-MSA-13, AC-MSA-15, REQ-CORPSE-11 and AC-CORPSE-11 keep their ids and add nothing.
 
 ### 13.1 Requirement → PLAN tasks, by module
 
@@ -4279,7 +4307,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-BOB-07 | T3.5 |
 | REQ-BOB-08 | T3.0f, T3.5 |
 
-**fishing-hotspot** (13)
+**fishing-hotspot** (14)
 
 | Requirement | PLAN tasks |
 |---|---|
@@ -4294,8 +4322,9 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-HOT-09 | T3.6b |
 | REQ-HOT-10 | T3.6b |
 | REQ-HOT-11 | T3.6b |
-| REQ-HOT-12 | T3.6, T3.6b |
+| REQ-HOT-12 | T3.6, T3.6b, T3.6c |
 | REQ-HOT-13 | T3.0f, T3.6 |
+| REQ-HOT-14 | T3.6c |
 
 **rare-drop-odds** (26)
 
@@ -4637,8 +4666,9 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T3.3c | feat(debug): /ksu debug dump sounds | REQ-GS-13 |
 | T3.3a | feat(data): corpse spot table [brief 3.3] [reinstated R40] | REQ-CORPSE-01, REQ-CORPSE-09, REQ-CORPSE-10, REQ-XC-LICENSE-03 |
 | T3.3 | feat(mining): possible corpse spots [brief 3.3] [reinstated R40] | REQ-CORPSE-02, REQ-CORPSE-03, REQ-CORPSE-04, REQ-CORPSE-05, REQ-CORPSE-06, REQ-CORPSE-07, REQ-CORPSE-08, REQ-GS-16 |
-| T3.2b | feat(mining): corpse keys in sacks | REQ-MSA-05, REQ-MSA-06 |
+| T3.2b | feat(mining): sack reminder for corpse keys | REQ-MSA-05, REQ-MSA-06 |
 | T3.3b | feat(mining): Organ Donor ding hint | REQ-CORPSE-11 |
+| T3.6c | feat(fishing): hide Hypixel's hotspot particles | REQ-HOT-12, REQ-HOT-14 |
 | T3.9b | feat(odds): Scatha case | REQ-ODDS-10, REQ-ODDS-05, REQ-ODDS-13, REQ-ODDS-14, REQ-ODDS-15, REQ-ODDS-16 |
 | T3.9c | feat(odds): Croesus / dungeon reward chest tooltips | REQ-ODDS-17, REQ-ODDS-18, REQ-ODDS-19 |
 | T3.9d | feat(odds): Frozen Corpse odds panel + loot parser, Vanguard | REQ-ODDS-10, REQ-ODDS-05, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22 |
