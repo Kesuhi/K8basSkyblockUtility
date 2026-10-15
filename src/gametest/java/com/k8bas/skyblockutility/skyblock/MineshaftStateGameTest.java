@@ -16,15 +16,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * nothing in a shaft (AC-GS-16, third bullet); with one on it reads the code from the real sidebar and names
  * it from the bundled table, and the corpse widget (absent in singleplayer) reports absent; leaving the shaft
  * clears it (AC-GS-15); and the dev-only `/ksu debug shaft` simulates a shaft for the T3.2 and T3.9d gametests.
- * The mineshaft alert (T3.2) is a consumer that is on by default, so it is switched off for the run.
+ * The mineshaft alert (T3.2) and the possible corpse spots (T3.3) are consumers that are on by default, so both are
+ * switched off for the run.
  */
 public class MineshaftStateGameTest implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
 		AtomicBoolean consumer = new AtomicBoolean(false);
-		Module alert = ModuleManager.modules().stream().filter(module -> module.id().equals("mineshaft_alert")).findFirst().orElseThrow();
-		boolean alertWasOn = context.computeOnClient(client -> alert.isEnabled());
-		context.runOnClient(client -> alert.setEnabled(false));
+		List<Module> consumers = ModuleManager.modules().stream().filter(module -> List.of("mineshaft_alert", "corpse_spots").contains(module.id())).toList();
+		check(consumers.size() == 2, "both default-on consumers found: " + consumers);
+		List<Module> wereOn = context.computeOnClient(client -> consumers.stream().filter(Module::isEnabled).toList());
+		context.runOnClient(client -> consumers.forEach(module -> module.setEnabled(false)));
 		try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
 			singleplayer.getConnection().waitForChunksRender();
 			TestServerContext server = singleplayer.getServer();
@@ -74,7 +76,7 @@ public class MineshaftStateGameTest implements FabricClientGameTest {
 			server.runCommand("team remove k8shaft");
 		} finally {
 			consumer.set(false);
-			context.runOnClient(client -> alert.setEnabled(alertWasOn));
+			context.runOnClient(client -> wereOn.forEach(module -> module.setEnabled(true)));
 		}
 	}
 
