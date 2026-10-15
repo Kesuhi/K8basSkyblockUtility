@@ -1374,19 +1374,19 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - New from this round: spots are ruled out by the ding's silence (R44 (b), T3.3e); its field check AC-CORPSE-15 comes at the next field check.
   - **Still open (after R44):**
     - the opportunistic items: a party summon (AC-MSA-10) and the rare-room glow (AC-GLOW-11) (Scatha, slayer and a Vanguard corpse were here; dropped, R42);
-    - the push and CI item below.
   - Closed (2026-10-15, your fifth round with the jar at `e3a19b3`): the rule-out check AC-CORPSE-15 [E] for T3.3e passed ("All worked").
   - Closed by R44: the sack-reminder check AC-MSA-15 with the "[Take out k]" button, the ding check AC-CORPSE-12 on the "Corpse ding" HUD element, and the privacy check AC-GS-12 [E].
 - [dropped R38] *(the mob gist stays as it is)* you have removed Ghost, Fels, Sneaky Creeper and Invisibug from the 1.0.x mob gist (any time before this, e.g. together with T0.5); Claude checks that the raw URL still parses (AC-NPCDB-09 pre-check)
-- [ ] every commit since G2, including fixture commits from the G3 captures, builds in a worktree (AC-XC-05); then push `update/26.2` (D-10 checkpoint push); CI green on the pushed head
+- [x] every commit since G2, including fixture commits from the G3 captures, builds in a worktree (AC-XC-05); then push `update/26.2` (D-10 checkpoint push); CI green on the pushed head
   - So far (2026-10-15): all 26 commits from `b92bbfd` to `10ddc84` build alone, with conforming subjects and noreply authors. Run again over the G3 commits before the push.
   - Again (2026-10-15, R44): all 50 commits from `b92bbfd` to `fbb0c56` (the head at the time of the check) build alone, with conforming subjects, the noreply author and the co-author line (AC-XC-05). Commits after `fbb0c56` are checked again before the push. The push itself, and CI on the pushed head, wait for your "push".
-- [ ] Phase 3 report:
+  - Done (2026-10-15, your "push"): the 3 commits after `fbb0c56` (two docs, T3.3e built and tested as committed) checked; all 52 since `b92bbfd` carry the noreply author and the co-author line, no token or helioq address. Pushed as a fast-forward `b92bbfd..5978261` from the Kesuhi account, hooks on; CI run 38767609624 (build) green on `5978261`. The local `backup/before-rewrite-g3` branch is deleted.
+- [x] Phase 3 report:
   - opportunistic criteria not yet seen (§11)
   - UNVERIFIED fixtures (REQ-GS-14)
   - the sack-key result from the G3 check (REQ-MSA-05; not testable at G1, R24): sack keys work (R36), so R39 counts them (T3.2b). Corrected at the second session (R41): they do not open a corpse, so the count stays the inventory, with a sack reminder (T3.2b)
   - the CHANGELOG entry for each feature
-  - Draft (2026-10-15), to complete after your field checks:
+  - Delivered (2026-10-15, after the push); the opportunistic AC-MSA-10 and AC-GLOW-11 stay open, not blocking Phase 4:
     - **Built:**
       - game-state readers, the data registry, profile service and menu reader (T3.0a–T3.0n);
       - the NPC and mob lists bundled (T3.8–T3.8c), the dungeon NPC name lines (T3.1);
