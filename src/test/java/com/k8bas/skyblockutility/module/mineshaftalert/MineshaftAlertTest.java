@@ -161,7 +161,7 @@ class MineshaftAlertTest {
 		sack.menu(new MenuSnapshot("Dwarven Mines Sack", 58, 36, List.of(new MenuSlot(22, "minecraft:paper", 1, "Tungsten Key",
 				List.of("Dwarven Mines Sack", "", "Stored: 3/22.2k"), "TUNGSTEN_KEY"))));
 		Component line = MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false), corpse("Umber", false)), InventoryCounts.EMPTY, true, sack);
-		assertEquals("Tungsten 1 · 1 Tungsten, 1 Umber · Tungsten Key: 0 in inventory ⚠ (3 in your sack: take them out) · Umber Key: 0 in inventory ⚠",
+		assertEquals("Tungsten 1 · 1 Tungsten, 1 Umber · Tungsten Key: 0 in inventory ⚠ (3 in your sack: take them out) [Take out 1] · Umber Key: 0 in inventory ⚠",
 				text(line), "a known 0 in the sack adds nothing");
 		assertEquals(TextColor.fromLegacyFormat(ChatFormatting.RED), countColour(line), "the reminder keeps the shortage marker");
 		// No sack seen yet: no reminder.
@@ -179,6 +179,51 @@ class MineshaftAlertTest {
 		// The Skeleton Key fits no sack: never a reminder.
 		assertEquals("Vanguard · 1 Vanguard · Skeleton Key: 0 in inventory ⚠",
 				text(MineshaftAlertText.alert("Vanguard", List.of(corpse("Vanguard", false)), InventoryCounts.EMPTY, true, sack)));
+	}
+
+	@Test
+	void theTakeOutButtonRunsGetFromSacksForWhatIsMissing() {
+		// AC-MSA-13 (R43 (c)): k = keys needed - keys in the inventory, at most what the sack holds.
+		SackKeys sack = new SackKeys();
+		sack.menu(new MenuSnapshot("Dwarven Mines Sack", 58, 36, List.of(new MenuSlot(22, "minecraft:paper", 1, "Tungsten Key",
+				List.of("Dwarven Mines Sack", "", "Stored: 5/22.2k"), "TUNGSTEN_KEY"))));
+		Component two = MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false), corpse("Tungsten", false)), InventoryCounts.EMPTY, true, sack);
+		assertEquals(List.of("getfromsacks Tungsten Key 2"), commands(two), "2 corpses, none in the inventory, 5 in the sack");
+		assertTrue(text(two).endsWith("(5 in your sack: take them out) [Take out 2]"), text(two));
+		List<SlotItem> own = new ArrayList<>(List.of(new SlotItem("TUNGSTEN_KEY", 1)));
+		while (own.size() < InventoryCounts.SLOTS) {
+			own.add(SlotItem.EMPTY);
+		}
+		Component one = MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false), corpse("Tungsten", false)), InventoryCounts.of(own), true, sack);
+		assertEquals(List.of("getfromsacks Tungsten Key 1"), commands(one), "1 in the inventory: 1 more");
+		sack.menu(new MenuSnapshot("Dwarven Mines Sack", 58, 36, List.of(new MenuSlot(22, "minecraft:paper", 1, "Tungsten Key",
+				List.of("Dwarven Mines Sack", "", "Stored: 1/22.2k"), "TUNGSTEN_KEY"))));
+		assertEquals(List.of("getfromsacks Tungsten Key 1"), commands(MineshaftAlertText.alert("Tungsten 1",
+				List.of(corpse("Tungsten", false), corpse("Tungsten", false)), InventoryCounts.EMPTY, true, sack)), "at most what the sack holds");
+		assertEquals(List.of(), commands(MineshaftAlertText.alert("Tungsten 1", List.of(corpse("Tungsten", false)), InventoryCounts.of(own), true, sack)),
+				"not short: no button");
+		assertEquals(List.of("getfromsacks Umber Key 3"), commands(MineshaftAlertText.takeOutButton("Umber Key", 3)));
+		// Its hover names the command a click runs (AC-XC-13, AC-MSA-13 (e)).
+		List<String> hovers = new ArrayList<>();
+		two.visit((style, part) -> {
+			if (style.getClickEvent() != null && style.getHoverEvent() instanceof HoverEvent.ShowText show) {
+				hovers.add(show.value().getString());
+			}
+			return java.util.Optional.empty();
+		}, net.minecraft.network.chat.Style.EMPTY);
+		assertEquals(List.of("Click to run /getfromsacks Tungsten Key 2"), hovers);
+	}
+
+	/** Every click command in [line], in order, each time it occurs (a doubled button shows twice). */
+	private static List<String> commands(Component line) {
+		List<String> commands = new ArrayList<>();
+		line.visit((style, part) -> {
+			if (style.getClickEvent() instanceof net.minecraft.network.chat.ClickEvent.RunCommand run) {
+				commands.add(run.command());
+			}
+			return java.util.Optional.empty();
+		}, net.minecraft.network.chat.Style.EMPTY);
+		return commands;
 	}
 
 	@Test
