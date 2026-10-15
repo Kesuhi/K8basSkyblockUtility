@@ -6,6 +6,47 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-10-15
+
+This release brings helpers for mining in Glacite Mineshafts (an entry alert with your corpse keys,
+possible corpse spots and an Organ Donor ding hint) and for fishing (hotspot rings with a warning when
+yours disappears, and a smoother bobber), and beam colours you can change.
+
+**Requirements:** Minecraft 26.2 (Fabric) with Java 25, Fabric Loader 0.19.5 or newer, Fabric API
+0.161.0 or newer, Fabric Language Kotlin 1.14.1 or newer and Hypixel Mod API 1.0.2 or newer (its
+build labelled `mc26.1` also runs on 26.2), the same as for 1.2.0. Render Chest 1.0.3 is bundled.
+Mod Menu is optional.
+
+**Upgrading from 1.2.0:**
+- Install this version by hand: 1.2.0's update check only notifies. Replace
+  `k8bas_skyblock_utility-1.2.0+26.2.jar` with `k8bas_skyblock_utility-1.2.1+26.2.jar` and restart.
+  No other mod needs to change.
+- Your settings, rules and keybinds are kept. The new features start ON (see the defaults below);
+  they live in the new Mining and Fishing categories of the settings, where each can be turned off.
+- On the first start, a fixed NPC whose colour from 1.0.x or 1.1.0 was not the default green gets
+  that colour back as its beam colour. "Use island colour" on its card undoes it.
+- What behaves differently (details under "Changed"): the NPC and mob lists ship inside the mod and
+  are no longer downloaded; the hidden Jerries have their own "Hidden Jerries" folder; Ghost, Fels,
+  Sneaky Creeper and Invisibug are no longer in the mob list; the pickers no longer offer an entry
+  you already made a rule for yourself; a rule whose list entry is gone shows all its fields.
+- If you go back to 1.2.0 later, it first copies the newer settings file to a `.bak` file and tells
+  you in chat.
+
+**Defaults in this version:**
+- Mineshaft entry alert (Mining): ON. Show corpse key counts: ON.
+- Possible corpse spots (Mining): ON. Hide spots when all corpses are looted: ON. Organ Donor ding
+  hint: ON, with its "Corpse ding" HUD line at the top centre, below the boss bar. Remove ruled-out
+  spots: ON.
+- Bobber Fix (Fishing): ON.
+- Fishing Hotspots (Fishing): ON. Highlight ring: ON. Filled area: ON. Fill opacity: 25 % (0–100 %).
+  Hide Hypixel's hotspot particles: ON.
+- Hotspot gone warning: ON. Warning title: ON. Warning sound: ON, with Sound "Note block pling" at
+  Sound volume 100 %. Warning chat message: ON. Also show as a notice: OFF.
+- Island beam colours: each island's own, as in 1.2.0 (for example red on the Crimson Isle), and
+  green `#0AA351` for a waypoint shown on every island. A fixed NPC's beam follows its island's
+  colour until you give it its own (or it kept one from 1.0.x or 1.1.0, see above).
+- Every option that 1.2.0 had keeps its 1.2.0 default.
+
 ### Added
 
 - Mineshaft entry alert (Mining, ON by default): when you enter a Glacite Mineshaft, one chat line
@@ -20,7 +61,7 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   part off.
 - Possible corpse spots (Mining, ON by default): in a Glacite Mineshaft, a "Possible corpse #n"
   label at every place a frozen corpse can spawn in that layout (spots are known for 29 of the 34
-  shaft types), visible through walls. These are known spawn spots from community data
+  shaft types), shown even behind blocks. These are known spawn spots from community data
   (SkyHanni-REPO, meowdding-repo, ShaftUtils), not detected corpses. "Hide spots when all corpses are
   looted" (ON) removes them once the Frozen Corpses tab widget lists every corpse as looted. `/ksu
   corpses` lists the spots by distance. With an Organ Donor accessory, a "Corpse ding" HUD line
@@ -37,6 +78,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   drawn changes; the server still decides bites and catches. Other players' bobbers and other
   servers are unchanged. If a game update or another mod blocks it, the game still starts and the
   card says it is unavailable. Thanks to SkyOcean for finding the cause.
+- `/ksu corpses` is a command now: text after `/ksu` that starts with `corpses` runs it instead of
+  searching the settings; search `corpse` to find the corpse settings.
+- `/ksu debug data`: lists the data tables bundled in the mod and their versions, in chat only.
 - `/ksu debug dump sounds on|off`: for 10 minutes, every sound the game plays is written to the log
   with its name, place, volume and pitch, to identify sounds such as the Organ Donor ding. It only
   listens; no sound is changed and nothing is sent.
@@ -61,7 +105,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   default green keep their island's colour. "Use island colour" on its card undoes it.
 - The NPC and mob lists for "Add from database" now ship inside the mod. They are no longer
   downloaded at start, so both pickers work offline and on the first launch, and the mod makes no
-  request to GitHub gists any more. Their content is the same as the lists 1.2.0 downloaded.
+  request to GitHub gists any more. Apart from the corrections in this section (merged duplicates,
+  updated positions, the Hidden Jerries folder, the mineshaft entries and the removed invisible mobs),
+  they hold the same entries as the lists 1.2.0 downloaded.
 - The four hidden Jerries (Blue, Green, Purple and Golden Jerry) are now in a mob folder called
   "Hidden Jerries" instead of "Jerry", which is also the name of Jerry's Workshop. Rules you made
   from them keep working on every island.
