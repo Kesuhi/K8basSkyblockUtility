@@ -18,12 +18,16 @@ public final class CaptureAllowlist {
 			"Your Skills", "Skills", "Collections", "Collection", "Your Museum", "Museum",
 			"Heart of the Mountain", "Heart of the Forest", "Pets", "Accessory Bag",
 			// bestiary and dungeon rewards
-			"Bestiary", "Croesus");
+			"Bestiary", "Croesus",
+			// the sack overview (T3.2b, R39)
+			"Sacks");
 	/** "<parent> ➜ <page>", only for leveling parents, the task menus and the bestiary. */
 	private static final Pattern SUBMENU = Pattern.compile(
 			"(Tasks|Core|Event|Dungeon|Essence Shop|Slaying|Mining|Farming|Fishing|Foraging|Miscellaneous|Story|Complete Dungeons|Bestiary) ➜ .+");
 	private static final Pattern RNG_METER = Pattern.compile(".+ RNG Meter");
 	private static final Pattern REWARD_CHEST = Pattern.compile("(Wood|Gold|Diamond|Emerald|Obsidian|Bedrock) Chest");
+	/** One sack, e.g. "Dwarven Sack" (T3.2b, R39; UNVERIFIED until captured). */
+	private static final Pattern SACK = Pattern.compile("[A-Za-z' ]+ Sack");
 	private static final Pattern FLOOR = Pattern.compile("(Master Mode )?(The )?Catacombs - Floor [IVX]+");
 	private static final Pattern PAGE = Pattern.compile("^\\(\\d+/\\d+\\)\\s*|\\s*\\(\\d+/\\d+\\)$");
 
@@ -33,7 +37,7 @@ public final class CaptureAllowlist {
 	public static boolean matches(String rawTitle) {
 		String title = normalise(rawTitle);
 		return EXACT.contains(title) || SUBMENU.matcher(title).matches() || RNG_METER.matcher(title).matches()
-				|| REWARD_CHEST.matcher(title).matches() || FLOOR.matcher(title).matches();
+				|| REWARD_CHEST.matcher(title).matches() || FLOOR.matcher(title).matches() || SACK.matcher(title).matches();
 	}
 
 	static String normalise(String rawTitle) {

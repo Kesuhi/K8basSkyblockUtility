@@ -23,6 +23,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   drawn changes; the server still decides bites and catches. Other players' bobbers and other
   servers are unchanged. If a game update or another mod blocks it, the game still starts and the
   card says it is unavailable. Thanks to SkyOcean for finding the cause.
+- `/ksu debug dump sounds on|off`: for 10 minutes, every sound the game plays is written to the log
+  with its name, place, volume and pitch, to identify sounds such as the Organ Donor ding. It only
+  listens; no sound is changed and nothing is sent.
 - Fishing Hotspots (Fishing, ON by default): on every SkyBlock island, each fishing hotspot whose
   name you can see gets a ring on the water or lava in its buff's colour (Sea Creature Chance dark
   aqua, Fishing Speed aqua, Double Hook Chance blue, Treasure and Trophy Fish gold, Shards yellow),

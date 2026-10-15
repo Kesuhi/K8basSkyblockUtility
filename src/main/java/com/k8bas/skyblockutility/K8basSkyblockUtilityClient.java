@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.data.BundledData;
 import com.k8bas.skyblockutility.debug.ContainerDump;
 import com.k8bas.skyblockutility.debug.DebugCommand;
+import com.k8bas.skyblockutility.debug.SoundDump;
 import com.k8bas.skyblockutility.hook.HookStatus;
 import com.k8bas.skyblockutility.highlight.GlowHandler;
 import com.k8bas.skyblockutility.highlight.HighlightManager;
@@ -87,6 +88,7 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		SettingsCommand.register();
 		DebugCommand.register();
 		ContainerDump.register();
+		SoundDump.register();
 		Updates.register();
 		NoticeHooks.register();
 		ShippedHud.register();

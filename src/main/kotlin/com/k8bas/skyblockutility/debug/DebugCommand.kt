@@ -28,7 +28,8 @@ import java.util.stream.Collectors
  *   builds (REQ-LOC-08).
  * - `debug dump tab|sidebar|entities` writes what the client currently shows to latest.log,
  *   one `[K8BAS-DUMP]` line each, for parser fixtures (REQ-GS-13). `debug dump containers
- *   on|off` arms the menu capture (ContainerDump). All of them ship in production, only read,
+ *   on|off` arms the menu capture (ContainerDump), `debug dump sounds on|off` the sound capture
+ *   (SoundDump). All of them ship in production, only read,
  *   and write nothing unless the player runs them (REQ-GS-12).
  */
 object DebugCommand {
@@ -54,7 +55,7 @@ object DebugCommand {
 					.then(ClientCommands.literal("data").executes { showData() })
 					.then(
 						ClientCommands.literal("dump")
-							.executes { usage(it.source, root, "debug dump <tab|sidebar|entities|containers>") }
+							.executes { usage(it.source, root, "debug dump <tab|sidebar|entities|containers|sounds>") }
 							.then(ClientCommands.literal("tab").executes { report("tab", dumpTab()) })
 							.then(ClientCommands.literal("sidebar").executes { report("sidebar", dumpSidebar()) })
 							.then(ClientCommands.literal("entities").executes { report("entities", dumpEntities()) })
@@ -70,6 +71,22 @@ object DebugCommand {
 									.then(
 										ClientCommands.literal("off").executes {
 											ContainerDump.disarm()
+											1
+										},
+									),
+							)
+							.then(
+								ClientCommands.literal("sounds")
+									.executes { usage(it.source, root, "debug dump sounds <on|off>") }
+									.then(
+										ClientCommands.literal("on").executes {
+											SoundDump.arm()
+											1
+										},
+									)
+									.then(
+										ClientCommands.literal("off").executes {
+											SoundDump.disarm()
 											1
 										},
 									),

@@ -38,6 +38,16 @@ class CaptureAllowlistTest {
 	}
 
 	@Test
+	void sackMenusMatch() {
+		// The corpse keys in sacks (T3.2b, R39): the sack overview and each sack, titles UNVERIFIED until captured.
+		for (String title : new String[]{"Sacks", "Dwarven Sack", "Mining Sack", "Enchanted Mining Sack", "Large Dwarven Sack"}) {
+			assertTrue(CaptureAllowlist.matches(title), title);
+		}
+		assertFalse(CaptureAllowlist.matches("Sack of Sacks ➜ Upgrades"));
+		assertFalse(CaptureAllowlist.matches("Backpack"));
+	}
+
+	@Test
 	void unrelatedMenusDoNotMatch() {
 		for (String title : new String[]{"Auction House", "Bazaar", "Your Bank", "Ender Chest", "SkyBlock Menu", "Trades", ""}) {
 			assertFalse(CaptureAllowlist.matches(title), title);
