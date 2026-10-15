@@ -48,10 +48,6 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   its own switch; a notice can be added. It only counts a hotspot your bobber was in during the
   last 30 seconds while you are within 40 blocks, so leaving the island or flying away is not a
   warning. Only you see or hear it.
-- Rare Drop Odds (Odds & Trackers, OFF by default): the odds behind rare drops, with a switch for
-  each case (Scatha, dungeon reward chests, Vanguard corpses, Lapis/Umber/Tungsten corpses, the
-  slayer RNG meter), local chat lines on a rare drop, a rare threshold and "Reset odds counters".
-  Counts are kept per SkyBlock profile and only cover what the mod saw while running.
 
 ### Changed
 

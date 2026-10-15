@@ -281,7 +281,7 @@ class DataValidatorTest {
 
 	@Test
 	void dottedTableIdsAreValidAndTheirReferencesChecked() throws IOException {
-		// Planned ids such as ref.skills and odds.supplied.
+		// Planned ids such as ref.skills.
 		for (String file : List.of("test/islands.json", "test/npcs.json")) {
 			edit(file, text -> text.replace("test_islands", "ref.islands"));
 		}

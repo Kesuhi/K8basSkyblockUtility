@@ -8,7 +8,7 @@ import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 
 /**
- * The mineshaft state the mineshaft alert and Rare Drop Odds read (T3.0m, REQ-GS-17); those features never
+ * The mineshaft state the mineshaft alert and the possible corpse spots read (T3.0m, REQ-GS-17); those features never
  * parse the shaft code or the corpse list themselves. It works only while one of its consumers is active
  * and the player is in a Glacite Mineshaft: only then are the tab and sidebar readers wanted, so with every
  * consumer off nothing is read or stored (REQ-GS-16). The code's display name comes from the bundled

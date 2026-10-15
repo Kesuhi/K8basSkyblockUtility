@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, R25 after T3.4 and R26–R35 during Phases 2 and 3, see SPEC §12.3; R35 runs G3 before T3.9b–f; R36 records the G3 field results; R37 drops the drill re-equip fix, T3.7; R38 leaves the four invisible-by-design mobs out of the bundled mob table; R39 counted corpse keys in sacks too (D-7 changed, T3.2b); R40 reinstates the possible corpse spots, T3.3a and T3.3, which R22 had dropped, and adds T3.3b and T3.3c; R41 records the second G3 field session: a key only in the sack does not open a corpse, so D-7 is restored with a sack reminder (R39 replaced, T3.2b rescoped), Hypixel's hotspot particles are hidden on the client (T3.6c), and the ding hint is made concrete from your capture (T3.3b)). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped T3.7 keeps its ids as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
+| Status | **Approved on 2026-10-01**, together with `SPEC.md`. All decisions are made (D-1–D-29 and the spec questions R1–R17 as recommended, except R10 = b; the D-17 captures moved to G1; R18 and R19 decided after the G1 review; R20–R24 decided after the G1 smoke, R25 after T3.4 and R26–R35 during Phases 2 and 3, see SPEC §12.3; R35 runs G3 before T3.9b–f; R36 records the G3 field results; R37 drops the drill re-equip fix, T3.7; R38 leaves the four invisible-by-design mobs out of the bundled mob table; R39 counted corpse keys in sacks too (D-7 changed, T3.2b); R40 reinstates the possible corpse spots, T3.3a and T3.3, which R22 had dropped, and adds T3.3b and T3.3c; R41 records the second G3 field session: a key only in the sack does not open a corpse, so D-7 is restored with a sack reminder (R39 replaced, T3.2b rescoped), Hypixel's hotspot particles are hidden on the client (T3.6c), and the ding hint is made concrete from your capture (T3.3b); R42 drops the Rare Drop Odds feature: T3.9b–f are dropped, and the built T3.9a, T3.9g and T3.9h are removed from the code). **Every active task in §7 names the SPEC requirement ids it implements (`Req:`) and the acceptance criteria it proves (`Accept:`).** The dropped tasks T3.7 and T3.9a–T3.9h keep their ids as `Was Req:` / `Was Accept:`. Work follows §7 in order; ticked boxes mark finished tasks. The optimizer is Phase 6 and the release Phase 7; the data schema draft is in `docs/sbxp/` (§10). |
 | Date | 2026-10-01 |
 | Branch | `update/26.2` (from `main` @ `bc0f2f6`, v1.0.1) |
 | Baseline | `./gradlew build` on `main` is green (26.1.2) |
@@ -91,13 +91,13 @@ This repo is **CC0-1.0**. Copying LGPL code into it is incompatible, because tha
 
 | Project | License (verified) | Outcome |
 |---|---|---|
-| **SkyOcean** (meowdding) | Custom "SkyOcean License v1": `.java/.kt/.kts`, shaders, `src/repo/**`, `buildSrc/**` = **MIT**; everything else (textures, sounds, lang, post-effects) = **All Rights Reserved** | Bobber fix, hotspot logic and mineshaft alert **reimplemented** from the described behaviour. One MIT data file, `src/repo/vanguard.jsonc` (Vanguard loot weights), is bundled with a notice, with its "assumed" dye weight replaced (R6). No ARR assets touched. Courtesy credit in README. Not ported: automatic `/pc` chat sends and particle-*packet* cancelling (§3). |
+| **SkyOcean** (meowdding) | Custom "SkyOcean License v1": `.java/.kt/.kts`, shaders, `src/repo/**`, `buildSrc/**` = **MIT**; everything else (textures, sounds, lang, post-effects) = **All Rights Reserved** | Bobber fix, hotspot logic and mineshaft alert **reimplemented** from the described behaviour. One MIT data file, `src/repo/vanguard.jsonc` (Vanguard loot weights), was bundled with a notice, with its "assumed" dye weight replaced (R6); R42 removed it with the odds, so no SkyOcean material is bundled any more. Its notice section stays only for the Bobber Fix approach credit, and `licenses/skyocean.txt` is gone from the jar and the repo. No ARR assets touched. Courtesy credit in README. Not ported: automatic `/pc` chat sends and particle-*packet* cancelling (§3). |
 | **Skyblocker** | **LGPL-3.0** | **Behaviour study only** (waypoint look, corpse key mapping). Zero code copied. |
 | **AlpakaAddons** | **No LICENSE file** (GitHub: none; `fabric.mod.json` claims "MIT" with no text or notice, which is ambiguous) | Treated as **all rights reserved**. UI rebuilt from a written spec in our own words. No code, shaders, textures, fonts, logo or sounds copied. |
 | **Hot-Shirtless-Men** (Rekteiru) | **MIT** © 2024 Rekteiru | Only the visual half (A) is relevant; it is **reimplemented** (`ItemStack.matchesIgnoringComponents` plus a SkyBlock uuid check), so no notice is required. Courtesy credit. |
 | Render Chest (AzureAaron) | **Apache-2.0** | Proposed **dependency**, JiJ via Loom `include` as its README asks, for depth-tested glow (D-1). Its LICENCE ships inside its jar. Same version Skyblocker and SkyHanni bundle. |
 | Cloth Config | LGPL-3.0 (dependency, not copied) | Removed in Phase 2. `ButtonEntry`/`LiveTextFieldEntry` say they were "modeled directly on Cloth Config's … source"; they are deleted in the UI rebuild, which removes any provenance doubt. |
-| NEU-REPO (Moulberry) | MIT © 2020 Moulberry | Proposed: bundle trimmed `bestiary.json` and `rngscore.json` data with notice (D-5) |
+| NEU-REPO (Moulberry) | MIT © 2020 Moulberry | Proposed: bundle trimmed `bestiary.json` and `rngscore.json` data with notice (D-5). `rngscore.json` was bundled for the odds and is removed with them (R42); the notice now covers only the NPC list (T3.8) |
 | Corpse-spot data | **SkyHanni-REPO PR #759: open and unmerged**, from contributor fork `GrowlingGrizzly/SkyHanni-REPO` @ `e2c8edb932`; MIT © 2022 hannibal2 per the fork's LICENSE. **meowdding-repo**: MIT © 2026 meowdding. | **[reinstated R40]** (dropped after G1 by R22): one merged table (29 shaft codes, 129 spots) from three sources: PR #759 @ `e2c8edb93240b0852d9b42e614f3c80a5476916c`; meowdding-repo `repo/mining/mineshaft_corpses/` pinned at `20524eb3255da52653957dfd39b22a02e56b82ad` (data unchanged since `42d01278a8`; its MIT LICENSE is present at the pin); ShaftUtils (DeveloperGr3y/ShaftUtils, CC0-1.0) `corpse_spawns.json` @ `c9a38786f61533e63d9fef20f320c70b02072c4f` (105 spots, credit Michelzz). Notices for all three, credit to GrowlingGrizzly, licence files `licenses/skyhanni-repo.txt` and `licenses/meowdding-repo.txt` (SPEC REQ-CORPSE-01, REQ-CORPSE-09). |
 | Hypixel wikis | Community wiki CC BY-NC-SA 3.0 (host Weird Gloop: Terms forbid automated use without consent; `robots.txt` blocks `api.php` and Claude's crawlers); Fandom CC BY-SA (Terms forbid automated access) | **Human cross-check only.** No scripted extraction and no runtime fetch. A page is read only when you paste or save it (D-28). XP values, maxima and structure need a non-wiki source. Rates and drop chances may cite one human-read wiki page, but never as the only source of a `verified` value. Risk note: a substantial extraction could touch the EU database right (§87b UrhG); this is research, not legal advice. No consent request in 2.0.0 (D-16 (a); SPEC §12.1). |
 | Hypixel API (keyless `/v2/resources/skyblock/*`, `/v2/skyblock/bazaar`, `/v2/skyblock/auctions`) | Official API, policy updated 2026-09-30: no API keys in public mods, keyless endpoints OK with caching, "not affiliated with Hypixel" statement required | Facts (skill and collection XP, museum `donation_xp`, generator tiers, item tradability) built into bundled tables **at data-build time**. AH: one keyless scan per data update, NBT decoded in memory, only rounded per-item aggregates written; auctioneer, profile, coop and bidder UUIDs never touch disk. Optional live Bazaar on clients (D-22). Never raw dumps. README gets the required non-affiliation statement. |
@@ -146,7 +146,7 @@ Authoritative per-feature defaults: `SPEC.md` §12.H.
 | Bobber rubber-band fix | 🟡→🟢 | Client presentation only; no packets, timing or reel behaviour changed | ON |
 | Hotspot highlight | 🟢 | Depth-tested ring; read-only detection; no particle-packet cancelling. Hypixel's ring particles around a tracked hotspot are not drawn on the client (R41); the packets stay untouched | ON; hide Hypixel's hotspot particles ON (R41) |
 | "Hotspot gone" warning | 🟢 | Only if you fished it in the last 30 s and are within 40 blocks | ON |
-| Rare-drop odds overlay | 🟢 | Public drop rates + your own data; never predicts unopened contents | OFF (HUD clutter) |
+| Rare-drop odds overlay | **[dropped R42]** | Removed at G3 at your request (was: public drop rates + your own data; never predicts unopened contents) | — (was OFF) |
 | Drill hand-animation fix (A) | **[dropped R37]** | Removed at G3 at your request (was: render-only) | — (was ON) |
 | Drill "keep mining progress" (B) | 🔴 | **Excluded**: requires suppressing packets | — |
 | Bestiary HUD | 🟢 | Your own progress (tab widget, menus *you* open, chat) | OFF (HUD) |
@@ -174,8 +174,8 @@ Authoritative per-feature defaults: `SPEC.md` §12.H.
 | AD-3 | **Config robustness.** A `configVersion` field; atomic save (temp file, then `ATOMIC_MOVE`); one debounced save path; on parse failure, back up the broken file and never overwrite it; ordered, unit-tested migration steps. | Fixes the race and the data-loss bug; required before the UI changes save semantics. |
 | AD-4 | **Custom UI, no UI library, pure Java, vanilla font.** Rounded corners from fills (no private render APIs in v1). `Module` is decoupled from Cloth through a small option model that also feeds search. Cloth Config is removed at the end of Phase 2. | Matches AlpakaAddons, which is fully custom. Avoids fragile mixins and drops an LGPL dependency plus the provenance-doubt files. |
 | AD-5 | **HUD framework on Fabric `HudElementRegistry`**, with anchor-relative positions (9 anchors + offset + scale) and preview data. | No HUD mixin. Layouts survive GUI-scale and window changes. |
-| AD-6 | **Shared SkyBlock data services:** tab widgets, sidebar scoreboard, system chat, inventory counts, location (mode/map/server + change events). | Mineshaft, hotspot, odds and bestiary all need them. Built once and tested against captured lines. |
-| AD-7 | **Data bundled in the jar, versioned with releases. No runtime fetch, with one exception:** the opt-in live Bazaar price feed (D-22). Applies to the NPC/mob DBs, corpse spots (dropped by R22, reinstated by R40), bestiary, odds and SkyBlock XP tables. All of them go through **one shared data registry** (T3.0c): envelope per REQ-DATA-02 (`table`, `schemaVersion`, integer `dataVersion` +1 per change, `gameVersion`, `generatedAt`, `license` ∈ CC0-1.0 \| MIT \| Apache-2.0, `sources` as a map id → source; MIT/Apache tables under `thirdparty/`), an `index.json` with sha256 per file, and a validator inside `./gradlew check`. The gists are frozen, not deleted, because 1.0.x users still read them. | The data is small (50–72 KB) and unchanged since 2026-08-21. The remote fetch is a single point of failure (no cache, fallback, timeout or validation; NPE on a bad entry). Updates arrive with releases through the updater. Simplest option that meets "keep a fallback if remote is used". |
+| AD-6 | **Shared SkyBlock data services:** tab widgets, sidebar scoreboard, system chat, inventory counts, location (mode/map/server + change events). | Mineshaft, hotspot, odds (dropped, R42) and bestiary all need them. Built once and tested against captured lines. |
+| AD-7 | **Data bundled in the jar, versioned with releases. No runtime fetch, with one exception:** the opt-in live Bazaar price feed (D-22). Applies to the NPC/mob DBs, corpse spots (dropped by R22, reinstated by R40), bestiary, odds (dropped by R42) and SkyBlock XP tables. All of them go through **one shared data registry** (T3.0c): envelope per REQ-DATA-02 (`table`, `schemaVersion`, integer `dataVersion` +1 per change, `gameVersion`, `generatedAt`, `license` ∈ CC0-1.0 \| MIT \| Apache-2.0, `sources` as a map id → source; MIT/Apache tables under `thirdparty/`), an `index.json` with sha256 per file, and a validator inside `./gradlew check`. The gists are frozen, not deleted, because 1.0.x users still read them. | The data is small (50–72 KB) and unchanged since 2026-08-21. The remote fetch is a single point of failure (no cache, fallback, timeout or validation; NPE on a bad entry). Updates arrive with releases through the updater. Simplest option that meets "keep a fallback if remote is used". |
 | AD-8 | **Updater on GitHub Releases** (D-14). `/releases` with ETag and back-off; exact asset-name match for the running MC version; SHA-256 checked against the API `digest`; staged outside `mods/`; a JDK-only helper swaps the jar after the game exits; reconciliation on next launch. **Never installs without a click.** | The only design that works on Windows (jar locked while running), and the one established mods use. API facts verified live: digest field, 302 redirect, 60 req/h, and a 304 still counts when unauthenticated. |
 | AD-9 | **Mixins:** after AD-1 no core mixin remains. Later cosmetic hooks (bobber, drill animation (dropped, R37), read-only particle observer, hotspot particle hiding (R41, T3.6c)) go into one config `k8bas_skyblock_utility.mixins.json`, package `com.k8bas.skyblockutility.mixin`, `required: false`, `defaultRequire: 0`, with skipped injections logged. Prefer `@WrapOperation` / `@ModifyReturnValue`; never `@Redirect` / `@Overwrite`. | Alpaka, NoFrills and Skyblocker hook the same methods; a cosmetic conflict must not crash the game. |
 | AD-10 | **Versioning:** the Gradle `version` + `+<mc>` build metadata, e.g. jar `k8bas_skyblock_utility-2.0.0+26.2.jar`, tag `v2.0.0` (D-9). | The updater picks the right jar per MC version. |
@@ -207,7 +207,7 @@ Authoritative per-feature defaults: `SPEC.md` §12.H.
 
 | Tier | Who | What | When |
 |---|---|---|---|
-| A | Claude | JUnit 5 unit tests for pure logic: island map, rule matching, config migration (fixture *shaped like* your config), DB parsing with BOM, tab/scoreboard/chat parsers, odds and bestiary math, updater selection/rate-limit/path checks | every commit (`./gradlew build`, also in CI) |
+| A | Claude | JUnit 5 unit tests for pure logic: island map, rule matching, config migration (fixture *shaped like* your config), DB parsing with BOM, tab/scoreboard/chat parsers, bestiary math (odds math dropped, R42), updater selection/rate-limit/path checks | every commit (`./gradlew build`, also in CI) |
 | B | Claude | `./gradlew runClient` smoke: mixins apply, `/ksu` opens, dev-only `/ksu debug island <name>` | every phase |
 | C | Claude | Fabric client gametests in singleplayer with screenshots, which Claude reviews: glow on summoned named entities, labels behind stone/glass/water, beams, config screen, HUD editor at GUI scales 1–4 | where content can be simulated |
 | D | Claude | Production boot of the exact jar against a **copy** of your 26.2 mod set (`-Pk8bas.prodMods=<dir>`, not part of `check`, `-Dmixin.debug.export`): crashes, new ERRORs, injection order, chat-listener phase order | G1, G2, G3, G4 (updater on a local mock source), G5, G6, both releases |
@@ -234,7 +234,7 @@ Phase 0 seams + tests + dev runtime (on 26.1.2)
                (white label + coloured beam; whether it ships as an intermediate release is decided then: it ships in v1.2.0 before T3.4b [decided R33])
  ─► Phase 2 UI: option model ─► render kit ─► widgets ─► screen ─► rule lists + switch ─► drop Cloth
                HUD framework ─► HUD editor                          ─► [G2]
- ─► Phase 3 features: the other 3.0 shared services first; odds (T3.9) last, after D-3 ─► [G3]
+ ─► Phase 3 features: the other 3.0 shared services first; odds (T3.9) last, after D-3 (dropped at G3, R42) ─► [G3]
  ─► Phase 4 updater ─► [G4]  ─► Phase 5 bestiary HUD ─► [G5]
  ─► Phase 6 SkyBlock XP Optimizer: calculator core ─► data tool + reference tables ─► task table + research
                ─► prices ─► progress detection ─► planner ─► table UI + screen ─► HUD ─► update skill ─► [G6]
@@ -261,7 +261,7 @@ Rough size: Phase 1 ≈ 1–2 days; Phase 2 is the largest (~4–5.5k lines of J
 
 Sizes: XS 1 file · S 1–2 · M 3–5. `Verify` always includes `./gradlew build` (tier A) unless noted.
 
-Every active task names the SPEC requirements it implements (`Req:`) and the acceptance criteria it proves (`Accept:`); the dropped task T3.7 (R37) shows its ids as `Was Req:` / `Was Accept:`, which the traceability (SPEC §13) leaves out. T3.3a and T3.3, dropped by R22, are active again (R40). Requirements that are met at a checkpoint rather than by a task (reviews, reports) are named in that checkpoint's list. **Every checkpoint report (G1, G1r, G2–G7) follows REQ-XC-REPORT-01**: what changed, what was tested, known issues and decisions (AC-XC-07). It also lists the skills used (REQ-XC-SKILLS-01, AC-XC-10) and flags questionable items instead of building them (REQ-XC-RULES-06, AC-XC-11). Requirements deliberately not built are listed under "Not built in 2.0.0" at the end of this section.
+Every active task names the SPEC requirements it implements (`Req:`) and the acceptance criteria it proves (`Accept:`); the dropped tasks T3.7 (R37) and T3.9a–T3.9h (R42) show their ids as `Was Req:` / `Was Accept:`, which the traceability (SPEC §13) leaves out. T3.3a and T3.3, dropped by R22, are active again (R40). Requirements that are met at a checkpoint rather than by a task (reviews, reports) are named in that checkpoint's list. **Every checkpoint report (G1, G1r, G2–G7) follows REQ-XC-REPORT-01**: what changed, what was tested, known issues and decisions (AC-XC-07). It also lists the skills used (REQ-XC-SKILLS-01, AC-XC-10) and flags questionable items instead of building them (REQ-XC-RULES-06, AC-XC-11). Requirements deliberately not built are listed under "Not built in 2.0.0" at the end of this section.
 
 ### Phase 0 — Setup (still on 26.1.2)
 
@@ -305,7 +305,7 @@ Every active task names the SPEC requirements it implements (`Req:`) and the acc
     - "SkyBlock Leveling", "Ways to Level Up", "Skill Related Tasks", "Tasks ➜ *"
     - "<X> ➜ *" only when X is a leveling parent (Core, Event, Dungeon, Essence Shop, Slaying, Mining, Farming, Fishing, Foraging, Miscellaneous, Story, Complete Dungeons). The "Fishing ➜ *" pattern also matches the bestiary's fishing pages; T5.2b tells them apart by lore
     - Bestiary and "Bestiary ➜ *"; the D-27 component menus: Skills, Collections, Museum, HOTM, HOTF, Pets, Accessory Bag
-    - Croesus, dungeon reward chests and "* RNG Meter" (fixtures for REQ-ODDS-17/23; titles UNVERIFIED)
+    - Croesus, dungeon reward chests and "* RNG Meter" (fixtures for REQ-ODDS-17/23, dropped by R42; titles UNVERIFIED)
   - `/ksu debug dump entities` writes the displayed name tags within 8 blocks, with their height above the entity below (fixture for AC-GLOW-08, T3.1). An invisible body without a displayed name is never listed.
   - Accept: AC-GS-12 [A] (60-min disarm, fake clock); unit tests of the stable-contents check and the allowlist; AC-GS-13 [E] at G1.
 
@@ -488,7 +488,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 
 **Spec:** SPEC `ui-config` (REQ-UI-*) and `hud` (REQ-HUD-*); decisions D-8 and R12.
 - One centred panel: 70 % × 68 % of the GUI area, clamped to 480–660 × 340–440 GUI px, with ≥ 4 px margin (the margin wins). 38 px header (name, version, search), 160 px sidebar with match badges, 44 px cards (6 px gaps) under section headers.
-- Categories: General · Highlights · Waypoints · Mining · Fishing · Odds & Trackers · SkyBlock XP. Empty categories are hidden. Every feature is a card with its own toggle.
+- Categories: General · Highlights · Waypoints · Mining · Fishing · Odds & Trackers · SkyBlock XP. Empty categories are hidden (Odds & Trackers is empty since R42 removed Rare Drop Odds, until T5.3 adds the Bestiary Tracker). Every feature is a card with its own toggle.
 - Live-apply. The file is written once per close (any route) and on discrete commits. `/ksu <term>` opens the screen pre-filtered, unless `<term>` is a reserved subcommand.
 - HUD: anchor-relative positions. In the editor, Esc = Save and Cancel reverts. HUDs are hidden under any screen except chat.
 - Order: UI track T2.1 → T2.6; HUD track T2.7 → T2.8 in parallel; T2.8b after T2.5b. Stretch items T2.9–T2.9d only after G2.
@@ -673,7 +673,7 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
 
 ### Phase 3 — Features (each behind its own toggle)
 
-*Shared game-state, data and rendering infrastructure comes first (T3.0*), then the NPC/mob data (T3.8*), then the features. Rare Drop Odds (T3.9*) is built last. Exception (R23): the waypoint path T3.0b → T3.0n → T3.4 is the first Phase 3 work, right after the v1.1.0 merge (§6). The possible corpse spots, T3.3a and T3.3, were dropped by R22 and are reinstated by R40; with the other work from the G3 field checks (R36–R40) they run after T3.9h and before the open odds cases T3.9b–f, in the order listed there. The drill re-equip fix, T3.7, is dropped (R37).*
+*Shared game-state, data and rendering infrastructure comes first (T3.0*), then the NPC/mob data (T3.8*), then the features. Rare Drop Odds (T3.9*) was built last. Exception (R23): the waypoint path T3.0b → T3.0n → T3.4 is the first Phase 3 work, right after the v1.1.0 merge (§6). The possible corpse spots, T3.3a and T3.3, were dropped by R22 and are reinstated by R40; with the other work from the G3 field checks (R36–R41) they run after T3.9h, in the order listed there. The drill re-equip fix, T3.7, is dropped (R37). Rare Drop Odds is dropped (R42): T3.9a, T3.9g and T3.9h are removed from the code, and the open cases T3.9b–f are not built.*
 
 - [x] **T3.0a feat(skyblock): reader base + tab-widget and sidebar readers** (M, deps T1.9, T1.18). Shared passive-reader base, the tab reader (`getListedOnlinePlayers` / `getTabListDisplayName`, a regex per line, widgets grouped by header, independent of tab order) and the sidebar reader (title plus team prefix/suffix lines, filler characters stripped). It uses T1.9's location change events and no longer owns them.
   - Req: REQ-GS-01, REQ-GS-02, REQ-GS-03, REQ-GS-10, REQ-GS-11, REQ-GS-12, REQ-GS-14, REQ-GS-15, REQ-GS-16, REQ-XC-PRIVACY-01
@@ -731,11 +731,12 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - a source record on a wiki, Fandom or hypixel.net host that is not a page cited by a person (D-16, D-28)
   - Accept: AC-DATA-03, AC-XC-03 (the validator part).
   - Done (2026-10-09): `data-schemas/upstreams.json` lists the data upstreams §2 approves (neu-repo, skyhanni-repo, skyocean; all MIT; SkyOcean only its MIT part). The validator fails on: a table not CC0-1.0 outside `thirdparty/<upstream>/`, an unapproved upstream folder, a licence other than the upstream's, an upstream in use without a `## <name>` section in THIRD_PARTY_NOTICES.md that names the file or without `licenses/<upstream>.txt`, an MIT or Apache source without an approved `notice`, any NC or SA licence anywhere in a table (short ids or written out), `george.json` as a file or cited by a source, and a source on a wiki, Fandom, hypixel.net or Reddit host (or of kind wiki_crosscheck, forum or reddit, or with a url that does not parse) whose access is not `user_supplied` (D-16, D-28); `api.hypixel.net` is the official API. The jar copies `licenses/*.txt` into `META-INF/licenses/`; `check` requires one per upstream in use and reruns when the notices, `licenses/` or the jar change; `release-check.sh` also looks for ignored files under `licenses/`. Unit test DataLicenceTest (15: every AC-DATA-03 case). Reviewed in two angles with two verifiers each; the 3 confirmed and 3 split findings are fixed.
+  - R42 (2026-10-15): with the odds tables removed, no SkyOcean table is bundled, so `licenses/skyocean.txt` is gone from the jar and the repo. SkyOcean's THIRD_PARTY_NOTICES section stays only for the Bobber Fix approach credit, and the NEU-REPO section names only the NPC list.
 - [x] **T3.0k feat(data): layered values** (S, deps T3.0c). Generic layering: bundled < live cache < user override. A live layer exists only for a consumer that declares an opt-in feed, and it never replaces or deletes the bundled table. T6.4 (prices) and T6.8 (rate, time and price overrides) use it.
   - Req: REQ-DATA-10, REQ-DATA-01
   - Accept: AC-DATA-08 (reports the winning layer and its timestamp; a failed live layer falls back to bundled silently).
   - Done (2026-10-09): `LayeredValues<K, V>` (Kotlin, package `data`): override > live > bundled, each answer with its layer and that layer's timestamp (the override's, the feed's fetch time, the table's generatedAt). The live layer exists only while a consumer has turned on its opt-in `LiveFeed`; a feed that throws (any Exception, checked ones from Kotlin included) or has no value falls back to the bundled value silently and is counted. The bundled values are only read. Overrides are kept in memory; the consumer persists them (per profile, T6.5c). Unit test LayeredValuesTest (7, AC-DATA-08). Reviewed in two angles with two verifiers each; the one confirmed finding (checked exceptions) is fixed.
-- [x] **T3.0m feat(skyblock): mineshaft state + shared widget hint** (M, deps T3.0a, T3.0i). Game-state now owns the shaft code and the Frozen Corpses list for T3.2, T3.9 and T3.3 (dropped by R22, reinstated by R40). Those features never parse them.
+- [x] **T3.0m feat(skyblock): mineshaft state + shared widget hint** (M, deps T3.0a, T3.0i). Game-state now owns the shaft code and the Frozen Corpses list for T3.2, T3.9 (dropped by R42) and T3.3 (dropped by R22, reinstated by R40). Those features never parse them.
   - Req: REQ-GS-17, REQ-GS-18, REQ-GS-15, REQ-GS-16, REQ-GS-14, REQ-XC-VERIFY-02, REQ-LOC-08, REQ-GS-13
   - Shaft code:
     - `[A-Z]{4}_[12CL]`, read from the sidebar scoreboard data and searched for 15 s after mineshaft entry
@@ -747,10 +748,10 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - reset on leaving the shaft, server switch and disconnect
     - [reinstated R40] a `/ksu corpses` hold that keeps the state running while the other features are OFF (built in T3.3, not here)
   - One widget-hint translation key; it is the failsafe that tells the player a widget is off. The command and menu path were not given at G1, so the wording stays UNVERIFIED and is checked at G3 (Q-MSA-04, R24). G3 answer (R36): `/widgets`; T3.2c changes the string. T3.2, T5.3 and Phase 6 use it.
-  - Dev-only `/ksu debug shaft <code> [Type:STATE…]` simulates a shaft for the T3.2, T3.9d and T3.3 gametests (T3.3 reinstated, R40). It does not exist in production.
+  - Dev-only `/ksu debug shaft <code> [Type:STATE…]` simulates a shaft for the T3.2, T3.9d and T3.3 gametests (T3.3 reinstated, R40; T3.9d dropped, R42). It does not exist in production.
   - Accept: AC-GS-15, AC-GS-16 (third bullet; the second, dropped by R22 and reinstated by R40, is T3.3's), AC-GS-17, AC-GS-18 ([R]; the [E] part at the G3 mineshaft check, R24). The [E] part of AC-GS-17 is checked at the G3 mineshaft check, and AC-GS-13 [D] (no `/ksu debug shaft` in production) at the G3 tier D boot.
   - Done (2026-10-09): `MineshaftTracker` (pure: the code `[A-Z]{4}_[12CL]` searched in the sidebar for 15 s after entry, then "Unknown shaft"; a code not in the table shown raw; the Frozen Corpses list in order, `UNLOOTED` as not looted, an unknown line logged by shape and the list PARTIAL; everything cleared on leaving) and `MineshaftState` (the game side: the tab and sidebar readers are wanted only while a consumer is active and the player is in a Glacite Mineshaft, so nothing is read or stored otherwise; listeners isolated). The first bundled table, `mining_shafts` (CC0, 34 codes; built from MiningQOL's CC0 list, cross-checked as facts against SkyHanni, skydiao, waypointer and Eurybium). Single-variant shafts are named as SPEC writes them (`OPAL_1` "Opal 1", also Titanium 1, Umber 1, Tungsten 1, Jasper 1), although most mods write "Opal"; your call to change. `WidgetHint`: one key, "The %s widget is off in your tab list. Turn it on with /widget." (SkyHanni sends `/widget`, Skyblocker `/widgets`, NEU `/tab`; UNVERIFIED until G3). Dev-only `/ksu debug shaft <code> [Type:NOT_LOOTED|LOOTED…] | clear`. Unit tests MineshaftTrackerTest (12) and MineshaftCodesTest (4: all 34 codes through the real table and registry, the G1 capture, the hint key). Gametest MineshaftStateGameTest: no parse in 600 ticks with every consumer off (AC-GS-16), the code from a real sidebar named from the table, the corpse widget absent in singleplayer, leaving clears it (AC-GS-15), the simulation. Reviewed in two angles with two verifiers each; the one confirmed finding (listener isolation) is fixed.
-- [x] **T3.0d feat(skyblock): profile service + per-profile store** (M, deps T3.0a, T3.0g, T1.7). Used by T3.9, T5.2 and Phase 6.
+- [x] **T3.0d feat(skyblock): profile service + per-profile store** (M, deps T3.0a, T3.0g, T1.7). Used by T3.2b, T5.2 and Phase 6 (T3.9 used it too; dropped, R42).
   - Req: REQ-GS-08, REQ-GS-09, REQ-GS-14
   - Profile identity:
     - from the tab `Profile:` widget and from profile chat lines, including cancelled ones (via T3.0g)
@@ -758,12 +759,12 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - "unknown" until identified; a change event fires on a profile or account switch
     - the reversed tab name in the Rift is ignored (EC-GS-10)
   - Store:
-    - one folder per (account, profile), `config/k8bas_skyblock_utility/profiles/<playerUuid>/<profileKey>/`, with one file per consumer (`odds.json`, `bestiary.json`, `sbxp.json`), each on config-store's atomic facility (REQ-CFG-12, T1.7); archiving moves the whole folder
+    - one folder per (account, profile), `config/k8bas_skyblock_utility/profiles/<playerUuid>/<profileKey>/`, with one file per consumer (`odds.json` (dropped with T3.9h, R42), `bestiary.json`, `sbxp.json`), each on config-store's atomic facility (REQ-CFG-12, T1.7); archiving moves the whole folder
     - nothing is written while the profile is unknown
     - a known name that comes back with a new profile id archives the old state
   - Accept: AC-GS-08, AC-GS-09.
   - Done (2026-10-09): `ProfileTracker` (pure: the tab widget `Profile: <name> [glyph]` and the chat lines `You are playing on profile:` and `Profile ID:`; key = name case-folded and trimmed without glyph or "(Co-op)"; a missing glyph keeps the last type (EC-GS-11); an id seen before the name is attached; a change event on a profile, account, id or type change) and `ProfileStore` (`<account>/<key>/<consumer>.json` on `AtomicFileStore`, the profile id in `profile.json`; a new id under a known name moves the folder to `<account>/archive/<key>-<time>/`). `ProfileService` feeds the tracker from the tab and chat readers only while a consumer is active, forgets the profile when none is and on disconnect, and keeps it across islands and servers. Glyphs ☀ stranded, Ⓑ bingo and the `Profile ID:` line are UNVERIFIED until captured (G3). Unit tests ProfileTrackerTest (13) and ProfileStoreTest (9); gametest ProfileServiceGameTest (not fed without a consumer; a profile line another mod cancels still identifies it, AC-GS-08; the id attached; state written to and read from the profile's folder). Reviewed in two angles with two verifiers each; five confirmed findings fixed: the Rift's reversed name is ignored also while the island is unknown, plus a guard against the current name backwards; with no consumer the profile becomes unknown; a profile without an id meeting a folder that has one reads and writes nothing until the id arrives; a failed archive move is retried and otherwise leaves the store unused until the next switch, never writing the new id into the old folder; an unreadable `profile.json` is not overwritten.
-- [x] **T3.0e feat(skyblock): read-only menu reader** (M, deps T3.0a, T0.4b). Moves T0.4b's stable-contents check into a reusable reader and switches the armed dump to it; the capture allowlist stays T0.4b's. Consumers (T3.9c, T3.9f, T5.2b, T6.5, T6.5b, T6.5e, T6.5f) register their own title patterns. It never clicks, pages, hovers or opens anything.
+- [x] **T3.0e feat(skyblock): read-only menu reader** (M, deps T3.0a, T0.4b). Moves T0.4b's stable-contents check into a reusable reader and switches the armed dump to it; the capture allowlist stays T0.4b's. Consumers (T3.2b, T5.2b, T6.5, T6.5b, T6.5e, T6.5f; T3.9c and T3.9f were dropped by R42) register their own title patterns. It never clicks, pages, hovers or opens anything.
   - Req: REQ-GS-06, REQ-GS-13, REQ-GS-12, REQ-GS-15, REQ-GS-14
   - Snapshots:
     - each holds the title and the top-container slots: index, name, server lore from `DataComponents.LORE`, SkyBlock id
@@ -1090,12 +1091,12 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - the card was untested.
       Rejected (split): a Pickonimbus gametest step (the unit table covers it).
 
-*T3.9 Rare Drop Odds [brief 3.7]: split into T3.9a–h and built last in Phase 3. D-3 = A (numeric odds, five cases), R10 = b. Reveal animations and the later candidates listed in SPEC rare-drop-odds are not in v1.*
+*T3.9 Rare Drop Odds [brief 3.7]: split into T3.9a–h and built last in Phase 3. D-3 = A (numeric odds, five cases), R10 = b. Reveal animations and the later candidates listed in SPEC rare-drop-odds are not in v1.* **Dropped by R42 (2026-10-15, your decision "Ignore the gambling overlays"): T3.9a, T3.9g and T3.9h were built and are removed from the code; T3.9b–f were never built. Nothing of it was released (it came after 1.2.0), so there is no config migration: a saved `rare_drop_odds` section is kept and not read. No active task depends on these tasks; the records below are kept.**
 
-- [x] **T3.9a feat(odds): odds math + "1 in N (P%)" format** (S, deps T1.18). Pure Java; every value is computed in code: at least one success, expected attempts, luck percentile, MF/Pet Luck scaling (cap 900, the < 5 % rule), per-corpse chance from per-roll weights over uniform roll counts, RNG-meter boost, slayer base chance, and bosses until guaranteed.
-  - Req: REQ-ODDS-06, REQ-ODDS-08
+- **T3.9a feat(odds): odds math + "1 in N (P%)" format** [dropped R42] **Removed (R42, 2026-10-15, your decision): `OddsMath`, `OddsFormat` and OddsMathTest are gone; the record below is kept.** It was built (done 2026-10-09). Was: (S, deps T1.18). Pure Java; every value is computed in code: at least one success, expected attempts, luck percentile, MF/Pet Luck scaling (cap 900, the < 5 % rule), per-corpse chance from per-roll weights over uniform roll counts, RNG-meter boost, slayer base chance, and bosses until guaranteed.
+  - Was Req: REQ-ODDS-06, REQ-ODDS-08
   - Format: thousands separators, 2 significant digits (minimum 0.0001 %), a basis label, "≈" for estimates, "?" for `verified: false` rows.
-  - Accept: AC-ODDS-05, AC-ODDS-07.
+  - Was Accept: AC-ODDS-05, AC-ODDS-07.
   - Done (2026-10-09): `module/odds/`, plain Kotlin with no game types (the repo's language since R30).
     - **`OddsMath`:** at least one success, expected attempts, luck percentile, the pet and drop chance with MF capped at 900 (pets always scale, other drops only below 5 %), the per-corpse mean over uniform roll counts, the meter boost (at most ×3), "guaranteed", the slayer base (500, or 250 for the Riftstalker) and bosses until guaranteed (null before a gain is seen).
     - **`OddsFormat`:** "1 in N (P%) <basis>" with US thousands separators, and the six SPEC basis labels.
@@ -1105,13 +1106,13 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - **Tests:** OddsMathTest (7), every AC-ODDS-05 and AC-ODDS-07 fixture plus the boundaries.
     - **For T3.9b:** the Scatha "chance by now" at 0 kills is a computed 0. The panel must show it as such and not pass 0 to `oneIn`.
     - **Review:** two angles with two verifiers each. Fixed (confirmed): whole-number percentages lost their second digit ("1%"), and exactly 0.0001 % showed as below the minimum (both from rounding the binary double). Also taken: p ≥ 1 as 100 %, and the meter cap test.
-- [x] **T3.9g feat(odds): bundled drop tables (two MIT, one CC0)** (M, deps T3.0c, T3.0i, T3.0j). Three registry tables, each with a schema and an index entry:
+- **T3.9g feat(odds): bundled drop tables (two MIT, one CC0)** [dropped R42] **Removed (R42, 2026-10-15, your decision): the tables `odds.rngscore` (NEU), `odds.vanguard` (SkyOcean) and `odds.supplied`, their schemas and index entries, DataOddsRulesTest, ShippedOddsTablesTest and OddsTablesTest, and `licenses/skyocean.txt` (so the SkyOcean licence text leaves the jar) are gone. The NEU-REPO notice keeps only the NPC list; SkyOcean's notice section stays only for the Bobber Fix approach credit. The validator keeps its per-row source rules (the corpse spot table uses `sourceRefs`) and drops the odds-only rules: no percentage field, no SkyOcean dye row, roll min at most max. The record below is kept.** It was built (done 2026-10-09). Was: (M, deps T3.0c, T3.0i, T3.0j). Three registry tables, each with a schema and an index entry:
   - MIT: the dungeon and slayer sections of NEU `constants/rngscore.json` (D-5), with notice files and a THIRD_PARTY_NOTICES entry
   - MIT: SkyOcean's `src/repo/vanguard.jsonc` weights (R6), with notice files and a THIRD_PARTY_NOTICES entry. Its assumed dye weight is replaced by a Frostbitten Dye row with its own `sourceRefs`/`license`, from a page you supply (REQ-ODDS-10)
   - CC0 `odds.supplied` under `data/` (not `thirdparty/`): the Scatha pet chances and the Lapis/Umber/Tungsten per-roll chances. Each row cites a source with `kind: wiki_crosscheck`, `access: user_supplied` (D-16 (a), D-28 (i)) and is `verified: false` unless a non-wiki origin agrees (REQ-ODDS-10). Rows are added only once you supply the pages; until then the table has no row for those items, so they show no number (REQ-ODDS-11). T3.9b and T3.9e add their rows; they create no table.
-  - Req: REQ-ODDS-09, REQ-ODDS-10, REQ-XC-LICENSE-03
+  - Was Req: REQ-ODDS-09, REQ-ODDS-10, REQ-XC-LICENSE-03
   - Each row holds the case id, SkyBlock id and display name; a weight plus the table total, or a base chance; roll min/max; `sourceRefs`, `license`, `verified` and `gameVersion`. Placeholder scores are flagged.
-  - Accept: AC-ODDS-08 (all three tables; a wiki-only row with `verified: true` and no second non-wiki origin also fails): `check` rejects a row without `sourceRefs` or `license`, any per-corpse % field, SkyOcean's assumed dye weight, and an MIT table without a notice.
+  - Was Accept: AC-ODDS-08 (all three tables; a wiki-only row with `verified: true` and no second non-wiki origin also fails): `check` rejects a row without `sourceRefs` or `license`, any per-corpse % field, SkyOcean's assumed dye weight, and an MIT table without a notice.
   - Done (2026-10-09):
     - **`odds.rngscore`** (`thirdparty/neu-repo/odds/rngscore.json`, MIT): NEU `constants/rngscore.json` at c4f7d475… (D-5), 390 rows "<catacombs|slayer>:<floor or boss>:<item>" with the dungeon score or slayer XP, and the display names from NEU `items/*.json`.
       - All 8 `DYE_*` rows are flagged `placeholder`: round scores set without a source (REQ-ODDS-17).
@@ -1136,11 +1137,11 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - a percentage map at the table root passed;
       - AC-ODDS-08 was not tested on the real schemas.
       Also taken: the NEU notice names `vanguard.json`, and an upside-down roll range fails.
-- [x] **T3.9h feat(odds): Rare Drop Odds module** (M, deps T3.9a, T3.9g, T3.0a, T3.0g, T3.0d, T3.0m, T1.9, T2.4a). The "Rare Drop Odds" card in Odds & Trackers: master toggle OFF; five case toggles ON; chat-line toggle ON; rare threshold 2 % (range 0.01–10 %). "Gambling" appears only as a hidden search keyword.
-  - Req: REQ-ODDS-01, REQ-ODDS-02, REQ-ODDS-03, REQ-ODDS-04, REQ-ODDS-07, REQ-ODDS-11, REQ-ODDS-12
+- **T3.9h feat(odds): Rare Drop Odds module** [dropped R42] **Removed (R42, 2026-10-15, your decision): the module `module/odds/` (`OddsCase`, `OddsTables`, `OddsCounters`, `OnceLog`, `RareDropOddsModule`), its card, counters, OddsFrameworkTest and the gametest RareDropOddsGameTest are gone, with the CHANGELOG entry. `ProfileService.storable()` stays (the sack reminder, T3.2b, uses the profile service). The "Odds & Trackers" category stays defined and is hidden while it has no card. The record below is kept.** It was built (done 2026-10-09). Was: (M, deps T3.9a, T3.9g, T3.0a, T3.0g, T3.0d, T3.0m, T1.9, T2.4a). The "Rare Drop Odds" card in Odds & Trackers: master toggle OFF; five case toggles ON; chat-line toggle ON; rare threshold 2 % (range 0.01–10 %). "Gambling" appears only as a hidden search keyword.
+  - Was Req: REQ-ODDS-01, REQ-ODDS-02, REQ-ODDS-03, REQ-ODDS-04, REQ-ODDS-07, REQ-ODDS-11, REQ-ODDS-12
   - Inputs are read-only, through game-state, and each event gets at most one local line. An unknown item or floor shows no number and is logged once. A missing table disables only its own case and shows a card notice.
   - Per-profile counters use the T3.0d store and are labelled "counted by K8bas since <date>". A "Reset odds counters" button resets the session counters.
-  - Accept: AC-ODDS-01, AC-ODDS-02, AC-ODDS-09, AC-ODDS-10.
+  - Was Accept: AC-ODDS-01, AC-ODDS-02, AC-ODDS-09, AC-ODDS-10.
   - Done (2026-10-09): `module/odds/`.
     - **`OddsCase`:** the five cases with the tables each needs. `OddsGate` turns a case on only with the master, its toggle and its tables readable (a table still loading counts as readable); the card notice reads "No data, off: <cases>".
     - **`OddsTables`:** the three table specs, decoded to typed rows, registered before the registry starts. A test hook can treat a table as unreadable.
@@ -1171,7 +1172,8 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Done (2026-10-15): `npcdb/mobs.json` without the four rows, data version 3, 309 rows, index rewritten. NpcMobTablesTest: none of the four ids, no row flagged invisible, 309 rows. BundledListsGameTest: the picker finds none of the four (AC-NPCDB-07 [C], passes). CHANGELOG and the data audit say so. The `invisible` flag and the greyed picker note stay for any later row. Review: one batch review of T3.8d, T3.2c, T3.3c, T3.3a and T3.3 in three angles (rules and licences, correctness, tests and style), each finding checked by two verifiers; none for this task.
 - [x] **T3.10 test(fixtures): G3 captures as fixtures** (S, deps T3.0a, T3.0e). The G3 captures become sanitised fixtures (player names, server ids and UUIDs removed): the Croesus chest, the `/sblevels` page, and the mineshaft tab and sidebar dumps. The UNVERIFIED list is updated.
   - Req: REQ-GS-14
-  - Accept: AC-GS-06 (the [E] capture: the `/sblevels` page equals its G1 capture), AC-ODDS-13 (fixture part: the Croesus capture replaces the provisional chest fixture).
+  - Accept: AC-GS-06 (the [E] capture: the `/sblevels` page equals its G1 capture).
+  - AC-ODDS-13 (fixture part: the Croesus capture replaces the provisional chest fixture) left this task when R42 dropped Rare Drop Odds. CroesusCaptureTest went with the odds; the Croesus capture files stay as fixtures.
   - Done (2026-10-15): `fixtures/captures/g3-2026-10-15/` (README in the G1 layout): the ONYX_1 tab and sidebar, and 10 menu files from 17 captures (Croesus, Catacombs - Floor I, SkyBlock Leveling, Ways to Level Up, Skill Related Tasks, Tasks ➜ Mining, Heart of the Mountain, three Dwarven Mines Sack states). Only `[K8BAS-DUMP]` lines; sanitised as at G1 (2 server ids, level −100 and XP −10,000 in 9 places, the rank in 2; no names besides the mod's own `Self`); every file passes `scripts/privacy-scan.sh --body` and the server-id check.
     - **Tests:** MenuRecaptureTest (AC-GS-06 made repeatable: the G3 SkyBlock Leveling page reads like G1's `skyblock-leveling-b.txt` up to numbers, only the level, XP and progress slots differ; three more pages match their G1 files up to numbers); CroesusCaptureTest (the captured titles are allowlisted, the Wood/Gold/Diamond heads list their contents, and the meter items of F1 are found in the shipped table); ContainerDumpFormatTest reads all G3 menus back line for line; G3 cases in SidebarParserTest, MineshaftCodesTest, MineshaftTrackerTest and CaptureAllowlistTest. `CaptureFixtures` is shared and folder-aware.
     - **Found:** no provisional Croesus fixture existed (T3.9c is not built), so these are the first chest fixtures. Opened from Croesus, a run's menu ("Catacombs - Floor I", no "The ") shows each chest as a head whose contents are lore lines (`Enchanted Book (Infinite Quiver VI)`, `Undead Essence x11`), so T3.9c's tooltip lines attach to lore lines there. The M7 Bedrock example of AC-ODDS-13, Master Mode, a reroll and the opened chest screens stay UNVERIFIED until captured. Hypixel dropped the space before the stat glyph in the level rewards (`+1<glyph> Strength`).
@@ -1239,56 +1241,58 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
     - **Rule** (`HotspotModule.hides`): option on, a ring-kind particle (pink dust, smoke on the Crimson Isle) inside the area of an active hotspot (`HotspotTracker.ringParticleOf`: within the estimated radius and half a block, 2 blocks of the surface), and only while this client draws that hotspot's ring (ring or disc on, its name tag shown); otherwise the particles draw. Card option "Hide Hypixel's hotspot particles", ON.
     - **Tests:** HotspotTrackerTest (the area, not the sampling zone), HotspotModuleTest (the card), MainHookPluginTest (the hook), HotspotGameTest (AC-HOT-12: 30 ring dust particles are not added and are still sampled with the option on, are added and sampled with it off, and dust 12 blocks out is added; the hook is applied; passes). AC-HOT-13 [R] by the review.
     - Review: two rounds, two angles with two verifiers each; confirmed and fixed: the first version hid every ring-kind particle within 6 blocks and also when no ring was drawn, the radius check with the option off was missing, and the margin was a block where the spec's area is half a block.
-- [ ] **T3.9b feat(odds): Scatha case** (M, deps T3.9h, T2.8). A Crystal Hollows HUD panel showing:
+- **T3.9b feat(odds): Scatha case** [dropped R42] **Dropped (R42, 2026-10-15, your decision): never built; the record below is kept.** Was: (M, deps T3.9h, T2.8). A Crystal Hollows HUD panel showing:
   - the base and the MF + Pet Luck-adjusted pet chances: any, Rare, Epic, Legendary
   - kills this session and kills since the last pet
   - the chance of at least 1 pet by now, and the expected kills
 
   Posts one line on your own Scatha PET DROP, then resets the since-last-pet count.
-  - Req: REQ-ODDS-05, REQ-ODDS-10, REQ-ODDS-13, REQ-ODDS-14, REQ-ODDS-15, REQ-ODDS-16
+  - Was Req: REQ-ODDS-05, REQ-ODDS-10, REQ-ODDS-13, REQ-ODDS-14, REQ-ODDS-15, REQ-ODDS-16
   - MF and Pet Luck come from the Stats widget ("tab") or from manual values ("manual"). A kill counts when a Scatha you hit dies within 30 s; it is not identified by maximum health alone. The pet chances are `odds.supplied` rows (T3.9g) from pages you supply (D-16 (a), D-28 (i)), with `verified: false` and "?".
-  - Accept: AC-ODDS-04 (Scatha panel), AC-ODDS-11, AC-ODDS-12 (A, plus a gametest with simulated entities and injected chat). The Crystal Hollows check at G3 is opportunistic.
-- [ ] **T3.9c feat(odds): Croesus / dungeon reward chest tooltips** (M, deps T3.9h, T3.0e). In end-of-run and Croesus chest screens, each RNG-meter item gets two tooltip lines (R10 = b):
+  - Was Accept: AC-ODDS-04 (Scatha panel), AC-ODDS-11, AC-ODDS-12 (A, plus a gametest with simulated entities and injected chat). The Crystal Hollows check at G3 is opportunistic.
+- **T3.9c feat(odds): Croesus / dungeon reward chest tooltips** [dropped R42] **Dropped (R42, 2026-10-15, your decision): never built; the record below is kept.** Was: (M, deps T3.9h, T3.0e). In end-of-run and Croesus chest screens, each RNG-meter item gets two tooltip lines (R10 = b):
   - "RNG-meter item · rarity rank k of n on <floor> · score S (relative)"
   - below it, "≈ 1 in N runs (P%, base, no bonuses)", with N = score / 300
 
   No HUD element and no chat line.
-  - Req: REQ-ODDS-17, REQ-ODDS-18, REQ-ODDS-19
+  - Was Req: REQ-ODDS-17, REQ-ODDS-18, REQ-ODDS-19
   - The floor comes from the title or the dungeon context; if neither gives it, no lines are shown. Lines are recomputed when the contents change (reroll). Placeholders are excluded, and the lines appear only in the Dungeon Hub or a dungeon. The chest titles are registered with the menu reader and the capture allowlist.
-  - Accept: AC-ODDS-13 (a provisional UNVERIFIED chest fixture until a capture replaces it), AC-ODDS-14. The Croesus check is at G3.
-- [ ] **T3.9d feat(odds): Frozen Corpse odds panel + loot parser, Vanguard** *(T3.9g: the Frostbitten Dye row is an `odds.supplied` row with case `vanguard`; the Vanguard roll counts come with your page, so until then only per-roll values show)* (M, deps T3.9h, T3.0m, T3.0g, T2.8). A mineshaft HUD panel per corpse type in the Frozen Corpses state (REQ-GS-17). It shows the N rarest items (default 3, range 1–10) with per-roll and per-corpse chance, plus the corpses looted this session. Falls back to "(widget off)" and never reads entities.
-  - Req: REQ-ODDS-05, REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22
+  - Was Accept: AC-ODDS-13 (a provisional UNVERIFIED chest fixture until a capture replaces it), AC-ODDS-14. The Croesus check is at G3.
+- **T3.9d feat(odds): Frozen Corpse odds panel + loot parser, Vanguard** [dropped R42] **Dropped (R42, 2026-10-15, your decision): never built; the record below is kept.** Was: *(T3.9g: the Frostbitten Dye row is an `odds.supplied` row with case `vanguard`; the Vanguard roll counts come with your page, so until then only per-roll values show)* (M, deps T3.9h, T3.0m, T3.0g, T2.8). A mineshaft HUD panel per corpse type in the Frozen Corpses state (REQ-GS-17). It shows the N rarest items (default 3, range 1–10) with per-roll and per-corpse chance, plus the corpses looted this session. Falls back to "(widget off)" and never reads entities.
+  - Was Req: REQ-ODDS-05, REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22
   - A parser for "<TYPE> CORPSE LOOT!" blocks ignores lines other mods insert and drops a block that is cut off for 2 s. It posts one line for the items at or below the threshold.
   - The Frostbitten Dye per-roll chance is the Vanguard table's supplied row (T3.9g), with `verified: false`. Per-corpse values carry the "no extra-roll perk" note.
   - The AC-ODDS-04 gametest drives T3.0m's dev-only shaft simulation (`/ksu debug shaft`); there is no second hook (this rule came from T3.3, which R22 dropped and R40 reinstates).
-  - Accept: AC-ODDS-03 (tier D at G3), AC-ODDS-04 (corpse panel), AC-ODDS-06, AC-ODDS-15 (Vanguard), AC-ODDS-16 (parser on all logged blocks).
-- [ ] **T3.9e feat(odds): Lapis / Umber / Tungsten corpse case** (S, deps T3.9d). Adds case 4 to the T3.9d panel and parser. Per-roll chances are `odds.supplied` rows (T3.9g) from pages you supply (no MIT source exists), with `verified: false` and "?". Rolls: Lapis 3–6, Umber and Tungsten 4–7. Without the pages, the items show no number (REQ-ODDS-11).
-  - Req: REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22
-  - Accept: AC-ODDS-15 (Umber part), AC-ODDS-16 (92 Lapis, 38 Tungsten and 28 Umber blocks). The mineshaft check is at G3.
-- [ ] **T3.9f feat(odds): slayer RNG meter case** (M, deps T3.9h, T2.8, T3.0e). A slayer HUD panel, shown during a quest and for 30 s after a meter line. It shows:
+  - Was Accept: AC-ODDS-03 (tier D at G3), AC-ODDS-04 (corpse panel), AC-ODDS-06, AC-ODDS-15 (Vanguard), AC-ODDS-16 (parser on all logged blocks).
+- **T3.9e feat(odds): Lapis / Umber / Tungsten corpse case** [dropped R42] **Dropped (R42, 2026-10-15, your decision): never built; the record below is kept.** Was: (S, deps T3.9d). Adds case 4 to the T3.9d panel and parser. Per-roll chances are `odds.supplied` rows (T3.9g) from pages you supply (no MIT source exists), with `verified: false` and "?". Rolls: Lapis 3–6, Umber and Tungsten 4–7. Without the pages, the items show no number (REQ-ODDS-11).
+  - Was Req: REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22
+  - Was Accept: AC-ODDS-15 (Umber part), AC-ODDS-16 (92 Lapis, 38 Tungsten and 28 Umber blocks). The mineshaft check is at G3.
+- **T3.9f feat(odds): slayer RNG meter case** [dropped R42] **Dropped (R42, 2026-10-15, your decision): never built; the record below is kept.** Was: (M, deps T3.9h, T2.8, T3.0e). A slayer HUD panel, shown during a quest and for 30 s after a meter line. It shows:
   - the selected item, from chat or from the "<slayer> RNG Meter" menu
   - stored and required XP, and the percentage
   - the base and the meter-boosted chance at the highest tier
   - bosses until guaranteed, once a per-boss gain has been seen
 
   Posts one line on a RARE / VERY RARE / CRAZY RARE DROP of an item in the table.
-  - Req: REQ-ODDS-05, REQ-ODDS-23, REQ-ODDS-24
-  - Accept: AC-ODDS-04 (slayer panel), AC-ODDS-17. The slayer check is at G3.
+  - Was Req: REQ-ODDS-05, REQ-ODDS-23, REQ-ODDS-24
+  - Was Accept: AC-ODDS-04 (slayer panel), AC-ODDS-17. The slayer check is at G3.
 
 **Checkpoint G3:**
 
-*R35 (2026-10-10, your answer): G3 runs now, before T3.9b–f. Those five odds cases wait for your wiki pages (Scatha, Lapis/Umber/Tungsten, the Vanguard corpse page with its roll counts and the Frostbitten Dye) and for chat and menu captures (corpse-loot blocks, a Scatha PET DROP line, slayer RNG meter lines, a reward-chest dump), so their acceptance items below stay open.*
+*R35 (2026-10-10, your answer): G3 runs now, before T3.9b–f. Those five odds cases wait for your wiki pages (Scatha, Lapis/Umber/Tungsten, the Vanguard corpse page with its roll counts and the Frostbitten Dye) and for chat and menu captures (corpse-loot blocks, a Scatha PET DROP line, slayer RNG meter lines, a reward-chest dump), so their acceptance items below stay open.* *Superseded for T3.9b–f by R42.*
+
+*Done (2026-10-15): R42 drops Rare Drop Odds, so the odds acceptance items below (AC-ODDS-02, AC-ODDS-03, AC-ODDS-12, AC-ODDS-13, AC-ODDS-16 and AC-ODDS-17) are dropped with it; nothing in G3 waits for T3.9b–f any more.*
 
 - [x] tiers A–C green (the full build with all gametests, 2026-10-10)
 - [x] `code-reviewer` review:
   - the rules review (AC-XC-01): no packet cancelling, no sends, nothing see-through that comes from an entity
-  - the module review items AC-MSA-08, AC-NPCWP-12, AC-BOB-06, AC-HOT-07, AC-ODDS-02 (AC-DRILL-02 was here; dropped, R37. AC-CORPSE-04, dropped by R22 and back with R40, is reviewed with T3.3)
+  - the module review items AC-MSA-08, AC-NPCWP-12, AC-BOB-06, AC-HOT-07 (AC-ODDS-02 was here; dropped, R42. AC-DRILL-02 was here; dropped, R37. AC-CORPSE-04, dropped by R22 and back with R40, is reviewed with T3.3)
   - licences and notices (AC-XC-03)
   - Done (2026-10-15): three reviews, each finding checked by two verifiers.
     - **Rules:** no finding.
     - **Module items:** one finding confirmed. AC-MSA-08's scan missed the 26.2 click and command names. It is replaced by one shared scan (`SendScan`, the names ReaderArchitectureTest checks against the 26.2 jar), run over every feature module and mixin by `FeatureSendScanTest`, with a test that each pattern catches a real 26.2 call.
     - **Licences:** no finding confirmed. One split finding is taken: the SkyOcean notice now states its licence split exactly, and that the Bobber Fix follows SkyOcean's `FishingHookMixin` approach, written anew.
-- [x] tier D boot of the jar with a copy of your mod set and the mixin export: AC-BOB-07, AC-HOT-10, AC-MSA-12, AC-ODDS-03, AC-NPCWP-11, AC-MARK-08 (D); AC-GS-13 [D] for `/ksu debug shaft` (absent from the production jar, REQ-LOC-08). The injection order is recorded. (AC-DRILL-04 was here; dropped, R37.)
+- [x] tier D boot of the jar with a copy of your mod set and the mixin export: AC-BOB-07, AC-HOT-10, AC-MSA-12, AC-NPCWP-11, AC-MARK-08 (D); AC-GS-13 [D] for `/ksu debug shaft` (absent from the production jar, REQ-LOC-08). The injection order is recorded. (AC-DRILL-04 was here; dropped, R37. AC-ODDS-03 was here; dropped, R42.)
   - Done (2026-10-10), with your 51 other jars from "26.2 Skyblock" (copied):
     - "Optional hooks: 4 of 4 active" (`bobber.link`, `bobber.lava`, `hotspot.particles`, `drill.refresh`).
     - Against the baseline, the only new ERROR line is Aaron's Mod failing its online profile-key fetch, which is not this mod. The only WARN from this mod is its one-time config backup.
@@ -1297,15 +1301,15 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - `FishingHook`: Skyblocker, Lithium, Debugify.
       - `ItemInHandRenderer`: Alpaka (14 handlers), NoFrills (7), Iris, Skyblocker, Debugify, Collective.
       - `ClientPacketListener`: Skyblocker, NoFrills, SkyHanni, Architectury, Bobby, SBO, Odin and others.
-    - AC-ODDS-03 needs T3.9d and waits with it.
+    - AC-ODDS-03 needs T3.9d and waits with it. (Both dropped, R42.)
 - [ ] your batched field checks (E, R17):
-  - mineshaft: AC-MSA-10 (party summon opportunistic), AC-MSA-11, AC-MSA-12 [E], corpse loot lines (AC-ODDS-16); AC-GS-02, AC-GS-03, AC-GS-07 and AC-GS-17 [E] (the reported code, corpse list and key counts equal a `/ksu debug dump tab|sidebar` taken there). AC-CORPSE-10 was here; dropped by R22, it comes back with T3.3 (R40)
+  - mineshaft: AC-MSA-10 (party summon opportunistic), AC-MSA-11, AC-MSA-12 [E] (the corpse loot lines, AC-ODDS-16, were here; dropped, R42); AC-GS-02, AC-GS-03, AC-GS-07 and AC-GS-17 [E] (the reported code, corpse list and key counts equal a `/ksu debug dump tab|sidebar` taken there). AC-CORPSE-10 was here; dropped by R22, it comes back with T3.3 (R40)
   - mineshaft, carried over from G1 (R24): the command and menu path that enable the Frozen Corpses widget, which fix the hint wording (AC-GS-18 [E], Q-MSA-04); and whether a Tungsten or Umber key held only in the Dwarven Sack opens a corpse (REQ-MSA-05 fallback; D-7 stands until then)
   - waypoints and markers: AC-NPCWP-11 and AC-MARK-08 [E] (Udel, Researcher Timmy and a hotspot ring, shaders on and off, next to Skyblocker waypoints)
   - fishing: AC-BOB-04 (2 min in water), AC-BOB-05 (30 s in lava), AC-HOT-08, AC-HOT-09 including the stand's tracking distance
   - mining: AC-DRILL-03 was here; dropped (R37)
-  - dungeon: one Croesus chest (AC-ODDS-13, plus a chest capture); the rare-room glow (AC-GLOW-11) is opportunistic
-  - opportunistic: Scatha (AC-ODDS-12), slayer (AC-ODDS-17), a Vanguard corpse
+  - dungeon: one Croesus chest capture (AC-ODDS-13 was here; dropped, R42); the rare-room glow (AC-GLOW-11) is opportunistic
+  - opportunistic: Scatha (AC-ODDS-12), slayer (AC-ODDS-17) and a Vanguard corpse were here; dropped (R42)
   - menus: AC-GS-06 [E] (one `/sblevels` page re-captured with the T3.0e dump equals its G1 capture)
   - privacy: AC-GS-12 [E] (after a session of at least 30 min with capture off, Claude checks that the config folder holds no raw chat, tab or sidebar text)
   - Done (2026-10-15), your first round of field checks (R36):
@@ -1328,8 +1332,8 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - **Still open (after R41):**
     - the sack-reminder field check, AC-MSA-15 (after T3.2b);
     - the ding check AC-CORPSE-12 (after T3.3b);
-    - not reported in R36: the corpse loot lines (AC-ODDS-16) and the privacy check (AC-GS-12 [E]);
-    - the opportunistic items: a party summon (AC-MSA-10), the rare-room glow (AC-GLOW-11), Scatha (AC-ODDS-12), slayer (AC-ODDS-17) and a Vanguard corpse.
+    - not reported in R36: the privacy check (AC-GS-12 [E]) (the corpse loot lines, AC-ODDS-16, were here; dropped, R42);
+    - the opportunistic items: a party summon (AC-MSA-10) and the rare-room glow (AC-GLOW-11) (Scatha, slayer and a Vanguard corpse were here; dropped, R42).
 - [dropped R38] *(the mob gist stays as it is)* you have removed Ghost, Fels, Sneaky Creeper and Invisibug from the 1.0.x mob gist (any time before this, e.g. together with T0.5); Claude checks that the raw URL still parses (AC-NPCDB-09 pre-check)
 - [ ] every commit since G2, including fixture commits from the G3 captures, builds in a worktree (AC-XC-05); then push `update/26.2` (D-10 checkpoint push); CI green on the pushed head
   - So far (2026-10-15): all 26 commits from `b92bbfd` to `10ddc84` build alone, with conforming subjects and noreply authors. Run again over the G3 commits before the push.
@@ -1343,17 +1347,16 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
       - game-state readers, the data registry, profile service and menu reader (T3.0a–T3.0n);
       - the NPC and mob lists bundled (T3.8–T3.8c), the dungeon NPC name lines (T3.1);
       - the mineshaft entry alert (T3.2), beam colour settings and migration (T3.4b);
-      - the bobber fix (T3.5), hotspot rings and the "hotspot gone" warning (T3.6, T3.6b);
-      - the odds math, tables and module (T3.9a, T3.9g, T3.9h).
-      Each has a CHANGELOG entry under [Unreleased]. The drill re-equip fix (T3.7) was built and then removed with its CHANGELOG entry (R37).
-    - **Open:** T3.10, T3.2b, T3.3b (R36–R41), T3.6c (R41); T3.9b–f (R35). Done since R36: T3.2c, T3.8d, T3.3c, T3.3a, T3.3.
+      - the bobber fix (T3.5), hotspot rings and the "hotspot gone" warning (T3.6, T3.6b).
+      Each has a CHANGELOG entry under [Unreleased]. The drill re-equip fix (T3.7) was built and then removed with its CHANGELOG entry (R37). So were the odds math, tables and module (T3.9a, T3.9g, T3.9h; R42).
+    - **Open:** no Phase 3 task. Done since R36: T3.2c, T3.8d, T3.3c, T3.3a, T3.3, T3.10, T3.2b, T3.3b and T3.6c. T3.9b–f, held back by R35, are dropped (R42).
     - **UNVERIFIED until your checks** (the sack formats and the Organ Donor ding came from your captures and logs, R41):
       - the Bestiary glyphs, the `Profile ID:` line and the ☀/Ⓑ profile glyphs;
       - the hotspot island caps and the pink-dust and smoke filters;
       - whether Hypixel's timer stand is hook id + 1 on the client;
-      - the dye placeholder scores;
       - the NPC positions listed at T3.8a.
-    - **Opportunistic, not yet seen:** a party summon into a shaft (AC-MSA-10), the rare-room glow (AC-GLOW-11), Scatha, slayer and a Vanguard corpse.
+      (The dye placeholder scores were on this list; they left with the odds tables, R42.)
+    - **Opportunistic, not yet seen:** a party summon into a shaft (AC-MSA-10) and the rare-room glow (AC-GLOW-11). (Scatha, slayer and a Vanguard corpse were on this list; dropped, R42.)
 
 ### Phase 4 — Auto-updater on GitHub Releases
 
@@ -1761,7 +1764,7 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
   - Req: REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-XC-TOGGLE-02, REQ-XC-RULES-07, REQ-GLOW-15, REQ-CORPSE-09
   - The corpse-spot licence line (REQ-CORPSE-09) left this task when R22 dropped corpse spots and is back with R40: the README says the corpse-spot data file is MIT, not CC0.
   - Supported version "Minecraft 26.2 (Fabric)": Java 25, minimum Loader, Fabric API, Hypixel Mod API; 26.1.x unsupported, 1.0.1 was the last 26.1 build.
-  - Feature table (name, one line, category, default per §12.H; Rare Drop Odds names the Croesus "≈ 1 in N runs (P%, base, no bonuses)" line, R10 = b). Every user-facing command. One placeholder per visible feature, as a committed image or text marker, so nothing renders as a broken image.
+  - Feature table (name, one line, category, default per §12.H; Rare Drop Odds, with its Croesus "≈ 1 in N runs" line (R10 = b), was here; dropped, R42). Every user-facing command. One placeholder per visible feature, as a committed image or text marker, so nothing renders as a broken image.
   - Compliance (P1–P7 in plain words, the excluded behaviours, the EC-GS-04 limitation), the non-affiliation sentence, network access (GitHub hosts per REQ-UPD-20, plus `api.hypixel.net` only when opted in, each with its toggle), licensing (CC0; MIT data → THIRD_PARTY_NOTICES; Render Chest Apache-2.0; credits).
   - Upgrade note: 1.0.x and 1.1.0 users install by hand once; settings migrate with a backup; the behaviour changes of REQ-REL-04; updates need one click, and some cases are notify-only.
   - Accept: AC-REL-01, AC-REL-02, AC-REL-03 (README half), AC-XC-04 (README defaults = code defaults), AC-GLOW-14 (README part).
@@ -1821,15 +1824,13 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
 
 ### Not built in 2.0.0
 
-**Requirements deferred by a decision.** These have no task on purpose, so they are not gaps. Where one has an AC, that AC checks that the feature is absent.
+**Requirements deferred by a decision.** These have no task on purpose, so they are not gaps. Where one has an AC, that AC checks that the feature is absent. None since R42: REQ-ODDS-25 and REQ-ODDS-26 (not in v1 under D-3 = A; reveal animations were left to SkyCase or a later follow-up, and AC-ODDS-18 did not apply) are dropped with the rest of rare-drop-odds, below.
 
-- **REQ-ODDS-25**: Not in v1: D-3 = A (numeric odds only); reveal animations are left to SkyCase or a later follow-up.
-- **REQ-ODDS-26**: Not in v1: D-3 = A; it applies only if a later follow-up adds reveal animations (AC-ODDS-18 is not applicable).
-
-**Requirements dropped at G3 (R37, R38).** These ids stay in SPEC, marked `[dropped R37]` or `[dropped R38]`, and no task builds them.
+**Requirements dropped at G3 (R37, R38, R42).** These ids stay in SPEC, marked `[dropped R37]`, `[dropped R38]` or `[dropped R42]`, and no task builds them.
 
 - The drill re-equip fix (brief Phase 3 item 8), removed at your request (commit `792ec9c`): **REQ-DRILL-01** to **REQ-DRILL-12** (REQ-DRILL-09 to REQ-DRILL-12 were already not built under D-4: no Drill Fuel HUD, fuel-lore parser, drill HUD element or low-fuel warning), **AC-DRILL-01** to **AC-DRILL-08**, **EC-DRILL-01** to **EC-DRILL-09** and **Q-DRILL-01** to **Q-DRILL-03** [dropped R37]. Its task T3.7 stays in §7, marked dropped; no other task depends on it. The README and "not implemented" lines about the packet-suppressing drill fix stay (REQ-REL-03).
 - The second bullet of **AC-NPCDB-09** (the mob gist without the four invisible mobs) and the G3 gist item [dropped R38]: the 1.0.x mob gist stays as it is.
+- Rare Drop Odds (brief Phase 3 item 7, the "Rare Drop Gambling Overlay"), removed at your request ("Ignore the gambling overlays"): **REQ-ODDS-01** to **REQ-ODDS-26**, **AC-ODDS-01** to **AC-ODDS-18**, **EC-ODDS-01** to **EC-ODDS-16** and **Q-ODDS-01** to **Q-ODDS-07** [dropped R42]. Its tasks stay in §7, marked dropped: T3.9a, T3.9g and T3.9h were built and are removed from the code; T3.9b–f were never built. No active task depends on them. It was never released, so there is no config migration; a saved `rare_drop_odds` section is kept and not read.
 
 **Requirements reinstated at G3 (R40).** R22 dropped the possible corpse spots after G1 (REQ-CORPSE-01 to REQ-CORPSE-10, their criteria, edge cases and questions, the `/ksu corpses` subscriber in REQ-GS-16, the second bullet of AC-GS-16 and the `corpses` reserved word). R40 reinstates all of them as `[reinstated R40]`, with T3.3a and T3.3 active again (§7, after T3.9h).
 
@@ -1894,7 +1895,7 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
 
 ## 9. Decisions (all decided on 2026-10-01)
 
-**Record:** you approved every decision below with the recommended option ("Plan: approve with recommendations"). One timing change: D-17's "now" capture moved to G1. The spec-level questions R1–R17 are recorded in `SPEC.md` §12.2 (all recommended, except **R10 = b**: the Croesus tooltip adds "≈ 1 in N runs (base)"). R18–R41, decided after G1, are recorded in `SPEC.md` §12.3; R22 dropped the corpse-spot parts of D-5 and D-6 below, and R40 reinstates them; R37 drops D-4's fix; R39 changed D-7, and R41 restores it with a sack reminder. The text below is kept as the record of what was decided.
+**Record:** you approved every decision below with the recommended option ("Plan: approve with recommendations"). One timing change: D-17's "now" capture moved to G1. The spec-level questions R1–R17 are recorded in `SPEC.md` §12.2 (all recommended, except **R10 = b**: the Croesus tooltip adds "≈ 1 in N runs (base)"). R18–R42, decided after G1, are recorded in `SPEC.md` §12.3; R22 dropped the corpse-spot parts of D-5 and D-6 below, and R40 reinstates them; R37 drops D-4's fix; R39 changed D-7, and R41 restores it with a sack reminder; R42 drops the Rare Drop Odds feature, so D-3 no longer applies. The text below is kept as the record of what was decided.
 
 - **D-1 Glow compliance:** switch to depth-tested glow (Render Chest, Apache-2.0, bundled), permanently ignore invisible entities, and offer **no** through-wall option. → *Yes.*
   - *Consequence for feature 1:* Trinity/Tomioka/Duncan then glow only once they are in view, so you can't find them through walls any more. Skyblocker's rare-room alert already tells you that the room exists.
@@ -1904,16 +1905,16 @@ Ships 2.0.0 the same way v1.1.0 shipped after G1 (phase 1): PR → your approval
   - (B) reveal animations, code-drawn and without SkyOcean art
   - (C) both
 
-  Also approve the T3.9 case list. Note that SkyCase (MIT, 26.2) already provides (B) for Croesus, Vanguard and Scatha. → *A, renamed "Rare Drop Odds"; B left to SkyCase or kept as a later follow-up.*
+  Also approve the T3.9 case list. Note that SkyCase (MIT, 26.2) already provides (B) for Croesus, Vanguard and Scatha. → *A, renamed "Rare Drop Odds"; B left to SkyCase or kept as a later follow-up.* (R42: the Rare Drop Odds feature is removed at G3 at your request; D-3 no longer applies.)
 - **D-4 Drill fuel:** which symptom do you see? (a) the drill dips in your hand on every block, (b) mining progress resets, (c) the fuel number or bar is wrong or missing. → *Implement (a) only (toggle, default ON). (b) is excluded (packet suppression; Hypixel fixed it on 2026-09-17). (c) only if you want a fuel HUD.* (R37: the (a) fix is removed at G3 at your request.)
 - **D-5 Third-party data:** bundle the MIT data with notices, or stay 100 % CC0 (ShaftUtils spots, ~16 fewer; hand-entered numbers)?
-  - The MIT data is the merged corpse spots (SkyHanni-REPO **unmerged** PR #759 by GrowlingGrizzly + meowdding-repo) plus the NEU bestiary and RNG weights. *(After G1, R22 dropped the corpse-spot part; the NEU bestiary and RNG weights stay. After G3, R40 reinstates the corpse spots, merged with the CC0 ShaftUtils spots.)*
+  - The MIT data is the merged corpse spots (SkyHanni-REPO **unmerged** PR #759 by GrowlingGrizzly + meowdding-repo) plus the NEU bestiary and RNG weights. *(After G1, R22 dropped the corpse-spot part; the NEU bestiary and RNG weights stay. After G3, R40 reinstates the corpse spots, merged with the CC0 ShaftUtils spots, and R42 removes the RNG weights with the odds.)*
   - If you choose MIT: ship from the pinned PR commit now, or ask the maintainers or wait for the merge first?
 
   → *MIT with notices, pinned commit, ship now with credit.*
 - **D-6 Defaults policy (§3):** P1–P7, plus these per-item defaults:
   - ON: distance line, hotspot ring, hotspot-gone warning, hiding Hypixel's hotspot particles (added at G3, R41), bobber fix, drill animation (dropped at G3, R37), corpse spots (from R40), the "You found X" title (current behaviour; limited to five NPCs after G1, R20), white waypoint labels (added after G1, R21: "White waypoint labels" ON)
-  - OFF: corpse spots (dropped after G1, R22; ON since R40), odds HUD, bestiary HUD
+  - OFF: corpse spots (dropped after G1, R22; ON since R40), odds HUD (dropped at G3, R42), bestiary HUD
   - SkyBlock XP: module and passive `/sblevels` / action-bar reading ON, "next best task" HUD OFF, live Bazaar OFF (D-22)
 
   → *Accept.*

@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * Each module's on/off state, taken before a gametest switches modules and put back after it, so a later gametest
- * finds the defaults: not every feature is ON by default (Rare Drop Odds is OFF, D-6). Client thread only.
+ * finds the defaults: not every feature need be ON by default (D-6). Client thread only.
  */
 public final class ModuleStates {
 	private final Map<String, Boolean> states = new LinkedHashMap<>();

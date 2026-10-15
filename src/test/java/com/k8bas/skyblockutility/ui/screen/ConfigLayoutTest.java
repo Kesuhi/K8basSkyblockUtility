@@ -146,7 +146,7 @@ class ConfigLayoutTest {
 	@Test
 	void aCategoryWithoutCardsIsHidden() {
 		List<Category> shown = ConfigLayout.categories(catalog());
-		assertEquals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING, Category.ODDS_TRACKERS), shown);
+		assertEquals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING), shown);
 	}
 
 	@Test

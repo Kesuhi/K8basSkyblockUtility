@@ -13,7 +13,7 @@ import java.util.function.Consumer
 
 /**
  * The per-profile store (T3.0d, REQ-GS-09): `<root>/<account>/<profile key>/<consumer>.json`, one file per
- * consumer (`odds`, `bestiary`, `sbxp`), each written through config-store's atomic facility, so a save cut
+ * consumer (`mineshaft_alert_sack`, `bestiary`, `sbxp`), each written through config-store's atomic facility, so a save cut
  * off before its move leaves the previous file (REQ-CFG-12). Each folder remembers its profile id in [META].
  * A known name that comes back with another id is a new profile: the old folder moves to
  * `<root>/<account>/archive/<key>-<time>/`, never merged. The store reads and writes only a folder it is

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26–R27 at T2.3b (2026-10-03), R28–R34 during Phase 2 and the v1.2.0 release (2026-10-04 to 2026-10-09), R35 before G3 (2026-10-10) and R36–R41 after the G3 field checks (2026-10-15); all are listed in §12.3. R36 answers both field questions that R24 left for G3: the Frozen Corpses widget is enabled with `/widgets`, and a key held only in the Dwarven Sack opens a corpse. R41 corrects the second answer: a key held only in the Dwarven Sack does not open a corpse. R37 drops the drill re-equip fix (module drill-fix). R38 leaves the four invisible-by-design mobs out of the bundled mob table. R39 changed D-7 to count sack keys too; R41 replaces R39: keys are counted in the inventory only again, with a reminder about keys seen in the sack. R40 reinstates the possible corpse spots (module corpse-waypoints), which R22 had dropped. R41 also hides Hypixel's hotspot particles on the client (REQ-HOT-14) and makes the Organ Donor ding hint concrete from your sound capture. Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped Rn]` and keep their ids; reinstated ones carry `[reinstated R40]`; R39's replaced changes carry `[replaced R41]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
+| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26–R27 at T2.3b (2026-10-03), R28–R34 during Phase 2 and the v1.2.0 release (2026-10-04 to 2026-10-09), R35 before G3 (2026-10-10) and R36–R42 after the G3 field checks (2026-10-15); all are listed in §12.3. R36 answers both field questions that R24 left for G3: the Frozen Corpses widget is enabled with `/widgets`, and a key held only in the Dwarven Sack opens a corpse. R41 corrects the second answer: a key held only in the Dwarven Sack does not open a corpse. R37 drops the drill re-equip fix (module drill-fix). R42 drops the Rare Drop Odds feature (module rare-drop-odds), built parts included. R38 leaves the four invisible-by-design mobs out of the bundled mob table. R39 changed D-7 to count sack keys too; R41 replaces R39: keys are counted in the inventory only again, with a reminder about keys seen in the sack. R40 reinstates the possible corpse spots (module corpse-waypoints), which R22 had dropped. R41 also hides Hypixel's hotspot particles on the client (REQ-HOT-14) and makes the Organ Donor ding hint concrete from your sound capture. Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped Rn]` and keep their ids; reinstated ones carry `[reinstated R40]`; R39's replaced changes carry `[replaced R41]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
 | Date | 2026-10-01 |
 | Inputs | Your original task prompt (verbatim) and the *SkyBlock XP Optimizer* addendum (verbatim), plus the research and decisions recorded in `PLAN.md` |
 | Relationship to PLAN.md | This file says **what** must be true and how we will know. `PLAN.md` says **how and in which order**. Every PLAN task names the requirement ids it implements (§13 Traceability). |
@@ -16,7 +16,7 @@
 
 Bring **K8bas Skyblock Utility** to **Minecraft 26.2 (Fabric)** and extend it. The work covers:
 - a new AlpakaAddons-style configuration screen and HUD editor
-- nine SkyBlock features from brief Phase 3; item 8 (the drill fix) was dropped at G3 [dropped R37], so eight are built. Item 3 (possible corpse spots), dropped after G1 by R22, is built again [reinstated R40]
+- nine SkyBlock features from brief Phase 3; item 8 (the drill fix) [dropped R37] and item 7 (the rare-drop odds, "Rare Drop Gambling Overlay") [dropped R42] were dropped at G3, so seven are built. Item 3 (possible corpse spots), dropped after G1 by R22, is built again [reinstated R40]
 - a safe GitHub-Releases auto-updater
 - a Bestiary tracker HUD
 - a SkyBlock XP Optimizer that ranks every SkyBlock XP source by XP per effective hour
@@ -67,7 +67,7 @@ The mod is client-side and display-only. Its own code is CC0; bundled third-part
 | `npc-waypoints` | Skyblocker-style NPC waypoints (white label, coloured beam) | world-markers, npc-mob-data, ui-config |
 | `bobber-fix` | Fishing bobber rubber-band fix | port-26-2, location |
 | `fishing-hotspot` | Hotspot highlight + "hotspot gone" warning, plus hiding Hypixel's ring particles on the client [R41] | world-markers, location |
-| `rare-drop-odds` | Rare-drop odds overlay ("gambling overlay") | game-state, data-registry, hud, location |
+| `rare-drop-odds` | Rare-drop odds overlay ("gambling overlay"). **[dropped R42]**: the maintainer removed it at G3, built parts included; the module text is kept as a record | game-state, data-registry, hud, location |
 | `drill-fix` | Drill fuel / re-equip fix. **[dropped R37]**: the maintainer removed it at G3; the module text is kept as a record | port-26-2, location (+ hud if a fuel HUD is chosen) |
 | `updater` | GitHub-Releases updater with confirmation | config-store, ui-config |
 | `bestiary-hud` | Bestiary tracker HUD | game-state, data-registry, hud, location |
@@ -200,7 +200,7 @@ Commits:
 
 | Tier | Who | What | Where |
 |---|---|---|---|
-| **A** unit | Claude | Pure logic: rule matching, island map, migrations, data parsing, parsers for tab/sidebar/chat/menus, odds/bestiary/optimizer math, updater selection, rate limits and paths | `src/test/java`, run by `./gradlew build` and in CI |
+| **A** unit | Claude | Pure logic: rule matching, island map, migrations, data parsing, parsers for tab/sidebar/chat/menus, bestiary/optimizer math (the odds math is dropped, R42), updater selection, rate limits and paths | `src/test/java`, run by `./gradlew build` and in CI |
 | **B** dev client | Claude | `runClient`: loads, mixins apply, screens open, dev-only debug island override | local |
 | **C** gametests | Claude | Singleplayer scenes with screenshots Claude reviews: glow, labels behind stone/glass/water, beams, rings, config screen, HUD editor at GUI scales 1–4 | `src/gametest/java` |
 | **D** production boot | Claude | The exact release jar plus a **copy** of your 26.2 mod set: no crash, no new ERRORs, injection and listener order recorded | local, at G1/G2/G6/release |
@@ -209,7 +209,7 @@ Commits:
 
 Rules:
 - Every acceptance criterion names its tier.
-- All pure logic in `config-store`, `game-state` parsers, `rare-drop-odds`, `bestiary-hud`, `updater` and `sbxp-optimizer` is unit-tested.
+- All pure logic in `config-store`, `game-state` parsers, `bestiary-hud`, `updater` and `sbxp-optimizer` is unit-tested (`rare-drop-odds` was here; dropped, R42).
 - Bug fixes start with a failing test (Prove-It).
 - Fixtures are **sanitised**: no other players' names, server ids (replaced by the placeholder `m000XX`) or UUIDs.
 - Formats not yet captured (tab widgets, sidebar, `/sblevels` lore) use provisional fixtures marked UNVERIFIED until your capture replaces them.
@@ -261,7 +261,7 @@ These apply to every module. Module sections reference them instead of repeating
 - **REQ-XC-RULES-04** Invisible entities must never be highlighted or announced. This is hard-coded, with no toggle. **Scope:** entities whose body and name the player cannot perceive (mobs, NPCs, corpses). A hologram armor stand whose name tag vanilla already displays (e.g. a fishing hotspot) counts as visible information, and markers derived from it are depth-tested. `[decided D-1, R2]` *(Derived: ground rule 5; Hypixel 2021 announcement "Displaying invisible entities")*
 - **REQ-XC-RULES-05** Alerts or markers derived from an entity may fire only after the player has line of sight to it. See-through rendering is allowed only for **fixed coordinates**, and distances are shown only to fixed coordinates. Exceptions [R2]: a depth-tested marker drawn for a hologram whose name tag vanilla displays (the hotspot ring, REQ-HOT-05) needs no separate line-of-sight check, and the "hotspot gone" warning is gated by the 30 s fished window and the 40-block distance (REQ-HOT-08) instead of line of sight. `[decided D-6, R2]` *(Derived: ground rule 5)*
 - **REQ-XC-RULES-06** Any feature or behaviour whose legality is questionable must be **flagged** in the phase report and `PLAN.md` instead of being implemented, unless you approve implementing it. The AMBER items (distance line, corpse spots, bobber fix, NPC waypoints) were approved through D-6; the corpse spots were dropped by R22 and are back [reinstated R40]. *(Brief: ground rule 5)*
-- **REQ-XC-RULES-07** Feature names and descriptions must not use "ESP", "x-ray", "through walls", "cheat" or "gambling". The README compliance section may describe excluded behaviour in negative statements, such as "outlines are hidden by blocks", but without these words. "gambling" may appear only as a hidden search keyword for the brief's feature title. *(Derived: Hypixel SkyBlock Rules on gambling wording; Modrinth rules §3)*
+- **REQ-XC-RULES-07** Feature names and descriptions must not use "ESP", "x-ray", "through walls", "cheat" or "gambling". The README compliance section may describe excluded behaviour in negative statements, such as "outlines are hidden by blocks", but without these words. "gambling" may appear only as a hidden search keyword for the brief's feature title. Since R42 no shipped feature uses that keyword: the Rare Drop Odds card that carried it is removed. The rule stays for later features. *(Derived: Hypixel SkyBlock Rules on gambling wording; Modrinth rules §3)*
 
 ### Licensing (ground rule 4)
 - **REQ-XC-LICENSE-01** Before borrowing ideas or code from SkyOcean, Skyblocker, AlpakaAddons or Hot-Shirtless-Men, each project's licence must be checked. The outcome is recorded in `PLAN.md` §2 (done). *(Brief: ground rule 4)*
@@ -516,10 +516,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   *(Brief: Phase 3 item 1, "fix it if needed"; Derived: G5 §5; PLAN D-2, T1.9)*
 - **REQ-LOC-04** The current location must be available as one immutable snapshot: raw mode, map, server name, server type, the mapped island name (or none), and whether the player is on SkyBlock. An island is reported only when the server type is SkyBlock. Reads are safe from any thread. *(Derived: read-core §8; PLAN T1.9, "Expose raw mode/map/server")*
-- **REQ-LOC-05** Consumers must be able to subscribe to location changes. An event fires once on the client thread whenever the server name or the mode differs from the previous snapshot, and once on disconnect. Every dungeon run and every mineshaft is a new server. *(Derived: needed by REQ-GLOW-14 (per-run reset), mineshaft-alert, fishing-hotspot and rare-drop-odds; read-core §8; G5 §6)*
+- **REQ-LOC-05** Consumers must be able to subscribe to location changes. An event fires once on the client thread whenever the server name or the mode differs from the previous snapshot, and once on disconnect. Every dungeon run and every mineshaft is a new server. *(Derived: needed by REQ-GLOW-14 (per-run reset), mineshaft-alert, fishing-hotspot and rare-drop-odds (dropped, R42); read-core §8; G5 §6)*
 - **REQ-LOC-06** An unmapped mode gives no island, but the raw mode stays in the snapshot. Each distinct unmapped mode is logged once per session. *(Derived: PLAN T1.9, "log unknown modes once")*
 - **REQ-LOC-07** On disconnect, and on a world change before the next location event arrives, the island must be cleared, so no feature gates on the previous server's island. *(Derived: read-core §8 — today the old value stays during transfers; this stops Dungeon Hub waypoints flashing into a new run)*
-- **REQ-LOC-08** A dev-only command must let a tester force a mode or island in `runClient`. It must not exist in production builds. Only the two simulators are dev-only: `/ksu debug island` and `/ksu debug shaft` (a simulated mineshaft for gametests such as the corpse odds panel of AC-ODDS-04; its first user, AC-CORPSE-03, is back [reinstated R40]). The read-only capture commands ship in production (REQ-GS-13). *(Derived: REQ-XC-VERIFY; PLAN T0.4)*
+- **REQ-LOC-08** A dev-only command must let a tester force a mode or island in `runClient`. It must not exist in production builds. Only the two simulators are dev-only: `/ksu debug island` and `/ksu debug shaft` (a simulated mineshaft for gametests such as the mineshaft alert's and AC-CORPSE-03 [reinstated R40]; the corpse odds panel of AC-ODDS-04 was another user, dropped by R42). The read-only capture commands ship in production (REQ-GS-13). *(Derived: REQ-XC-VERIFY; PLAN T0.4)*
 - **REQ-LOC-09** The list of island names, each with a short description, must be available to the UI, so island fields are picked from a list instead of typed. Examples: "Catacombs — inside dungeon runs", "Dungeon Hub — dungeon lobby". *(Derived: G5 §5; read-mob — free-text island fields allow silent typos)*
 - **REQ-LOC-10** No build may ship the "Catacombs" run mapping (REQ-LOC-03) without the invisible-entity exclusion (REQ-GLOW-03), because the mapping switches on Catacombs rules for invisible mobs such as Shadow Assassin and Fels. *(Brief: Ground rule 5; Derived: G5 §4)*
 
@@ -712,7 +712,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - A slider's value changes only from presses on its track.
 
   *(Derived: research-alpaka-ui §4, §14: Alpaka computes geometry separately for drawing and for clicks, which made clicks land on the wrong option)*
-- **REQ-UI-04** Categories, in this order: General, Highlights, Waypoints, Mining, Fishing, Odds & Trackers, and SkyBlock XP (added with the optimizer). A category with no feature in the current build is hidden. Each feature card appears in exactly one category. A setting may move to a different place in the screen than in 1.0.1, but it does not move in the config file.
+- **REQ-UI-04** Categories, in this order: General, Highlights, Waypoints, Mining, Fishing, Odds & Trackers, and SkyBlock XP (added with the optimizer). A category with no feature in the current build is hidden. Odds & Trackers stays defined for later trackers; since R42 removed Rare Drop Odds it has no card, so it is hidden until the Bestiary Tracker (Phase 5) adds one [R42]. Each feature card appears in exactly one category. A setting may move to a different place in the screen than in 1.0.1, but it does not move in the config file.
 
   Placement should be:
 
@@ -723,7 +723,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   | Waypoints | NPC Search: fixed NPC waypoints and name-matched NPC glow (including Trinity, Tomioka and Duncan as NPC Search rules [decided R1]), the "You found X" title, beam and label options |
   | Mining | Glacite Mineshaft alert, possible corpse spots [reinstated R40] |
   | Fishing | Bobber fix, hotspot highlight, "hotspot gone" warning |
-  | Odds & Trackers | Rare Drop Odds, Bestiary Tracker |
+  | Odds & Trackers | Bestiary Tracker (Rare Drop Odds was here; dropped, R42). Hidden while it has no card |
   | SkyBlock XP | Optimizer settings |
 
   *(Brief: Phase 2 "categories"; list Derived: PLAN §7 Phase 2 spec, T6.8, research-alpaka-ui §15)*
@@ -1004,7 +1004,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 ### hud — HUD framework and HUD editor
 **Origin:** Brief Phase 2 ("HUD editor", "HUD editing"); Brief Phase 5 ("movable, scalable HUD element (integrated into the new HUD editor)"); Addendum UI ("Optional HUD element (integrated into the HUD editor)") | **Depends on:** ui-config (and through it port-26-2, config-store) | **Plan tasks:** T2.7, T2.7b, T2.8, T2.8b, T2.9c, T5.3, T6.9, T7.4 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
-**Purpose:** One framework for all of the mod's on-screen HUD elements, and one HUD editor modelled on AlpakaAddons' editor, where the user moves, scales and resets every element. Later HUDs (the rare-drop odds panels, bestiary tracker, SkyBlock XP "next best task", and a drill fuel HUD if one is ever added) plug into it without their own position or scale code.
+**Purpose:** One framework for all of the mod's on-screen HUD elements, and one HUD editor modelled on AlpakaAddons' editor, where the user moves, scales and resets every element. Later HUDs (the bestiary tracker, SkyBlock XP "next best task", and a drill fuel HUD if one is ever added; the rare-drop odds panels were dropped by R42) plug into it without their own position or scale code.
 
 **Functional requirements**
 - **REQ-HUD-01** Element contract.
@@ -1016,7 +1016,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-HUD-02** Visibility [decided R12].
   - Elements are hidden while the vanilla HUD is hidden (F1).
   - Elements are hidden while the HUD editor is open; the editor draws each of them itself, exactly once.
-  - Elements are hidden while any screen other than chat is open. There is no menu-context exception in v1: odds shown inside a container screen (Croesus) are tooltip lines, not a HUD element (rare-drop-odds REQ-ODDS-05).
+  - Elements are hidden while any screen other than chat is open. There is no menu-context exception in v1. (The Croesus odds, shown inside a container screen as tooltip lines and not as a HUD element, were the planned case; they are dropped with rare-drop-odds, R42.)
 
   *(Derived: research-alpaka-ui §9 (Alpaka hides HUDs under screens); rare-drop-odds REQ-ODDS-05; R12)*
 - **REQ-HUD-03** Position model.
@@ -1069,14 +1069,14 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - The element's bounds follow the drawn text plus a 2 px margin, and update when the content changes.
 
   *(Brief: Phase 5 "Make the displayed lines configurable"; Addendum "next best task with XP/h")*
-- **REQ-HUD-13** The default positions of shipped elements should not overlap one another, measured with preview content at 1920×1080 and GUI scale 2. *(Derived: up to 5 elements (Scatha, corpse and slayer odds panels, bestiary, next best task) must be usable on a fresh config; no drill fuel HUD is built [decided D-4]; rare-drop-odds REQ-ODDS-05)*
+- **REQ-HUD-13** The default positions of shipped elements should not overlap one another, measured with preview content at 1920×1080 and GUI scale 2. *(Derived: up to 5 elements (Scatha, corpse and slayer odds panels, bestiary, next best task) must be usable on a fresh config; no drill fuel HUD is built [decided D-4]; rare-drop-odds REQ-ODDS-05. Since R42 the three odds panels are dropped, so 2 elements remain)*
 - **REQ-HUD-14** The editor may snap edges within 4 px to the screen edges, the centre lines and other elements, showing 1 px guide lines while snapped. Holding Alt disables snapping. [optional stretch, decided D-8; not required for 2.0.0] *(Derived: research-alpaka-ui §9 "NEW" proposal; PLAN T2.9c)*
 
 **Out of scope**
 - Resize handles, a grid, selecting several elements at once, a right-click context menu, and per-element toggles inside the editor. Toggles live on the feature cards.
 - Snapping and guide lines, except as the optional T2.9c stretch item (REQ-HUD-14).
 - Drawing HUD elements above a container or menu screen (no menu-context exception in v1, REQ-HUD-02).
-- The content, data and rule verdicts of individual HUDs (odds, bestiary, next best task, drill fuel). These are specified in their own modules.
+- The content, data and rule verdicts of individual HUDs (odds (dropped, R42), bestiary, next best task, drill fuel). These are specified in their own modules.
 - Moving or changing vanilla HUD elements (hotbar, scoreboard, chat).
 - Importing HUD positions from AlpakaAddons or other mods.
 
@@ -1189,7 +1189,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-DATA-10** The registry should offer layered values: bundled < live cache (only for features with an opt-in feed) < user override. Each value reports which layer won and that layer's timestamp, and a failed live layer falls back silently to bundled. *(Addendum: Prices "fall back to bundled values silently"; UI "per-task rate and time overrides"; Derived: GAP-1 §5)*
 - **REQ-DATA-11** Each loaded table's id, dataVersion and gameVersion should be logged once at startup and be viewable in-game (a debug command or an About card). *(Derived: needed to diagnose reports and to flag stale SBXP overrides, PLAN T6.8)*
 - **REQ-DATA-12** Bundled data should add at most 1 MB to the compressed release jar, and the validator reports each table's size. *(Brief: Phase 3 item 9 "size"; Derived: GAP-1 measured ≈0.15 MB)*
-- **REQ-DATA-13** Every bundled table must load through this registry, and no feature may ship its own resource loader. That covers the NPC DB, mob DB, odds tables, the corpse-spot table [reinstated R40], bestiary, and the SBXP tasks, rates, reference tables and prices. *(Addendum: intro "reuse the internal database"; Derived: D-26)*
+- **REQ-DATA-13** Every bundled table must load through this registry, and no feature may ship its own resource loader. That covers the NPC DB, mob DB, the corpse-spot table [reinstated R40], bestiary, and the SBXP tasks, rates, reference tables and prices. The odds tables were on this list; they are dropped with rare-drop-odds [dropped R42]. *(Addendum: intro "reuse the internal database"; Derived: D-26)*
 
 **Out of scope**
 - Downloading or refreshing bundled tables at runtime from a gist, GitHub raw or third-party repos (meowdding-repo, SkyHanni-REPO, NEU) [decided D-12].
@@ -1235,9 +1235,9 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
 ### game-state — Read-only game-state readers
 
-**Origin:** Derived. Needed by: brief Phase 3 item 2 (corpse list and keys), item 3 (reinstated R40), item 7, Phase 5 (bestiary), and the addendum's Progress detection. Basis: PLAN AD-6, §3, and research detection §4–7 | **Depends on:** port-26-2, config-store, location | **Plan tasks:** T0.4, T0.4c, T0.4b, T0.4d, T3.0a, T3.0g, T3.0h, T3.0m, T3.0d, T3.0e, T3.2c, T3.10, T3.3c, T5.3 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+**Origin:** Derived. Needed by: brief Phase 3 item 2 (corpse list and keys), item 3 (reinstated R40), item 7 (dropped, R42), Phase 5 (bestiary), and the addendum's Progress detection. Basis: PLAN AD-6, §3, and research detection §4–7 | **Depends on:** port-26-2, config-store, location | **Plan tasks:** T0.4, T0.4c, T0.4b, T0.4d, T3.0a, T3.0g, T3.0h, T3.0m, T3.0d, T3.0e, T3.2c, T3.10, T3.3c, T5.3 (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
 
-**Purpose:** Shared, strictly passive readers for what the server already shows the player: tab-list widgets, the sidebar, chat and action bar, menus the player opens, the player's own inventory, profile identity and the mineshaft state. The mineshaft alert, odds, bestiary and SBXP features all build on one tested source, and the readers never interact with the server.
+**Purpose:** Shared, strictly passive readers for what the server already shows the player: tab-list widgets, the sidebar, chat and action bar, menus the player opens, the player's own inventory, profile identity and the mineshaft state. The mineshaft alert, corpse spots, bestiary and SBXP features (and the odds, until R42 dropped them) all build on one tested source, and the readers never interact with the server.
 
 **Functional requirements**
 - **REQ-GS-01** Read-only. The readers must never:
@@ -1314,14 +1314,14 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-GS-15** On disconnect, server switch or world change, the readers clear their cached widget, sidebar and menu state, so nothing from the previous server is reported (e.g. the last shaft's corpses). *(Derived: research G6 timing; location dependency)*
 - **REQ-GS-16** A reader works only while at least one enabled feature subscribes to it. With every consuming feature disabled, it parses and stores nothing. *(Brief: Ground rule 6 — a disabled feature must have no effect)*
   - [reinstated R40] A `/ksu corpses` request counts as a subscriber to the mineshaft state (REQ-GS-17) for the current shaft, reads the current sidebar and tab state at once and keeps the mineshaft state running until the player leaves that shaft, so the command works with the mineshaft alert and the corpse markers OFF *(Derived from REQ-CORPSE-06)*.
-- **REQ-GS-17** Mineshaft state. Game-state owns the shaft identification and the corpse list, and exposes both to mineshaft-alert, corpse-waypoints [reinstated R40] and rare-drop-odds:
+- **REQ-GS-17** Mineshaft state. Game-state owns the shaft identification and the corpse list, and exposes both to mineshaft-alert and corpse-waypoints [reinstated R40] (rare-drop-odds was the third consumer; dropped, R42):
   - **Shaft code:** the code `<TYPE>_<VARIANT>` (pattern `[A-Z]{4}_[12CL]`), taken from the sidebar scoreboard data the server sends (REQ-GS-03), not from the rendered sidebar. The search starts on entry into a Glacite Mineshaft (location) and runs for up to 15 s.
   - **Display names:** a table of the 34 current codes maps each code to a display name, e.g. `OPAL_1` → "Opal 1", `RUBY_C` → "Ruby Crystal", `FAIR_1` → "Vanguard", `LITT_L` → "Littlefoot's Den". A code that matches the pattern but is not in the table is exposed raw. No code within 15 s gives "Unknown shaft".
   - **Frozen Corpses list:** the corpse types and per-type state from the server's "Frozen Corpses:" tab widget (REQ-GS-02). Line format `<Type>: NOT LOOTED|LOOTED`; `UNLOOTED` also counts as not looted. The list is ordered as listed and does not depend on tab order.
   - The state never comes from entities: no armor stand or other entity is scanned, classified or counted.
   - The state resets on leaving the shaft, server switch and disconnect (REQ-GS-15).
 
-  *(Brief: Phase 3 items 2, 3 (reinstated R40) and 7; Derived: one owner for state that several modules need, research domain-mining-rules B2, G6 §1 and §5)*
+  *(Brief: Phase 3 items 2, 3 (reinstated R40) and 7 (dropped, R42); Derived: one owner for state that several modules need, research domain-mining-rules B2, G6 §1 and §5)*
 - **REQ-GS-18** Widget hint. One shared hint string must name the command and menu path for enabling a Hypixel tab widget. The exact wording is verified in-game before release (Q-MSA-04). At G1 the maintainer reported believing that the Frozen Corpses widget is on by default, but gave no command or menu path, so the wording stayed UNVERIFIED for G3 [decided R24]. At G3 the widget was enabled with `/widgets`, so the hint names `/widgets` [decided R36]. The hint is the failsafe that tells the player a widget is off. Every consumer that asks the player to enable a widget (mineshaft-alert, bestiary-hud, sbxp-optimizer) uses this string, and no consumer hard-codes its own widget command. *(Derived: three modules named three different commands; research G6, domain-mining)*
 
 **Out of scope**
@@ -1384,7 +1384,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **AC-GS-16** (REQ-GS-16)
   - Given all consumers of the tab reader disabled, then its parse counter stays at 0 over 600 ticks — [A].
   - [reinstated R40] Given the mineshaft alert and the corpse markers OFF and a simulated shaft entry with sidebar code `OPAL_1`, when `/ksu corpses` is issued, then the shaft is reported as "Opal 1" and the state is kept until the simulated exit — [A].
-  - Given the mineshaft alert, the corpse spots [reinstated R40] and Rare Drop Odds OFF and a simulated entry with sidebar code `OPAL_1`, then the mineshaft state stores no code or corpse list and parses nothing over 600 ticks — [A].
+  - Given the mineshaft alert and the corpse spots [reinstated R40] OFF (Rare Drop Odds was also named here; dropped, R42) and a simulated entry with sidebar code `OPAL_1`, then the mineshaft state stores no code or corpse list and parses nothing over 600 ticks — [A].
 - **AC-GS-17** (REQ-GS-17) Given a simulated clock:
   - all 34 known codes inside a sidebar line shaped like `<date> <server> OPAL_1` give their display names, `ABCD_1` gives "ABCD_1", and no code line gives "Unknown shaft" after 15 s
   - a Frozen Corpses fixture with `Umber: NOT LOOTED`, `Tungsten: LOOTED` and `Lapis: UNLOOTED` gives two not-looted types and one looted type
@@ -1636,7 +1636,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - A code that matches the pattern but is not known is shown raw.
   - No code within 15 s gives "Unknown shaft".
 
-  *(Derived: corpse data is per shaft; one shared parser for mineshaft-alert, corpse-waypoints (reinstated R40) and rare-drop-odds; research domain-mining-rules B2, G6 §5)*
+  *(Derived: corpse data is per shaft; one shared parser for mineshaft-alert, corpse-waypoints (reinstated R40) and rare-drop-odds (dropped, R42); research domain-mining-rules B2, G6 §5)*
 - **REQ-MSA-03** Corpse source.
   - Corpse types and per-type counts must come **only** from the server's "Frozen Corpses:" tab-list widget, as parsed by game-state (REQ-GS-17) from the tab-list entries the server sends, independent of tab order and of how other mods draw the tab list.
   - Line format (parsed in REQ-GS-17): `<Type>: NOT LOOTED|LOOTED`. `UNLOOTED` also counts as not looted.
@@ -1717,7 +1717,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - Automatic party, guild or all-chat announcements (SkyOcean's default PARTY mode): excluded by ground rule 5. A click-to-fill share button is not in v1 [decided R7].
 - Finding, highlighting or marking corpses or the invisible portal armor stand from entity data.
 - Title, sound, notice (toast) or HUD versions of the alert (the brief asks for a chat alert; REQ-UI-21), and a live key-count HUD.
-- Corpse loot, profit or odds (covered by rare-drop-odds, T3.9).
+- Corpse loot, profit or odds (were covered by rare-drop-odds, T3.9, which R42 dropped; no feature covers them now).
 - Mineshaft pity, scrap count and cave-in timer.
 - Opening any menu to refresh data.
 
@@ -2389,8 +2389,10 @@ The numbers are the research defaults (research-skyocean §(b), research-domain-
 
 ---
 
-### rare-drop-odds — Rare Drop Odds (brief title: "Rare Drop Gambling Overlay")
-**Origin:** Brief Phase 3 item 7; ground rules 4, 5, 6 | **Depends on:** game-state, data-registry, hud, location (added: island/mode context is needed, see contradictions), config-store, ui-config | **Plan tasks:** T3.9a, T3.9g, T3.9h, T3.9b, T3.9c, T3.9d, T3.9e, T3.9f (generated from the PLAN.md `Req:` lines; per-requirement mapping in §13.1)
+### rare-drop-odds — Rare Drop Odds (brief title: "Rare Drop Gambling Overlay") [dropped R42]
+**Origin:** Brief Phase 3 item 7; ground rules 4, 5, 6 | **Depends on:** game-state, data-registry, hud, location (added: island/mode context is needed, see contradictions), config-store, ui-config | **Plan tasks:** T3.9a, T3.9g and T3.9h (built, then removed) and T3.9b–T3.9f (never built), all dropped by R42; none remain (§13.1)
+
+**Status: [dropped R42].** You had the whole Rare Drop Odds feature removed at G3 (2026-10-15, "Ignore the gambling overlays"). The built parts are gone from the code: the odds math and format (T3.9a); the three bundled tables `odds.rngscore` (NEU), `odds.vanguard` (SkyOcean) and `odds.supplied`, their schemas and the SkyOcean licence text in the jar (T3.9g); the module, its card, counters and gametest (T3.9h). The five cases (T3.9b–T3.9f) were never built. Nothing of it was released (it came after 1.2.0), so there is no config migration: a saved `rare_drop_odds` section is kept and not read. The text below is kept as the record. Every requirement, acceptance criterion, edge case and open question in it carries `[dropped R42]`; no id is reused. REQ-ODDS-25 and REQ-ODDS-26 were already not built under D-3.
 
 **Purpose:** Some rare-drop moments are already visible to the player: a Scatha fight, looting a Frozen Corpse, a dungeon reward chest, a slayer boss. At those moments, show how likely the drop is or was. Numbers come from public drop data and the player's own counters, so the player gets odds context without any automation. v1 is a numeric odds display [decided D-3]. Cosmetic reveal animations, as in SkyOcean, are not built in v1: SkyCase (MIT, 26.2) already offers them, and REQ-ODDS-25/26 are kept only for a later follow-up.
 
@@ -2409,10 +2411,10 @@ Later candidates, not in v1: generic pet drops (your logs show 171 Slug and 10 R
 **Functional requirements**
 
 *General*
-- **REQ-ODDS-01** The mod must provide a display-only "Rare Drop Odds" feature with one master toggle in the config category "Odds & Trackers". The toggle defaults to OFF. *(Brief: Phase 3 item 7 and "each behind its own toggle"; Derived: ground rule 6, D-6 default OFF because of HUD clutter)* [decided D-3, D-6]
-- **REQ-ODDS-02** No user-visible feature name, description or chat output may contain a word banned by policy P7. The feature is labelled "Rare Drop Odds". The brief title's word "Gambling" may appear only as a hidden search keyword, so that searching for the brief's name finds the card. *(Derived: PLAN P7; SkyBlock Rules L41/L67, see G3)* [decided D-3]
-- **REQ-ODDS-03** v1 must implement exactly the five cases of the case list above. Each case must have its own toggle, default ON, effective only while the master toggle is ON. Turning a case off must remove all of its HUD lines, tooltip lines and chat lines. *(Brief: item 7 "Scatha, Vanguard corpses, Croesus chests, and other logically similar cases … for my approval"; ground rule 6)* [decided D-3]
-- **REQ-ODDS-04** The feature must only *read* these inputs:
+- **REQ-ODDS-01** [dropped R42] *(you removed Rare Drop Odds at G3)* The mod must provide a display-only "Rare Drop Odds" feature with one master toggle in the config category "Odds & Trackers". The toggle defaults to OFF. *(Brief: Phase 3 item 7 and "each behind its own toggle"; Derived: ground rule 6, D-6 default OFF because of HUD clutter)* [decided D-3, D-6]
+- **REQ-ODDS-02** [dropped R42] *(you removed Rare Drop Odds at G3)* No user-visible feature name, description or chat output may contain a word banned by policy P7. The feature is labelled "Rare Drop Odds". The brief title's word "Gambling" may appear only as a hidden search keyword, so that searching for the brief's name finds the card. *(Derived: PLAN P7; SkyBlock Rules L41/L67, see G3)* [decided D-3]
+- **REQ-ODDS-03** [dropped R42] *(you removed Rare Drop Odds at G3)* v1 must implement exactly the five cases of the case list above. Each case must have its own toggle, default ON, effective only while the master toggle is ON. Turning a case off must remove all of its HUD lines, tooltip lines and chat lines. *(Brief: item 7 "Scatha, Vanguard corpses, Croesus chests, and other logically similar cases … for my approval"; ground rule 6)* [decided D-3]
+- **REQ-ODDS-04** [dropped R42] *(you removed Rare Drop Odds at G3)* The feature must only *read* these inputs:
   - system-chat and action-bar messages, including ones that other mods cancel or rewrite
   - tab-list widgets and the sidebar
   - the location
@@ -2420,84 +2422,84 @@ Later candidates, not in v1: generic pet drops (your logs show 171 Slug and 10 R
   - entities the player attacked
 
   It must never send chat messages or commands. It must never click, open or page a menu. It must never cancel, delay or alter a packet or chat message. It must never show or infer loot the server has not displayed: no prediction of unopened chests, rerolls or corpse contents, only published per-attempt probabilities. Every chat line it writes is a local client message. *(Brief: ground rule 5; Derived: PLAN P5 and §3 row "Rare-drop odds overlay")*
-- **REQ-ODDS-05** The Scatha, corpse and slayer panels must each be a HUD element registered in the HUD editor: movable, scalable and with preview data. Each panel is drawn only while its context applies:
+- **REQ-ODDS-05** [dropped R42] *(you removed Rare Drop Odds at G3)* The Scatha, corpse and slayer panels must each be a HUD element registered in the HUD editor: movable, scalable and with preview data. Each panel is drawn only while its context applies:
   - Scatha: in Crystal Hollows
   - corpses: in a Glacite Mineshaft with a matching corpse type
   - slayer: while a slayer quest is active, or within 30 s of an RNG-meter line
 
   The Croesus case adds tooltip lines inside the chest screen instead of a HUD element, because that moment happens inside a container screen. *(Brief: item 7 "an overlay"; Brief Phase 2 HUD editor; Derived: PLAN T3.9b–f, AD-5)*
-- **REQ-ODDS-06** Every displayed probability must use the format "1 in N (P%)":
+- **REQ-ODDS-06** [dropped R42] *(you removed Rare Drop Odds at G3)* Every displayed probability must use the format "1 in N (P%)":
   - N is rounded to an integer and has thousands separators.
   - P has 2 significant digits, down to a minimum of 0.0001%.
   - Each value names its basis: "per kill", "per roll", "per corpse", "base" or "with your MF/PL"; Croesus rank lines say "relative"; the Croesus run estimate says "base, no bonuses" and is prefixed "≈" (REQ-ODDS-19).
   - A value from a table row with `verified: false` carries a visible "?" marker. Its tooltip names the source. *(Derived: ground rule 4 attribution; the research found conflicting wiki numbers, see G1 and the domain research)*
-- **REQ-ODDS-07** Chat summary lines have their own toggle, default ON. There is at most **one** line per rare-drop event:
+- **REQ-ODDS-07** [dropped R42] *(you removed Rare Drop Odds at G3)* Chat summary lines have their own toggle, default ON. There is at most **one** line per rare-drop event:
   - corpse loot: only for looted items whose per-corpse chance is at or below the "rare threshold" (default 2%, range 0.01–10%)
   - Scatha: always on your own Scatha pet drop
   - slayer: on a rare drop that is in the slayer table *(Brief: item 7 "odds context for rare-drop moments"; Derived: PLAN T3.9b–f "plus a chat line", ground rule 6)*
-- **REQ-ODDS-08** Math contract. Everything is computed in code; no derived percentage is copied from a source.
+- **REQ-ODDS-08** [dropped R42] *(you removed Rare Drop Odds at G3)* Math contract. Everything is computed in code; no derived percentage is copied from a source.
   - Chance of at least 1 success in n attempts = 1 − (1 − p)^n. Expected attempts = 1/p. Luck percentile of a drop on attempt k = 1 − (1 − p)^k.
   - Pet drop p = base × (1 + (MF + PetLuck)/100). Any other drop p = base × (1 + MF/100), but only if base < 5%; otherwise p = base. MF is capped at 900.
   - Per-corpse chance = the mean over the type's roll counts n (uniform from min to max) of 1 − (1 − r)^n, where r = item weight / total weight per roll [decided D-3].
   - RNG-meter boost = 1 + min(2 × stored/required, 2). When stored ≥ required, the panel shows "guaranteed" instead of a chance.
   - Slayer base chance at the highest tier = multiplier × 100 / required meter XP, in percent. The multiplier is 500, or 250 for the Riftstalker.
   - Bosses until guaranteed = ceil((required − stored) / last observed per-boss meter gain). *(Derived: research-domain §2a/§2c/§2e, G1 §3/§5; the formulas are public facts)*
-- **REQ-ODDS-09** Data contract. Drop data must be bundled as data-registry tables, with no runtime fetch. Each entry holds:
+- **REQ-ODDS-09** [dropped R42] *(you removed Rare Drop Odds at G3)* Data contract. Drop data must be bundled as data-registry tables, with no runtime fetch. Each entry holds:
   - the case id, the SkyBlock item id and the display name used for matching
   - either the per-roll weight (together with the table's total weight) or the per-attempt base chance
   - the roll count min/max, where the case rolls more than once
   - `sourceRefs`, `license`, `verified`, and the SkyBlock `gameVersion` the entry was last checked against
 
   The tables must not contain any wiki per-corpse percentage column, and no wiki prose. *(Brief: ground rule 4; Derived: AD-7, T3.9a, G1's finding that the wiki per-corpse columns assume 4.5 rolls)*
-- **REQ-ODDS-10** Sources and licensing:
+- **REQ-ODDS-10** [dropped R42] *(you removed Rare Drop Odds at G3)* Sources and licensing:
   - Every number cites at least one source.
   - The MIT tables ship with notices in THIRD_PARTY_NOTICES: NEU rngscore [decided D-5] and the SkyOcean `src/repo/vanguard.jsonc` weights [decided R6].
   - Nothing else is copied from SkyOcean (code, art, sounds, post-effects or lang strings), and nothing from SkyCase pool files, from Scatha-Pro (ARR), or from Skyblocker/SkyHanni (LGPL).
   - Wiki-only numbers (Scatha, Lapis/Umber/Tungsten, Frostbitten Dye) follow the wiki policy: you supply the pages (decided D-16 (a), D-28 (i)). They stay `verified: false` and carry the "?" marker unless a second, non-wiki origin agrees.
   - SkyOcean's "Assumed odds" Frostbitten Dye weight is never used; the bundled Vanguard table replaces it with the wiki per-roll chance [decided R6]. *(Brief: ground rule 4; Derived: PLAN §2, D-5, D-16, D-28)* [decided D-5, D-16, D-28]
-- **REQ-ODDS-11** An item, corpse type or floor that is not in the tables is shown without a number, never with a guessed one, and is logged once per name per session. A missing or invalid table disables only its own case and shows a one-line notice on the feature's config card; the game must not crash. *(Derived: AD-7; T3.0c acceptance "the game loads with a table missing")*
-- **REQ-ODDS-12** These counters are stored per SkyBlock profile and survive restarts: Scatha kills since the last Scatha pet, Scatha kills counted, and corpses looted per type. Session counters reset on a profile switch, a game restart or a manual "Reset odds counters" button. Counters only cover events seen while the mod runs, and the UI says "counted by K8bas since <date>". *(Derived: "kills since last pet" is only meaningful per profile; PLAN T3.0d)*
+- **REQ-ODDS-11** [dropped R42] *(you removed Rare Drop Odds at G3)* An item, corpse type or floor that is not in the tables is shown without a number, never with a guessed one, and is logged once per name per session. A missing or invalid table disables only its own case and shows a one-line notice on the feature's config card; the game must not crash. *(Derived: AD-7; T3.0c acceptance "the game loads with a table missing")*
+- **REQ-ODDS-12** [dropped R42] *(you removed Rare Drop Odds at G3)* These counters are stored per SkyBlock profile and survive restarts: Scatha kills since the last Scatha pet, Scatha kills counted, and corpses looted per type. Session counters reset on a profile switch, a game restart or a manual "Reset odds counters" button. Counters only cover events seen while the mod runs, and the UI says "counted by K8bas since <date>". *(Derived: "kills since last pet" is only meaningful per profile; PLAN T3.0d)*
 
 *Case 1 — Scatha*
-- **REQ-ODDS-13** The Scatha panel must show:
+- **REQ-ODDS-13** [dropped R42] *(you removed Rare Drop Odds at G3)* The Scatha panel must show:
   - the base pet chance per kill: any, Rare, Epic and Legendary
   - the same chances adjusted for MF + Pet Luck
   - Scatha kills this session
   - Scatha kills since the last Scatha pet
   - the chance of at least 1 pet by now, at the adjusted any-pet chance
   - the expected number of kills *(Brief: item 7 "Scatha"; Derived: G1 §6 option A)*
-- **REQ-ODDS-14** Magic Find and Pet Luck are read from the "Stats" tab widget when it shows them. Otherwise the panel uses manual config values (non-negative integers, default 0). The panel shows which source is in use ("tab" or "manual"). *(Derived: research-domain §2a; G1 open question on MF/PL)*
-- **REQ-ODDS-15** A Scatha kill is counted when a Scatha (not a Worm) that the player attacked dies within 30 s of the player's last hit on it. Scathas the player never hit do not count, and Worms never count. Identification must not depend on maximum health alone, because the Derpy double-HP perk changes it. Detection is UNVERIFIED until the field check. *(Derived: needed for "kills since last pet"; G1 §6; behaviour of Skyblocker's Zealot counter)*
-- **REQ-ODDS-16** When the player gets a Scatha PET DROP message in system chat (their own, not guild, party or private chat), the mod posts one local line. The line gives the rarity, the kills since the last Scatha pet, the adjusted per-kill chance and the luck percentile. Then "since last pet" resets to 0. *(Brief: item 7; Derived: G1 §6)*
+- **REQ-ODDS-14** [dropped R42] *(you removed Rare Drop Odds at G3)* Magic Find and Pet Luck are read from the "Stats" tab widget when it shows them. Otherwise the panel uses manual config values (non-negative integers, default 0). The panel shows which source is in use ("tab" or "manual"). *(Derived: research-domain §2a; G1 open question on MF/PL)*
+- **REQ-ODDS-15** [dropped R42] *(you removed Rare Drop Odds at G3)* A Scatha kill is counted when a Scatha (not a Worm) that the player attacked dies within 30 s of the player's last hit on it. Scathas the player never hit do not count, and Worms never count. Identification must not depend on maximum health alone, because the Derpy double-HP perk changes it. Detection is UNVERIFIED until the field check. *(Derived: needed for "kills since last pet"; G1 §6; behaviour of Skyblocker's Zealot counter)*
+- **REQ-ODDS-16** [dropped R42] *(you removed Rare Drop Odds at G3)* When the player gets a Scatha PET DROP message in system chat (their own, not guild, party or private chat), the mod posts one local line. The line gives the rarity, the kills since the last Scatha pet, the adjusted per-kill chance and the luck percentile. Then "since last pet" resets to 0. *(Brief: item 7; Derived: G1 §6)*
 
 *Case 2 — Croesus / dungeon reward chests*
-- **REQ-ODDS-17** In dungeon reward chest screens (end-of-run chests and per-run chest menus opened from Croesus), each displayed item that is on that floor's RNG-meter list gets one tooltip line: "RNG-meter item · rarity rank k of n on <floor> · score S (relative)". Rank 1 is the highest score, which is the rarest item. Items not on the list get no line. Table entries flagged as placeholders (e.g. dyes) are excluded. The only per-run value is the base estimate of REQ-ODDS-19; no wiki per-run percentage is shown. *(Brief: item 7 "Croesus chests"; Derived: PLAN T3.9 case 2)* [decided D-3, R10]
-- **REQ-ODDS-18** The floor (F1–F7, M1–M7) is taken from the screen title or the current dungeon context; if it cannot be determined, no lines are shown. Lines are recomputed whenever the displayed contents change, for example after a Kismet reroll. They never refer to items that are not currently displayed. *(Brief: ground rule 5; Derived: PLAN §3 "never predicts unopened contents")*
-- **REQ-ODDS-19** Each RNG-meter item line of REQ-ODDS-17 gets a second tooltip line "≈ 1 in N runs (P%, base, no bonuses)", where N = RNG-meter score / 300 rounded to a whole number and P = 100 / N with two significant digits. It is labelled approximate ("≈") and follows the REQ-ODDS-06 format otherwise. *(Brief: item 7 "drop chances / odds context"; Derived: research-domain §2d — within ~1 % of the wiki on M5/M6/M7/F5/F6, ~2.5 % on F7)* [decided R10 = b]
+- **REQ-ODDS-17** [dropped R42] *(you removed Rare Drop Odds at G3)* In dungeon reward chest screens (end-of-run chests and per-run chest menus opened from Croesus), each displayed item that is on that floor's RNG-meter list gets one tooltip line: "RNG-meter item · rarity rank k of n on <floor> · score S (relative)". Rank 1 is the highest score, which is the rarest item. Items not on the list get no line. Table entries flagged as placeholders (e.g. dyes) are excluded. The only per-run value is the base estimate of REQ-ODDS-19; no wiki per-run percentage is shown. *(Brief: item 7 "Croesus chests"; Derived: PLAN T3.9 case 2)* [decided D-3, R10]
+- **REQ-ODDS-18** [dropped R42] *(you removed Rare Drop Odds at G3)* The floor (F1–F7, M1–M7) is taken from the screen title or the current dungeon context; if it cannot be determined, no lines are shown. Lines are recomputed whenever the displayed contents change, for example after a Kismet reroll. They never refer to items that are not currently displayed. *(Brief: ground rule 5; Derived: PLAN §3 "never predicts unopened contents")*
+- **REQ-ODDS-19** [dropped R42] *(you removed Rare Drop Odds at G3)* Each RNG-meter item line of REQ-ODDS-17 gets a second tooltip line "≈ 1 in N runs (P%, base, no bonuses)", where N = RNG-meter score / 300 rounded to a whole number and P = 100 / N with two significant digits. It is labelled approximate ("≈") and follows the REQ-ODDS-06 format otherwise. *(Brief: item 7 "drop chances / odds context"; Derived: research-domain §2d — within ~1 % of the wiki on M5/M6/M7/F5/F6, ~2.5 % on F7)* [decided R10 = b]
 
 *Cases 3 and 4 — Frozen Corpses (Vanguard; Lapis/Umber/Tungsten)*
-- **REQ-ODDS-20** The corpse panel shows, in a Glacite Mineshaft, every corpse type listed by the Frozen Corpses widget (Vanguard = case 3; Lapis, Umber, Tungsten = case 4). For each type it lists the N rarest items (default 3, range 1–10; ties ordered by name) with their per-roll and per-corpse chance, plus the corpses of that type looted this session. If the widget is unavailable, the panel shows every enabled type with a "(widget off)" note. It never scans entities. *(Brief: item 7 "Vanguard corpses"; the other types approved as case 4, decided D-3; Derived: G1 §7)*
-- **REQ-ODDS-21** On a "<TYPE> CORPSE LOOT!" block, the mod identifies the corpse type and the looted items and ignores lines that other mods insert inside the block. Following REQ-ODDS-07, it then posts one line listing every looted item whose per-corpse chance is at or below the threshold, e.g. "Vanguard: Shattered Locket — 1 in 109 per corpse (computed)". Frostbitten Dye uses its own per-roll chance. *(Brief: item 7; Derived: G1 §4 safety flags)*
-- **REQ-ODDS-22** Per-corpse values assume no extra-roll perk (Gifts from the Departed), and their tooltip says so. The per-roll value is always shown beside the per-corpse value. *(Derived: G1 §3's 4.5-roll finding conflicts with research-domain §2c)* [decided D-3]
+- **REQ-ODDS-20** [dropped R42] *(you removed Rare Drop Odds at G3)* The corpse panel shows, in a Glacite Mineshaft, every corpse type listed by the Frozen Corpses widget (Vanguard = case 3; Lapis, Umber, Tungsten = case 4). For each type it lists the N rarest items (default 3, range 1–10; ties ordered by name) with their per-roll and per-corpse chance, plus the corpses of that type looted this session. If the widget is unavailable, the panel shows every enabled type with a "(widget off)" note. It never scans entities. *(Brief: item 7 "Vanguard corpses"; the other types approved as case 4, decided D-3; Derived: G1 §7)*
+- **REQ-ODDS-21** [dropped R42] *(you removed Rare Drop Odds at G3)* On a "<TYPE> CORPSE LOOT!" block, the mod identifies the corpse type and the looted items and ignores lines that other mods insert inside the block. Following REQ-ODDS-07, it then posts one line listing every looted item whose per-corpse chance is at or below the threshold, e.g. "Vanguard: Shattered Locket — 1 in 109 per corpse (computed)". Frostbitten Dye uses its own per-roll chance. *(Brief: item 7; Derived: G1 §4 safety flags)*
+- **REQ-ODDS-22** [dropped R42] *(you removed Rare Drop Odds at G3)* Per-corpse values assume no extra-roll perk (Gifts from the Departed), and their tooltip says so. The per-roll value is always shown beside the per-corpse value. *(Derived: G1 §3's 4.5-roll finding conflicts with research-domain §2c)* [decided D-3]
 
 *Case 5 — Slayer RNG meter*
-- **REQ-ODDS-23** The slayer panel must show:
+- **REQ-ODDS-23** [dropped R42] *(you removed Rare Drop Odds at G3)* The slayer panel must show:
   - the selected RNG-meter item, taken from the "You set your … RNG Meter to drop …" line or from the "<slayer> RNG Meter" menu the player opens
   - stored and required meter XP, and the percentage
   - the base chance at the highest tier and the meter-boosted chance
   - bosses until guaranteed, hidden until one per-boss gain has been observed
 
   Odds are labelled "highest tier"; lower-tier odds are not shown. *(Brief: item 7 "other logically similar cases"; Derived: PLAN T3.9 case 5)* [decided D-3]
-- **REQ-ODDS-24** On a slayer rare-drop chat message (RARE / VERY RARE / CRAZY RARE DROP) for an item in the slayer table, the mod posts one line with that item's base chance at the highest tier. *(Brief: item 7; Derived: PLAN T3.9 case 5)* [decided D-3]
+- **REQ-ODDS-24** [dropped R42] *(you removed Rare Drop Odds at G3)* On a slayer rare-drop chat message (RARE / VERY RARE / CRAZY RARE DROP) for an item in the slayer table, the mod posts one line with that item's base chance at the highest tier. *(Brief: item 7; Derived: PLAN T3.9 case 5)* [decided D-3]
 
 *Reveal animations — not in v1 (decided D-3 = A); kept only for a later follow-up*
-- **REQ-ODDS-25** *[not in v1, decided D-3 = A; applies only if a later follow-up adds reveal animations]* A code-drawn reveal animation (a CS:GO-style item strip) for Obsidian/Bedrock dungeon chests (also via Croesus), Vanguard corpse loot and Scatha pet drops:
+- **REQ-ODDS-25** [dropped R42] *(you removed Rare Drop Odds at G3)* *[not in v1, decided D-3 = A; applies only if a later follow-up adds reveal animations]* A code-drawn reveal animation (a CS:GO-style item strip) for Obsidian/Bedrock dungeon chests (also via Croesus), Vanguard corpse loot and Scatha pet drops:
   - each context has its own toggle, default OFF
   - it runs as a non-blocking HUD overlay that ESC skips, with a duration of 1–10 s (default 5)
   - the strip always lands on the item the server actually gave
   - chat lines held back during the animation are replayed afterwards, never dropped
   - only vanilla sounds and original code-drawn visuals are used, with no SkyOcean sprites, post-effect JSON or lang strings *(Brief: item 7 reference "SkyOcean"; Derived: G1 §4)*
-- **REQ-ODDS-26** *[not in v1, decided D-3 = A; applies only if a later follow-up adds reveal animations with odds]* The final card of a reveal shows the item's odds in the REQ-ODDS-06 format. *(Derived: G1 §5 hybrid)*
+- **REQ-ODDS-26** [dropped R42] *(you removed Rare Drop Odds at G3)* *[not in v1, decided D-3 = A; applies only if a later follow-up adds reveal animations with odds]* The final card of a reveal shows the item's odds in the REQ-ODDS-06 format. *(Derived: G1 §5 hybrid)*
 
 **Out of scope**
 - Reveal animations and slot machines (decided D-3 = A; at most a later follow-up). SkyCase (MIT, 26.2) already offers them.
@@ -2511,13 +2513,13 @@ Later candidates, not in v1: generic pet drops (your logs show 171 Slug and 10 R
 - Computing Magic Find from gear, and bestiary family Magic Find (UNVERIFIED).
 
 **Acceptance criteria**
-- **AC-ODDS-01** (REQ-ODDS-01, 02, 03) Given a fresh config, when the option model is built, then "Rare Drop Odds" sits in "Odds & Trackers" with the master toggle OFF and one toggle per case (five), each ON. No option title, description or chat template contains a word from the P7 list, and a search for the brief title's word "Gambling" finds the card through its keyword. Verified by [A], plus a config-screen screenshot [C].
-- **AC-ODDS-02** (REQ-ODDS-04) Code review finds no chat or command send, container click, screen open, packet or message cancellation, or message modification in the module [R]. The module's chat listeners return "allow" for 100% of the fixture messages [A].
-- **AC-ODDS-03** (REQ-ODDS-04, 21) Given your 26.2 mod set (Skyblocker, SkyHanni), when the exact jar boots and a recorded corpse-loot block is injected that another mod cancels, then the module still parses it exactly once and the log shows no new ERROR [D].
-- **AC-ODDS-04** (REQ-ODDS-05) Given the HUD editor, then the Scatha, corpse and slayer panels show preview data and can be moved and scaled (0.5–3.0). After Save and a restart they are at the same anchor-relative position. Outside their context they are not drawn. Verified by [C].
-- **AC-ODDS-05** (REQ-ODDS-06) p = 1/1389.4 renders as "1 in 1,389 (0.072%)" and p = 0.004 as "1 in 250 (0.40%)". A row with `verified: false` renders the "?" marker [A], and its tooltip names the source [C].
-- **AC-ODDS-06** (REQ-ODDS-07) A Vanguard loot block with two items at or below 2% gives exactly one chat line naming both. Raising the threshold to 0.5% leaves only the item below 0.5%. With the chat toggle off, no line appears. Verified by [A].
-- **AC-ODDS-07** (REQ-ODDS-08) Math fixtures, verified by [A]:
+- **AC-ODDS-01** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-01, 02, 03) Given a fresh config, when the option model is built, then "Rare Drop Odds" sits in "Odds & Trackers" with the master toggle OFF and one toggle per case (five), each ON. No option title, description or chat template contains a word from the P7 list, and a search for the brief title's word "Gambling" finds the card through its keyword. Verified by [A], plus a config-screen screenshot [C].
+- **AC-ODDS-02** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-04) Code review finds no chat or command send, container click, screen open, packet or message cancellation, or message modification in the module [R]. The module's chat listeners return "allow" for 100% of the fixture messages [A].
+- **AC-ODDS-03** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-04, 21) Given your 26.2 mod set (Skyblocker, SkyHanni), when the exact jar boots and a recorded corpse-loot block is injected that another mod cancels, then the module still parses it exactly once and the log shows no new ERROR [D].
+- **AC-ODDS-04** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-05) Given the HUD editor, then the Scatha, corpse and slayer panels show preview data and can be moved and scaled (0.5–3.0). After Save and a restart they are at the same anchor-relative position. Outside their context they are not drawn. Verified by [C].
+- **AC-ODDS-05** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-06) p = 1/1389.4 renders as "1 in 1,389 (0.072%)" and p = 0.004 as "1 in 250 (0.40%)". A row with `verified: false` renders the "?" marker [A], and its tooltip names the source [C].
+- **AC-ODDS-06** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-07) A Vanguard loot block with two items at or below 2% gives exactly one chat line naming both. Raising the threshold to 0.5% leaves only the item below 0.5%. With the chat toggle off, no line appears. Verified by [A].
+- **AC-ODDS-07** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-08) Math fixtures, verified by [A]:
   - p = 0.004: n = 250 gives 63.3% ±0.1, and n = 500 gives 86.5% ±0.1.
   - Legendary 0.0004 with MF 100 + PL 50 gives 0.001.
   - MF 1,000 is treated as 900.
@@ -2525,48 +2527,48 @@ Later candidates, not in v1: generic pet drops (your logs show 171 Slug and 10 R
   - Vanguard per corpse with uniform 5–8 rolls: Caged Wisp (10/3515) gives 1.83% ±0.01 and Shattered Locket (5/3515) gives 0.92% ±0.01.
   - Meter at s/r = 0.5 gives ×2; at s/r ≥ 1 it gives "guaranteed".
   - Warden Heart (required 3,674,250) gives base 1 in 7,349.
-- **AC-ODDS-08** (REQ-ODDS-09, 10) `./gradlew check` fails for an odds entry with no `sourceRefs`, with no `license`, with a per-corpse percentage field, or with SkyOcean's assumed dye weight, and for an MIT table with no notice. It passes for the shipped tables. Verified by [A].
-- **AC-ODDS-09** (REQ-ODDS-11) An unknown item gives no number and exactly one log line per session. With one table deleted from the test resources, that case is disabled with a notice, the other cases still work, and `runClient` boots. Verified by [A] and [B].
-- **AC-ODDS-10** (REQ-ODDS-12) Given profile A with 312 kills since the last pet, switching to profile B shows B's counter, and switching back shows 312. The value survives a restart. The reset button zeroes only the session counters. Verified by [A].
-- **AC-ODDS-11** (REQ-ODDS-13, 14) Given Stats-widget fixture lines "Magic Find: 100" and "Pet Luck: 50" (UNVERIFIED format until the G1 capture), the panel shows any-pet 1 in 100 and Legendary 1 in 1,000 with source "tab". With no widget and manual MF 0 / PL 0, it shows 1 in 250 with source "manual". Verified by [A], plus a preview screenshot [C].
-- **AC-ODDS-12** (REQ-ODDS-15, 16) Verified by [A] on events and fixtures, a gametest with simulated entities and injected chat [C], and a field check in Crystal Hollows [E]:
+- **AC-ODDS-08** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-09, 10) `./gradlew check` fails for an odds entry with no `sourceRefs`, with no `license`, with a per-corpse percentage field, or with SkyOcean's assumed dye weight, and for an MIT table with no notice. It passes for the shipped tables. Verified by [A].
+- **AC-ODDS-09** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-11) An unknown item gives no number and exactly one log line per session. With one table deleted from the test resources, that case is disabled with a notice, the other cases still work, and `runClient` boots. Verified by [A] and [B].
+- **AC-ODDS-10** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-12) Given profile A with 312 kills since the last pet, switching to profile B shows B's counter, and switching back shows 312. The value survives a restart. The reset button zeroes only the session counters. Verified by [A].
+- **AC-ODDS-11** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-13, 14) Given Stats-widget fixture lines "Magic Find: 100" and "Pet Luck: 50" (UNVERIFIED format until the G1 capture), the panel shows any-pet 1 in 100 and Legendary 1 in 1,000 with source "tab". With no widget and manual MF 0 / PL 0, it shows 1 in 250 with source "manual". Verified by [A], plus a preview screenshot [C].
+- **AC-ODDS-12** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-15, 16) Verified by [A] on events and fixtures, a gametest with simulated entities and injected chat [C], and a field check in Crystal Hollows [E]:
   - When an attacked Scatha dies, the kill count goes +1.
   - A Scatha the player never hit, and an attacked Worm, give +0.
   - A system-chat Scatha PET DROP posts one line and resets "since last pet".
   - The guild-chat line "Guild > X: PET DROP! RARE Scatha" changes nothing.
-- **AC-ODDS-13** (REQ-ODDS-17, 18) Given a captured, sanitised M7 Bedrock chest screen containing a Dark Claymore, its tooltip shows "score 416,820" and "rank 1 of n on M7". A non-meter item gets no line, and a placeholder dye gets no line. A screen with an unknown floor gets no lines. Replacing the contents (reroll fixture) recomputes the lines. Verified by [A], a screenshot [C] and a Croesus field check [E].
-- **AC-ODDS-14** (REQ-ODDS-19) Given the M7 Dark Claymore with score 416,820, its tooltip shows "≈ 1 in 1,389 runs (0.072%, base, no bonuses)" below the rank line; an item not on the RNG-meter list shows neither line — [A]
-- **AC-ODDS-15** (REQ-ODDS-20) Given a widget fixture listing Vanguard and Umber, the panel lists for Vanguard: Frostbitten Dye (1 in 1,539 per corpse), Shattered Locket (1 in 109), then Caged Wisp (1 in 55), each with its per-roll value. Umber follows. With no widget, the panel shows all enabled types with "(widget off)". Verified by [A] and [C].
-- **AC-ODDS-16** (REQ-ODDS-21, 22) The sanitised fixture set of all corpse-loot blocks from your logs (92 Lapis, 38 Tungsten, 28 Umber, 3 Vanguard) parses with 0 failures. "[SkyHanni]" and "[Skyblocker]" lines inside a block are ignored. Each logged block has at least the type's minimum roll count of item lines, after merged stacks. Every per-corpse value carries the "no extra-roll perk" note. Verified by [A]; a mineshaft field check [E].
-- **AC-ODDS-17** (REQ-ODDS-23, 24) Given the line "set RNG Meter to drop Warden Heart" and stored XP 1,837,125, the panel shows 50%, base 1 in 7,349 and boosted 1 in 3,674. After two stored-XP lines 1,500 apart, it shows bosses until guaranteed = ceil((3,674,250 − s)/1,500). A rare-drop line for a table item gives one chat line. Verified by [A]; a slayer field check [E].
-- **AC-ODDS-18** (REQ-ODDS-25, 26; not in v1, decided D-3 = A; applies only to a later follow-up) The animation never blocks movement input. ESC ends it. The strip lands on the received item. Every chat line held during the animation appears afterwards, in order. Verified by [A] on the chat hold/replay logic and [C] screenshots.
+- **AC-ODDS-13** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-17, 18) Given a captured, sanitised M7 Bedrock chest screen containing a Dark Claymore, its tooltip shows "score 416,820" and "rank 1 of n on M7". A non-meter item gets no line, and a placeholder dye gets no line. A screen with an unknown floor gets no lines. Replacing the contents (reroll fixture) recomputes the lines. Verified by [A], a screenshot [C] and a Croesus field check [E].
+- **AC-ODDS-14** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-19) Given the M7 Dark Claymore with score 416,820, its tooltip shows "≈ 1 in 1,389 runs (0.072%, base, no bonuses)" below the rank line; an item not on the RNG-meter list shows neither line — [A]
+- **AC-ODDS-15** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-20) Given a widget fixture listing Vanguard and Umber, the panel lists for Vanguard: Frostbitten Dye (1 in 1,539 per corpse), Shattered Locket (1 in 109), then Caged Wisp (1 in 55), each with its per-roll value. Umber follows. With no widget, the panel shows all enabled types with "(widget off)". Verified by [A] and [C].
+- **AC-ODDS-16** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-21, 22) The sanitised fixture set of all corpse-loot blocks from your logs (92 Lapis, 38 Tungsten, 28 Umber, 3 Vanguard) parses with 0 failures. "[SkyHanni]" and "[Skyblocker]" lines inside a block are ignored. Each logged block has at least the type's minimum roll count of item lines, after merged stacks. Every per-corpse value carries the "no extra-roll perk" note. Verified by [A]; a mineshaft field check [E].
+- **AC-ODDS-17** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-23, 24) Given the line "set RNG Meter to drop Warden Heart" and stored XP 1,837,125, the panel shows 50%, base 1 in 7,349 and boosted 1 in 3,674. After two stored-XP lines 1,500 apart, it shows bosses until guaranteed = ceil((3,674,250 − s)/1,500). A rare-drop line for a table item gives one chat line. Verified by [A]; a slayer field check [E].
+- **AC-ODDS-18** [dropped R42] *(you removed Rare Drop Odds at G3)* (REQ-ODDS-25, 26; not in v1, decided D-3 = A; applies only to a later follow-up) The animation never blocks movement input. ESC ends it. The strip lands on the received item. Every chat line held during the animation appears afterwards, in order. Verified by [A] on the chat hold/replay logic and [C] screenshots.
 
 **Edge cases**
-- **EC-ODDS-01** SkyHanni or Skyblocker cancels or compacts a loot block or PET DROP line → it is still read through the cancelled-message path, and our line appears once, never twice when both paths fire.
-- **EC-ODDS-02** Other mods insert profit lines inside a loot block → those lines are ignored, not treated as items.
-- **EC-ODDS-03** A disconnect or world change interrupts a loot block, so the closing border never arrives → the block is dropped after 2 s and no partial line is posted.
-- **EC-ODDS-04** A merged stack such as "Blue Goblin Egg x5" → counts as one looted item; the number of rolls is never inferred from stacks.
-- **EC-ODDS-05** Hypixel renames or adds a loot item, or a new corpse type appears in the widget → it is shown without odds and logged once.
-- **EC-ODDS-06** Another player's Scatha pet drop arrives in guild or party chat → ignored.
-- **EC-ODDS-07** The PET DROP format differs because another mod added the rarity word or a "(+N)" suffix (UNVERIFIED raw format) → both the raw and the modified forms match.
-- **EC-ODDS-08** A Scatha the player hit is killed by another player → it counts as one attempt. A Scatha the player never hit → not counted.
-- **EC-ODDS-09** The profile is unknown (Profile widget missing) when a kill happens → the kill is counted in memory and persisted once the profile becomes known in the same session; it is discarded if the profile never becomes known.
-- **EC-ODDS-10** The Stats widget shows MF above 900 → the math uses 900 and the panel shows "(cap 900)". If the widget disappears mid-session → the manual value is used and the source label changes.
-- **EC-ODDS-11** Croesus titles with a page prefix ("(2/3) Croesus"), "Master Catacombs - Floor VII", and "Bedrock Chest" vs "Bedrock" → all recognised. Same-titled containers outside the Dungeon Hub or a dungeon → ignored (location gate).
-- **EC-ODDS-12** A placeholder RNG-meter score (dyes) → excluded from the ranks.
-- **EC-ODDS-13** The selected slayer meter item changes → the panel shows the new item and learns the per-boss gain again. A Tier I/II boss gives a gain of 0 → ignored. A full meter → "guaranteed on the next qualifying boss".
-- **EC-ODDS-14** A data table is missing or corrupted → only that case is disabled, with a notice.
-- **EC-ODDS-15** The GUI scale or window size changes, or F1 is pressed → panels stay anchored or hide; counters keep counting.
-- **EC-ODDS-16** One corpse yields two rare items → one combined chat line.
+- **EC-ODDS-01** [dropped R42] *(you removed Rare Drop Odds at G3)* SkyHanni or Skyblocker cancels or compacts a loot block or PET DROP line → it is still read through the cancelled-message path, and our line appears once, never twice when both paths fire.
+- **EC-ODDS-02** [dropped R42] *(you removed Rare Drop Odds at G3)* Other mods insert profit lines inside a loot block → those lines are ignored, not treated as items.
+- **EC-ODDS-03** [dropped R42] *(you removed Rare Drop Odds at G3)* A disconnect or world change interrupts a loot block, so the closing border never arrives → the block is dropped after 2 s and no partial line is posted.
+- **EC-ODDS-04** [dropped R42] *(you removed Rare Drop Odds at G3)* A merged stack such as "Blue Goblin Egg x5" → counts as one looted item; the number of rolls is never inferred from stacks.
+- **EC-ODDS-05** [dropped R42] *(you removed Rare Drop Odds at G3)* Hypixel renames or adds a loot item, or a new corpse type appears in the widget → it is shown without odds and logged once.
+- **EC-ODDS-06** [dropped R42] *(you removed Rare Drop Odds at G3)* Another player's Scatha pet drop arrives in guild or party chat → ignored.
+- **EC-ODDS-07** [dropped R42] *(you removed Rare Drop Odds at G3)* The PET DROP format differs because another mod added the rarity word or a "(+N)" suffix (UNVERIFIED raw format) → both the raw and the modified forms match.
+- **EC-ODDS-08** [dropped R42] *(you removed Rare Drop Odds at G3)* A Scatha the player hit is killed by another player → it counts as one attempt. A Scatha the player never hit → not counted.
+- **EC-ODDS-09** [dropped R42] *(you removed Rare Drop Odds at G3)* The profile is unknown (Profile widget missing) when a kill happens → the kill is counted in memory and persisted once the profile becomes known in the same session; it is discarded if the profile never becomes known.
+- **EC-ODDS-10** [dropped R42] *(you removed Rare Drop Odds at G3)* The Stats widget shows MF above 900 → the math uses 900 and the panel shows "(cap 900)". If the widget disappears mid-session → the manual value is used and the source label changes.
+- **EC-ODDS-11** [dropped R42] *(you removed Rare Drop Odds at G3)* Croesus titles with a page prefix ("(2/3) Croesus"), "Master Catacombs - Floor VII", and "Bedrock Chest" vs "Bedrock" → all recognised. Same-titled containers outside the Dungeon Hub or a dungeon → ignored (location gate).
+- **EC-ODDS-12** [dropped R42] *(you removed Rare Drop Odds at G3)* A placeholder RNG-meter score (dyes) → excluded from the ranks.
+- **EC-ODDS-13** [dropped R42] *(you removed Rare Drop Odds at G3)* The selected slayer meter item changes → the panel shows the new item and learns the per-boss gain again. A Tier I/II boss gives a gain of 0 → ignored. A full meter → "guaranteed on the next qualifying boss".
+- **EC-ODDS-14** [dropped R42] *(you removed Rare Drop Odds at G3)* A data table is missing or corrupted → only that case is disabled, with a notice.
+- **EC-ODDS-15** [dropped R42] *(you removed Rare Drop Odds at G3)* The GUI scale or window size changes, or F1 is pressed → panels stay anchored or hide; counters keep counting.
+- **EC-ODDS-16** [dropped R42] *(you removed Rare Drop Odds at G3)* One corpse yields two rare items → one combined chat line.
 
 **Open questions**
-- **Q-ODDS-01** What should the "Rare Drop Gambling Overlay" be: A numeric odds, B reveal animations, or C both? And may it be named "Rare Drop Odds"? → decided D-3 (A, numeric odds, named "Rare Drop Odds"; reveal animations left to SkyCase or a later follow-up)
-- **Q-ODDS-02** Which v1 cases do you approve? → decided D-3 (all five cases of the T3.9 list)
-- **Q-ODDS-03** For Croesus, should the tooltip show relative rarity only, or also a number? → decided D-3 (relative rarity, no wiki per-run %) and R10 = b (plus the base "≈ 1 in N runs" line)
-- **Q-ODDS-04** Which per-corpse odds model should the corpse cases use? → decided D-3 (per-roll plus per-corpse computed in code from the roll range, the PLAN T3.9a approach)
-- **Q-ODDS-05** Where do the wiki-only numbers come from (Scatha, Lapis/Umber/Tungsten, Frostbitten Dye)? → decided D-16, D-28 (you supply the pages; `verified: false` with "?" unless a non-wiki origin agrees)
-- **Q-ODDS-06** May the MIT drop data be bundled? NEU rngscore → decided D-5 (MIT with notices); SkyOcean `vanguard.jsonc` → decided R6
-- **Q-ODDS-07** Are the defaults right: module OFF, cases ON inside it, chat lines ON, threshold 2%? → decided D-6 (yes)
+- **Q-ODDS-01** [dropped R42] *(you removed Rare Drop Odds at G3)* What should the "Rare Drop Gambling Overlay" be: A numeric odds, B reveal animations, or C both? And may it be named "Rare Drop Odds"? → decided D-3 (A, numeric odds, named "Rare Drop Odds"; reveal animations left to SkyCase or a later follow-up)
+- **Q-ODDS-02** [dropped R42] *(you removed Rare Drop Odds at G3)* Which v1 cases do you approve? → decided D-3 (all five cases of the T3.9 list)
+- **Q-ODDS-03** [dropped R42] *(you removed Rare Drop Odds at G3)* For Croesus, should the tooltip show relative rarity only, or also a number? → decided D-3 (relative rarity, no wiki per-run %) and R10 = b (plus the base "≈ 1 in N runs" line)
+- **Q-ODDS-04** [dropped R42] *(you removed Rare Drop Odds at G3)* Which per-corpse odds model should the corpse cases use? → decided D-3 (per-roll plus per-corpse computed in code from the roll range, the PLAN T3.9a approach)
+- **Q-ODDS-05** [dropped R42] *(you removed Rare Drop Odds at G3)* Where do the wiki-only numbers come from (Scatha, Lapis/Umber/Tungsten, Frostbitten Dye)? → decided D-16, D-28 (you supply the pages; `verified: false` with "?" unless a non-wiki origin agrees)
+- **Q-ODDS-06** [dropped R42] *(you removed Rare Drop Odds at G3)* May the MIT drop data be bundled? NEU rngscore → decided D-5 (MIT with notices); SkyOcean `vanguard.jsonc` → decided R6
+- **Q-ODDS-07** [dropped R42] *(you removed Rare Drop Odds at G3)* Are the defaults right: module OFF, cases ON inside it, chat lines ON, threshold 2%? → decided D-6 (yes)
 
 ---
 
@@ -3921,7 +3923,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
 1. Every module's acceptance criteria (§10) pass at their stated tier. Three exceptions:
    - Criteria explicitly superseded by a later module are checked at their own checkpoint only. Example: the 1.0.1 waypoint style in AC-PORT-06 is checked at G1 and then replaced by the npc-waypoints style.
    - Criteria that depend on rare in-game content (rare rooms, Vanguard corpses, hotspots) are checked opportunistically and listed as open in the phase report until seen.
-   - Criteria marked dropped are not checked: [dropped R37] AC-DRILL-01 to AC-DRILL-06, and [dropped R38] the second bullet of AC-NPCDB-09. The criteria R22 dropped (AC-CORPSE-01 to AC-CORPSE-10 and the second bullet of AC-GS-16) are checked again [reinstated R40].
+   - Criteria marked dropped are not checked: [dropped R37] AC-DRILL-01 to AC-DRILL-06, [dropped R42] AC-ODDS-01 to AC-ODDS-18, and [dropped R38] the second bullet of AC-NPCDB-09. The criteria R22 dropped (AC-CORPSE-01 to AC-CORPSE-10 and the second bullet of AC-GS-16) are checked again [reinstated R40].
 2. Checkpoints G1–G7 in `PLAN.md` are closed, each with a phase report (REQ-XC-REPORT-01).
 3. Every commit on `update/26.2` builds green (AC-XC-05: per-commit worktree build at each checkpoint), and CI is green on every pushed head and on the final PR.
 4. A 1.0.1 config file migrates with no setting lost (config-store, ui-config).
@@ -3945,8 +3947,8 @@ You approved **all plan decisions D-1–D-29 with the recommended option** ("Pla
 | Area | Decided |
 |---|---|
 | Rules | D-1 visible-only glow (Render Chest), invisible entities never highlighted, no through-wall option · D-6 defaults policy P1–P7 (below) and the defaults table §12.H |
-| Data & licensing | D-5 MIT data with notices (pinned PR #759 commit, credit); its corpse-spot part (SkyHanni-REPO PR #759 + meowdding spots) was dropped by R22 and is reinstated by R40, now merged with the CC0 ShaftUtils spots; the NEU bestiary and RNG weights stay · D-12 NPC/mob lists bundled only, gists frozen · D-16 (a) wiki = human cross-check; XP and maxima need a non-wiki source; an unverified rate or drop chance may rest on one page you supplied. This overrides the addendum's "fill XP values from the official wiki", which closed on 2026-07-21. No consent request to Weird Gloop. · D-25 delete wiki copies + parsed data after plan approval · D-26 "Phase 3.9 internal database" = shared data registry (T3.0c) · D-28 (i) Claude reads wiki/forum/reddit pages only when you supply them |
-| Features | D-2 split Catacombs / Dungeon Hub · D-3 numeric "Rare Drop Odds", 5 v1 cases (Scatha, Croesus/dungeon chests = relative rarity, Vanguard, Lapis/Umber/Tungsten, Slayer RNG) · D-4 drill hand re-equip fix only, drills only (the fix is dropped by R37) · D-7 corpse keys counted from inventory (changed by R39: inventory plus sacks; restored by R41: inventory only, with a sack reminder) · D-15 beam colour = island colour + optional per-NPC override, glow colour separate |
+| Data & licensing | D-5 MIT data with notices (pinned PR #759 commit, credit); its corpse-spot part (SkyHanni-REPO PR #759 + meowdding spots) was dropped by R22 and is reinstated by R40, now merged with the CC0 ShaftUtils spots; the NEU bestiary stays; the NEU RNG weights (and SkyOcean's Vanguard weights, R6) were bundled for the odds and are removed with them (R42) · D-12 NPC/mob lists bundled only, gists frozen · D-16 (a) wiki = human cross-check; XP and maxima need a non-wiki source; an unverified rate or drop chance may rest on one page you supplied. This overrides the addendum's "fill XP values from the official wiki", which closed on 2026-07-21. No consent request to Weird Gloop. · D-25 delete wiki copies + parsed data after plan approval · D-26 "Phase 3.9 internal database" = shared data registry (T3.0c) · D-28 (i) Claude reads wiki/forum/reddit pages only when you supply them |
+| Features | D-2 split Catacombs / Dungeon Hub · D-3 numeric "Rare Drop Odds", 5 v1 cases (Scatha, Croesus/dungeon chests = relative rarity, Vanguard, Lapis/Umber/Tungsten, Slayer RNG) (no longer applies (R42): the feature is dropped) · D-4 drill hand re-equip fix only, drills only (the fix is dropped by R37) · D-7 corpse keys counted from inventory (changed by R39: inventory plus sacks; restored by R41: inventory only, with a sack reminder) · D-15 beam colour = island colour + optional per-NPC override, glow colour separate |
 | UI | D-8 no UI library, vanilla font, corners from fills, accent configurable (default teal `#29B6B2`), live-apply + save on close, Cloth Config removed, toasts, T2.9 items as stretch goals |
 | Updater & release | D-9 final 2.0.0 · D-10 repo-local identity `Kesuhi <…noreply…>`, push at checkpoints, merge commit · D-13 early v1.1.0+26.2 after G1, rules warning on old release notes, no 26.1.2 hotfix · D-14 confirm → staged install |
 | Optimizer | D-17 `/sblevels` and component-menu captures — **all at G1** (you moved the "now" capture on 2026-10-01) · D-18 blended research priority · D-19 gross costs · D-20 one keyless AH scan per data update (asks first, aggregates only), no third-party LBIN · D-21 next step per instance · D-22 live Bazaar opt-in, ≤ 1/15 min, instant-buy · D-23 skill: you supply patch notes, `disable-model-invocation: true`, gates, Java data tool, venv for the eval loop · D-24 max level from your capture · D-27 component-menu parsers · D-29 free/waiting group, carries excluded |
@@ -3963,7 +3965,7 @@ You approved **all plan decisions D-1–D-29 with the recommended option** ("Pla
 
 **Consequences of D-15 and D-3:**
 - **Beam colours (D-15):** on one island, all beams without a per-NPC colour share the island colour. Beams look individually coloured once you set per-NPC colours. If you'd rather have every new waypoint get its own colour automatically from a palette, say "D-15 → palette".
-- **Croesus tooltip (D-3 + R10 = b):** relative rarity plus a base "≈ 1 in N runs" estimate from the same MIT data.
+- **Croesus tooltip (D-3 + R10 = b):** relative rarity plus a base "≈ 1 in N runs" estimate from the same MIT data. No longer applies (R42): the Croesus case was never built and the feature is dropped.
 
 ### 12.2 Spec questions R1–R17 — answered
 
@@ -3976,11 +3978,11 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 | R3 | Assumptions A-1–A-10 (§1): 26.2 only, Fabric only, English UI, Hypixel Mod API required, own code CC0, only you test on Hypixel, glow = outline, GitHub-only distribution, Windows verified, one CI grep + a pre-commit privacy scan. Plus the capability map (§2) with the dependency fixes found by review | a) correct · b) correct me | **a** |
 | R4 | Release details (Q-REL-02..05, Q-UPD-01):<ul><li>the rules warning goes on **v1.0.0 and v1.0.1** (same glow), wording approved by you first</li><li>the early release goes through an intermediate PR to `main`</li><li>v1.1.0 replaces the dead Modrinth updater with a notify-only GitHub check shown as a chat line</li><li>your PR approval covers the merge; a separate "ship" authorises tag push + publish</li><li>GitHub immutable releases are enabled before 2.0.0</li></ul> | a) all as described · b) change parts | **a** |
 | R5 | NPC/mob data (Q-NPCDB-02..05):<ul><li>invisible-by-design mobs (Ghost, Fels, Sneaky Creeper, Invisibug) stay in the picker greyed, not addable, labelled "never highlighted (Hypixel rules)"</li><li>no new island coverage in v1 (gaps listed)</li><li>rules created from the database follow corrected coordinates</li><li>**you** remove those 4 mobs from the 1.0.x mob gist</li></ul> | a) all as described · b) change parts | **a**. Amended by R38: the 4 mobs are left out of the bundled mob table instead of shown greyed, and the mob gist stays as it is |
-| R6 | Also bundle SkyOcean's `src/repo/vanguard.jsonc` (MIT under its licence) with a notice, replacing its "assumed" dye weight (Q-ODDS-06) | a) yes · b) no (Vanguard odds from your supplied pages only) | **a** |
+| R6 | Also bundle SkyOcean's `src/repo/vanguard.jsonc` (MIT under its licence) with a notice, replacing its "assumed" dye weight (Q-ODDS-06) | a) yes · b) no (Vanguard odds from your supplied pages only) | **a**. No longer applies (R42): the Vanguard table and its SkyOcean licence text are removed with the odds |
 | R7 | Mineshaft and corpses (Q-MSA-02/03, Q-CORPSE-02/03):<ul><li>a Dead Man's Chest corpse adds one follow-up line</li><li>no "[Share]" button in v1</li><li>`/ksu corpses` lists spots even with markers OFF</li><li>corpse spot markers are **text labels only** (no beam or box), see-through, default OFF</li></ul> | a) as described · b) corpse markers also get beams · c) list command only, no markers | **a**. R22 dropped `/ksu corpses` and the corpse spot markers; R40 reinstates both, with the markers default ON |
 | R8 | Existing fixed-waypoint colours: a customised colour becomes that rule's beam colour; rules still on the old default green follow the island colour (Q-NPCWP-02) | a) as described · b) all colours stay glow-only · c) every colour becomes a beam colour | **a** |
 | R9 | Fishing (Q-BOB-01, Q-HOT-01): the bobber fix applies to **your own** bobber only, and "the hotspot you're fishing in" means your bobber was inside its area at any time in the last 30 s | a) as described · b) every bobber; "fishing in" = a catch within 30 s | **a** |
-| R10 | Croesus/dungeon chest tooltip (Q-ODDS-03): keep relative rarity only (decided D-3), or add "≈ 1 in N runs (base, no bonuses)" from the same MIT data (N = RNG score / 300, within ~1–2.5 % of the wiki)? | a) relative only · b) + "≈ 1 in N runs" | **Answer: b** |
+| R10 | Croesus/dungeon chest tooltip (Q-ODDS-03): keep relative rarity only (decided D-3), or add "≈ 1 in N runs (base, no bonuses)" from the same MIT data (N = RNG score / 300, within ~1–2.5 % of the wiki)? | a) relative only · b) + "≈ 1 in N runs" | **Answer: b**. No longer applies (R42): the Croesus case is dropped |
 | R11 | Bestiary (Q-BEST-01..03):<ul><li>"milestone" = the global milestone shown as "tiers to next milestone" (from menu/chat), plus a family "kills to max" line</li><li>the milestone line is ON by default when known</li><li>a session resets on manual reset, profile switch or restart, with an optional "reset on island change" (OFF)</li><li>if the Bestiary tab widget proves unusable at G1, menu + chat snapshots only (decide any estimated counter after G1)</li></ul> | a) as described · b) change parts | **a** |
 | R12 | UI details (Q-UI-03, Q-HUD-01/02):<ul><li>toasts for update prompts, plus an *optional* toast channel on warnings, default OFF (your brief's chat/title/sound stay the defaults)</li><li>HUD editor: Esc = save and close, Cancel reverts</li><li>HUD elements are hidden while any screen other than chat is open</li></ul> | a) as described · b) toasts ON for warnings · c) HUDs stay visible under screens | **a** |
 | R13 | Updater startup cleanup (Q-UPD-02) | a) delete every lower-version copy · b) delete only the jar the updater itself replaced; warn once about others · c) never delete | **b** |
@@ -3993,9 +3995,9 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.3 Decisions after G1 — R18–R41
+### 12.3 Decisions after G1 — R18–R42
 
-You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. R25–R35 followed during Phases 2 and 3 (2026-10-03 to 2026-10-10), R36–R40 after the G3 field checks and R41 after the second G3 field session (2026-10-15). Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 dropped carry `[reinstated R40]` since R40, the items R37 and R38 drop carry `[dropped R37]` or `[dropped R38]`, the requirement changes of R39 that R41 replaces carry `[replaced R41]`, and all keep their ids.
+You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. R25–R35 followed during Phases 2 and 3 (2026-10-03 to 2026-10-10), R36–R40 after the G3 field checks, R41 after the second G3 field session and R42 after that (2026-10-15). Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 dropped carry `[reinstated R40]` since R40, the items R37, R38 and R42 drop carry `[dropped R37]`, `[dropped R38]` or `[dropped R42]`, the requirement changes of R39 that R41 replaces carry `[replaced R41]`, and all keep their ids.
 
 | # | Decision | Recorded in |
 |---|---|---|
@@ -4003,7 +4005,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R19 | Captures mask real player names, yours included, as Self, Player1, …; NPC names and Hypixel's tab-widget entries stay | REQ-GS-13, AC-GS-13; PLAN T0.4d |
 | R20 | In v1.1.0, the "You found <NPC>" title fires only for five special moving NPCs: Trinity, Tomioka and Duncan (Catacombs), and Xalx and Pete (Crystal Hollows). A rule qualifies when its NPC data sourceId is `trinity`, `tomioka`, `duncan`, `xalx` or `pete`, or, for a hand-made rule without a sourceId, when its label equals one of those five names, ignoring case and surrounding spaces. Other NPC Search rules still outline their NPC but never trigger the title. The other title rules stay: line of sight, once per rule per server, reset on a location change, its own toggle (default ON), never for invisible entities | REQ-GLOW-14, REQ-GLOW-15, AC-GLOW-13, Q-GLOW-03, REQ-REL-04, §12.H; PLAN §3, T1.11b, T7.1, §9 (D-6) |
 | R21 | In v1.1.0, NPC Search gets the setting "White waypoint labels", default ON: waypoint labels and their distance line are drawn white. OFF draws them in the rule's colour (the 1.0.1 and 1.1.0-dev look). This replaces the npc-waypoints out-of-scope line "Label colours other than white": white stays the default, and the rule's colour becomes an opt-out. When the beacon beams arrive (T3.4), the setting stays and the beam carries the colour. In v1.1.0 the distance line follows the label (white while the setting is ON). From T3.4 on, ON gives a white label and a yellow distance line (Skyblocker style), and T3.4 updates the toggle tooltip to say so; OFF still draws both lines in the rule's own `color` field, not in the resolved beam colour. Superseded from 1.2.0 by R31: the setting is gone and labels are always white | REQ-PORT-06, AC-PORT-06, REQ-NPCWP-02, REQ-NPCWP-03, REQ-NPCWP-08, npc-waypoints out of scope, AC-NPCWP-03, AC-NPCWP-05, EC-NPCWP-06, REQ-REL-04, §12.H; PLAN §3, T1.3b, T3.4, T7.1, §9 (D-6) |
-| R22 | The possible corpse spots (brief Phase 3 item 3) are dropped from the plan entirely: the corpse-waypoints module, PLAN T3.3a (spot table) and T3.3 (markers and `/ksu corpses`), their defaults row, the `corpses` reserved word, D-5's corpse-spot data (SkyHanni-REPO PR #759 + meowdding spots) and the corpse-spot points of R7. Ids are kept and marked dropped. What stays: the mineshaft entry alert (T3.2), the Frozen Corpses widget reading (T3.0m), the corpse odds (T3.9d, T3.9e) and D-5's NEU bestiary and RNG-weight data. The README's excluded-behaviour line "filtering possible corpse spots by entities you cannot see" stays (REQ-REL-03). Reversed by R40 | corpse-waypoints (all ids), REQ-GS-16, AC-GS-16, REQ-REL-03, §11, REQ-GS-17, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T2.5b, T3.0m, T3.3a, T3.3, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
+| R22 | The possible corpse spots (brief Phase 3 item 3) are dropped from the plan entirely: the corpse-waypoints module, PLAN T3.3a (spot table) and T3.3 (markers and `/ksu corpses`), their defaults row, the `corpses` reserved word, D-5's corpse-spot data (SkyHanni-REPO PR #759 + meowdding spots) and the corpse-spot points of R7. Ids are kept and marked dropped. What stays: the mineshaft entry alert (T3.2), the Frozen Corpses widget reading (T3.0m), the corpse odds (T3.9d, T3.9e) and D-5's NEU bestiary and RNG-weight data. The README's excluded-behaviour line "filtering possible corpse spots by entities you cannot see" stays (REQ-REL-03). Reversed by R40. The corpse odds and the RNG-weight data are dropped later by R42 | corpse-waypoints (all ids), REQ-GS-16, AC-GS-16, REQ-REL-03, §11, REQ-GS-17, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T2.5b, T3.0m, T3.3a, T3.3, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
 | R23 | Order after the v1.1.0 merge: the first Phase 3 work is the waypoint path T3.0b (marker toolkit) → T3.0n (beacon beams) → T3.4 (Skyblocker-style NPC waypoints: white label plus coloured beacon beam), so beams come right after v1.1.0. Reimplemented from scratch: Skyblocker is LGPL-3.0, and no Skyblocker code is used (REQ-NPCWP-11). Whether this ships as an intermediate release is decided then | §2 (build order), REQ-PORT-06, AC-PORT-06, AC-PORT-14 ("once T3.4 lands"); PLAN §6, Phase 3 intro, T3.0b, T3.4, T3.8 |
 | R24 | G1 field answers. (a) Q-MSA-04: you believe the Frozen Corpses tab widget is on by default and ask for a failsafe that tells the player when it is off. The once-per-launch widget hint (REQ-MSA-08, REQ-GS-18) is that failsafe. The command and menu path that enable the widget were not given, so the hint wording stays UNVERIFIED and is checked at G3. (b) Whether a Tungsten or Umber key held only in the Dwarven Sack opens a corpse could not be tested: D-7 (inventory only) stands, the REQ-MSA-05 sack fallback is not triggered, and the question stays open for G3. (c) Every area of the game counts as a Bestiary area except the Dungeon Hub. (a) and (b) are answered at G3 by R36 | Status, §10 intro, REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-BEST-12, AC-BEST-11, §13.3; PLAN G1, T3.0m, T3.2, T5.3, G3 |
 | R25 | After T3.4 (2026-10-03): (a) Q-NPCWP-04, keep the documented island colour defaults under REQ-NPCWP-05 as they are. (b) The waypoint path (T3.0b, T3.0n, T3.4) does not ship as an intermediate release; it ships with the next regular release, so T3.4b (colour settings and the R8 migration) lands first. (b) is superseded by R33: the path ships in v1.2.0 before T3.4b | REQ-NPCWP-05, Q-NPCWP-04; PLAN §6 waypoint path, T3.4 |
@@ -4016,15 +4018,16 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R32 | 2026-10-05, T2.9d: the anti-aliased corners are the opt-in setting "Smooth corners" in General › Interface, OFF until picked (the key is absent from the file until then, so a 1.0.1 file saves back unchanged), so the fill-based corners stay the default. When it is ON, rounded rectangles and outlines draw each corner from a white alpha mask baked per radius at screen-pixel resolution and tinted with the shape's colour (public render APIs only, REQ-UI-17); the straight parts stay plain fills. A shape the mask cannot draw (radius 0 or above 256 screen px, an outline thicker than its radius, a box too small for its outline) and a session in which a mask texture could not be made fall back to the fill-based corners. Every place that draws rounded shapes follows the setting, the HUD notices included | REQ-UI-18, REQ-UI-17, §12.H; PLAN T2.9d |
 | R33 | 2026-10-09: after T2.9–T2.9d, the work on `update/26.2` ships as v1.2.0 (the maintainer: "create a new release with the changes up till then"), an intermediate release in the REQ-REL-14 flow (a PR to `main` merged after the maintainer's approval, then tag and publish after a separate "ship"); its PR summary starts at v1.1.0, which `main` already holds. It includes the waypoint path (T3.0b, T3.0n, T3.4) before T3.4b, superseding R25(b): beams use the island colours, not changeable in game yet, and the R8 colour migration (REQ-NPCWP-09) runs when T3.4b lands, because the stored colours are kept (R31); the [D] parts of AC-NPCWP-11 and AC-MARK-08 run at the release's tier D boot, their [E] parts are known issues (EC-REL-13). Its README is compacted to what 1.2.0 ships: Fabric Language Kotlin required, Cloth Config and "White waypoint labels" gone | REQ-REL-14, AC-REL-12, AC-REL-06, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, R25, REQ-NPCWP-09; PLAN §6 waypoint path, T3.4, T2.12, T2.13, T2.14, G2r |
 | R34 | 2026-10-09, the maintainer: the README's feature list is laid out like the in-game settings menu (categories with their descriptions, cards in screen order, each setting with its default); the screenshot placeholders, the `/ksu debug` commands, the upgrade notes, the fair-play and compliance section and the network-access list are removed from the README. Upgrade notes stay in each release's CHANGELOG section; the README keeps the non-affiliation statement, the requirements, the commands and the licensing | REQ-REL-01, REQ-REL-03, REQ-REL-04, AC-REL-01, AC-REL-02, AC-REL-03 |
-| R35 | 2026-10-10, your answer: G3 runs now, before T3.9b–f. Those five odds cases wait for your wiki pages (Scatha, Lapis/Umber/Tungsten, the Vanguard corpse page with its roll counts and the Frostbitten Dye) and for chat and menu captures (corpse-loot blocks, a Scatha PET DROP line, slayer RNG meter lines, a reward-chest dump), so their acceptance items stay open | Status; PLAN Checkpoint G3, T3.9b–T3.9f |
+| R35 | 2026-10-10, your answer: G3 runs now, before T3.9b–f. Those five odds cases wait for your wiki pages (Scatha, Lapis/Umber/Tungsten, the Vanguard corpse page with its roll counts and the Frostbitten Dye) and for chat and menu captures (corpse-loot blocks, a Scatha PET DROP line, slayer RNG meter lines, a reward-chest dump), so their acceptance items stay open. Superseded for T3.9b–f by R42: the five cases are dropped, so they no longer wait for pages or captures | Status; PLAN Checkpoint G3, T3.9b–T3.9f |
 | R36 | 2026-10-15, G3 field results. (a) The Frozen Corpses widget is enabled with `/widgets`; the shared widget-hint string names `/widgets` (closes Q-MSA-04 and the [E] part of AC-GS-18). (b) A Tungsten or Umber key held only in the Dwarven Sack opens a corpse, so the REQ-MSA-05 fallback condition is met and D-7 was put to you again (→ R39). (c) Bobber Fix works in water and lava (AC-BOB-04, AC-BOB-05 passed). (d) The mineshaft entry alert and its key counts matched the tab and sidebar dumps (Onyx 1, 3 Lapis): the [E] parts of AC-GS-02, AC-GS-03, AC-GS-07, AC-GS-17, AC-MSA-11 and AC-MSA-12 passed. (e) Hotspot rings did not show on Backwater Bayou, Lotus Atoll or the Crimson Isle: Iris with a shaderpack has no program for vanilla's debug_quads pipeline. Fixed in commit `40910ad`: rings use their own pipeline, given to Iris's basic program (probed with Sodium 0.9.2, Iris 1.11.4 and your shaderpack: no ring before, ring after). The "hotspot gone" warning could not be seen for the same reason. AC-HOT-08, AC-HOT-09 and the ring part of the [E] parts of AC-MARK-08 and AC-NPCWP-11 are re-checked at the next field check. Hypixel's buff text "+5 Trophy Chance" is now recognised. (f) The Croesus chest and one `/sblevels` page were captured with the dumps (the AC-ODDS-13 capture and the AC-GS-06 [E] capture); turning them into fixtures is still to do (T3.10). (g) Not seen, opportunistic: a party summon (AC-MSA-10), the rare-room glow (AC-GLOW-11), Scatha, slayer and Vanguard corpse loot. (h) The waypoint check (the [E] parts of AC-NPCWP-11 and AC-MARK-08) stays open: you asked for a fuller explanation. (i) The 150-marker performance gametest (AC-MARK-06) fails with or without the change while your game runs alongside; it is re-run with the game closed before the push. (b) is corrected by R41: a key held only in the Dwarven Sack does not open a corpse. The re-checks of (e) and (h) passed at the second session (R41) | Status, §10 intro, REQ-GS-18, AC-GS-18, EC-SBXP-07, REQ-MSA-05, REQ-MSA-08, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-HOT-02; PLAN G1, T3.0m, T3.2, T3.2c, T3.10, Checkpoint G3 |
 | R37 | 2026-10-15, at your request: the drill re-equip fix (module drill-fix, T3.7) is removed (commit `792ec9c`): the module, its mixin and hook `drill.refresh`, its card, tests and CHANGELOG entry. Ids are kept and marked dropped. The README and "not implemented" lines about the packet-suppressing drill fix stay (REQ-REL-03) | §1, §2, drill-fix (all ids), REQ-UI-04, §11, §12.1 (D-4), §12.H, §13; PLAN §3, T3.0f, T3.7, G3, "Not built in 2.0.0", §9 (D-4, D-6) |
 | R38 | 2026-10-15, you: "remove them when pulling the list into the jar". The invisible-by-design mobs Ghost, Fels, Sneaky Creeper and Invisibug are left out of the bundled mob table, instead of being listed greyed in the picker (amends R5). A rule that targets one of them still never outlines an invisible mob (REQ-GLOW-03, EC-GLOW-09). The 1.0.x mob gist stays as it is, so the gist removal and its check are dropped | REQ-NPCDB-08, REQ-NPCDB-10, AC-NPCDB-07, AC-NPCDB-09, Q-NPCDB-02, Q-NPCDB-03, EC-GLOW-09, REQ-UI-11, R5, §11; PLAN T3.8, T3.8b, T3.8c, T3.8d, G3, T7.4 |
 | R39 | 2026-10-15, after R36 (b): D-7 changes. Corpse keys are counted in the inventory and in sacks, and a used key is subtracted automatically. The sack amount of `TUNGSTEN_KEY`, `UMBER_KEY` and `SKELETON_KEY` is read only from what the server shows the player (sack menus the player opens, readable "[Sacks]" chat messages), kept per SkyBlock profile, and lowered by one when a keyed corpse is looted and the inventory count did not drop. Until a sack amount is known, the entry reads "n in inventory, sack not seen yet", without a shortage marker; then "n (i inventory + s sack)". The mod never opens a menu or sends anything. The formats are UNVERIFIED until a capture or research step supplies them. This replaces the REQ-MSA-05 build-constant fallback. Replaced by R41 (a): sack keys do not open a corpse, so the count is the inventory again, with a sack reminder | REQ-MSA-05, REQ-MSA-06, REQ-MSA-09, mineshaft-alert out of scope, AC-MSA-01, AC-MSA-04, AC-MSA-13, AC-MSA-15, EC-MSA-03, EC-MSA-04, Q-MSA-01, game-state out of scope, Q-GS-01, §12.1 (D-7); PLAN T3.0h, T3.2, T3.2b, §9 (D-7) |
 | R40 | 2026-10-15: the possible corpse spots (module corpse-waypoints) are reinstated, reversing R22. The spot table merges SkyHanni-REPO PR #759, meowdding-repo and ShaftUtils into one frame (29 codes, 129 spots; 5 codes without spot data), the markers default ON, and the notices cover all three sources. New: the Organ Donor ding hint (REQ-CORPSE-11) highlights the spots within 20 blocks of the player for a while after the ding, using only the sound and the player's position, and `/ksu debug dump sounds` (REQ-GS-13) captures the ding's sound id, pitch and source, which stay UNVERIFIED until then. Captured at the second G3 session, R41 (c) | corpse-waypoints (all ids), REQ-GS-13, REQ-GS-16, REQ-GS-17, AC-GS-16, AC-GS-19, REQ-UI-04, REQ-UI-10, REQ-MARK-02, REQ-MARK-06, AC-MARK-05, REQ-DATA-13, REQ-LOC-08, REQ-XC-RULES-06, R7, §1, §2, §11, §12.1 (D-5), §12.H, §13; PLAN §2, §3, AD-7, T3.0m, T3.3a, T3.3, T3.3b, T3.3c, T7.1, T7.1b, G3, "Not built in 2.0.0", §8, §9 (D-5, D-6) |
 | R41 | 2026-10-15, after the second G3 field session with the new jar. Field results: hotspot rings show, also with your Iris shaderpack, and the "hotspot gone" warning works (AC-HOT-08, AC-HOT-09 and the ring part of AC-MARK-08 passed); waypoints next to Skyblocker's look fine, shaders on and off (AC-NPCWP-11 and AC-MARK-08 [E] passed); possible corpse spots and `/ksu corpses` work in a real shaft, Littlefoot's Den (AC-CORPSE-10 passed); the Organ Donor ding was captured with `/ksu debug dump sounds`: `minecraft:block.note_block.harp`, category block, volume 1.0, at your own position, with a pitch that rises from about 1.05 at 17 blocks to about 1.97 within 3 blocks of the nearest unlooted corpse and dings every 0.95 s far to 0.55 s close. Correction of R36 (b): a Tungsten or Umber key held only in the Dwarven Sack does not open a corpse. Decisions: (a) D-7 is restored: corpse keys count the inventory only (36 slots + offhand), with the shortage marker. When a keyed type is short and the mod has seen keys of that type in the Dwarven Sack (the Dwarven Mines Sack menu you open, kept current by "[Sacks]" hover lines and "Moved N <Item> from your Sacks to your inventory." lines, per profile), the entry adds "(n in your sack: take them out)". With no sack amount known, nothing is added; the Skeleton Key fits no sack and never gets the reminder; nothing is subtracted on loot. This replaces R39. (b) A new option "Hide Hypixel's hotspot particles" on the Fishing Hotspots card, ON: the ring particles of a tracked hotspot are not drawn on the client; the packets are still received, read by the observer and never changed or cancelled. (c) The ding hint is made concrete: a harp of the block category within 4 blocks of the player, only in a shaft, labels the spots within 20 blocks of the player "Possible corpse #n · ding nearby: <warmth>" ("very close" at pitch ≥ 1.9, "close" at ≥ 1.6, "far" otherwise) until 2 s after the last ding; the sound's position never picks a spot | Status, §2, §10 intro, REQ-GS-13, game-state out of scope, Q-GS-01, world-markers out of scope, REQ-MSA-05, REQ-MSA-06, REQ-MSA-09, mineshaft-alert out of scope, AC-MSA-01, AC-MSA-04, AC-MSA-13, AC-MSA-15, EC-MSA-03, EC-MSA-04, Q-MSA-01, Q-MSA-04, REQ-CORPSE-11, AC-CORPSE-11, REQ-HOT-12, REQ-HOT-14, AC-HOT-12, AC-HOT-13, fishing-hotspot out of scope, REQ-REL-03, R36, R39, R40, §12.1 (D-7), §12.H, §13; PLAN §3, G1, T3.0h, T3.2, T3.2b, T3.3b, T3.6c, Checkpoint G3, §9 (D-6, D-7) |
+| R42 | 2026-10-15, your request "Ignore the gambling overlays": the whole Rare Drop Odds feature (module rare-drop-odds, the brief's "Rare Drop Gambling Overlay") is removed. The open cases T3.9b–f are dropped, and the built parts leave the code: the odds math and format (T3.9a); the three bundled tables `odds.rngscore` (NEU), `odds.vanguard` (SkyOcean) and `odds.supplied`, their schemas and the SkyOcean licence text in the jar (T3.9g); the module, its card, counters and gametest (T3.9h). Nothing of it was released (it came after 1.2.0), so there is no config migration: a saved `rare_drop_odds` section is kept and not read. The NEU-REPO notice keeps only the NPC list. SkyOcean keeps its notice section only for the Bobber Fix approach credit; no SkyOcean material is bundled any more, so `licenses/skyocean.txt` leaves the jar and the repo. The "Odds & Trackers" category stays defined for later trackers and is hidden while it has no card. The data validator keeps its per-row source rules (the corpse spot table uses `sourceRefs`); its odds-only rules go (no percentage field, no SkyOcean dye row, roll range min ≤ max). Ids are kept and marked dropped. D-3, R6 and R10 no longer apply; R35 is superseded for T3.9b–f. Also from you: the mineshaft type display you asked about already exists (the entry alert starts with the shaft name, REQ-MSA-02), so there is no new requirement for it | Status, §1, §2, §7, REQ-XC-RULES-07, REQ-LOC-05, REQ-LOC-08, REQ-UI-04, hud (purpose, REQ-HUD-02, REQ-HUD-13, out of scope), REQ-DATA-13, game-state (origin, purpose), REQ-GS-17, AC-GS-16, REQ-MSA-02, mineshaft-alert out of scope, rare-drop-odds (all ids), §11, §12.1 (D-3, D-5), R6, R10, R22, R35, §12.H, §13; PLAN Status, §2, §3, AD-6, AD-7, §5, §6, §7 intro, T0.4b, Phase 2 (categories), Phase 3 intro, T3.0j, T3.0m, T3.0d, T3.0e, T3.9a–T3.9h, T3.10, Checkpoint G3, T7.1, "Not built in 2.0.0", §9 (D-3, D-5, D-6) |
 
-### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28, R32, R37, R40 and R41)
+### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28, R32, R37, R40, R41 and R42)
 
 | Feature | Default | | Feature | Default |
 |---|---|---|---|---|
@@ -4033,7 +4036,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | "You found X" title | ON, after line of sight, once per run; only for Trinity, Tomioka, Duncan, Xalx and Pete [R20] | | Bobber fix | ON (own bobber) [R9] |
 | NPC waypoints | ON; beacon beams ON; distance line ON; labels always white [R31] | | Hotspot ring / filled area / hide Hypixel's hotspot particles | ON / ON [R2] / ON [R41] |
 | Fixed-coordinate labels see-through | yes | | Hotspot-gone warning | ON (title + sound + chat) [R2] |
-| Drill re-equip fix | [dropped R37]: no toggle (was ON, drills only) | | Rare Drop Odds | **OFF**; once enabled all cases ON, chat lines ON, rare threshold 2 % |
+| Drill re-equip fix | [dropped R37]: no toggle (was ON, drills only) | | Rare Drop Odds | [dropped R42]: no card (was **OFF**; once enabled all cases ON, chat lines ON, rare threshold 2 %) |
 | Bestiary HUD | **OFF**; lines when enabled: tier, kills, to next tier, rate, session kills, milestone (when known) ON; to max, ETA OFF; reset on island change OFF [R11] | | Update check / channel | ON (notify) / STABLE |
 | Toast channel on warnings | **OFF** [R12]; notices top right, 5 s, set in General › Interface [R28] | | SkyBlock XP module / passive reading / live deltas | ON / ON / ON [R14] |
 | "Next best task" HUD | **OFF** | | Live Bazaar | **OFF** |
@@ -4044,11 +4047,11 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 
 ## 13. Traceability (final)
 
-Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check script that runs both ways (the `Was Req:` and `Was Accept:` bullets of the dropped task T3.7 are excluded; §13.1 and §13.2 show them as "was …"):
-- 387 requirements: 368 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), 2 not built by decision (REQ-ODDS-25, REQ-ODDS-26), and 12 dropped at G3 (REQ-DRILL-01 to REQ-DRILL-12, R37). **None uncovered.**
-- 171 tasks: 170 active and 1 dropped (T3.7, R37). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. The R36–R40 update added T3.2c, T3.8d, T3.10, T3.3c, T3.2b and T3.3b, made T3.3a and T3.3 active again (R40) and dropped T3.7 (R37). R41 adds T3.6c and rescopes T3.2b.
-- 349 acceptance criteria (withdrawn ones excluded): 343 are each named by a task or a checkpoint, and 6 are dropped (AC-DRILL-01 to AC-DRILL-06, R37). Within AC-NPCDB-09 the second bullet is dropped (R38); the criterion stays.
-- How these numbers were counted (2026-10-15): the requirement and criterion ids are the `- **REQ-…**` and `- **AC-…**` bullets in this file; the tasks are the `**T…**` items in PLAN §7 with their `Req:` and `Accept:` lines and the checkpoint lists. The summary before this update (384 requirements, 152 tasks, 342 criteria) dated from R20–R24 and missed later additions: the files held 385 requirements, 164 tasks and 343 criteria before this update. This update adds 1 requirement (REQ-CORPSE-11), 6 tasks and 4 criteria (AC-GS-19, AC-MSA-15, AC-CORPSE-11, AC-CORPSE-12); R37 moves 12 requirements (8 implemented, 4 not built) and 6 criteria to dropped; R40 moves 10 requirements and 10 criteria from dropped back to active. R41 (same day, same method) adds 1 requirement (REQ-HOT-14), 1 task (T3.6c) and 2 criteria (AC-HOT-12, AC-HOT-13); its rewrites of REQ-MSA-05, AC-MSA-13, AC-MSA-15, REQ-CORPSE-11 and AC-CORPSE-11 keep their ids and add nothing.
+Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check script that runs both ways (the `Was Req:` and `Was Accept:` bullets of the dropped tasks T3.7 and T3.9a–T3.9h are excluded; §13.1 and §13.2 show them as "was …"):
+- 387 requirements: 344 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), and 38 dropped at G3 (REQ-DRILL-01 to REQ-DRILL-12, R37; REQ-ODDS-01 to REQ-ODDS-26, R42). None is left as not built by decision: REQ-ODDS-25 and REQ-ODDS-26 were, and are now dropped with their module. **None uncovered.**
+- 171 tasks: 162 active and 9 dropped (T3.7, R37; T3.9a–T3.9h, R42). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. The R36–R40 update added T3.2c, T3.8d, T3.10, T3.3c, T3.2b and T3.3b, made T3.3a and T3.3 active again (R40) and dropped T3.7 (R37). R41 adds T3.6c and rescopes T3.2b. R42 drops T3.9a–T3.9h.
+- 349 acceptance criteria (withdrawn ones excluded): 325 are each named by a task or a checkpoint, and 24 are dropped (AC-DRILL-01 to AC-DRILL-06, R37; AC-ODDS-01 to AC-ODDS-18, R42). Within AC-NPCDB-09 the second bullet is dropped (R38); the criterion stays.
+- How these numbers were counted (2026-10-15): the requirement and criterion ids are the `- **REQ-…**` and `- **AC-…**` bullets in this file; the tasks are the `**T…**` items in PLAN §7 with their `Req:` and `Accept:` lines and the checkpoint lists. The summary before this update (384 requirements, 152 tasks, 342 criteria) dated from R20–R24 and missed later additions: the files held 385 requirements, 164 tasks and 343 criteria before this update. This update adds 1 requirement (REQ-CORPSE-11), 6 tasks and 4 criteria (AC-GS-19, AC-MSA-15, AC-CORPSE-11, AC-CORPSE-12); R37 moves 12 requirements (8 implemented, 4 not built) and 6 criteria to dropped; R40 moves 10 requirements and 10 criteria from dropped back to active. R41 (same day, same method) adds 1 requirement (REQ-HOT-14), 1 task (T3.6c) and 2 criteria (AC-HOT-12, AC-HOT-13); its rewrites of REQ-MSA-05, AC-MSA-13, AC-MSA-15, REQ-CORPSE-11 and AC-CORPSE-11 keep their ids and add nothing. R42 (same day, same method) adds nothing and moves 26 requirements (24 named by T3.9 tasks, 2 not built by decision), 8 tasks (T3.9a–T3.9h) and 18 criteria to dropped; T3.10 no longer names AC-ODDS-13. The totals stay 387, 171 and 349.
 
 ### 13.1 Requirement → PLAN tasks, by module
 
@@ -4326,36 +4329,36 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-HOT-13 | T3.0f, T3.6 |
 | REQ-HOT-14 | T3.6c |
 
-**rare-drop-odds** (26)
+**rare-drop-odds** (26, all dropped by R42)
 
 | Requirement | PLAN tasks |
 |---|---|
-| REQ-ODDS-01 | T3.9h |
-| REQ-ODDS-02 | T3.9h |
-| REQ-ODDS-03 | T3.9h |
-| REQ-ODDS-04 | T3.9h |
-| REQ-ODDS-05 | T3.9b, T3.9d, T3.9f |
-| REQ-ODDS-06 | T3.9a |
-| REQ-ODDS-07 | T3.9h |
-| REQ-ODDS-08 | T3.9a |
-| REQ-ODDS-09 | T3.9g |
-| REQ-ODDS-10 | T3.9g, T3.9b, T3.9d, T3.9e |
-| REQ-ODDS-11 | T3.9h |
-| REQ-ODDS-12 | T3.9h |
-| REQ-ODDS-13 | T3.9b |
-| REQ-ODDS-14 | T3.9b |
-| REQ-ODDS-15 | T3.9b |
-| REQ-ODDS-16 | T3.9b |
-| REQ-ODDS-17 | T3.9c |
-| REQ-ODDS-18 | T3.9c |
-| REQ-ODDS-19 | T3.9c |
-| REQ-ODDS-20 | T3.9d, T3.9e |
-| REQ-ODDS-21 | T3.9d, T3.9e |
-| REQ-ODDS-22 | T3.9d, T3.9e |
-| REQ-ODDS-23 | T3.9f |
-| REQ-ODDS-24 | T3.9f |
-| REQ-ODDS-25 | *not built:* Not in v1: D-3 = A (numeric odds only); |
-| REQ-ODDS-26 | *not built:* Not in v1: D-3 = A; |
+| REQ-ODDS-01 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9h) |
+| REQ-ODDS-02 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9h) |
+| REQ-ODDS-03 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9h) |
+| REQ-ODDS-04 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9h) |
+| REQ-ODDS-05 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9b, T3.9d, T3.9f) |
+| REQ-ODDS-06 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9a) |
+| REQ-ODDS-07 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9h) |
+| REQ-ODDS-08 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9a) |
+| REQ-ODDS-09 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9g) |
+| REQ-ODDS-10 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9g, T3.9b, T3.9d, T3.9e) |
+| REQ-ODDS-11 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9h) |
+| REQ-ODDS-12 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9h) |
+| REQ-ODDS-13 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9b) |
+| REQ-ODDS-14 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9b) |
+| REQ-ODDS-15 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9b) |
+| REQ-ODDS-16 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9b) |
+| REQ-ODDS-17 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9c) |
+| REQ-ODDS-18 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9c) |
+| REQ-ODDS-19 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9c) |
+| REQ-ODDS-20 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9d, T3.9e) |
+| REQ-ODDS-21 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9d, T3.9e) |
+| REQ-ODDS-22 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9d, T3.9e) |
+| REQ-ODDS-23 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9f) |
+| REQ-ODDS-24 | *dropped R42:* you removed Rare Drop Odds at G3 (was T3.9f) |
+| REQ-ODDS-25 | *dropped R42:* you removed Rare Drop Odds at G3 (was not built under D-3) |
+| REQ-ODDS-26 | *dropped R42:* you removed Rare Drop Odds at G3 (was not built under D-3) |
 
 **drill-fix** (12, all dropped by R37)
 
@@ -4539,7 +4542,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-XC-RULES-07 | T0.6, T2.1, T7.1 |
 | REQ-XC-LICENSE-01 | T0.1 |
 | REQ-XC-LICENSE-02 | T1.10 |
-| REQ-XC-LICENSE-03 | T3.0j, T3.9g, T3.3a, T5.1, T6.2f, T6.11, T7.1b |
+| REQ-XC-LICENSE-03 | T3.0j, T3.3a, T5.1, T6.2f, T6.11, T7.1b (was also T3.9g, dropped R42) |
 | REQ-XC-LICENSE-04 | T2.2 |
 | REQ-XC-LICENSE-05 | T0.1, T0.6, T6.2, T6.2f, T6.3a |
 | REQ-XC-TOGGLE-01 | T1.11, T2.1, T2.4a, T5.3, T6.8 |
@@ -4657,9 +4660,9 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T3.6 | feat(fishing): hotspot detection + ring [brief 3.6] | REQ-HOT-13, REQ-HOT-01, REQ-HOT-02, REQ-HOT-03, REQ-HOT-04, REQ-HOT-05, REQ-HOT-06, REQ-HOT-12 |
 | T3.6b | feat(fishing): "hotspot gone" warning | REQ-HOT-12, REQ-HOT-07, REQ-HOT-08, REQ-HOT-09, REQ-HOT-10, REQ-HOT-11 |
 | T3.7 | feat(mining): drill re-equip fix [brief 3.8] [dropped R37] | *dropped R37:* the maintainer removed the drill re-equip fix at G3 (was REQ-DRILL-07, REQ-DRILL-01, REQ-DRILL-02, REQ-DRILL-03, REQ-DRILL-04, REQ-DRILL-05, REQ-DRILL-06, REQ-DRILL-08) |
-| T3.9a | feat(odds): odds math + "1 in N (P%)" format | REQ-ODDS-06, REQ-ODDS-08 |
-| T3.9g | feat(odds): bundled drop tables (two MIT, one CC0) | REQ-XC-LICENSE-03, REQ-ODDS-09, REQ-ODDS-10 |
-| T3.9h | feat(odds): Rare Drop Odds module | REQ-ODDS-01, REQ-ODDS-02, REQ-ODDS-03, REQ-ODDS-04, REQ-ODDS-07, REQ-ODDS-11, REQ-ODDS-12 |
+| T3.9a | feat(odds): odds math + "1 in N (P%)" format [dropped R42] | *dropped R42:* you removed Rare Drop Odds at G3 (was REQ-ODDS-06, REQ-ODDS-08) |
+| T3.9g | feat(odds): bundled drop tables (two MIT, one CC0) [dropped R42] | *dropped R42:* you removed Rare Drop Odds at G3 (was REQ-XC-LICENSE-03, REQ-ODDS-09, REQ-ODDS-10) |
+| T3.9h | feat(odds): Rare Drop Odds module [dropped R42] | *dropped R42:* you removed Rare Drop Odds at G3 (was REQ-ODDS-01, REQ-ODDS-02, REQ-ODDS-03, REQ-ODDS-04, REQ-ODDS-07, REQ-ODDS-11, REQ-ODDS-12) |
 | T3.2c | fix(mining): widget hint says /widgets | REQ-GS-18, REQ-MSA-08 |
 | T3.8d | data(npcdb): drop the four invisible mobs | REQ-NPCDB-08 |
 | T3.10 | test(fixtures): G3 captures as fixtures | REQ-GS-14 |
@@ -4669,11 +4672,11 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T3.2b | feat(mining): sack reminder for corpse keys | REQ-MSA-05, REQ-MSA-06 |
 | T3.3b | feat(mining): Organ Donor ding hint | REQ-CORPSE-11 |
 | T3.6c | feat(fishing): hide Hypixel's hotspot particles | REQ-HOT-12, REQ-HOT-14 |
-| T3.9b | feat(odds): Scatha case | REQ-ODDS-10, REQ-ODDS-05, REQ-ODDS-13, REQ-ODDS-14, REQ-ODDS-15, REQ-ODDS-16 |
-| T3.9c | feat(odds): Croesus / dungeon reward chest tooltips | REQ-ODDS-17, REQ-ODDS-18, REQ-ODDS-19 |
-| T3.9d | feat(odds): Frozen Corpse odds panel + loot parser, Vanguard | REQ-ODDS-10, REQ-ODDS-05, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22 |
-| T3.9e | feat(odds): Lapis / Umber / Tungsten corpse case | REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22 |
-| T3.9f | feat(odds): slayer RNG meter case | REQ-ODDS-05, REQ-ODDS-23, REQ-ODDS-24 |
+| T3.9b | feat(odds): Scatha case [dropped R42] | *dropped R42:* you removed Rare Drop Odds at G3 (was REQ-ODDS-10, REQ-ODDS-05, REQ-ODDS-13, REQ-ODDS-14, REQ-ODDS-15, REQ-ODDS-16) |
+| T3.9c | feat(odds): Croesus / dungeon reward chest tooltips [dropped R42] | *dropped R42:* you removed Rare Drop Odds at G3 (was REQ-ODDS-17, REQ-ODDS-18, REQ-ODDS-19) |
+| T3.9d | feat(odds): Frozen Corpse odds panel + loot parser, Vanguard [dropped R42] | *dropped R42:* you removed Rare Drop Odds at G3 (was REQ-ODDS-10, REQ-ODDS-05, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22) |
+| T3.9e | feat(odds): Lapis / Umber / Tungsten corpse case [dropped R42] | *dropped R42:* you removed Rare Drop Odds at G3 (was REQ-ODDS-10, REQ-ODDS-20, REQ-ODDS-21, REQ-ODDS-22) |
+| T3.9f | feat(odds): slayer RNG meter case [dropped R42] | *dropped R42:* you removed Rare Drop Odds at G3 (was REQ-ODDS-05, REQ-ODDS-23, REQ-ODDS-24) |
 | T4.1 | feat(update): check outcomes, manual checks and state | REQ-CFG-12, REQ-UPD-04, REQ-UPD-09, REQ-UPD-19, REQ-UPD-08 |
 | T4.2 | feat(update): secure download + integrity + jar validation | REQ-UPD-09, REQ-UPD-20, REQ-UPD-08, REQ-UPD-13, REQ-UPD-14, REQ-UPD-15 |
 | T4.3 | feat(update): install eligibility + staged install via helper | REQ-UPD-16, REQ-UPD-17 |

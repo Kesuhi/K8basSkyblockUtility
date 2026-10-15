@@ -9,8 +9,6 @@ import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsConfig
 import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsModule
 import com.k8bas.skyblockutility.module.hotspot.HotspotConfig
 import com.k8bas.skyblockutility.module.hotspot.HotspotModule
-import com.k8bas.skyblockutility.module.odds.OddsConfig
-import com.k8bas.skyblockutility.module.odds.RareDropOddsModule
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertModule
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig
@@ -36,7 +34,6 @@ object OptionCatalog {
 		setMineshaftAlertEnabled: Consumer<Boolean> = Consumer { mineshaftAlert.enabled = it },
 		bobberFix: BobberFixConfig = BobberFixConfig(),
 		hotspots: HotspotConfig = HotspotConfig(),
-		odds: OddsConfig = OddsConfig(),
 		corpseSpots: CorpseSpotsConfig = CorpseSpotsConfig(),
 	): List<Card> = sorted(
 		GeneralOptions.cards(general) +
@@ -45,8 +42,7 @@ object OptionCatalog {
 			MineshaftAlertModule.cards(mineshaftAlert, setMineshaftAlertEnabled) +
 			CorpseSpotsModule.cards(corpseSpots, Consumer { corpseSpots.enabled = it }) +
 			BobberFixModule.cards(bobberFix, Consumer { bobberFix.enabled = it }) +
-			HotspotModule.cards(hotspots, Consumer { hotspots.enabled = it }) +
-			RareDropOddsModule.cards(odds, Consumer { odds.enabled = it }),
+			HotspotModule.cards(hotspots, Consumer { hotspots.enabled = it }),
 	)
 
 	/** The catalog of the running game: General plus each registered module's cards. */

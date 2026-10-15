@@ -10,7 +10,7 @@ import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 
 /**
- * The profile service and per-profile store (T3.0d, REQ-GS-08, REQ-GS-09), for the odds, the bestiary and the
+ * The profile service and per-profile store (T3.0d, REQ-GS-08, REQ-GS-09), for the sack reminder, the bestiary and the
  * SkyBlock XP optimizer. It reads the tab `Profile:` widget and the profile chat lines (also ones another mod
  * hides, through the chat reader) only while one of its consumers is active (REQ-GS-16). The profile stays
  * known across islands and servers and becomes unknown on a disconnect. State goes to

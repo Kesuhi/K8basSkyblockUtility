@@ -11,10 +11,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * The source scan for "sends nothing and clicks nothing" (REQ-XC-RULES, AC-GS-01, AC-MSA-08, AC-BOB-06, AC-HOT-07,
- * AC-ODDS-02): the 26.2 names of a slot click, a container close, a command or chat send and a packet
- * send (checked with javap on the 26.2 jar), plus every Serverbound packet. Comments are left out, so a doc comment
- * may say what the code never does.
+ * The source scan for "sends nothing and clicks nothing" (REQ-XC-RULES, AC-GS-01, AC-MSA-08, AC-BOB-06, AC-HOT-07):
+ * the 26.2 names of a slot click, a container close, a command or chat send and a packet send (checked with javap on
+ * the 26.2 jar), plus every Serverbound packet. Comments are left out, so a doc comment may say what the code never
+ * does.
  */
 public final class SendScan {
 	public static final Map<String, Pattern> SENDS = Map.of(

@@ -121,7 +121,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	/** AC-UI-04: each category opens with its cards; a feature switched off dims its sub-options. */
 	private static void everyCategory(ClientGameTestContext context) {
 		List<Category> categories = context.computeOnClient(client -> screen(client).categories());
-		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING, Category.ODDS_TRACKERS)),
+		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING)),
 				"the categories with cards: " + categories);
 		for (Category category : categories) {
 			context.runOnClient(client -> screen(client).select(category));
@@ -134,7 +134,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			}
 		}
 		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
-		// Put back each module's own state afterwards: not every feature is ON by default (Rare Drop Odds is OFF).
+		// Put back each module's own state afterwards: not every feature need be ON by default.
 		java.util.Map<String, Boolean> before = context.computeOnClient(client -> {
 			java.util.Map<String, Boolean> states = new java.util.HashMap<>();
 			ModuleManager.modules().forEach(module -> states.put(module.id(), module.isEnabled()));

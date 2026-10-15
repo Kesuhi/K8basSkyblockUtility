@@ -13,7 +13,6 @@ import com.k8bas.skyblockutility.module.ModuleManager;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule;
 import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsModule;
 import com.k8bas.skyblockutility.module.hotspot.HotspotModule;
-import com.k8bas.skyblockutility.module.odds.RareDropOddsModule;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertModule;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterModule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchModule;
@@ -83,7 +82,6 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		ModuleManager.register(new CorpseSpotsModule());
 		ModuleManager.register(new BobberFixModule());
 		ModuleManager.register(new HotspotModule());
-		ModuleManager.register(new RareDropOddsModule());
 		// Future modules get registered here, one line each.
 
 		SettingsKeybind.register();

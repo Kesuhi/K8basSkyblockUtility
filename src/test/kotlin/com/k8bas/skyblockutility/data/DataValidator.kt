@@ -63,9 +63,6 @@ object DataValidator {
 	/** How a repository or the official API is read: an origin that can verify a number. */
 	private val ORIGIN_ACCESS = setOf("git", "api")
 
-	/** A field that holds a percentage: odds tables keep weights and base chances only. */
-	private val PERCENT_FIELD = Regex("(?i)percent|pct|perCorpse|per_corpse")
-
 	private val REFERENCE = Regex("^([a-z][a-z0-9_]*(?:\\.[a-z0-9_]+)*):([^\\s:]+)$")
 
 	private val REGISTRY: SchemaRegistry = SchemaRegistry.withDefaultDialect(
@@ -280,15 +277,13 @@ object DataValidator {
 	}
 
 	/**
-	 * The per-row source rules (T3.9g, REQ-ODDS-09, REQ-ODDS-10, AC-ODDS-08). Every row's `sourceRefs` names sources of
-	 * the table. A row that is `verified: true` needs at least one origin that is not a page a person cited (wiki,
-	 * forum, Reddit, or any page a person supplied): a repository or API (`access` git or api), a url or a revision.
-	 * In the odds tables: no percentage field anywhere (the chances are computed in code, never copied), no dye row from
-	 * SkyOcean, whose dye weight is only assumed (R6), and roll counts with min at most max.
+	 * The per-row source rules (first written for the odds tables, T3.9g; kept for every table after R42). Every row's
+	 * `sourceRefs` names sources of the table. A row that is `verified: true` needs at least one origin that is not a page
+	 * a person cited (wiki, forum, Reddit, or any page a person supplied): a repository or API (`access` git or api), a
+	 * url or a revision.
 	 */
 	private fun rowSources(table: String, json: JsonNode, problems: MutableList<Problem>) {
 		val sources = json.get("sources")?.takeIf { it.isObject } ?: return
-		val odds = table.startsWith("odds.")
 		fun cited(source: JsonNode): Boolean {
 			if (source.get("access")?.stringValue() in CITED_ACCESS) {
 				return true
@@ -314,32 +309,18 @@ object DataValidator {
 			if (!node.isObject) {
 				return
 			}
-			if (odds) {
-				node.properties().map { it.key }.filter { PERCENT_FIELD.containsMatchIn(it) }.forEach {
-					problems += Problem(table, "$at/$it", "no percentage field: chances are computed in code from weights and base chances (REQ-ODDS-08/09)")
-				}
-				val min = node.get("min")
-				val max = node.get("max")
-				if (min != null && max != null && min.isNumber && max.isNumber && min.intValue() > max.intValue()) {
-					problems += Problem(table, "$at/min", "a roll count range needs min at most max")
-				}
-			}
 			val refs = node.get("sourceRefs")
 			if (refs != null) {
 				val names = if (refs.isArray) refs.mapNotNull { it.takeIf { ref -> ref.isString }?.stringValue() } else listOf()
 				if (names.isEmpty()) {
-					problems += Problem(table, "$at/sourceRefs", "a row cites at least one source (REQ-ODDS-10)")
+					problems += Problem(table, "$at/sourceRefs", "a row cites at least one source")
 				}
 				names.filter { sources.get(it) == null }.forEach {
 					problems += Problem(table, "$at/sourceRefs", "$it is not one of the table's sources")
 				}
 				val cited = names.mapNotNull { sources.get(it) }
 				if (node.get("verified")?.let { it.isBoolean && it.booleanValue() } == true && cited.isNotEmpty() && cited.none(::origin)) {
-					problems += Problem(table, "$at/verified", "a wiki-only row stays verified: false until a second, non-wiki origin agrees (REQ-ODDS-10)")
-				}
-				val item = listOf("item", "id").firstNotNullOfOrNull { node.get(it)?.takeIf { value -> value.isString }?.stringValue() } ?: ""
-				if (odds && item.contains("DYE", ignoreCase = true) && cited.any { it.get("notice")?.stringValue() == "skyocean" }) {
-					problems += Problem(table, "$at/sourceRefs", "SkyOcean's dye weight is only assumed and never used; cite the page you supplied instead (R6)")
+					problems += Problem(table, "$at/verified", "a wiki-only row stays verified: false until a second, non-wiki origin agrees")
 				}
 			}
 			node.properties().forEach { (key, child) -> if (key != "sources") walk(child, "$at/$key") }
