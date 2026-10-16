@@ -28,6 +28,9 @@ public final class SmoothCornersTestScreen extends Screen {
 	static final int SMALL = 210;
 	static final int SMALL_SIZE = 9;
 	static final int SMALL_OUTLINE = 230;
+	/** The icon probe (T3.20): the kit's × at 8 GUI px. */
+	static final int ICON = 250;
+	static final int ICON_SIZE = 8;
 
 	public SmoothCornersTestScreen() {
 		super(Component.literal("Smooth corners test"));
@@ -49,6 +52,7 @@ public final class SmoothCornersTestScreen extends Screen {
 		}
 		Shapes.roundedRect(graphics, SMALL, TOP, SMALL_SIZE, SMALL_SIZE, Shapes.RADIUS_CARD, GREEN);
 		Shapes.roundedOutline(graphics, SMALL_OUTLINE, TOP, SMALL_SIZE, SMALL_SIZE, Shapes.RADIUS_CARD, 1, GREEN);
+		Shapes.icon(graphics, IconShapes.Icon.CROSS, ICON, TOP, ICON_SIZE, GREEN);
 		try (Clip empty = Clip.push(graphics, 10, 50, 0, 0)) {
 			Shapes.roundedRect(graphics, 10, 50, W, H, Shapes.RADIUS_CARD, MAGENTA);
 			Shapes.roundedOutline(graphics, 60, 50, W, H, Shapes.RADIUS_CARD, 1, MAGENTA);

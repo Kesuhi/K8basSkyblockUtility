@@ -4,12 +4,23 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 
 /**
  * The masks made so far (REQ-UI-18, T2.9d, R32; REQ-UI-47, T3.18), one per [MaskKey] at the current GUI scale, at most
- * [MAX_MASKS] of them. A scale change releases them all, so only the sizes in use are kept. A mask beyond the bound is not
+ * [limit] of them ([MAX_MASKS] for masks). A scale change releases them all, so only the sizes in use are kept. A mask beyond the bound is not
  * made: its shape is drawn from fill spans while the masks already made stay in use (REQ-UI-47). If a mask cannot be made,
  * the cache stays failed for the session and every shape uses the fill spans from then on; what was made before is still
- * released at the next scale change. Each of the two is logged once per session.
+ * released at the next scale change. Each of the two is logged once per session. The icon textures use one too, with
+ * their own bound ([limit]) and names in the log (T3.20).
  */
-class MaskCache<V : Any>(private val baker: Baker<V>, private val releaser: Releaser<V>, private val logger: Logger) {
+class MaskCache<V : Any> @JvmOverloads constructor(
+	private val baker: Baker<V>,
+	private val releaser: Releaser<V>,
+	private val logger: Logger,
+	/** The most kept at one GUI scale. */
+	val limit: Int = MAX_MASKS,
+	/** What is cached, for the log: "mask" or "icon". */
+	private val kind: String = "mask",
+	/** What is drawn from fill spans once a texture cannot be made, for the log. */
+	private val shapes: String = "discs, pills and smooth corners",
+) {
 	fun interface Baker<V> {
 		fun bake(key: Int): V
 	}
@@ -31,14 +42,14 @@ class MaskCache<V : Any>(private val baker: Baker<V>, private val releaser: Rele
 	private var scale = 0
 	private var overflowLogged = false
 
-	/** Why a mask could not be made, or null; once set, [get] returns null for good. */
+	/** Why a texture could not be made, or null; once set, [get] returns null for good. */
 	var failure: RuntimeException? = null
 		private set
 
 	val failed: Boolean
 		get() = failure != null
 
-	/** The mask for this key at this GUI scale, made on first use; null beyond [MAX_MASKS] and once failed. */
+	/** The mask for this key at this GUI scale, made on first use; null beyond [limit] and once failed. */
 	fun get(scale: Int, key: Int): V? {
 		// The scale is checked first, so a failed cache still releases its masks at the next scale change; not at
 		// once, since shapes drawn earlier in the frame may still use them. A new scale's first call is a frame's first.
@@ -50,10 +61,10 @@ class MaskCache<V : Any>(private val baker: Baker<V>, private val releaser: Rele
 			return null
 		}
 		masks.get(key)?.let { return it }
-		if (masks.size >= MAX_MASKS) {
+		if (masks.size >= limit) {
 			if (!overflowLogged) {
 				overflowLogged = true
-				logger.log("More than $MAX_MASKS mask textures at one GUI scale: the shapes beyond them are drawn from fill spans", null)
+				logger.log("More than $limit $kind textures at one GUI scale: the shapes beyond them are drawn from fill spans", null)
 			}
 			return null
 		}
@@ -61,7 +72,7 @@ class MaskCache<V : Any>(private val baker: Baker<V>, private val releaser: Rele
 			baker.bake(key)
 		} catch (e: RuntimeException) {
 			failure = e
-			logger.log("A mask texture could not be made: discs, pills and smooth corners are drawn from fill spans for this session", e)
+			logger.log("Could not make one of the $kind textures: $shapes are drawn from fill spans for this session", e)
 			return null
 		}
 		masks.put(key, mask)

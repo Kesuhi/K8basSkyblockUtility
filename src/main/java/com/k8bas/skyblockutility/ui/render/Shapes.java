@@ -22,7 +22,7 @@ import org.joml.Matrix3x2fStack;
  * T2.9d, R32) each corner is instead a tinted quad of an anti-aliased mask texture and the straight parts stay
  * fills; a shape a mask cannot draw keeps the fill-based corners. Discs, pills and one-cap pills always take their
  * round ends from a disc mask (REQ-UI-30, T3.18). A texture baked at its size times the GUI scale (the colour wheel,
- * T3.19) is drawn 1:1 as one element by {@link #image}. Every mask and baked texture is sampled linear and clamped to its
+ * T3.19, and the icons, T3.20) is drawn 1:1 as one element by {@link #image}. Every mask and baked texture is sampled linear and clamped to its
  * edge (REQ-UI-31). Written from SPEC REQ-UI-17, REQ-UI-18, REQ-UI-30 and REQ-UI-31; no AlpakaAddons code (REQ-UI-24).
  */
 public final class Shapes {
@@ -103,7 +103,7 @@ public final class Shapes {
 
 	/**
 	 * A texture of sw×sh texels at GUI (x, y), one texel per screen pixel, tinted {@code argb} and sampled linear, clamped
-	 * to its edge (REQ-UI-31): the colour wheel, baked at its size times the GUI scale (T3.19). One element with the image's
+	 * to its edge (REQ-UI-31): the colour wheel and the icons, baked at their size times the GUI scale. One element with the image's
 	 * bounds rounded outward (REQ-UI-27), so what is drawn after it and overlaps it lands above it.
 	 */
 	public static void image(GuiGraphicsExtractor graphics, Identifier texture, float x, float y, int sw, int sh, int argb) {
@@ -115,6 +115,33 @@ public final class Shapes {
 			Matrix3x2f pose = new Matrix3x2f(outer).translate(x, y).scale(1F / scale, 1F / scale);
 			graphics.guiRenderState.addGuiElement(new ShapeRenderState(RenderPipelines.GUI_TEXTURED, texture(texture), pose, element.quads(),
 					element.uvs(), argb, scissor, bounds(element)));
+		}
+	}
+
+	/**
+	 * An icon of the kit (REQ-UI-32, T3.20), size × size GUI pixels at GUI (x, y), in the colour {@code argb}: rasterised at its
+	 * size times the GUI scale and drawn 1:1. Where no texture can be had (REQ-UI-47), its half-covered pixels as fill spans,
+	 * still one element.
+	 */
+	public static void icon(GuiGraphicsExtractor graphics, IconShapes.Icon icon, float x, float y, int size, int argb) {
+		if (size <= 0) {
+			return;
+		}
+		int scale = guiScale();
+		int px = size * scale;
+		Identifier texture = IconTextures.texture(scale, icon, px);
+		if (texture != null) {
+			image(graphics, texture, x, y, px, px, argb);
+			return;
+		}
+		Matrix3x2fStack outer = graphics.pose();
+		ScreenRectangle scissor = graphics.scissorStack.peek();
+		ShapePlan.Element box = ShapePlan.image(outer, x, y, px, px, scale, clip(scissor));
+		int[] spans = IconTextures.spans(scale, icon, px);
+		if (box != null && spans.length > 0) {
+			Matrix3x2f pose = new Matrix3x2f(outer).translate(x, y).scale(1F / scale, 1F / scale);
+			graphics.guiRenderState.addGuiElement(new ShapeRenderState(RenderPipelines.GUI, TextureSetup.noTexture(), pose, spans, null, argb,
+					scissor, bounds(box)));
 		}
 	}
 

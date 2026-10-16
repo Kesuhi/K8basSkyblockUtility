@@ -167,4 +167,37 @@ class MaskCacheTest {
 		assertEquals(List.of(made), released, "each once");
 		assertEquals(1, logged.size());
 	}
+
+	/**
+	 * REQ-UI-47 (T3.20): the icon cache, as IconTextures builds it, holds at most 16 icons per scale; the 17th is drawn from
+	 * fill spans, logged once.
+	 */
+	@Test
+	void theIconCacheHoldsSixteenPerScale() {
+		assertEquals(16, IconTextures.MAX_ICONS);
+		MaskCache<String> icons = IconTextures.cache(key -> "icon " + key, released::add, (message, cause) -> logged.add(message));
+		assertEquals(16, icons.getLimit());
+		for (int key = 0; key < 16; key++) {
+			assertNotNull(icons.get(2, key), "icon " + key);
+		}
+		assertNull(icons.get(2, 16), "the 17th");
+		assertNull(icons.get(2, 17));
+		assertEquals(1, logged.size(), "once: " + logged);
+		assertTrue(logged.get(0).contains("16 icon textures"), logged.get(0));
+		assertNotNull(icons.get(3, 16), "a new scale counts from zero");
+	}
+
+	/** Every icon at every size the UI can ask for (up to 64 GUI px at scale 6) has its own key, and the key gives both back. */
+	@Test
+	void iconKeysAreDistinctAndDecode() {
+		Set<Integer> keys = new HashSet<>();
+		for (IconShapes.Icon icon : IconShapes.Icon.values()) {
+			for (int px = 1; px <= 64 * 6; px++) {
+				int key = IconTextures.key(icon, px);
+				assertTrue(keys.add(key), icon + " at " + px);
+				assertEquals(icon.ordinal(), key >> 16);
+				assertEquals(px, key & 0xFFFF);
+			}
+		}
+	}
 }

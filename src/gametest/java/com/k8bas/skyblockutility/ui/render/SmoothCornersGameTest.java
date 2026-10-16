@@ -28,6 +28,8 @@ import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.FADED;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.FADED_ALPHA;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.FILLED;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.H;
+import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.ICON;
+import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.ICON_SIZE;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.OUTLINE;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.SMALL;
 import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.SMALL_OUTLINE;
@@ -45,6 +47,8 @@ import static com.k8bas.skyblockutility.ui.render.SmoothCornersTestScreen.W;
  *       outline with radius 6, whose clamped radius leaves a 1 px middle between its corner masks at odd scales), and
  *       the pixels outside the corners are the same as with it off; the 9×9 outline is shaped like a disc but follows
  *       the setting, as every outline does (EC-UI-21);</li>
+ *   <li>the kit's × (REQ-UI-32, T3.20) is its 8 GUI px icon rasterised at 8 × scale px and drawn 1:1 in its colour, the
+ *       same with the setting on and off, at every scale it is rebaked for;</li>
  *   <li>a disc drawn into a fresh render state submits its mask quad with the sampler cache's linear, clamp-to-edge
  *       sampler (REQ-UI-31, T3.18);</li>
  *   <li>a clip cuts the smooth shape as it cuts fills, an empty clip shows nothing, and nothing is logged
@@ -87,6 +91,9 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 					probe.sameOutsideTheCorners(on, off, s);
 				}
 				check(soft > 0, "scale " + s + ": smooth corners have soft pixels");
+				for (BufferedImage image : List.of(off, on)) {
+					iconIsTheKits(image, s);
+				}
 				check(context.computeOnClient(client -> drawnWithTheLinearClampSampler()), "scale " + s
 						+ ": a mask quad samples with the sampler cache's linear, clamp-to-edge sampler, not the texture's own");
 				for (BufferedImage image : List.of(off, on)) {
@@ -141,6 +148,24 @@ public class SmoothCornersGameTest implements FabricClientGameTest {
 				new Probe(small + " px disc", SMALL * s, TOP * s, small, small, 0, 0, 255, small, true),
 				new Probe(small + " px outline", SMALL_OUTLINE * s, TOP * s, small, small, CornerPieces.clampRadius(small, small, r), s, 255, small,
 						false));
+	}
+
+	/** T3.20: each pixel of the × probe is the icon's baked coverage in green, within the blend's rounding. */
+	private static void iconIsTheKits(BufferedImage image, int s) {
+		int px = ICON_SIZE * s;
+		int[] alpha = IconShapes.bake(IconShapes.Icon.CROSS, px);
+		int soft = 0;
+		for (int y = 0; y < px; y++) {
+			for (int x = 0; x < px; x++) {
+				int green = green(image, ICON * s + x, TOP * s + y);
+				check(Math.abs(green - alpha[y * px + x]) <= TOLERANCE, "scale " + s + ", the × pixel " + x + "," + y + ": green " + green
+						+ ", expected " + alpha[y * px + x]);
+				if (alpha[y * px + x] > TOLERANCE && alpha[y * px + x] < 255 - TOLERANCE) {
+					soft++;
+				}
+			}
+		}
+		check(soft > 0, "scale " + s + ": the × has anti-aliased edges");
 	}
 
 	/**
