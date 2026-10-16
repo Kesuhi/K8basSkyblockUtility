@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import com.k8bas.skyblockutility.ui.render.IconProbe;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.gametest.ModuleStates;
 import com.k8bas.skyblockutility.module.ModuleManager;
@@ -371,6 +373,22 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 				typed, shown.lines().size());
 	}
 
+	/**
+	 * AC-UI-33 [C] (T3.21): at GUI scale 2 the search box's glass, inside its 4 px padding, and its ×, centred in the clear
+	 * button, are the kit's icons drawn 1:1 with anti-aliased edges, in the secondary text colour.
+	 */
+	private static void searchIcons(ClientGameTestContext context, Path shot) {
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		check(scale == 2, "the search icons are checked at GUI scale 2: " + scale);
+		ConfigLayout.Rect box = context.computeOnClient(client -> screen(client).frame().search());
+		String glass = IconProbe.check(shot, IconShapes.Icon.SEARCH, box.x() + 4, box.y() + (box.h() - 8) / 2, 8, scale, Theme.TEXT_SECONDARY);
+		int clearX = box.right() - ClearButton.SIZE - 2;
+		int clearY = box.y() + (box.h() - ClearButton.SIZE) / 2;
+		String cross = IconProbe.check(shot, IconShapes.Icon.CROSS, clearX + 2, clearY + 2, 8, scale, Theme.TEXT_SECONDARY);
+		check(glass.isEmpty(), "the search glass: " + glass);
+		check(cross.isEmpty(), "the search box's ×: " + cross);
+	}
+
 	/** T2.4b, AC-UI-07 [C] with real keys: Ctrl+F, typing, the category switch, nothing found, Esc, ×, and the query kept across categories. */
 	private static void search(ClientGameTestContext context) {
 		context.runOnClient(client -> screen(client).select(Category.GENERAL));
@@ -393,7 +411,9 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 				+ range.categories() + ", " + shown);
 		check(range.badge(Category.HIGHLIGHTS) == 1 && rows.equals(List.of("mob_highlighter.scan_range")), "one hit, the scan range: " + rows);
 		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "the switch kept the box focused");
-		context.takeScreenshot("t2.4b-search-range");
+		context.getInput().setCursorPos(2, 2);
+		context.waitTick();
+		searchIcons(context, context.takeScreenshot("t2.4b-search-range"));
 		// × while typing: the box empties and keeps the keyboard, so the next query can be typed at once.
 		click(context, cross);
 		check(context.computeOnClient(client -> screen(client).query()).isEmpty(), "× while typing empties the box");

@@ -24,6 +24,7 @@ import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.Clip;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiClock;
@@ -155,6 +156,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			}
 		}));
 		search = add(TextField.of(new TextEditModel(SearchIndex.MAX_QUERY_LENGTH, GameClipboard.INSTANCE), "Search settings", this::applyQuery));
+		// REQ-UI-32: the kit's search glass at the box's left end.
+		search.leftIcon(IconShapes.Icon.SEARCH);
 		search.reserveRight(ClearButton.SIZE);
 		// One keyboard stop for the sidebar: Up/Down/Home/End pick the category at once, the query stays (T2.9b).
 		tabs.setKeys(this::tabKey);

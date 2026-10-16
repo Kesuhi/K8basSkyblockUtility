@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.screen;
 import com.k8bas.skyblockutility.ui.option.RuleGroup;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
@@ -125,7 +126,8 @@ final class RuleHeaderWidget extends Widget {
 		float hover = hoverAmount(contains(mouseX, mouseY) && !overAction(mouseX));
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover)));
 		int midY = y + height / 2;
-		drawChevron(graphics, x + 10, midY);
+		// REQ-UI-32: the kit's chevron, pointing right while closed, down while open.
+		Shapes.icon(graphics, expanded ? IconShapes.Icon.CHEVRON_DOWN : IconShapes.Icon.CHEVRON_RIGHT, x + 6, midY - 4, 8, faded(Theme.TEXT_SECONDARY));
 		Shapes.roundedRect(graphics, x + 22, midY - DOT / 2, DOT, DOT, DOT / 2, faded(0xFF000000 | rule.colour().getAsInt()));
 		int textX = x + 22 + DOT + 6;
 		int textY = y + (height - font.lineHeight) / 2 + 1;
@@ -141,15 +143,4 @@ final class RuleHeaderWidget extends Widget {
 				faded(title.equals(UNNAMED) ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY));
 	}
 
-	/** A small triangle: pointing right while closed, down while open. */
-	private void drawChevron(GuiGraphicsExtractor graphics, int cx, int cy) {
-		int colour = faded(Theme.TEXT_SECONDARY);
-		for (int i = 0; i < 4; i++) {
-			if (expanded) {
-				graphics.fill(cx - 3 + i, cy - 2 + i, cx + 4 - i, cy - 1 + i, colour);
-			} else {
-				graphics.fill(cx - 2 + i, cy - 3 + i, cx - 1 + i, cy + 4 - i, colour);
-			}
-		}
-	}
 }

@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.option.Binding;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -120,6 +121,20 @@ class WidgetBehaviourTest {
 		assertEquals(scroll + 2, field.indexAt(TextField.PADDING + 12), "two characters into the view");
 		assertEquals(scroll + 2, field.indexAt(TextField.PADDING + 14), "nearest boundary");
 		assertEquals(scroll, field.indexAt(0));
+	}
+
+	/** T3.21 (REQ-UI-32): an icon at the left end (the search glass) moves the text and its click positions right by its room. */
+	@Test
+	void aLeftIconKeepsItsRoomFreeOfText() {
+		TextField field = field("abcdefghijklmnop");
+		field.leftIcon(IconShapes.Icon.SEARCH);
+		field.setBounds(0, 0, 40 + 2 * TextField.PADDING + TextField.LEFT_ICON, 16);
+		field.keepCaretVisible();
+		assertEquals(10, field.scroll(), "the same 6 characters fit beside the icon");
+		int scroll = field.scroll();
+		int textLeft = TextField.PADDING + TextField.LEFT_ICON;
+		assertEquals(scroll + 2, field.indexAt(textLeft + 12), "two characters into the view, after the icon");
+		assertEquals(scroll, field.indexAt(TextField.PADDING), "over the icon: the view's start");
 	}
 
 	/** An edit and a click in the same frame, before a draw: the old scroll must not reach past the text. */

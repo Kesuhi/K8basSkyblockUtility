@@ -21,6 +21,8 @@ import java.util.List;
  */
 public final class AdvancedWidgetTestScreen extends WidgetScreen {
 	private final List<Runnable> layout = new ArrayList<>();
+	/** The short dropdown's entries. */
+	private static final List<String> SHORT = List.of("Stable", "Beta (pre-releases)", "Alpha");
 	volatile String shortValue = "Stable";
 	volatile String longValue = "Entry 1";
 	volatile String bottomValue = "Top";
@@ -31,6 +33,7 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 	volatile int alphaCommits;
 	final ColorSwatch ruleSwatch;
 	final ColorSwatch alphaSwatch;
+	final Dropdown<String> shortDropdown;
 	final Dropdown<String> longDropdown;
 	final Dropdown<String> bottomDropdown;
 	final ToggleSwitch toggle;
@@ -41,8 +44,7 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 
 	public AdvancedWidgetTestScreen() {
 		super(Component.literal("Advanced widget test"));
-		place(new Dropdown<>(choice("short", List.of("Stable", "Beta (pre-releases)", "Alpha"), () -> shortValue, v -> shortValue = v), this, () -> { }),
-				8, 8, 120, 16);
+		shortDropdown = place(new Dropdown<>(choice("short", SHORT, () -> shortValue, v -> shortValue = v), this, () -> { }), 8, 8, 120, 16);
 		List<String> entries = new ArrayList<>();
 		for (int i = 1; i <= 12; i++) {
 			entries.add("Entry " + i);
@@ -148,6 +150,16 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 		}
 		Widget rows = overlay().widgets().get(0);
 		return new int[] {windowX(rows.x + rows.width / 2), windowY(rows.y + row * Dropdown.ROW_HEIGHT + Dropdown.ROW_HEIGHT / 2)};
+	}
+
+	/** The open dropdown list's rows (T3.21). */
+	Widget openListWidget() {
+		return overlay().widgets().get(0);
+	}
+
+	/** The short dropdown's selected entry, as its row in the open list (the list has no scroll). */
+	int shortDropdownSelectedRow() {
+		return SHORT.indexOf(shortValue);
 	}
 
 	boolean listOpen() {

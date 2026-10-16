@@ -1,5 +1,8 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import com.k8bas.skyblockutility.ui.render.IconProbe;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
+import com.k8bas.skyblockutility.ui.render.Theme;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -66,6 +69,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 			context.getInput().setCursorPos(2, 2);
 			context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
 			context.waitTicks(3);
+			ruleHeaderChevron(context);
 			originalValues(context);
 			invalidRegex(context);
 			editsSurviveTheClose(context);
@@ -168,6 +172,25 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 
 	private static boolean shown(ConfigScreen screen, String id) {
 		return screen.page().page().rows().stream().anyMatch(row -> row instanceof ConfigLayout.OptionRow option && option.option().id().equals(id));
+	}
+
+	/**
+	 * AC-UI-33 [C] (T3.21): at GUI scale 2 the first rule header's chevron is the kit's, right while the rule is closed and
+	 * down while open, drawn 1:1 with anti-aliased edges in the secondary text colour (at 45 % on a dimmed card).
+	 */
+	private static void ruleHeaderChevron(ClientGameTestContext context) {
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		check(scale == 2, "the rule header chevron is checked at GUI scale 2: " + scale);
+		Path shot = context.takeScreenshot("t3.21-rule-header-scale-2");
+		int[] at = context.computeOnClient(client -> {
+			RuleHeaderWidget header = (RuleHeaderWidget) screen(client).page().header(headers(screen(client)).get(0).rule());
+			return new int[] {header.x(), header.y(), header.height(), header.expanded() ? 1 : 0, header.isDimmed() ? 1 : 0};
+		});
+		// A dimmed widget draws at 45 % of its alpha (Widget.faded).
+		int colour = at[4] == 1 ? (0xFF * 45 / 100) << 24 | Theme.TEXT_SECONDARY & 0xFFFFFF : Theme.TEXT_SECONDARY;
+		String chevron = IconProbe.check(shot, at[3] == 1 ? IconShapes.Icon.CHEVRON_DOWN : IconShapes.Icon.CHEVRON_RIGHT, at[0] + 6, at[1] + at[2] / 2 - 4, 8,
+				scale, colour);
+		check(chevron.isEmpty(), "the rule header's chevron: " + chevron);
 	}
 
 	/** AC-UI-15 [C]: the original label, dot colour, island, pattern and colour. */

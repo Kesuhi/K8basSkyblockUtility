@@ -16,7 +16,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   The colour picker's marker was a square before.
 - The colour picker's wheel is drawn sharp at every GUI scale, with an evenly soft edge, instead of a
   small image stretched to fit. The colours you pick are the same.
-- The search box's × is drawn as a sharp icon at every GUI scale instead of a text character.
+- Icons are drawn sharp at every GUI scale: the search box's × and its new search glass, the arrows of
+  dropdowns, rule headers and the database picker's folders, and a new check mark beside the selected
+  entry of an open dropdown list.
 
 ### Fixed
 

@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.screen;
 import com.k8bas.skyblockutility.ui.option.RuleDatabase;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
@@ -186,7 +187,9 @@ public final class DatabasePickerOverlay extends Overlay {
 		int textY = y + (height - font.lineHeight) / 2 + 1;
 		int indent = x + 4 + row.depth() * 12;
 		if (row.entry() == null) {
-			drawChevron(graphics, indent + 3, y + height / 2, row.open());
+			// REQ-UI-32: the kit's chevron, pointing right while closed, down while open.
+			Shapes.icon(graphics, row.open() ? IconShapes.Icon.CHEVRON_DOWN : IconShapes.Icon.CHEVRON_RIGHT, indent - 1, y + height / 2 - 4, 8,
+					Theme.TEXT_SECONDARY);
 			String count = Integer.toString(row.count());
 			UiText.rightAligned(graphics, font, count, x + width - 6, textY, Theme.TEXT_SECONDARY);
 			UiText.draw(graphics, font, Ellipsis.fit(row.label(), x + width - 12 - font.width(count) - (indent + 12), font::width), indent + 12, textY,
@@ -212,13 +215,4 @@ public final class DatabasePickerOverlay extends Overlay {
 		UiText.centred(graphics, font, "Add", addX + add[2] / 2, textY, theme.textOnAccent());
 	}
 
-	private static void drawChevron(GuiGraphicsExtractor graphics, int cx, int cy, boolean open) {
-		for (int i = 0; i < 4; i++) {
-			if (open) {
-				graphics.fill(cx - 3 + i, cy - 2 + i, cx + 4 - i, cy - 1 + i, Theme.TEXT_SECONDARY);
-			} else {
-				graphics.fill(cx - 2 + i, cy - 3 + i, cx - 1 + i, cy + 4 - i, Theme.TEXT_SECONDARY);
-			}
-		}
-	}
 }

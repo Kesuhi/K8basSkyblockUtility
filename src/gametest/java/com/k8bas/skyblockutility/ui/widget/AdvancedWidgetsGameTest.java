@@ -5,6 +5,8 @@ import com.k8bas.skyblockutility.ui.color.Hsv;
 import com.k8bas.skyblockutility.ui.color.WheelGeometry;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.render.CornerMask;
+import com.k8bas.skyblockutility.ui.render.IconProbe;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.ShapeRenderState;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -68,6 +70,7 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			}
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
+			dropdownIcons(context);
 			dropdowns(context);
 			keybinds(context);
 			colourPicker(context);
@@ -196,6 +199,34 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		check(context.computeOnClient(client -> client.debugEntries.isOverlayVisible()) == overlayBefore, "without toggling the debug overlay");
 		LOGGER.info("keybind: F7 bound and saved, F2 not captured, Esc unbound and saved, left click cancelled, right click reset (also to J), "
 				+ "E bound with a conflict, F3 bound");
+	}
+
+	/**
+	 * AC-UI-33 [C] (T3.21), at GUI scale 2: the closed short dropdown (GUI 8, 8, 120x16) shows the kit's down chevron 12 px
+	 * from its right end in the text colour; open, its list shows the kit's check mark beside the selected entry, in the
+	 * accent; both drawn 1:1 with anti-aliased edges.
+	 */
+	private static void dropdownIcons(ClientGameTestContext context) {
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		check(scale == 2, "the dropdown icons are checked at GUI scale 2: " + scale);
+		Path closed = context.takeScreenshot("t3.21-dropdown-closed-scale-2");
+		String chevron = IconProbe.check(closed, IconShapes.Icon.CHEVRON_DOWN, 8 + 120 - 12, 8 + (16 - 8) / 2, 8, scale, Theme.TEXT_PRIMARY);
+		check(chevron.isEmpty(), "the dropdown's chevron: " + chevron);
+		click(context, screen -> screen.centre(screen.shortDropdown));
+		int[] rows = context.computeOnClient(client -> {
+			Widget list = screen(client).openListWidget();
+			return new int[] {list.x, list.y, list.width};
+		});
+		int selected = context.computeOnClient(client -> screen(client).shortDropdownSelectedRow());
+		context.getInput().setCursorPos(1, 1);
+		context.waitTicks(2);
+		Path open = context.takeScreenshot("t3.21-dropdown-open-scale-2");
+		int rowY = rows[1] + selected * Dropdown.ROW_HEIGHT;
+		String check = IconProbe.check(open, IconShapes.Icon.CHECK, rows[0] + rows[2] - 15, rowY + (Dropdown.ROW_HEIGHT - 8) / 2, 8, scale,
+				Theme.current().accent());
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
+		check(check.isEmpty(), "the open list's check mark: " + check);
 	}
 
 	/** AC-UI-12 with real input: hex typed and saved, Cancel and Esc discard, an invalid hex is marked, alpha only where stored. */

@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
@@ -19,6 +20,8 @@ import java.util.List;
  */
 public final class Dropdown<E> extends Widget {
 	public static final int ROW_HEIGHT = 14;
+	/** The chevron's and the check mark's size in GUI px (REQ-UI-32). */
+	static final int ICON = 8;
 	public static final int MAX_ROWS = 8;
 
 	private final Choice<E> choice;
@@ -95,15 +98,9 @@ public final class Dropdown<E> extends Widget {
 		int textColor = faded(enabled ? Theme.TEXT_PRIMARY : Theme.TEXT_DISABLED);
 		String shown = Ellipsis.fit(choice.label().apply(choice.binding().get()), width - 18, font::width);
 		UiText.draw(graphics, font, shown, x + 5, y + (height - font.lineHeight) / 2 + 1, textColor);
-		drawChevron(graphics, x + width - 11, y + height / 2, isOpen(), textColor);
-	}
-
-	/** A small triangle of 1 px rows, pointing down, or up while open. */
-	private static void drawChevron(GuiGraphicsExtractor graphics, int left, int middleY, boolean up, int color) {
-		for (int row = 0; row < 3; row++) {
-			int y = up ? middleY + 1 - row : middleY - 1 + row;
-			graphics.fill(left + row, y, left + 7 - row, y + 1, color);
-		}
+		// REQ-UI-32: the kit's chevron, pointing down, or up while open.
+		Shapes.icon(graphics, isOpen() ? IconShapes.Icon.CHEVRON_UP : IconShapes.Icon.CHEVRON_DOWN, x + width - 12, y + (height - ICON) / 2, ICON,
+				textColor);
 	}
 
 	/** The open list, drawn over everything. */
@@ -217,15 +214,20 @@ public final class Dropdown<E> extends Widget {
 					}
 					E value = choice.values().get(index);
 					int rowY = y + row * ROW_HEIGHT;
-					if (value.equals(current)) {
+					boolean selected = value.equals(current);
+					if (selected) {
 						graphics.fill(x + 1, rowY + 1, x + width - 1, rowY + ROW_HEIGHT - 1, theme.accentBackground());
 						graphics.fill(x + 1, rowY + 1, x + 3, rowY + ROW_HEIGHT - 1, theme.accent());
 					} else if (index == model.highlighted()) {
 						graphics.fill(x + 1, rowY + 1, x + width - 1, rowY + ROW_HEIGHT - 1, Theme.CARD_HOVER);
 					}
-					String label = Ellipsis.fit(choice.label().apply(value), width - 14, font::width);
+					// The selected entry has the kit's check mark at its right end (REQ-UI-32), so its label keeps that free.
+					String label = Ellipsis.fit(choice.label().apply(value), width - (selected ? 26 : 14), font::width);
 					UiText.draw(graphics, font, label, x + 7, rowY + (ROW_HEIGHT - font.lineHeight) / 2 + 1,
-							value.equals(current) ? theme.accent() : Theme.TEXT_PRIMARY);
+							selected ? theme.accent() : Theme.TEXT_PRIMARY);
+					if (selected) {
+						Shapes.icon(graphics, IconShapes.Icon.CHECK, x + width - 15, rowY + (ROW_HEIGHT - ICON) / 2, ICON, theme.accent());
+					}
 				}
 				int count = choice.values().size();
 				if (count > shownRows) {
