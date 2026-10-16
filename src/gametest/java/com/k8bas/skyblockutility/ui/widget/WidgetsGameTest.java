@@ -64,6 +64,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			context.waitTicks(3);
 			knobHasNoFillLine(context);
 			knobsAreAntiAliased(context);
+			hoveredKnobGrows(context);
 			wheelOverASlider(context);
 			dragCommitsOnce(context);
 			typingAndShortcuts(context);
@@ -319,6 +320,9 @@ public class WidgetsGameTest implements FabricClientGameTest {
 						int[][] sliders = context.computeOnClient(client -> screen(client.gui.screen()).knobSliders());
 						for (int i = 0; i < sliders.length; i++) {
 							checkKnob(shot, scale, smooth, sliders[i], i == 1 || i == 3, pass + ", slider " + i);
+							// The forced-hot ones, plain and dimmed, are drawn grown (T3.36); the others at their layout size.
+							int expected = (i == 3 || i == 5 ? Slider.KNOB_GROWN : Slider.KNOB_SIZE) * scale;
+							check(sliders[i][8] == expected, pass + ", slider " + i + ": its knob is drawn " + sliders[i][8] + " px, not " + expected);
 							if (i == 0 || i == 2) {
 								checkTrackEnds(shot, scale, sliders[i], pass + ", slider " + i);
 							}
@@ -335,11 +339,12 @@ public class WidgetsGameTest implements FabricClientGameTest {
 	}
 
 	private static void checkKnob(BufferedImage shot, int scale, boolean smooth, int[] slider, boolean notchCheck, String what) {
-		int size = Slider.KNOB_SIZE * scale;
+		// The knob as drawn, on the physical-pixel grid (REQ-UI-34, T3.25), grown when hot (T3.36).
+		int size = slider[8];
 		int r = size / 2;
-		// Where the knob is drawn, on the physical-pixel grid (REQ-UI-34, T3.25).
 		int left = slider[6];
-		int top = slider[4] * scale;
+		int top = slider[7];
+		check(size == Slider.KNOB_SIZE * scale || size == Slider.KNOB_GROWN * scale, what + ": the knob is drawn " + size + " px, 10 or 12 GUI px across");
 		boolean dimmed = slider[5] == 1;
 		int centre = shot.getRGB(left + r, top + r);
 		int interior = 0;
@@ -377,15 +382,14 @@ public class WidgetsGameTest implements FabricClientGameTest {
 				}
 			}
 		}
-		checkRimSymmetry(shot, scale, left, top, trackTop, what);
+		checkRimSymmetry(shot, size, left, top, trackTop, scale, what);
 	}
 
 	/**
 	 * Above and below the track the knob's outermost pixels left and right match: the knob is a smooth disc whatever
 	 * the setting (REQ-UI-29), so its rim is anti-aliased in both passes and must blend over the same backdrop.
 	 */
-	private static void checkRimSymmetry(BufferedImage shot, int scale, int left, int top, int trackTop, String what) {
-		int size = Slider.KNOB_SIZE * scale;
+	private static void checkRimSymmetry(BufferedImage shot, int size, int left, int top, int trackTop, int scale, String what) {
 		int trackRows = Slider.TRACK_HEIGHT * scale;
 		for (int y = 0; y < size; y++) {
 			int row = top + y;
@@ -413,10 +417,10 @@ public class WidgetsGameTest implements FabricClientGameTest {
 
 	/** Next to a knob at either end, every pixel outside both the full track pill and the knob's disc is backdrop. */
 	private static void checkTrackEnds(BufferedImage shot, int scale, int[] slider, String what) {
-		int size = Slider.KNOB_SIZE * scale;
-		// Where the knob is drawn, on the physical-pixel grid (REQ-UI-34, T3.25).
+		// The knob as drawn, on the physical-pixel grid (REQ-UI-34, T3.25).
+		int size = slider[8];
 		int left = slider[6];
-		int top = slider[4] * scale;
+		int top = slider[7];
 		int trackX = slider[0] * scale;
 		int trackTop = slider[1] * scale;
 		int trackW = slider[2] * scale;
@@ -636,6 +640,55 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		LOGGER.info("pointer shapes on the widget test screen: hand, I-beam, arrow when disabled, horizontal resize while dragged; the default after a close");
 	}
 
+	/** The pixels in the accent colour in the live slider's value label (GUI 94..160 x 46..62 at GUI scale 2). */
+	private static int accentPixels(Path shot, ClientGameTestContext context) {
+		int accent = context.computeOnClient(client -> com.k8bas.skyblockutility.ui.render.Theme.current().accent()) & 0xFFFFFF;
+		BufferedImage image = read(shot);
+		int count = 0;
+		for (int y = 46 * 2; y < 62 * 2; y++) {
+			for (int x = 94 * 2; x < 160 * 2; x++) {
+				if ((image.getRGB(x, y) & 0xFFFFFF) == accent) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * AC-UI-47 (REQ-UI-46, T3.36) at GUI scale 2: a hovered knob is drawn 12 GUI px across, 4 screen px wider than an idle one,
+	 * measured the same way along the row through their centres (the forced-hot slider at 96 of 0..128, the idle one at 64).
+	 */
+	private static void hoveredKnobGrows(ClientGameTestContext context) {
+		check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == 2, "at GUI scale 2");
+		BufferedImage shot = read(context.takeScreenshot("t3.36-knobs"));
+		int[] idle = runAt(shot, 135 * 2, 34 * 2, Theme.TEXT_SECONDARY & 0xFFFFFF);
+		int[] hot = runAt(shot, 267 * 2, 54 * 2, Theme.TEXT_PRIMARY & 0xFFFFFF);
+		int idleWidth = idle[1] - idle[0] + 1;
+		int hotWidth = hot[1] - hot[0] + 1;
+		LOGGER.info("knob widths at GUI scale 2, full-colour pixels through the centre: idle {}, hovered {}", idleWidth, hotWidth);
+		check(idleWidth >= 16 && hotWidth - idleWidth == 4, "the hovered knob 2 GUI px wider than the idle one: " + hotWidth + " against " + idleWidth);
+		// About the same centre: the idle knob at 64 of 0..128 is centred on GUI x 135, the hovered one at 96 on 267.
+		check(idle[0] + idle[1] == 2 * 135 * 2 - 1 && hot[0] + hot[1] == 2 * 267 * 2 - 1, "both centred on their place: " + java.util.Arrays.toString(idle)
+				+ ", " + java.util.Arrays.toString(hot));
+	}
+
+	/** The first and last pixel of the run of exactly {@code rgb} along a row through ({@code x}, {@code y}); x, x - 1 when (x, y) is not it. */
+	private static int[] runAt(BufferedImage image, int x, int y, int rgb) {
+		if ((image.getRGB(x, y) & 0xFFFFFF) != rgb) {
+			return new int[] {x, x - 1};
+		}
+		int left = x;
+		while (left > 0 && (image.getRGB(left - 1, y) & 0xFFFFFF) == rgb) {
+			left--;
+		}
+		int right = x;
+		while (right + 1 < image.getWidth() && (image.getRGB(right + 1, y) & 0xFFFFFF) == rgb) {
+			right++;
+		}
+		return new int[] {left, right};
+	}
+
 	/** REQ-UI-15: a drag through the real screen follows the pointer and commits once, on release. */
 	private static void dragCommitsOnce(ClientGameTestContext context) {
 		int[] start = context.computeOnClient(client -> screen(client.gui.screen()).sliderPoint(0.1));
@@ -652,10 +705,16 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		}
 		boolean dragging = context.computeOnClient(client -> screen(client.gui.screen()).sliderDragging());
 		int duringDrag = context.computeOnClient(client -> screen(client.gui.screen()).decimalCommits);
+		// AC-UI-47 (REQ-UI-46, T3.36): while dragged its value is in the accent colour, and not after the release.
+		int accentWhileDragged = accentPixels(context.takeScreenshot("t3.36-slider-dragged"), context);
 		double atEnd = context.computeOnClient(client -> screen(client.gui.screen()).decimalValue) / 100.0;
 		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
 		context.waitTick();
 		int afterRelease = context.computeOnClient(client -> screen(client.gui.screen()).decimalCommits);
+		int accentReleased = accentPixels(context.takeScreenshot("t3.36-slider-released"), context);
+		LOGGER.info("decimal slider value label: {} accent pixels while dragged, {} after the release", accentWhileDragged, accentReleased);
+		check(accentWhileDragged > 0 && accentReleased == 0, "the value in the accent colour while dragged only: " + accentWhileDragged + ", then "
+				+ accentReleased);
 		LOGGER.info("decimal slider drag: value {} while dragging, commits {} during and {} after", atEnd, duringDrag - commitsBefore,
 				afterRelease - commitsBefore);
 		check(dragging, "a press on the track starts a drag");

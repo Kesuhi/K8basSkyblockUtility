@@ -18,11 +18,15 @@ import java.util.function.LongSupplier;
  * writes the file at most once (REQ-UI-15). The wheel never changes it (REQ-UI-37): it goes on to the
  * page under it, and while the slider is dragged nowhere. The arrow keys step it while it has the
  * keyboard focus. A stored value outside the range is only replaced once the shown value really
- * changes (EC-UI-05).
+ * changes (EC-UI-05). Its knob grows from {@link #KNOB_SIZE} to {@link #KNOB_GROWN} GUI px on hover and while dragged, and its
+ * value shows in the accent colour while dragged (REQ-UI-46); its layout and where a press reaches it stay those of the
+ * {@link #KNOB_SIZE} knob.
  */
 public final class Slider extends Widget {
 	public static final int TRACK_HEIGHT = 4;
 	public static final int KNOB_SIZE = 10;
+	/** The knob's drawn size on hover and while dragged (REQ-UI-46). */
+	public static final int KNOB_GROWN = 12;
 
 	private final SliderModel model;
 	private final LongSupplier get;
@@ -31,8 +35,12 @@ public final class Slider extends Widget {
 	private final LongFunction<String> label;
 	private final Runnable clickSound;
 	private boolean dragging;
+	/** From the knob's centre to where the press grabbed it, so it does not jump to the pointer (REQ-UI-46); 0 on the track. */
+	private double grabOffset;
 	private long valueAtPress;
 	private boolean forcedHot;
+	/** The knob as drawn last, in screen pixels: left, top and size (for gametests). */
+	private final int[] drawnKnob = new int[3];
 
 	/**
 	 * @param get        the stored value in model units
@@ -64,9 +72,43 @@ public final class Slider extends Widget {
 		return x + (int) Math.round(model.fraction(get.getAsLong()) * (width - KNOB_SIZE));
 	}
 
-	/** Where the knob is drawn (REQ-UI-34): its exact left edge on the physical-pixel grid at GUI scale {@code scale}. */
+	/**
+	 * Where the knob at its layout size, {@link #KNOB_SIZE}, is drawn (REQ-UI-34): its exact left edge on the physical-pixel grid
+	 * at GUI scale {@code scale}. Grown, it is drawn about the same centre.
+	 */
 	public float drawnKnobX(int scale) {
 		return Shapes.snap((float) (x + model.fraction(get.getAsLong()) * (width - KNOB_SIZE)), scale);
+	}
+
+	/** How hot it looks now, 0 to 1, eased (REQ-UI-17): hovered, dragged or forced. */
+	private float hover(double mouseX, double mouseY) {
+		if (forcedHot) {
+			return 1F;
+		}
+		return hoverAmount(enabled && (dragging || contains(mouseX, mouseY)));
+	}
+
+	/** How big the knob is drawn now, {@link #KNOB_SIZE} to {@link #KNOB_GROWN} GUI px: grown on hover and while dragged (REQ-UI-46). */
+	float knobSize(double mouseX, double mouseY) {
+		return knobSizeFor(hover(mouseX, mouseY));
+	}
+
+	/** The knob's size for a hover amount from 0 to 1. */
+	private static float knobSizeFor(float hover) {
+		return KNOB_SIZE + (KNOB_GROWN - KNOB_SIZE) * hover;
+	}
+
+	/** The knob as drawn last, in screen pixels: left, top and size (for gametests). */
+	public int[] drawnKnob() {
+		return drawnKnob.clone();
+	}
+
+	/** The value label's colour: the accent while dragged (REQ-UI-46), else the normal text colour, or the disabled one. */
+	int labelColor(Theme theme) {
+		if (!enabled) {
+			return Theme.TEXT_DISABLED;
+		}
+		return dragging ? theme.accent() : Theme.TEXT_PRIMARY;
 	}
 
 	/** Draws the hovered look regardless of the mouse, for screenshots of every state. */
@@ -93,14 +135,22 @@ public final class Slider extends Widget {
 		}
 		dragging = true;
 		valueAtPress = get.getAsLong();
-		moveTo(mouseX);
+		// On the knob as drawn (grown on hover): it keeps where it was grabbed, and its value is left as it is until the drag
+		// moves it. Elsewhere on the track: its centre goes to the pointer.
+		double centre = x + KNOB_SIZE / 2.0 + model.fraction(valueAtPress) * (width - KNOB_SIZE);
+		if (Math.abs(mouseX - centre) <= knobSize(mouseX, mouseY) / 2.0) {
+			grabOffset = mouseX - centre;
+		} else {
+			grabOffset = 0;
+			moveTo(mouseX);
+		}
 		return true;
 	}
 
 	@Override
 	public void drag(double mouseX, double mouseY) {
 		if (dragging) {
-			moveTo(mouseX);
+			moveTo(mouseX - grabOffset);
 		}
 	}
 
@@ -161,7 +211,7 @@ public final class Slider extends Widget {
 		return true;
 	}
 
-	/** Follows the pointer; writes only when the shown value changes. */
+	/** Puts the knob's centre at {@code mouseX}; writes only when the shown value changes. */
 	private void moveTo(double mouseX) {
 		double fraction = width <= KNOB_SIZE ? 0 : (mouseX - x - KNOB_SIZE / 2.0) / (width - KNOB_SIZE);
 		long value = model.fromTrack(fraction, false);
@@ -175,20 +225,27 @@ public final class Slider extends Widget {
 		Theme theme = Theme.current();
 		long value = get.getAsLong();
 		int trackY = y + (height - TRACK_HEIGHT) / 2;
-		float knobX = drawnKnobX(Shapes.guiScale());
-		boolean hot = enabled && (forcedHot || dragging || contains(mouseX, mouseY));
-		float hover = forcedHot ? 1F : hoverAmount(hot);
+		int scale = Shapes.guiScale();
+		float hover = hover(mouseX, mouseY);
+		// The knob grows about its centre (REQ-UI-46), its size in whole screen pixels and its box on their grid (REQ-UI-34).
+		float centreX = (float) (x + KNOB_SIZE / 2.0 + model.fraction(value) * (width - KNOB_SIZE));
+		// Concentric with the track's rows, as the layout's knob is, also for an odd height.
+		float centreY = y + (height - KNOB_SIZE) / 2 + KNOB_SIZE / 2F;
+		int size = Math.max(1, Math.round(knobSizeFor(hover) * scale));
+		float knobX = Math.round(centreX * scale - size / 2F) / (float) scale;
+		drawnKnob[0] = Math.round(knobX * scale);
+		drawnKnob[1] = Math.round(centreY * scale - size / 2F);
+		drawnKnob[2] = size;
 		// REQ-UI-28: nothing that shows lies under the knob. The fill (the track's colour while disabled) ends, and the
 		// rest of the track starts, where the knob's disc meets the track's top and bottom edges; the opaque knob covers
 		// the sliver under its middle rows. A dimmed knob is translucent, so they stop at its box instead.
-		float[] gap = trackGap(knobX, KNOB_SIZE, TRACK_HEIGHT, dimmed);
+		float[] gap = trackGap(knobX, size / (float) scale, TRACK_HEIGHT, dimmed);
 		int fill = enabled ? ColorMath.lerp(theme.accent(), theme.accentHover(), hover) : Theme.SEPARATOR;
 		Shapes.bar(graphics, x, gap[0], trackY, TRACK_HEIGHT, Corners.LEFT, faded(fill));
 		Shapes.bar(graphics, gap[1], x + width, trackY, TRACK_HEIGHT, Corners.RIGHT, faded(Theme.SEPARATOR));
 		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, hover) : Theme.TEXT_DISABLED;
-		Shapes.roundedRect(graphics, knobX, y + (height - KNOB_SIZE) / 2, KNOB_SIZE, KNOB_SIZE, KNOB_SIZE / 2, faded(knobColor));
-		UiText.draw(graphics, font, label.apply(value), labelX(), y + (height - font.lineHeight) / 2 + 1,
-				faded(enabled ? Theme.TEXT_PRIMARY : Theme.TEXT_DISABLED));
+		Shapes.disc(graphics, centreX, centreY, size / (float) scale, faded(knobColor));
+		UiText.draw(graphics, font, label.apply(value), labelX(), y + (height - font.lineHeight) / 2 + 1, faded(labelColor(theme)));
 	}
 
 	/**
@@ -196,7 +253,7 @@ public final class Slider extends Widget {
 	 * at {@code knobX} over a track {@code trackHeight} high: knob centre ∓ sqrt(r² − (h/2)²) for an opaque knob, centre ∓ r
 	 * for a dimmed one.
 	 */
-	static float[] trackGap(float knobX, int knob, int trackHeight, boolean dimmed) {
+	static float[] trackGap(float knobX, float knob, int trackHeight, boolean dimmed) {
 		float radius = knob / 2F;
 		float half = trackHeight / 2F;
 		float reach = dimmed ? radius : (float) Math.sqrt(radius * radius - half * half);

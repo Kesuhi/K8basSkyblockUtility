@@ -70,6 +70,116 @@ class WidgetBehaviourTest {
 		assertEquals(1, commits[0], "a click that changes nothing commits nothing");
 	}
 
+	/** AC-UI-47 [A] (REQ-UI-46, T3.36): a press on the knob keeps the pointer where it grabbed the knob; the knob does not jump. */
+	@Test
+	void aPressOnTheKnobKeepsTheGrabOffset() {
+		Slider slider = slider();
+		value[0] = 50;
+		// The knob's centre is at 5 + 50 = 55: pressed 3 GUI px left of it.
+		assertTrue(slider.press(52, 6, 0));
+		assertEquals(50, value[0], "no jump on the press");
+		slider.drag(72, 6);
+		assertEquals(70, value[0], "20 GUI px further: the knob's centre moved 20 GUI px, to 75, and the value is that place's");
+		assertEquals(75, slider.knobX() + Slider.KNOB_SIZE / 2, "the knob's centre");
+		slider.release(72, 6);
+	}
+
+	/** AC-UI-47 [A], AC-UI-14: a press on the knob of a value off the step grid leaves it as it is and writes nothing. */
+	@Test
+	void aPressOnTheKnobChangesNothingByItself() {
+		Slider slider = new Slider(SliderModel.ofInt(0, 100, 5), () -> value[0], v -> value[0] = v, () -> commits[0]++, Long::toString,
+				() -> sounds[0]++);
+		slider.setBounds(0, 0, 110, 12);
+		// 37 (a fine step, or a value edited in the file): the knob's centre at 5 + 37 = 42.
+		value[0] = 37;
+		assertTrue(slider.press(42, 6, 0));
+		assertEquals(37, value[0], "not snapped to the step by the press");
+		slider.release(42, 6);
+		assertEquals(37, value[0]);
+		assertEquals(0, commits[0], "nothing written");
+	}
+
+	/** AC-UI-47 [A]: on a grown knob, a press on its outer ring is a press on the knob too. */
+	@Test
+	void aPressOnTheGrownKnobsRimKeepsTheGrabOffset() {
+		Slider slider = slider();
+		slider.forceHot(true);
+		value[0] = 50;
+		// The knob's centre is at 55 and it is drawn 12 GUI px across: 5.5 GUI px right of the centre is on it.
+		assertTrue(slider.press(60.5, 6, 0));
+		assertEquals(50, value[0], "no jump");
+		slider.release(60.5, 6);
+	}
+
+	/** AC-UI-47 [A]: a press on the track away from the knob still moves the knob there (REQ-UI-03). */
+	@Test
+	void aPressOnTheTrackAwayFromTheKnobJumpsThere() {
+		Slider slider = slider();
+		value[0] = 50;
+		assertTrue(slider.press(85, 6, 0), "30 GUI px right of the knob's centre");
+		assertEquals(80, value[0], "the knob's centre is under the pointer: 85");
+		slider.drag(90, 6);
+		assertEquals(85, value[0], "and follows it from there");
+		slider.release(90, 6);
+	}
+
+	/** AC-UI-47 [A]: the knob's drawn size eases from 10 to 12 GUI px on hover and while dragged, and back after it. */
+	@Test
+	void theKnobGrowsOnHoverAndWhileDragged() {
+		long[] now = {0};
+		UiTime previous = UiClock.enter(UiTime.of(() -> now[0], () -> true));
+		try {
+			Slider slider = slider();
+			value[0] = 50;
+			assertEquals(10F, slider.knobSize(-50, -50), 1e-6, "idle");
+			assertEquals(10F, slider.knobSize(55, 6), 1e-6, "the pointer just arrived");
+			now[0] = 75;
+			float growing = slider.knobSize(55, 6);
+			assertTrue(growing > 10F && growing < 12F, "75 ms on: " + growing);
+			now[0] = 150;
+			assertEquals(12F, slider.knobSize(55, 6), 1e-6, "12 GUI px at 150 ms");
+			assertTrue(slider.press(55, 6, 0));
+			now[0] = 400;
+			assertEquals(12F, slider.knobSize(300, 300), 1e-6, "dragged with the pointer far away: still grown");
+			slider.release(300, 300);
+			now[0] = 401;
+			assertTrue(slider.knobSize(300, 300) <= 12F);
+			now[0] = 551;
+			assertEquals(10F, slider.knobSize(300, 300), 1e-6, "150 ms after the release and away: back to 10");
+		} finally {
+			UiClock.leave(previous);
+		}
+	}
+
+	/** AC-UI-47 [A]: grown to 12 GUI px, the knob changes neither the slider's layout nor where a press reaches it. */
+	@Test
+	void theGrownKnobChangesNeitherLayoutNorHits() {
+		Slider slider = slider();
+		slider.forceHot(true);
+		assertEquals(12F, slider.knobSize(-50, -50), 1e-6, "grown");
+		value[0] = 0;
+		assertEquals(0, slider.knobX(), "its layout at the track's start, as at 10 GUI px");
+		// The grown knob is drawn 1 GUI px past each end of the track; a press there reaches no slider.
+		assertFalse(slider.press(-1, 6, 0), "1 GUI px left of the layout");
+		value[0] = 100;
+		assertEquals(100, slider.knobX(), "at the track's end, as at 10 GUI px");
+		assertFalse(slider.press(110, 6, 0), "1 GUI px right of it");
+		assertFalse(slider.press(50, -1, 0), "1 GUI px above it");
+		assertFalse(slider.press(50, 12, 0), "1 GUI px below it");
+	}
+
+	/** AC-UI-47 [A]: the value label is in the accent colour while dragged, and its normal colour after the release. */
+	@Test
+	void theValueLabelIsAccentWhileDragged() {
+		com.k8bas.skyblockutility.ui.render.Theme theme = com.k8bas.skyblockutility.ui.render.Theme.of(new com.k8bas.skyblockutility.config.GeneralConfig());
+		Slider slider = slider();
+		assertEquals(com.k8bas.skyblockutility.ui.render.Theme.TEXT_PRIMARY, slider.labelColor(theme), "idle");
+		assertTrue(slider.press(50, 6, 0));
+		assertEquals(theme.accent(), slider.labelColor(theme), "dragged");
+		slider.release(50, 6);
+		assertEquals(com.k8bas.skyblockutility.ui.render.Theme.TEXT_PRIMARY, slider.labelColor(theme), "released");
+	}
+
 	/** REQ-UI-03: only a press on the track counts, and only with the left button. */
 	@Test
 	void onlyAPressOnTheTrackStartsADrag() {

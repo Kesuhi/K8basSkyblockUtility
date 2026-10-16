@@ -77,6 +77,19 @@ public final class Shapes {
 	}
 
 	/**
+	 * A disc {@code diameter} GUI px across centred on ({@code cx}, {@code cy}), its size rounded to whole screen pixels and its
+	 * box on the physical-pixel grid (REQ-UI-34): a knob that grows between whole GUI sizes (REQ-UI-46). One mask quad, as every
+	 * disc (REQ-UI-30).
+	 */
+	public static void disc(GuiGraphicsExtractor graphics, float cx, float cy, float diameter, int argb) {
+		int scale = guiScale();
+		int d = Math.max(1, Math.round(diameter * scale));
+		float left = Math.round(cx * scale - d / 2F) / (float) scale;
+		float top = Math.round(cy * scale - d / 2F) / (float) scale;
+		draw(graphics, left, top, d, d, (d + 1) / 2, 0, Corners.ALL, argb);
+	}
+
+	/**
 	 * A horizontal bar of a track (REQ-UI-28, T3.16): from GUI x0 to x1, both snapped to the nearest screen pixel, h
 	 * GUI pixels high at y, with radius h/2 at the given {@link Corners} corners and square ends elsewhere.
 	 */

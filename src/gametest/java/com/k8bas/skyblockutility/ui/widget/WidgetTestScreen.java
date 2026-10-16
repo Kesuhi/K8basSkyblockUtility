@@ -91,6 +91,13 @@ public final class WidgetTestScreen extends WidgetScreen {
 		Slider dimmedSlider = place(new Slider(range, () -> dimmed[0], v -> dimmed[0] = v, () -> { }, range::format, () -> { }), 8, 214, 80, 12);
 		dimmedSlider.setDimmed(true);
 		knobSliders.add(dimmedSlider);
+		// T3.36: a dimmed knob grown as on hover, so its translucent disc is checked against the fill and track around it.
+		long[] dimmedHot = {64};
+		Slider dimmedHotSlider = place(new Slider(range, () -> dimmedHot[0], v -> dimmedHot[0] = v, () -> { }, range::format, () -> { }), 140, 214,
+				80, 12);
+		dimmedHotSlider.setDimmed(true);
+		dimmedHotSlider.forceHot(true);
+		knobSliders.add(dimmedHotSlider);
 
 		int row = 0;
 		for (Button.Style style : Button.Style.values()) {
@@ -199,8 +206,10 @@ public final class WidgetTestScreen extends WidgetScreen {
 		int[][] out = new int[knobSliders.size()][];
 		for (int i = 0; i < out.length; i++) {
 			Slider s = knobSliders.get(i);
+			// The knob as drawn (grown when hot, T3.36): its left, top and size in screen pixels.
+			int[] drawn = s.drawnKnob();
 			out[i] = new int[] {s.x, s.y + (s.height - Slider.TRACK_HEIGHT) / 2, s.width, s.knobX(), s.y + (s.height - Slider.KNOB_SIZE) / 2,
-					s.isDimmed() ? 1 : 0, Math.round(s.drawnKnobX(scale) * scale)};
+					s.isDimmed() ? 1 : 0, drawn[0], drawn[1], drawn[2]};
 		}
 		return out;
 	}

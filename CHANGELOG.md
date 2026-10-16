@@ -65,6 +65,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - The settings sidebar, the database picker and open dropdown lists light up the entry under the
   pointer smoothly, as cards and buttons already did. When you pick another category, the highlight
   with its accent bar slides from the old tab to the new one. With "Animations" off both are instant.
+- The settings' sliders feel steadier: a knob no longer jumps under the pointer when you grab it off its
+  middle, it grows a little while you point at or drag it, and the value next to it shows in the accent
+  colour while you drag. A click elsewhere on the track still moves the knob there.
 
 ### Fixed
 

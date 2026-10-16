@@ -800,14 +800,15 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		click(context, row);
 		check(context.computeOnClient(client -> ConfigManager.general().noticePosition()) == com.k8bas.skyblockutility.ui.notice.NoticePosition.BOTTOM_LEFT,
 				"Bottom left picked");
-		// REQ-UI-37 (T3.28): the wheel over the slider leaves it; a press on its track at 6 s sets it.
+		// REQ-UI-37 (T3.28): the wheel over the slider leaves it; a press on its track at 10 s, away from its knob, sets it (at 6 s, one
+		// 5 GUI px step from 5 s, the press would be on the knob grown under the pointer, which keeps its grab, REQ-UI-46).
 		int secondsBefore = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
 		move(context, controlCentre(context, "interface.notice_seconds"));
 		context.getInput().scroll(1.0);
 		context.waitTick();
 		check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == secondsBefore, "the wheel leaves the seconds");
-		click(context, sliderPoint(context, "interface.notice_seconds", (6 - 1) / 14.0));
-		check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == 6, "a press on the track at 6 s sets 6 s");
+		click(context, sliderPoint(context, "interface.notice_seconds", (10 - 1) / 14.0));
+		check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == 10, "a press on the track at 10 s sets 10 s");
 
 		// AC-UI-13: the "Open settings" capture: F7 binds and is in options.txt; Esc unbinds; a right click resets.
 		click(context, controlCentre(context, "keybinds.open_settings"));
