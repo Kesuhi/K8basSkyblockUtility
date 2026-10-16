@@ -109,7 +109,15 @@ public final class ToggleSwitch extends Widget {
 		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, t) : Theme.TEXT_DISABLED;
 		Shapes.roundedRect(graphics, x, y, width, height, height / 2, faded(track));
 		int knobSize = height - 4;
-		int knobX = x + 2 + Math.round((width - 4 - knobSize) * t);
-		Shapes.roundedRect(graphics, knobX, y + 2, knobSize, knobSize, knobSize / 2, faded(knobColor));
+		Shapes.roundedRect(graphics, knobX(x, width, height, t, Shapes.guiScale()), y + 2, knobSize, knobSize, knobSize / 2, faded(knobColor));
+	}
+
+	/**
+	 * The knob's left edge in GUI px at {@code t} (0 off, 1 on) for a switch at x, w×h: on the physical-pixel grid at GUI
+	 * scale {@code scale} (REQ-UI-34), so it slides in screen-pixel steps.
+	 */
+	static float knobX(int x, int width, int height, float t, int scale) {
+		int knobSize = height - 4;
+		return Shapes.snap(x + 2 + (width - 4 - knobSize) * t, scale);
 	}
 }

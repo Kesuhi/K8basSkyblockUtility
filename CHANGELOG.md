@@ -31,6 +31,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   dropdowns and their lists, key binding buttons, colour swatches, the text cursor, the colour picker and
   the database picker, tooltips, notices, the settings' section lines, and the HUD editor's outlines and
   snap guides. The keyboard focus ring stays as thick as before, so it is easy to see.
+- Switch knobs, slider knobs, the category switch's slide and notices move in steps of the screen's own
+  pixels instead of whole GUI pixels, so they glide more smoothly at GUI scale 2 and above. Where you
+  click is unchanged.
 
 ### Fixed
 

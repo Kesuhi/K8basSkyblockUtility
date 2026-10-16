@@ -2,7 +2,9 @@ package com.k8bas.skyblockutility.ui.notice;
 
 import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.config.ConfigManager;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.UiTime;
 import com.k8bas.skyblockutility.ui.widget.ListTooltipTestScreen;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -14,9 +16,11 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * T2.3d, AC-UI-19 [C] in a real client:
@@ -25,7 +29,9 @@ import java.util.List;
  *       screen (read from the screenshot), and a click under them still reaches the screen;</li>
  *   <li>a notice goes after its configured duration (3 s, not a bound of the range) plus the slide time, to within a tick;</li>
  *   <li>in a world with no screen they are drawn over the HUD, and the inventory key still opens the
- *       inventory; F1 hides them, as it hides vanilla toasts.</li>
+ *       inventory; F1 hides them, as it hides vanilla toasts;</li>
+ *   <li>AC-UI-35 [C] (REQ-UI-34, T3.25): on a test clock with motion on, a notice sliding in is drawn on the physical-pixel
+ *       grid: in a frame where it is half a GUI px from its whole-px box, its accent bar starts where the drawn box puts it.</li>
  * </ul>
  */
 public class NoticeGameTest implements FabricClientGameTest {
@@ -37,6 +43,7 @@ public class NoticeGameTest implements FabricClientGameTest {
 		try {
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			overAScreen(context);
+			slidesOnThePhysicalGrid(context);
 			lifetime(context);
 			inAWorld(context);
 		} finally {
@@ -90,6 +97,55 @@ public class NoticeGameTest implements FabricClientGameTest {
 		context.runOnClient(client -> Notices.clear());
 		context.setScreen(() -> null);
 		LOGGER.info("notices over a screen: {} shown, drawn at {}, a click under them picked row {}", titles, first, clicked);
+	}
+
+	/** A notice sliding in, on a clock the test steps, drawn half a GUI px from its whole-px box where the slide puts it. */
+	private static void slidesOnThePhysicalGrid(ClientGameTestContext context) {
+		context.setScreen(ListTooltipTestScreen::new);
+		context.waitForScreen(ListTooltipTestScreen.class);
+		context.getInput().setCursorPos(1100, 900);
+		AtomicLong clock = new AtomicLong(50_000);
+		UiTime before = context.computeOnClient(client -> Notices.getTime());
+		try {
+			context.runOnClient(client -> {
+				Notices.setTime(UiTime.of(clock::get, () -> true));
+				ConfigManager.general().noticePosition = NoticePosition.TOP_LEFT;
+				ConfigManager.general().noticeSeconds = 10;
+				Notices.post(new Notice("Sliding in", List.of("On the physical grid")));
+			});
+			// Late in the slide, so the box is on screen, at a frame that lies on a half GUI px.
+			long at = -1;
+			for (long now = 50_100; now <= 50_200 && at < 0; now += 10) {
+				clock.set(now);
+				NoticeLayout.Placed box = context.computeOnClient(client -> Notices.placed(client.getWindow().getGuiScaledWidth(),
+						client.getWindow().getGuiScaledHeight()).get(0));
+				if (box.drawnX() != box.x() && box.drawnX() >= 1) {
+					at = now;
+				}
+			}
+			check(at > 0, "a frame of the slide lies on a half GUI px");
+			clock.set(at);
+			context.waitTicks(2);
+			BufferedImage shot = HairlineProbe.read(context.takeScreenshot("t3.25-notice-sliding"));
+			NoticeLayout.Placed box = context.computeOnClient(client -> Notices.placed(client.getWindow().getGuiScaledWidth(),
+					client.getWindow().getGuiScaledHeight()).get(0));
+			int scale = context.computeOnClient(client -> Shapes.guiScale());
+			int accent = context.computeOnClient(client -> Theme.current().accent()) & 0xFFFFFF;
+			int row = (box.y() + box.height() / 2) * scale;
+			int column = 0;
+			while (column < (box.x() + 8) * scale && (shot.getRGB(column, row) & 0xFFFFFF) != accent) {
+				column++;
+			}
+			int expected = Math.round(box.drawnX() * scale) + Shapes.hairlinePx(scale);
+			check(column == expected, "the accent bar starts at physical column " + column + ", where the box drawn at " + box.drawnX()
+					+ " puts it: " + expected + " (laid out at " + box.x() + ")");
+		} finally {
+			context.runOnClient(client -> {
+				Notices.setTime(before);
+				Notices.clear();
+			});
+			context.setScreen(() -> null);
+		}
 	}
 
 	/** Gone after its duration plus the slide time, to within a client tick (50 ms) and a frame. */

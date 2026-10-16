@@ -52,9 +52,14 @@ public final class Slider extends Widget {
 		return dragging;
 	}
 
-	/** The knob's left edge in GUI pixels, for the stored value. */
+	/** The knob's left edge in whole GUI pixels, for the stored value: the layout. */
 	public int knobX() {
 		return x + (int) Math.round(model.fraction(get.getAsLong()) * (width - KNOB_SIZE));
+	}
+
+	/** Where the knob is drawn (REQ-UI-34): its exact left edge on the physical-pixel grid at GUI scale {@code scale}. */
+	public float drawnKnobX(int scale) {
+		return Shapes.snap((float) (x + model.fraction(get.getAsLong()) * (width - KNOB_SIZE)), scale);
 	}
 
 	/** Draws the hovered look regardless of the mouse, for screenshots of every state. */
@@ -152,7 +157,7 @@ public final class Slider extends Widget {
 		Theme theme = Theme.current();
 		long value = get.getAsLong();
 		int trackY = y + (height - TRACK_HEIGHT) / 2;
-		int knobX = knobX();
+		float knobX = drawnKnobX(Shapes.guiScale());
 		boolean hot = enabled && (forcedHot || dragging || contains(mouseX, mouseY));
 		float hover = forcedHot ? 1F : hoverAmount(hot);
 		// REQ-UI-28: nothing that shows lies under the knob. The fill (the track's colour while disabled) ends, and the

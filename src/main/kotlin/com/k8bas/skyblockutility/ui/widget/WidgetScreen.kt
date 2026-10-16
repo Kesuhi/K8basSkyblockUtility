@@ -352,22 +352,45 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		target.focusRing(ring)
 		val accent = Theme.current().accent()
 		val region = target.clip()
+		val shift = drawShiftY(target)
 		if (region == null) {
-			Shapes.focusRing(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), accent)
+			shifted(graphics, shift) { Shapes.focusRing(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), accent) }
 			return
 		}
 		Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
 			if (clip.visible()) {
-				Shapes.focusRing(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), accent)
+				shifted(graphics, shift) { Shapes.focusRing(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), accent) }
 			}
+		}
+	}
+
+	/**
+	 * How far [widget] is drawn below its laid-out place this frame, less than 1 GUI px: the fraction of a slide drawn on the
+	 * physical-pixel grid (REQ-UI-34). Input still meets the whole-px layout.
+	 */
+	protected open fun drawShiftY(widget: Widget): Float = 0F
+
+	/** Runs [block] moved down by [shift] GUI px; inside a clip, so the clip stays where it is. */
+	private inline fun shifted(graphics: GuiGraphicsExtractor, shift: Float, block: () -> Unit) {
+		if (shift == 0F) {
+			block()
+			return
+		}
+		graphics.pose().pushMatrix()
+		try {
+			graphics.pose().translate(0F, shift)
+			block()
+		} finally {
+			graphics.pose().popMatrix()
 		}
 	}
 
 	/** Draws a widget inside its clip region, if it has one; the mouse outside the region is no hover. */
 	private fun drawClipped(graphics: GuiGraphicsExtractor, widget: Widget, mouseX: Int, mouseY: Int) {
 		val region = widget.clip()
+		val shift = drawShiftY(widget)
 		if (region == null) {
-			widget.draw(graphics, font, mouseX, mouseY)
+			shifted(graphics, shift) { widget.draw(graphics, font, mouseX, mouseY) }
 			return
 		}
 		if (!widget.showing()) {
@@ -376,7 +399,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		val inside = region.contains(mouseX.toDouble(), mouseY.toDouble())
 		Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
 			if (clip.visible()) {
-				widget.draw(graphics, font, if (inside) mouseX else -1, if (inside) mouseY else -1)
+				shifted(graphics, shift) { widget.draw(graphics, font, if (inside) mouseX else -1, if (inside) mouseY else -1) }
 			}
 		}
 	}

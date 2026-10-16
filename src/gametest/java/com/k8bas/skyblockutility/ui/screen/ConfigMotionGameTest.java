@@ -8,7 +8,9 @@ import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.ui.render.ScaleAbout;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiClock;
 import com.k8bas.skyblockutility.ui.render.UiTime;
@@ -21,6 +23,7 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -43,6 +46,11 @@ import java.util.concurrent.atomic.AtomicLong;
  *       Animations OFF (a source whose motion reads the switch) the panel is at full size and a category shows unslid
  *       from the first frame, and the first frame after a toggle click shows the knob at its end; switched back ON in
  *       the open screen, the next click slides again.</li>
+ *   <li>AC-UI-35 [C] (REQ-UI-34, T3.25): 80 ms into the switch the page is laid out 3 GUI px down but drawn 2.5 down, on the
+ *       physical-pixel grid, which the screenshot shows at the card's top edge, and the section line above it keeps its
+ *       settled distance to the card; during the slide, clicks at the card's inner top and bottom edges reach it and one
+ *       1 px above reaches nothing (AC-UI-03). The toggle knob mid-slide is drawn on the grid, a click on the switch then
+ *       reaches it, and its knob turns back from where it was.</li>
  * </ul>
  */
 public class ConfigMotionGameTest implements FabricClientGameTest {
@@ -195,6 +203,33 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		int sidebar = pixel(context, shot, points[2], points[3]);
 		check(sidebar == (Theme.SIDEBAR & 0xFFFFFF), "the sidebar is not veiled: " + Integer.toHexString(sidebar));
 
+		// AC-UI-35: at 80 ms 2.592 GUI px of slide are left, laid out as 3 and drawn as 2.5 at GUI scale 2.
+		clock.addAndGet(40);
+		context.waitTicks(2);
+		float drawnSlide = context.computeOnClient(client -> screen(client).motion().slideDrawn(Shapes.guiScale()));
+		int laidSlide = context.computeOnClient(client -> screen(client).motion().slideOffset());
+		float openScale = context.computeOnClient(client -> screen(client).motion().scale());
+		check(laidSlide == 3 && drawnSlide == 2.5F && openScale == 1F, "80 ms in: laid out " + laidSlide + ", drawn " + drawnSlide + ", scale "
+				+ openScale);
+		int[] sliding = cardAndLine(context, context.takeScreenshot("t3.25-switch-at-80ms"));
+		check(sliding[0] == sliding[2] - 1, "the card's top edge is drawn half a GUI px above its whole-px place: physical row " + sliding[0]
+				+ ", laid out at " + sliding[2]);
+		// AC-UI-03 during the slide, at the whole-px layout: the card's inner top and bottom rows reach it, 1 px above nothing.
+		String unclicked = context.computeOnClient(client -> settings());
+		int[][] edges = context.computeOnClient(client -> {
+			Widget card = screen(client).page().card(toggleRow(screen(client)).option());
+			return new int[][] {{card.x() + 12, card.y()}, {card.x() + 12, card.y() + card.height() - 1}, {card.x() + 12, card.y() - 1}};
+		});
+		for (int i = 0; i < 2; i++) {
+			click(context, edges[i]);
+			check(!context.computeOnClient(client -> settings()).equals(unclicked), "a click on the sliding card's inner edge " + i + " reaches it");
+			click(context, edges[i]);
+			check(context.computeOnClient(client -> settings()).equals(unclicked), "and back");
+		}
+		click(context, edges[2]);
+		check(context.computeOnClient(client -> settings()).equals(unclicked), "1 px above the sliding card reaches nothing");
+		check(context.computeOnClient(client -> screen(client).motion().slideOffset()) == 3, "still sliding");
+
 		String before = context.computeOnClient(client -> settings());
 		int[] title = context.computeOnClient(client -> {
 			Widget card = screen(client).page().card(toggleRow(screen(client)).option());
@@ -218,13 +253,44 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		clock.addAndGet(75);
 		context.waitTicks(2);
 		float halfway = context.computeOnClient(client -> knob(screen(client), time));
+		check(clicked == from && halfway > 0F && halfway < 1F, "the knob follows the test clock: " + clicked + ", " + halfway);
+		// AC-UI-35: mid-slide the knob is drawn on the physical-pixel grid, at the eased position written out here.
+		BufferedImage knobShot = HairlineProbe.read(context.takeScreenshot("t3.25-knob-sliding"));
+		int[] knobBox = context.computeOnClient(client -> {
+			Widget toggle = screen(client).page().control(toggleRow(screen(client)).option());
+			return new int[] {toggle.x(), toggle.y(), toggle.width(), toggle.height(), Shapes.guiScale()};
+		});
+		int knobScale = knobBox[4];
+		int knobPx = (knobBox[3] - 4) * knobScale;
+		int knobLeft = Math.round((knobBox[0] + 2 + (knobBox[2] - 4 - (knobBox[3] - 4)) * halfway) * knobScale);
+		int knobRow = (knobBox[1] + 2) * knobScale + knobPx / 2;
+		int knobColour = knobShot.getRGB(knobLeft + knobPx / 2, knobRow);
+		int runLeft = knobLeft + knobPx / 2;
+		while (runLeft > knobLeft - 4 && near(knobShot.getRGB(runLeft - 1, knobRow), knobColour)) {
+			runLeft--;
+		}
+		int runRight = knobLeft + knobPx / 2;
+		while (runRight < knobLeft + knobPx + 4 && near(knobShot.getRGB(runRight + 1, knobRow), knobColour)) {
+			runRight++;
+		}
+		check(runLeft + runRight + 1 == 2 * knobLeft + knobPx, "the sliding knob is centred on " + (knobLeft + knobPx / 2.0) + ": its row runs "
+				+ runLeft + " to " + runRight);
+		// AC-UI-03 during the knob's slide: a click on the switch itself reaches it, and the knob turns back from where it is.
+		int[] control = context.computeOnClient(client -> {
+			Widget toggle = screen(client).page().control(toggleRow(screen(client)).option());
+			return new int[] {toggle.x() + toggle.width() / 2, toggle.y() + toggle.height() / 2};
+		});
+		click(context, control);
+		check(context.computeOnClient(client -> settings()).equals(before), "a click on the sliding switch flips it back");
+		float turned = context.computeOnClient(client -> knob(screen(client), time));
 		clock.addAndGet(200);
 		context.waitTicks(2);
 		float ended = context.computeOnClient(client -> knob(screen(client), time));
-		check(clicked == from && halfway > 0F && halfway < 1F && ended == 1F - from,
-				"the knob follows the test clock: " + clicked + ", " + halfway + ", " + ended);
-		click(context, title);
-		check(context.computeOnClient(client -> settings()).equals(before), "and back");
+		check(turned == halfway && ended == from, "the knob turns back from " + halfway + ": " + turned + ", then " + ended);
+		// Settled, the section line lies as far above the card as it was drawn during the slide: page text and widgets moved together.
+		int[] settled = cardAndLine(context, context.takeScreenshot("t3.25-switch-settled"));
+		check(settled[0] == settled[2] && settled[0] - settled[1] == sliding[0] - sliding[1], "the section line keeps its distance to the card: "
+				+ (sliding[0] - sliding[1]) + " px sliding, " + (settled[0] - settled[1]) + " settled");
 	}
 
 	/**
@@ -290,6 +356,41 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 	}
 
 	/** The first toggle's knob as the screen's frames see it: read on the screen's source, as they are drawn. */
+	/**
+	 * In the screenshot, on a column near the toggle card's right end: the physical row of the card's top edge, of the section
+	 * line above it, and of the card's whole-px top. Each is the first row that differs from the panel between them, going
+	 * away from it.
+	 */
+	private static int[] cardAndLine(ClientGameTestContext context, Path shot) {
+		int[] card = context.computeOnClient(client -> {
+			Widget box = screen(client).page().card(toggleRow(screen(client)).option());
+			int scale = Shapes.guiScale();
+			return new int[] {(box.x() + box.width() - 10) * scale, box.y() * scale, scale};
+		});
+		BufferedImage image = HairlineProbe.read(shot);
+		int column = card[0];
+		int gap = card[1] - 2 * card[2];
+		int panel = image.getRGB(column, gap);
+		int top = gap;
+		while (top < card[1] + 2 * card[2] && image.getRGB(column, top) == panel) {
+			top++;
+		}
+		int line = gap;
+		while (line > gap - 30 * card[2] && image.getRGB(column, line) == panel) {
+			line--;
+		}
+		return new int[] {top, line, card[1]};
+	}
+
+	private static boolean near(int a, int b) {
+		for (int shift = 0; shift <= 16; shift += 8) {
+			if (Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF)) > 6) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private static float knob(ConfigScreen screen, UiTime time) {
 		UiTime previous = UiClock.enter(time);
 		try {

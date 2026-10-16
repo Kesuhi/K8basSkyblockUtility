@@ -332,7 +332,8 @@ public class WidgetsGameTest implements FabricClientGameTest {
 	private static void checkKnob(BufferedImage shot, int scale, boolean smooth, int[] slider, boolean notchCheck, String what) {
 		int size = Slider.KNOB_SIZE * scale;
 		int r = size / 2;
-		int left = slider[3] * scale;
+		// Where the knob is drawn, on the physical-pixel grid (REQ-UI-34, T3.25).
+		int left = slider[6];
 		int top = slider[4] * scale;
 		boolean dimmed = slider[5] == 1;
 		int centre = shot.getRGB(left + r, top + r);
@@ -408,7 +409,8 @@ public class WidgetsGameTest implements FabricClientGameTest {
 	/** Next to a knob at either end, every pixel outside both the full track pill and the knob's disc is backdrop. */
 	private static void checkTrackEnds(BufferedImage shot, int scale, int[] slider, String what) {
 		int size = Slider.KNOB_SIZE * scale;
-		int left = slider[3] * scale;
+		// Where the knob is drawn, on the physical-pixel grid (REQ-UI-34, T3.25).
+		int left = slider[6];
 		int top = slider[4] * scale;
 		int trackX = slider[0] * scale;
 		int trackTop = slider[1] * scale;

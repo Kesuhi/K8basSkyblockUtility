@@ -47,6 +47,15 @@ public final class Shapes {
 	}
 
 	/**
+	 * As {@link #roundedRect(GuiGraphicsExtractor, int, int, int, int, int, int)} at a GUI position snapped to the nearest
+	 * screen pixel (REQ-UI-34): a moving knob drawn on the physical-pixel grid rather than in whole GUI px.
+	 */
+	public static void roundedRect(GuiGraphicsExtractor graphics, float x, float y, int w, int h, int radius, int argb) {
+		int scale = guiScale();
+		draw(graphics, snap(x, scale), snap(y, scale), w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, 0, scale), 0, Corners.ALL, argb);
+	}
+
+	/**
 	 * A horizontal bar of a track (REQ-UI-28, T3.16): from GUI x0 to x1, both snapped to the nearest screen pixel, h
 	 * GUI pixels high at y, with radius h/2 at the given {@link Corners} corners and square ends elsewhere.
 	 */

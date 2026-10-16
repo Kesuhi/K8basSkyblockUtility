@@ -415,47 +415,58 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	 */
 	private void drawPageText(GuiGraphicsExtractor graphics, Theme theme, int mouseX, int mouseY) {
 		ConfigLayout.Rect content = frame.content();
-		int scroll = pageScroll;
 		try (Clip clip = Clip.push(graphics, content.x(), content.y(), content.w(), content.h())) {
 			if (!clip.visible()) {
 				return;
 			}
-			if (view.nothingFound()) {
-				String message = Ellipsis.fit(view.message(), content.w() - 2 * ConfigLayout.PAD, font::width);
-				UiText.centred(graphics, font, message, content.x() + content.w() / 2, content.y() + 40, Theme.TEXT_SECONDARY);
-				return;
+			// With the page's widgets, the slide's fraction on the physical-pixel grid (REQ-UI-34).
+			graphics.pose().pushMatrix();
+			try {
+				graphics.pose().translate(0F, slideFraction());
+				drawPageRows(graphics, theme, mouseX, mouseY, content);
+			} finally {
+				graphics.pose().popMatrix();
 			}
-			for (ConfigLayout.Row row : page.page().rows()) {
-				ConfigLayout.Rect rect = ConfigLayout.row(frame, scroll, row);
-				if (rect.bottom() < content.y() || rect.y() > content.bottom()) {
-					continue;
+		}
+	}
+
+	private void drawPageRows(GuiGraphicsExtractor graphics, Theme theme, int mouseX, int mouseY, ConfigLayout.Rect content) {
+		int scroll = pageScroll;
+		if (view.nothingFound()) {
+			String message = Ellipsis.fit(view.message(), content.w() - 2 * ConfigLayout.PAD, font::width);
+			UiText.centred(graphics, font, message, content.x() + content.w() / 2, content.y() + 40, Theme.TEXT_SECONDARY);
+			return;
+		}
+		for (ConfigLayout.Row row : page.page().rows()) {
+			ConfigLayout.Rect rect = ConfigLayout.row(frame, scroll, row);
+			if (rect.bottom() < content.y() || rect.y() > content.bottom()) {
+				continue;
+			}
+			if (row instanceof ConfigLayout.Heading heading) {
+				UiText.draw(graphics, font, Ellipsis.fit(heading.category().displayName(), rect.w(), font::width), rect.x(), rect.y(),
+						Theme.TEXT_PRIMARY);
+				int lineY = rect.y() + 14;
+				for (String line : heading.description()) {
+					UiText.draw(graphics, font, line, rect.x(), lineY, Theme.TEXT_SECONDARY);
+					lineY += 10;
 				}
-				if (row instanceof ConfigLayout.Heading heading) {
-					UiText.draw(graphics, font, Ellipsis.fit(heading.category().displayName(), rect.w(), font::width), rect.x(), rect.y(),
-							Theme.TEXT_PRIMARY);
-					int lineY = rect.y() + 14;
-					for (String line : heading.description()) {
-						UiText.draw(graphics, font, line, rect.x(), lineY, Theme.TEXT_SECONDARY);
-						lineY += 10;
-					}
-					if (heading.cut() && rect.contains(mouseX, mouseY) && content.contains(mouseX, mouseY)) {
-						showTooltip(heading.category().description());
-					}
-				} else if (row instanceof ConfigLayout.RuleProblem problem) {
-					// Why the rule does nothing, in the fixed error colour (REQ-GLOW-10, REQ-UI-12).
-					int lineY = rect.y() + 1;
-					for (String line : problem.lines()) {
-						UiText.draw(graphics, font, line, rect.x(), lineY, Theme.ERROR);
-						lineY += 10;
-					}
-				} else if (row instanceof ConfigLayout.Section section) {
-					String title = Ellipsis.fit(section.card().title(), rect.w(), font::width);
-					int textY = rect.y() + 8;
-					UiText.draw(graphics, font, title, rect.x(), textY, theme.accent());
-					int lineX = rect.x() + font.width(title) + 6;
-					if (lineX < rect.right()) {
-						Shapes.hairlineH(graphics, lineX, textY + 4, rect.right() - lineX, Theme.SEPARATOR);
-					}
+				if (heading.cut() && rect.contains(mouseX, mouseY) && content.contains(mouseX, mouseY)) {
+					showTooltip(heading.category().description());
+				}
+			} else if (row instanceof ConfigLayout.RuleProblem problem) {
+				// Why the rule does nothing, in the fixed error colour (REQ-GLOW-10, REQ-UI-12).
+				int lineY = rect.y() + 1;
+				for (String line : problem.lines()) {
+					UiText.draw(graphics, font, line, rect.x(), lineY, Theme.ERROR);
+					lineY += 10;
+				}
+			} else if (row instanceof ConfigLayout.Section section) {
+				String title = Ellipsis.fit(section.card().title(), rect.w(), font::width);
+				int textY = rect.y() + 8;
+				UiText.draw(graphics, font, title, rect.x(), textY, theme.accent());
+				int lineX = rect.x() + font.width(title) + 6;
+				if (lineX < rect.right()) {
+					Shapes.hairlineH(graphics, lineX, textY + 4, rect.right() - lineX, Theme.SEPARATOR);
 				}
 			}
 		}
@@ -636,6 +647,20 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	@Override
 	protected float contentScale() {
 		return motion.scale();
+	}
+
+	/**
+	 * How far the page is drawn below its whole-px layout this frame: the category slide on the physical-pixel grid less the
+	 * whole GUI px it is laid out at (REQ-UI-34), so clicks meet the layout (AC-UI-03).
+	 */
+	private float slideFraction() {
+		return motion.slideDrawn(Shapes.guiScale()) - motion.slideOffset();
+	}
+
+	@Override
+	protected float drawShiftY(Widget widget) {
+		float fraction = slideFraction();
+		return fraction != 0F && pageWidgets.contains(widget) ? fraction : 0F;
 	}
 
 	/**

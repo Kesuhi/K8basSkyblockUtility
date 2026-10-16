@@ -171,13 +171,17 @@ public final class WidgetTestScreen extends WidgetScreen {
 		return new int[] {knobX, middleSlider.y + (middleSlider.height - Slider.KNOB_SIZE) / 2};
 	}
 
-	/** Per AC-UI-28 slider: its x, track top, width, knob left and top edge, and 1 if dimmed (GUI pixels). */
+	/**
+	 * Per AC-UI-28 slider: its x, track top, width, knob left (laid out) and top edge, 1 if dimmed (GUI pixels), and the knob's
+	 * left edge as drawn, on the physical-pixel grid (REQ-UI-34), in physical pixels.
+	 */
 	int[][] knobSliders() {
+		int scale = Shapes.guiScale();
 		int[][] out = new int[knobSliders.size()][];
 		for (int i = 0; i < out.length; i++) {
 			Slider s = knobSliders.get(i);
 			out[i] = new int[] {s.x, s.y + (s.height - Slider.TRACK_HEIGHT) / 2, s.width, s.knobX(), s.y + (s.height - Slider.KNOB_SIZE) / 2,
-					s.isDimmed() ? 1 : 0};
+					s.isDimmed() ? 1 : 0, Math.round(s.drawnKnobX(scale) * scale)};
 		}
 		return out;
 	}

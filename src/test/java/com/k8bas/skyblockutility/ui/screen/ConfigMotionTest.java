@@ -28,6 +28,30 @@ class ConfigMotionTest {
 		assertFalse(motion.animating());
 	}
 
+	/**
+	 * AC-UI-35 (REQ-UI-34, T3.25): stepped every 10 ms at GUI scale 2, the category slide is drawn at multiples of 0.5 GUI px,
+	 * some on a half, within half a GUI px of the whole-px offset the page is laid out (and hit-tested) at.
+	 */
+	@Test
+	void theSlideIsDrawnOnThePhysicalGrid() {
+		for (int to : new int[] {2, 0}) {
+			motion.finish();
+			motion.switchCategory(1, to);
+			motion.frame();
+			int halves = 0;
+			for (int t = 0; t <= ConfigMotion.SWITCH_MS + 20; t += 10) {
+				motion.frame();
+				float drawn = motion.slideDrawn(2);
+				assertEquals(Math.round(drawn * 2), drawn * 2, 1e-4F, t + " ms: " + drawn + " on the half-px grid");
+				assertTrue(Math.abs(drawn - motion.slideOffset()) <= 0.5F, t + " ms: " + drawn + " near the laid-out " + motion.slideOffset());
+				halves += Math.abs(drawn - Math.round(drawn)) > 0.25F ? 1 : 0;
+				now[0] += 10;
+			}
+			assertTrue(halves > 0, "some frames lie on a half GUI px");
+			assertEquals(0F, motion.slideDrawn(2), "settled");
+		}
+	}
+
 	@Test
 	void openStartsOnTheFirstFrameNotWhenArmed() {
 		motion.open();
