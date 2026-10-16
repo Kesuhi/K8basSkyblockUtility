@@ -6,6 +6,7 @@ import com.k8bas.skyblockutility.ui.render.Shapes;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 
 /**
  * The picker's hue/saturation wheel (REQ-UI-13): a press inside the circle picks (hit-testing matches
@@ -57,10 +58,20 @@ final class ColorWheel extends Widget {
 
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
-		WheelTexture.ensureValue(state.hsv().v());
-		// The whole texture, scaled onto the wheel's bounds.
-		graphics.blit(RenderPipelines.GUI_TEXTURED, WheelTexture.ID, x, y, 0F, 0F, width, height, WheelTexture.SIZE, WheelTexture.SIZE,
-				WheelTexture.SIZE, WheelTexture.SIZE);
+		float value = state.hsv().v();
+		// REQ-UI-31: baked at the wheel's size in screen pixels, drawn 1:1 and sampled linear.
+		int size = width * Shapes.guiScale();
+		Identifier wheel = WheelTexture.get(size, value);
+		if (wheel != null) {
+			Shapes.image(graphics, wheel, x, y, size, size, 0xFFFFFFFF);
+		} else {
+			// REQ-UI-47: the 1.2.1 wheel, one fixed texture scaled onto the wheel's bounds.
+			Identifier legacy = WheelTexture.legacy(value);
+			if (legacy != null) {
+				graphics.blit(RenderPipelines.GUI_TEXTURED, legacy, x, y, 0F, 0F, width, height, WheelTexture.LEGACY_SIZE, WheelTexture.LEGACY_SIZE,
+						WheelTexture.LEGACY_SIZE, WheelTexture.LEGACY_SIZE);
+			}
+		}
 		// REQ-UI-30: a white disc with a disc of the picked colour inside it, both from the disc mask.
 		int[] marker = marker();
 		Shapes.roundedRect(graphics, marker[0] - 4, marker[1] - 4, 8, 8, 4, 0xFFFFFFFF);

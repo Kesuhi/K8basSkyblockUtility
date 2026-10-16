@@ -3,10 +3,10 @@ package com.k8bas.skyblockutility.ui.render;
 /**
  * The coverage of the anti-aliased corners (REQ-UI-18, T2.9d, R32): a 2R×2R image of a disc of radius R, one
  * alpha per screen pixel, fully covered up to half a pixel inside the rim and fading over one pixel, the ramp
- * the colour wheel uses. A pixel at least half covered is exactly a pixel the fill-based corners draw
+ * the 1.2.1 colour wheel used. A pixel at least half covered is exactly a pixel the fill-based corners draw
  * ({@link Corners}), so turning the setting on only softens the edge. The disc masks of discs and pills (REQ-UI-30,
- * T3.18) are the exact area of each pixel inside the circle instead, centred on a mask of any diameter. Written from
- * SPEC REQ-UI-18 and REQ-UI-30; no AlpakaAddons code (REQ-UI-24).
+ * T3.18) and the colour wheel's rim (REQ-UI-31, T3.19) are the exact area of each pixel inside the circle instead,
+ * centred on a mask of any diameter. Written from SPEC REQ-UI-18 and REQ-UI-30; no AlpakaAddons code (REQ-UI-24).
  */
 public final class CornerMask {
 	/** The largest radius, in screen pixels, a mask is made for (a 512×512 texture); larger shapes use the fills. */

@@ -13,7 +13,8 @@ import java.util.function.IntFunction;
  * under the outer pose, rounded outward. A shape drawn over another one then always overlaps its bounds and lands
  * above it, also at fractional positions and scales; piece by piece, a span starting half-way into a GUI pixel lost
  * up to a pixel of its bounds and slid under (the 1.2.1 slider-knob line). Discs and pills take their round ends from
- * one disc mask per diameter (REQ-UI-30, T3.18). Pure, so it is tested without a game.
+ * one disc mask per diameter (REQ-UI-30, T3.18). {@link #image} plans a baked texture drawn 1:1 as one element with the
+ * same outward-rounded bounds (REQ-UI-31, T3.19). Pure, so it is tested without a game.
  */
 public final class ShapePlan {
 	/**
@@ -111,6 +112,19 @@ public final class ShapePlan {
 			quads[i * 4 + 3] = span.y1();
 		}
 		return new Result(List.of(element(false, quads, null, box)), -1);
+	}
+
+	/**
+	 * A texture of sw×sh texels with its corner at GUI (x, y), a multiple of 1/scale (REQ-UI-31, T3.19): one textured element
+	 * showing the whole texture with one texel per screen pixel, its bounds the image's GUI rectangle rounded outward and cut
+	 * to {@code scissor}; null when nothing of it is left.
+	 */
+	public static Element image(Matrix3x2fc outer, float x, float y, int sw, int sh, int scale, int[] scissor) {
+		if (sw <= 0 || sh <= 0) {
+			return null;
+		}
+		int[] box = clip(bounds(outer, x, y, x + (float) sw / scale, y + (float) sh / scale), scissor);
+		return box == null ? null : element(true, new int[] {0, 0, sw, sh}, new float[] {0, 0, 1, 1}, box);
 	}
 
 	/**

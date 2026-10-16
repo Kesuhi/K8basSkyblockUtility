@@ -14,6 +14,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - Slider and toggle knobs, toggle switches, slider tracks, colour dots and the colour picker's marker are
   drawn as true circles and pill shapes, with evenly soft edges at every GUI scale, odd sizes included.
   The colour picker's marker was a square before.
+- The colour picker's wheel is drawn sharp at every GUI scale, with an evenly soft edge, instead of a
+  small image stretched to fit. The colours you pick are the same.
 
 ### Fixed
 

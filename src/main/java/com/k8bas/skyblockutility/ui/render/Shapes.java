@@ -21,8 +21,9 @@ import org.joml.Matrix3x2fStack;
  * screen pixels, so at GUI scale 3 or 4 they are as round as at scale 1. With "Smooth corners" on (REQ-UI-18,
  * T2.9d, R32) each corner is instead a tinted quad of an anti-aliased mask texture and the straight parts stay
  * fills; a shape a mask cannot draw keeps the fill-based corners. Discs, pills and one-cap pills always take their
- * round ends from a disc mask (REQ-UI-30, T3.18). Every mask is sampled linear and clamped to its edge (REQ-UI-31).
- * Written from SPEC REQ-UI-17, REQ-UI-18 and REQ-UI-30; no AlpakaAddons code (REQ-UI-24).
+ * round ends from a disc mask (REQ-UI-30, T3.18). A texture baked at its size times the GUI scale (the colour wheel,
+ * T3.19) is drawn 1:1 as one element by {@link #image}. Every mask and baked texture is sampled linear and clamped to its
+ * edge (REQ-UI-31). Written from SPEC REQ-UI-17, REQ-UI-18, REQ-UI-30 and REQ-UI-31; no AlpakaAddons code (REQ-UI-24).
  */
 public final class Shapes {
 	/** Corner radii in GUI pixels: cards, tabs, and small controls. */
@@ -83,9 +84,8 @@ public final class Shapes {
 		int scale = guiScale();
 		Matrix3x2fStack outer = graphics.pose();
 		ScreenRectangle scissor = graphics.scissorStack.peek();
-		int[] clip = scissor == null ? null : new int[] {scissor.left(), scissor.top(), scissor.right(), scissor.bottom()};
 		boolean smooth = ShapePlan.alwaysSmooth(w, h, radius, thickness, corners) || smooth();
-		ShapePlan.Drawn<Identifier> drawn = ShapePlan.resolve(outer, x, y, w, h, radius, thickness, corners, scale, smooth, clip,
+		ShapePlan.Drawn<Identifier> drawn = ShapePlan.resolve(outer, x, y, w, h, radius, thickness, corners, scale, smooth, clip(scissor),
 				key -> CornerTextures.mask(scale, key));
 		ShapePlan.Result plan = drawn.plan();
 		if (plan.elements().isEmpty()) {
@@ -93,24 +93,49 @@ public final class Shapes {
 		}
 		Matrix3x2f pose = new Matrix3x2f(outer).translate(x, y).scale(1F / scale, 1F / scale);
 		for (ShapePlan.Element element : plan.elements()) {
-			ScreenRectangle bounds = new ScreenRectangle(element.left(), element.top(), element.right() - element.left(),
-					element.bottom() - element.top());
 			graphics.guiRenderState.addGuiElement(element.textured()
 					? new ShapeRenderState(RenderPipelines.GUI_TEXTURED, texture(drawn.mask()), pose, element.quads(), element.uvs(), argb, scissor,
-							bounds)
-					: new ShapeRenderState(RenderPipelines.GUI, TextureSetup.noTexture(), pose, element.quads(), null, argb, scissor, bounds));
+							bounds(element))
+					: new ShapeRenderState(RenderPipelines.GUI, TextureSetup.noTexture(), pose, element.quads(), null, argb, scissor,
+							bounds(element)));
 		}
 	}
 
-	private static TextureSetup texture(Identifier mask) {
-		AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(mask);
+	/**
+	 * A texture of sw×sh texels at GUI (x, y), one texel per screen pixel, tinted {@code argb} and sampled linear, clamped
+	 * to its edge (REQ-UI-31): the colour wheel, baked at its size times the GUI scale (T3.19). One element with the image's
+	 * bounds rounded outward (REQ-UI-27), so what is drawn after it and overlaps it lands above it.
+	 */
+	public static void image(GuiGraphicsExtractor graphics, Identifier texture, float x, float y, int sw, int sh, int argb) {
+		int scale = guiScale();
+		Matrix3x2fStack outer = graphics.pose();
+		ScreenRectangle scissor = graphics.scissorStack.peek();
+		ShapePlan.Element element = ShapePlan.image(outer, x, y, sw, sh, scale, clip(scissor));
+		if (element != null) {
+			Matrix3x2f pose = new Matrix3x2f(outer).translate(x, y).scale(1F / scale, 1F / scale);
+			graphics.guiRenderState.addGuiElement(new ShapeRenderState(RenderPipelines.GUI_TEXTURED, texture(texture), pose, element.quads(),
+					element.uvs(), argb, scissor, bounds(element)));
+		}
+	}
+
+	/** The scissor as {left, top, right, bottom} for {@link ShapePlan}, or null for none. */
+	private static int[] clip(ScreenRectangle scissor) {
+		return scissor == null ? null : new int[] {scissor.left(), scissor.top(), scissor.right(), scissor.bottom()};
+	}
+
+	private static ScreenRectangle bounds(ShapePlan.Element element) {
+		return new ScreenRectangle(element.left(), element.top(), element.right() - element.left(), element.bottom() - element.top());
+	}
+
+	private static TextureSetup texture(Identifier id) {
+		AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(id);
 		return maskTexture(texture.getTextureView(), RenderSystem.getSamplerCache());
 	}
 
 	/**
-	 * A mask's texture setup (REQ-UI-31): its view with the sampler cache's shared linear, clamp-to-edge sampler, not the
-	 * texture's own nearest, repeating one (no texture subclass), so a mask at a fractional position or under the open
-	 * animation's scale resamples smoothly and never reads the opposite edge. Drawn 1:1, it reads each texel exactly.
+	 * A mask's or baked texture's setup (REQ-UI-31): its view with the sampler cache's shared linear, clamp-to-edge sampler,
+	 * not the texture's own nearest, repeating one (no texture subclass), so it resamples smoothly at a fractional position or
+	 * under the open animation's scale and never reads the opposite edge. Drawn 1:1, it reads each texel exactly.
 	 */
 	static TextureSetup maskTexture(GpuTextureView view, SamplerCache samplers) {
 		return TextureSetup.singleTexture(view, samplers.getSampler(AddressMode.CLAMP_TO_EDGE, AddressMode.CLAMP_TO_EDGE, FilterMode.LINEAR,
@@ -125,7 +150,8 @@ public final class Shapes {
 		return ConfigManager.general().smoothCorners();
 	}
 
-	private static int guiScale() {
+	/** The GUI scale shapes are drawn at: screen pixels per GUI pixel, at least 1. */
+	public static int guiScale() {
 		return Math.max(1, Minecraft.getInstance().getWindow().getGuiScale());
 	}
 }

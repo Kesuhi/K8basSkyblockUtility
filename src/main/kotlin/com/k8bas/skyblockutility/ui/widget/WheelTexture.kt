@@ -1,64 +1,90 @@
 package com.k8bas.skyblockutility.ui.widget
 
-import com.k8bas.skyblockutility.ui.color.Hsv
+import com.k8bas.skyblockutility.ui.color.WheelImage
+import com.k8bas.skyblockutility.ui.render.MaskCache
 import com.mojang.blaze3d.platform.NativeImage
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.Identifier
-import kotlin.math.abs
-import kotlin.math.atan2
-import kotlin.math.sqrt
+import org.slf4j.LoggerFactory
 
 /**
- * One shared hue/saturation wheel texture for the colour picker (REQ-UI-13), baked at the requested
- * brightness and rebaked only when that changes; the picked colour is a puck drawn on top. 128 px with
- * a soft rim, so it stays smooth at large GUI scales. Uploaded through the game's texture API (no
- * direct GL, REQ-PORT-12).
+ * The colour picker's hue/saturation wheel as a texture (REQ-UI-13, REQ-UI-31, T3.19): baked at the wheel's drawn size in
+ * screen pixels ([WheelImage]), so it is drawn 1:1, and rebaked when the GUI scale or the brightness changes, one at a time
+ * ([WheelCache]); the picked colour is a marker drawn on top. If it cannot be made, the wheel is drawn the 1.2.1 way, one
+ * 128 px texture scaled onto it (REQ-UI-47). Uploaded through the game's texture API (no direct GL, REQ-PORT-12).
  */
 internal object WheelTexture {
-	const val SIZE: Int = 128
+	/** The size of the 1.2.1 wheel's texture, which the fallback scales onto the wheel. */
+	const val LEGACY_SIZE: Int = 128
 
-	@JvmField
-	val ID: Identifier = Identifier.fromNamespaceAndPath("k8bas_skyblock_utility", "dynamic/ui_color_wheel")
-	private var texture: DynamicTexture? = null
-	private var bakedValue = -1f
+	private val LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility/ui")
+	private val scaled = WheelCache(GameTextures("ui_color_wheel_"), MaskCache.Logger { message, cause ->
+		LOGGER.warn("{}: the picker falls back to the 1.2.1 wheel for this session", message, cause)
+	})
+	private val fallback = WheelCache(GameTextures("ui_color_wheel_legacy_"), MaskCache.Logger { _, cause ->
+		LOGGER.warn("The 1.2.1 colour wheel's texture could not be made or rebaked either: the picker shows no wheel for this session", cause)
+	})
 
+	/**
+	 * For gametests: while set, [get] gives null as if the wheel could not be made, so the fallback is drawn (REQ-UI-47).
+	 * Cleared, the fallback's texture is freed again, so the client keeps one wheel texture as in play.
+	 */
 	@JvmStatic
-	fun ensureValue(value: Float) {
-		val baked = texture
-		if (baked == null) {
-			texture = DynamicTexture({ "k8bas colour wheel" }, build(value)).also { Minecraft.getInstance().textureManager.register(ID, it) }
-			bakedValue = value
-			return
-		}
-		if (abs(bakedValue - value) < 1f / 255f) {
-			return
-		}
-		baked.setPixels(build(value))
-		baked.upload()
-		bakedValue = value
-	}
-
-	private fun build(value: Float): NativeImage {
-		val image = NativeImage(SIZE, SIZE, false)
-		val radius = SIZE / 2f
-		for (y in 0 until SIZE) {
-			for (x in 0 until SIZE) {
-				val dx = x + 0.5f - radius
-				val dy = y + 0.5f - radius
-				val distance = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-				// Fully inside up to half a pixel from the rim, then fading over one pixel.
-				val coverage = maxOf(0f, minOf(1f, radius - distance + 0.5f))
-				if (coverage <= 0f) {
-					image.setPixelABGR(x, y, 0)
-					continue
-				}
-				val hue = (atan2(dy.toDouble(), dx.toDouble()) / (Math.PI * 2)).toFloat() + 0.5f
-				val rgb = Hsv(hue % 1f, minOf(1f, distance / radius), value).toRgb()
-				val alpha = Math.round(coverage * 255)
-				image.setPixelABGR(x, y, alpha shl 24 or ((rgb and 0xFF) shl 16) or ((rgb shr 8 and 0xFF) shl 8) or (rgb shr 16 and 0xFF))
+	var fallbackForTests: Boolean = false
+		set(value) {
+			field = value
+			if (!value) {
+				fallback.clear()
 			}
 		}
-		return image
+
+	/** The wheel, size × size screen pixels at this brightness; null if it cannot be made (draw [legacy] then). */
+	@JvmStatic
+	fun get(size: Int, value: Float): Identifier? = if (fallbackForTests) null else scaled.get(size, value)?.id
+
+	/** The 1.2.1 wheel, [LEGACY_SIZE] px at this brightness; null if that cannot be made either. */
+	@JvmStatic
+	fun legacy(value: Float): Identifier? = fallback.get(LEGACY_SIZE, value)?.id
+
+	private class Baked(val id: Identifier, val image: WheelImage, val texture: DynamicTexture)
+
+	/** Each size has its own id, so a new size is registered before the old one is released. */
+	private class GameTextures(private val prefix: String) : WheelCache.Textures<Baked> {
+		override fun make(size: Int, value: Float): Baked {
+			val image = WheelImage.of(size)
+			val id = Identifier.fromNamespaceAndPath("k8bas_skyblock_utility", "dynamic/$prefix$size")
+			val texture = DynamicTexture({ "k8bas colour wheel $size" }, size, size, false)
+			try {
+				fill(texture.pixels, image, value)
+				texture.upload()
+				Minecraft.getInstance().textureManager.register(id, texture)
+			} catch (e: RuntimeException) {
+				// Once made, close() frees the image and the GPU texture alike. A throw inside the game's constructor is its
+				// own failure, at most once a session, since the cache then stays failed.
+				texture.close()
+				throw e
+			}
+			return Baked(id, image, texture)
+		}
+
+		override fun refill(texture: Baked, value: Float) {
+			fill(texture.texture.pixels, texture.image, value)
+			texture.texture.upload()
+		}
+
+		override fun release(texture: Baked) {
+			Minecraft.getInstance().textureManager.release(texture.id)
+		}
+
+		private fun fill(pixels: NativeImage, image: WheelImage, value: Float) {
+			val size = image.size()
+			val argb = image.argb(value)
+			for (y in 0 until size) {
+				for (x in 0 until size) {
+					pixels.setPixel(x, y, argb[y * size + x])
+				}
+			}
+		}
 	}
 }

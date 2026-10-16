@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -181,6 +182,28 @@ class ShapeBoundsTest {
 	void nothingIsPlannedForAnEmptyShape() {
 		assertTrue(ShapePlan.of(new Matrix3x2f(), 0, 0, 0, 10, 4, 0, 2, true, null).elements().isEmpty());
 		assertTrue(ShapePlan.of(new Matrix3x2f(), 0, 0, 10, -1, 4, 0, 2, false, null).elements().isEmpty());
+		assertNull(ShapePlan.image(new Matrix3x2f(), 0, 0, 0, 10, 2, null));
+	}
+
+	/**
+	 * T3.19 (REQ-UI-31): a texture of sw×sh texels, the colour wheel's, is one textured element showing the whole texture with
+	 * one texel per screen pixel; its bounds are the image's GUI rectangle rounded outward, cut to the scissor (REQ-UI-27).
+	 */
+	@Test
+	void anImageIsDrawnOneTexelPerScreenPixel() {
+		for (int scale = 1; scale <= 4; scale++) {
+			Matrix3x2f outer = new Matrix3x2f().translate(0.5F, 0.25F);
+			int size = 80 * scale;
+			ShapePlan.Element image = ShapePlan.image(outer, 10, 20, size, size, scale, null);
+			assertNotNull(image, "scale " + scale);
+			assertTrue(image.textured());
+			assertArrayEquals(new int[] {0, 0, size, size}, image.quads(), "scale " + scale + ": its texels, one per screen pixel");
+			assertArrayEquals(new float[] {0, 0, 1, 1}, image.uvs(), "scale " + scale + ": the whole texture");
+			assertArrayEquals(new int[] {10, 20, 91, 101}, box(image), "scale " + scale + ": 10.5..90.5 x 20.25..100.25 rounded outward");
+			assertArrayEquals(new int[] {30, 20, 60, 50}, box(ShapePlan.image(outer, 10, 20, size, size, scale, new int[] {30, 0, 60, 50})),
+					"scale " + scale + ": cut to the scissor");
+			assertNull(ShapePlan.image(outer, 10, 20, size, size, scale, new int[] {200, 0, 300, 50}), "scale " + scale + ": outside it, nothing");
+		}
 	}
 
 	private static int[] box(ShapePlan.Element element) {
