@@ -153,6 +153,21 @@ public final class Shapes {
 	}
 
 	/**
+	 * A vertical pill from GUI (x0, y0) to (x1, y1), its edges snapped to the screen pixel grid and its ends round (REQ-UI-30):
+	 * a scrollbar's thumb or track (REQ-UI-36), smooth whatever the setting, as one GUI element.
+	 */
+	public static void pillV(GuiGraphicsExtractor graphics, float x0, float y0, float x1, float y1, int argb) {
+		int scale = guiScale();
+		int left = Math.round(x0 * scale);
+		int top = Math.round(y0 * scale);
+		int w = Math.round(x1 * scale) - left;
+		int h = Math.round(y1 * scale) - top;
+		if (w > 0 && h > 0) {
+			draw(graphics, (float) left / scale, (float) top / scale, w, h, (Math.min(w, h) + 1) / 2, 0, Corners.ALL, argb);
+		}
+	}
+
+	/**
 	 * A rounded shape, w×h with radius and thickness in screen pixels at GUI (x, y), as one GUI element, or two back to
 	 * back with identical bounds (REQ-UI-27, {@link ShapePlan}): its pieces in screen pixels under a 1/scale pose, so
 	 * corners are as round at GUI scale 4 as at 1. With "Smooth corners", and always for discs and pills, the round parts

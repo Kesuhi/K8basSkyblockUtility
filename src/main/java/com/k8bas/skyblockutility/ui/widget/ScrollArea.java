@@ -1,6 +1,5 @@
 package com.k8bas.skyblockutility.ui.widget;
 
-import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiClock;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -13,12 +12,13 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
  * offset of this moment, and {@link #drawnScroll} the one to draw at.
  */
 public final class ScrollArea extends Widget {
-	public static final int SCROLLBAR = 6;
+	public static final int SCROLLBAR = ScrollbarPainter.HIT_WIDTH;
 	public static final int WHEEL_STEP = 24;
 	public static final int FINE_STEP = 6;
 
 	private final VirtualRows rows = new VirtualRows(1);
 	private final SmoothScroll smooth = new SmoothScroll(UiClock.SOURCE);
+	private final ScrollbarPainter scrollbar = new ScrollbarPainter();
 	private int grab = -1;
 
 	/** The content's height, set by the layout each frame; the scroll is held to it (EC-UI-01). */
@@ -65,6 +65,12 @@ public final class ScrollArea extends Widget {
 		sync();
 	}
 
+	/** The thumb as laid out now (its offset from the region's top, and its length), for tests. */
+	public VirtualRows.Thumb thumb() {
+		sync();
+		return rows.thumb(height);
+	}
+
 	public int maxScroll() {
 		return rows.maxScroll();
 	}
@@ -100,7 +106,7 @@ public final class ScrollArea extends Widget {
 	}
 
 	private boolean onScrollbar(double mouseX) {
-		return rows.overflows() && mouseX >= x + width - SCROLLBAR;
+		return rows.overflows() && ScrollbarPainter.inHitArea(x, width, mouseX);
 	}
 
 	@Override
@@ -155,7 +161,6 @@ public final class ScrollArea extends Widget {
 		}
 		VirtualRows.Thumb thumb = rows.thumb(height);
 		boolean hot = grab >= 0 || contains(mouseX, mouseY) && onScrollbar(mouseX);
-		graphics.fill(x + width - SCROLLBAR + 2, y + thumb.offset() + 1, x + width - 1, y + thumb.offset() + thumb.length() - 1,
-				hot ? Theme.TEXT_SECONDARY : Theme.TEXT_DISABLED);
+		scrollbar.draw(graphics, x, y, width, height, thumb.offset(), thumb.length(), hot, argb -> argb);
 	}
 }

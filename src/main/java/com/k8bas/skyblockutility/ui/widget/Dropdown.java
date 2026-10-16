@@ -104,6 +104,14 @@ public final class Dropdown<E> extends Widget {
 				textColor);
 	}
 
+	/** For tests: the open list's scrollbar thumb, {top, length} in GUI px from the screen's top; null when closed or short. */
+	int[] openThumb() {
+		if (list == null || !list.open || !list.overflows()) {
+			return null;
+		}
+		return new int[] {Math.round(list.rows.y + list.thumbTop()), list.thumbLength()};
+	}
+
 	/** The open list, drawn over everything. */
 	private final class OpenList extends Overlay {
 		private final DropdownModel model = new DropdownModel(choice.values().size(), MAX_ROWS);
@@ -172,12 +180,43 @@ public final class Dropdown<E> extends Widget {
 			host.close(this);
 		}
 
+		private boolean overflows() {
+			return choice.values().size() > shownRows();
+		}
+
+		private int shownRows() {
+			return rows.height / ROW_HEIGHT;
+		}
+
+		/** The thumb's length in GUI px: the share of the entries in view, never shorter than a list's thumb. */
+		private int thumbLength() {
+			return Math.min(rows.height, Math.max(VirtualRows.MIN_THUMB, rows.height * shownRows() / choice.values().size()));
+		}
+
+		/** The thumb's top from the list's, in GUI px, where the list is shown now. */
+		private float thumbTop() {
+			return (rows.height - thumbLength()) * model.shownRows() / Math.max(1, choice.values().size() - shownRows());
+		}
+
 		/** The rows: a click picks, the wheel scrolls, the mouse highlights. */
 		private final class Rows extends Widget {
+			private final ScrollbarPainter scrollbar = new ScrollbarPainter();
+			/** While the thumb is dragged: where it was grabbed, from its top; else -1. */
+			private int grab = -1;
+
 			@Override
 			public boolean press(double mouseX, double mouseY, int button) {
+				grab = -1;
 				if (button != 0 || !contains(mouseX, mouseY)) {
 					return false;
+				}
+				// The scrollbar (REQ-UI-36): the thumb is dragged, a press on the track puts its middle there.
+				if (overflows() && ScrollbarPainter.inHitArea(x, width, mouseX)) {
+					int along = (int) Math.floor(mouseY - y);
+					int top = Math.round(thumbTop());
+					grab = along >= top && along < top + thumbLength() ? along - top : thumbLength() / 2;
+					dragTo(along);
+					return true;
 				}
 				int index = model.rowAt(mouseY - y, ROW_HEIGHT);
 				if (index >= 0) {
@@ -187,8 +226,30 @@ public final class Dropdown<E> extends Widget {
 			}
 
 			@Override
+			public void drag(double mouseX, double mouseY) {
+				if (grab >= 0) {
+					dragTo((int) Math.floor(mouseY - y));
+				}
+			}
+
+			@Override
+			public void release(double mouseX, double mouseY) {
+				grab = -1;
+			}
+
+			/** The list at the row whose thumb top lies at {@code along} less the grab, in whole rows. */
+			private void dragTo(int along) {
+				int track = rows.height - thumbLength();
+				int range = choice.values().size() - shownRows();
+				model.scrollTo(track <= 0 ? 0 : Math.round((float) (along - grab) * range / track));
+			}
+
+			@Override
 			public boolean scroll(double mouseX, double mouseY, int notches, boolean fine) {
-				model.scrollBy(-notches);
+				// While the thumb is dragged it follows the pointer, and the wheel is ignored (EC-UI-25).
+				if (grab < 0) {
+					model.scrollBy(-notches);
+				}
 				return true;
 			}
 
@@ -208,7 +269,6 @@ public final class Dropdown<E> extends Widget {
 				Theme theme = Theme.current();
 				Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.CARD);
 				E current = choice.binding().get();
-				int shownRows = height / ROW_HEIGHT;
 				// The row fills meet the hairline outline flush (T3.22): one hairline in from the box's edges, 1 GUI px between rows.
 				float line = Shapes.hairlineGui(scale);
 				float left = x + line;
@@ -236,11 +296,10 @@ public final class Dropdown<E> extends Widget {
 					}
 				}
 				Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.SEPARATOR);
-				if (count > shownRows) {
-					// A thin scroll thumb on the right.
-					int thumbHeight = Math.max(6, height * shownRows / count);
-					float thumbY = y + (height - thumbHeight) * model.shownRows() / Math.max(1, count - shownRows);
-					Shapes.fill(graphics, x + width - 3, thumbY + 1, right, thumbY + thumbHeight - 1, Theme.TEXT_DISABLED);
+				if (overflows()) {
+					// The kit's scrollbar (REQ-UI-36), wide while the pointer is over it or its thumb is dragged.
+					boolean hot = grab >= 0 || contains(mouseX, mouseY) && ScrollbarPainter.inHitArea(x, width, mouseX);
+					scrollbar.draw(graphics, x, y, width, height, thumbTop(), thumbLength(), hot, argb -> argb);
 				}
 			}
 

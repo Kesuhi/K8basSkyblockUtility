@@ -38,6 +38,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   where the mouse wheel or the keyboard sends them instead of jumping a notch at a time. Dragging the
   scrollbar still follows the mouse at once, and a click during a glide stops it. With "Animations" off
   they jump as before.
+- Scrollbars are slim rounded bars set in from the edge, and widen over a faint track when you point at
+  or drag them. The area you can grab is as wide as before.
 
 ### Fixed
 

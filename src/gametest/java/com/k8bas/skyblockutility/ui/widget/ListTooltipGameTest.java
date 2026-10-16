@@ -34,6 +34,7 @@ public class ListTooltipGameTest implements FabricClientGameTest {
 			context.setScreen(ListTooltipTestScreen::new);
 			context.waitForScreen(ListTooltipTestScreen.class);
 			tooltipAtTheCorner(context);
+			scrollbarStates(context);
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
 			longList(context);
@@ -85,6 +86,45 @@ public class ListTooltipGameTest implements FabricClientGameTest {
 		TooltipLayout.Box label = context.computeOnClient(client -> screen(client).tooltip());
 		check(label != null && label.lines().equals(java.util.List.of("The whole label")), "a hovered label shows its tooltip: " + label);
 		LOGGER.info("tooltip at the corner:{}", log);
+	}
+
+	/** AC-UI-37 [C] (REQ-UI-36, T3.27): the list's scrollbar idle, hovered and dragged at GUI scales 1-4. */
+	private static void scrollbarStates(ClientGameTestContext context) {
+		for (int scale = 1; scale <= 4; scale++) {
+			int s = scale;
+			context.runOnClient(client -> client.options.guiScale().set(s));
+			context.waitTicks(3);
+			for (String state : java.util.List.of("idle", "hovered", "dragged")) {
+				if (state.equals("idle")) {
+					context.getInput().setCursorPos(1100, 900);
+					context.waitTicks(2);
+				} else {
+					move(context, ListTooltipTestScreen::thumbCentre);
+				}
+				if (state.equals("dragged")) {
+					// Held on the thumb, the pointer moved off it sideways: still dragged, the scroll where it was.
+					context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+					context.waitTick();
+					move(context, screen -> new int[] {screen.visibleRow(0)[0], screen.thumbCentre()[1]});
+				}
+				java.awt.image.BufferedImage shot = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(
+						context.takeScreenshot("t3.27-list-" + state + "-scale-" + s));
+				int[] g = context.computeOnClient(client -> {
+					VirtualList list = screen(client).list;
+					VirtualRows.Thumb thumb = list.rows().thumb(list.height);
+					return new int[] {list.x + list.width, list.y, list.y + list.height, list.y + thumb.offset(), thumb.length()};
+				});
+				if (state.equals("dragged")) {
+					context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+					context.waitTick();
+				}
+				String problem = ScrollbarProbe.check(shot, "the list's " + state + " scrollbar", s, g[0], g[1], g[2], g[3], g[4], !state.equals("idle"));
+				check(problem.isEmpty(), problem);
+			}
+		}
+		context.runOnClient(client -> screen(client).list.setScroll(0));
+		context.getInput().setCursorPos(1100, 900);
+		context.waitTicks(2);
 	}
 
 	private static void longList(ClientGameTestContext context) {

@@ -74,6 +74,7 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			context.waitTicks(3);
 			listOutlineIsAHairline(context);
 			dropdownIcons(context);
+			dropdownScrollbar(context);
 			dropdowns(context);
 			keybinds(context);
 			colourPicker(context);
@@ -239,6 +240,75 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
 		}
+	}
+
+	/**
+	 * AC-UI-37 [C] (REQ-UI-36, T3.27): the open long dropdown's scrollbar (12 entries, 8 in view) at GUI scales 1-4: idle,
+	 * hovered, and dragged (held on the thumb, the pointer moved off it sideways), and the drag scrolls the list.
+	 */
+	private static void dropdownScrollbar(ClientGameTestContext context) {
+		try {
+			for (int scale = 1; scale <= 4; scale++) {
+				int s = scale;
+				context.runOnClient(client -> client.options.guiScale().set(s));
+				context.waitTicks(3);
+				int[] box = context.computeOnClient(client -> {
+					Dropdown<String> dropdown = screen(client).longDropdown;
+					return windowPoint(dropdown.x + dropdown.width / 2, dropdown.y + dropdown.height / 2);
+				});
+				context.getInput().setCursorPos(box[0], box[1]);
+				context.waitTicks(2);
+				context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+				context.waitTicks(2);
+				check(context.computeOnClient(client -> screen(client).listOpen()), "scale " + s + ": the long list opened");
+				for (String state : java.util.List.of("idle", "hovered", "dragged")) {
+					int[] g = context.computeOnClient(client -> {
+						Widget rows = screen(client).openListWidget();
+						int[] thumb = screen(client).longDropdown.openThumb();
+						return new int[] {rows.x + rows.width, rows.y, rows.y + rows.height, thumb[0], thumb[1], rows.x};
+					});
+					int[] at = context.computeOnClient(client -> state.equals("idle") ? windowPoint(g[5] + 20, g[1] + 3 * Dropdown.ROW_HEIGHT)
+							: windowPoint(g[0] - 3, g[3] + g[4] / 2));
+					context.getInput().setCursorPos(at[0], at[1]);
+					context.waitTicks(2);
+					if (state.equals("dragged")) {
+						context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+						context.waitTick();
+						check(context.computeOnClient(client -> screen(client).listOpen()), "scale " + s + ": a press on the thumb grabs it and picks no entry");
+						int[] off = context.computeOnClient(client -> windowPoint(g[5] + 20, g[3] + g[4] / 2));
+						context.getInput().setCursorPos(off[0], off[1]);
+						context.waitTicks(2);
+					}
+					java.awt.image.BufferedImage shot = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(
+							context.takeScreenshot("t3.27-dropdown-" + state + "-scale-" + s));
+					String problem = ScrollbarProbe.check(shot, "the dropdown list's " + state + " scrollbar", s, g[0], g[1], g[2], g[3], g[4],
+							!state.equals("idle"));
+					if (state.equals("dragged")) {
+						// Down by half the list's height: the list follows the thumb.
+						int[] down = context.computeOnClient(client -> windowPoint(g[5] + 20, g[3] + g[4] / 2 + (g[2] - g[1]) / 2));
+						context.getInput().setCursorPos(down[0], down[1]);
+						context.waitTicks(2);
+						int top = context.computeOnClient(client -> screen(client).longDropdown.openThumb()[0]);
+						context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+						context.waitTicks(2);
+						check(top > g[3], "scale " + s + ": dragging the thumb scrolls the list: its top " + g[3] + " -> " + top);
+						check(context.computeOnClient(client -> screen(client).listOpen()), "scale " + s + ": and leaves it open");
+					}
+					check(problem.isEmpty(), problem);
+				}
+				context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+				context.waitTicks(2);
+			}
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(2));
+			context.waitTicks(3);
+		}
+	}
+
+	private static int[] windowPoint(int guiX, int guiY) {
+		var window = Minecraft.getInstance().getWindow();
+		return new int[] {(int) Math.round((guiX + 0.5) * window.getScreenWidth() / window.getGuiScaledWidth()),
+				(int) Math.round((guiY + 0.5) * window.getScreenHeight() / window.getGuiScaledHeight())};
 	}
 
 	/**

@@ -89,6 +89,8 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			search(context);
 			saveModel(context);
 			generalCategory(context);
+			// Last: it opens a settings screen of its own and closes it.
+			contentScrollbar(context);
 		} finally {
 			context.runOnClient(client -> {
 				modules.restore();
@@ -818,6 +820,56 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		move(context, gui);
 		context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
 		context.waitTicks(2);
+	}
+
+	/** AC-UI-37 [C] (REQ-UI-36, T3.27): the content area's scrollbar idle and hovered at GUI scales 1-4, on the Waypoints page. */
+	private static void contentScrollbar(ClientGameTestContext context) {
+		int before = context.computeOnClient(client -> client.options.guiScale().get());
+		// Big enough for GUI scale 4 (the steps before leave a smaller window, where the game caps the scale).
+		context.getInput().resizeWindow(1280, 960);
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		try {
+			context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+			for (int scale = 1; scale <= 4; scale++) {
+				int s = scale;
+				context.runOnClient(client -> client.options.guiScale().set(s));
+				context.waitTicks(3);
+				check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == s, "GUI scale " + s + " applies");
+				for (String state : java.util.List.of("idle", "hovered", "dragged")) {
+					int[] g = context.computeOnClient(client -> {
+						ConfigScreen screen = screen(client);
+						ConfigLayout.Rect content = screen.frame().content();
+						var thumb = screen.scrollArea().thumb();
+						return new int[] {content.right(), content.y(), content.bottom(), content.y() + thumb.offset(), thumb.length()};
+					});
+					int[] at = state.equals("idle") ? new int[] {2, 2} : context.computeOnClient(client -> window(g[0] - 3, g[3] + g[4] / 2));
+					context.getInput().setCursorPos(at[0], at[1]);
+					context.waitTicks(2);
+					if (state.equals("dragged")) {
+						// Held on the thumb, the pointer moved off it sideways onto the page's padding: still dragged.
+						context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+						context.waitTick();
+						int[] off = context.computeOnClient(client -> window(g[0] - 12, g[3] + g[4] / 2));
+						context.getInput().setCursorPos(off[0], off[1]);
+						context.waitTicks(2);
+					}
+					java.awt.image.BufferedImage shot = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(
+							context.takeScreenshot("t3.27-content-" + state + "-scale-" + s));
+					if (state.equals("dragged")) {
+						context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+						context.waitTick();
+					}
+					String problem = com.k8bas.skyblockutility.ui.widget.ScrollbarProbe.check(shot, "the content area's " + state + " scrollbar", s, g[0],
+							g[1], g[2], g[3], g[4], !state.equals("idle"));
+					check(problem.isEmpty(), problem);
+				}
+			}
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(before));
+			context.getInput().setCursorPos(2, 2);
+			context.setScreen(() -> null);
+		}
 	}
 
 	private static int[] window(int guiX, int guiY) {

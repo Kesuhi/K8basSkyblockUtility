@@ -20,7 +20,7 @@ import java.util.function.IntSupplier;
  * moment, which clicks meet, and the rest is drawn as a translation on the physical-pixel grid.
  */
 public final class VirtualList extends Widget {
-	static final int SCROLLBAR = 6;
+	static final int SCROLLBAR = ScrollbarPainter.HIT_WIDTH;
 	private static final int WHEEL_ROWS = 3;
 
 	/** Draws one row in its rectangle (clipped to the list). */
@@ -31,6 +31,7 @@ public final class VirtualList extends Widget {
 
 	private final VirtualRows rows;
 	private final SmoothScroll smooth = new SmoothScroll(UiClock.SOURCE);
+	private final ScrollbarPainter scrollbar = new ScrollbarPainter();
 	private final IntSupplier count;
 	private final RowPainter painter;
 	private final IntConsumer onClick;
@@ -169,7 +170,7 @@ public final class VirtualList extends Widget {
 	}
 
 	private boolean onScrollbar(double mouseX) {
-		return rows.overflows() && mouseX >= x + width - SCROLLBAR;
+		return rows.overflows() && ScrollbarPainter.inHitArea(x, width, mouseX);
 	}
 
 	/** The row under the mouse, or -1. */
@@ -280,9 +281,8 @@ public final class VirtualList extends Widget {
 			}
 			if (rows.overflows()) {
 				VirtualRows.Thumb thumb = rows.thumb(height);
-				boolean hot = grab >= 0 || onScrollbar(mouseX) && contains(mouseX, mouseY);
-				graphics.fill(x + width - SCROLLBAR + 2, y + thumb.offset() + 1, x + width - 1, y + thumb.offset() + thumb.length() - 1,
-						faded(hot ? Theme.TEXT_SECONDARY : Theme.TEXT_DISABLED));
+				boolean hot = enabled && (grab >= 0 || onScrollbar(mouseX) && contains(mouseX, mouseY));
+				scrollbar.draw(graphics, x, y, width, height, thumb.offset(), thumb.length(), hot, this::faded);
 			}
 		}
 	}

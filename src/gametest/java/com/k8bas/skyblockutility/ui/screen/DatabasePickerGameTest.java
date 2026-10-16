@@ -183,6 +183,40 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		context.takeScreenshot("t2.5c-npc-picker-end");
 		int last = context.computeOnClient(client -> picker(client).list().rows().visible().end() - 1);
 		check(last == total - 1, "scrolled to the last row: " + last + " of " + (total - 1));
+		// AC-UI-37 [C] (T3.27): its scrollbar idle (the pointer over the rows), then hovered, at GUI scales 1-4.
+		for (int scale = 1; scale <= 4; scale++) {
+			int s = scale;
+			context.runOnClient(client -> client.options.guiScale().set(s));
+			context.waitTicks(3);
+			context.getInput().setCursorPos(window[0], window[1]);
+			context.waitTicks(2);
+			for (boolean hot : new boolean[] {false, true}) {
+				int[] g = context.computeOnClient(client -> {
+					var list = picker(client).list();
+					var thumb = list.rows().thumb(list.height());
+					return new int[] {list.x() + list.width(), list.y(), list.y() + list.height(), list.y() + thumb.offset(), thumb.length()};
+				});
+				if (hot) {
+					int[] at = context.computeOnClient(client -> window(g[0] - 2, g[3] + g[4] / 2));
+					context.getInput().setCursorPos(at[0], at[1]);
+					context.waitTicks(2);
+				}
+				java.awt.image.BufferedImage shot = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(
+						context.takeScreenshot("t3.27-picker-" + (hot ? "hovered" : "idle") + "-scale-" + s));
+				check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == s, "GUI scale " + s + " applies");
+				String problem = com.k8bas.skyblockutility.ui.widget.ScrollbarProbe.check(shot, "the picker's " + (hot ? "hovered" : "idle") + " scrollbar",
+						s, g[0], g[1], g[2], g[3], g[4], hot);
+				check(problem.isEmpty(), problem);
+			}
+		}
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		context.waitTicks(3);
+		int[] back = context.computeOnClient(client -> {
+			int[] centre = centreOf(picker(client).list());
+			return window(centre[0], centre[1]);
+		});
+		context.getInput().setCursorPos(back[0], back[1]);
+		context.waitTicks(2);
 		// The first Esc leaves the search field (REQ-UI-22), the second closes the picker.
 		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 		context.waitTicks(2);
@@ -235,7 +269,7 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 			for (int i = 0; i < rows.size(); i++) {
 				if (rows.get(i).entry() != null && rows.get(i).label().equals(name)) {
 					Widget list = picker.list();
-					int[] add = DatabasePickerOverlay.addButton(list.width() - (picker.list().rows().overflows() ? 6 : 0), DatabasePickerOverlay.ROW_HEIGHT);
+					int[] add = DatabasePickerOverlay.addButton(list.width() - (picker.list().rows().overflows() ? com.k8bas.skyblockutility.ui.widget.ScrollbarPainter.HIT_WIDTH : 0), DatabasePickerOverlay.ROW_HEIGHT);
 					return new int[] {list.x() + add[0] + add[2] / 2, list.y() + picker.list().rows().rowTop(i) + add[1] + add[3] / 2};
 				}
 			}

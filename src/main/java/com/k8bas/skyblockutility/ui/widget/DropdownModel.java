@@ -61,6 +61,12 @@ public final class DropdownModel {
 		smooth.glideTo(scroll);
 	}
 
+	/** Shows the list from row {@code rows} at once: its scrollbar's thumb dragged or its track pressed. */
+	public void scrollTo(int rows) {
+		scroll = Math.max(0, Math.min(maxScroll(), rows));
+		smooth.jumpTo(scroll);
+	}
+
 	/** The entry at a y inside the list, or -1: where it is laid out now, at whole GUI px. */
 	public int rowAt(double localY, int rowHeight) {
 		if (localY < 0 || localY >= visible * rowHeight) {

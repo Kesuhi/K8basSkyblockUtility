@@ -179,7 +179,8 @@ class VirtualListTest {
 		list.setBounds(10, 20, 160, 200);
 		list.rows().setScroll(9);
 		list.press(15, 20 + 18 + 4, 0);
-		assertEquals(List.of("1 at 5.0,13.0 of 154x18"), clicks, "the second row on screen (scrolled half a row), without the scroll bar's width");
+		// The row is the list less the scrollbar's hit area, which takes in its widened thumb (T3.27: 160 - 7).
+		assertEquals(List.of("1 at 5.0,13.0 of 153x18"), clicks, "the second row on screen (scrolled half a row), without the scroll bar's width");
 	}
 
 	@Test
