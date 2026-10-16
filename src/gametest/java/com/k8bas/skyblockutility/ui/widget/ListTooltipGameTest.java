@@ -283,6 +283,23 @@ public class ListTooltipGameTest implements FabricClientGameTest {
 		float full = context.computeOnClient(client -> screen(client).tooltipAlpha());
 		check(full == 1F, "opaque at 500 ms: " + full);
 		LOGGER.info("tooltip fade: {} at 400 ms, {} at 450, {} at 500", start, half, full);
+		// AC-UI-46 (REQ-UI-45, T3.35): a list row's hover highlight eases in, as a card's: its colour 75 ms in lies between its own
+		// and the hover colour, and is the hover colour at 150 ms.
+		int[] plain = context.computeOnClient(client -> {
+			VirtualList list = screen(client).list;
+			return new int[] {ListTooltipTestScreen.windowX(list.x + 120), ListTooltipTestScreen.windowY(list.y + 2)};
+		});
+		move(context, screen -> screen.visibleRow(0));
+		int atOnce = pixel(context.takeScreenshot("t3.35-row-hover-at-0ms"), plain);
+		rest(context, 75);
+		int midway = pixel(context.takeScreenshot("t3.35-row-hover-at-75ms"), plain);
+		rest(context, 75);
+		int hovered = pixel(context.takeScreenshot("t3.35-row-hover-at-150ms"), plain);
+		LOGGER.info("row hover: {} at 0 ms, {} at 75, {} at 150", Integer.toHexString(atOnce), Integer.toHexString(midway), Integer.toHexString(hovered));
+		check(atOnce == (Theme.CARD & 0xFFFFFF), "the row's own colour as the pointer arrives: " + Integer.toHexString(atOnce));
+		check(midway != atOnce && midway != (Theme.CARD_HOVER & 0xFFFFFF) && luminance(midway) > luminance(atOnce)
+				&& luminance(midway) < luminance(Theme.CARD_HOVER & 0xFFFFFF), "75 ms in, between: " + Integer.toHexString(midway));
+		check(hovered == (Theme.CARD_HOVER & 0xFFFFFF), "the hover colour at 150 ms: " + Integer.toHexString(hovered));
 	}
 
 	/**

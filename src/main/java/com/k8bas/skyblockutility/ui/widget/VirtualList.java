@@ -26,7 +26,15 @@ public final class VirtualList extends Widget {
 	/** Draws one row in its rectangle (clipped to the list). */
 	@FunctionalInterface
 	public interface RowPainter {
-		void draw(GuiGraphicsExtractor graphics, Font font, int index, int x, int y, int width, int height, boolean hovered);
+		/** @param hover how hovered the row looks, 0 to 1, eased in and out (REQ-UI-45) */
+		void draw(GuiGraphicsExtractor graphics, Font font, int index, int x, int y, int width, int height, float hover);
+	}
+
+	/** Drawn under the rows and scrolled with them (REQ-UI-45: the sidebar's sliding tab indicator). */
+	@FunctionalInterface
+	public interface Underlay {
+		/** @param firstRowTop where the first row's top is now, above the list once it is scrolled */
+		void draw(GuiGraphicsExtractor graphics, int x, int firstRowTop, int rowWidth, int rowHeight);
 	}
 
 	private final VirtualRows rows;
@@ -43,6 +51,9 @@ public final class VirtualList extends Widget {
 	/** While the thumb is dragged: where it was grabbed, from its top; else -1. */
 	private int grab = -1;
 	private RowCursor rowCursor;
+	/** How hovered each row looks, eased (REQ-UI-45). */
+	private final RowHover hover = new RowHover(UiClock.SOURCE);
+	private Underlay underlay;
 	private VirtualRows.Range lastDrawn = new VirtualRows.Range(0, 0);
 
 	public VirtualList(int rowHeight, IntSupplier count, RowPainter painter, IntConsumer onClick) {
@@ -126,6 +137,16 @@ public final class VirtualList extends Widget {
 	/** The shape over each row, for rows only parts of which a click reaches; without one every row shows the hand. */
 	public void setRowCursor(RowCursor rowCursor) {
 		this.rowCursor = rowCursor;
+	}
+
+	/** No row looks hovered, at once: for a list whose rows were rebuilt, so an index may be another row now. */
+	public void resetHover() {
+		hover.reset();
+	}
+
+	/** Draws {@code underlay} under the rows each frame, or nothing for null. */
+	public void setUnderlay(Underlay underlay) {
+		this.underlay = underlay;
 	}
 
 	/** Keyboard steps through the list (REQ-UI-18, T2.9b): true if the key was used. */
@@ -313,6 +334,7 @@ public final class VirtualList extends Widget {
 		smooth.setScale(scale);
 		sync();
 		int hoveredRow = enabled && grab < 0 ? rowAt(mouseX, mouseY) : -1;
+		hover.hover(hoveredRow);
 		int rowWidth = rowWidth();
 		try (Clip clip = Clip.push(graphics, x, y, width, height)) {
 			if (!clip.visible()) {
@@ -328,8 +350,11 @@ public final class VirtualList extends Widget {
 			graphics.pose().pushMatrix();
 			try {
 				graphics.pose().translate(0F, shift);
+				if (underlay != null) {
+					underlay.draw(graphics, x, y + rows.rowTop(0), rowWidth, rows.rowHeight());
+				}
 				for (int index = first; index < end; index++) {
-					painter.draw(graphics, font, index, x, y + rows.rowTop(index), rowWidth, rows.rowHeight(), index == hoveredRow);
+					painter.draw(graphics, font, index, x, y + rows.rowTop(index), rowWidth, rows.rowHeight(), hover.amount(index));
 				}
 			} finally {
 				graphics.pose().popMatrix();

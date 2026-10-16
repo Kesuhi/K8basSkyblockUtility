@@ -114,6 +114,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private int pendingScroll = -1;
 	/** The open scale and the category slide-and-fade (REQ-UI-18, T2.9). */
 	private final ConfigMotion motion;
+	/** Where the selected tab's highlight is, sliding on a switch (REQ-UI-45). */
+	private final TabIndicator tabIndicator;
 	private int plainBackground;
 	/** The scroll the page was laid out at this frame: the real scroll less the slide, so text and cards move together. */
 	private int pageScroll;
@@ -147,6 +149,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		super(Component.literal(NAME));
 		setTime(time);
 		this.motion = new ConfigMotion(time::millis, time::motion);
+		this.tabIndicator = new TabIndicator(time);
 		this.parent = parent;
 		this.cards = cards;
 		this.categories = ConfigLayout.categories(cards);
@@ -168,6 +171,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		// One keyboard stop for the sidebar: Up/Down/Home/End pick the category at once, the query stays (T2.9b).
 		tabs.setKeys(this::tabKey);
 		tabs.setFocusRow(() -> view.categories().indexOf(selected));
+		tabs.setUnderlay(this::drawTabIndicator);
 		clear = add(new ClearButton(() -> !search.model().text().isEmpty(), () -> {
 			UiSound.click();
 			search.model().setText("");
@@ -225,6 +229,18 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			focus(null);
 		}
 		Category previous = selected;
+		// The selected tab's highlight slides to the new one from the old one's place in the tabs shown now (a search may have
+		// moved it); the first, or after the old one left the tabs, it is there at once (REQ-UI-45).
+		int tab = view.categories().indexOf(category);
+		int from = previous == null ? -1 : view.categories().indexOf(previous);
+		if (from < 0) {
+			tabIndicator.jumpTo(tab);
+		} else {
+			if (tabIndicator.target() != from) {
+				tabIndicator.jumpTo(from);
+			}
+			tabIndicator.slideTo(tab);
+		}
 		// A control of the page being left loses the keyboard focus; the sidebar and the search box keep it.
 		Widget focused = navFocus();
 		if (focused != null && focused != tabs && focused != search) {
@@ -499,16 +515,34 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		}
 	}
 
-	private void drawTab(GuiGraphicsExtractor graphics, Font font, int row, int x, int y, int w, int h, boolean hovered) {
+	/**
+	 * The selected tab's highlight and its 2 px accent bar, under the tabs: where the indicator is, sliding to a newly selected
+	 * tab (REQ-UI-45), on the physical-pixel grid (REQ-UI-34). A search that moves the selected tab moves it at once.
+	 */
+	private void drawTabIndicator(GuiGraphicsExtractor graphics, int x, int firstRowTop, int rowWidth, int rowHeight) {
+		int tab = view.categories().indexOf(selected);
+		if (tab < 0) {
+			return;
+		}
+		if (tab != tabIndicator.target()) {
+			tabIndicator.jumpTo(tab);
+		}
+		Theme theme = Theme.current();
+		float top = tabIndicator.drawnTop(firstRowTop, rowHeight, Shapes.guiScale());
+		Shapes.roundedRect(graphics, x, top, rowWidth, ConfigLayout.TAB, Shapes.RADIUS_CONTROL, theme.accentBackground());
+		Shapes.fill(graphics, x, top + 4, x + 2, top + ConfigLayout.TAB - 4, theme.accent());
+	}
+
+	private void drawTab(GuiGraphicsExtractor graphics, Font font, int row, int x, int y, int w, int h, float hover) {
 		Category category = view.categories().get(row);
 		boolean current = category == selected;
 		Theme theme = Theme.current();
 		int tabHeight = ConfigLayout.TAB;
-		if (current) {
-			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_CONTROL, theme.accentBackground());
-			graphics.fill(x, y + 4, x + 2, y + tabHeight - 4, theme.accent());
-		} else if (hovered) {
-			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_CONTROL, Theme.CARD_HOVER);
+		// The selected tab's highlight is the indicator's; another tab's hover eases in and out (REQ-UI-45), faded where the
+		// sliding indicator passes over it, so the hover never covers it.
+		float away = Math.min(1F, Math.abs(tabIndicator.position() - row));
+		if (!current && hover * away > 0F) {
+			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_CONTROL, ColorMath.withAlpha(Math.round(255 * hover * away), Theme.CARD_HOVER));
 		}
 		// The number of options, or of hits while searching (REQ-UI-08).
 		String count = Integer.toString(view.badge(category));
@@ -740,6 +774,16 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	}
 
 	/** For gametests: the motion, to step through or check. */
+	/** Puts the search box's text through the search, as typing does, for tests. */
+	void applyQueryForTests() {
+		applyQuery(search.model().text());
+	}
+
+	/** Where the selected tab's highlight is now, in tabs from the first, for tests. */
+	float tabIndicatorPosition() {
+		return tabIndicator.position();
+	}
+
 	ConfigMotion motion() {
 		return motion;
 	}

@@ -87,6 +87,8 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			clock.addAndGet(1_000);
 			context.waitTicks(2);
 			check(!context.computeOnClient(client -> screen(client).motion().animating()), "settled");
+			tabIndicatorSlides(context, clock);
+			listHoversEase(context, clock);
 			theWheelGlides(context, clock, time);
 			overlaysFadeIn(context, clock);
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
@@ -898,6 +900,172 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		float scale = screen.motion().scale();
 		return new int[] {(int) Math.floor(ScaleAbout.toScreen(x + 0.5, screen.width / 2.0, scale)),
 				(int) Math.floor(ScaleAbout.toScreen(y + 0.5, screen.height / 2.0, scale))};
+	}
+
+	/**
+	 * AC-UI-46 [C] (REQ-UI-45, T3.35): a tab switch at GUI scale 2 as a screenshot sequence on the test clock: the selected tab's
+	 * accent bar is on the old tab at the switch, strictly between the two 75 ms later, and on the new tab at 150 ms.
+	 */
+	private static void tabIndicatorSlides(ClientGameTestContext context, AtomicLong clock) {
+		check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == 2, "at GUI scale 2");
+		int[] tabs = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			List<Category> categories = screen.view().categories();
+			return new int[] {screen.tabs().x(), screen.tabs().y(), categories.indexOf(screen.selected()), categories.size() - 1,
+					ConfigLayout.TAB + ConfigLayout.TAB_GAP, screen.tabs().y() + screen.tabs().height()};
+		});
+		check(tabs[2] >= 0 && tabs[3] - tabs[2] >= 2 && context.computeOnClient(client -> screen(client).tabs().rows().scroll()) == 0,
+				"a switch across at least two tabs, the sidebar unscrolled: " + java.util.Arrays.toString(tabs));
+		int accent = Theme.current().accent() & 0xFFFFFF;
+		int fromTop = (tabs[1] + tabs[2] * tabs[4] + 4) * 2;
+		int toTop = (tabs[1] + tabs[3] * tabs[4] + 4) * 2;
+		context.runOnClient(client -> screen(client).select(screen(client).view().categories().get(tabs[3])));
+		context.waitTicks(2);
+		int atSwitch = accentBar(context.takeScreenshot("t3.35-tab-switch-at-0ms"), tabs, accent, "at the switch");
+		clock.addAndGet(75);
+		context.waitTicks(2);
+		int midway = accentBar(context.takeScreenshot("t3.35-tab-switch-at-75ms"), tabs, accent, "75 ms in");
+		clock.addAndGet(75);
+		context.waitTicks(2);
+		int arrived = accentBar(context.takeScreenshot("t3.35-tab-switch-at-150ms"), tabs, accent, "at 150 ms");
+		LOGGER.info("tab indicator, physical row of its accent bar's top: {} at the switch, {} at 75 ms, {} at 150 ms (tabs at {} and {})", atSwitch, midway,
+				arrived, fromTop, toTop);
+		check(atSwitch == fromTop, "at the switch, on the old tab: " + atSwitch + ", not " + fromTop);
+		check(midway > fromTop && midway < toTop, "75 ms later, strictly between " + fromTop + " and " + toTop + ": " + midway);
+		check(arrived == toTop, "at 150 ms, on the new tab: " + arrived + ", not " + toTop);
+		// The pointer on the selected tab: its hover never covers the highlight's accent bar.
+		int[] selectedTab = context.computeOnClient(client -> window(tabs[0] + 30, tabs[1] + tabs[3] * tabs[4] + ConfigLayout.TAB / 2));
+		context.getInput().setCursorPos(selectedTab[0], selectedTab[1]);
+		context.waitTicks(2);
+		clock.addAndGet(150);
+		context.waitTicks(2);
+		check(accentBar(context.takeScreenshot("t3.35-tab-hovered"), tabs, accent, "the selected tab hovered") == toTop, "its bar shows under the pointer");
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		// Searches, on the still test clock: the highlight is on the selected tab in the first frame, with no slide, when a search
+		// moves that tab in the shown list, when it selects another tab as the old one has no hit (it does not slide from where
+		// the old one was), and when the search is cleared.
+		Category shown = context.computeOnClient(client -> screen(client).selected());
+		check(shown == Category.FISHING, "the switch went to Fishing, the last tab: " + shown);
+		int[] kept = search(context, "bobber");
+		check(context.computeOnClient(client -> screen(client).selected()) == shown && kept[0] >= 0 && kept[0] < tabs[3] && kept[1] == kept[0] * 1000,
+				"\"bobber\": Fishing stays selected, moved up the shown tabs, its highlight there at once: tab " + kept[0] + ", at " + kept[1] / 1000F);
+		int[] back = search(context, "");
+		check(back[0] == tabs[3] && back[1] == tabs[3] * 1000, "cleared: Fishing back at its place, its highlight there at once: tab " + back[0] + ", at "
+				+ back[1] / 1000F);
+		// From Fishing's place, a search without it: the highlight goes to the newly selected tab at once, not sliding from there.
+		int[] moved = search(context, "npc");
+		check(context.computeOnClient(client -> screen(client).selected()) != shown && moved[0] >= 0 && moved[1] == moved[0] * 1000,
+				"\"npc\": another tab selected, its highlight there at once: tab " + moved[0] + ", at " + moved[1] / 1000F);
+		int[] cleared = search(context, "");
+		check(cleared[0] >= 0 && cleared[1] == cleared[0] * 1000, "cleared: the highlight on the selected tab at once: tab " + cleared[0] + ", at "
+				+ cleared[1] / 1000F);
+	}
+
+	/** Searches for {@code query} as typing would; returns the selected tab's index in the shown tabs and the highlight's place, x1000. */
+	private static int[] search(ClientGameTestContext context, String query) {
+		context.runOnClient(client -> {
+			screen(client).search().model().setText(query);
+			screen(client).applyQueryForTests();
+		});
+		context.waitTicks(2);
+		return context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			return new int[] {screen.view().categories().indexOf(screen.selected()), Math.round(screen.tabIndicatorPosition() * 1000)};
+		});
+	}
+
+	/**
+	 * The accent bar down the sidebar's left edge in a screenshot at GUI scale 2: exactly one run of the accent colour in that
+	 * column, as tall as the bar ({@code TAB} less 8 GUI px); returns its top physical row.
+	 */
+	private static int accentBar(Path shot, int[] tabs, int accent, String when) {
+		java.awt.image.BufferedImage image = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(shot);
+		int column = tabs[0] * 2 + 1;
+		int runs = 0;
+		int top = -1;
+		int length = 0;
+		boolean inRun = false;
+		for (int row = tabs[1] * 2; row < tabs[5] * 2; row++) {
+			boolean on = (image.getRGB(column, row) & 0xFFFFFF) == accent;
+			if (on && !inRun) {
+				runs++;
+				if (runs == 1) {
+					top = row;
+				}
+			}
+			if (on && runs == 1) {
+				length++;
+			}
+			inRun = on;
+		}
+		check(runs == 1 && length == (ConfigLayout.TAB - 8) * 2, when + ": one accent bar " + (ConfigLayout.TAB - 8) * 2 + " px tall down the tabs, not "
+				+ runs + " (the first " + length + " px)");
+		return top;
+	}
+
+	/**
+	 * AC-UI-46 (REQ-UI-45, T3.35) on the test clock: an open dropdown's highlight and a database picker row's hover ease in as a
+	 * card's: 75 ms after the pointer arrives the row's colour lies between its own and the hover colour, and at 150 ms it is
+	 * the hover colour.
+	 */
+	private static void listHoversEase(ClientGameTestContext context, AtomicLong clock) {
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		click(context, controlOf(context, "interface.notice_position"));
+		int[] entry = context.computeOnClient(client -> {
+			com.k8bas.skyblockutility.ui.widget.Overlay list = screen(client).overlay();
+			check(list != null, "the dropdown opened");
+			Widget rows = list.widgets().get(0);
+			// An entry that is not the selected one (that one has the accent look), at its right end, away from its label.
+			var choice = (com.k8bas.skyblockutility.ui.option.Choice<?>) screen(client).page().page().rows().stream()
+					.filter(r -> r instanceof ConfigLayout.OptionRow o && o.option().id().equals("interface.notice_position"))
+					.map(r -> ((ConfigLayout.OptionRow) r).option()).findFirst().orElseThrow();
+			int index = choice.values().indexOf(choice.binding().get()) == 0 ? 1 : 0;
+			return new int[] {rows.x() + rows.width() - 24, rows.y() + com.k8bas.skyblockutility.ui.widget.Dropdown.LIST_PADDING
+					+ index * com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT + 3};
+		});
+		easesIn(context, clock, entry, Theme.CARD, "an open dropdown's entry");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		click(context, controlOf(context, "mob_highlighter.add_from_database"));
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		int[] folder = context.computeOnClient(client -> {
+			check(screen(client).overlay() instanceof DatabasePickerOverlay, "the picker opened");
+			Widget list = ((DatabasePickerOverlay) screen(client).overlay()).list();
+			return new int[] {list.x() + list.width() - 40, list.y() + 3};
+		});
+		easesIn(context, clock, folder, Theme.PANEL, "a database picker folder");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> screen(client).overlay()) == null, "Esc closed the picker");
+	}
+
+	/** The pointer onto GUI point {@code at}: its colour starts at {@code base}, lies between at 75 ms and is the hover colour at 150 ms. */
+	private static void easesIn(ClientGameTestContext context, AtomicLong clock, int[] at, int base, String what) {
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		int[] window = context.computeOnClient(client -> window(at[0], at[1]));
+		context.getInput().setCursorPos(window[0], window[1]);
+		context.waitTicks(2);
+		int atOnce = pixel(context, context.takeScreenshot("t3.35-ease-0ms"), at[0], at[1]);
+		clock.addAndGet(75);
+		context.waitTicks(2);
+		int midway = pixel(context, context.takeScreenshot("t3.35-ease-75ms"), at[0], at[1]);
+		clock.addAndGet(75);
+		context.waitTicks(2);
+		int full = pixel(context, context.takeScreenshot("t3.35-ease-150ms"), at[0], at[1]);
+		LOGGER.info("{}: {} at 0 ms, {} at 75, {} at 150", what, Integer.toHexString(atOnce), Integer.toHexString(midway), Integer.toHexString(full));
+		check(atOnce == (base & 0xFFFFFF), what + ": its own colour as the pointer arrives: " + Integer.toHexString(atOnce));
+		check(between(midway, base, Theme.CARD_HOVER), what + ": 75 ms in, between: " + Integer.toHexString(midway));
+		check(full == (Theme.CARD_HOVER & 0xFFFFFF), what + ": the hover colour at 150 ms: " + Integer.toHexString(full));
 	}
 
 	/** Each channel strictly between the two colours' (in either order). */

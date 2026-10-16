@@ -62,6 +62,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   shows its tooltip at once. A tooltip now sits beside its setting, a list's entry or a button instead
   of following the pointer, so it never covers the slider or value it describes, and it hides while
   you hold the mouse button and when the page scrolls.
+- The settings sidebar, the database picker and open dropdown lists light up the entry under the
+  pointer smoothly, as cards and buttons already did. When you pick another category, the highlight
+  with its accent bar slides from the old tab to the new one. With "Animations" off both are instant.
 
 ### Fixed
 

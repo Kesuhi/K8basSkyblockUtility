@@ -8,6 +8,7 @@ import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.UiClock;
 import com.k8bas.skyblockutility.ui.render.UiText;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -238,6 +239,8 @@ public final class Dropdown<E> extends Widget {
 		/** The rows: a click picks, the wheel scrolls, the mouse highlights. */
 		private final class Rows extends Widget {
 			private final ScrollbarPainter scrollbar = new ScrollbarPainter();
+			/** The highlighted row's look, eased in and out as a card's hover (REQ-UI-45). */
+			private final RowHover highlight = new RowHover(UiClock.SOURCE);
 			/** While the thumb is dragged: where it was grabbed, from its top; else -1. */
 			private int grab = -1;
 
@@ -324,6 +327,7 @@ public final class Dropdown<E> extends Widget {
 				}
 				lastMouseX = mouseX;
 				lastMouseY = mouseY;
+				highlight.hover(model.highlighted());
 				Theme theme = Theme.current();
 				Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.CARD);
 				E current = choice.binding().get();
@@ -371,8 +375,11 @@ public final class Dropdown<E> extends Widget {
 				if (selected) {
 					Shapes.fill(graphics, left, top, right, bottom, theme.accentBackground());
 					Shapes.fill(graphics, left, top, x + 3, bottom, theme.accent());
-				} else if (index == model.highlighted()) {
-					Shapes.fill(graphics, left, top, right, bottom, Theme.CARD_HOVER);
+				} else {
+					float amount = highlight.amount(index);
+					if (amount > 0F) {
+						Shapes.fill(graphics, left, top, right, bottom, ColorMath.withAlpha(Math.round(255 * amount), Theme.CARD_HOVER));
+					}
 				}
 				// The selected entry has the kit's check mark at its right end (REQ-UI-32), so its label keeps that free.
 				String label = Ellipsis.fit(choice.label().apply(value), width - (selected ? 26 : 14), font::width);

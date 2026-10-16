@@ -139,6 +139,7 @@ public final class DatabasePickerOverlay extends Overlay {
 		closedInSearch.clear();
 		refresh();
 		list.setScroll(0);
+		list.resetHover();
 	}
 
 	/** An entry's Add button, from its row's top left: x, y, width, height. Drawing and clicks both use it. */
@@ -172,6 +173,7 @@ public final class DatabasePickerOverlay extends Overlay {
 				toggled.add(row.folderKey());
 			}
 			refresh();
+			list.resetHover();
 			clickSound.run();
 			return;
 		}
@@ -207,13 +209,13 @@ public final class DatabasePickerOverlay extends Overlay {
 		};
 	}
 
-	private void drawRow(GuiGraphicsExtractor graphics, Font font, int index, int x, int y, int width, int height, boolean hovered) {
+	private void drawRow(GuiGraphicsExtractor graphics, Font font, int index, int x, int y, int width, int height, float hover) {
 		if (index >= rows.size()) {
 			return;
 		}
 		PickerRows.Row row = rows.get(index);
-		if (hovered) {
-			Shapes.plain(graphics, x, y, x + width, y + height - 1, Theme.CARD_HOVER);
+		if (hover > 0F) {
+			Shapes.plain(graphics, x, y, x + width, y + height - 1, ColorMath.withAlpha(Math.round(255 * hover), Theme.CARD_HOVER));
 		}
 		int textY = y + (height - font.lineHeight) / 2 + 1;
 		int indent = x + 4 + row.depth() * 12;
@@ -242,7 +244,8 @@ public final class DatabasePickerOverlay extends Overlay {
 		}
 		UiText.draw(graphics, font, Ellipsis.fit(row.label(), addX - 6 - (indent + 12), font::width), indent + 12, textY, Theme.TEXT_PRIMARY);
 		Theme theme = Theme.current();
-		Shapes.roundedRect(graphics, addX, y + add[1], add[2], add[3], Shapes.RADIUS_CONTROL, hovered ? theme.accent() : ColorMath.lerp(Theme.CARD, theme.accent(), 0.6F));
+		Shapes.roundedRect(graphics, addX, y + add[1], add[2], add[3], Shapes.RADIUS_CONTROL,
+				ColorMath.lerp(ColorMath.lerp(Theme.CARD, theme.accent(), 0.6F), theme.accent(), hover));
 		UiText.centred(graphics, font, "Add", addX + add[2] / 2, textY, theme.textOnAccent());
 	}
 

@@ -24,9 +24,9 @@ public final class ListTooltipTestScreen extends WidgetScreen {
 		super(Component.literal("List and tooltip test"));
 		corner = add(new Button("?", Button.Style.NORMAL, () -> { }, () -> { }));
 		corner.setTooltip("§eSix lines\nThe second line\nA third, somewhat longer line of text\nFour\nFive\nAnd the sixth");
-		list = add(new VirtualList(ROW_HEIGHT, () -> ROWS, (graphics, font, index, x, y, w, h, hovered) -> {
+		list = add(new VirtualList(ROW_HEIGHT, () -> ROWS, (graphics, font, index, x, y, w, h, hover) -> {
 			paintingRows++;
-			graphics.fill(x, y, x + w, y + h - 1, hovered ? Theme.CARD_HOVER : index % 2 == 0 ? Theme.CARD : Theme.SIDEBAR);
+			graphics.fill(x, y, x + w, y + h - 1, com.k8bas.skyblockutility.ui.render.ColorMath.lerp(index % 2 == 0 ? Theme.CARD : Theme.SIDEBAR, Theme.CARD_HOVER, hover));
 			UiText.draw(graphics, font, "Row " + index, x + 4, y + 5, Theme.TEXT_PRIMARY);
 		}, index -> clicked = index));
 		list.setRowTooltip(index -> "Row " + index + " in full");
