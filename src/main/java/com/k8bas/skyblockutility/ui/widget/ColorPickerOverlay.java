@@ -128,6 +128,11 @@ public final class ColorPickerOverlay extends Overlay {
 	}
 
 	@Override
+	public int radius() {
+		return Shapes.RADIUS_CARD;
+	}
+
+	@Override
 	public int[] bounds() {
 		return new int[] {panelX, panelY, panelX + WIDTH, panelY + panelHeight};
 	}

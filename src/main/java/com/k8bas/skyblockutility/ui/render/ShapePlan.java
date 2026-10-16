@@ -221,6 +221,69 @@ public final class ShapePlan {
 		return new Result(fillQuads.length == 0 ? List.of(round) : List.of(round, element(false, fillQuads, null, box)), mask);
 	}
 
+	/**
+	 * A soft shadow's 9-slice (REQ-UI-41, T3.31) around a box of w×h screen pixels at GUI (x, y): its four corner tiles, e×e,
+	 * from a mask 2e square (e = its corner radius + {@code blur}), and its four edges stretched from the one texel row or
+	 * column next to the mask's centre, sampled at that texel's centre; no centre piece, as the element covers it. One
+	 * textured element, its bounds the shadow's GUI rectangle rounded outward and cut to {@code scissor}; null when nothing is
+	 * left.
+	 */
+	public static Element shadow(Matrix3x2fc outer, float x, float y, int w, int h, int e, int blur, int scale, int[] scissor) {
+		if (w <= 0 || h <= 0 || e <= 0) {
+			return null;
+		}
+		int x0 = -blur;
+		int y0 = -blur;
+		int x1 = w + blur;
+		int y1 = h + blur;
+		int[] box = clip(bounds(outer, x + (float) x0 / scale, y + (float) y0 / scale, x + (float) x1 / scale, y + (float) y1 / scale), scissor);
+		if (box == null) {
+			return null;
+		}
+		float n = 2F * e;
+		float mid = (e - 0.5F) / n;
+		// The corners meet where the box is shorter than its two corners: they share it, and the edges between go.
+		int cx = Math.min(x0 + e, (x0 + x1) / 2);
+		int cy = Math.min(y0 + e, (y0 + y1) / 2);
+		int rx = Math.max(x1 - e, cx);
+		int by = Math.max(y1 - e, cy);
+		float uLeft = (cx - x0) / n;
+		float vTop = (cy - y0) / n;
+		float uRight = 1F - (x1 - rx) / n;
+		float vBottom = 1F - (y1 - by) / n;
+		boolean across = rx > cx;
+		boolean down = by > cy;
+		int count = 4 + (across ? 2 : 0) + (down ? 2 : 0);
+		int[] quads = new int[count * 4];
+		float[] uvs = new float[count * 4];
+		int i = 0;
+		i = slice(quads, uvs, i, x0, y0, cx, cy, 0F, 0F, uLeft, vTop);
+		i = slice(quads, uvs, i, rx, y0, x1, cy, uRight, 0F, 1F, vTop);
+		i = slice(quads, uvs, i, x0, by, cx, y1, 0F, vBottom, uLeft, 1F);
+		i = slice(quads, uvs, i, rx, by, x1, y1, uRight, vBottom, 1F, 1F);
+		if (across) {
+			i = slice(quads, uvs, i, cx, y0, rx, cy, mid, 0F, mid, vTop);
+			i = slice(quads, uvs, i, cx, by, rx, y1, mid, vBottom, mid, 1F);
+		}
+		if (down) {
+			i = slice(quads, uvs, i, x0, cy, cx, by, 0F, mid, uLeft, mid);
+			slice(quads, uvs, i, rx, cy, x1, by, uRight, mid, 1F, mid);
+		}
+		return element(true, quads, uvs, box);
+	}
+
+	private static int slice(int[] quads, float[] uvs, int i, int x0, int y0, int x1, int y1, float u0, float v0, float u1, float v1) {
+		quads[i] = x0;
+		quads[i + 1] = y0;
+		quads[i + 2] = x1;
+		quads[i + 3] = y1;
+		uvs[i] = u0;
+		uvs[i + 1] = v0;
+		uvs[i + 2] = u1;
+		uvs[i + 3] = v1;
+		return i + 4;
+	}
+
 	private static Element element(boolean textured, int[] quads, float[] uvs, int[] box) {
 		return new Element(textured, quads, uvs, box[0], box[1], box[2], box[3]);
 	}

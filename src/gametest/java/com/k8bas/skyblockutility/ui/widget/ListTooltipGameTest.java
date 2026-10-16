@@ -57,6 +57,17 @@ public class ListTooltipGameTest implements FabricClientGameTest {
 			int[] size = context.computeOnClient(client -> new int[] {screen(client).width, screen(client).height});
 			check(box != null, "scale " + s + ": hovering the button shows its tooltip");
 			check(box.lines().size() == 6, "scale " + s + ": six lines: " + box.lines());
+			// AC-UI-42 [C] (T3.31): its shadow darkens beside it; past the blur the screen is untouched, and its own fill is too.
+			var image = HairlineProbe.read(shot);
+			// Its left padding at mid-height, away from its rounded corners.
+			int ownFill = image.getRGB((box.x() + 2) * s, (box.y() + box.height() / 2) * s) & 0xFFFFFF;
+			// The tooltip sits at the window's bottom right corner here, so its shadow is read on its left side.
+			int shadowY = (box.y() + box.height() / 2) * s;
+			int justLeft = image.getRGB((box.x() - 1) * s, shadowY) & 0xFFFFFF;
+			int pastBlur = image.getRGB((box.x() - com.k8bas.skyblockutility.ui.render.Shapes.SHADOW_BLUR - 1) * s, shadowY) & 0xFFFFFF;
+			check(luminance(justLeft) < luminance(pastBlur), "scale " + s + ": a shadow beside the tooltip: " + Integer.toHexString(justLeft)
+					+ " beside " + Integer.toHexString(pastBlur));
+			check(ownFill == (Theme.SIDEBAR & 0xFFFFFF), "scale " + s + ": the shadow is not over the tooltip: " + Integer.toHexString(ownFill));
 			if (s <= 2) {
 				// AC-UI-41 [C] (T3.30): the tooltip takes the control radius, 4 GUI px.
 				String corner = com.k8bas.skyblockutility.ui.render.RadiusProbe.check(HairlineProbe.read(shot), "the tooltip's corner at scale " + s,
@@ -212,6 +223,10 @@ public class ListTooltipGameTest implements FabricClientGameTest {
 		} catch (IOException e) {
 			throw new AssertionError("cannot read " + screenshot, e);
 		}
+	}
+
+	private static int luminance(int rgb) {
+		return (rgb >> 16 & 0xFF) * 3 + (rgb >> 8 & 0xFF) * 6 + (rgb & 0xFF);
 	}
 
 	private static void check(boolean condition, String what) {

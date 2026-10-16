@@ -8,6 +8,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ### Added
 
+- Soft shadows under the settings window, open dropdown lists, the colour picker, the database picker
+  and tooltips, so they stand out from what lies behind them.
 - "Animations" (General › Interface, ON by default): switched off, this mod's screens and notices show
   every change at once, without sliding or fading: the settings opening, a category switch, hover,
   switches and notices. Tooltips still wait the same time before they show. The change applies at once,

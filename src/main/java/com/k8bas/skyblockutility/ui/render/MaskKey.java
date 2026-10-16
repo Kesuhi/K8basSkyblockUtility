@@ -8,6 +8,8 @@ package com.k8bas.skyblockutility.ui.render;
 public final class MaskKey {
 	/** Above every corner key: radius 256 and thickness up to 511 fit below bit 18. */
 	private static final int DISC = 1 << 20;
+	/** A shadow mask (T3.31): its corner radius and blur, as a corner's radius and thickness. */
+	private static final int SHADOW = 1 << 21;
 
 	private MaskKey() {
 	}
@@ -24,12 +26,20 @@ public final class MaskKey {
 		return (key & DISC) != 0;
 	}
 
+	public static int shadow(int radius, int blur) {
+		return SHADOW | radius << 9 | blur;
+	}
+
+	public static boolean isShadow(int key) {
+		return (key & SHADOW) != 0;
+	}
+
 	public static int diameter(int key) {
 		return key & (DISC - 1);
 	}
 
 	public static int radius(int key) {
-		return key >> 9;
+		return (key & (DISC - 1)) >> 9;
 	}
 
 	public static int thickness(int key) {

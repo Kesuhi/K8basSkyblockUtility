@@ -94,6 +94,11 @@ public final class DatabasePickerOverlay extends Overlay {
 	}
 
 	@Override
+	public int radius() {
+		return Shapes.RADIUS_CARD;
+	}
+
+	@Override
 	public int[] bounds() {
 		return new int[] {panelX, panelY, panelX + panelWidth, panelY + panelHeight};
 	}

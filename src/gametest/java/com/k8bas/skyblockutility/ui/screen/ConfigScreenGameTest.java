@@ -92,6 +92,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			generalCategory(context);
 			wheelOverASlider(context);
 			cornerRadii(context);
+			panelShadow(context);
 			// Last: it opens a settings screen of its own and closes it.
 			contentScrollbar(context);
 		} finally {
@@ -1042,6 +1043,170 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			});
 			context.setScreen(() -> null);
 		}
+	}
+
+	/**
+	 * AC-UI-42 [C] (REQ-UI-41, T3.31) at GUI scales 1-4, the panel over one plain colour: its shadow darkens just below and left
+	 * of it, and past its blur the colour is untouched; it is the only thing drawn outside the panel (AC-UI-02).
+	 */
+	private static void panelShadow(ClientGameTestContext context) {
+		int scaleBefore = context.computeOnClient(client -> client.options.guiScale().get());
+		int plain = 0x404040;
+		context.getInput().resizeWindow(1280, 960);
+		try {
+			context.setScreen(() -> {
+				ConfigScreen screen = new ConfigScreen(null);
+				screen.plainBackgroundForTests(0xFF000000 | plain);
+				return screen;
+			});
+			context.waitForScreen(ConfigScreen.class);
+			context.getInput().setCursorPos(2, 2);
+			StringBuilder problems = new StringBuilder();
+			for (int scale = 1; scale <= 4; scale++) {
+				int s = scale;
+				context.runOnClient(client -> client.options.guiScale().set(s));
+				context.waitTicks(3);
+				context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+				context.waitTicks(2);
+				var shot = HairlineProbe.read(context.takeScreenshot("t3.31-panel-shadow-scale-" + s));
+				ConfigLayout.Rect panel = context.computeOnClient(client -> screen(client).frame().panel());
+				int cx = (panel.x() + panel.w() / 2) * s;
+				int cy = (panel.y() + panel.h() / 2) * s;
+				int below = shot.getRGB(cx, (panel.bottom() + 1) * s) & 0xFFFFFF;
+				int left = shot.getRGB((panel.x() - 2) * s, cy) & 0xFFFFFF;
+				if (!(darker(below, plain) && darker(left, plain))) {
+					problems.append("scale ").append(s).append(": no shadow below or left of the panel: ").append(Integer.toHexString(below))
+							.append(", ").append(Integer.toHexString(left)).append("; ");
+				}
+				// EC-UI-19: its reach fits in the panel's margin, so it is never cut at the window's edge.
+				int guiWidth = shot.getWidth() / s;
+				int guiHeight = shot.getHeight() / s;
+				if (panel.x() - Shapes.SHADOW_BLUR < 0 || panel.right() + Shapes.SHADOW_BLUR > guiWidth
+						|| panel.bottom() + Shapes.SHADOW_OFFSET + Shapes.SHADOW_BLUR > guiHeight) {
+					problems.append("scale ").append(s).append(": the shadow reaches past the window; ");
+				}
+				// The first pixels past its extent, where the window has them: blur out to the left, offset plus blur down.
+				int pastBottom = panel.bottom() + Shapes.SHADOW_OFFSET + Shapes.SHADOW_BLUR;
+				int pastLeft = panel.x() - Shapes.SHADOW_BLUR - 1;
+				if (pastBottom < guiHeight && (shot.getRGB(cx, pastBottom * s) & 0xFFFFFF) != plain) {
+					problems.append("scale ").append(s).append(": something just below the shadow; ");
+				}
+				if (pastLeft >= 0 && (shot.getRGB(pastLeft * s, cy) & 0xFFFFFF) != plain) {
+					problems.append("scale ").append(s).append(": something just left of the shadow; ");
+				}
+				// Not over the panel: its sidebar's own colour just inside its bottom left, in the shadow's full band.
+				int inside = shot.getRGB((panel.x() + 2) * s, (panel.bottom() - 3) * s) & 0xFFFFFF;
+				if (inside != (Theme.SIDEBAR & 0xFFFFFF)) {
+					problems.append("scale ").append(s).append(": the shadow shows over the panel: ").append(Integer.toHexString(inside)).append("; ");
+				}
+				// AC-UI-02: outside the panel and its shadow the screen is the plain colour, and the shadow only darkens it.
+				int x0 = (panel.x() - Shapes.SHADOW_BLUR) * s;
+				int y0 = (panel.y() + Shapes.SHADOW_OFFSET - Shapes.SHADOW_BLUR) * s;
+				int x1 = (panel.right() + Shapes.SHADOW_BLUR) * s;
+				int y1 = (panel.bottom() + Shapes.SHADOW_OFFSET + Shapes.SHADOW_BLUR) * s;
+				int strays = 0;
+				for (int y = 0; y < shot.getHeight(); y += 2) {
+					for (int x = 0; x < shot.getWidth(); x += 2) {
+						boolean inPanel = x >= panel.x() * s && x < panel.right() * s && y >= panel.y() * s && y < panel.bottom() * s;
+						if (inPanel) {
+							continue;
+						}
+						int rgb = shot.getRGB(x, y) & 0xFFFFFF;
+						boolean inShadow = x >= x0 && x < x1 && y >= y0 && y < y1;
+						if (inShadow ? !(rgb == plain || darker(rgb, plain)) : rgb != plain) {
+							strays++;
+						}
+					}
+				}
+				if (strays > 0) {
+					problems.append("scale ").append(s).append(": ").append(strays).append(" pixels outside the panel other than its shadow; ");
+				}
+				overlayShadow(context, s, Category.GENERAL, "interface.notice_position", false, Theme.CARD, "the dropdown list", problems);
+				overlayShadow(context, s, Category.GENERAL, "interface.accent", true, Theme.PANEL, "the colour picker", problems);
+				overlayShadow(context, s, Category.WAYPOINTS, "npc_search.add_from_database", true, Theme.PANEL, "the database picker", problems);
+			}
+			check(problems.isEmpty(), problems.toString());
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(scaleBefore));
+			context.setScreen(() -> null);
+		}
+	}
+
+	/**
+	 * Opens an overlay with the control {@code optionId} and checks its shadow over the plain background's screen: just below
+	 * it, the screen as it was (under a modal, as the backdrop leaves it) with black at the shadow's alpha over it; past the
+	 * blur, the screen as it was; and its own fill just inside its left edge.
+	 */
+	private static void overlayShadow(ClientGameTestContext context, int s, Category category, String optionId, boolean modal, int fill, String name,
+			StringBuilder problems) {
+		context.runOnClient(client -> screen(client).select(category));
+		context.waitTicks(2);
+		int[] control = controlCentre(context, optionId);
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		var closed = HairlineProbe.read(context.takeScreenshot("t3.31-" + optionId + "-closed-scale-" + s));
+		click(context, control);
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		int[] box = context.computeOnClient(client -> screen(client).overlay().bounds());
+		var open = HairlineProbe.read(context.takeScreenshot("t3.31-" + optionId + "-open-scale-" + s));
+		// Read on its left side at mid-height, never its anchor (a list may open upward, onto its field): the screen pixel right
+		// beside it, half a pixel out from its edge, and the first one past the blur.
+		int midY = (box[1] + box[3]) / 2 * s;
+		int besideX = box[0] * s - 1;
+		int pastX = Math.max(0, (box[0] - Shapes.SHADOW_BLUR) * s - 1);
+		int backdrop = modal ? Theme.BACKDROP >>> 24 : 0;
+		int belowWas = mix(closed.getRGB(besideX, midY) & 0xFFFFFF, Theme.BACKDROP & 0xFFFFFF, backdrop);
+		int pastWas = mix(closed.getRGB(pastX, midY) & 0xFFFFFF, Theme.BACKDROP & 0xFFFFFF, backdrop);
+		int shade = Math.round(Shapes.SHADOW_ALPHA * com.k8bas.skyblockutility.ui.render.ShadowMask.alpha(0.5F, Shapes.SHADOW_BLUR * s) / 255F);
+		int belowExpected = mix(belowWas, 0, shade);
+		int belowNow = open.getRGB(besideX, midY) & 0xFFFFFF;
+		int pastNow = open.getRGB(pastX, midY) & 0xFFFFFF;
+		// Inside its left edge: a dialog's padding at mid-height, a list's top padding (its rows may be highlighted).
+		int ownFill = open.getRGB((box[0] + 3) * s, (modal ? (box[1] + box[3]) / 2 : box[1] + 2) * s) & 0xFFFFFF;
+		if (channelGap(belowNow, belowExpected) > 3) {
+			problems.append(name).append(" at scale ").append(s).append(": beside it ").append(Integer.toHexString(belowNow)).append(", not the shadow's ")
+					.append(Integer.toHexString(belowExpected)).append("; ");
+		}
+		if (channelGap(pastNow, pastWas) > 3) {
+			problems.append(name).append(" at scale ").append(s).append(": past its shadow ").append(Integer.toHexString(pastNow)).append(", not ")
+					.append(Integer.toHexString(pastWas)).append("; ");
+		}
+		if (ownFill != (fill & 0xFFFFFF)) {
+			problems.append(name).append(" at scale ").append(s).append(": its shadow shows over it: ").append(Integer.toHexString(ownFill)).append("; ");
+		}
+		for (int i = 0; i < 3 && context.computeOnClient(client -> screen(client).overlay()) != null; i++) {
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTick();
+		}
+	}
+
+	/** {@code rgb} under {@code top} at {@code alpha} (0-255). */
+	private static int mix(int rgb, int top, int alpha) {
+		int out = 0;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			out |= Math.round(((top >> shift & 0xFF) * alpha + (rgb >> shift & 0xFF) * (255 - alpha)) / 255F) << shift;
+		}
+		return out;
+	}
+
+	/** The largest difference of any channel. */
+	private static int channelGap(int a, int b) {
+		int gap = 0;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			gap = Math.max(gap, Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF)));
+		}
+		return gap;
+	}
+
+	/** Whether {@code rgb} is darker than {@code than} in every channel. */
+	private static boolean darker(int rgb, int than) {
+		for (int shift = 0; shift <= 16; shift += 8) {
+			if ((rgb >> shift & 0xFF) >= (than >> shift & 0xFF)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/** Sends {@code count} notches (positive up), each with the pointer moved onto the slider first; returns the scroll after them. */

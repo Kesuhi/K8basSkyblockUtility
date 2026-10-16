@@ -34,6 +34,14 @@ public final class Shapes {
 	public static final int RADIUS_PANEL = 8;
 	public static final int RADIUS_CARD = 6;
 	public static final int RADIUS_CONTROL = 4;
+	/**
+	 * A soft shadow (REQ-UI-41): how far it blurs out and how far down it lies, in GUI px, and its black's alpha. Its reach,
+	 * the blur and the offset together, stays within the 4 GUI px a panel keeps from the window (REQ-UI-02, EC-UI-19), so it
+	 * is never cut at the window's edge.
+	 */
+	public static final int SHADOW_BLUR = 3;
+	public static final int SHADOW_OFFSET = 1;
+	public static final int SHADOW_ALPHA = 0x50;
 
 	private Shapes() {
 	}
@@ -224,6 +232,33 @@ public final class Shapes {
 			Matrix3x2f pose = new Matrix3x2f(outer).translate(x, y).scale(1F / scale, 1F / scale);
 			graphics.guiRenderState.addGuiElement(new ShapeRenderState(RenderPipelines.GUI_TEXTURED, texture(texture), pose, element.quads(),
 					element.uvs(), argb, scissor, bounds(element)));
+		}
+	}
+
+	/**
+	 * A soft drop shadow (REQ-UI-41, T3.31) under a w×h element at GUI (x, y) whose corners have {@code radius} GUI px: the
+	 * baked mask's 9-slice, tinted black at {@link #SHADOW_ALPHA}, {@link #SHADOW_OFFSET} down and blurring
+	 * {@link #SHADOW_BLUR} out, drawn before the element so it lies under it. Left out when its mask cannot be had
+	 * (REQ-UI-47).
+	 */
+	public static void shadow(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius) {
+		int scale = guiScale();
+		int r = Math.max(0, Math.min(radius, Math.min(w, h) / 2)) * scale;
+		int blur = SHADOW_BLUR * scale;
+		Identifier mask = CornerTextures.mask(scale, MaskKey.shadow(r, blur));
+		if (mask == null) {
+			return;
+		}
+		Matrix3x2fStack outer = graphics.pose();
+		ScreenRectangle scissor = graphics.scissorStack.peek();
+		float top = y + SHADOW_OFFSET;
+		// Cut to the scissor, or to the window (REQ-UI-41: it stays inside it).
+		int[] cut = scissor != null ? clip(scissor) : new int[] {0, 0, graphics.guiWidth(), graphics.guiHeight()};
+		ShapePlan.Element element = ShapePlan.shadow(outer, x, top, w * scale, h * scale, r + blur, blur, scale, cut);
+		if (element != null) {
+			Matrix3x2f pose = new Matrix3x2f(outer).translate(x, top).scale(1F / scale, 1F / scale);
+			graphics.guiRenderState.addGuiElement(new ShapeRenderState(RenderPipelines.GUI_TEXTURED, texture(mask), pose, element.quads(),
+					element.uvs(), UiFade.apply(SHADOW_ALPHA << 24), scissor, bounds(element)));
 		}
 	}
 

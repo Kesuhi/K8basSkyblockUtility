@@ -347,6 +347,19 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			var scaled = false
 			try {
 				scaled = scaleIn(graphics, open, shown)
+				// Its soft shadow first, under it, fading and scaling in with it (REQ-UI-41).
+				open.bounds()?.let { box ->
+					val region = open.shadowClip()
+					if (region == null) {
+						Shapes.shadow(graphics, box[0], box[1], box[2] - box[0], box[3] - box[1], open.radius())
+					} else {
+						Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
+							if (clip.visible()) {
+								Shapes.shadow(graphics, box[0], box[1], box[2] - box[0], box[3] - box[1], open.radius())
+							}
+						}
+					}
+				}
 				open.drawFrame(graphics, font, mouseX, mouseY)
 				for (widget in open.widgets()) {
 					drawClipped(graphics, widget, mouseX, mouseY)
@@ -493,6 +506,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		val box = TooltipLayout.layout(text, mouseX, mouseY, width, height, font::width)
 		lastTooltip = box
 		graphics.nextStratum()
+		Shapes.shadow(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL)
 		Shapes.roundedRect(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SIDEBAR)
 		Shapes.roundedHairline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SEPARATOR)
 		var lineY = box.y() + TooltipLayout.PADDING

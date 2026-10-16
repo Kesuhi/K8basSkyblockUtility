@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory
 
 /**
  * The anti-aliased masks as textures (REQ-UI-18, T2.9d, R32; REQ-UI-30, T3.18): white, with the [CornerMask] coverage as
- * alpha, a corner mask per radius and thickness and a disc mask per diameter, all in screen pixels, so one texel is one
+ * alpha, a corner mask per radius and thickness, a disc mask per diameter and a shadow mask per corner radius and blur
+ * ([ShadowMask], T3.31), all in screen pixels, so one texel is one
  * screen pixel and the colour comes from the tint. Uploaded through the game's texture API (no direct GL, REQ-PORT-12), as
  * the colour wheel is.
  */
@@ -23,15 +24,26 @@ internal object CornerTextures {
 
 	private fun bake(key: Int): Identifier {
 		val disc = MaskKey.isDisc(key)
+		val shadow = MaskKey.isShadow(key)
 		val radius = MaskKey.radius(key)
 		val thickness = MaskKey.thickness(key)
-		val size = if (disc) MaskKey.diameter(key) else 2 * radius
+		val size = when {
+			disc -> MaskKey.diameter(key)
+			// A shadow's four corner tiles, its corner radius and its blur each (REQ-UI-41, T3.31).
+			shadow -> 2 * (radius + thickness)
+			else -> 2 * radius
+		}
 		val alpha = when {
 			disc -> CornerMask.bakeDisc(size)
+			shadow -> ShadowMask.bake(radius, thickness)
 			thickness == 0 -> CornerMask.bakeFill(radius)
 			else -> CornerMask.bakeRing(radius, thickness)
 		}
-		val name = if (disc) "ui_disc_$size" else "ui_corner_${radius}_$thickness"
+		val name = when {
+			disc -> "ui_disc_$size"
+			shadow -> "ui_shadow_${radius}_$thickness"
+			else -> "ui_corner_${radius}_$thickness"
+		}
 		val id = Identifier.fromNamespaceAndPath("k8bas_skyblock_utility", "dynamic/$name")
 		val image = NativeImage(size, size, false)
 		try {

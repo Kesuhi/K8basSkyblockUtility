@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget;
 
+import com.k8bas.skyblockutility.ui.render.ClipRect;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
@@ -40,6 +42,19 @@ public abstract class Overlay {
 	 * it at once, unscaled.
 	 */
 	public int[] bounds() {
+		return null;
+	}
+
+	/** The corner radius of its box in GUI px, for its shadow (REQ-UI-41): a control's unless it says otherwise. */
+	public int radius() {
+		return Shapes.RADIUS_CONTROL;
+	}
+
+	/**
+	 * The region its shadow is cut to, or null for the window: a dropdown list's, which lies in its card's region, so its
+	 * shadow stays inside the panel (REQ-UI-02).
+	 */
+	public ClipRect shadowClip() {
 		return null;
 	}
 

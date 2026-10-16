@@ -114,6 +114,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private int pendingScroll = -1;
 	/** The open scale and the category slide-and-fade (REQ-UI-18, T2.9). */
 	private final ConfigMotion motion;
+	private int plainBackground;
 	/** The scroll the page was laid out at this frame: the real scroll less the slide, so text and cards move together. */
 	private int pageScroll;
 	/** A page control a key reached, scrolled into view in the next layout (T2.9b). */
@@ -388,8 +389,17 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+		if (plainBackground != 0) {
+			graphics.fill(0, 0, width, height, plainBackground);
+			return;
+		}
 		// The game stays visible around the panel, only dimmed.
 		extractDimmedGame(graphics, partialTick);
+	}
+
+	/** For gametests: one colour behind the panel instead of the dimmed game, so its shadow can be read; 0 for the game. */
+	void plainBackgroundForTests(int argb) {
+		plainBackground = argb;
 	}
 
 	@Override
@@ -398,6 +408,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		ConfigLayout.Rect panel = frame.panel();
 		ConfigLayout.Rect header = frame.header();
 		ConfigLayout.Rect sidebar = frame.sidebar();
+		// Its soft shadow first, under it: the only thing drawn outside it (REQ-UI-41, REQ-UI-02).
+		Shapes.shadow(graphics, panel.x(), panel.y(), panel.w(), panel.h(), Shapes.RADIUS_PANEL);
 		// One corner scale (REQ-UI-40): the panel rounded; its header follows the top corners, the sidebar the bottom left one.
 		Shapes.roundedRect(graphics, panel.x(), panel.y(), panel.w(), panel.h(), Shapes.RADIUS_PANEL, Theme.PANEL);
 		Shapes.roundedRect(graphics, header.x(), header.y(), header.w(), header.h(), Shapes.RADIUS_PANEL, Corners.TOP_LEFT | Corners.TOP_RIGHT,

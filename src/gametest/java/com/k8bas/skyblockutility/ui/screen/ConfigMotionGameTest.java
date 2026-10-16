@@ -696,6 +696,23 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 				+ Integer.toHexString(pixel(context, at60, inside[0], inside[1])) + " between " + Integer.toHexString(under60) + " and "
 				+ Integer.toHexString(insideEnd));
 		check(pixel(context, at120, inside[0], inside[1]) == insideEnd, name + ": at 120 ms it is fully shown");
+		// AC-UI-42 [C] (T3.31): open, its shadow darkens the screen just below it, and past the blur the screen is as it was (under
+		// a modal, as the backdrop leaves it).
+		// The row right below it: inside the shadow's box, its offset lower, so in its full band.
+		int below = box[3];
+		int past = box[3] + com.k8bas.skyblockutility.ui.render.Shapes.SHADOW_BLUR + com.k8bas.skyblockutility.ui.render.Shapes.SHADOW_OFFSET;
+		int shadowColumn = (box[0] + box[2]) / 2;
+		int alphaBackdrop = modal ? Theme.BACKDROP >>> 24 : 0;
+		int belowWas = over(pixel(context, closedShot, shadowColumn, below), Theme.BACKDROP & 0xFFFFFF, alphaBackdrop);
+		int pastWas = over(pixel(context, closedShot, shadowColumn, past), Theme.BACKDROP & 0xFFFFFF, alphaBackdrop);
+		int belowNow = pixel(context, settled, shadowColumn, below);
+		int pastNow = pixel(context, settled, shadowColumn, past);
+		// Just below it the shadow's full band: black at its alpha over the screen.
+		int belowShadow = over(belowWas, 0, com.k8bas.skyblockutility.ui.render.Shapes.SHADOW_ALPHA);
+		check(lighterBy(belowNow, belowShadow) <= 4 && lighterBy(belowShadow, belowNow) <= 4, name + ": a shadow under it: "
+				+ Integer.toHexString(belowNow) + " for " + Integer.toHexString(belowShadow));
+		check(lighterBy(pastWas, pastNow) <= 3 && lighterBy(pastNow, pastWas) <= 3, name + ": past the blur the screen is as it was: "
+				+ Integer.toHexString(pastNow) + " for " + Integer.toHexString(pastWas));
 		if (modal) {
 			int cornerEnd = pixel(context, settled, corner[0], corner[1]);
 			check(cornerEnd != cornerBefore, name + ": its backdrop dims the screen");
@@ -731,7 +748,8 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			int last = -1;
 			// From the list's own top row down (the field above it changes as it opens).
 			for (int row = box[1] * scale; row < (box[3] + 6) * scale; row++) {
-				if (mid.getRGB(column, row) != was.getRGB(column, row)) {
+				// The list lightens what it covers (its outline and rows); its shadow below only darkens, so it does not count.
+				if (lum(mid.getRGB(column, row)) > lum(was.getRGB(column, row))) {
 					first = first < 0 ? row : first;
 					last = row;
 				}
@@ -742,6 +760,19 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			check(first == box[1] * scale && Math.abs(last + 1 - drawnBottom * scale) <= 1, name + ": at 10 ms the list is drawn from row " + first
 					+ " to " + last + ": its top at " + box[1] * scale + " stays and its bottom is at " + drawnBottom * scale);
 		}
+	}
+
+	private static int lum(int rgb) {
+		return (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF);
+	}
+
+	/** How much lighter {@code a} is than {@code b}, summed over the channels (0 if it is not). */
+	private static int lighterBy(int a, int b) {
+		int d = 0;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			d += Math.max(0, (a >> shift & 0xFF) - (b >> shift & 0xFF));
+		}
+		return d;
 	}
 
 	/** {@code rgb} under {@code top} at {@code alpha} (0-255): the colour a translucent fill over it shows. */

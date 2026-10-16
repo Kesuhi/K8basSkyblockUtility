@@ -64,7 +64,7 @@ class MaskCache<V : Any> @JvmOverloads constructor(
 		if (masks.size >= limit) {
 			if (!overflowLogged) {
 				overflowLogged = true
-				logger.log("More than $limit $kind textures at one GUI scale: the shapes beyond them are drawn from fill spans", null)
+				logger.log("More than $limit $kind textures at one GUI scale: the shapes beyond them are drawn from fill spans (a shadow is left out)", null)
 			}
 			return null
 		}

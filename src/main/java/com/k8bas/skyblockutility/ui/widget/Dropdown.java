@@ -184,6 +184,11 @@ public final class Dropdown<E> extends Widget {
 		}
 
 		@Override
+		public ClipRect shadowClip() {
+			return clip();
+		}
+
+		@Override
 		public float[] anchor() {
 			return Dropdown.anchor(rows.x, rows.y, rows.width, rows.height, placement != null && placement.upward());
 		}
