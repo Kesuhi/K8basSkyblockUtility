@@ -21,6 +21,12 @@ final class GradientSlider extends Widget {
 	private final boolean checkerboard;
 	private boolean dragging;
 
+	/** While dragged, the wheel goes nowhere (REQ-UI-37). */
+	@Override
+	public boolean blocksWheel() {
+		return dragging;
+	}
+
 	GradientSlider(DoubleSupplier get, Consumer<Float> set, IntUnaryOperator colourAt, boolean checkerboard) {
 		this.get = get;
 		this.set = set;

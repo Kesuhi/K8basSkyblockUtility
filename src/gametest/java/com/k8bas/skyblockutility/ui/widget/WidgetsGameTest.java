@@ -25,8 +25,11 @@ import java.nio.file.Path;
  * T2.3a, the basic widgets in a real client:
  * <ul>
  *   <li>every widget state on one screen, screenshotted at GUI scales 1-4;</li>
- *   <li>AC-UI-06 with real input: 3 wheel notches over a 0.1-step slider raise it by 0.3, Shift gives
- *       the fine step, and the wheel commits nothing;</li>
+ *   <li>AC-UI-38 on a screen without keyboard navigation (REQ-UI-37, T3.28): the wheel over a 0.1-step slider, idle, after a
+ *       press and release on its knob and on its track, with and without Shift, scrolls the region it sits in exactly as over
+ *       its empty space and never changes the value; at the region's top and bottom it changes nothing; during a drag it is
+ *       ignored over the slider and off it, the value follows only the pointer and is committed once; a press on the track
+ *       moves the knob there and starts a drag;</li>
  *   <li>REQ-UI-15 with real input: a drag along the track follows live and commits once, on release;</li>
  *   <li>a text field takes typing and Ctrl+A, Backspace;</li>
  *   <li>AC-UI-05 [C]: in a world, a focused field takes E and the bound "Open settings" key, so no
@@ -61,7 +64,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			context.waitTicks(3);
 			knobHasNoFillLine(context);
 			knobsAreAntiAliased(context);
-			wheelSteps(context);
+			wheelOverASlider(context);
 			dragCommitsOnce(context);
 			typingAndShortcuts(context);
 			context.setScreen(() -> null);
@@ -467,26 +470,110 @@ public class WidgetsGameTest implements FabricClientGameTest {
 		}
 	}
 
-	/** AC-UI-06 with real wheel events. */
-	private static void wheelSteps(ClientGameTestContext context) {
-		int[] centres = context.computeOnClient(client -> screen(client.gui.screen()).liveCentres());
-		context.getInput().setCursorPos(centres[0], centres[1]);
-		context.waitTick();
-		for (int i = 0; i < 3; i++) {
-			context.getInput().scroll(1.0);
+	/** AC-UI-38 [A] on a screen without keyboard navigation, with real wheel events (T3.28). */
+	private static void wheelOverASlider(ClientGameTestContext context) {
+		// The reference: 3 notches down and 3 up over the region's empty space.
+		setPage(context, WidgetTestScreen.PAGE_START);
+		pointAt(context, WidgetTestScreen::pageEmpty);
+		int down = notches(context, -3) - WidgetTestScreen.PAGE_START;
+		int up = notches(context, 3) - WidgetTestScreen.PAGE_START - down;
+		check(down > 0 && up == -down, "the region scrolls both ways over its empty space: " + down + ", " + up);
+		for (String state : java.util.List.of("idle", "after a press on the knob", "after a press on the track")) {
+			setPage(context, WidgetTestScreen.PAGE_START);
+			context.runOnClient(client -> screen(client.gui.screen()).setDecimal(100));
+			if (!state.equals("idle")) {
+				pointAt(context, state.endsWith("knob") ? WidgetTestScreen::liveKnob : screen -> screen.sliderPoint(0.8));
+				context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+				context.waitTicks(2);
+			}
+			long value = decimal(context);
+			pointAt(context, WidgetTestScreen::liveCentres);
+			check(context.computeOnClient(client -> screen(client.gui.screen()).sliderInRegion()), state + ": the slider shows in the region");
+			int afterDown = notches(context, -3);
+			int afterUp = notches(context, 3);
+			check(afterDown == WidgetTestScreen.PAGE_START + down && afterUp == WidgetTestScreen.PAGE_START, state + ": the wheel over the slider scrolls "
+					+ "the region as over its empty space: " + afterDown + ", " + afterUp);
+			context.getInput().holdShift();
+			notches(context, -3);
+			notches(context, 3);
+			context.getInput().releaseShift();
+			check(decimal(context) == value, state + ": the value is unchanged, with Shift too: " + value + " -> " + decimal(context));
 		}
-		context.waitTick();
-		double afterThree = context.computeOnClient(client -> screen(client.gui.screen()).decimalValue) / 100.0;
-		context.getInput().holdShift();
-		context.getInput().scroll(1.0);
-		context.getInput().releaseShift();
-		context.waitTick();
-		double afterFine = context.computeOnClient(client -> screen(client.gui.screen()).decimalValue) / 100.0;
+		// At the region's top and bottom the wheel over the slider, placed to show there, changes nothing.
+		int max = context.computeOnClient(client -> screen(client.gui.screen()).pageMax());
+		for (int edge : new int[] {0, max}) {
+			context.runOnClient(client -> screen(client.gui.screen()).setSliderTop(edge + 8));
+			setPage(context, edge);
+			check(context.computeOnClient(client -> screen(client.gui.screen()).sliderInRegion()), "the slider shows at the edge " + edge);
+			long value = decimal(context);
+			pointAt(context, WidgetTestScreen::liveCentres);
+			int after = notches(context, edge == 0 ? 3 : -3);
+			check(after == edge && decimal(context) == value, "at " + (edge == 0 ? "the top" : "the bottom") + " nothing changes: " + after + ", "
+					+ decimal(context));
+		}
+		context.runOnClient(client -> screen(client.gui.screen()).setSliderTop(-1));
+		// During a drag the wheel is ignored, over the slider and off it; the value follows only the pointer; one commit.
+		setPage(context, WidgetTestScreen.PAGE_START);
+		context.runOnClient(client -> screen(client.gui.screen()).setDecimal(100));
 		int commits = context.computeOnClient(client -> screen(client.gui.screen()).decimalCommits);
-		LOGGER.info("decimal slider: 1.0 + 3 notches = {}, + 1 Shift notch = {}, commits {}", afterThree, afterFine, commits);
-		check(afterThree == 1.3, "3 notches at step 0.1 give 1.3: " + afterThree);
-		check(afterFine == 1.31, "Shift gives the fine step of 0.01: " + afterFine);
-		check(commits == 0, "the wheel commits nothing");
+		pointAt(context, WidgetTestScreen::liveKnob);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		pointAt(context, screen -> screen.sliderPoint(0.6));
+		long held = decimal(context);
+		check(Math.abs(held - 200) <= 5, "the value follows the pointer: 0.6 along gives about 2.00: " + held);
+		int scroll = notches(context, -3);
+		check(scroll == WidgetTestScreen.PAGE_START && decimal(context) == held, "a drag over the slider ignores the wheel: " + scroll + ", " + decimal(context));
+		pointAt(context, WidgetTestScreen::pageEmpty);
+		long off = decimal(context);
+		scroll = notches(context, 3);
+		check(scroll == WidgetTestScreen.PAGE_START && decimal(context) == off, "and off it: " + scroll + ", " + decimal(context));
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		check(context.computeOnClient(client -> screen(client.gui.screen()).decimalCommits) == commits + 1, "the drag is committed once");
+		// A press on the track away from the knob moves the knob there and starts a drag.
+		context.runOnClient(client -> screen(client.gui.screen()).setDecimal(100));
+		pointAt(context, screen -> screen.sliderPoint(0.9));
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		boolean dragging = context.computeOnClient(client -> screen(client.gui.screen()).sliderDragging());
+		long moved = decimal(context);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		check(dragging && moved > 250, "a press on the track moves the knob there (" + moved + ") and starts a drag (" + dragging + ")");
+		setPage(context, WidgetTestScreen.PAGE_START);
+		context.runOnClient(client -> screen(client.gui.screen()).setDecimal(100));
+		context.getInput().setCursorPos(1, 1);
+		context.waitTicks(2);
+		LOGGER.info("wheel over a slider: the region scrolled {} per 3 notches over it as over its empty space, the value never moved", down);
+	}
+
+	private static void setPage(ClientGameTestContext context, int scroll) {
+		context.runOnClient(client -> screen(client.gui.screen()).setPageScroll(scroll));
+		context.waitTicks(2);
+	}
+
+	private static long decimal(ClientGameTestContext context) {
+		return context.computeOnClient(client -> screen(client.gui.screen()).decimalValue);
+	}
+
+	private interface Point {
+		int[] at(WidgetTestScreen screen);
+	}
+
+	private static void pointAt(ClientGameTestContext context, Point point) {
+		int[] at = context.computeOnClient(client -> point.at(screen(client.gui.screen())));
+		context.getInput().setCursorPos(at[0], at[1]);
+		context.waitTicks(2);
+	}
+
+	/** Sends {@code count} notches (positive up) and returns the region's scroll after them. */
+	private static int notches(ClientGameTestContext context, int count) {
+		for (int i = 0; i < Math.abs(count); i++) {
+			context.getInput().scroll(Math.signum(count));
+			context.waitTick();
+		}
+		return context.computeOnClient(client -> screen(client.gui.screen()).pageScroll());
 	}
 
 	/** REQ-UI-15: a drag through the real screen follows the pointer and commits once, on release. */

@@ -35,6 +35,14 @@ public final class WidgetTestScreen extends WidgetScreen {
 	private final TextEditModel probeModel = new TextEditModel(64, GAME_CLIPBOARD);
 	private final TextField probeField;
 	private final Slider liveSlider;
+	/** AC-UI-38 (T3.28): a region behind the live slider that scrolls both ways; the slider moves with it. */
+	private final ScrollArea page = new ScrollArea();
+	/** Where the region starts, so it can scroll both ways and the slider is at its usual place. */
+	static final int PAGE_START = 75;
+	private static final com.k8bas.skyblockutility.ui.render.ClipRect PAGE_BOX = new com.k8bas.skyblockutility.ui.render.ClipRect(4, 40, 128, 26);
+	private boolean pageStarted;
+	/** The live slider's top in the region's content: by default where it shows at its usual place at {@link #PAGE_START}. */
+	private int sliderTop = PAGE_START + 8;
 	private Slider middleSlider;
 	/** The sliders AC-UI-28 looks at (T3.16): 0, 64 and 128, the hovered one and the dimmed one. */
 	private final List<Slider> knobSliders = new ArrayList<>();
@@ -60,8 +68,19 @@ public final class WidgetTestScreen extends WidgetScreen {
 			}
 			knobSliders.add(slider);
 		}
-		liveSlider = place(new Slider(decimalModel, () -> decimalValue, v -> decimalValue = v, () -> decimalCommits++, decimalModel::format, () -> { }),
-				8, 48, 80, 12);
+		add(page);
+		layout.add(() -> {
+			page.setBounds(PAGE_BOX.x(), PAGE_BOX.y(), PAGE_BOX.width(), PAGE_BOX.height());
+			// 3 notches (72 GUI px) fit both ways from the start.
+			page.setContentHeight(PAGE_BOX.height() + 150);
+			if (!pageStarted) {
+				pageStarted = true;
+				page.setScroll(PAGE_START);
+			}
+		});
+		liveSlider = add(new Slider(decimalModel, () -> decimalValue, v -> decimalValue = v, () -> decimalCommits++, decimalModel::format, () -> { }));
+		liveSlider.setClip(PAGE_BOX);
+		layout.add(() -> liveSlider.setBounds(8, PAGE_BOX.y() + sliderTop - page.scroll(), 80, 12));
 		long[] disabled = {32};
 		place(new Slider(range, () -> disabled[0], v -> disabled[0] = v, () -> { }, range::format, () -> { }), 140, 48, 60, 12).setEnabled(false);
 		long[] hot = {96};
@@ -188,5 +207,42 @@ public final class WidgetTestScreen extends WidgetScreen {
 
 	boolean sliderDragging() {
 		return liveSlider.isDragging();
+	}
+
+	int pageScroll() {
+		return page.scroll();
+	}
+
+	int pageMax() {
+		return page.maxScroll();
+	}
+
+	void setPageScroll(int scroll) {
+		page.setScroll(scroll);
+	}
+
+	/** A point over the region's empty space, right of the slider's value and left of its widened scrollbar, in window pixels. */
+	int[] pageEmpty() {
+		return new int[] {windowX(120), windowY(page.y + 15)};
+	}
+
+	/** Places the live slider in the region's content, so it shows at the region's top or bottom too; negative for its usual place. */
+	void setSliderTop(int top) {
+		sliderTop = top < 0 ? PAGE_START + 8 : top;
+	}
+
+	/** Whether the live slider lies whole inside the region now (it is clipped to it). */
+	boolean sliderInRegion() {
+		return liveSlider.y >= page.y && liveSlider.y + liveSlider.height <= page.y + page.height;
+	}
+
+	/** The live slider's knob centre, in window pixels. */
+	int[] liveKnob() {
+		return new int[] {windowX(liveSlider.knobX() + Slider.KNOB_SIZE / 2), windowY(liveSlider.y + liveSlider.height / 2)};
+	}
+
+	/** Sets the live slider's value, in its units (1.00 is 100). */
+	void setDecimal(long units) {
+		decimalValue = units;
 	}
 }

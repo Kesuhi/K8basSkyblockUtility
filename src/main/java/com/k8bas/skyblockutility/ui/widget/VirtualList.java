@@ -89,6 +89,12 @@ public final class VirtualList extends Widget {
 		return rows.scroll() - smooth.drawn(scale);
 	}
 
+	/** While its thumb is dragged the wheel goes nowhere, over this list or any other region (EC-UI-25). */
+	@Override
+	public boolean blocksWheel() {
+		return grab >= 0;
+	}
+
 	/** For tests: the GUI scale the list is drawn at, as a draw sets it. */
 	void setScale(int scale) {
 		smooth.setScale(scale);

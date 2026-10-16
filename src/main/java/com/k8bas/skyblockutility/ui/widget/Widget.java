@@ -199,6 +199,14 @@ public abstract class Widget {
 		return focused;
 	}
 
+	/**
+	 * Whether the wheel goes nowhere while a press on this widget is held: a slider being dragged (REQ-UI-37), so neither its
+	 * value nor the page under it moves. No widget takes the wheel for being pressed or focused.
+	 */
+	public boolean blocksWheel() {
+		return false;
+	}
+
 	/** How hovered the widget looks, easing to 1 or 0 in 150 ms (REQ-UI-17). Created on the first draw, on the game's clock. */
 	protected float hoverAmount(boolean hot) {
 		if (hoverAnimation == null) {

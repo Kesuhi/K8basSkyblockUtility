@@ -237,6 +237,12 @@ public final class Dropdown<E> extends Widget {
 				grab = -1;
 			}
 
+			/** While its thumb is dragged the wheel goes nowhere (EC-UI-25). */
+			@Override
+			public boolean blocksWheel() {
+				return grab >= 0;
+			}
+
 			/** The list at the row whose thumb top lies at {@code along} less the grab, in whole rows. */
 			private void dragTo(int along) {
 				int track = rows.height - thumbLength();

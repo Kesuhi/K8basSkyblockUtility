@@ -39,7 +39,10 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   scrollbar still follows the mouse at once, and a click during a glide stops it. With "Animations" off
   they jump as before.
 - Scrollbars are slim rounded bars set in from the edge, and widen over a faint track when you point at
-  or drag them. The area you can grab is as wide as before.
+  or drag them. The area you can grab takes in the widened bar, and a dropdown list's bar can be dragged too.
+- The mouse wheel no longer changes sliders. Over a slider it scrolls the page or list like anywhere
+  else, so scrolling never changes a setting by accident, and while you drag a slider the wheel does
+  nothing. Drag a slider, click its track, or use the arrow keys after Tab to change it.
 
 ### Fixed
 

@@ -83,16 +83,37 @@ class WidgetBehaviourTest {
 		assertFalse(slider.press(50, 6, 0), "disabled");
 	}
 
+	/**
+	 * REQ-UI-37 (T3.28, your change of 2026-10-15): the wheel never changes a slider and is never taken by it, so it goes on to
+	 * the page; idle, after a press and release on the knob and on the track, during a drag, with or without Shift. Only a drag
+	 * blocks the wheel, so a held slider does not scroll the page either.
+	 */
 	@Test
-	void theWheelStepsLiveWithoutACommit() {
+	void theWheelNeverChangesASlider() {
 		Slider slider = slider();
 		value[0] = 10;
-		assertTrue(slider.scroll(50, 6, 3, false));
-		assertEquals(13, value[0]);
-		assertTrue(slider.scroll(50, 6, -1, true));
-		assertEquals(12, value[0]);
-		assertEquals(0, commits[0]);
-		assertFalse(slider.scroll(200, 6, 1, false), "not over the slider");
+		for (int notches : new int[] {3, -3}) {
+			for (boolean fine : new boolean[] {false, true}) {
+				assertFalse(slider.scroll(50, 6, notches, fine), "idle: not taken (" + notches + ", fine " + fine + ")");
+			}
+		}
+		assertEquals(10, value[0]);
+		assertFalse(slider.blocksWheel(), "idle, it does not block the wheel");
+		int knob = slider.knobX() + Slider.KNOB_SIZE / 2;
+		assertTrue(slider.press(knob, 6, 0), "a press on the knob");
+		slider.release(knob, 6);
+		assertFalse(slider.scroll(knob, 6, 3, false), "after a press on the knob: not taken");
+		assertTrue(slider.press(90, 6, 0), "a press on the track");
+		assertTrue(slider.blocksWheel(), "while dragged, the wheel goes nowhere");
+		long dragged = value[0];
+		assertFalse(slider.scroll(90, 6, 3, false), "during the drag: not taken");
+		assertFalse(slider.scroll(90, 6, -3, true));
+		assertEquals(dragged, value[0], "and the value follows only the pointer");
+		slider.release(90, 6);
+		assertFalse(slider.blocksWheel());
+		assertFalse(slider.scroll(90, 6, 3, false), "after a press on the track: not taken");
+		assertEquals(dragged, value[0]);
+		assertEquals(1, commits[0], "one commit, for the press on the track");
 	}
 
 	/** EC-UI-05: an out-of-range value is only replaced when the shown value changes. */
@@ -100,13 +121,13 @@ class WidgetBehaviourTest {
 	void anOutOfRangeValueSurvivesUntilItReallyChanges() {
 		Slider slider = slider();
 		value[0] = 200;
-		assertTrue(slider.scroll(50, 6, 1, false));
+		assertTrue(slider.navKey(NavKey.RIGHT, false));
 		assertEquals(200, value[0], "up from the shown maximum changes nothing");
 		assertTrue(slider.press(105, 6, 0), "on the knob, at the maximum");
 		slider.release(105, 6);
 		assertEquals(200, value[0], "a click on the knob writes nothing");
 		assertEquals(0, commits[0]);
-		assertTrue(slider.scroll(50, 6, -1, false));
+		assertTrue(slider.navKey(NavKey.LEFT, false));
 		assertEquals(99, value[0], "a real change replaces it");
 	}
 

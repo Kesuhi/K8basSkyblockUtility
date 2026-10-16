@@ -89,6 +89,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			search(context);
 			saveModel(context);
 			generalCategory(context);
+			wheelOverASlider(context);
 			// Last: it opens a settings screen of its own and closes it.
 			contentScrollbar(context);
 		} finally {
@@ -710,10 +711,14 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		click(context, row);
 		check(context.computeOnClient(client -> ConfigManager.general().noticePosition()) == com.k8bas.skyblockutility.ui.notice.NoticePosition.BOTTOM_LEFT,
 				"Bottom left picked");
+		// REQ-UI-37 (T3.28): the wheel over the slider leaves it; a press on its track at 6 s sets it.
+		int secondsBefore = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
 		move(context, controlCentre(context, "interface.notice_seconds"));
 		context.getInput().scroll(1.0);
 		context.waitTick();
-		check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == 6, "the wheel adds a second");
+		check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == secondsBefore, "the wheel leaves the seconds");
+		click(context, sliderPoint(context, "interface.notice_seconds", (6 - 1) / 14.0));
+		check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == 6, "a press on the track at 6 s sets 6 s");
 
 		// AC-UI-13: the "Open settings" capture: F7 binds and is in options.txt; Esc unbinds; a right click resets.
 		click(context, controlCentre(context, "keybinds.open_settings"));
@@ -745,6 +750,229 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		});
 		LOGGER.info("config screen General: accent #FF5252 applied at once and written; notices moved bottom left, 6 s; Open settings key "
 				+ "bound to F7 in options.txt, unbound by Esc, reset by a right click");
+	}
+
+	/**
+	 * AC-UI-38 [A] on the settings screen, which has keyboard navigation (REQ-UI-37, T3.28), with the notice duration slider
+	 * (the catalogue's sliders are whole numbers; the 0.1 step runs on the widget test screen), and its [C] Given: on the General
+	 * page started part-way down, the wheel over the slider, idle, Tab-focused, after a press and release on its knob and on
+	 * its track, with and without Shift, scrolls the page exactly as over its empty padding and changes neither the value nor
+	 * the file; at the page's top and bottom (where the slider shows there) it changes nothing; during a drag it is ignored
+	 * over the slider and off it, and the drag is written once, on release; Tab focus and the arrow keys still step it.
+	 */
+	private static void wheelOverASlider(ClientGameTestContext context) {
+		String id = "interface.notice_seconds";
+		Integer secondsBefore = context.computeOnClient(client -> ConfigManager.general().noticeSeconds);
+		context.getInput().resizeWindow(1280, 960);
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		try {
+			context.runOnClient(client -> screen(client).select(Category.GENERAL));
+			context.waitTicks(2);
+			int[] page = context.computeOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				ConfigLayout.OptionRow row = optionRow(screen, option -> option.id().equals(id));
+				int view = screen.frame().content().h();
+				int max = screen.scrollArea().maxScroll();
+				int start = Math.max(72, Math.min(max - 72, row.y() + row.height() / 2 - view / 2));
+				return new int[] {start, max, row.y(), row.height(), view};
+			});
+			int start = page[0];
+			check(page[1] >= 144, "General scrolls far enough both ways: " + page[1]);
+			// The reference: 3 notches down and 3 up over the content's left padding, beside the slider.
+			setScroll(context, start);
+			move(context, context.computeOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				Widget slider = screen.page().control(optionRow(screen, option -> option.id().equals(id)).option());
+				return new int[] {screen.frame().content().x() + 2, slider.y() + slider.height() / 2};
+			}));
+			int down = notches(context, -3) - start;
+			int up = notches(context, 3) - start - down;
+			check(down > 0 && up == -down, "the page scrolls both ways over its padding: " + down + ", " + up);
+			for (String state : List.of("idle", "Tab-focused", "after a press on the knob", "after a press on the track")) {
+				context.runOnClient(client -> ConfigManager.general().noticeSeconds = 5);
+				setScroll(context, start);
+				if (state.equals("Tab-focused")) {
+					boolean reached = false;
+					for (int i = 0; i < 60 && !reached; i++) {
+						context.getInput().pressKey(GLFW.GLFW_KEY_TAB);
+						context.waitTicks(2);
+						reached = context.computeOnClient(client -> screen(client).navFocus() == screen(client).page()
+								.control(optionRow(screen(client), option -> option.id().equals(id)).option()));
+					}
+					check(reached, "Tab reached the slider");
+					setScroll(context, start);
+				} else if (!state.equals("idle")) {
+					click(context, sliderPoint(context, id, state.endsWith("knob") ? -1 : 0.8));
+				}
+				int value = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
+				String fileThen = flushedFile(context);
+				// Each notch with the pointer on the slider where it is then: the page moves it 24 GUI px a notch.
+				int afterDown = notchesOver(context, id, -3);
+				int afterUp = notchesOver(context, id, 3);
+				check(afterDown == start + down && afterUp == start, state + ": the wheel over the slider scrolls the page as over its padding: "
+						+ afterDown + ", " + afterUp);
+				context.getInput().holdShift();
+				notchesOver(context, id, -3);
+				notchesOver(context, id, 3);
+				context.getInput().releaseShift();
+				check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == value, state + ": the value is unchanged, with Shift too");
+				check(flushedFile(context).equals(fileThen), state + ": and the file too");
+				if (state.equals("Tab-focused")) {
+					// The arrow keys still step the focused slider: 3 steps right, then Shift for the fine step.
+					for (int i = 0; i < 3; i++) {
+						context.getInput().pressKey(GLFW.GLFW_KEY_RIGHT);
+						context.waitTick();
+					}
+					int stepped = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
+					context.getInput().holdShift();
+					context.getInput().pressKey(GLFW.GLFW_KEY_RIGHT);
+					context.getInput().releaseShift();
+					context.waitTick();
+					int fineStepped = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
+					// A whole-number slider's fine step is 1 second too; the 0.1 slider's is in KeyboardControlsTest.
+					check(stepped == 8 && fineStepped == 9, "Tab focus: 3 right arrows step 5 s to " + stepped + ", Shift+right to " + fineStepped);
+					context.runOnClient(client -> ConfigManager.general().noticeSeconds = value);
+					click(context, context.computeOnClient(client -> new int[] {screen(client).frame().content().x() + 2,
+							screen(client).frame().content().y() + 4}));
+				}
+			}
+			// EC-UI-25: the wheel over an open dropdown list scrolls the list, not the page.
+			setScroll(context, start);
+			click(context, controlCentre(context, "interface.notice_position"));
+			check(context.computeOnClient(client -> screen(client).overlay()) != null, "the position list opens");
+			int listed = context.computeOnClient(client -> screen(client).scrollArea().scroll());
+			move(context, context.computeOnClient(client -> centreOf(screen(client).overlay().widgets().get(0))));
+			int overList = notches(context, -3);
+			check(overList == listed, "the wheel over the open list leaves the page: " + listed + " -> " + overList);
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTicks(2);
+			// At the page's top and bottom the wheel over a slider changes nothing: the Highlights page's mob scan range, which
+			// shows at both (the notice duration slider shows at neither).
+			context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+			context.waitTicks(2);
+			String range = "mob_highlighter.scan_range";
+			int highlightsMax = context.computeOnClient(client -> screen(client).scrollArea().maxScroll());
+			StringBuilder edges = new StringBuilder();
+			for (boolean top : new boolean[] {true, false}) {
+				int edge = top ? 0 : highlightsMax;
+				setScroll(context, edge);
+				boolean shows = context.computeOnClient(client -> {
+					ConfigScreen screen = screen(client);
+					Widget slider = screen.page().control(optionRow(screen, option -> option.id().equals(range)).option());
+					ConfigLayout.Rect content = screen.frame().content();
+					return slider.y() >= content.y() && slider.y() + slider.height() <= content.bottom();
+				});
+				check(shows, "the mob scan range slider shows at scroll " + edge);
+				int value = context.computeOnClient(client -> ConfigManager.general().mobScanRangeBlocks);
+				move(context, sliderPoint(context, range, 0.5));
+				// At the top the notches go up, at the bottom down: the way the page cannot go.
+				int after = notches(context, top ? 3 : -3);
+				check(after == edge && context.computeOnClient(client -> ConfigManager.general().mobScanRangeBlocks) == value, "at the "
+						+ (top ? "top" : "bottom") + " nothing changes: " + after);
+				edges.append(top ? "top (up)" : "bottom (down)").append(" at ").append(edge).append(' ');
+			}
+			context.runOnClient(client -> screen(client).select(Category.GENERAL));
+			context.waitTicks(2);
+			// During a drag the wheel is ignored, over the slider and off it; written once, on release.
+			setScroll(context, start);
+			move(context, sliderPoint(context, id, -1));
+			int requests = context.computeOnClient(client -> ConfigManager.saveRequests());
+			context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			move(context, sliderPoint(context, id, 0.9));
+			int held = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
+			int scroll = notches(context, -3);
+			check(scroll == start && context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == held,
+					"a drag over the slider ignores the wheel: " + scroll);
+			int sliderY = sliderPoint(context, id, 0.5)[1];
+			move(context, context.computeOnClient(client -> new int[] {screen(client).frame().content().x() + 2, sliderY}));
+			int off = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
+			scroll = notches(context, 3);
+			check(scroll == start && context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == off, "and off it: " + scroll);
+			check(context.computeOnClient(client -> ConfigManager.saveRequests()) == requests, "nothing written during the drag");
+			context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			check(context.computeOnClient(client -> ConfigManager.saveRequests()) - requests == 1, "and once on release");
+			LOGGER.info("config screen wheel over a slider: {} GUI px per 3 notches over it as over the padding, in 4 states; edges: {}", down, edges);
+		} finally {
+			context.runOnClient(client -> ConfigManager.general().noticeSeconds = secondsBefore);
+		}
+		wheelLeavesTheFile(context);
+	}
+
+	/**
+	 * AC-UI-38 [C]: on the General page, the wheel with the pointer resting on the notice duration slider, before and after a
+	 * click on its knob, scrolls the page and changes neither the value nor the file, which the screen writes when it closes.
+	 */
+	private static void wheelLeavesTheFile(ClientGameTestContext context) {
+		String id = "interface.notice_seconds";
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.waitTicks(2);
+		String fileBefore = flushedFile(context).replaceAll("\\s", "");
+		int value = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
+		move(context, controlCentre(context, id));
+		int start = context.computeOnClient(client -> screen(client).scrollArea().scroll());
+		int max = context.computeOnClient(client -> screen(client).scrollArea().maxScroll());
+		int up = start >= 72 ? 3 : -3;
+		int afterWheel = notches(context, up);
+		check(afterWheel != start || max == 0, "the wheel over the slider scrolls the page: " + start + " -> " + afterWheel);
+		notches(context, -up);
+		click(context, sliderPoint(context, id, -1));
+		int beforeSecond = context.computeOnClient(client -> screen(client).scrollArea().scroll());
+		move(context, sliderPoint(context, id, 0.5));
+		int afterClick = notches(context, up);
+		check(afterClick != beforeSecond || max == 0, "after the click the wheel over it still scrolls the page: " + beforeSecond + " -> "
+				+ afterClick);
+		check(context.computeOnClient(client -> ConfigManager.general().noticeSeconds()) == value, "the value stays " + value);
+		context.setScreen(() -> null);
+		context.waitTicks(2);
+		String fileAfter = flushedFile(context).replaceAll("\\s", "");
+		check(fileAfter.equals(fileBefore), "closing the screen wrote no change: " + fileBefore + " -> " + fileAfter);
+	}
+
+	/** Sends {@code count} notches (positive up), each with the pointer moved onto the slider first; returns the scroll after them. */
+	private static int notchesOver(ClientGameTestContext context, String optionId, int count) {
+		for (int i = 0; i < Math.abs(count); i++) {
+			move(context, sliderPoint(context, optionId, 0.5));
+			context.getInput().scroll(Math.signum(count));
+			context.waitTick();
+		}
+		return context.computeOnClient(client -> screen(client).scrollArea().scroll());
+	}
+
+	private static void setScroll(ClientGameTestContext context, int scroll) {
+		context.runOnClient(client -> screen(client).scrollArea().setScroll(scroll));
+		context.waitTicks(2);
+	}
+
+	/** Sends {@code count} notches (positive up) and returns the page's scroll after them. */
+	private static int notches(ClientGameTestContext context, int count) {
+		for (int i = 0; i < Math.abs(count); i++) {
+			context.getInput().scroll(Math.signum(count));
+			context.waitTick();
+		}
+		return context.computeOnClient(client -> screen(client).scrollArea().scroll());
+	}
+
+	/** The settings file as written now. */
+	private static String flushedFile(ClientGameTestContext context) {
+		context.runOnClient(client -> ConfigManager.flush());
+		return configFile(context);
+	}
+
+	/** A GUI point on a slider: along its track by {@code fraction} (0 left, 1 right), or its knob's centre for a negative one. */
+	private static int[] sliderPoint(ClientGameTestContext context, String optionId, double fraction) {
+		return context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			var slider = (com.k8bas.skyblockutility.ui.widget.Slider) screen.page().control(optionRow(screen, option -> option.id().equals(optionId)).option());
+			int knob = com.k8bas.skyblockutility.ui.widget.Slider.KNOB_SIZE;
+			int x = fraction < 0 ? slider.knobX() + knob / 2 : slider.x() + knob / 2 + (int) Math.round(fraction * (slider.width() - knob));
+			return new int[] {x, slider.y() + slider.height() / 2};
+		});
 	}
 
 	private static int[] controlCentre(ClientGameTestContext context, String optionId) {

@@ -95,6 +95,12 @@ public final class ScrollArea extends Widget {
 		}
 	}
 
+	/** While its thumb is dragged the wheel goes nowhere, over this region or any other (EC-UI-25). */
+	@Override
+	public boolean blocksWheel() {
+		return grab >= 0;
+	}
+
 	/** A press elsewhere ends a thumb drag whose release went to another widget, so the wheel is not left ignored. */
 	public void endDrag() {
 		grab = -1;

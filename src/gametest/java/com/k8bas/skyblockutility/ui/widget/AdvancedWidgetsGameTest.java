@@ -497,6 +497,23 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		click(context, screen -> screen.centre(screen.picker().saveButton()));
 		int typed = context.computeOnClient(client -> screen(client).alphaColour);
 		check(typed == 0x4029B6B2, "#4029B6B2 typed key by key saves with its alpha: " + Integer.toHexString(typed));
+		// AC-UI-38 (REQ-UI-37, T3.28): 3 notches each way over the brightness and the alpha slider leave both values.
+		click(context, screen -> screen.centre(screen.alphaSwatch));
+		int pickerBefore = context.computeOnClient(client -> screen(client).picker().state().color());
+		float alphaBefore = context.computeOnClient(client -> screen(client).picker().state().alpha());
+		for (boolean overAlpha : new boolean[] {false, true}) {
+			move(context, screen -> screen.point(overAlpha ? screen.picker().alphaSlider() : screen.picker().brightnessSlider(), 0.3, 0.5));
+			for (double notch : new double[] {1, 1, 1, -1, -1, -1}) {
+				context.getInput().scroll(notch);
+				context.waitTick();
+			}
+		}
+		int pickerAfter = context.computeOnClient(client -> screen(client).picker().state().color());
+		float alphaAfter = context.computeOnClient(client -> screen(client).picker().state().alpha());
+		check(pickerAfter == pickerBefore && alphaAfter == alphaBefore, "the wheel over the brightness and alpha sliders leaves them: "
+				+ Integer.toHexString(pickerBefore) + " -> " + Integer.toHexString(pickerAfter) + ", alpha " + alphaBefore + " -> " + alphaAfter);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
 		LOGGER.info("colour picker: #GG1234 marked, #1A2B3C saved with one commit, the wheel then Cancel and Esc applied nothing, brightness "
 				+ "to 0 and back kept hue and saturation, #80FF0000 dropped its alpha, an invalid hex saved the last valid colour, a preset "
 				+ "set the hex, alpha only where stored and saved at 0 and typed");

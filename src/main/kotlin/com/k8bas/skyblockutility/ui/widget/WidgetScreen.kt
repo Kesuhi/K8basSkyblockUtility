@@ -560,6 +560,11 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		timed { handleScroll(mouseX, mouseY, scrollX, scrollY) }
 
 	private fun handleScroll(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
+		// During a slider drag the wheel is ignored, wherever the pointer is (REQ-UI-37).
+		if (pressed?.blocksWheel() == true) {
+			scrollRest = 0.0
+			return true
+		}
 		val fine = Minecraft.getInstance().hasShiftDown()
 		val amount = if (scrollY != 0.0) scrollY else if (fine) scrollX else 0.0
 		val notches: Int

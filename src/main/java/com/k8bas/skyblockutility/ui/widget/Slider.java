@@ -15,8 +15,10 @@ import java.util.function.LongSupplier;
 /**
  * A whole-number or decimal slider (REQ-UI-06). Only a press on its track starts a drag (REQ-UI-03);
  * the value follows the drag live, and {@code onCommit} runs once on release if it changed, so a drag
- * writes the file at most once (REQ-UI-15). The wheel steps live; Shift gives the fine step. A stored
- * value outside the range is only replaced once the shown value really changes (EC-UI-05).
+ * writes the file at most once (REQ-UI-15). The wheel never changes it (REQ-UI-37): it goes on to the
+ * page under it, and while the slider is dragged nowhere. The arrow keys step it while it has the
+ * keyboard focus. A stored value outside the range is only replaced once the shown value really
+ * changes (EC-UI-05).
  */
 public final class Slider extends Widget {
 	public static final int TRACK_HEIGHT = 4;
@@ -99,15 +101,14 @@ public final class Slider extends Widget {
 
 	@Override
 	public boolean scroll(double mouseX, double mouseY, int notches, boolean fine) {
-		if (!enabled || notches == 0 || !contains(mouseX, mouseY)) {
-			return false;
-		}
-		long stored = get.getAsLong();
-		long after = model.stepFrom(stored, notches, fine);
-		if (after != model.shown(stored)) {
-			set.accept(after);
-		}
-		return true;
+		// Never taken, in any state, so a page scrolls over it as over the rest of its card (REQ-UI-37).
+		return false;
+	}
+
+	/** While dragged, the wheel goes nowhere: no value change and no scroll (REQ-UI-37, EC-UI-25). */
+	@Override
+	public boolean blocksWheel() {
+		return dragging;
 	}
 
 	@Override
@@ -116,8 +117,8 @@ public final class Slider extends Widget {
 	}
 
 	/**
-	 * Right/Up a step up, Left/Down a step down (Shift: the fine step), Page Up/Down ten steps, Home/End the ends. Like
-	 * the wheel: live, written when the screen closes, and a stored value off the range is kept until a step changes it.
+	 * Right/Up a step up, Left/Down a step down (Shift: the fine step), Page Up/Down ten steps, Home/End the ends: live,
+	 * written when the screen closes, and a stored value off the range is kept until a step changes it.
 	 */
 	@Override
 	public boolean navKey(NavKey key, boolean fine) {

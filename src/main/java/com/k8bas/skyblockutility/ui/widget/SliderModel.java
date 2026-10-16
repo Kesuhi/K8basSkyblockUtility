@@ -62,7 +62,7 @@ public final class SliderModel {
 	}
 
 	/**
-	 * The value after {@code notches} steps (scroll wheel or keys), up for positive. Off the grid, the
+	 * The value after {@code notches} steps (the arrow keys), up for positive. Off the grid, the
 	 * first step goes to the neighbouring grid value in that direction.
 	 */
 	public long stepFrom(long stored, int notches, boolean useFine) {
