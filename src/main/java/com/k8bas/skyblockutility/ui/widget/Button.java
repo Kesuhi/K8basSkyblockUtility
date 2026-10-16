@@ -29,6 +29,11 @@ public final class Button extends Widget {
 	private boolean pressed;
 	private Look look = Look.LIVE;
 
+	/** Its style; a normal one, enabled, has the separator-coloured outline (for gametests too). */
+	public Style style() {
+		return style;
+	}
+
 	public Button(String label, Style style, Runnable action, Runnable clickSound) {
 		this.label = label;
 		this.style = style;

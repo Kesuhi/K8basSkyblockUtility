@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.render
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet
 
 /**
  * The masks made so far (REQ-UI-18, T2.9d, R32; REQ-UI-47, T3.18), one per [MaskKey] at the current GUI scale, at most
@@ -39,6 +40,8 @@ class MaskCache<V : Any> @JvmOverloads constructor(
 	}
 
 	private val masks = Int2ObjectOpenHashMap<V>()
+	/** The keys asked for since the GUI scale last changed, for gametests (AC-UI-48): a mask not among them is another scale's. */
+	private val askedAtScale = IntOpenHashSet()
 	private var scale = 0
 	private var overflowLogged = false
 
@@ -56,7 +59,9 @@ class MaskCache<V : Any> @JvmOverloads constructor(
 		if (scale != this.scale) {
 			clear()
 			this.scale = scale
+			askedAtScale.clear()
 		}
+		askedAtScale.add(key)
 		if (failed) {
 			return null
 		}
@@ -77,6 +82,23 @@ class MaskCache<V : Any> @JvmOverloads constructor(
 		}
 		masks.put(key, mask)
 		return mask
+	}
+
+	/** For gametests (AC-UI-48): the GUI scale its masks are for, and how many it holds. */
+	fun scaleForTests(): Int = scale
+
+	fun sizeForTests(): Int = masks.size
+
+	/** For gametests (AC-UI-48): how many masks it holds that were not asked for at its current scale (left from another). */
+	fun staleForTests(): Int {
+		var stale = 0
+		val keys = masks.keys.iterator()
+		while (keys.hasNext()) {
+			if (!askedAtScale.contains(keys.nextInt())) {
+				stale++
+			}
+		}
+		return stale
 	}
 
 	/** Releases every mask made so far. */

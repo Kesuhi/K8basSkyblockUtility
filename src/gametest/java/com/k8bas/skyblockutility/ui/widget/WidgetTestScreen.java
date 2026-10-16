@@ -197,19 +197,13 @@ public final class WidgetTestScreen extends WidgetScreen {
 		return new int[] {knobX, middleSlider.y + (middleSlider.height - Slider.KNOB_SIZE) / 2};
 	}
 
-	/**
-	 * Per AC-UI-28 slider: its x, track top, width, knob left (laid out) and top edge, 1 if dimmed (GUI pixels), and the knob's
-	 * left edge as drawn, on the physical-pixel grid (REQ-UI-34), in physical pixels.
-	 */
+	/** Per AC-UI-28 slider, as {@link KnobProbe#of} reads it: its geometry, and its knob as drawn (T3.25, T3.36). */
 	int[][] knobSliders() {
-		int scale = Shapes.guiScale();
 		int[][] out = new int[knobSliders.size()][];
 		for (int i = 0; i < out.length; i++) {
 			Slider s = knobSliders.get(i);
 			// The knob as drawn (grown when hot, T3.36): its left, top and size in screen pixels.
-			int[] drawn = s.drawnKnob();
-			out[i] = new int[] {s.x, s.y + (s.height - Slider.TRACK_HEIGHT) / 2, s.width, s.knobX(), s.y + (s.height - Slider.KNOB_SIZE) / 2,
-					s.isDimmed() ? 1 : 0, drawn[0], drawn[1], drawn[2]};
+			out[i] = KnobProbe.of(s);
 		}
 		return out;
 	}

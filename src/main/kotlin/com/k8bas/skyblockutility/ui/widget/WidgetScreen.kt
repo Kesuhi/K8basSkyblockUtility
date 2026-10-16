@@ -256,6 +256,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (cancel) {
 			open.cancel()
 		}
+		open.closed()
 		overlay = null
 		transition = null
 		pressed = null

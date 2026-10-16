@@ -28,6 +28,9 @@ class WheelCache<T : Any>(private val textures: Textures<T>, private val logger:
 	var failed: Boolean = false
 		private set
 
+	/** For gametests (AC-UI-48): the size of the texture it holds, or 0 for none. */
+	fun sizeForTests(): Int = if (texture == null) 0 else size
+
 	/** The texture for this size and brightness, made or rebaked as needed; null once failed. */
 	fun get(size: Int, value: Float): T? {
 		if (failed) {

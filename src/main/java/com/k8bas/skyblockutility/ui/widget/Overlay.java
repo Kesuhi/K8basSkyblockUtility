@@ -32,6 +32,10 @@ public abstract class Overlay {
 	public void cancel() {
 	}
 
+	/** Closed in any way (after {@link #cancel()} when it was one): what it alone used can be freed. */
+	public void closed() {
+	}
+
 	/** A key while open (Esc is handled by the screen); true if used. */
 	public boolean key(int key, boolean ctrl, boolean shift) {
 		return false;

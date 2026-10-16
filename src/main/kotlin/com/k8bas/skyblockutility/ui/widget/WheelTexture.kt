@@ -47,6 +47,18 @@ internal object WheelTexture {
 	@JvmStatic
 	fun legacy(value: Float): Identifier? = fallback.get(LEGACY_SIZE, value)?.id
 
+	/** Frees the wheel's textures when the colour picker closes; the next one makes them again for its GUI scale. */
+	@JvmStatic
+	fun release() {
+		scaled.clear()
+		fallback.clear()
+	}
+
+	/** For gametests (AC-UI-48): how many wheel textures there are, and the scaled one's size in screen pixels (0 for none). */
+	@JvmStatic
+	fun cachedForTests(): IntArray =
+		intArrayOf((if (scaled.sizeForTests() > 0) 1 else 0) + (if (fallback.sizeForTests() > 0) 1 else 0), scaled.sizeForTests())
+
 	private class Baked(val id: Identifier, val image: WheelImage, val texture: DynamicTexture)
 
 	/** Each size has its own id, so a new size is registered before the old one is released. */

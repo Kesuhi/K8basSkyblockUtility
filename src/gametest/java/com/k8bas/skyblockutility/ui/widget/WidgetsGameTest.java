@@ -3,7 +3,6 @@ package com.k8bas.skyblockutility.ui.widget;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.ui.render.CornerMask;
-import com.k8bas.skyblockutility.ui.render.Corners;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -261,22 +260,10 @@ public class WidgetsGameTest implements FabricClientGameTest {
 					});
 					context.waitTicks(3);
 					BufferedImage shot = read(context.takeScreenshot("t3.15-outline-scale-" + scale + (smooth ? "-smooth" : "-off")));
-					int wrong = 0;
-					int checked = 0;
-					int w = 46 * scale;
-					int h = 16 * scale;
-					int r = Shapes.RADIUS_CONTROL * scale;
-					for (int y = 0; y < h; y++) {
-						for (int x = 0; x < w; x++) {
-							boolean corner = (x < r || x >= w - r) && (y < r || y >= h - r);
-							if (corner && outlineCovers(smooth, w, h, r, Shapes.hairlinePx(scale), x, y)) {
-								checked++;
-								if (!near(shot.getRGB(8 * scale + x, 68 * scale + y), Theme.SEPARATOR)) {
-									wrong++;
-								}
-							}
-						}
-					}
+					int[] corners = OutlineProbe.corners(shot, scale, smooth, 8 * scale, 68 * scale, 46 * scale, 16 * scale, Shapes.RADIUS_CONTROL * scale,
+							Theme.SEPARATOR);
+					int checked = corners[0];
+					int wrong = corners[1];
 					LOGGER.info("outline corners at scale {}{}: {} of {} pixels lack the outline colour", scale, smooth ? " smooth" : "", wrong,
 							checked);
 					check(checked > 0 && wrong == 0, "outline corners at scale " + scale + (smooth ? " smooth" : "") + ": " + wrong + " of "
@@ -339,124 +326,13 @@ public class WidgetsGameTest implements FabricClientGameTest {
 	}
 
 	private static void checkKnob(BufferedImage shot, int scale, boolean smooth, int[] slider, boolean notchCheck, String what) {
-		// The knob as drawn, on the physical-pixel grid (REQ-UI-34, T3.25), grown when hot (T3.36).
-		int size = slider[8];
-		int r = size / 2;
-		int left = slider[6];
-		int top = slider[7];
-		check(size == Slider.KNOB_SIZE * scale || size == Slider.KNOB_GROWN * scale, what + ": the knob is drawn " + size + " px, 10 or 12 GUI px across");
-		boolean dimmed = slider[5] == 1;
-		int centre = shot.getRGB(left + r, top + r);
-		int interior = 0;
-		int wrong = 0;
-		for (int y = 0; y < size; y++) {
-			for (int x = 0; x < size; x++) {
-				boolean full = CornerMask.discAlpha(size, x, y) == 255;
-				if (full) {
-					interior++;
-					if (!near(shot.getRGB(left + x, top + y), centre)) {
-						wrong++;
-					}
-				}
-			}
-		}
-		check(interior > 0 && wrong == 0, what + ": " + wrong + " of " + interior + " knob pixels differ from its centre");
-		int trackTop = slider[1] * scale;
-		if (dimmed) {
-			int fill = shot.getRGB(slider[0] * scale + 2 * scale, trackTop + Slider.TRACK_HEIGHT * scale / 2);
-			int fillPixels = 0;
-			for (int y = 0; y < size; y++) {
-				for (int x = 0; x < size; x++) {
-					if (near(shot.getRGB(left + x, top + y), fill)) {
-						fillPixels++;
-					}
-				}
-			}
-			check(fillPixels == 0, what + ": " + fillPixels + " pixels of the dimmed fill inside the knob's box");
-		}
-		if (notchCheck) {
-			int backdrop = shot.getRGB(left + r, top - 2 * scale);
-			for (int y : new int[] {trackTop, trackTop + Slider.TRACK_HEIGHT * scale - 1}) {
-				for (int x = left - scale; x < left + size + scale; x++) {
-					check(!near(shot.getRGB(x, y), backdrop), what + ": the backdrop shows on the track's row " + (y - top) + " at x " + (x - left));
-				}
-			}
-		}
-		checkRimSymmetry(shot, size, left, top, trackTop, scale, what);
+		String problem = KnobProbe.knob(shot, scale, slider, notchCheck, what);
+		check(problem.isEmpty(), problem);
 	}
 
-	/**
-	 * Above and below the track the knob's outermost pixels left and right match: the knob is a smooth disc whatever
-	 * the setting (REQ-UI-29), so its rim is anti-aliased in both passes and must blend over the same backdrop.
-	 */
-	private static void checkRimSymmetry(BufferedImage shot, int size, int left, int top, int trackTop, int scale, String what) {
-		int trackRows = Slider.TRACK_HEIGHT * scale;
-		for (int y = 0; y < size; y++) {
-			int row = top + y;
-			if (row >= trackTop && row < trackTop + trackRows) {
-				continue;
-			}
-			int a = -1;
-			int b = -1;
-			for (int x = 0; x < size; x++) {
-				if (CornerMask.discAlpha(size, x, y) > 0) {
-					if (a < 0) {
-						a = x;
-					}
-					b = x;
-				}
-			}
-			if (a >= 0) {
-				int la = shot.getRGB(left + a, row);
-				int rb = shot.getRGB(left + b, row);
-				check(near(la, rb), what + ": the rim differs left and right on knob row " + y + ": " + Integer.toHexString(la) + " vs "
-						+ Integer.toHexString(rb));
-			}
-		}
-	}
-
-	/** Next to a knob at either end, every pixel outside both the full track pill and the knob's disc is backdrop. */
 	private static void checkTrackEnds(BufferedImage shot, int scale, int[] slider, String what) {
-		// The knob as drawn, on the physical-pixel grid (REQ-UI-34, T3.25).
-		int size = slider[8];
-		int left = slider[6];
-		int top = slider[7];
-		int trackX = slider[0] * scale;
-		int trackTop = slider[1] * scale;
-		int trackW = slider[2] * scale;
-		int trackH = Slider.TRACK_HEIGHT * scale;
-		int backdrop = shot.getRGB(left + size / 2, top - 2 * scale);
-		// Discs and pills are smooth whatever the setting (REQ-UI-29): a pixel any of their masks touches may be tinted.
-		// The pill's caps are the outer halves of the disc mask of its height (REQ-UI-30).
-		int cap = trackH / 2;
-		for (int y = 0; y < trackH; y++) {
-			for (int x = left - scale; x < left + size + scale; x++) {
-				int px = x - trackX;
-				boolean inPill = px >= 0 && px < trackW && (px >= cap && px < trackW - cap
-						|| CornerMask.discAlpha(trackH, px < cap ? px : px - (trackW - trackH), y) > 0);
-				int ky = trackTop + y - top;
-				boolean inDisc = x >= left && x < left + size && ky >= 0 && ky < size && CornerMask.discAlpha(size, x - left, ky) > 0;
-				if (!inPill && !inDisc) {
-					check(near(shot.getRGB(x, trackTop + y), backdrop), what + ": fill or track outside the pill and the knob at track row " + y
-							+ ", x " + (x - left) + " from the knob");
-				}
-			}
-		}
-	}
-
-	/** Whether the 1 GUI px outline fully covers screen pixel (x, y) of the w×h button with radius r. */
-	private static boolean outlineCovers(boolean smooth, int w, int h, int r, int t, int x, int y) {
-		if (smooth) {
-			int mx = x < r ? x : x - (w - 2 * r);
-			int my = y < r ? y : y - (h - 2 * r);
-			return CornerMask.ringAlpha(r, t, mx, my) == 255;
-		}
-		for (Corners.Span span : Corners.ring(w, h, r, t)) {
-			if (x >= span.x0() && x < span.x1() && y >= span.y0() && y < span.y1()) {
-				return true;
-			}
-		}
-		return false;
+		String problem = KnobProbe.trackEnds(shot, scale, slider, what);
+		check(problem.isEmpty(), problem);
 	}
 
 	private static boolean near(int a, int b) {

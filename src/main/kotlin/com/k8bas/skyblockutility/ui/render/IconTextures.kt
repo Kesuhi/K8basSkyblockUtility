@@ -37,6 +37,10 @@ internal object IconTextures {
 	@JvmStatic
 	fun texture(scale: Int, icon: IconShapes.Icon, px: Int): Identifier? = cache.get(scale, key(icon, px))
 
+	/** For gametests (AC-UI-48): the GUI scale the icon textures are for, how many there are, and how many of them another scale's. */
+	@JvmStatic
+	fun cachedForTests(): IntArray = intArrayOf(cache.scaleForTests(), cache.sizeForTests(), cache.staleForTests())
+
 	/** The icon's fill spans for the fallback, made once per icon and size at this GUI scale. */
 	@JvmStatic
 	fun spans(scale: Int, icon: IconShapes.Icon, px: Int): IntArray {

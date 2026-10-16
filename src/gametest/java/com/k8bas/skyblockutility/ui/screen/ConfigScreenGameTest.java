@@ -243,7 +243,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	 * The render thread's errors and warnings, and any exception, logged between two markers. Other threads'
 	 * known noise in a test client without an account (authentication, Realms) is left out.
 	 */
-	private static List<String> errorsBetween(ClientGameTestContext context, String start, String end) {
+	static List<String> errorsBetween(ClientGameTestContext context, String start, String end) {
 		String log = "";
 		for (int tries = 0; tries < 40 && !log.contains(end); tries++) {
 			context.waitTick();
@@ -255,7 +255,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 				|| line.contains("Exception") && !line.contains("MinecraftClientHttpException") && !line.contains("buildHttpException")).toList();
 	}
 
-	private static String latestLog() {
+	static String latestLog() {
 		try {
 			return java.nio.file.Files.readString(net.fabricmc.loader.api.FabricLoader.getInstance().getGameDir().resolve(Path.of("logs", "latest.log")));
 		} catch (IOException e) {

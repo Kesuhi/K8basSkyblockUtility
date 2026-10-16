@@ -111,6 +111,12 @@ public final class ColorPickerOverlay extends Overlay {
 		return alpha != null;
 	}
 
+	/** Its wheel's textures are freed, so no other GUI scale's is kept while it is closed (REQ-UI-47, AC-UI-48). */
+	@Override
+	public void closed() {
+		WheelTexture.release();
+	}
+
 	private void save() {
 		binding.set(state.color());
 		commit.run();

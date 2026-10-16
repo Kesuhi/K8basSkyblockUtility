@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.Identifier;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
+import org.joml.Vector2f;
 
 /**
  * Rects and rounded rects from plain fills (REQ-UI-17, D-8; no direct GL, REQ-PORT-12). Corners are cut in
@@ -212,6 +213,9 @@ public final class Shapes {
 		int argb = UiFade.apply(colour);
 		int scale = guiScale();
 		Matrix3x2fStack outer = graphics.pose();
+		if (cornerSquares != null && radius > 0 && !ShapePlan.alwaysSmooth(w, h, radius, thickness, corners)) {
+			recordCorners(outer, x, y, w, h, radius, corners, scale);
+		}
 		ScreenRectangle scissor = graphics.scissorStack.peek();
 		boolean smooth = ShapePlan.alwaysSmooth(w, h, radius, thickness, corners) || smooth();
 		ShapePlan.Drawn<Identifier> drawn = ShapePlan.resolve(outer, x, y, w, h, radius, thickness, corners, scale, smooth, clip(scissor),
@@ -227,6 +231,40 @@ public final class Shapes {
 							bounds(element))
 					: new ShapeRenderState(RenderPipelines.GUI, TextureSetup.noTexture(), pose, element.quads(), null, argb, scissor,
 							bounds(element)));
+		}
+	}
+
+	/**
+	 * For gametests (AC-UI-30): while recording, the screen-pixel squares (x, y, side) of the round corners of rectangles and
+	 * outlines, the only places "Smooth corners" changes; discs and pills, always smooth, are not recorded.
+	 */
+	private static java.util.List<int[]> cornerSquares;
+
+	/** For gametests (AC-UI-30): starts recording the corner squares drawn from now, or stops it. */
+	public static void recordCornersForTests(boolean on) {
+		cornerSquares = on ? new java.util.ArrayList<>() : null;
+	}
+
+	/** For gametests (AC-UI-30): the corner squares recorded so far. */
+	public static java.util.List<int[]> recordedCornersForTests() {
+		return cornerSquares == null ? java.util.List.of() : java.util.List.copyOf(cornerSquares);
+	}
+
+	private static void recordCorners(Matrix3x2fStack pose, float x, float y, int w, int h, int radius, int corners, int scale) {
+		Vector2f at = pose.transformPosition(x, y, new Vector2f());
+		int left = Math.round(at.x * scale);
+		int top = Math.round(at.y * scale);
+		if ((corners & Corners.TOP_LEFT) != 0) {
+			cornerSquares.add(new int[] {left, top, radius});
+		}
+		if ((corners & Corners.TOP_RIGHT) != 0) {
+			cornerSquares.add(new int[] {left + w - radius, top, radius});
+		}
+		if ((corners & Corners.BOTTOM_LEFT) != 0) {
+			cornerSquares.add(new int[] {left, top + h - radius, radius});
+		}
+		if ((corners & Corners.BOTTOM_RIGHT) != 0) {
+			cornerSquares.add(new int[] {left + w - radius, top + h - radius, radius});
 		}
 	}
 

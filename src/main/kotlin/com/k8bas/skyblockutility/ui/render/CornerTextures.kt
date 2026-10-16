@@ -22,6 +22,10 @@ internal object CornerTextures {
 	@JvmStatic
 	fun mask(scale: Int, key: Int): Identifier? = cache.get(scale, key)
 
+	/** For gametests (AC-UI-48): the GUI scale the masks are for, how many there are, and how many of them another scale's. */
+	@JvmStatic
+	fun cachedForTests(): IntArray = intArrayOf(cache.scaleForTests(), cache.sizeForTests(), cache.staleForTests())
+
 	private fun bake(key: Int): Identifier {
 		val disc = MaskKey.isDisc(key)
 		val shadow = MaskKey.isShadow(key)
