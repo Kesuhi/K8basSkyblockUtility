@@ -105,10 +105,10 @@ public final class Button extends Widget {
 		}
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(fill));
 		if (style == Style.NORMAL || !enabled) {
-			Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1, faded(Theme.SEPARATOR));
+			Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(Theme.SEPARATOR));
 		} else if (style == Style.DESTRUCTIVE) {
 			// A light rim, so a destructive button differs from a primary one even with a red accent (EC-UI-15).
-			Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1, faded(ColorMath.withAlpha(0x70, Theme.TEXT_PRIMARY)));
+			Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(ColorMath.withAlpha(0x70, Theme.TEXT_PRIMARY)));
 		}
 		String shown = Ellipsis.fit(label, width - 8, font::width);
 		UiText.centred(graphics, font, shown, x + width / 2, y + (height - font.lineHeight) / 2 + 1, faded(text));

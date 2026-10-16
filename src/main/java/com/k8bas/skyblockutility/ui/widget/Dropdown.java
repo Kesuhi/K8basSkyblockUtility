@@ -94,7 +94,7 @@ public final class Dropdown<E> extends Widget {
 		float hover = hoverAmount(hot);
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(Theme.SIDEBAR));
 		int outline = !enabled ? Theme.CARD_HOVER : isOpen() ? theme.accent() : ColorMath.lerp(Theme.SEPARATOR, Theme.TEXT_DISABLED, hover);
-		Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1, faded(outline));
+		Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(outline));
 		int textColor = faded(enabled ? Theme.TEXT_PRIMARY : Theme.TEXT_DISABLED);
 		String shown = Ellipsis.fit(choice.label().apply(choice.binding().get()), width - 18, font::width);
 		UiText.draw(graphics, font, shown, x + 5, y + (height - font.lineHeight) / 2 + 1, textColor);
@@ -204,9 +204,13 @@ public final class Dropdown<E> extends Widget {
 				lastMouseY = mouseY;
 				Theme theme = Theme.current();
 				Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.CARD);
-				Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1, Theme.SEPARATOR);
+				Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.SEPARATOR);
 				E current = choice.binding().get();
 				int shownRows = height / ROW_HEIGHT;
+				// The row fills meet the hairline outline flush (T3.22): one hairline in from the box's edges, 1 GUI px between rows.
+				float line = Shapes.hairlineGui(Shapes.guiScale());
+				float left = x + line;
+				float right = x + width - line;
 				for (int row = 0; row < shownRows; row++) {
 					int index = model.scroll() + row;
 					if (index >= choice.values().size()) {
@@ -214,12 +218,14 @@ public final class Dropdown<E> extends Widget {
 					}
 					E value = choice.values().get(index);
 					int rowY = y + row * ROW_HEIGHT;
+					float top = row == 0 ? y + line : rowY + 1;
+					float bottom = rowY + ROW_HEIGHT == y + height ? y + height - line : rowY + ROW_HEIGHT - 1;
 					boolean selected = value.equals(current);
 					if (selected) {
-						graphics.fill(x + 1, rowY + 1, x + width - 1, rowY + ROW_HEIGHT - 1, theme.accentBackground());
-						graphics.fill(x + 1, rowY + 1, x + 3, rowY + ROW_HEIGHT - 1, theme.accent());
+						Shapes.fill(graphics, left, top, right, bottom, theme.accentBackground());
+						Shapes.fill(graphics, left, top, x + 3, bottom, theme.accent());
 					} else if (index == model.highlighted()) {
-						graphics.fill(x + 1, rowY + 1, x + width - 1, rowY + ROW_HEIGHT - 1, Theme.CARD_HOVER);
+						Shapes.fill(graphics, left, top, right, bottom, Theme.CARD_HOVER);
 					}
 					// The selected entry has the kit's check mark at its right end (REQ-UI-32), so its label keeps that free.
 					String label = Ellipsis.fit(choice.label().apply(value), width - (selected ? 26 : 14), font::width);
@@ -234,7 +240,7 @@ public final class Dropdown<E> extends Widget {
 					// A thin scroll thumb on the right.
 					int thumbHeight = Math.max(6, height * shownRows / count);
 					int thumbY = y + (height - thumbHeight) * model.scroll() / Math.max(1, count - shownRows);
-					graphics.fill(x + width - 3, thumbY + 1, x + width - 1, thumbY + thumbHeight - 1, Theme.TEXT_DISABLED);
+					Shapes.fill(graphics, x + width - 3, thumbY + 1, right, thumbY + thumbHeight - 1, Theme.TEXT_DISABLED);
 				}
 			}
 		}

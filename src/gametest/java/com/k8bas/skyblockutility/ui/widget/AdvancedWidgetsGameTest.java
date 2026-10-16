@@ -8,6 +8,7 @@ import com.k8bas.skyblockutility.ui.render.CornerMask;
 import com.k8bas.skyblockutility.ui.render.IconProbe;
 import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.ShapeRenderState;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -70,6 +71,7 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			}
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
+			listOutlineIsAHairline(context);
 			dropdownIcons(context);
 			dropdowns(context);
 			keybinds(context);
@@ -202,6 +204,43 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 	}
 
 	/**
+	 * AC-UI-34 [C] (REQ-UI-33, T3.22): at GUI scales 2, 3 and 4 the open short dropdown list's outline measures
+	 * ceil(guiScale / 2) physical px on its top edge; back at scale 2 afterwards.
+	 */
+	private static void listOutlineIsAHairline(ClientGameTestContext context) {
+		try {
+			for (int scale = 2; scale <= 4; scale++) {
+				int s = scale;
+				context.runOnClient(client -> client.options.guiScale().set(s));
+				context.waitTicks(3);
+				click(context, screen -> screen.centre(screen.shortDropdown));
+				int[] list = context.computeOnClient(client -> {
+					Widget rows = screen(client).openListWidget();
+					return new int[] {rows.x, rows.y, rows.width};
+				});
+				context.getInput().setCursorPos(1, 1);
+				context.waitTicks(2);
+				java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(context.takeScreenshot("t3.22-list-outline-scale-" + scale).toFile());
+				context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+				context.waitTick();
+				// REQ-UI-33's rule written out, not read from the code under test.
+				int thick = (int) Math.ceil(scale / 2.0);
+				int listEdge = 0;
+				while (near(image.getRGB((list[0] + list[2] / 2) * scale, list[1] * scale + listEdge) & 0xFFFFFF, Theme.SEPARATOR & 0xFFFFFF)) {
+					listEdge++;
+				}
+				LOGGER.info("dropdown list outline at scale {}: {} px (rule {})", scale, listEdge, thick);
+				check(listEdge == thick, "scale " + scale + ": the open list's outline is " + listEdge + " px, the hairline " + thick);
+			}
+		} catch (IOException e) {
+			throw new AssertionError("cannot read a screenshot", e);
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(2));
+			context.waitTicks(3);
+		}
+	}
+
+	/**
 	 * AC-UI-33 [C] (T3.21), at GUI scale 2: the closed short dropdown (GUI 8, 8, 120x16) shows the kit's down chevron 12 px
 	 * from its right end in the text colour; open, its list shows the kit's check mark beside the selected entry, in the
 	 * accent; both drawn 1:1 with anti-aliased edges.
@@ -265,7 +304,12 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		check(!context.computeOnClient(client -> screen(client).picker().state().hexValid()), "#GG1234 is marked invalid");
 		check(context.computeOnClient(client -> screen(client).picker().state().color()) == 0x0AA351, "and keeps the last valid colour");
 		Path invalidShot = context.takeScreenshot("t2.3b-picker-invalid-hex");
-		int[] fieldTop = context.computeOnClient(client -> screen(client).point(screen(client).picker().hexField(), 0.5, 0));
+		// The outline is a hairline (T3.22): its first physical row, at the field's top edge.
+		int[] fieldTop = context.computeOnClient(client -> {
+			Widget field = screen(client).picker().hexField();
+			int scale = client.getWindow().getGuiScale();
+			return new int[] {(field.x + field.width / 2) * scale, field.y * scale};
+		});
 		int outline = pixel(invalidShot, fieldTop);
 		check(outline == (Theme.ERROR & 0xFFFFFF), "the invalid field has the error outline: " + Integer.toHexString(outline));
 		context.getInput().holdControl();

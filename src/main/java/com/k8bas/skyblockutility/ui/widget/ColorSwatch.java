@@ -66,7 +66,7 @@ public final class ColorSwatch extends Widget {
 		}
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(storesAlpha ? colour : 0xFF000000 | colour));
 		float hover = hoverAmount(enabled && contains(mouseX, mouseY));
-		Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1,
+		Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL,
 				faded(ColorMath.lerp(Theme.SEPARATOR, Theme.TEXT_PRIMARY, hover)));
 	}
 }

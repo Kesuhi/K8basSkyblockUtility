@@ -23,7 +23,8 @@ import org.joml.Matrix3x2fStack;
  * fills; a shape a mask cannot draw keeps the fill-based corners. Discs, pills and one-cap pills always take their
  * round ends from a disc mask (REQ-UI-30, T3.18). A texture baked at its size times the GUI scale (the colour wheel,
  * T3.19, and the icons, T3.20) is drawn 1:1 as one element by {@link #image}. Every mask and baked texture is sampled linear and clamped to its
- * edge (REQ-UI-31). Written from SPEC REQ-UI-17, REQ-UI-18, REQ-UI-30 and REQ-UI-31; no AlpakaAddons code (REQ-UI-24).
+ * edge (REQ-UI-31). Outlines and thin lines are hairlines in screen pixels, ceil(guiScale / 2) thick (REQ-UI-33, T3.22).
+ * Written from SPEC REQ-UI-17, REQ-UI-18, REQ-UI-30, REQ-UI-31 and REQ-UI-33; no AlpakaAddons code (REQ-UI-24).
  */
 public final class Shapes {
 	/** Corner radii in GUI pixels: cards, tabs, and small controls. */
@@ -70,6 +71,71 @@ public final class Shapes {
 		if (thickness > 0) {
 			int scale = guiScale();
 			draw(graphics, x, y, w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, thickness, scale), thickness * scale, Corners.ALL, argb);
+		}
+	}
+
+	/**
+	 * A hairline's thickness in screen pixels at this GUI scale (REQ-UI-33): ceil(guiScale / 2), so 1 at scales 1 and 2, 2 at
+	 * 3 and 4, 3 at 5 and 6. Outlines and thin lines are this thick; a focus ring is not ({@link #focusRingPx}).
+	 */
+	public static int hairlinePx(int scale) {
+		return (scale + 1) / 2;
+	}
+
+	/** A focus ring's thickness in screen pixels (REQ-UI-33): 1 GUI px, so keyboard focus stays easy to see. */
+	public static int focusRingPx(int scale) {
+		return scale;
+	}
+
+	/** A GUI position snapped to the nearest screen pixel at this GUI scale, a multiple of 1/scale. */
+	public static float snap(float v, int scale) {
+		return (float) Math.round(v * scale) / scale;
+	}
+
+	/** A rounded outline one hairline thick (REQ-UI-33) inside the w×h box: the outline of a control. */
+	public static void roundedHairline(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
+		int scale = guiScale();
+		draw(graphics, x, y, w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, 1, scale), hairlinePx(scale), Corners.ALL, argb);
+	}
+
+	/** A square outline one hairline thick (REQ-UI-33) inside the w×h box. */
+	public static void hairlineRect(GuiGraphicsExtractor graphics, float x, float y, int w, int h, int argb) {
+		int scale = guiScale();
+		draw(graphics, snap(x, scale), snap(y, scale), w * scale, h * scale, 0, hairlinePx(scale), Corners.ALL, argb);
+	}
+
+	/** A horizontal hairline (REQ-UI-33) w GUI px long, its top edge at GUI y, snapped to the screen pixel grid. */
+	public static void hairlineH(GuiGraphicsExtractor graphics, float x, float y, int w, int argb) {
+		int scale = guiScale();
+		draw(graphics, snap(x, scale), snap(y, scale), w * scale, hairlinePx(scale), 0, 0, Corners.ALL, argb);
+	}
+
+	/** A vertical hairline (REQ-UI-33) h GUI px long, its left edge at GUI x, snapped to the screen pixel grid: the text caret. */
+	public static void hairlineV(GuiGraphicsExtractor graphics, float x, float y, int h, int argb) {
+		int scale = guiScale();
+		draw(graphics, snap(x, scale), snap(y, scale), hairlinePx(scale), h * scale, 0, 0, Corners.ALL, argb);
+	}
+
+	/** A focus ring (REQ-UI-33): a rounded outline {@link #focusRingPx} thick, 1 GUI px at every GUI scale. */
+	public static void focusRing(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
+		int scale = guiScale();
+		draw(graphics, x, y, w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, 1, scale), focusRingPx(scale), Corners.ALL, argb);
+	}
+
+	/** One hairline in GUI pixels at this GUI scale: how far a fill sits inside a hairline outline to meet it flush. */
+	public static float hairlineGui(int scale) {
+		return (float) hairlinePx(scale) / scale;
+	}
+
+	/** A plain fill from GUI (x0, y0) to (x1, y1), its edges snapped to the screen pixel grid, so it can meet a hairline flush. */
+	public static void fill(GuiGraphicsExtractor graphics, float x0, float y0, float x1, float y1, int argb) {
+		int scale = guiScale();
+		int left = Math.round(x0 * scale);
+		int top = Math.round(y0 * scale);
+		int right = Math.round(x1 * scale);
+		int bottom = Math.round(y1 * scale);
+		if (right > left && bottom > top) {
+			draw(graphics, (float) left / scale, (float) top / scale, right - left, bottom - top, 0, 0, Corners.ALL, argb);
 		}
 	}
 

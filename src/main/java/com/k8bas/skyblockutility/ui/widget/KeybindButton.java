@@ -139,7 +139,7 @@ public final class KeybindButton extends Widget {
 		Theme theme = Theme.current();
 		int fill = enabled ? ColorMath.lerp(Theme.CARD_HOVER, Theme.SEPARATOR, hover) : Theme.CARD;
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(fill));
-		Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1, faded(armed ? theme.accent() : Theme.SEPARATOR));
+		Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(armed ? theme.accent() : Theme.SEPARATOR));
 		String bound = target.bound();
 		String name = bound.equals(Keybind.UNBOUND) ? "Not bound" : displayName.apply(bound);
 		boolean conflict = !armed && !conflicts().isEmpty();

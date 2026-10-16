@@ -54,6 +54,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 				context.waitTicks(3);
 				context.takeScreenshot("t2.3a-widgets-scale-" + s);
 			}
+			hairlinesAreThin(context);
 			outlineCornersKeepTheirColour(context);
 			knobsKeepTheirOwnColour(context);
 			context.runOnClient(client -> client.options.guiScale().set(2));
@@ -204,7 +205,41 @@ public class WidgetsGameTest implements FabricClientGameTest {
 	}
 
 	/**
-	 * AC-UI-29's outline corners (T3.15): the idle "Cancel" button (GUI 8, 68, 46x16, radius 4, 1 px outline) at GUI
+	 * AC-UI-34 [C] (REQ-UI-33, T3.22): at GUI scales 2, 3 and 4 the outline of the idle "Cancel" button (GUI 8, 68, 46x16)
+	 * and of the empty "Search settings..." field (GUI 8, 132, 140x16) measure ceil(guiScale / 2) physical px on their top
+	 * edge, and the caret of the focused "Zealot" field (GUI 160, 132, its clock stopped so the caret always shows) is that
+	 * wide: 1, 2 and 2 px.
+	 */
+	private static void hairlinesAreThin(ClientGameTestContext context) {
+		for (int scale = 2; scale <= 4; scale++) {
+			int s = scale;
+			context.runOnClient(client -> client.options.guiScale().set(s));
+			context.waitTicks(3);
+			BufferedImage shot = read(context.takeScreenshot("t3.22-hairlines-scale-" + scale));
+			// REQ-UI-33's rule written out, not read from the code under test.
+			int thick = (int) Math.ceil(scale / 2.0);
+			int button = run(shot, (8 + 23) * scale, 68 * scale, 0, 1, Theme.SEPARATOR);
+			int field = run(shot, (8 + 70) * scale, 132 * scale, 0, 1, Theme.SEPARATOR);
+			int caretX = context.computeOnClient(client -> 160 + 4 + client.font.width("Zealot"));
+			int caret = run(shot, caretX * scale, (132 + 7) * scale, 1, 0, Theme.TEXT_PRIMARY);
+			boolean clearBefore = !near(shot.getRGB(caretX * scale - 1, (132 + 7) * scale), Theme.TEXT_PRIMARY);
+			LOGGER.info("hairlines at scale {}: button {} px, field {} px, caret {} px (rule {})", scale, button, field, caret, thick);
+			check(button == thick && field == thick && caret == thick && clearBefore, "scale " + scale + ": hairlines " + thick + " px: button " + button
+					+ ", field " + field + ", caret " + caret + (clearBefore ? "" : ", the caret starts earlier"));
+		}
+	}
+
+	/** How many pixels from (x, y), stepping by (dx, dy), have the colour {@code argb}. */
+	private static int run(BufferedImage shot, int x, int y, int dx, int dy, int argb) {
+		int n = 0;
+		while (near(shot.getRGB(x + n * dx, y + n * dy), argb)) {
+			n++;
+		}
+		return n;
+	}
+
+	/**
+	 * AC-UI-29's outline corners (T3.15): the idle "Cancel" button (GUI 8, 68, 46x16, radius 4, a hairline outline) at GUI
 	 * scales 3 and 4, Smooth corners OFF and ON. Every corner pixel the outline fully covers shows the outline colour;
 	 * in 1.2.1 the fill was drawn over some of them.
 	 */
@@ -228,7 +263,7 @@ public class WidgetsGameTest implements FabricClientGameTest {
 					for (int y = 0; y < h; y++) {
 						for (int x = 0; x < w; x++) {
 							boolean corner = (x < r || x >= w - r) && (y < r || y >= h - r);
-							if (corner && outlineCovers(smooth, w, h, r, scale, x, y)) {
+							if (corner && outlineCovers(smooth, w, h, r, Shapes.hairlinePx(scale), x, y)) {
 								checked++;
 								if (!near(shot.getRGB(8 * scale + x, 68 * scale + y), Theme.SEPARATOR)) {
 									wrong++;

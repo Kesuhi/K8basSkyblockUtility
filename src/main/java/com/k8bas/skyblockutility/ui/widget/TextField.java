@@ -246,7 +246,7 @@ public final class TextField extends Widget {
 		float hover = forcedHot ? 1F : hoverAmount(hot);
 		int outline = !enabled ? Theme.CARD_HOVER : wrong ? Theme.ERROR : focused ? theme.accent()
 				: ColorMath.lerp(Theme.SEPARATOR, Theme.TEXT_DISABLED, hover);
-		Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1, faded(outline));
+		Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(outline));
 		String text = model.text();
 		keepCaretVisible();
 		int textY = y + (height - font.lineHeight) / 2 + 1;
@@ -271,7 +271,8 @@ public final class TextField extends Widget {
 			UiText.draw(graphics, font, text, originX, textY, faded(enabled ? Theme.TEXT_PRIMARY : Theme.TEXT_DISABLED));
 			if (focused && ((clock.getAsLong() - focusedAt) / BLINK_MS) % 2 == 0) {
 				int caretX = originX + font.width(text.substring(0, model.caret()));
-				graphics.fill(caretX, textY - 1, caretX + 1, textY + font.lineHeight - 1, Theme.TEXT_PRIMARY);
+				// REQ-UI-33: the caret is a hairline on the screen pixel grid.
+				Shapes.hairlineV(graphics, caretX, textY - 1, font.lineHeight, Theme.TEXT_PRIMARY);
 			}
 		}
 	}
