@@ -54,6 +54,10 @@ import java.util.concurrent.atomic.AtomicLong;
  *   <li>AC-UI-36 [C] and EC-UI-25 (REQ-UI-35, T3.26): a wheel notch over the page glides on the test clock (still at 0 ms,
  *       strictly between at 50 ms, at 24 GUI px from 400 ms on), and a press during a glide stops it where the page was
  *       drawn.</li>
+ *   <li>AC-UI-39 [C] (REQ-UI-38, T3.29): the dropdown list, the colour picker and the database picker, screenshotted at 0,
+ *       60 and 120 ms after opening: a point inside each, and the modal backdrop, are unchanged at 0 ms, between at 60 ms and
+ *       at their end from 120 ms on; closing is at once; a click on a dropdown entry 10 ms after opening picks that entry.
+ *       With Animations OFF a dropdown list is fully drawn in its first frame (AC-UI-40).</li>
  * </ul>
  */
 public class ConfigMotionGameTest implements FabricClientGameTest {
@@ -84,6 +88,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			context.waitTicks(2);
 			check(!context.computeOnClient(client -> screen(client).motion().animating()), "settled");
 			theWheelGlides(context, clock, time);
+			overlaysFadeIn(context, clock);
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 			context.waitTicks(2);
 			check(!(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen), "Esc closes the screen");
@@ -349,6 +354,28 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			check(atEnd == knobColour && atStart != knobColour, "the screenshot shows the knob at its end: " + Integer.toHexString(atEnd) + " at the end, "
 					+ Integer.toHexString(atStart) + " at the start");
 
+			// AC-UI-40 [C]: with Animations OFF a dropdown list is fully drawn in its first frame.
+			context.runOnClient(client -> screen(client).select(Category.GENERAL));
+			context.waitTicks(2);
+			int[] field = controlOf(context, "interface.notice_position");
+			Path closedList = context.takeScreenshot("t3.24-list-closed");
+			click(context, field);
+			int[] listBox = context.computeOnClient(client -> screen(client).overlay().bounds());
+			Path firstFrame = context.takeScreenshot("t3.24-list-first-frame");
+			clock.addAndGet(1_000);
+			context.waitTicks(2);
+			Path laterFrame = context.takeScreenshot("t3.24-list-later");
+			int[] inList = evenChange(context, closedList, laterFrame, listBox);
+			check(inList != null, "the list changes an even patch of the screen");
+			int first = pixel(context, firstFrame, inList[0], inList[1]);
+			int later = pixel(context, laterFrame, inList[0], inList[1]);
+			check(first == later, "with Animations OFF the list is fully drawn at once: " + Integer.toHexString(first) + ", later "
+					+ Integer.toHexString(later));
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTicks(2);
+			context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+			context.waitTicks(2);
+
 			// Switched ON in the open screen, the next click slides on the still clock: the knob stays at its start.
 			context.runOnClient(client -> ConfigManager.general().animations = true);
 			click(context, title);
@@ -576,6 +603,209 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		check(context.computeOnClient(client -> screen(client).overlay()) == null, "Esc closed the list");
 		context.runOnClient(client -> screen(client).focus(null));
 		context.waitTicks(1);
+	}
+
+	/** AC-UI-39 [C]: each overlay fades and scales in on the test clock, and closes at once. */
+	private static void overlaysFadeIn(ClientGameTestContext context, AtomicLong clock) {
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.waitTicks(2);
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		fadeIn(context, clock, "dropdown", "interface.notice_position", false);
+		fadeIn(context, clock, "colour-picker", "interface.accent", true);
+		context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+		context.waitTicks(2);
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		fadeIn(context, clock, "database-picker", "npc_search.add_from_database", true);
+
+		// A click on a dropdown entry 10 ms after opening picks that entry; the list is gone at once.
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.waitTicks(2);
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		var before = context.computeOnClient(client -> ConfigManager.general().noticePosition);
+		check(context.computeOnClient(client -> ConfigManager.general().noticePosition()) != com.k8bas.skyblockutility.ui.notice.NoticePosition.values()[3],
+				"the fourth entry is not the value yet");
+		try {
+			click(context, controlOf(context, "interface.notice_position"));
+			clock.addAndGet(10);
+			context.waitTicks(2);
+			// The fourth entry's last row as laid out: scaled input (0.97 about the list's top) would meet the fifth.
+			int[] entry = context.computeOnClient(client -> {
+				int[] box = screen(client).overlay().bounds();
+				return new int[] {(box[0] + box[2]) / 2, box[1] + 4 * com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT - 1};
+			});
+			int[] window = context.computeOnClient(client -> window(entry[0], entry[1]));
+			context.getInput().setCursorPos(window[0], window[1]);
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			check(context.computeOnClient(client -> screen(client).overlay()) == null, "the pick closes the list at once");
+			check(context.computeOnClient(client -> ConfigManager.general().noticePosition()) == com.k8bas.skyblockutility.ui.notice.NoticePosition.values()[3],
+					"10 ms after opening, a click on the fourth entry picks it: " + context.computeOnClient(client -> ConfigManager.general().noticePosition()));
+		} finally {
+			context.runOnClient(client -> ConfigManager.general().noticePosition = before);
+		}
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+	}
+
+	/**
+	 * Opens an overlay with the control {@code optionId} on the still test clock and checks a point inside it (and, for a modal,
+	 * the backdrop at the screen's corner) at 0, 60 and 120 ms against the frames before it opened and long after; then closes
+	 * it with Esc and checks it is gone in that frame.
+	 */
+	private static void fadeIn(ClientGameTestContext context, AtomicLong clock, String name, String optionId, boolean modal) {
+		int[] control = controlOf(context, optionId);
+		Path closedShot = context.takeScreenshot("t3.29-" + name + "-before");
+		click(context, control);
+		check(context.computeOnClient(client -> screen(client).overlay()) != null, name + ": it opened");
+		int[] box = context.computeOnClient(client -> screen(client).overlay().bounds());
+		// For the backdrop: a point on the sidebar outside the overlay, which stays still (the panorama behind turns).
+		int[] corner = context.computeOnClient(client -> {
+			ConfigLayout.Rect sidebar = screen(client).frame().sidebar();
+			return new int[] {sidebar.x() + 4, sidebar.bottom() - 4};
+		});
+		check(corner[0] < box[0] || corner[0] >= box[2] || corner[1] < box[1] || corner[1] >= box[3], name + ": the backdrop point is outside it");
+		int cornerBefore = pixel(context, closedShot, corner[0], corner[1]);
+		Path at0 = context.takeScreenshot("t3.29-" + name + "-at-0ms");
+		clock.addAndGet(10);
+		context.waitTicks(2);
+		Path at10 = context.takeScreenshot("t3.29-" + name + "-at-10ms");
+		clock.addAndGet(50);
+		context.waitTicks(2);
+		Path at60 = context.takeScreenshot("t3.29-" + name + "-at-60ms");
+		clock.addAndGet(60);
+		context.waitTicks(2);
+		Path at120 = context.takeScreenshot("t3.29-" + name + "-at-120ms");
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		Path settled = context.takeScreenshot("t3.29-" + name + "-settled");
+		// A point inside it that it changes, in a patch that is even both before and once open, so the 0.96 scale moving it by
+		// a GUI px at 60 ms still samples the same.
+		int[] inside = evenChange(context, closedShot, settled, box);
+		check(inside != null, name + ": somewhere inside, it changes an even patch of the screen");
+		int insideBefore = pixel(context, closedShot, inside[0], inside[1]);
+		int insideEnd = pixel(context, settled, inside[0], inside[1]);
+		check(pixel(context, at0, inside[0], inside[1]) == insideBefore, name + ": at 0 ms it does not show yet");
+		// Partly shown: between the screen as it is under it at 60 ms and the open overlay. Under a modal that screen is dimmed by
+		// the backdrop easing in, at the alpha the ease-out curve, written out here, gives at 60 ms: 1 - (1 - 0.5)^3 = 0.875.
+		int inside60 = pixel(context, at60, inside[0], inside[1]);
+		int under60 = modal ? over(insideBefore, Theme.BACKDROP & 0xFFFFFF, Math.round((Theme.BACKDROP >>> 24) * 0.875F)) : insideBefore;
+		check(between(inside60, under60, insideEnd), name + ": at 60 ms it is partly shown: "
+				+ Integer.toHexString(pixel(context, at60, inside[0], inside[1])) + " between " + Integer.toHexString(under60) + " and "
+				+ Integer.toHexString(insideEnd));
+		check(pixel(context, at120, inside[0], inside[1]) == insideEnd, name + ": at 120 ms it is fully shown");
+		if (modal) {
+			int cornerEnd = pixel(context, settled, corner[0], corner[1]);
+			check(cornerEnd != cornerBefore, name + ": its backdrop dims the screen");
+			check(pixel(context, at0, corner[0], corner[1]) == cornerBefore, name + ": at 0 ms the backdrop is clear");
+			check(between(pixel(context, at60, corner[0], corner[1]), cornerBefore, cornerEnd), name + ": at 60 ms the backdrop is easing in");
+			check(pixel(context, at120, corner[0], corner[1]) == cornerEnd, name + ": at 120 ms the backdrop is at its alpha");
+		}
+		for (int i = 0; i < 3 && context.computeOnClient(client -> screen(client).overlay()) != null; i++) {
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTick();
+		}
+		check(context.computeOnClient(client -> screen(client).overlay()) == null, name + ": Esc closes it");
+		Path closed = context.takeScreenshot("t3.29-" + name + "-closed");
+		check(pixel(context, closed, inside[0], inside[1]) == insideBefore, name + ": closing is at once, with no fade out");
+		// Closing during the transition is at once too.
+		click(context, control);
+		clock.addAndGet(60);
+		context.waitTicks(2);
+		for (int i = 0; i < 3 && context.computeOnClient(client -> screen(client).overlay()) != null; i++) {
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTick();
+		}
+		Path closedEarly = context.takeScreenshot("t3.29-" + name + "-closed-at-60ms");
+		check(pixel(context, closedEarly, inside[0], inside[1]) == insideBefore, name + ": closed at 60 ms, it is gone at once");
+		if (!modal) {
+			// The drawn list at 10 ms, faint but there: its top edge, at the field, stays; its bottom edge is where the scaled box puts
+			// it, about 2 GUI px short of its end (at 60 ms the scale is too near 1 to tell).
+			int scale = context.computeOnClient(client -> com.k8bas.skyblockutility.ui.render.Shapes.guiScale());
+			BufferedImage was = HairlineProbe.read(closedShot);
+			BufferedImage mid = HairlineProbe.read(at10);
+			int column = (box[0] + box[2]) / 2 * scale;
+			int first = -1;
+			int last = -1;
+			// From the list's own top row down (the field above it changes as it opens).
+			for (int row = box[1] * scale; row < (box[3] + 6) * scale; row++) {
+				if (mid.getRGB(column, row) != was.getRGB(column, row)) {
+					first = first < 0 ? row : first;
+					last = row;
+				}
+			}
+			// The ease-out curve written out: 1 - (1 - 10/120)^3 of the way from 0.96 to 1.
+			float s10 = 0.96F + 0.04F * (1F - (float) Math.pow(1 - 10 / 120.0, 3));
+			float drawnBottom = com.k8bas.skyblockutility.ui.render.Shapes.snap(box[1] + (box[3] - box[1]) * s10, scale);
+			check(first == box[1] * scale && Math.abs(last + 1 - drawnBottom * scale) <= 1, name + ": at 10 ms the list is drawn from row " + first
+					+ " to " + last + ": its top at " + box[1] * scale + " stays and its bottom is at " + drawnBottom * scale);
+		}
+	}
+
+	/** {@code rgb} under {@code top} at {@code alpha} (0-255): the colour a translucent fill over it shows. */
+	private static int over(int rgb, int top, int alpha) {
+		int out = 0;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			int channel = Math.round(((top >> shift & 0xFF) * alpha + (rgb >> shift & 0xFF) * (255 - alpha)) / 255F);
+			out |= channel << shift;
+		}
+		return out;
+	}
+
+	/** The first point of the box, on a 2 GUI px grid, whose 5x5 GUI px patch is even in both shots and differs between them. */
+	private static int[] evenChange(ClientGameTestContext context, Path before, Path after, int[] box) {
+		int[] gui = context.computeOnClient(client -> new int[] {client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()});
+		BufferedImage was = HairlineProbe.read(before);
+		BufferedImage now = HairlineProbe.read(after);
+		for (int y = box[1] + 4; y < box[3] - 4; y += 2) {
+			for (int x = box[0] + 4; x < box[2] - 4; x += 2) {
+				int a = at(was, gui, x, y);
+				int b = at(now, gui, x, y);
+				if (a != b && even(was, gui, x, y, a) && even(now, gui, x, y, b)) {
+					return new int[] {x, y};
+				}
+			}
+		}
+		return null;
+	}
+
+	private static boolean even(BufferedImage image, int[] gui, int x, int y, int rgb) {
+		for (int dy = -2; dy <= 2; dy++) {
+			for (int dx = -2; dx <= 2; dx++) {
+				if (at(image, gui, x + dx, y + dy) != rgb) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/** The image's pixel at the middle of a GUI pixel, as {@link #pixel} reads it. */
+	private static int at(BufferedImage image, int[] gui, int guiX, int guiY) {
+		return image.getRGB((int) Math.floor((guiX + 0.5) * image.getWidth() / gui[0]), (int) Math.floor((guiY + 0.5) * image.getHeight() / gui[1])) & 0xFFFFFF;
+	}
+
+	/** A control's centre in GUI px, scrolled into view at once first. */
+	private static int[] controlOf(ClientGameTestContext context, String optionId) {
+		context.runOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.OptionRow row = screen.page().page().rows().stream()
+					.filter(r -> r instanceof ConfigLayout.OptionRow o && o.option().id().equals(optionId)).map(r -> (ConfigLayout.OptionRow) r)
+					.findFirst().orElseThrow();
+			screen.scrollArea().ensureVisible(row.y(), row.y() + row.height());
+			screen.scrollArea().setScroll(screen.scrollArea().target());
+		});
+		context.waitTicks(2);
+		return context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.OptionRow row = screen.page().page().rows().stream()
+					.filter(r -> r instanceof ConfigLayout.OptionRow o && o.option().id().equals(optionId)).map(r -> (ConfigLayout.OptionRow) r)
+					.findFirst().orElseThrow();
+			Widget control = screen.page().control(row.option());
+			return new int[] {control.x() + control.width() / 2, control.y() + control.height() / 2};
+		});
 	}
 
 	/** Reads what the screen's frames see: on the screen's source, as they run. */

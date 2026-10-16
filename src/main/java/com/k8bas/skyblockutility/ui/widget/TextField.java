@@ -266,7 +266,7 @@ public final class TextField extends Widget {
 			if (model.hasSelection()) {
 				int from = originX + font.width(text.substring(0, model.selectionStart()));
 				int to = originX + font.width(text.substring(0, model.selectionEnd()));
-				graphics.fill(from, textY - 1, to, textY + font.lineHeight, theme.accentBackground());
+				Shapes.plain(graphics, from, textY - 1, to, textY + font.lineHeight, theme.accentBackground());
 			}
 			UiText.draw(graphics, font, text, originX, textY, faded(enabled ? Theme.TEXT_PRIMARY : Theme.TEXT_DISABLED));
 			if (focused && ((clock.getAsLong() - focusedAt) / BLINK_MS) % 2 == 0) {

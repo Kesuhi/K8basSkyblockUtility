@@ -112,6 +112,14 @@ public final class Dropdown<E> extends Widget {
 		return new int[] {Math.round(list.rows.y + list.thumbTop()), list.thumbLength()};
 	}
 
+	/**
+	 * Where an open list from (x, y), w × h, scales in about (REQ-UI-38): the middle of the side that meets its field, so it
+	 * grows out of the field, down from its top or up from its bottom.
+	 */
+	static float[] anchor(int x, int y, int w, int h, boolean upward) {
+		return new float[] {x + w / 2F, upward ? y + h : y};
+	}
+
 	/** The open list, drawn over everything. */
 	private final class OpenList extends Overlay {
 		private final DropdownModel model = new DropdownModel(choice.values().size(), MAX_ROWS);
@@ -165,6 +173,16 @@ public final class Dropdown<E> extends Widget {
 				}
 			}
 			return true;
+		}
+
+		@Override
+		public int[] bounds() {
+			return new int[] {rows.x, rows.y, rows.x + rows.width, rows.y + rows.height};
+		}
+
+		@Override
+		public float[] anchor() {
+			return Dropdown.anchor(rows.x, rows.y, rows.width, rows.height, placement != null && placement.upward());
 		}
 
 		@Override

@@ -37,8 +37,13 @@ public final class Shapes {
 
 	public static void rect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int argb) {
 		if (w > 0 && h > 0) {
-			graphics.fill(x, y, x + w, y + h, argb);
+			graphics.fill(x, y, x + w, y + h, UiFade.apply(argb));
 		}
+	}
+
+	/** A plain fill from (x0, y0) to (x1, y1) as the game draws it, at the kit's fade (REQ-UI-38). */
+	public static void plain(GuiGraphicsExtractor graphics, int x0, int y0, int x1, int y1, int argb) {
+		graphics.fill(x0, y0, x1, y1, UiFade.apply(argb));
 	}
 
 	public static void roundedRect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
@@ -174,7 +179,8 @@ public final class Shapes {
 	 * are tinted quads of an anti-aliased mask; without a mask the fill spans. Only the {@link Corners} {@code corners}
 	 * are round.
 	 */
-	private static void draw(GuiGraphicsExtractor graphics, float x, float y, int w, int h, int radius, int thickness, int corners, int argb) {
+	private static void draw(GuiGraphicsExtractor graphics, float x, float y, int w, int h, int radius, int thickness, int corners, int colour) {
+		int argb = UiFade.apply(colour);
 		int scale = guiScale();
 		Matrix3x2fStack outer = graphics.pose();
 		ScreenRectangle scissor = graphics.scissorStack.peek();
@@ -200,7 +206,8 @@ public final class Shapes {
 	 * to its edge (REQ-UI-31): the colour wheel and the icons, baked at their size times the GUI scale. One element with the image's
 	 * bounds rounded outward (REQ-UI-27), so what is drawn after it and overlaps it lands above it.
 	 */
-	public static void image(GuiGraphicsExtractor graphics, Identifier texture, float x, float y, int sw, int sh, int argb) {
+	public static void image(GuiGraphicsExtractor graphics, Identifier texture, float x, float y, int sw, int sh, int colour) {
+		int argb = UiFade.apply(colour);
 		int scale = guiScale();
 		Matrix3x2fStack outer = graphics.pose();
 		ScreenRectangle scissor = graphics.scissorStack.peek();
@@ -234,7 +241,7 @@ public final class Shapes {
 		int[] spans = IconTextures.spans(scale, icon, px);
 		if (box != null && spans.length > 0) {
 			Matrix3x2f pose = new Matrix3x2f(outer).translate(x, y).scale(1F / scale, 1F / scale);
-			graphics.guiRenderState.addGuiElement(new ShapeRenderState(RenderPipelines.GUI, TextureSetup.noTexture(), pose, spans, null, argb,
+			graphics.guiRenderState.addGuiElement(new ShapeRenderState(RenderPipelines.GUI, TextureSetup.noTexture(), pose, spans, null, UiFade.apply(argb),
 					scissor, bounds(box)));
 		}
 	}

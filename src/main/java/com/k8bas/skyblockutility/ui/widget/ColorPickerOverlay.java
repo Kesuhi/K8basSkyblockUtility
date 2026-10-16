@@ -128,6 +128,11 @@ public final class ColorPickerOverlay extends Overlay {
 	}
 
 	@Override
+	public int[] bounds() {
+		return new int[] {panelX, panelY, panelX + WIDTH, panelY + panelHeight};
+	}
+
+	@Override
 	public boolean contains(double mouseX, double mouseY) {
 		return mouseX >= panelX && mouseY >= panelY && mouseX < panelX + WIDTH && mouseY < panelY + panelHeight;
 	}
@@ -181,13 +186,13 @@ public final class ColorPickerOverlay extends Overlay {
 		if (state.storesAlpha()) {
 			for (int cx = 0; cx < w; cx += 4) {
 				for (int cy = 0; cy < h; cy += 4) {
-					graphics.fill(x + cx, y + cy, Math.min(x + w, x + cx + 4), Math.min(y + h, y + cy + 4),
+					Shapes.plain(graphics, x + cx, y + cy, Math.min(x + w, x + cx + 4), Math.min(y + h, y + cy + 4),
 							((cx + cy) / 4) % 2 == 0 ? 0xFF9A9A9A : 0xFF5E5E5E);
 				}
 			}
-			graphics.fill(x, y, x + w, y + h, colour);
+			Shapes.plain(graphics, x, y, x + w, y + h, colour);
 		} else {
-			graphics.fill(x, y, x + w, y + h, 0xFF000000 | colour);
+			Shapes.plain(graphics, x, y, x + w, y + h, 0xFF000000 | colour);
 		}
 	}
 
@@ -213,7 +218,7 @@ public final class ColorPickerOverlay extends Overlay {
 
 		@Override
 		public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
-			graphics.fill(x, y, x + width, y + height, 0xFF000000 | rgb);
+			Shapes.plain(graphics, x, y, x + width, y + height, 0xFF000000 | rgb);
 			boolean current = (state.color() & 0xFFFFFF) == rgb;
 			int outline = current ? Theme.TEXT_PRIMARY : contains(mouseX, mouseY) ? Theme.TEXT_SECONDARY : Theme.SEPARATOR;
 			Shapes.hairlineAround(graphics, x, y, width, height, 0, outline);

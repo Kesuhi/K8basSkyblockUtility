@@ -59,7 +59,7 @@ public final class ColorSwatch extends Widget {
 		if (storesAlpha) {
 			for (int cx = 0; cx < width; cx += 4) {
 				for (int cy = 0; cy < height; cy += 4) {
-					graphics.fill(x + cx, y + cy, Math.min(x + width, x + cx + 4), Math.min(y + height, y + cy + 4),
+					Shapes.plain(graphics, x + cx, y + cy, Math.min(x + width, x + cx + 4), Math.min(y + height, y + cy + 4),
 							((cx + cy) / 4) % 2 == 0 ? 0xFF9A9A9A : 0xFF5E5E5E);
 				}
 			}

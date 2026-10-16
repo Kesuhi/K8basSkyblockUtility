@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.widget;
 import com.k8bas.skyblockutility.ui.color.ColorPickerState;
 import com.k8bas.skyblockutility.ui.color.WheelGeometry;
 import com.k8bas.skyblockutility.ui.render.Shapes;
+import com.k8bas.skyblockutility.ui.render.UiFade;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -69,7 +70,7 @@ final class ColorWheel extends Widget {
 			Identifier legacy = WheelTexture.legacy(value);
 			if (legacy != null) {
 				graphics.blit(RenderPipelines.GUI_TEXTURED, legacy, x, y, 0F, 0F, width, height, WheelTexture.LEGACY_SIZE, WheelTexture.LEGACY_SIZE,
-						WheelTexture.LEGACY_SIZE, WheelTexture.LEGACY_SIZE);
+						WheelTexture.LEGACY_SIZE, WheelTexture.LEGACY_SIZE, UiFade.apply(0xFFFFFFFF));
 			}
 		}
 		// REQ-UI-30: a white disc with a disc of the picked colour inside it, both from the disc mask.

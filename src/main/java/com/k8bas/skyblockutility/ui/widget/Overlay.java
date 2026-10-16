@@ -35,6 +35,20 @@ public abstract class Overlay {
 		return false;
 	}
 
+	/**
+	 * The box it is drawn in, {left, top, right, bottom} in GUI px, which its open transition scales (REQ-UI-38); null to draw
+	 * it at once, unscaled.
+	 */
+	public int[] bounds() {
+		return null;
+	}
+
+	/** The point its open transition scales it about, {x, y} in GUI px: a dialog's centre unless it says otherwise. */
+	public float[] anchor() {
+		int[] box = bounds();
+		return box == null ? null : new float[] {(box[0] + box[2]) / 2F, (box[1] + box[3]) / 2F};
+	}
+
 	/** False once what it belongs to is gone from view; the screen then closes it. */
 	public boolean stillAnchored() {
 		return true;

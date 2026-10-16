@@ -66,17 +66,17 @@ final class GradientSlider extends Widget {
 			for (int cx = 0; cx < width; cx += 4) {
 				for (int cy = 0; cy < height; cy += 4) {
 					boolean light = ((cx + cy) / 4) % 2 == 0;
-					graphics.fill(x + cx, y + cy, Math.min(x + width, x + cx + 4), Math.min(y + height, y + cy + 4), light ? 0xFF9A9A9A : 0xFF5E5E5E);
+					Shapes.plain(graphics, x + cx, y + cy, Math.min(x + width, x + cx + 4), Math.min(y + height, y + cy + 4), light ? 0xFF9A9A9A : 0xFF5E5E5E);
 				}
 			}
 		}
 		for (int column = 0; column < width; column++) {
 			int colour = colourAt.applyAsInt(Math.round(column * 255F / Math.max(1, width - 1)));
-			graphics.fill(x + column, y, x + column + 1, y + height, colour);
+			Shapes.plain(graphics, x + column, y, x + column + 1, y + height, colour);
 		}
 		Shapes.hairlineAround(graphics, x, y, width, height, 1, Theme.SEPARATOR);
 		int handle = x + (int) Math.round(get.getAsDouble() * (width - 1));
-		graphics.fill(handle - 2, y - 2, handle + 1, y + height + 2, 0xFF000000);
-		graphics.fill(handle - 1, y - 1, handle, y + height + 1, 0xFFFFFFFF);
+		Shapes.plain(graphics, handle - 2, y - 2, handle + 1, y + height + 2, 0xFF000000);
+		Shapes.plain(graphics, handle - 1, y - 1, handle, y + height + 1, 0xFFFFFFFF);
 	}
 }

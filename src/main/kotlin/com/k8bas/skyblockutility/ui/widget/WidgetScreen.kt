@@ -6,6 +6,7 @@ import com.k8bas.skyblockutility.ui.render.Shapes
 import com.k8bas.skyblockutility.ui.render.Theme
 import com.k8bas.skyblockutility.ui.render.TooltipLayout
 import com.k8bas.skyblockutility.ui.render.UiClock
+import com.k8bas.skyblockutility.ui.render.UiFade
 import com.k8bas.skyblockutility.ui.render.UiText
 import com.k8bas.skyblockutility.ui.render.UiTime
 import com.mojang.blaze3d.platform.InputConstants
@@ -61,6 +62,8 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	private var textInputGuard: EditBox? = null
 	private var keyGuard: EditBox? = null
 	private var overlay: Overlay? = null
+	/** The open overlay's open transition (REQ-UI-38): drawing only; input meets its final layout. */
+	private var transition: OverlayTransition? = null
 
 	/** Scrolling left over from fractional wheel or trackpad events, below one notch. */
 	private var scrollRest = 0.0
@@ -140,6 +143,10 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		}
 		focus(null)
 		nav.overlayOpened()
+		if (overlay !== opened) {
+			// It opens on the screen's clock source, also when opened from outside an event.
+			transition = timed { OverlayTransition(UiClock.SOURCE) }
+		}
 		overlay = opened
 		updateFocusGuard()
 	}
@@ -221,6 +228,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			open.cancel()
 		}
 		overlay = null
+		transition = null
 		pressed = null
 		pressedButton = -1
 		nav.overlayClosed()
@@ -328,18 +336,52 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 				return
 			}
 			graphics.nextStratum()
+			val shown = transition
 			if (open.modal()) {
-				graphics.fill(0, 0, width, height, Theme.BACKDROP)
+				// The backdrop eases in with the overlay (REQ-UI-38).
+				val alpha = shown?.backdropAlpha(Theme.BACKDROP ushr 24) ?: (Theme.BACKDROP ushr 24)
+				graphics.fill(0, 0, width, height, (alpha shl 24) or (Theme.BACKDROP and 0xFFFFFF))
 				graphics.nextStratum()
 			}
-			open.drawFrame(graphics, font, mouseX, mouseY)
-			for (widget in open.widgets()) {
-				drawClipped(graphics, widget, mouseX, mouseY)
+			val fade = UiFade.enter(shown?.opacity() ?: 1F)
+			var scaled = false
+			try {
+				scaled = scaleIn(graphics, open, shown)
+				open.drawFrame(graphics, font, mouseX, mouseY)
+				for (widget in open.widgets()) {
+					drawClipped(graphics, widget, mouseX, mouseY)
+				}
+				drawFocusRing(graphics, true)
+			} finally {
+				if (scaled) {
+					graphics.pose().popMatrix()
+				}
+				UiFade.leave(fade)
 			}
-			drawFocusRing(graphics, true)
 		}
 		drawTooltip(graphics, mouseX, mouseY, lookX, lookY)
 	}
+
+	/**
+	 * While [open] scales in, maps its box onto the scaled one about its anchor, whose edges lie on the physical-pixel grid
+	 * (REQ-UI-34); returns whether a pose was pushed. Input is not mapped: it meets the final layout.
+	 */
+	private fun scaleIn(graphics: GuiGraphicsExtractor, open: Overlay, shown: OverlayTransition?): Boolean {
+		if (shown == null || shown.scale() >= 1F) {
+			return false
+		}
+		val box = open.bounds() ?: return false
+		val anchor = open.anchor() ?: return false
+		val map = shown.pose(box[0], box[1], box[2], box[3], anchor[0], anchor[1], Shapes.guiScale()) ?: return false
+		graphics.pose().pushMatrix()
+		graphics.pose().translate(map[0], map[1])
+		graphics.pose().scale(map[2], map[3])
+		graphics.pose().translate(-box[0].toFloat(), -box[1].toFloat())
+		return true
+	}
+
+	/** For tests: the open overlay's transition, or null. */
+	fun overlayTransition(): OverlayTransition? = transition
 
 	/**
 	 * The keyboard focus ring in the accent colour (REQ-UI-17), in the layer that has the focus ([inOverlay]); none after a

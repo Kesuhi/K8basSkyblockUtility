@@ -43,6 +43,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - The mouse wheel no longer changes sliders. Over a slider it scrolls the page or list like anywhere
   else, so scrolling never changes a setting by accident, and while you drag a slider the wheel does
   nothing. Drag a slider, click its track, or use the arrow keys after Tab to change it.
+- Dropdown lists, the colour picker and the database picker fade and grow in quickly when they open,
+  and the dimmed background behind a dialog fades in with them. You can click them at once, and they
+  close at once. With "Animations" off they appear at once.
 
 ### Fixed
 

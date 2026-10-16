@@ -94,6 +94,11 @@ public final class DatabasePickerOverlay extends Overlay {
 	}
 
 	@Override
+	public int[] bounds() {
+		return new int[] {panelX, panelY, panelX + panelWidth, panelY + panelHeight};
+	}
+
+	@Override
 	public boolean contains(double mouseX, double mouseY) {
 		return mouseX >= panelX && mouseY >= panelY && mouseX < panelX + panelWidth && mouseY < panelY + panelHeight;
 	}
@@ -187,7 +192,7 @@ public final class DatabasePickerOverlay extends Overlay {
 		}
 		PickerRows.Row row = rows.get(index);
 		if (hovered) {
-			graphics.fill(x, y, x + width, y + height - 1, Theme.CARD_HOVER);
+			Shapes.plain(graphics, x, y, x + width, y + height - 1, Theme.CARD_HOVER);
 		}
 		int textY = y + (height - font.lineHeight) / 2 + 1;
 		int indent = x + 4 + row.depth() * 12;
