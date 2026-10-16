@@ -34,6 +34,10 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - Switch knobs, slider knobs, the category switch's slide and notices move in steps of the screen's own
   pixels instead of whole GUI pixels, so they glide more smoothly at GUI scale 2 and above. Where you
   click is unchanged.
+- Scrolling glides: the settings page, the sidebar, the database picker and open dropdown lists ease to
+  where the mouse wheel or the keyboard sends them instead of jumping a notch at a time. Dragging the
+  scrollbar still follows the mouse at once, and a click during a glide stops it. With "Animations" off
+  they jump as before.
 
 ### Fixed
 

@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.option.Choice;
+import com.k8bas.skyblockutility.ui.render.Clip;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
@@ -196,6 +197,8 @@ public final class Dropdown<E> extends Widget {
 
 			@Override
 			public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
+				int scale = Shapes.guiScale();
+				model.setScale(scale);
 				// The mouse highlights a row only when it moves, so the arrow keys keep theirs under a still pointer.
 				if ((mouseX != lastMouseX || mouseY != lastMouseY) && contains(mouseX, mouseY)) {
 					model.highlight(model.rowAt(mouseY - y, ROW_HEIGHT));
@@ -204,43 +207,60 @@ public final class Dropdown<E> extends Widget {
 				lastMouseY = mouseY;
 				Theme theme = Theme.current();
 				Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.CARD);
-				Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.SEPARATOR);
 				E current = choice.binding().get();
 				int shownRows = height / ROW_HEIGHT;
 				// The row fills meet the hairline outline flush (T3.22): one hairline in from the box's edges, 1 GUI px between rows.
-				float line = Shapes.hairlineGui(Shapes.guiScale());
+				float line = Shapes.hairlineGui(scale);
 				float left = x + line;
 				float right = x + width - line;
-				for (int row = 0; row < shownRows; row++) {
-					int index = model.scroll() + row;
-					if (index >= choice.values().size()) {
-						break;
-					}
-					E value = choice.values().get(index);
-					int rowY = y + row * ROW_HEIGHT;
-					float top = row == 0 ? y + line : rowY + 1;
-					float bottom = rowY + ROW_HEIGHT == y + height ? y + height - line : rowY + ROW_HEIGHT - 1;
-					boolean selected = value.equals(current);
-					if (selected) {
-						Shapes.fill(graphics, left, top, right, bottom, theme.accentBackground());
-						Shapes.fill(graphics, left, top, x + 3, bottom, theme.accent());
-					} else if (index == model.highlighted()) {
-						Shapes.fill(graphics, left, top, right, bottom, Theme.CARD_HOVER);
-					}
-					// The selected entry has the kit's check mark at its right end (REQ-UI-32), so its label keeps that free.
-					String label = Ellipsis.fit(choice.label().apply(value), width - (selected ? 26 : 14), font::width);
-					UiText.draw(graphics, font, label, x + 7, rowY + (ROW_HEIGHT - font.lineHeight) / 2 + 1,
-							selected ? theme.accent() : Theme.TEXT_PRIMARY);
-					if (selected) {
-						Shapes.icon(graphics, IconShapes.Icon.CHECK, x + width - 15, rowY + (ROW_HEIGHT - ICON) / 2, ICON, theme.accent());
+				int count = choice.values().size();
+				// Laid out at whole GUI px, where clicks meet the rows; the rest of a glide moves them on the physical-pixel grid
+				// (REQ-UI-35), and a row in part at either end is cut at the box.
+				int laidOut = model.laidOutPx(ROW_HEIGHT);
+				float shift = model.drawShift(ROW_HEIGHT, scale);
+				try (Clip clip = Clip.push(graphics, x, y, width, height)) {
+					if (clip.visible()) {
+						graphics.pose().pushMatrix();
+						try {
+							graphics.pose().translate(0F, shift);
+							for (int index = Math.max(0, laidOut / ROW_HEIGHT - 1); index < count; index++) {
+								int rowY = y + index * ROW_HEIGHT - laidOut;
+								if (rowY >= y + height + ROW_HEIGHT) {
+									break;
+								}
+								drawRow(graphics, font, theme, index, rowY, line, left, right, current);
+							}
+						} finally {
+							graphics.pose().popMatrix();
+						}
 					}
 				}
-				int count = choice.values().size();
+				Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.SEPARATOR);
 				if (count > shownRows) {
 					// A thin scroll thumb on the right.
 					int thumbHeight = Math.max(6, height * shownRows / count);
-					int thumbY = y + (height - thumbHeight) * model.scroll() / Math.max(1, count - shownRows);
+					float thumbY = y + (height - thumbHeight) * model.shownRows() / Math.max(1, count - shownRows);
 					Shapes.fill(graphics, x + width - 3, thumbY + 1, right, thumbY + thumbHeight - 1, Theme.TEXT_DISABLED);
+				}
+			}
+
+			private void drawRow(GuiGraphicsExtractor graphics, Font font, Theme theme, int index, int rowY, float line, float left, float right,
+					E current) {
+				E value = choice.values().get(index);
+				float top = rowY <= y ? y + line : rowY + 1;
+				float bottom = rowY + ROW_HEIGHT >= y + height ? y + height - line : rowY + ROW_HEIGHT - 1;
+				boolean selected = value.equals(current);
+				if (selected) {
+					Shapes.fill(graphics, left, top, right, bottom, theme.accentBackground());
+					Shapes.fill(graphics, left, top, x + 3, bottom, theme.accent());
+				} else if (index == model.highlighted()) {
+					Shapes.fill(graphics, left, top, right, bottom, Theme.CARD_HOVER);
+				}
+				// The selected entry has the kit's check mark at its right end (REQ-UI-32), so its label keeps that free.
+				String label = Ellipsis.fit(choice.label().apply(value), width - (selected ? 26 : 14), font::width);
+				UiText.draw(graphics, font, label, x + 7, rowY + (ROW_HEIGHT - font.lineHeight) / 2 + 1, selected ? theme.accent() : Theme.TEXT_PRIMARY);
+				if (selected) {
+					Shapes.icon(graphics, IconShapes.Icon.CHECK, x + width - 15, rowY + (ROW_HEIGHT - ICON) / 2, ICON, theme.accent());
 				}
 			}
 		}

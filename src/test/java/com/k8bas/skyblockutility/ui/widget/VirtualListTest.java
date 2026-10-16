@@ -1,5 +1,9 @@
 package com.k8bas.skyblockutility.ui.widget;
 
+import com.k8bas.skyblockutility.ui.render.UiClock;
+import com.k8bas.skyblockutility.ui.render.UiTime;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,6 +15,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** REQ-UI-20, AC-UI-18 (T2.3c): a list that lays out and hit-tests only its visible rows. */
 class VirtualListTest {
+	/** With motion off (Animations OFF, T3.26) a scroll is at its target at once; SmoothScrollTest covers the glide. */
+	private UiTime previous;
+
+	@BeforeEach
+	void motionOff() {
+		previous = UiClock.enter(UiTime.of(() -> 0L, () -> false));
+	}
+
+	@AfterEach
+	void restore() {
+		UiClock.leave(previous);
+	}
+
 	/** AC-UI-18: 5,000 rows of 18 px in a 200 px viewport; at most ceil(200/18)+1 = 13 rows, and a click's y gives the right row. */
 	@Test
 	void fiveThousandRowsLayOutAtMostThirteen() {

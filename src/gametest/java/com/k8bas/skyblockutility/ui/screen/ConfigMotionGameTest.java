@@ -51,6 +51,9 @@ import java.util.concurrent.atomic.AtomicLong;
  *       settled distance to the card; during the slide, clicks at the card's inner top and bottom edges reach it and one
  *       1 px above reaches nothing (AC-UI-03). The toggle knob mid-slide is drawn on the grid, a click on the switch then
  *       reaches it, and its knob turns back from where it was.</li>
+ *   <li>AC-UI-36 [C] and EC-UI-25 (REQ-UI-35, T3.26): a wheel notch over the page glides on the test clock (still at 0 ms,
+ *       strictly between at 50 ms, at 24 GUI px from 400 ms on), and a press during a glide stops it where the page was
+ *       drawn.</li>
  * </ul>
  */
 public class ConfigMotionGameTest implements FabricClientGameTest {
@@ -80,6 +83,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			clock.addAndGet(1_000);
 			context.waitTicks(2);
 			check(!context.computeOnClient(client -> screen(client).motion().animating()), "settled");
+			theWheelGlides(context, clock, time);
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 			context.waitTicks(2);
 			check(!(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen), "Esc closes the screen");
@@ -125,7 +129,9 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		// still at 0.90: the clock stands still).
 		context.runOnClient(client -> {
 			ConfigLayout.OptionRow row = toggleRow(screen(client));
+			// Brought into view at once: on the still test clock a glide would not move (T3.26).
 			screen(client).scrollArea().ensureVisible(row.y(), row.y() + row.height());
+			screen(client).scrollArea().setScroll(screen(client).scrollArea().target());
 		});
 		context.waitTicks(2);
 		boolean before = context.computeOnClient(client -> toggleValue(screen(client)));
@@ -400,6 +406,188 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		}
 	}
 
+	/**
+	 * AC-UI-36 [C] (REQ-UI-35, T3.26) at GUI scale 2 on the test clock: 3 notches screenshotted at 0, 16, 50 and 400 ms show a
+	 * card drawn at a growing offset, on the physical-pixel grid, that ends at 72 GUI px; a click 30 ms into a glide reaches
+	 * the toggle drawn under the pointer and stops the glide there (EC-UI-25); Tab to a control below the view glides to it.
+	 */
+	private static void theWheelGlides(ClientGameTestContext context, AtomicLong clock, UiTime time) {
+		// The switch starts on the next frame; then the clock steps past it.
+		context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+		context.waitTicks(2);
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		check(!context.computeOnClient(client -> screen(client).motion().animating()), "the switch to Waypoints has ended");
+		context.runOnClient(client -> onScreen(time, () -> {
+			screen(client).scrollArea().setScroll(0);
+			return null;
+		}));
+		context.waitTicks(2);
+		// The content's left padding: the scroll area's own, under no card or control.
+		int[] point = context.computeOnClient(client -> {
+			ConfigLayout.Rect content = screen(client).frame().content();
+			return new int[] {content.x() + 2, content.y() + content.h() / 2};
+		});
+		check(context.computeOnClient(client -> screen(client).page().widgets().stream().noneMatch(w -> w.contains(point[0] + 0.5,
+				point[1] + 0.5))), "nothing but the scroll area lies under the pointer");
+		check(context.computeOnClient(client -> screen(client).scrollArea().maxScroll()) >= 200, "Waypoints scrolls far enough");
+		// A card well inside the view, whose top edge the screenshots follow: its laid-out top at scroll 0, and a column on it.
+		int[] probe = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.Rect content = screen.frame().content();
+			for (ConfigLayout.Row row : screen.page().page().rows()) {
+				if (row instanceof ConfigLayout.OptionRow option) {
+					Widget card = screen.page().card(option.option());
+					if (card.y() >= content.y() + 100 && card.y() <= content.bottom() - 10) {
+						return new int[] {card.x() + card.width() - 10, card.y()};
+					}
+				}
+			}
+			throw new AssertionError("FAILED: no card to follow");
+		});
+		int[] window = context.computeOnClient(client -> window(point[0], point[1]));
+		context.getInput().setCursorPos(window[0], window[1]);
+		context.waitTicks(2);
+		for (int i = 0; i < 3; i++) {
+			context.getInput().scroll(-1.0);
+			context.waitTick();
+		}
+		int target = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().target()));
+		check(target == 72, "3 notches: target " + target);
+		long base = clock.get();
+		float last = -1;
+		for (long t : new long[] {0, 16, 50, 400}) {
+			clock.set(base + t);
+			context.waitTicks(2);
+			BufferedImage shot = HairlineProbe.read(context.takeScreenshot("t3.26-wheel-at-" + t + "ms"));
+			float drawn = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().drawnScroll(Shapes.guiScale())));
+			int scale = context.computeOnClient(client -> Shapes.guiScale());
+			int column = probe[0] * scale;
+			int row = Math.round((probe[1] - drawn) * scale);
+			boolean edge = shot.getRGB(column, row) != shot.getRGB(column, row - 1) && shot.getRGB(column, row - 1) == shot.getRGB(column, row - 2);
+			check(drawn > last && edge, t + " ms: the card's top edge is drawn at physical row " + row + " for a scroll of " + drawn
+					+ " (before: " + last + ")");
+			last = drawn;
+		}
+		check(last == 72F, "it ends at 72: " + last);
+
+		// Back up: 30 ms into the glide, a click reaches the toggle drawn under the pointer, and the glide stops there.
+		for (int i = 0; i < 3; i++) {
+			context.getInput().scroll(1.0);
+			context.waitTick();
+		}
+		clock.addAndGet(30);
+		context.waitTicks(2);
+		int at30 = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().scroll()));
+		check(at30 > 0 && at30 < 72, "30 ms into the glide up: " + at30);
+		int[] toggle = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.Rect content = screen.frame().content();
+			for (ConfigLayout.Row row : screen.page().page().rows()) {
+				if (row instanceof ConfigLayout.OptionRow option && option.option() instanceof Toggle) {
+					Widget card = screen.page().card(option.option());
+					if (card.y() >= content.y() + 4 && card.y() + card.height() <= content.bottom() - 4) {
+						return new int[] {card.x() + 12, card.y() + card.height() / 2};
+					}
+				}
+			}
+			throw new AssertionError("FAILED: no toggle card in view");
+		});
+		String before = context.computeOnClient(client -> settings());
+		click(context, toggle);
+		check(!context.computeOnClient(client -> settings()).equals(before), "the click at 30 ms flipped the toggle drawn under the pointer");
+		clock.addAndGet(400);
+		context.waitTicks(2);
+		int after = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().scroll()));
+		int stopped = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().target()));
+		check(after == at30 && stopped == at30, "the click stopped the glide where the page was drawn: " + at30 + ", then " + after
+				+ " (target " + stopped + ")");
+		click(context, toggle);
+		check(context.computeOnClient(client -> settings()).equals(before), "and back");
+
+		// AC-UI-36: Tab to a control below the view sets the target to show it, and the page glides there.
+		context.runOnClient(client -> onScreen(time, () -> {
+			screen(client).scrollArea().setScroll(0);
+			return null;
+		}));
+		context.waitTicks(2);
+		int from = -1;
+		int goal = -1;
+		for (int i = 0; i < 80 && goal <= from; i++) {
+			context.getInput().pressKey(GLFW.GLFW_KEY_TAB);
+			context.waitTicks(2);
+			from = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().scroll()));
+			goal = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().target()));
+		}
+		check(goal > from, "a Tab reached a control below the view: target " + goal + ", at " + from);
+		clock.addAndGet(50);
+		context.waitTicks(2);
+		int tab50 = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().scroll()));
+		clock.addAndGet(350);
+		context.waitTicks(2);
+		int tab400 = context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().scroll()));
+		check(tab50 > from && tab50 < goal && tab400 == goal, "Tab glides from " + from + " to " + goal + ": " + tab50 + " at 50 ms, "
+				+ tab400 + " at 400 ms");
+		// The keyboard focus goes, so the Esc that follows closes the screen.
+		click(context, point);
+		aKeyOpenedListStaysOpen(context, clock, time);
+	}
+
+	/**
+	 * A dropdown half out of view, reached with Tab and opened with Enter while its reveal would glide (the clock stands
+	 * still): the page shows its box at once, so the list stays anchored and open.
+	 */
+	private static void aKeyOpenedListStaysOpen(ClientGameTestContext context, AtomicLong clock, UiTime time) {
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.waitTicks(2);
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		check(!context.computeOnClient(client -> screen(client).motion().animating()), "the switch to General has ended");
+		context.runOnClient(client -> onScreen(time, () -> {
+			ConfigScreen screen = screen(client);
+			screen.scrollArea().setScroll(0);
+			return null;
+		}));
+		context.waitTicks(2);
+		context.runOnClient(client -> onScreen(time, () -> {
+			ConfigScreen screen = screen(client);
+			Widget control = screen.page().control(choiceRow(screen).option());
+			// Half above the content's top edge.
+			screen.scrollArea().setScroll(control.y() - screen.frame().content().y() + control.height() / 2);
+			return null;
+		}));
+		context.waitTicks(2);
+		boolean reached = false;
+		for (int i = 0; i < 40 && !reached; i++) {
+			context.getInput().pressKey(GLFW.GLFW_KEY_TAB);
+			context.waitTicks(2);
+			reached = context.computeOnClient(client -> screen(client).navFocus() == screen(client).page().control(choiceRow(screen(client)).option()));
+		}
+		check(reached, "Tab reached the dropdown");
+		check(context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().scroll()
+				!= screen(client).scrollArea().target())), "its reveal would glide on the still clock");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ENTER);
+		context.waitTicks(3);
+		check(context.computeOnClient(client -> screen(client).overlay()) != null, "the list Enter opened stays open");
+		check(context.computeOnClient(client -> onScreen(time, () -> screen(client).scrollArea().scroll()
+				== screen(client).scrollArea().target())), "the page shows the box at once");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> screen(client).overlay()) == null, "Esc closed the list");
+		context.runOnClient(client -> screen(client).focus(null));
+		context.waitTicks(1);
+	}
+
+	/** Reads what the screen's frames see: on the screen's source, as they run. */
+	private static <T> T onScreen(UiTime time, java.util.function.Supplier<T> read) {
+		UiTime previous = UiClock.enter(time);
+		try {
+			return read.get();
+		} finally {
+			UiClock.leave(previous);
+		}
+	}
+
 	/** A dropdown opened mid-switch settles the motion, so the list is placed at its settled box. */
 	private static void anOverlaySettlesTheMotion(ClientGameTestContext context) {
 		context.runOnClient(client -> screen(client).select(Category.GENERAL));
@@ -407,7 +595,9 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		check(context.computeOnClient(client -> screen(client).motion().animating()), "switching to General");
 		context.runOnClient(client -> {
 			ConfigLayout.OptionRow row = choiceRow(screen(client));
+			// Brought into view at once: on the still test clock a glide would not move (T3.26).
 			screen(client).scrollArea().ensureVisible(row.y(), row.y() + row.height());
+			screen(client).scrollArea().setScroll(screen(client).scrollArea().target());
 		});
 		context.waitTicks(2);
 		check(context.computeOnClient(client -> screen(client).motion().animating()), "still switching");

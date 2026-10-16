@@ -43,7 +43,8 @@ import kotlin.math.sign
  * keyboard an invisible vanilla box is the screen's focused element; it never draws or gets input.
  *
  * Each frame and input event runs on the screen's UI clock source, [time] (REQ-UI-39): the game's, or a motion
- * gametest's test clock with motion on.
+ * gametest's test clock with motion on. A frame reads its time once, so its layout and its drawing see the same moment
+ * of every animation and glide.
  */
 abstract class WidgetScreen protected constructor(title: Component) : Screen(title), OverlayHost {
 	private val widgets = ArrayList<Widget>()
@@ -203,9 +204,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		}
 	}
 
-	/** Runs [block] with [time] as the UI clock source in effect, then puts the one before back. */
-	private inline fun <T> timed(block: () -> T): T {
-		val previous = UiClock.enter(time)
+	/** Runs [block] with [source] as the UI clock source in effect, then puts the one before back. */
+	private inline fun <T> timed(source: UiTime = time, block: () -> T): T {
+		val previous = UiClock.enter(source)
 		try {
 			return block()
 		} finally {
@@ -278,8 +279,11 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	private fun localY(y: Double): Double = ScaleAbout.toLocal(y, frameCy.toDouble(), frameScale)
 
-	override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) =
-		timed { extractFrame(graphics, mouseX, mouseY, partialTick) }
+	override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
+		val now = time.millis()
+		val source = time
+		timed(UiTime.of({ now }, source::motion)) { extractFrame(graphics, mouseX, mouseY, partialTick) }
+	}
 
 	private fun extractFrame(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
 		super.extractRenderState(graphics, mouseX, mouseY, partialTick)

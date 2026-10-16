@@ -126,7 +126,7 @@ public final class DatabasePickerOverlay extends Overlay {
 	private void queryChanged() {
 		closedInSearch.clear();
 		refresh();
-		list.rows().setScroll(0);
+		list.setScroll(0);
 	}
 
 	/** An entry's Add button, from its row's top left: x, y, width, height. Drawing and clicks both use it. */

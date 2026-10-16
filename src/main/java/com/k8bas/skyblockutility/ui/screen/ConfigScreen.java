@@ -58,6 +58,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -229,7 +230,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		}
 		if (page != null) {
 			// A category shown and left before a frame was drawn keeps the scroll it came with.
-			scrolls.put(selected, pendingScroll >= 0 ? pendingScroll : scrollArea.scroll());
+			scrolls.put(selected, pendingScroll >= 0 ? pendingScroll : scrollArea.target());
 			widgets().removeAll(pageWidgets);
 		}
 		selected = category;
@@ -332,6 +333,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		clear.setBounds(box.right() - ClearButton.SIZE - 2, box.y() + (box.h() - ClearButton.SIZE) / 2, ClearButton.SIZE, ClearButton.SIZE);
 		ConfigLayout.Rect content = frame.content();
 		scrollArea.setBounds(content.x(), content.y(), content.w(), content.h());
+		// Before the scroll is read: a new GUI scale puts it on its target for the whole frame (EC-UI-18).
+		scrollArea.setScale(Shapes.guiScale());
 		// The slide moves the page, not the scroll: its widgets are laid out where they are drawn, so clicks meet them (AC-UI-03).
 		int slide = motion.slideOffset();
 		int scroll = scrollArea.scroll();
@@ -348,6 +351,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			if (row != null) {
 				int[] span = ConfigLayout.revealSpan(laidOut, row);
 				scrollArea.ensureVisible(span[0], span[1]);
+				// A list the key opened needs its box in view this frame, or it closes unanchored: no glide under an overlay.
+				if (overlay() != null) {
+					scrollArea.setScroll(scrollArea.target());
+				}
 			}
 		}
 		if (scrollArea.scroll() != scroll) {
@@ -422,7 +429,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			// With the page's widgets, the slide's fraction on the physical-pixel grid (REQ-UI-34).
 			graphics.pose().pushMatrix();
 			try {
-				graphics.pose().translate(0F, slideFraction());
+				graphics.pose().translate(0F, pageShift());
 				drawPageRows(graphics, theme, mouseX, mouseY, content);
 			} finally {
 				graphics.pose().popMatrix();
@@ -639,7 +646,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (target != current) {
 			UiSound.click();
 			show(shown.get(target), true);
-			tabs.rows().ensureVisible(target);
+			tabs.ensureVisible(target);
 		}
 		return true;
 	}
@@ -650,17 +657,32 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	}
 
 	/**
-	 * How far the page is drawn below its whole-px layout this frame: the category slide on the physical-pixel grid less the
-	 * whole GUI px it is laid out at (REQ-UI-34), so clicks meet the layout (AC-UI-03).
+	 * How far the page is drawn below its whole-px layout this frame, under 1 GUI px, so clicks meet the layout (AC-UI-03): the
+	 * category slide on the physical-pixel grid less the whole GUI px it is laid out at (REQ-UI-34), and the scroll's glide
+	 * likewise (REQ-UI-35).
 	 */
-	private float slideFraction() {
-		return motion.slideDrawn(Shapes.guiScale()) - motion.slideOffset();
+	private float pageShift() {
+		int scale = Shapes.guiScale();
+		return motion.slideDrawn(scale) + pageScroll - scrollArea.drawnScroll(scale);
 	}
 
 	@Override
 	protected float drawShiftY(Widget widget) {
-		float fraction = slideFraction();
-		return fraction != 0F && pageWidgets.contains(widget) ? fraction : 0F;
+		float shift = pageShift();
+		return shift != 0F && pageWidgets.contains(widget) ? shift : 0F;
+	}
+
+	/** A press during a glide stops it where the page was drawn (EC-UI-25), so the pressed control stays under the pointer. */
+	@Override
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		UiTime previous = UiClock.enter(getTime());
+		try {
+			scrollArea.stopGlide();
+			scrollArea.endDrag();
+			return super.mouseClicked(event, doubleClick);
+		} finally {
+			UiClock.leave(previous);
+		}
 	}
 
 	/**
@@ -683,6 +705,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	 */
 	@Override
 	public void open(Overlay overlay) {
+		// A glide stops where the page was drawn, so the control that opened the overlay keeps its place.
+		scrollArea.stopGlide();
 		int slide = motion.slideOffset();
 		motion.finish();
 		if (slide != 0 && page != null && frame != null) {

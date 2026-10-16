@@ -4,6 +4,10 @@ import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.Keybind;
 import com.k8bas.skyblockutility.ui.option.OptionText;
+import com.k8bas.skyblockutility.ui.render.UiClock;
+import com.k8bas.skyblockutility.ui.render.UiTime;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,6 +21,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** REQ-UI-06, REQ-UI-14, EC-UI-11, R26, R27 (T2.3b): the dropdown and keybind capture, without drawing. */
 class DropdownAndKeybindTest {
+	/** With motion off (Animations OFF, T3.26) a scroll is at its target at once; SmoothScrollTest covers the glide. */
+	private UiTime previous;
+
+	@BeforeEach
+	void motionOff() {
+		previous = UiClock.enter(UiTime.of(() -> 0L, () -> false));
+	}
+
+	@AfterEach
+	void restore() {
+		UiClock.leave(previous);
+	}
+
 	// --- Dropdown placement and list model ---
 
 	@Test
