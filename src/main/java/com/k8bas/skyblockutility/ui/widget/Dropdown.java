@@ -24,6 +24,8 @@ public final class Dropdown<E> extends Widget {
 	/** The chevron's and the check mark's size in GUI px (REQ-UI-32). */
 	static final int ICON = 8;
 	public static final int MAX_ROWS = 8;
+	/** The open list's padding at its top and bottom, so its first and last rows stay inside its corners (REQ-UI-40). */
+	public static final int LIST_PADDING = 4;
 
 	private final Choice<E> choice;
 	private final OverlayHost host;
@@ -109,7 +111,7 @@ public final class Dropdown<E> extends Widget {
 		if (list == null || !list.open || !list.overflows()) {
 			return null;
 		}
-		return new int[] {Math.round(list.rows.y + list.thumbTop()), list.thumbLength()};
+		return new int[] {Math.round(list.rows.y + LIST_PADDING + list.thumbTop()), list.thumbLength()};
 	}
 
 	/**
@@ -135,11 +137,12 @@ public final class Dropdown<E> extends Widget {
 		public void layout(int screenWidth, int screenHeight) {
 			ClipRect area = clip();
 			if (area == null) {
-				placement = DropdownPlacement.place(x, y, width, height, choice.values().size(), ROW_HEIGHT, MAX_ROWS, screenWidth, screenHeight, 4);
+				placement = DropdownPlacement.place(x, y, width, height, choice.values().size(), ROW_HEIGHT, MAX_ROWS, screenWidth, screenHeight, 4,
+						LIST_PADDING);
 			} else {
 				// Inside a scrolled region (a settings card) the list stays in that region, so it never leaves the panel.
 				DropdownPlacement.Placement local = DropdownPlacement.place(x - area.x(), y - area.y(), width, height, choice.values().size(),
-						ROW_HEIGHT, MAX_ROWS, area.width(), area.height(), 2);
+						ROW_HEIGHT, MAX_ROWS, area.width(), area.height(), 2, LIST_PADDING);
 				placement = new DropdownPlacement.Placement(local.x() + area.x(), local.y() + area.y(), local.width(), local.height(), local.rows(),
 						local.upward());
 			}
@@ -203,17 +206,22 @@ public final class Dropdown<E> extends Widget {
 		}
 
 		private int shownRows() {
-			return rows.height / ROW_HEIGHT;
+			return listHeight() / ROW_HEIGHT;
+		}
+
+		/** The height the rows have: the list less its padding at each end. */
+		private int listHeight() {
+			return Math.max(0, rows.height - 2 * LIST_PADDING);
 		}
 
 		/** The thumb's length in GUI px: the share of the entries in view, never shorter than a list's thumb. */
 		private int thumbLength() {
-			return Math.min(rows.height, Math.max(VirtualRows.MIN_THUMB, rows.height * shownRows() / choice.values().size()));
+			return Math.min(listHeight(), Math.max(VirtualRows.MIN_THUMB, listHeight() * shownRows() / choice.values().size()));
 		}
 
 		/** The thumb's top from the list's, in GUI px, where the list is shown now. */
 		private float thumbTop() {
-			return (rows.height - thumbLength()) * model.shownRows() / Math.max(1, choice.values().size() - shownRows());
+			return (listHeight() - thumbLength()) * model.shownRows() / Math.max(1, choice.values().size() - shownRows());
 		}
 
 		/** The rows: a click picks, the wheel scrolls, the mouse highlights. */
@@ -230,13 +238,13 @@ public final class Dropdown<E> extends Widget {
 				}
 				// The scrollbar (REQ-UI-36): the thumb is dragged, a press on the track puts its middle there.
 				if (overflows() && ScrollbarPainter.inHitArea(x, width, mouseX)) {
-					int along = (int) Math.floor(mouseY - y);
+					int along = (int) Math.floor(mouseY - y - LIST_PADDING);
 					int top = Math.round(thumbTop());
 					grab = along >= top && along < top + thumbLength() ? along - top : thumbLength() / 2;
 					dragTo(along);
 					return true;
 				}
-				int index = model.rowAt(mouseY - y, ROW_HEIGHT);
+				int index = model.rowAt(mouseY - y - LIST_PADDING, ROW_HEIGHT);
 				if (index >= 0) {
 					pick(index);
 				}
@@ -246,7 +254,7 @@ public final class Dropdown<E> extends Widget {
 			@Override
 			public void drag(double mouseX, double mouseY) {
 				if (grab >= 0) {
-					dragTo((int) Math.floor(mouseY - y));
+					dragTo((int) Math.floor(mouseY - y - LIST_PADDING));
 				}
 			}
 
@@ -263,7 +271,7 @@ public final class Dropdown<E> extends Widget {
 
 			/** The list at the row whose thumb top lies at {@code along} less the grab, in whole rows. */
 			private void dragTo(int along) {
-				int track = rows.height - thumbLength();
+				int track = listHeight() - thumbLength();
 				int range = choice.values().size() - shownRows();
 				model.scrollTo(track <= 0 ? 0 : Math.round((float) (along - grab) * range / track));
 			}
@@ -286,7 +294,7 @@ public final class Dropdown<E> extends Widget {
 				model.setScale(scale);
 				// The mouse highlights a row only when it moves, so the arrow keys keep theirs under a still pointer.
 				if ((mouseX != lastMouseX || mouseY != lastMouseY) && contains(mouseX, mouseY)) {
-					model.highlight(model.rowAt(mouseY - y, ROW_HEIGHT));
+					model.highlight(model.rowAt(mouseY - y - LIST_PADDING, ROW_HEIGHT));
 				}
 				lastMouseX = mouseX;
 				lastMouseY = mouseY;
@@ -302,13 +310,13 @@ public final class Dropdown<E> extends Widget {
 				// (REQ-UI-35), and a row in part at either end is cut at the box.
 				int laidOut = model.laidOutPx(ROW_HEIGHT);
 				float shift = model.drawShift(ROW_HEIGHT, scale);
-				try (Clip clip = Clip.push(graphics, x, y, width, height)) {
+				try (Clip clip = Clip.push(graphics, x, y + LIST_PADDING, width, listHeight())) {
 					if (clip.visible()) {
 						graphics.pose().pushMatrix();
 						try {
 							graphics.pose().translate(0F, shift);
 							for (int index = Math.max(0, laidOut / ROW_HEIGHT - 1); index < count; index++) {
-								int rowY = y + index * ROW_HEIGHT - laidOut;
+								int rowY = y + LIST_PADDING + index * ROW_HEIGHT - laidOut;
 								if (rowY >= y + height + ROW_HEIGHT) {
 									break;
 								}
@@ -323,15 +331,16 @@ public final class Dropdown<E> extends Widget {
 				if (overflows()) {
 					// The kit's scrollbar (REQ-UI-36), wide while the pointer is over it or its thumb is dragged.
 					boolean hot = grab >= 0 || contains(mouseX, mouseY) && ScrollbarPainter.inHitArea(x, width, mouseX);
-					scrollbar.draw(graphics, x, y, width, height, thumbTop(), thumbLength(), hot, argb -> argb);
+					scrollbar.draw(graphics, x, y + LIST_PADDING, width, listHeight(), thumbTop(), thumbLength(), hot, argb -> argb);
 				}
 			}
 
 			private void drawRow(GuiGraphicsExtractor graphics, Font font, Theme theme, int index, int rowY, float line, float left, float right,
 					E current) {
 				E value = choice.values().get(index);
-				float top = rowY <= y ? y + line : rowY + 1;
-				float bottom = rowY + ROW_HEIGHT >= y + height ? y + height - line : rowY + ROW_HEIGHT - 1;
+				// 1 GUI px between rows; the padding keeps the first and last inside the list's corners.
+				float top = rowY + 1;
+				float bottom = rowY + ROW_HEIGHT - 1;
 				boolean selected = value.equals(current);
 				if (selected) {
 					Shapes.fill(graphics, left, top, right, bottom, theme.accentBackground());

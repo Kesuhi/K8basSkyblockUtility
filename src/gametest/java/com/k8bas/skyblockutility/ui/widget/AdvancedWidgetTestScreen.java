@@ -149,7 +149,7 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 			throw new AssertionError("FAILED: this dropdown's list is not open");
 		}
 		Widget rows = overlay().widgets().get(0);
-		return new int[] {windowX(rows.x + rows.width / 2), windowY(rows.y + row * Dropdown.ROW_HEIGHT + Dropdown.ROW_HEIGHT / 2)};
+		return new int[] {windowX(rows.x + rows.width / 2), windowY(rows.y + Dropdown.LIST_PADDING + row * Dropdown.ROW_HEIGHT + Dropdown.ROW_HEIGHT / 2)};
 	}
 
 	/** The open dropdown list's rows (T3.21). */

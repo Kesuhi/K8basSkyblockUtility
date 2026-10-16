@@ -27,9 +27,12 @@ import org.joml.Matrix3x2fStack;
  * Written from SPEC REQ-UI-17, REQ-UI-18, REQ-UI-30, REQ-UI-31 and REQ-UI-33; no AlpakaAddons code (REQ-UI-24).
  */
 public final class Shapes {
-	/** Corner radii in GUI pixels: cards, tabs, and small controls. */
+	/**
+	 * The one corner scale (REQ-UI-40), in GUI pixels: the settings panel, cards, and controls (tabs, fields, buttons, the
+	 * dropdown list, tooltips); a pill takes half its height.
+	 */
+	public static final int RADIUS_PANEL = 8;
 	public static final int RADIUS_CARD = 6;
-	public static final int RADIUS_TAB = 5;
 	public static final int RADIUS_CONTROL = 4;
 
 	private Shapes() {
@@ -47,8 +50,13 @@ public final class Shapes {
 	}
 
 	public static void roundedRect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
+		roundedRect(graphics, x, y, w, h, radius, Corners.ALL, argb);
+	}
+
+	/** A rectangle rounded only at the {@link Corners} {@code corners}: a strip that follows a panel's corners (REQ-UI-40). */
+	public static void roundedRect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int corners, int argb) {
 		int scale = guiScale();
-		draw(graphics, x, y, w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, 0, scale), 0, Corners.ALL, argb);
+		draw(graphics, x, y, w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, 0, scale), 0, corners, argb);
 	}
 
 	/**

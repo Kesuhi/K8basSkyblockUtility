@@ -54,6 +54,26 @@ class DropdownAndKeybindTest {
 		assertEquals(320 - 4 - 100, right.x(), "kept inside the right edge");
 	}
 
+	/** REQ-UI-40 (T3.30): the open list has 4 GUI px of padding at its ends, in its height and in what fits. */
+	@Test
+	void theListsEndPaddingEntersItsHeightAndPlacement() {
+		DropdownPlacement.Placement below = DropdownPlacement.place(10, 20, 100, 16, 5, 14, 8, 320, 240, 4, 4);
+		assertEquals(5, below.rows());
+		assertEquals(5 * 14 + 8, below.height(), "the rows and 4 GUI px at each end");
+		assertEquals(36, below.y(), "right under the box");
+		DropdownPlacement.Placement up = DropdownPlacement.place(10, 200, 100, 16, 5, 14, 8, 320, 240, 4, 4);
+		assertTrue(up.upward());
+		assertEquals(200 - (5 * 14 + 8), up.y(), "its padded bottom on the box");
+		// Below a box at 108: 240 - 4 - 124 = 112 GUI px, 8 rows of 14 without the padding, (112 - 8) / 14 = 7 with it.
+		DropdownPlacement.Placement squeezed = DropdownPlacement.place(10, 108, 100, 16, 20, 14, 8, 320, 240, 4, 4);
+		assertFalse(squeezed.upward());
+		assertEquals(7, squeezed.rows(), "the padding counts in what fits: " + squeezed);
+		assertEquals(124, squeezed.y());
+		assertEquals(7 * 14 + 8, squeezed.height());
+		// Below a box at 145: 75 GUI px; 5 rows of 14 fit without the padding (70), not with it (78), so it opens upward.
+		assertTrue(DropdownPlacement.place(10, 145, 100, 16, 5, 14, 8, 320, 240, 4, 4).upward(), "the padding counts in the side too");
+	}
+
 	@Test
 	void theListModelScrollsToAndMovesTheHighlight() {
 		DropdownModel model = new DropdownModel(20, 8);

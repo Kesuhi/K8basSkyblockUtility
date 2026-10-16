@@ -20,6 +20,8 @@ public final class ScrollArea extends Widget {
 	private final SmoothScroll smooth = new SmoothScroll(UiClock.SOURCE);
 	private final ScrollbarPainter scrollbar = new ScrollbarPainter();
 	private int grab = -1;
+	/** How far short of the region's bottom its scrollbar's track ends: clear of a rounded panel's corner (REQ-UI-40). */
+	private int trackInset;
 
 	/** The content's height, set by the layout each frame; the scroll is held to it (EC-UI-01). */
 	public void setContentHeight(int contentHeight) {
@@ -68,7 +70,16 @@ public final class ScrollArea extends Widget {
 	/** The thumb as laid out now (its offset from the region's top, and its length), for tests. */
 	public VirtualRows.Thumb thumb() {
 		sync();
-		return rows.thumb(height);
+		return rows.thumb(track());
+	}
+
+	/** Ends the scrollbar's track {@code inset} GUI px short of the region's bottom; the region itself is unchanged. */
+	public void setTrackInset(int inset) {
+		trackInset = Math.max(0, inset);
+	}
+
+	private int track() {
+		return Math.max(1, height - trackInset);
 	}
 
 	public int maxScroll() {
@@ -123,13 +134,13 @@ public final class ScrollArea extends Widget {
 		}
 		// The thumb is where it was drawn; a glide stops there, and the thumb or the track takes over.
 		stopGlide();
-		VirtualRows.Thumb thumb = rows.thumb(height);
-		int along = (int) Math.floor(mouseY - y);
+		VirtualRows.Thumb thumb = rows.thumb(track());
+		int along = Math.min(track() - 1, (int) Math.floor(mouseY - y));
 		if (along >= thumb.offset() && along < thumb.offset() + thumb.length()) {
 			grab = along - thumb.offset();
 		} else {
 			grab = thumb.length() / 2;
-			setScroll(rows.scrollForThumb(along - grab, height));
+			setScroll(rows.scrollForThumb(along - grab, track()));
 		}
 		return true;
 	}
@@ -137,7 +148,7 @@ public final class ScrollArea extends Widget {
 	@Override
 	public void drag(double mouseX, double mouseY) {
 		if (grab >= 0) {
-			setScroll(rows.scrollForThumb((int) Math.floor(mouseY - y) - grab, height));
+			setScroll(rows.scrollForThumb((int) Math.floor(mouseY - y) - grab, track()));
 		}
 	}
 
@@ -165,8 +176,8 @@ public final class ScrollArea extends Widget {
 		if (!rows.overflows()) {
 			return;
 		}
-		VirtualRows.Thumb thumb = rows.thumb(height);
+		VirtualRows.Thumb thumb = rows.thumb(track());
 		boolean hot = grab >= 0 || contains(mouseX, mouseY) && onScrollbar(mouseX);
-		scrollbar.draw(graphics, x, y, width, height, thumb.offset(), thumb.length(), hot, argb -> argb);
+		scrollbar.draw(graphics, x, y, width, track(), thumb.offset(), thumb.length(), hot, argb -> argb);
 	}
 }

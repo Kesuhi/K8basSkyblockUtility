@@ -305,6 +305,18 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		}
 	}
 
+	private static int colourDistance(int a, int b) {
+		int d = 0;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			d += Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF));
+		}
+		return d;
+	}
+
+	private static int luminance(int rgb) {
+		return (rgb >> 16 & 0xFF) * 3 + (rgb >> 8 & 0xFF) * 6 + (rgb & 0xFF);
+	}
+
 	private static int[] windowPoint(int guiX, int guiY) {
 		var window = Minecraft.getInstance().getWindow();
 		return new int[] {(int) Math.round((guiX + 0.5) * window.getScreenWidth() / window.getGuiScaledWidth()),
@@ -331,7 +343,7 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		context.getInput().setCursorPos(1, 1);
 		context.waitTicks(2);
 		Path open = context.takeScreenshot("t3.21-dropdown-open-scale-2");
-		int rowY = rows[1] + selected * Dropdown.ROW_HEIGHT;
+		int rowY = rows[1] + Dropdown.LIST_PADDING + selected * Dropdown.ROW_HEIGHT;
 		String check = IconProbe.check(open, IconShapes.Icon.CHECK, rows[0] + rows[2] - 15, rowY + (Dropdown.ROW_HEIGHT - 8) / 2, 8, scale,
 				Theme.current().accent());
 		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
@@ -497,6 +509,45 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		click(context, screen -> screen.centre(screen.picker().saveButton()));
 		int typed = context.computeOnClient(client -> screen(client).alphaColour);
 		check(typed == 0x4029B6B2, "#4029B6B2 typed key by key saves with its alpha: " + Integer.toHexString(typed));
+		// AC-UI-41 [C] (REQ-UI-40, T3.30): the gradient sliders have a pill track (its outline's corner half its height) and the
+		// round outlined knob: light at its centre, with a dark ring around it.
+		click(context, screen -> screen.centre(screen.alphaSwatch));
+		for (int gradientScale = 1; gradientScale <= 2; gradientScale++) {
+		int gs = gradientScale;
+		context.runOnClient(client -> client.options.guiScale().set(gs));
+		context.waitTicks(3);
+		var gradientShot = HairlineProbe.read(context.takeScreenshot("t3.30-gradient-sliders-scale-" + gs));
+		for (boolean alphaSlider : new boolean[] {false, true}) {
+			int[] bar = context.computeOnClient(client -> {
+				GradientSlider slider = (GradientSlider) (alphaSlider ? screen(client).picker().alphaSlider() : screen(client).picker().brightnessSlider());
+				return new int[] {slider.x, slider.y, slider.width, slider.height, Math.round(slider.knobCentre() * gs)};
+			});
+			int s = gs;
+			// Its box's corner pixel lies outside the round end: the panel shows there (at most touched by the outline's soft edge),
+			// not the gradient that fills the track just inside its end.
+			int boxCorner = gradientShot.getRGB(bar[0] * s, bar[1] * s);
+			int insideEnd = gradientShot.getRGB((bar[0] + bar[3] / 2 + 1) * s, (bar[1] + bar[3] / 2) * s);
+			check(colourDistance(boxCorner, com.k8bas.skyblockutility.ui.render.Theme.PANEL) < colourDistance(boxCorner, insideEnd),
+					"the track's round end leaves its box's corner to the panel at scale " + s + ": " + Integer.toHexString(boxCorner) + " (the track "
+							+ Integer.toHexString(insideEnd) + ")");
+			int ring = com.k8bas.skyblockutility.ui.render.Shapes.hairlinePx(s);
+			String corner = com.k8bas.skyblockutility.ui.render.RadiusProbe.check(gradientShot, (alphaSlider ? "the alpha" : "the brightness")
+					+ " slider's track", bar[0] * s - ring, bar[1] * s - ring, bar[3] * s + 2 * ring, bar[3] * s / 2 + ring);
+			check(corner.isEmpty(), corner);
+			int centreY = (bar[1] * 2 + bar[3]) * s / 2;
+			int knobCentre = gradientShot.getRGB(bar[4], centreY) & 0xFFFFFF;
+			int edge = bar[4] + Slider.KNOB_SIZE * s / 2 + s / 2;
+			check(knobCentre == (com.k8bas.skyblockutility.ui.render.Theme.TEXT_PRIMARY & 0xFFFFFF), "the knob is light at its centre: "
+					+ Integer.toHexString(knobCentre));
+			check(luminance(gradientShot.getRGB(edge, centreY)) < luminance(gradientShot.getRGB(edge + 2 * s, centreY)),
+					"a dark ring outlines the knob: " + Integer.toHexString(gradientShot.getRGB(edge, centreY)) + " beside "
+							+ Integer.toHexString(gradientShot.getRGB(edge + 2 * s, centreY)));
+		}
+		}
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		context.waitTicks(3);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
 		// AC-UI-38 (REQ-UI-37, T3.28): 3 notches each way over the brightness and the alpha slider leave both values.
 		click(context, screen -> screen.centre(screen.alphaSwatch));
 		int pickerBefore = context.computeOnClient(client -> screen(client).picker().state().color());

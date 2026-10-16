@@ -46,6 +46,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - Dropdown lists, the colour picker and the database picker fade and grow in quickly when they open,
   and the dimmed background behind a dialog fades in with them. You can click them at once, and they
   close at once. With "Animations" off they appear at once.
+- One set of corner sizes: the settings window now has rounded corners, the sidebar tabs match the
+  other controls, dropdown lists have a little room above their first and below their last entry, and
+  the colour picker's sliders are rounded with the same round knob as the other sliders.
 
 ### Fixed
 

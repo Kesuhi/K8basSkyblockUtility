@@ -50,7 +50,7 @@ public final class RenderKitTestScreen extends Screen {
 		// Sidebar with a selected and a plain tab.
 		int sidebar = Math.min(160, w / 3);
 		Shapes.rect(graphics, x, y + 38, sidebar, h - 38, Theme.SIDEBAR);
-		Shapes.roundedRect(graphics, x + 6, y + 46, sidebar - 12, 20, Shapes.RADIUS_TAB, theme.accentBackground());
+		Shapes.roundedRect(graphics, x + 6, y + 46, sidebar - 12, 20, Shapes.RADIUS_CONTROL, theme.accentBackground());
 		UiText.draw(graphics, font, "Highlights", x + 14, y + 52, theme.accent());
 		UiText.draw(graphics, font, "Waypoints", x + 14, y + 76, Theme.TEXT_SECONDARY);
 		// Cards: normal and hovered.

@@ -57,6 +57,12 @@ public class ListTooltipGameTest implements FabricClientGameTest {
 			int[] size = context.computeOnClient(client -> new int[] {screen(client).width, screen(client).height});
 			check(box != null, "scale " + s + ": hovering the button shows its tooltip");
 			check(box.lines().size() == 6, "scale " + s + ": six lines: " + box.lines());
+			if (s <= 2) {
+				// AC-UI-41 [C] (T3.30): the tooltip takes the control radius, 4 GUI px.
+				String corner = com.k8bas.skyblockutility.ui.render.RadiusProbe.check(HairlineProbe.read(shot), "the tooltip's corner at scale " + s,
+						box.x() * s, box.y() * s, box.height() * s, com.k8bas.skyblockutility.ui.render.Shapes.RADIUS_CONTROL * s);
+				check(corner.isEmpty(), corner);
+			}
 			if (s >= 2) {
 				// AC-UI-34 [C] (T3.23): the tooltip's outline is a hairline, measured down from its top edge's middle.
 				String line = HairlineProbe.check(HairlineProbe.read(shot), "the tooltip's outline", s, (box.x() + box.width() / 2) * s, box.y() * s, 0, 1,

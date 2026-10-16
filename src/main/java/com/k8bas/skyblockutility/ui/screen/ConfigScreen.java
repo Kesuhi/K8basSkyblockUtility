@@ -23,6 +23,7 @@ import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.Clip;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
+import com.k8bas.skyblockutility.ui.render.Corners;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
@@ -333,6 +334,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		clear.setBounds(box.right() - ClearButton.SIZE - 2, box.y() + (box.h() - ClearButton.SIZE) / 2, ClearButton.SIZE, ClearButton.SIZE);
 		ConfigLayout.Rect content = frame.content();
 		scrollArea.setBounds(content.x(), content.y(), content.w(), content.h());
+		// The content's bottom right corner is the panel's: its scrollbar ends clear of the rounding.
+		scrollArea.setTrackInset(Shapes.RADIUS_PANEL / 2);
 		// Before the scroll is read: a new GUI scale puts it on its target for the whole frame (EC-UI-18).
 		scrollArea.setScale(Shapes.guiScale());
 		// The slide moves the page, not the scroll: its widgets are laid out where they are drawn, so clicks meet them (AC-UI-03).
@@ -395,10 +398,12 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		ConfigLayout.Rect panel = frame.panel();
 		ConfigLayout.Rect header = frame.header();
 		ConfigLayout.Rect sidebar = frame.sidebar();
-		graphics.fill(panel.x(), panel.y(), panel.right(), panel.bottom(), Theme.PANEL);
-		graphics.fill(header.x(), header.y(), header.right(), header.bottom(), Theme.HEADER);
+		// One corner scale (REQ-UI-40): the panel rounded; its header follows the top corners, the sidebar the bottom left one.
+		Shapes.roundedRect(graphics, panel.x(), panel.y(), panel.w(), panel.h(), Shapes.RADIUS_PANEL, Theme.PANEL);
+		Shapes.roundedRect(graphics, header.x(), header.y(), header.w(), header.h(), Shapes.RADIUS_PANEL, Corners.TOP_LEFT | Corners.TOP_RIGHT,
+				Theme.HEADER);
 		graphics.fill(header.x(), header.bottom() - 1, header.right(), header.bottom(), theme.accent());
-		graphics.fill(sidebar.x(), sidebar.y(), sidebar.right(), sidebar.bottom(), Theme.SIDEBAR);
+		Shapes.roundedRect(graphics, sidebar.x(), sidebar.y(), sidebar.w(), sidebar.h(), Shapes.RADIUS_PANEL, Corners.BOTTOM_LEFT, Theme.SIDEBAR);
 		drawHeaderText(graphics, header);
 		drawPageText(graphics, theme, mouseX, mouseY);
 	}
@@ -485,10 +490,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		Theme theme = Theme.current();
 		int tabHeight = ConfigLayout.TAB;
 		if (current) {
-			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_TAB, theme.accentBackground());
+			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_CONTROL, theme.accentBackground());
 			graphics.fill(x, y + 4, x + 2, y + tabHeight - 4, theme.accent());
 		} else if (hovered) {
-			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_TAB, Theme.CARD_HOVER);
+			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_CONTROL, Theme.CARD_HOVER);
 		}
 		// The number of options, or of hits while searching (REQ-UI-08).
 		String count = Integer.toString(view.badge(category));
@@ -694,7 +699,9 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		int veil = motion.veilAlpha();
 		if (veil > 0) {
 			ConfigLayout.Rect content = frame.content();
-			graphics.fill(content.x(), content.y(), content.right(), content.bottom(), ColorMath.withAlpha(veil, Theme.PANEL & 0xFFFFFF));
+			// Its bottom right corner is the panel's: rounded with it (REQ-UI-40).
+			Shapes.roundedRect(graphics, content.x(), content.y(), content.w(), content.h(), Shapes.RADIUS_PANEL, Corners.BOTTOM_RIGHT,
+					ColorMath.withAlpha(veil, Theme.PANEL & 0xFFFFFF));
 		}
 	}
 

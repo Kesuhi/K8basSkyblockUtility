@@ -231,7 +231,7 @@ public final class ShapePlan {
 	 * An outline ({@code t} > 0) always follows the setting, also one shaped like a pill (the toggle's focus ring).
 	 */
 	public static boolean alwaysSmooth(int w, int h, int r, int t, int corners) {
-		return t == 0 && (corners != Corners.ALL || 2 * r >= Math.min(w, h));
+		return t == 0 && 2 * r >= Math.min(w, h);
 	}
 
 	/** {@code box} cut to {@code scissor} (null for none), or null when nothing of it is left. */

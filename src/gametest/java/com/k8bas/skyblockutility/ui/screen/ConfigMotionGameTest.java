@@ -634,7 +634,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			// The fourth entry's last row as laid out: scaled input (0.97 about the list's top) would meet the fifth.
 			int[] entry = context.computeOnClient(client -> {
 				int[] box = screen(client).overlay().bounds();
-				return new int[] {(box[0] + box[2]) / 2, box[1] + 4 * com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT - 1};
+				return new int[] {(box[0] + box[2]) / 2, box[1] + com.k8bas.skyblockutility.ui.widget.Dropdown.LIST_PADDING + 4 * com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT - 1};
 			});
 			int[] window = context.computeOnClient(client -> window(entry[0], entry[1]));
 			context.getInput().setCursorPos(window[0], window[1]);

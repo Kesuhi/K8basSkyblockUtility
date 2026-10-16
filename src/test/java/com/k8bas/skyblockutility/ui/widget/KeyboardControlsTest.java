@@ -36,6 +36,40 @@ class KeyboardControlsTest {
 		assertEquals(131, value[0], "Shift: the fine step, 1.31");
 	}
 
+	/**
+	 * REQ-UI-40 (T3.30): the colour picker's slider has the slider's round knob, whose centre runs inside the track: a press at
+	 * the knob's half width from either end is 0 or 1, and the middle is a half.
+	 */
+	@Test
+	void aGradientSlidersKnobRunsInsideItsTrack() {
+		float[] set = {0.5F};
+		GradientSlider gradient = new GradientSlider(() -> set[0], v -> set[0] = v, step -> step, false);
+		gradient.setBounds(0, 0, 110, 10);
+		int half = Slider.KNOB_SIZE / 2;
+		gradient.press(half, 5, 0);
+		assertEquals(0F, set[0], 1e-6, "the left end");
+		gradient.drag(110 - half, 5);
+		assertEquals(1F, set[0], 1e-6, "the right end");
+		gradient.drag(55, 5);
+		assertEquals(0.5F, set[0], 1e-6, "the middle");
+		gradient.release(55, 5);
+		assertEquals(55F, gradient.knobCentre(), 1e-4, "its knob is drawn there");
+	}
+
+	/** REQ-UI-40: a region in a rounded panel's corner keeps its scrollbar's track short of the corner. */
+	@Test
+	void aRegionsTrackCanStopShortOfItsBottom() {
+		ScrollArea area = new ScrollArea();
+		area.setBounds(0, 0, 300, 200);
+		area.setContentHeight(2000);
+		area.setTrackInset(4);
+		area.setScroll(area.maxScroll());
+		var thumb = area.thumb();
+		assertEquals(196, thumb.offset() + thumb.length(), "at the bottom the thumb ends 4 GUI px up");
+		assertTrue(area.press(298, 199, 0), "a press below the track still takes the scrollbar");
+		area.release(298, 199);
+	}
+
 	/** REQ-UI-37, EC-UI-25: while dragged, the colour picker's slider and a region's thumb block the wheel, and not otherwise. */
 	@Test
 	void dragsBlockTheWheel() {

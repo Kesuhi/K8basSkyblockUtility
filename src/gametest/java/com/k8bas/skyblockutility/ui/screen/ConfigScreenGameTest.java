@@ -12,6 +12,7 @@ import com.k8bas.skyblockutility.ui.option.IntSlider;
 import com.k8bas.skyblockutility.ui.option.Option;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -90,6 +91,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			saveModel(context);
 			generalCategory(context);
 			wheelOverASlider(context);
+			cornerRadii(context);
 			// Last: it opens a settings screen of its own and closes it.
 			contentScrollbar(context);
 		} finally {
@@ -705,7 +707,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			check(rows.x() >= content.x() && rows.y() >= content.y() && rows.x() + rows.width() <= content.right()
 					&& rows.y() + rows.height() <= content.bottom(), "the list stays inside the content: " + rows.y());
 			// The fourth entry: Bottom left.
-			return new int[] {rows.x() + rows.width() / 2, rows.y() + 3 * com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT
+			return new int[] {rows.x() + rows.width() / 2, rows.y() + com.k8bas.skyblockutility.ui.widget.Dropdown.LIST_PADDING + 3 * com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT
 					+ com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT / 2};
 		});
 		click(context, row);
@@ -932,6 +934,114 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 		String fileAfter = flushedFile(context).replaceAll("\\s", "");
 		check(fileAfter.equals(fileBefore), "closing the screen wrote no change: " + fileBefore + " -> " + fileAfter);
+	}
+
+	/**
+	 * AC-UI-41 [C] (REQ-UI-40, T3.30) at GUI scales 1 and 2 with Smooth corners ON: the corner radii read from the screenshot
+	 * are 8 for the panel, 6 for a card, 4 for a button and the selected tab, half the height for a toggle's pill, and 4 for
+	 * the open dropdown list, whose first and last rows, hovered, keep their highlight out of its corners.
+	 */
+	private static void cornerRadii(ClientGameTestContext context) {
+		Boolean smoothBefore = context.computeOnClient(client -> ConfigManager.general().smoothCorners);
+		int scaleBefore = context.computeOnClient(client -> client.options.guiScale().get());
+		var positionBefore = context.computeOnClient(client -> ConfigManager.general().noticePosition);
+		context.getInput().resizeWindow(1280, 960);
+		try {
+			context.setScreen(() -> new ConfigScreen(null));
+			context.waitForScreen(ConfigScreen.class);
+			StringBuilder problems = new StringBuilder();
+			for (int round = 0; round < 4; round++) {
+				int s = 1 + round % 2;
+				boolean smooth = round < 2;
+				context.runOnClient(client -> ConfigManager.general().smoothCorners = smooth);
+				// A middle entry is the value, so the first and last rows show only the hover highlight.
+				context.runOnClient(client -> ConfigManager.general().noticePosition = com.k8bas.skyblockutility.ui.notice.NoticePosition.values()[2]);
+				context.runOnClient(client -> client.options.guiScale().set(s));
+				context.waitTicks(3);
+				context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+				context.runOnClient(client -> screen(client).scrollArea().setScroll(0));
+				context.getInput().setCursorPos(2, 2);
+				context.waitTicks(3);
+				// {x, y, w, h} in GUI px, and the expected radius in GUI px.
+				int[][] shapes = context.computeOnClient(client -> {
+					ConfigScreen screen = screen(client);
+					ConfigLayout.Rect panel = screen.frame().panel();
+					Widget card = screen.page().card(optionRow(screen, option -> option.id().equals("npc_search.enabled")).option());
+					Widget button = screen.page().control(optionRow(screen, option -> option.id().equals("npc_search.add_from_database")).option());
+					Widget toggle = screen.page().control(optionRow(screen, option -> option.id().equals("npc_search.enabled")).option());
+					var tabs = screen.tabs();
+					int tab = screen.categories().indexOf(Category.WAYPOINTS);
+					// The spec's radii (REQ-UI-40): panel 8, card 6, control and tab 4, pill half its height.
+					return new int[][] {
+							{panel.x(), panel.y(), panel.w(), panel.h(), 8},
+							{card.x(), card.y(), card.width(), card.height(), 6},
+							{button.x(), button.y(), button.width(), button.height(), 4},
+							{tabs.x(), tabs.y() + tabs.rows().rowTop(tab), tabs.width(), ConfigLayout.TAB, 4},
+							{toggle.x(), toggle.y(), toggle.width(), toggle.height(), toggle.height() / 2}};
+				});
+				String pass = (smooth ? "smooth" : "off") + " scale " + s;
+				var shot = HairlineProbe.read(context.takeScreenshot("t3.30-radii-" + (smooth ? "smooth" : "off") + "-scale-" + s));
+				// The panel's other three corners, each drawn by its own strip: the header's top right, the sidebar's bottom left, the
+				// panel's own bottom right; with what lies on the edge there.
+				int[] p = shapes[0];
+				int px = p[0] * s;
+				int py = p[1] * s;
+				int pr = (p[0] + p[2]) * s - 1;
+				int pb = (p[1] + p[3]) * s - 1;
+				int half = p[3] * s / 2;
+				problems.append(com.k8bas.skyblockutility.ui.render.RadiusProbe.corner(shot, "the panel's top left (" + pass + ")", px, py, true, true, half,
+						Theme.HEADER, 8 * s));
+				problems.append(com.k8bas.skyblockutility.ui.render.RadiusProbe.corner(shot, "the panel's top right (" + pass + ")", pr, py, false, true, half,
+						Theme.HEADER, 8 * s));
+				problems.append(com.k8bas.skyblockutility.ui.render.RadiusProbe.corner(shot, "the panel's bottom left (" + pass + ")", px, pb, true, false,
+						half, Theme.SIDEBAR, 8 * s));
+				problems.append(com.k8bas.skyblockutility.ui.render.RadiusProbe.corner(shot, "the panel's bottom right (" + pass + ")", pr, pb, false, false,
+						half, Theme.PANEL, 8 * s));
+				String[] names = {"the panel", "a card", "a button", "the selected tab", "a toggle's pill"};
+				for (int i = 1; i < shapes.length; i++) {
+					int[] shape = shapes[i];
+					// The selected tab has its accent bar on its left edge: its corner is read along its top edge.
+					problems.append(i == 3
+							? com.k8bas.skyblockutility.ui.render.RadiusProbe.checkTop(shot, names[i] + " (" + pass + ")", shape[0] * s, shape[1] * s,
+									shape[2] * s, shape[4] * s)
+							: com.k8bas.skyblockutility.ui.render.RadiusProbe.check(shot, names[i] + " (" + pass + ")", shape[0] * s, shape[1] * s,
+									shape[3] * s, shape[4] * s));
+				}
+				// The open dropdown list: its corner, and its first and last rows' highlight kept out of its corners.
+				context.runOnClient(client -> screen(client).select(Category.GENERAL));
+				context.waitTicks(2);
+				click(context, controlCentre(context, "interface.notice_position"));
+				int[] list = context.computeOnClient(client -> screen(client).overlay().bounds());
+				for (boolean last : new boolean[] {false, true}) {
+					int rowY = last ? list[3] - com.k8bas.skyblockutility.ui.widget.Dropdown.LIST_PADDING - com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT / 2
+							: list[1] + com.k8bas.skyblockutility.ui.widget.Dropdown.LIST_PADDING + com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT / 2;
+					move(context, new int[] {list[0] + 40, rowY});
+					var open = HairlineProbe.read(context.takeScreenshot("t3.30-list-" + (last ? "last" : "first") + "-row-scale-" + s));
+					if (!last) {
+						problems.append(com.k8bas.skyblockutility.ui.render.RadiusProbe.check(open, "the dropdown list (" + pass + ")", list[0] * s,
+								list[1] * s, (list[3] - list[1]) * s, 4 * s));
+					}
+					// Just inside the outline at the corner, the list's own colour, not a row's highlight.
+					// 3 GUI px in from the corner: clear of the outline, inside the padding, where an unpadded row reached.
+					int cornerY = last ? (list[3] - 3) * s : (list[1] + 2) * s;
+					int inCorner = open.getRGB((list[0] + 3) * s, cornerY) & 0xFFFFFF;
+					if (inCorner != (Theme.CARD & 0xFFFFFF)) {
+						problems.append("the dropdown list's ").append(last ? "last" : "first").append(" row's highlight reaches its corner (")
+								.append(pass).append("): ").append(Integer.toHexString(inCorner)).append("; ");
+					}
+				}
+				context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+				context.waitTicks(2);
+			}
+			check(problems.isEmpty(), problems.toString());
+		} finally {
+			context.runOnClient(client -> {
+				ConfigManager.general().smoothCorners = smoothBefore;
+				ConfigManager.general().noticePosition = positionBefore;
+				client.options.guiScale().set(scaleBefore);
+			});
+			context.setScreen(() -> null);
+		}
 	}
 
 	/** Sends {@code count} notches (positive up), each with the pointer moved onto the slider first; returns the scroll after them. */
