@@ -52,6 +52,28 @@ class VirtualListTest {
 		assertEquals(5000 * 18 - 200, rows.maxScroll());
 	}
 
+	/** REQ-UI-44 (T3.34): a row's tooltip is anchored to that row, as laid out now, not to the whole list. */
+	@Test
+	void aRowsTooltipIsAnchoredToItsRow() {
+		VirtualList list = new VirtualList(20, () -> 30, (graphics, font, index, x, y, w, h, hovered) -> { }, index -> { });
+		list.setBounds(10, 10, 100, 200);
+		list.setRowTooltip(index -> "Row " + index);
+		list.setScroll(5);
+		int[] anchor = new int[4];
+		// 25 GUI px down the list at scroll 5 is row 1, laid out from 15 to 35.
+		list.tooltipAnchor(40, 35, anchor);
+		assertEquals("Row 1", list.tooltipAt(40, 35));
+		assertEquals(List.of(10, 25, 100 - VirtualList.SCROLLBAR, 20), List.of(anchor[0], anchor[1], anchor[2], anchor[3]), "the row, without the scrollbar");
+		// A row half scrolled out of the top: beside what shows of it.
+		list.setScroll(30);
+		list.tooltipAnchor(40, 12, anchor);
+		assertEquals("Row 1", list.tooltipAt(40, 12));
+		assertEquals(List.of(10, 10, 100 - VirtualList.SCROLLBAR, 10), List.of(anchor[0], anchor[1], anchor[2], anchor[3]), "its shown half");
+		// Off the rows (on the scrollbar) the list itself.
+		list.tooltipAnchor(108, 35, anchor);
+		assertEquals(List.of(10, 10, 100, 200), List.of(anchor[0], anchor[1], anchor[2], anchor[3]), "the list");
+	}
+
 	@Test
 	void outsideTheRowsHitsNothing() {
 		VirtualRows rows = new VirtualRows(18);

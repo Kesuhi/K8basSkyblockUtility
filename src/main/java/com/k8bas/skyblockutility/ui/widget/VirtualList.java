@@ -290,6 +290,22 @@ public final class VirtualList extends Widget {
 		return text == null ? "" : text;
 	}
 
+	/** A row's tooltip goes beside what shows of that row, where it is laid out now; off the rows, beside the list. */
+	@Override
+	public void tooltipAnchor(double mouseX, double mouseY, int[] out) {
+		int row = rowAt(mouseX, mouseY);
+		if (row < 0) {
+			super.tooltipAnchor(mouseX, mouseY, out);
+			return;
+		}
+		int top = Math.max(y, y + rows.rowTop(row));
+		int bottom = Math.min(y + height, y + rows.rowTop(row) + rows.rowHeight());
+		out[0] = x;
+		out[1] = top;
+		out[2] = rowWidth();
+		out[3] = Math.max(0, bottom - top);
+	}
+
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		rows.setCount(count.getAsInt());

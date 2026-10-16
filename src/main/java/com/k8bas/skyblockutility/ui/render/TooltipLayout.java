@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.function.ToIntFunction;
 
 /**
- * Where a tooltip goes and how its text wraps (REQ-UI-19): beside the cursor, flipped to its left at
- * the right edge, and always entirely inside the window. Text wraps at spaces, "\n" breaks a line, and
- * a word longer than a line is cut. Formatting codes carry on to the next line, as they would in one
- * string. Text taller than the window is cut, its last line ending in "...".
+ * Where a tooltip goes and how its text wraps (REQ-UI-19): beside its control, not at the pointer (REQ-UI-44), and
+ * always entirely inside the window. Text wraps at spaces, "\n" breaks a line, and a word longer than a line is cut.
+ * Formatting codes carry on to the next line, as they would in one string. Text taller than the window is cut, its
+ * last line ending in "...".
  */
 public final class TooltipLayout {
 	/** The text width a tooltip wraps at, if the window has room for it. */
@@ -17,8 +17,8 @@ public final class TooltipLayout {
 	/** Kept free between the box and the window's edge. */
 	public static final int MARGIN = 4;
 	public static final int LINE_HEIGHT = 10;
-	/** From the cursor to the box. */
-	public static final int OFFSET = 12;
+	/** Between the control and the box. */
+	public static final int GAP = 6;
 	private static final char SECTION = '§';
 
 	private TooltipLayout() {
@@ -28,7 +28,14 @@ public final class TooltipLayout {
 	public record Box(List<String> lines, int x, int y, int width, int height) {
 	}
 
-	public static Box layout(String text, int mouseX, int mouseY, int screenWidth, int screenHeight, ToIntFunction<String> width) {
+	/**
+	 * The tooltip for the control at {@code anchorX}, {@code anchorY} ({@code anchorWidth} by {@code anchorHeight}): on its right,
+	 * {@link #GAP} away and top to top; flipped to its left when it does not fit there; then below it or above it, left to left;
+	 * moved inside the window along the side it is on. When no side fits it goes where, inside the window, it covers the least of
+	 * the control (EC-UI-24).
+	 */
+	public static Box anchored(String text, int anchorX, int anchorY, int anchorWidth, int anchorHeight, int screenWidth, int screenHeight,
+			ToIntFunction<String> width) {
 		int maxText = Math.max(1, Math.min(PREFERRED_TEXT_WIDTH, screenWidth - 2 * MARGIN - 2 * PADDING));
 		List<String> lines = wrap(text, maxText, width);
 		int maxLines = Math.max(1, (screenHeight - 2 * MARGIN - 2 * PADDING + 1) / LINE_HEIGHT);
@@ -42,13 +49,34 @@ public final class TooltipLayout {
 		}
 		int boxWidth = textWidth + 2 * PADDING;
 		int boxHeight = lines.size() * LINE_HEIGHT - 1 + 2 * PADDING;
-		int x = mouseX + OFFSET;
-		if (x + boxWidth > screenWidth - MARGIN) {
-			x = mouseX - OFFSET - boxWidth;
+		int minX = MARGIN;
+		int maxX = Math.max(MARGIN, screenWidth - MARGIN - boxWidth);
+		int minY = MARGIN;
+		int maxY = Math.max(MARGIN, screenHeight - MARGIN - boxHeight);
+		int y = clamp(anchorY, MARGIN, screenHeight - MARGIN - boxHeight);
+		if (anchorX + anchorWidth + GAP + boxWidth <= screenWidth - MARGIN) {
+			return new Box(List.copyOf(lines), anchorX + anchorWidth + GAP, y, boxWidth, boxHeight);
 		}
-		x = clamp(x, MARGIN, screenWidth - MARGIN - boxWidth);
-		int y = clamp(mouseY - OFFSET, MARGIN, screenHeight - MARGIN - boxHeight);
-		return new Box(List.copyOf(lines), x, y, boxWidth, boxHeight);
+		if (anchorX - GAP - boxWidth >= MARGIN) {
+			return new Box(List.copyOf(lines), anchorX - GAP - boxWidth, y, boxWidth, boxHeight);
+		}
+		int x = clamp(anchorX, MARGIN, screenWidth - MARGIN - boxWidth);
+		if (anchorY + anchorHeight + GAP + boxHeight <= screenHeight - MARGIN) {
+			return new Box(List.copyOf(lines), x, anchorY + anchorHeight + GAP, boxWidth, boxHeight);
+		}
+		if (anchorY - GAP - boxHeight >= MARGIN) {
+			return new Box(List.copyOf(lines), x, anchorY - GAP - boxHeight, boxWidth, boxHeight);
+		}
+		// No side fits: what it covers is its overlap across times its overlap down, each least at one end of where the box can
+		// go inside the window (right and below first on a tie).
+		int across = cover(maxX, boxWidth, anchorX, anchorWidth) <= cover(minX, boxWidth, anchorX, anchorWidth) ? maxX : minX;
+		int down = cover(maxY, boxHeight, anchorY, anchorHeight) <= cover(minY, boxHeight, anchorY, anchorHeight) ? maxY : minY;
+		return new Box(List.copyOf(lines), across, down, boxWidth, boxHeight);
+	}
+
+	/** How much of the span from {@code otherStart} ({@code otherLength} long) the span from {@code start} covers. */
+	private static int cover(int start, int length, int otherStart, int otherLength) {
+		return Math.max(0, Math.min(start + length, otherStart + otherLength) - Math.max(start, otherStart));
 	}
 
 	/** Lines no wider than {@code maxWidth}; an empty text gives one empty line. */

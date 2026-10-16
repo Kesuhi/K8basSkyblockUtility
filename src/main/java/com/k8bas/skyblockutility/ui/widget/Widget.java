@@ -109,6 +109,17 @@ public abstract class Widget {
 	}
 
 	/**
+	 * What the tooltip at the mouse is placed beside (REQ-UI-44): x, y, width, height into {@code out}; the widget itself, or the
+	 * part the tooltip belongs to (a list's row).
+	 */
+	public void tooltipAnchor(double mouseX, double mouseY, int[] out) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = width;
+		out[3] = height;
+	}
+
+	/**
 	 * The pointer shape over this widget (REQ-UI-43), asked only while it is the topmost enabled one there; null lets the
 	 * widget below decide (a part that belongs to another widget). Clickable widgets give the hand.
 	 */

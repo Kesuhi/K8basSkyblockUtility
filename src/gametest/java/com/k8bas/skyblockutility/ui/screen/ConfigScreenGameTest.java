@@ -93,7 +93,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 			context.waitTicks(2);
 			Screen after = context.computeOnClient(client -> client.gui.screen());
-			check(after instanceof TitleScreen, "Esc goes back to the title screen: " + after);
+			check(after instanceof TitleScreen && after == TOOLTIP_PARENT.get(), "Esc goes back to the screen it came from, a title screen: " + after);
 			context.setScreen(() -> new ConfigScreen(Minecraft.getInstance().gui.screen()));
 			context.waitForScreen(ConfigScreen.class);
 			context.waitTicks(2);
@@ -353,6 +353,15 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		LOGGER.info("config screen wheel: sidebar left the content at 0, content scrolled to {}", scrolled);
 	}
 
+	/** The title screen the tooltip section's settings screen returns to, so Esc's return to it can be told from the game's fallback. */
+	private static final java.util.concurrent.atomic.AtomicReference<Screen> TOOLTIP_PARENT = new java.util.concurrent.atomic.AtomicReference<>();
+
+	/** Whether a tooltip box lies beside the rectangle, {@link com.k8bas.skyblockutility.ui.render.TooltipLayout#GAP} away on one side. */
+	private static boolean beside(com.k8bas.skyblockutility.ui.render.TooltipLayout.Box box, int x, int y, int w, int h) {
+		int gap = com.k8bas.skyblockutility.ui.render.TooltipLayout.GAP;
+		return box.x() == x + w + gap || box.x() + box.width() + gap == x || box.y() == y + h + gap || box.y() + box.height() + gap == y;
+	}
+
 	/** EC-UI-01: a focused field keeps the keyboard through a resize; REQ-UI-19: a control shows its card's tooltip. */
 	private static void focusAndTooltip(ClientGameTestContext context) {
 		int[] box = context.computeOnClient(client -> {
@@ -373,7 +382,16 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		context.waitTick();
 		context.runOnClient(client -> screen(client).search().model().setText(""));
 
-		// Over NPC Search's own switch, the card's AMBER tooltip shows.
+		// The tooltips on a clock the test steps (T3.34; motion off, as in every gametest), on a settings screen of their own,
+		// which Esc leaves for the title screen as the first one did.
+		java.util.concurrent.atomic.AtomicLong clock = new java.util.concurrent.atomic.AtomicLong(50_000);
+		context.setScreen(() -> {
+			TOOLTIP_PARENT.set(new TitleScreen());
+			return new ConfigScreen(TOOLTIP_PARENT.get(), com.k8bas.skyblockutility.settings.OptionCatalog.live(),
+					com.k8bas.skyblockutility.ui.render.UiTime.of(clock::get, () -> false));
+		});
+		context.waitForScreen(ConfigScreen.class);
+		// Over NPC Search's own switch, the card's AMBER tooltip shows after 400 ms of rest, beside the card (REQ-UI-44).
 		context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
 		context.runOnClient(client -> screen(client).scrollTo(0));
 		context.waitTicks(2);
@@ -384,12 +402,67 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			return new int[] {control.x() + control.w() / 2, control.y() + control.h() / 2};
 		});
 		move(context, toggle);
+		check(context.computeOnClient(client -> screen(client).tooltipShown()) == null, "no tooltip as the pointer arrives on the switch");
+		clock.addAndGet(399);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> screen(client).tooltipShown()) == null, "none after 399 ms of rest");
+		clock.addAndGet(1);
 		context.waitTicks(2);
 		String expected = context.computeOnClient(client -> optionRow(screen(client), option -> option instanceof Toggle).option().text().tooltip());
 		var shown = context.computeOnClient(client -> screen(client).tooltipShown());
 		check(!expected.isBlank() && shown != null && String.join(" ", shown.lines()).startsWith(expected.substring(0, 20)),
-				"hovering the switch shows its card's tooltip: " + shown);
+				"hovering the switch shows its card's tooltip after 400 ms: " + shown);
+		ConfigLayout.Rect toggleCard = context.computeOnClient(client -> ConfigLayout.card(screen(client).frame(), 0,
+				optionRow(screen(client), option -> option instanceof Toggle)));
+		int[] window = context.computeOnClient(client -> new int[] {screen(client).width, screen(client).height});
+		check(!overlaps(shown, toggleCard.x(), toggleCard.y(), toggleCard.w(), toggleCard.h()), "beside its card, over neither the card nor its switch: "
+				+ shown + ", card " + toggleCard);
+		check(beside(shown, toggleCard.x(), toggleCard.y(), toggleCard.w(), toggleCard.h()), "6 GUI px beside its card: " + shown + ", card " + toggleCard);
+		check(shown.x() >= 0 && shown.y() >= 0 && shown.x() + shown.width() <= window[0] && shown.y() + shown.height() <= window[1], "inside the window");
 		context.takeScreenshot("t2.4a-tooltip-over-a-switch");
+		// AC-UI-45 [C]: at GUI scale 2 a slider's tooltip (its card's) covers neither its knob nor its value.
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.runOnClient(client -> screen(client).scrollTo(0));
+		context.waitTicks(2);
+		int[] slider = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.OptionRow row = optionRow(screen, option -> option instanceof IntSlider);
+			ConfigLayout.Rect track = ConfigLayout.control(ConfigLayout.card(screen.frame(), 0, row), row.option());
+			return new int[] {track.x(), track.y(), track.w(), track.h()};
+		});
+		move(context, new int[] {slider[0] + slider[2] / 2, slider[1] + slider[3] / 2});
+		clock.addAndGet(400);
+		context.waitTicks(2);
+		var overSlider = context.computeOnClient(client -> screen(client).tooltipShown());
+		check(overSlider != null, "the slider's card has a tooltip, shown after 400 ms");
+		check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == 2, "at GUI scale 2");
+		// The track (its knob runs on it) and the value column after it.
+		check(!overlaps(overSlider, slider[0], slider[1], slider[2] + ConfigLayout.SLIDER_LABEL, slider[3]),
+				"over neither the slider's knob nor its value: " + overSlider + ", slider " + java.util.Arrays.toString(slider));
+		ConfigLayout.Rect sliderCard = context.computeOnClient(client -> ConfigLayout.card(screen(client).frame(), 0,
+				optionRow(screen(client), option -> option instanceof IntSlider)));
+		check(beside(overSlider, sliderCard.x(), sliderCard.y(), sliderCard.w(), sliderCard.h()), "beside the slider's card (its tooltip is the card's): "
+				+ overSlider + ", card " + sliderCard);
+		context.takeScreenshot("t3.34-tooltip-beside-a-slider");
+		// A card half scrolled under the header: its tooltip goes beside what shows of it, top to top.
+		context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+		context.runOnClient(client -> screen(client).scrollTo(optionRow(screen(client), option -> option instanceof Toggle).y() + 12));
+		context.waitTicks(2);
+		int[] cut = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.Rect card = ConfigLayout.card(screen.frame(), screen.scrollArea().scroll(), optionRow(screen, option -> option instanceof Toggle));
+			ConfigLayout.Rect content = screen.frame().content();
+			return new int[] {card.x(), card.y(), card.w(), card.bottom(), content.y()};
+		});
+		check(cut[1] < cut[4] && cut[3] > cut[4] + 10, "the card is half under the header: " + java.util.Arrays.toString(cut));
+		move(context, new int[] {cut[0] + 20, cut[4] + 6});
+		clock.addAndGet(400);
+		context.waitTicks(2);
+		var overCut = context.computeOnClient(client -> screen(client).tooltipShown());
+		check(overCut != null && beside(overCut, cut[0], cut[4], cut[2], cut[3] - cut[4]) && overCut.y() == cut[4],
+				"beside the card's shown part, from " + cut[4] + ": " + overCut);
+		context.runOnClient(client -> screen(client).scrollTo(0));
+		context.waitTicks(2);
 		LOGGER.info("config screen focus and tooltip: the search box kept the keyboard through a resize, typed {}; the switch showed {} lines",
 				typed, shown.lines().size());
 	}
@@ -1239,6 +1312,11 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			return sliders < 4 ? "only " + sliders + " sliders found" : found.toString();
 		});
 		check(problems.isEmpty(), "slider values that do not fit the value column: " + problems);
+	}
+
+	/** Whether a tooltip box covers any of the rectangle at {@code x}, {@code y}, {@code w} by {@code h}. */
+	private static boolean overlaps(com.k8bas.skyblockutility.ui.render.TooltipLayout.Box box, int x, int y, int w, int h) {
+		return box.x() < x + w && x < box.x() + box.width() && box.y() < y + h && y < box.y() + box.height();
 	}
 
 	/** Whether {@code rgb} is darker than {@code than} in every channel. */

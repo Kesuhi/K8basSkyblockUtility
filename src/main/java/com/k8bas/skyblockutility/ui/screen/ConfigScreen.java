@@ -475,7 +475,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 					lineY += 10;
 				}
 				if (heading.cut() && rect.contains(mouseX, mouseY) && content.contains(mouseX, mouseY)) {
-					showTooltip(heading.category().description());
+					// Beside what shows of the heading: it may be scrolled partly under the header.
+					int top = Math.max(rect.y(), content.y());
+					int bottom = Math.min(rect.bottom(), content.bottom());
+					showTooltip(heading.category().description(), rect.x(), top, rect.w(), Math.max(0, bottom - top));
 				}
 			} else if (row instanceof ConfigLayout.RuleProblem problem) {
 				// Why the rule does nothing, in the fixed error colour (REQ-GLOW-10, REQ-UI-12).

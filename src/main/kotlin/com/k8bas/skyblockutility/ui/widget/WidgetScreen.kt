@@ -35,7 +35,8 @@ import kotlin.math.sign
  * - One overlay (a dropdown's list, a modal) can be open; it is drawn over everything and gets all
  *   input. A click outside closes a plain overlay unchanged and is not passed on; a modal stays.
  *   Esc closes it without applying anything.
- * - The hovered widget's tooltip is drawn last, over everything, inside the window (REQ-UI-19).
+ * - The hovered widget's tooltip is drawn last, over everything, inside the window (REQ-UI-19), beside its control after the
+ *   pointer has rested there, fading in (REQ-UI-44, [TooltipTimer]).
  * - Each frame it asks the game for the pointer shape of the widget under the mouse, or of the one being dragged
  *   (REQ-UI-43), through the call the game's own widgets use.
  * - A screen that opts in ([keyboardNavigation], REQ-UI-18) is also run from the keyboard: Tab and Shift+Tab move a
@@ -72,8 +73,27 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	/** Scrolling left over from fractional wheel or trackpad events, below one notch. */
 	private var scrollRest = 0.0
 
-	/** Asked for by [drawContent] this frame. */
+	/** Asked for by [drawContent] this frame, with what it is placed beside. */
 	private var requestedTooltip = ""
+	private val requestedAnchor = IntArray(4)
+
+	/** When the tooltip shows and how far it has faded in (REQ-UI-44). */
+	private val tooltipTimer = TooltipTimer()
+	private val tooltipAnchor = IntArray(4)
+
+	/**
+	 * The mouse buttons pressed on this screen and not released yet, one bit each: no tooltip shows while one is held, whether a
+	 * widget took the press or not (REQ-UI-44). The game keeps its own pressed flags only while no screen is open.
+	 */
+	private var buttonsHeld = 0
+
+	/** The mouse in the last frame, so the tooltip timer knows whether it moved. */
+	private var lastMouseX = Int.MIN_VALUE
+	private var lastMouseY = Int.MIN_VALUE
+
+	/** A gametest's tooltip box, drawn as it is instead of the hovered one (AC-UI-29, AC-UI-49); null for none. */
+	private var placedTooltip: TooltipLayout.Box? = null
+	private var lastTooltipAlpha = 0F
 
 	/** The content's scale and its centre as drawn last (T2.9); the mouse maps back through them until the next frame. */
 	private var frameScale = 1F
@@ -153,6 +173,8 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (overlay !== opened) {
 			// It opens on the screen's clock source, also when opened from outside an event.
 			transition = timed { OverlayTransition(UiClock.SOURCE) }
+			// A tooltip hides, and the delay starts again over the overlay (EC-UI-26).
+			tooltipTimer.restart()
 		}
 		overlay = opened
 		updateFocusGuard()
@@ -238,6 +260,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		transition = null
 		pressed = null
 		pressedButton = -1
+		tooltipTimer.restart()
 		nav.overlayClosed()
 		updateFocusGuard()
 	}
@@ -357,6 +380,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			if (!open.stillAnchored()) {
 				closeOverlay(true)
 				lastTooltip = null
+				lastTooltipAlpha = 0F
 				return
 			}
 			graphics.nextStratum()
@@ -488,61 +512,123 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	}
 
 	/**
-	 * Shows a tooltip at the mouse this frame, for something drawn in [drawContent] rather than
-	 * a widget (e.g. a label cut with "..."). A widget's own tooltip under the mouse comes first.
+	 * Shows a tooltip this frame, for something drawn in [drawContent] rather than a widget (e.g. a label cut with "..."), placed
+	 * beside it: [x], [y], [width] by [height]. A widget's own tooltip under the mouse comes first.
 	 */
-	protected fun showTooltip(text: String?) {
+	protected fun showTooltip(text: String?, x: Int, y: Int, width: Int, height: Int) {
 		requestedTooltip = text ?: ""
+		requestedAnchor[0] = x
+		requestedAnchor[1] = y
+		requestedAnchor[2] = width
+		requestedAnchor[3] = height
 	}
 
 	/** The tooltip drawn in the last frame, or null. */
 	protected fun lastTooltip(): TooltipLayout.Box? = lastTooltip
 
+	/** The last drawn tooltip's opacity, 0 to 1, for tests. */
+	protected fun lastTooltipAlpha(): Float = lastTooltipAlpha
+
 	/**
-	 * The tooltip of the topmost widget under the mouse that has one, over everything else (REQ-UI-19):
-	 * a control without one shows its card's. With an overlay open only its widgets count. None while a
-	 * press is held, so a drag is not covered.
+	 * For gametests: draws a tooltip with [text] in a box at [x], [y], [width] by [height] in every frame, whatever is hovered, so
+	 * it can be put over a slider (AC-UI-29, AC-UI-49); a null [text] goes back to the hovered tooltip. The text wraps to the
+	 * box's width; lines past its height are drawn below it.
+	 */
+	fun placeTooltipForTests(text: String?, x: Int, y: Int, width: Int, height: Int) {
+		placedTooltip = text?.let {
+			TooltipLayout.Box(java.util.List.copyOf(TooltipLayout.wrap(it, maxOf(1, width - 2 * TooltipLayout.PADDING), font::width)), x, y, width, height)
+		}
+	}
+
+	/**
+	 * The tooltip of the topmost widget under the mouse that has one, over everything else (REQ-UI-19): a control without one
+	 * shows its card's. With an overlay open only its widgets count. None while a press is held, so a drag is not covered.
+	 * It shows once the pointer has rested on its control, beside that control (the widget the text is from, or a list's row,
+	 * as much of it as its region shows), and fades in (REQ-UI-44).
 	 */
 	private fun drawTooltip(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, lookX: Double, lookY: Double) {
 		lastTooltip = null
-		if (pressed != null) {
+		lastTooltipAlpha = 0F
+		val moved = mouseX != lastMouseX || mouseY != lastMouseY
+		lastMouseX = mouseX
+		lastMouseY = mouseY
+		placedTooltip?.let {
+			drawTooltipBox(graphics, it, 1F)
 			return
 		}
 		var text = ""
-		val active = activeWidgets()
-		for (i in active.size - 1 downTo 0) {
-			val widget = active[i]
-			// The widget under the mouse in the layout (the content may be scaled); the box itself at the real mouse, unscaled.
-			if (widget.contains(lookX, lookY) && widget.inClip(lookX, lookY)) {
-				val own = widget.tooltipAt(lookX, lookY)
-				if (!own.isNullOrEmpty()) {
-					text = own
-					break
+		var owner: Any? = null
+		// None while a mouse button is held, whether a widget took the press or not.
+		if (pressed == null && buttonsHeld == 0) {
+			val active = activeWidgets()
+			for (i in active.size - 1 downTo 0) {
+				val widget = active[i]
+				// The widget under the mouse in the layout (the content may be scaled).
+				if (widget.contains(lookX, lookY) && widget.inClip(lookX, lookY)) {
+					val own = widget.tooltipAt(lookX, lookY)
+					if (!own.isNullOrEmpty()) {
+						text = own
+						owner = widget
+						widget.tooltipAnchor(lookX, lookY, tooltipAnchor)
+						cutToRegion(widget.clip())
+						break
+					}
 				}
 			}
+			if (text.isEmpty() && overlay == null && requestedTooltip.isNotEmpty()) {
+				text = requestedTooltip
+				owner = this
+				requestedAnchor.copyInto(tooltipAnchor)
+			}
 		}
-		if (text.isEmpty() && overlay == null) {
-			text = requestedTooltip
-		}
-		if (text.isEmpty()) {
+		val time = UiClock.SOURCE
+		if (!tooltipTimer.update(time.millis(), owner, text, tooltipAnchor[0], tooltipAnchor[1], tooltipAnchor[2], tooltipAnchor[3], moved, time.motion())) {
 			return
 		}
-		val box = TooltipLayout.layout(text, mouseX, mouseY, width, height, font::width)
+		val box = TooltipLayout.anchored(text, tooltipAnchor[0], tooltipAnchor[1], tooltipAnchor[2], tooltipAnchor[3], width, height, font::width)
+		drawTooltipBox(graphics, box, tooltipTimer.alpha())
+	}
+
+	/** The tooltip's anchor cut to [region], so it goes beside what shows of its control. */
+	private fun cutToRegion(region: com.k8bas.skyblockutility.ui.render.ClipRect?) {
+		if (region == null) {
+			return
+		}
+		val left = maxOf(tooltipAnchor[0], region.x)
+		val top = maxOf(tooltipAnchor[1], region.y)
+		val right = minOf(tooltipAnchor[0] + tooltipAnchor[2], region.right())
+		val bottom = minOf(tooltipAnchor[1] + tooltipAnchor[3], region.bottom())
+		tooltipAnchor[0] = left
+		tooltipAnchor[1] = top
+		tooltipAnchor[2] = maxOf(0, right - left)
+		tooltipAnchor[3] = maxOf(0, bottom - top)
+	}
+
+	private fun drawTooltipBox(graphics: GuiGraphicsExtractor, box: TooltipLayout.Box, alpha: Float) {
 		lastTooltip = box
+		lastTooltipAlpha = alpha
 		graphics.nextStratum()
-		Shapes.shadow(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL)
-		Shapes.roundedRect(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SIDEBAR)
-		Shapes.roundedHairline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SEPARATOR)
-		var lineY = box.y() + TooltipLayout.PADDING
-		for (line in box.lines()) {
-			UiText.draw(graphics, font, line, box.x() + TooltipLayout.PADDING, lineY, Theme.TEXT_PRIMARY)
-			lineY += TooltipLayout.LINE_HEIGHT
+		val fade = UiFade.enter(alpha)
+		try {
+			Shapes.shadow(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL)
+			Shapes.roundedRect(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SIDEBAR)
+			Shapes.roundedHairline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SEPARATOR)
+			var lineY = box.y() + TooltipLayout.PADDING
+			for (line in box.lines()) {
+				UiText.draw(graphics, font, line, box.x() + TooltipLayout.PADDING, lineY, Theme.TEXT_PRIMARY)
+				lineY += TooltipLayout.LINE_HEIGHT
+			}
+		} finally {
+			UiFade.leave(fade)
 		}
 	}
 
 	private fun activeWidgets(): List<Widget> = overlay?.widgets() ?: widgets
 
-	override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean = timed { handleClick(event, doubleClick) }
+	override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean = timed {
+		buttonsHeld = buttonsHeld or buttonBit(event.button())
+		handleClick(event, doubleClick)
+	}
 
 	private fun handleClick(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
 		// An armed keybind takes the button as its input (R27: left cancels, right resets, others bind).
@@ -614,7 +700,12 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return super.mouseDragged(event, dragX, dragY)
 	}
 
-	override fun mouseReleased(event: MouseButtonEvent): Boolean = timed { handleRelease(event) }
+	override fun mouseReleased(event: MouseButtonEvent): Boolean = timed {
+		// After any release the tooltip's delay starts again (REQ-UI-44).
+		buttonsHeld = buttonsHeld and buttonBit(event.button()).inv()
+		tooltipTimer.restart()
+		handleRelease(event)
+	}
 
 	private fun handleRelease(event: MouseButtonEvent): Boolean {
 		val held = pressed
@@ -640,6 +731,8 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		timed { handleScroll(mouseX, mouseY, scrollX, scrollY) }
 
 	private fun handleScroll(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
+		// The wheel hides a tooltip, and the delay starts again for what is then under the pointer (EC-UI-26).
+		tooltipTimer.restart()
 		// During a slider drag the wheel is ignored, wherever the pointer is (REQ-UI-37).
 		if (pressed?.blocksWheel() == true) {
 			scrollRest = 0.0
@@ -848,6 +941,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	companion object {
 		private const val KEY_ESCAPE = 256
+
+		/** A mouse button's bit in [buttonsHeld]; none for a button number past 31. */
+		private fun buttonBit(button: Int): Int = if (button in 0..31) 1 shl button else 0
 
 		/** The game's cursor for a shape; the default is the one the game starts each frame with. */
 		private fun cursorType(shape: PointerShape): CursorType = when (shape) {

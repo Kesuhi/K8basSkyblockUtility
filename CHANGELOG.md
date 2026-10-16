@@ -57,6 +57,11 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - One set of corner sizes: the settings window now has rounded corners, the sidebar tabs match the
   other controls, dropdown lists have a little room above their first and below their last entry, and
   the colour picker's sliders are rounded with the same round knob as the other sliders.
+- Tooltips wait until the pointer has rested on a setting for 0.4 seconds, then fade in, so they no
+  longer flash up while you move across the screen. Moving on to the next setting within 0.3 seconds
+  shows its tooltip at once. A tooltip now sits beside its setting, a list's entry or a button instead
+  of following the pointer, so it never covers the slider or value it describes, and it hides while
+  you hold the mouse button and when the page scrolls.
 
 ### Fixed
 
