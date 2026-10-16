@@ -54,6 +54,11 @@ public final class Slider extends Widget {
 		return dragging;
 	}
 
+	/** Where its value label starts: left-aligned 6 GUI px after the track's end, in the value column (REQ-UI-42). */
+	public int labelX() {
+		return x + width + 6;
+	}
+
 	/** The knob's left edge in whole GUI pixels, for the stored value: the layout. */
 	public int knobX() {
 		return x + (int) Math.round(model.fraction(get.getAsLong()) * (width - KNOB_SIZE));
@@ -170,7 +175,7 @@ public final class Slider extends Widget {
 		Shapes.bar(graphics, gap[1], x + width, trackY, TRACK_HEIGHT, Corners.RIGHT, faded(Theme.SEPARATOR));
 		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, hover) : Theme.TEXT_DISABLED;
 		Shapes.roundedRect(graphics, knobX, y + (height - KNOB_SIZE) / 2, KNOB_SIZE, KNOB_SIZE, KNOB_SIZE / 2, faded(knobColor));
-		UiText.draw(graphics, font, label.apply(value), x + width + 6, y + (height - font.lineHeight) / 2 + 1,
+		UiText.draw(graphics, font, label.apply(value), labelX(), y + (height - font.lineHeight) / 2 + 1,
 				faded(enabled ? Theme.TEXT_PRIMARY : Theme.TEXT_DISABLED));
 	}
 

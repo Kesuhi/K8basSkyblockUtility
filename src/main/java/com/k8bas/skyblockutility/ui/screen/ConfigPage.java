@@ -209,10 +209,11 @@ final class ConfigPage {
 			}
 			Option option = optionRow.option();
 			ConfigLayout.Rect rect = ConfigLayout.card(frame, scroll, optionRow);
-			ConfigLayout.Rect controlRect = ConfigLayout.control(rect, option);
+			ConfigLayout.Rect controlRect = ConfigLayout.control(rect, option, optionRow.indent());
 			OptionCard cardWidget = cardFor(option);
 			Widget control = controls.get(option);
 			cardWidget.setBounds(rect.x(), rect.y(), rect.w(), rect.h());
+			cardWidget.setIndent(optionRow.indent());
 			control.setBounds(controlRect.x(), controlRect.y(), controlRect.w(), controlRect.h());
 			cardWidget.setClip(clip);
 			cardWidget.fitText(width);

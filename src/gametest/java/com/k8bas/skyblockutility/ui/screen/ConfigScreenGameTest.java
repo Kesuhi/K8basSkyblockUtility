@@ -93,6 +93,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			wheelOverASlider(context);
 			cornerRadii(context);
 			panelShadow(context);
+			sliderValuesFit(context);
 			// Last: it opens a settings screen of its own and closes it.
 			contentScrollbar(context);
 		} finally {
@@ -1197,6 +1198,35 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			gap = Math.max(gap, Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF)));
 		}
 		return gap;
+	}
+
+	/**
+	 * AC-UI-43 [C] (REQ-UI-42, T3.32): with the vanilla font, every value text each registered slider can show (every whole value
+	 * of its range, which covers its steps and its max, with its unit and zero label) measures at most the value column less its
+	 * 6 GUI px gap.
+	 */
+	private static void sliderValuesFit(ClientGameTestContext context) {
+		String problems = context.computeOnClient(client -> {
+			StringBuilder found = new StringBuilder();
+			int sliders = 0;
+			for (var card : com.k8bas.skyblockutility.settings.OptionCatalog.live()) {
+				for (var option : card.options()) {
+					if (!(option instanceof com.k8bas.skyblockutility.ui.option.IntSlider slider)) {
+						continue;
+					}
+					sliders++;
+					for (int value = slider.min(); value <= slider.max(); value++) {
+						String text = slider.format(value);
+						int width = client.font.width(text);
+						if (width > ConfigLayout.SLIDER_LABEL - 6) {
+							found.append(slider.id()).append(": \"").append(text).append("\" is ").append(width).append(" GUI px; ");
+						}
+					}
+				}
+			}
+			return sliders < 4 ? "only " + sliders + " sliders found" : found.toString();
+		});
+		check(problems.isEmpty(), "slider values that do not fit the value column: " + problems);
 	}
 
 	/** Whether {@code rgb} is darker than {@code than} in every channel. */

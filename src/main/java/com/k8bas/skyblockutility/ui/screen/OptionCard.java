@@ -26,6 +26,8 @@ final class OptionCard extends Widget {
 	/** The switch a click anywhere on a toggle card flips; null for other cards. */
 	private final ToggleSwitch toggle;
 	private ConfigLayout.Lines description = new ConfigLayout.Lines(List.of(), false);
+	/** How far its row is indented (a rule's field), so its text ends where its control's layout starts. */
+	private int indent;
 
 	OptionCard(Option option, ToggleSwitch toggle) {
 		this.option = option;
@@ -34,6 +36,10 @@ final class OptionCard extends Widget {
 
 	Option option() {
 		return option;
+	}
+
+	void setIndent(int indent) {
+		this.indent = indent;
 	}
 
 	@Override
@@ -63,7 +69,7 @@ final class OptionCard extends Widget {
 	 * done with the layout, so the tooltip knows before the first draw whether the text was cut.
 	 */
 	void fitText(ToIntFunction<String> measure) {
-		ConfigLayout.Rect text = ConfigLayout.text(new ConfigLayout.Rect(x, y, width, height), option);
+		ConfigLayout.Rect text = ConfigLayout.text(new ConfigLayout.Rect(x, y, width, height), option, indent);
 		int maxLines = option.status().state() == OptionStatus.State.OK ? 2 : 1;
 		description = ConfigLayout.fitLines(option.text().description(), text.w(), maxLines, measure);
 	}
@@ -85,7 +91,7 @@ final class OptionCard extends Widget {
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		float hover = hoverAmount(enabled && contains(mouseX, mouseY));
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover)));
-		ConfigLayout.Rect text = ConfigLayout.text(new ConfigLayout.Rect(x, y, width, height), option);
+		ConfigLayout.Rect text = ConfigLayout.text(new ConfigLayout.Rect(x, y, width, height), option, indent);
 		if (text.w() <= 0) {
 			return;
 		}

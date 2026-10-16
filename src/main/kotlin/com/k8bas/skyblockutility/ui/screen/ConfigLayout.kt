@@ -335,9 +335,14 @@ object ConfigLayout {
 	/**
 	 * The control on the right of a card: a switch, dropdown, key button or colour swatch, or a slider's track (its
 	 * value label sits in the [SLIDER_LABEL] px to the track's right, which a press does not reach).
+	 *
+	 * The slider column (REQ-UI-42): every slider's track ends [SLIDER_LABEL] + [PAD] GUI px left of the content's right edge
+	 * (a card's right edge, indented or not), and its length comes from the card's width before its [indent], so on one page
+	 * every track starts and ends at the same x and every value label starts 6 GUI px after it.
 	 */
 	@JvmStatic
-	fun control(card: Rect, option: Option): Rect {
+	@JvmOverloads
+	fun control(card: Rect, option: Option, indent: Int = 0): Rect {
 		var height = CONTROL_HEIGHT
 		var right = card.right() - PAD
 		var width = when (option) {
@@ -348,7 +353,7 @@ object ConfigLayout {
 			is IntSlider -> {
 				right -= SLIDER_LABEL
 				// A narrow card gives up track length first, so the title keeps some room.
-				maxOf(30, minOf(80, card.w - 2 * PAD - SLIDER_LABEL - 60))
+				maxOf(30, minOf(80, card.w + indent - 2 * PAD - SLIDER_LABEL - 60))
 			}
 			is Choice<*> -> 120
 			is TextOption -> 140
@@ -361,7 +366,8 @@ object ConfigLayout {
 			}
 			else -> 100
 		}
-		width = minOf(width, maxOf(0, card.w / 2 - PAD))
+		// A slider's half is also taken before the indent, so the clamp keeps its column too.
+		width = minOf(width, maxOf(0, (card.w + if (option is IntSlider) indent else 0) / 2 - PAD))
 		return Rect(right - width, card.y + (card.h - height) / 2, width, height)
 	}
 
@@ -376,10 +382,14 @@ object ConfigLayout {
 		return Rect(header.right() - HEADER_ACTION_INSET - width, header.y + (header.h - height) / 2, width, height)
 	}
 
-	/** Where a card's title, description and status go: from its left edge to just before the control. */
+	/**
+	 * Where a card's title, description and status go: from its left edge to just before the control (placed as
+	 * [control] places it, with the card's [indent]).
+	 */
 	@JvmStatic
-	fun text(card: Rect, option: Option): Rect {
-		val control = control(card, option)
+	@JvmOverloads
+	fun text(card: Rect, option: Option, indent: Int = 0): Rect {
+		val control = control(card, option, indent)
 		return Rect(card.x + PAD, card.y, control.x - 8 - (card.x + PAD), card.h)
 	}
 
