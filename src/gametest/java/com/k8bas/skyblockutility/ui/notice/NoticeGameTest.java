@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.ui.notice;
 
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.widget.ListTooltipTestScreen;
@@ -71,6 +72,11 @@ public class NoticeGameTest implements FabricClientGameTest {
 				client.getWindow().getGuiScaledHeight()).get(0));
 		int inside = pixel(shot, window(context, first.x() + first.width() - 4, first.y() + 2));
 		check(inside == (Theme.HEADER & 0xFFFFFF), "the notice is drawn over the screen: " + Integer.toHexString(inside) + " at " + first);
+		// AC-UI-34 [C] (T3.23): the notice's outline is a hairline, measured down from its top edge's middle.
+		int noticeScale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		String line = HairlineProbe.check(HairlineProbe.read(shot), "the notice's outline", noticeScale, (first.x() + first.width() / 2) * noticeScale,
+				first.y() * noticeScale, 0, 1, Theme.SEPARATOR);
+		check(line.isEmpty(), line);
 
 		// The list's first row lies under the first notice; a click there still reaches the screen.
 		int[] row = window(context, first.x() + 40, 8 + 5);

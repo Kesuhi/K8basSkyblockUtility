@@ -19,9 +19,11 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - Icons are drawn sharp at every GUI scale: the search box's × and its new search glass, the arrows of
   dropdowns, rule headers and the database picker's folders, and a new check mark beside the selected
   entry of an open dropdown list.
-- The outlines of buttons, text fields, dropdowns and their lists, key binding buttons and colour swatches,
-  and the text cursor, are fine lines on the screen's own pixels: 1 pixel thick at GUI scales 1 and 2, 2 at
-  3 and 4, 3 at 5 and 6, instead of growing with the GUI scale.
+- Outlines and thin lines are fine lines on the screen's own pixels: 1 pixel thick at GUI scales 1 and 2,
+  2 at 3 and 4, 3 at 5 and 6, instead of growing with the GUI scale. This covers buttons, text fields,
+  dropdowns and their lists, key binding buttons, colour swatches, the text cursor, the colour picker and
+  the database picker, tooltips, notices, the settings' section lines, and the HUD editor's outlines and
+  snap guides. The keyboard focus ring stays as thick as before, so it is easy to see.
 
 ### Fixed
 

@@ -98,6 +98,11 @@ public final class DatabasePickerOverlay extends Overlay {
 		return mouseX >= panelX && mouseY >= panelY && mouseX < panelX + panelWidth && mouseY < panelY + panelHeight;
 	}
 
+	/** The panel's left, top and width in GUI pixels, for gametests (T3.23). */
+	int[] panel() {
+		return new int[] {panelX, panelY, panelWidth};
+	}
+
 	@Override
 	public void layout(int screenWidth, int screenHeight) {
 		refresh();
@@ -156,7 +161,7 @@ public final class DatabasePickerOverlay extends Overlay {
 	@Override
 	public void drawFrame(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		Shapes.roundedRect(graphics, panelX, panelY, panelWidth, panelHeight, Shapes.RADIUS_CARD, Theme.PANEL);
-		Shapes.roundedOutline(graphics, panelX, panelY, panelWidth, panelHeight, Shapes.RADIUS_CARD, 1, Theme.SEPARATOR);
+		Shapes.roundedHairline(graphics, panelX, panelY, panelWidth, panelHeight, Shapes.RADIUS_CARD, Theme.SEPARATOR);
 		UiText.draw(graphics, font, Ellipsis.fit(database.title(), panelWidth - 16, font::width), panelX + 8, panelY + 8, Theme.TEXT_PRIMARY);
 		String message = message();
 		if (message != null) {

@@ -68,7 +68,7 @@ final class GradientSlider extends Widget {
 			int colour = colourAt.applyAsInt(Math.round(column * 255F / Math.max(1, width - 1)));
 			graphics.fill(x + column, y, x + column + 1, y + height, colour);
 		}
-		Shapes.roundedOutline(graphics, x - 1, y - 1, width + 2, height + 2, 2, 1, Theme.SEPARATOR);
+		Shapes.hairlineAround(graphics, x, y, width, height, 1, Theme.SEPARATOR);
 		int handle = x + (int) Math.round(get.getAsDouble() * (width - 1));
 		graphics.fill(handle - 2, y - 2, handle + 1, y + height + 2, 0xFF000000);
 		graphics.fill(handle - 1, y - 1, handle, y + height + 1, 0xFFFFFFFF);

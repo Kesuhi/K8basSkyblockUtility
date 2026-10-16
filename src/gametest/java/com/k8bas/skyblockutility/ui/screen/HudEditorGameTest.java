@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.config.HudConfig;
 import com.k8bas.skyblockutility.hud.HudAnchor;
@@ -106,7 +108,14 @@ public class HudEditorGameTest implements FabricClientGameTest {
 		HudRect b = rect(context, B);
 		check(b.y() < HudEditorScreen.LABEL_FLIP, "box B is in the top 48 px, so its label is below it: " + b);
 		check(context.computeOnClient(client -> editor(client).status()).equals(HudEditorScreen.NOTHING_SELECTED), "nothing selected yet");
-		context.takeScreenshot("t2.8-editor");
+		java.awt.image.BufferedImage editorShot = HairlineProbe.read(context.takeScreenshot("t2.8-editor"));
+		// AC-UI-34 [C] (T3.23): box B's outline is a hairline just outside its box, measured down from its bottom edge.
+		int editorScale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		int bx = (int) b.x() + (int) Math.ceil(b.w()) / 2;
+		int by = (int) b.y() + (int) Math.ceil(b.h());
+		// B is registered disabled and nothing hovers it, so its outline has the disabled text colour.
+		String outline = HairlineProbe.check(editorShot, "box B's outline", editorScale, bx * editorScale, by * editorScale, 0, 1, Theme.TEXT_DISABLED);
+		check(outline.isEmpty(), outline);
 		LOGGER.info("hud editor: {} drawn once each by the editor, none by the HUD", drawn);
 	}
 
@@ -237,7 +246,13 @@ public class HudEditorGameTest implements FabricClientGameTest {
 		check(snapped.x() == 450 && snapped.y() == before.y(), "snapped to the centre line: " + snapped);
 		check(context.computeOnClient(client -> editor(client).model().guides(client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()))
 				.contains(new HudSnap.Guide(true, 480)), "with its guide");
-		context.takeScreenshot("t2.9c-snap-centre");
+		java.awt.image.BufferedImage snapShot = HairlineProbe.read(context.takeScreenshot("t2.9c-snap-centre"));
+		// AC-UI-34 [C] (T3.23): the guide is a hairline, measured across it at GUI y 100, and nothing of it lies left of 480.
+		int guideScale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		int guideColour = Theme.current().accent();
+		String guide = HairlineProbe.check(snapShot, "the snap guide", guideScale, 480 * guideScale, 100 * guideScale, 1, 0, guideColour);
+		check(guide.isEmpty() && HairlineProbe.run(snapShot, 480 * guideScale - 1, 100 * guideScale, -1, 0, guideColour) == 0,
+				"the snap guide starts at x 480: " + guide);
 		// Alt held: a move off and back to the same place, and the element follows the mouse.
 		context.getInput().holdAlt();
 		cursorExact(context, targetX + 1, startY);

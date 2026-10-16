@@ -193,7 +193,7 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			}
 			String id = element.id();
 			int outline = id.equals(model.selected()) ? accent : id.equals(hovered) ? Theme.TEXT_PRIMARY : disabled ? Theme.TEXT_DISABLED : OUTLINE_IDLE;
-			Shapes.outline(graphics, x - 1, y - 1, w + 2, h + 2, outline);
+			Shapes.hairlineAround(graphics, x, y, w, h, 0, outline);
 			// The name above the box, below it in the top 48 px, inside its top edge when below would leave the
 			// window; always inside the window.
 			String label = Ellipsis.fit(element.displayName() + (disabled ? " (disabled)" : ""), width - 4, font::width);
@@ -204,14 +204,14 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			}
 			UiText.draw(graphics, font, label, labelX, labelY, disabled ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY);
 		}
-		// While a drag is snapped, a 1 px accent guide per target it lies on (REQ-HUD-14), under the status panel.
+		// While a drag is snapped, a hairline accent guide per target it lies on (REQ-HUD-14, REQ-UI-33), under the status panel.
 		List<HudSnap.Guide> guides = model.guides(width, height);
 		for (int i = 0; i < guides.size(); i++) {
 			HudSnap.Guide guide = guides.get(i);
 			if (guide.vertical()) {
-				graphics.fill(guide.at(), 0, guide.at() + 1, height, accent);
+				Shapes.hairlineV(graphics, guide.at(), 0, height, accent);
 			} else {
-				graphics.fill(0, guide.at(), width, guide.at() + 1, accent);
+				Shapes.hairlineH(graphics, 0, guide.at(), width, accent);
 			}
 		}
 		// Above the buttons, clear of the top edge where HUDs usually sit, on a panel over the game's own HUD.

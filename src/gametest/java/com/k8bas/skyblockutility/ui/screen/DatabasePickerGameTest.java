@@ -1,5 +1,8 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import java.nio.file.Path;
+import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobDatabaseEntry;
@@ -77,7 +80,13 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		openPicker(context, Category.HIGHLIGHTS, "mob_highlighter.add_from_database");
 		List<String> folders = context.computeOnClient(client -> picker(client).rows().stream().map(PickerRows.Row::label).toList());
 		check(folders.equals(List.of("Dwarven Mines", "Hub", "The End")), "the islands, as closed folders: " + folders);
-		context.takeScreenshot("t2.5c-picker-folders");
+		Path folderShot = context.takeScreenshot("t2.5c-picker-folders");
+		// AC-UI-34 [C] (T3.23): the picker panel's outline is a hairline, measured down from its top edge's middle.
+		int[] panel = context.computeOnClient(client -> picker(client).panel());
+		int pickerScale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		String line = HairlineProbe.check(HairlineProbe.read(folderShot), "the database picker's outline", pickerScale,
+				(panel[0] + panel[2] / 2) * pickerScale, panel[1] * pickerScale, 0, 1, Theme.SEPARATOR);
+		check(line.isEmpty(), line);
 		int[] field = context.computeOnClient(client -> centreOf(picker(client).searchField()));
 		click(context, field);
 		context.getInput().typeChars("zeal");

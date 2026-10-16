@@ -330,12 +330,12 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		val accent = Theme.current().accent()
 		val region = target.clip()
 		if (region == null) {
-			Shapes.roundedOutline(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), 1, accent)
+			Shapes.focusRing(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), accent)
 			return
 		}
 		Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
 			if (clip.visible()) {
-				Shapes.roundedOutline(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), 1, accent)
+				Shapes.focusRing(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), accent)
 			}
 		}
 	}
@@ -402,7 +402,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		lastTooltip = box
 		graphics.nextStratum()
 		Shapes.roundedRect(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SIDEBAR)
-		Shapes.roundedOutline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, 1, Theme.SEPARATOR)
+		Shapes.roundedHairline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SEPARATOR)
 		var lineY = box.y() + TooltipLayout.PADDING
 		for (line in box.lines()) {
 			UiText.draw(graphics, font, line, box.x() + TooltipLayout.PADDING, lineY, Theme.TEXT_PRIMARY)

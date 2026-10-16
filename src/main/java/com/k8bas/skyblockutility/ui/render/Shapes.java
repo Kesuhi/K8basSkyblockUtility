@@ -41,14 +41,6 @@ public final class Shapes {
 		}
 	}
 
-	/** A 1 px square outline just inside (x, y, w, h). */
-	public static void outline(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int argb) {
-		graphics.fill(x, y, x + w, y + 1, argb);
-		graphics.fill(x, y + h - 1, x + w, y + h, argb);
-		graphics.fill(x, y + 1, x + 1, y + h - 1, argb);
-		graphics.fill(x + w - 1, y + 1, x + w, y + h - 1, argb);
-	}
-
 	public static void roundedRect(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
 		int scale = guiScale();
 		draw(graphics, x, y, w * scale, h * scale, ShapePlan.pixelRadius(w, h, radius, 0, scale), 0, Corners.ALL, argb);
@@ -114,6 +106,18 @@ public final class Shapes {
 	public static void hairlineV(GuiGraphicsExtractor graphics, float x, float y, int h, int argb) {
 		int scale = guiScale();
 		draw(graphics, snap(x, scale), snap(y, scale), hairlinePx(scale), h * scale, 0, 0, Corners.ALL, argb);
+	}
+
+	/**
+	 * A hairline wrapped flush around the w×h content box at GUI (x, y), whose corners have radius {@code radius} GUI px
+	 * (REQ-UI-33): the line lies just outside the box, so no background shows between them at any GUI scale. Radius 0 keeps
+	 * it square.
+	 */
+	public static void hairlineAround(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int radius, int argb) {
+		int scale = guiScale();
+		int t = hairlinePx(scale);
+		float off = (float) t / scale;
+		draw(graphics, x - off, y - off, w * scale + 2 * t, h * scale + 2 * t, radius == 0 ? 0 : radius * scale + t, t, Corners.ALL, argb);
 	}
 
 	/** A focus ring (REQ-UI-33): a rounded outline {@link #focusRingPx} thick, 1 GUI px at every GUI scale. */

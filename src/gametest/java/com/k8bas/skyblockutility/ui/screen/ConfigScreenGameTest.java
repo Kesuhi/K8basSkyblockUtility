@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.ui.render.IconProbe;
 import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.config.ConfigManager;
@@ -84,6 +85,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			context.setScreen(() -> new ConfigScreen(Minecraft.getInstance().gui.screen()));
 			context.waitForScreen(ConfigScreen.class);
 			context.waitTicks(2);
+			sectionSeparator(context);
 			search(context);
 			saveModel(context);
 			generalCategory(context);
@@ -387,6 +389,28 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		String cross = IconProbe.check(shot, IconShapes.Icon.CROSS, clearX + 2, clearY + 2, 8, scale, Theme.TEXT_SECONDARY);
 		check(glass.isEmpty(), "the search glass: " + glass);
 		check(cross.isEmpty(), "the search box's ×: " + cross);
+	}
+
+	/**
+	 * AC-UI-34 [C] (T3.23): on the General page a section's separator line is a hairline. It is found as the first run of
+	 * at least 20 GUI px of the separator colour three quarters across the content, and measured down there.
+	 */
+	private static void sectionSeparator(ClientGameTestContext context) {
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.waitTicks(3);
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		java.awt.image.BufferedImage image = HairlineProbe.read(context.takeScreenshot("t3.23-section-separator"));
+		ConfigLayout.Rect content = context.computeOnClient(client -> screen(client).frame().content());
+		int x = (content.x() + content.w() * 3 / 4) * scale;
+		int found = -1;
+		for (int y = content.y() * scale; y < content.bottom() * scale && found < 0; y++) {
+			if (HairlineProbe.run(image, x, y, -1, 0, Theme.SEPARATOR) >= 20 * scale) {
+				found = y;
+			}
+		}
+		check(found >= 0, "a section separator line on the General page");
+		String line = HairlineProbe.check(image, "a section separator", scale, x, found, 0, 1, Theme.SEPARATOR);
+		check(line.isEmpty(), line);
 	}
 
 	/** T2.4b, AC-UI-07 [C] with real keys: Ctrl+F, typing, the category switch, nothing found, Esc, ×, and the query kept across categories. */

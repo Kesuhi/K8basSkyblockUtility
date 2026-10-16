@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.ui.widget;
 
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.TooltipLayout;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -55,6 +56,12 @@ public class ListTooltipGameTest implements FabricClientGameTest {
 			int[] size = context.computeOnClient(client -> new int[] {screen(client).width, screen(client).height});
 			check(box != null, "scale " + s + ": hovering the button shows its tooltip");
 			check(box.lines().size() == 6, "scale " + s + ": six lines: " + box.lines());
+			if (s >= 2) {
+				// AC-UI-34 [C] (T3.23): the tooltip's outline is a hairline, measured down from its top edge's middle.
+				String line = HairlineProbe.check(HairlineProbe.read(shot), "the tooltip's outline", s, (box.x() + box.width() / 2) * s, box.y() * s, 0, 1,
+						Theme.SEPARATOR);
+				check(line.isEmpty(), line);
+			}
 			check(box.x() >= 0 && box.y() >= 0 && box.x() + box.width() <= size[0] && box.y() + box.height() <= size[1],
 					"scale " + s + ": inside the " + size[0] + "x" + size[1] + " window: " + box);
 			// The top padding's middle shows the tooltip's background, so it is drawn where it was laid out.

@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.ui.widget;
 
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
 import com.k8bas.skyblockutility.ui.color.Hsv;
 import com.k8bas.skyblockutility.ui.color.WheelGeometry;
@@ -282,6 +283,20 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			}
 			Path shot = context.takeScreenshot("t2.3b-picker-rgb-scale-" + scale);
 			wheelIsBakedForTheScale(context, shot, scale);
+			if (scale >= 2) {
+				// AC-UI-34 [C] (T3.23): the picker panel's outline is a hairline; its top edge lies 24 GUI px above the wheel.
+				int[] wheel = context.computeOnClient(client -> new int[] {screen(client).picker().wheel().x, screen(client).picker().wheel().y});
+				String line = HairlineProbe.check(HairlineProbe.read(shot), "the colour picker's outline", scale, (wheel[0] + 40) * scale,
+						(wheel[1] - 24) * scale, 0, 1, Theme.SEPARATOR);
+				// The brightness slider's outline lies just outside it: measured up from the row above its top edge.
+				int[] slider = context.computeOnClient(client -> {
+					Widget bar = screen(client).picker().brightnessSlider();
+					return new int[] {bar.x + bar.width / 2, bar.y};
+				});
+				line += HairlineProbe.check(HairlineProbe.read(shot), "the brightness slider's outline", scale, slider[0] * scale, slider[1] * scale - 1, 0,
+						-1, Theme.SEPARATOR);
+				check(line.isEmpty(), line);
+			}
 			// The whole wheel shows: red at the left edge, cyan at the right, the panel in the box's corner.
 			int[] left = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.06, 0.5));
 			int[] right = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.94, 0.5));

@@ -166,14 +166,14 @@ public final class ColorPickerOverlay extends Overlay {
 	@Override
 	public void drawFrame(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		Shapes.roundedRect(graphics, panelX, panelY, WIDTH, panelHeight, Shapes.RADIUS_CARD, Theme.PANEL);
-		Shapes.roundedOutline(graphics, panelX, panelY, WIDTH, panelHeight, Shapes.RADIUS_CARD, 1, Theme.SEPARATOR);
+		Shapes.roundedHairline(graphics, panelX, panelY, WIDTH, panelHeight, Shapes.RADIUS_CARD, Theme.SEPARATOR);
 		UiText.draw(graphics, font, title, panelX + 8, panelY + 8, Theme.TEXT_PRIMARY);
 		int column = panelX + 8 + WHEEL + 12;
 		int previewWidth = WIDTH - (column - panelX) - 8;
 		// Before | after.
 		drawColour(graphics, column, panelY + 24, previewWidth / 2, 16, state.initial());
 		drawColour(graphics, column + previewWidth / 2, panelY + 24, previewWidth - previewWidth / 2, 16, state.color());
-		Shapes.roundedOutline(graphics, column - 1, panelY + 23, previewWidth + 2, 18, 2, 1, Theme.SEPARATOR);
+		Shapes.hairlineAround(graphics, column, panelY + 24, previewWidth, 16, 1, Theme.SEPARATOR);
 	}
 
 	/** A colour box; one with alpha shows a checkerboard behind it. */
@@ -216,7 +216,7 @@ public final class ColorPickerOverlay extends Overlay {
 			graphics.fill(x, y, x + width, y + height, 0xFF000000 | rgb);
 			boolean current = (state.color() & 0xFFFFFF) == rgb;
 			int outline = current ? Theme.TEXT_PRIMARY : contains(mouseX, mouseY) ? Theme.TEXT_SECONDARY : Theme.SEPARATOR;
-			Shapes.roundedOutline(graphics, x - 1, y - 1, width + 2, height + 2, 1, 1, outline);
+			Shapes.hairlineAround(graphics, x, y, width, height, 0, outline);
 		}
 	}
 }

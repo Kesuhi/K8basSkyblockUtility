@@ -63,9 +63,10 @@ object Notices {
 		for (box in placed.asReversed()) {
 			val notice = box.entry().notice()
 			Shapes.roundedRect(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.HEADER)
-			Shapes.roundedOutline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, 1, Theme.SEPARATOR)
-			// The accent on the leading edge marks it as the mod's.
-			graphics.fill(box.x() + 1, box.y() + 3, box.x() + 3, box.y() + box.height() - 3, theme.accent())
+			Shapes.roundedHairline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SEPARATOR)
+			// The accent on the leading edge marks it as the mod's, flush with the hairline outline.
+			val line = Shapes.hairlineGui(Shapes.guiScale())
+			Shapes.fill(graphics, box.x() + line, box.y() + 3f, box.x() + 3f, (box.y() + box.height() - 3).toFloat(), theme.accent())
 			val textX = box.x() + NoticeLayout.PADDING + 2
 			val textWidth = box.width() - NoticeLayout.PADDING * 2 - 2
 			var lineY = box.y() + NoticeLayout.PADDING

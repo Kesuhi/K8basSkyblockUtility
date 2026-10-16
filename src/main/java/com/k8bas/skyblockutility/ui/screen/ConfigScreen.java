@@ -451,7 +451,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 					UiText.draw(graphics, font, title, rect.x(), textY, theme.accent());
 					int lineX = rect.x() + font.width(title) + 6;
 					if (lineX < rect.right()) {
-						graphics.fill(lineX, textY + 4, rect.right(), textY + 5, Theme.SEPARATOR);
+						Shapes.hairlineH(graphics, lineX, textY + 4, rect.right() - lineX, Theme.SEPARATOR);
 					}
 				}
 			}
