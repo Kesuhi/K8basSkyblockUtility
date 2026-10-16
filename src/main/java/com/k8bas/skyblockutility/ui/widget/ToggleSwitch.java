@@ -7,6 +7,7 @@ import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiClock;
 import com.k8bas.skyblockutility.ui.render.UiSound;
+import com.k8bas.skyblockutility.ui.render.UiTime;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
@@ -21,19 +22,29 @@ public final class ToggleSwitch extends Widget {
 	private final Runnable clickSound;
 	private final Animated knob;
 
+	/** On a clock alone, with motion always on (tests). */
 	public ToggleSwitch(Binding<Boolean> binding, Runnable clickSound, LongSupplier clock) {
-		this.binding = binding;
-		this.clickSound = clickSound;
-		this.knob = new Animated(binding.get() ? 1F : 0F, Animated.DEFAULT_DURATION_MS, clock);
+		this(binding, clickSound, UiTime.of(clock, () -> true));
 	}
 
-	/** A switch with the click sound, on the game's clock. */
+	public ToggleSwitch(Binding<Boolean> binding, Runnable clickSound, UiTime time) {
+		this.binding = binding;
+		this.clickSound = clickSound;
+		this.knob = new Animated(binding.get() ? 1F : 0F, Animated.DEFAULT_DURATION_MS, time);
+	}
+
+	/** A switch with the click sound, on the UI clock source (REQ-UI-39). */
 	public static ToggleSwitch of(Binding<Boolean> binding) {
-		return new ToggleSwitch(binding, UiSound::click, UiClock.MILLIS);
+		return new ToggleSwitch(binding, UiSound::click, UiClock.SOURCE);
 	}
 
 	public boolean value() {
 		return binding.get();
+	}
+
+	/** For tests: where the knob is drawn now, 0 at the off end to 1 at the on end. */
+	public float knob() {
+		return knob.value();
 	}
 
 	public void toggle() {

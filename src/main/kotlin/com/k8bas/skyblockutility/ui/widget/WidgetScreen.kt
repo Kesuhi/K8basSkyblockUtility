@@ -5,7 +5,9 @@ import com.k8bas.skyblockutility.ui.render.ScaleAbout
 import com.k8bas.skyblockutility.ui.render.Shapes
 import com.k8bas.skyblockutility.ui.render.Theme
 import com.k8bas.skyblockutility.ui.render.TooltipLayout
+import com.k8bas.skyblockutility.ui.render.UiClock
 import com.k8bas.skyblockutility.ui.render.UiText
+import com.k8bas.skyblockutility.ui.render.UiTime
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
@@ -39,9 +41,15 @@ import kotlin.math.sign
  * The game checks a few keys (the narrator hotkey) before the screen sees them and turns the input
  * method off each tick unless a vanilla text box is focused, so while one of our text fields has the
  * keyboard an invisible vanilla box is the screen's focused element; it never draws or gets input.
+ *
+ * Each frame and input event runs on the screen's UI clock source, [time] (REQ-UI-39): the game's, or a motion
+ * gametest's test clock with motion on.
  */
 abstract class WidgetScreen protected constructor(title: Component) : Screen(title), OverlayHost {
 	private val widgets = ArrayList<Widget>()
+
+	/** The UI clock source this screen's frames and input run on (REQ-UI-39); a motion gametest sets its own. */
+	protected var time: UiTime = UiClock.GAME
 	private val keysTaken = HashSet<Int>()
 	private var pressed: Widget? = null
 	private var pressedButton = -1
@@ -189,8 +197,20 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	 * the guard for a focused field, armed keybind or open overlay is put back (EC-UI-01).
 	 */
 	override fun init() {
-		super.init()
-		updateFocusGuard()
+		timed {
+			super.init()
+			updateFocusGuard()
+		}
+	}
+
+	/** Runs [block] with [time] as the UI clock source in effect, then puts the one before back. */
+	private inline fun <T> timed(block: () -> T): T {
+		val previous = UiClock.enter(time)
+		try {
+			return block()
+		} finally {
+			UiClock.leave(previous)
+		}
 	}
 
 	/** Closes the open overlay; [cancel] first when it closes without applying. */
@@ -258,7 +278,10 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	private fun localY(y: Double): Double = ScaleAbout.toLocal(y, frameCy.toDouble(), frameScale)
 
-	override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
+	override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) =
+		timed { extractFrame(graphics, mouseX, mouseY, partialTick) }
+
+	private fun extractFrame(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
 		super.extractRenderState(graphics, mouseX, mouseY, partialTick)
 		revealPending?.let {
 			revealPending = null
@@ -412,7 +435,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	private fun activeWidgets(): List<Widget> = overlay?.widgets() ?: widgets
 
-	override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
+	override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean = timed { handleClick(event, doubleClick) }
+
+	private fun handleClick(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
 		// An armed keybind takes the button as its input (R27: left cancels, right resets, others bind).
 		val focused = keyboardFocus
 		if (focused != null && focused.capturesKeys()) {
@@ -471,7 +496,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return super.mouseClicked(event, doubleClick)
 	}
 
-	override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean {
+	override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean = timed { handleDrag(event, dragX, dragY) }
+
+	private fun handleDrag(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean {
 		val held = pressed
 		if (held != null && event.button() == pressedButton) {
 			held.drag(localX(event.x()), localY(event.y()))
@@ -480,7 +507,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return super.mouseDragged(event, dragX, dragY)
 	}
 
-	override fun mouseReleased(event: MouseButtonEvent): Boolean {
+	override fun mouseReleased(event: MouseButtonEvent): Boolean = timed { handleRelease(event) }
+
+	private fun handleRelease(event: MouseButtonEvent): Boolean {
 		val held = pressed
 		if (held != null && event.button() == pressedButton) {
 			pressed = null
@@ -500,7 +529,10 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	 * step. Shift gives the fine step (on macOS Shift turns the wheel horizontal, which counts too).
 	 * With an overlay open the wheel only reaches the overlay.
 	 */
-	override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
+	override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean =
+		timed { handleScroll(mouseX, mouseY, scrollX, scrollY) }
+
+	private fun handleScroll(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
 		val fine = Minecraft.getInstance().hasShiftDown()
 		val amount = if (scrollY != 0.0) scrollY else if (fine) scrollX else 0.0
 		val notches: Int
@@ -525,7 +557,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return overlay != null || super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)
 	}
 
-	override fun keyPressed(event: KeyEvent): Boolean {
+	override fun keyPressed(event: KeyEvent): Boolean = timed { handleKey(event) }
+
+	private fun handleKey(event: KeyEvent): Boolean {
 		val navigating = keyboardNavigation()
 		val navKey = if (navigating) navKeyOf(event) else NavKey.NONE
 		// A held Space or Enter that just activated a control must not pick in the list it opened, bind the capture it armed
@@ -675,7 +709,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	}
 
 	/** Releases of keys taken above are taken too; others reach the game, so no key stays held. */
-	override fun keyReleased(event: KeyEvent): Boolean {
+	override fun keyReleased(event: KeyEvent): Boolean = timed { handleKeyRelease(event) }
+
+	private fun handleKeyRelease(event: KeyEvent): Boolean {
 		nav.released(keyId(event))
 		if (keysTaken.remove(keyId(event))) {
 			return true
@@ -683,7 +719,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return super.keyReleased(event)
 	}
 
-	override fun charTyped(event: CharacterEvent): Boolean {
+	override fun charTyped(event: CharacterEvent): Boolean = timed { handleChar(event) }
+
+	private fun handleChar(event: CharacterEvent): Boolean {
 		// The space that follows a Space activation types nowhere.
 		if (keyboardNavigation() && nav.takeSpaceChar(event.codepoint())) {
 			return true

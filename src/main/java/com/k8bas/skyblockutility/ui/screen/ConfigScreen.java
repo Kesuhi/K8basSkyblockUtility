@@ -31,6 +31,7 @@ import com.k8bas.skyblockutility.ui.render.UiClock;
 import com.k8bas.skyblockutility.ui.render.TooltipLayout;
 import com.k8bas.skyblockutility.ui.render.UiSound;
 import com.k8bas.skyblockutility.ui.render.UiText;
+import com.k8bas.skyblockutility.ui.render.UiTime;
 import com.k8bas.skyblockutility.ui.widget.Button;
 import com.k8bas.skyblockutility.ui.widget.ColorSwatch;
 import com.k8bas.skyblockutility.ui.widget.Dropdown;
@@ -65,8 +66,6 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BooleanSupplier;
-import java.util.function.LongSupplier;
 
 /**
  * The settings screen (T2.4a, REQ-UI-01): one centred panel over the dimmed game, with a header (name,
@@ -134,13 +133,17 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	}
 
 	ConfigScreen(Screen parent, List<Card> cards) {
-		this(parent, cards, UiClock.MILLIS, () -> UiClock.MOTION);
+		this(parent, cards, UiClock.GAME);
 	}
 
-	/** With the motion's clock and switch given, so a gametest can step through an animation (T2.9). */
-	ConfigScreen(Screen parent, List<Card> cards, LongSupplier clock, BooleanSupplier motionOn) {
+	/**
+	 * On a UI clock source of its own (REQ-UI-39), so a gametest can step through its animations (T2.9): the open and
+	 * category motion, and every animated value of the screen, which draws and takes input on it.
+	 */
+	ConfigScreen(Screen parent, List<Card> cards, UiTime time) {
 		super(Component.literal(NAME));
-		this.motion = new ConfigMotion(clock, motionOn);
+		setTime(time);
+		this.motion = new ConfigMotion(time::millis, time::motion);
 		this.parent = parent;
 		this.cards = cards;
 		this.categories = ConfigLayout.categories(cards);
@@ -558,12 +561,18 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	 */
 	@Override
 	public boolean keyPressed(KeyEvent event) {
-		if (event.key() == GLFW.GLFW_KEY_F && shortcutCtrl(event) && keyboardFocus() == null && overlay() == null && !pressHeld()) {
-			focus(search);
-			search.model().selectAll();
-			return true;
+		// On the screen's clock source, as in super, so the search box's caret starts on it too.
+		UiTime previous = UiClock.enter(getTime());
+		try {
+			if (event.key() == GLFW.GLFW_KEY_F && shortcutCtrl(event) && keyboardFocus() == null && overlay() == null && !pressHeld()) {
+				focus(search);
+				search.model().selectAll();
+				return true;
+			}
+			return super.keyPressed(event);
+		} finally {
+			UiClock.leave(previous);
 		}
-		return super.keyPressed(event);
 	}
 
 	@Override

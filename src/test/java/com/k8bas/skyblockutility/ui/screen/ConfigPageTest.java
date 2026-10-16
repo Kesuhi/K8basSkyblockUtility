@@ -210,8 +210,10 @@ class ConfigPageTest {
 				assertFalse(before.equals(state()), toggle.id() + " flips");
 				// Flip it back, so each click starts from the defaults.
 				((ToggleSwitch) page.control(option)).toggle();
-				// A setting absent until picked (smooth corners, R32) is now picked; put back what was there.
-				general.smoothCorners = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class).smoothCorners;
+				// A setting absent until picked (smooth corners R32, animations R46) is now picked; put back what was there.
+				GeneralConfig was = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class);
+				general.smoothCorners = was.smoothCorners;
+				general.animations = was.animations;
 				assertEquals(before, state(), toggle.id() + ": nothing else changed");
 			}
 			case Choice<?> choice -> {

@@ -58,6 +58,12 @@ public final class GeneralOptions {
 								"Changes only how rounded corners are drawn. Off cuts them from whole pixels, as in 1.2.",
 								List.of("smooth", "corners", "rounded", "anti-aliasing", "look")),
 						true, Binding.of(config::smoothCorners, value -> config.smoothCorners = value)),
+				Toggle.of("interface.animations", "general.animations",
+						new OptionText("Animations", "Lets this mod's screens and notices move and fade.",
+								"Off shows every change at once: the panel opening, the category switch, hover, switches and notices. Tooltips still wait "
+										+ "before they show.",
+								List.of("animations", "motion", "fade", "slide", "reduce motion")),
+						true, Binding.of(config::animations, value -> config.animations = value)),
 				Choice.of("interface.notice_position", "general.noticePosition",
 						new OptionText("Notice position", "Where notices appear on the screen.",
 								"Notices are short messages, e.g. that your settings file was backed up. Vanilla toasts show top right too and are drawn "

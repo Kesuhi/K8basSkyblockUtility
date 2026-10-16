@@ -35,8 +35,8 @@ final class ConfigMotion {
 	private int veil;
 
 	/**
-	 * @param clock   milliseconds (UiClock.MILLIS in the game)
-	 * @param enabled false: nothing ever animates (the gametests, unless one turns it on)
+	 * @param clock   milliseconds, of the screen's UI clock source (REQ-UI-39)
+	 * @param enabled that source's motion; false (Animations OFF, the gametests' default): nothing animates
 	 */
 	ConfigMotion(LongSupplier clock, BooleanSupplier enabled) {
 		this.clock = clock;

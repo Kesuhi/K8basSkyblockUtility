@@ -50,6 +50,15 @@ public final class NoticeLayout {
 	/** As above; a notice whose text is wider than {@link #WIDTH} allows grows to fit it, up to {@link #MAX_WIDTH}. */
 	public static List<Placed> place(List<NoticeQueue.Entry> entries, NoticePosition position, int screenWidth, int screenHeight, long now,
 			ToIntFunction<String> measure) {
+		return place(entries, position, screenWidth, screenHeight, now, measure, true);
+	}
+
+	/**
+	 * As above; with {@code motion} off (Animations OFF, REQ-UI-39) a notice is in place from its first frame and a leaving one
+	 * is gone at once, its room closed.
+	 */
+	public static List<Placed> place(List<NoticeQueue.Entry> entries, NoticePosition position, int screenWidth, int screenHeight, long now,
+			ToIntFunction<String> measure, boolean motion) {
 		List<Placed> placed = new ArrayList<>();
 		double offset = MARGIN;
 		for (NoticeQueue.Entry entry : entries) {
@@ -61,7 +70,12 @@ public final class NoticeLayout {
 			float shown = entry.shown(now);
 			boolean leaving = now > entry.postedAt() + NoticeQueue.SLIDE_TIME_MS / 2 + entry.durationMs();
 			float slide;
-			if (!leaving) {
+			if (!motion) {
+				if (leaving) {
+					continue;
+				}
+				slide = 1F;
+			} else if (!leaving) {
 				slide = Easing.outCubic(shown);
 			} else if (shown >= 0.5F) {
 				// Leaving, first half: slides out and keeps its room.

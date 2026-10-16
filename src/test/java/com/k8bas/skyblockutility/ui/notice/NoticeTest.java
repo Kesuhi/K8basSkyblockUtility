@@ -74,6 +74,37 @@ class NoticeTest {
 		assertThrows(IllegalArgumentException.class, () -> new Notice(" ", List.of()));
 	}
 
+	/**
+	 * AC-UI-40 (REQ-UI-39, T3.24): with motion off a notice is in place from the moment it is posted, as when its slide has
+	 * ended, and a leaving one is gone at once: no slide in or out.
+	 */
+	@Test
+	void withMotionOffANoticeIsInPlaceAtOnce() {
+		for (NoticePosition position : NoticePosition.values()) {
+			NoticeQueue queue = new NoticeQueue();
+			queue.post(new Notice("Notice", List.of("one")), 0, 5 * SECOND);
+			NoticeLayout.Placed settled = NoticeLayout.place(queue.visible(SECOND), position, 1280, 960, SECOND).get(0);
+			NoticeLayout.Placed atOnce = NoticeLayout.place(queue.visible(0), position, 1280, 960, 0, text -> 0, false).get(0);
+			assertEquals(settled, atOnce, position + ": at 0 ms where the slide ends");
+			NoticeLayout.Placed sliding = NoticeLayout.place(queue.visible(0), position, 1280, 960, 0, text -> 0, true).get(0);
+			assertFalse(settled.equals(sliding), position + ": with motion on it still slides in at 0 ms");
+			long leaving = 5 * SECOND + NoticeQueue.SLIDE_TIME_MS / 2 + 1;
+			assertEquals(List.of(), NoticeLayout.place(queue.visible(leaving), position, 1280, 960, leaving, text -> 0, false),
+					position + ": leaving, it is gone at once");
+		}
+	}
+
+	/** EC-UI-23: after a 500 ms hitch from its post, a notice is in place, where its slide ends, never past it. */
+	@Test
+	void aHitchLandsTheNoticeInPlace() {
+		for (NoticePosition position : NoticePosition.values()) {
+			NoticeQueue queue = new NoticeQueue();
+			queue.post(new Notice("Notice", List.of("one")), 0, 5 * SECOND);
+			NoticeLayout.Placed settled = NoticeLayout.place(queue.visible(2 * SECOND), position, 1280, 960, 2 * SECOND).get(0);
+			assertEquals(settled, NoticeLayout.place(queue.visible(500), position, 1280, 960, 500).get(0), position.toString());
+		}
+	}
+
 	@Test
 	void everyPositionKeepsTheStackInsideWithoutOverlap() {
 		for (NoticePosition position : NoticePosition.values()) {

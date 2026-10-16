@@ -202,7 +202,7 @@ public abstract class Widget {
 	/** How hovered the widget looks, easing to 1 or 0 in 150 ms (REQ-UI-17). Created on the first draw, on the game's clock. */
 	protected float hoverAmount(boolean hot) {
 		if (hoverAnimation == null) {
-			hoverAnimation = new Animated(hot ? 1F : 0F, Animated.DEFAULT_DURATION_MS, UiClock.MILLIS);
+			hoverAnimation = new Animated(hot ? 1F : 0F, Animated.DEFAULT_DURATION_MS, UiClock.SOURCE);
 		}
 		hoverAnimation.animateTo(hot ? 1F : 0F);
 		return hoverAnimation.value();

@@ -27,6 +27,8 @@ public class GeneralConfig implements Normalizable {
 	/** "Smooth corners" (REQ-UI-18, REQ-UI-29): anti-aliased rounded corners in this mod's screens and notices. Absent
 	 *  (null, never written) until picked; absent means ON from 1.3.0 (R46), a saved false stays OFF. */
 	public Boolean smoothCorners;
+	/** "Animations" (REQ-UI-39, R46): UI motion and fades. Absent (null, never written) until picked; absent means ON. */
+	public Boolean animations;
 	/** HUD element positions (REQ-HUD-03). Absent (null, never written) until a position is saved in the HUD editor. */
 	public HudConfig hud;
 
@@ -40,6 +42,10 @@ public class GeneralConfig implements Normalizable {
 
 	public boolean smoothCorners() {
 		return smoothCorners == null || smoothCorners;
+	}
+
+	public boolean animations() {
+		return animations == null || animations;
 	}
 
 	/** A negative scan range means unlimited (0), as the scan treats it. */

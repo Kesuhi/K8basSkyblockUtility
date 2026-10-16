@@ -2,6 +2,10 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.render.IconShapes;
+import com.k8bas.skyblockutility.ui.render.UiClock;
+import com.k8bas.skyblockutility.ui.render.UiTime;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,6 +14,32 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** REQ-UI-03, REQ-UI-06, REQ-UI-15 (T2.3a): how the widgets react to the mouse, without drawing. */
 class WidgetBehaviourTest {
+	/** AC-UI-40 (REQ-UI-39, T3.24): hover eases on the UI clock source, and with its motion off it is at its end at once. */
+	@Test
+	void hoverFollowsTheUiClockSource() {
+		long[] now = {0};
+		boolean[] motion = {true};
+		Widget widget = new Widget() {
+			@Override
+			public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
+			}
+		};
+		UiTime previous = UiClock.enter(UiTime.of(() -> now[0], () -> motion[0]));
+		try {
+			assertEquals(0F, widget.hoverAmount(false));
+			now[0] += 1;
+			assertTrue(widget.hoverAmount(true) < 0.1F, "motion on: it starts easing");
+			now[0] += 50;
+			float halfway = widget.hoverAmount(true);
+			assertTrue(halfway > 0F && halfway < 1F, "on the source's clock: " + halfway);
+			motion[0] = false;
+			assertEquals(1F, widget.hoverAmount(true), "motion off: at its end at once");
+			assertEquals(0F, widget.hoverAmount(false), "and back at once");
+		} finally {
+			UiClock.leave(previous);
+		}
+	}
+
 	private final long[] value = {0};
 	private final int[] commits = {0};
 	private final int[] sounds = {0};

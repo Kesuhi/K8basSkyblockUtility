@@ -10,6 +10,9 @@ import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
 import com.k8bas.skyblockutility.ui.render.ScaleAbout;
 import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.UiClock;
+import com.k8bas.skyblockutility.ui.render.UiTime;
+import com.k8bas.skyblockutility.ui.widget.ToggleSwitch;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -35,6 +38,11 @@ import java.util.concurrent.atomic.AtomicLong;
  *       stays in the content area, and a click on the slid card reaches it.</li>
  *   <li>An overlay opened mid-switch settles the motion first, and the dropdown that opened it keeps its place (the
  *       rest of the slide goes into the scroll), so its list stays open.</li>
+ *   <li>AC-UI-40 (REQ-UI-39, T3.24): the screen runs on the source the test gives it (a test clock, motion on) with
+ *       -Dk8bas.ui.motion=off set, which turns the game's source off; a toggle's knob follows that test clock. With
+ *       Animations OFF (a source whose motion reads the switch) the panel is at full size and a category shows unslid
+ *       from the first frame, and the first frame after a toggle click shows the knob at its end; switched back ON in
+ *       the open screen, the next click slides again.</li>
  * </ul>
  */
 public class ConfigMotionGameTest implements FabricClientGameTest {
@@ -46,11 +54,12 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		String start = "k8bas config motion start " + System.nanoTime();
 		String end = "k8bas config motion end " + System.nanoTime();
 		AtomicLong clock = new AtomicLong(10_000);
+		UiTime time = UiTime.of(clock::get, () -> true);
 		context.getInput().resizeWindow(1280, 960);
 		try {
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			LOGGER.info(start);
-			context.setScreen(() -> new ConfigScreen(Minecraft.getInstance().gui.screen(), OptionCatalog.live(), clock::get, () -> true));
+			context.setScreen(() -> new ConfigScreen(Minecraft.getInstance().gui.screen(), OptionCatalog.live(), time));
 			context.waitForScreen(ConfigScreen.class);
 			context.getInput().setCursorPos(2, 2);
 			context.waitTicks(3);
@@ -58,7 +67,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			clock.addAndGet(1_000);
 			context.waitTicks(2);
 			check(!context.computeOnClient(client -> screen(client).motion().animating()), "the open has ended");
-			duringASwitch(context, clock);
+			duringASwitch(context, clock, time);
 			anOverlaySettlesTheMotion(context);
 			clock.addAndGet(1_000);
 			context.waitTicks(2);
@@ -66,6 +75,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 			context.waitTicks(2);
 			check(!(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen), "Esc closes the screen");
+			withAnimationsOff(context, clock);
 			context.waitTicks(5);
 			LOGGER.info(end);
 			List<String> errors = errorsBetween(context, start, end);
@@ -162,7 +172,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 	}
 
 	/** 40 ms into a switch to Highlights: slid 6 px, veiled at 131, in the content only; a click on the slid card works. */
-	private static void duringASwitch(ClientGameTestContext context, AtomicLong clock) {
+	private static void duringASwitch(ClientGameTestContext context, AtomicLong clock, UiTime time) {
 		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
 		context.waitTicks(2);
 		clock.addAndGet(40);
@@ -195,6 +205,98 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		check(after.contains("mob_highlighter=false") && before.contains("mob_highlighter=true"), "the slid toggle card flips Mob Highlighter: " + after);
 		click(context, title);
 		check(context.computeOnClient(client -> settings()).equals(before), "and back");
+		// AC-UI-40: from a settled knob, one click slides it on the screen's test clock, which stands still until the test
+		// steps it, while -Dk8bas.ui.motion=off holds the game's source still.
+		check(!context.computeOnClient(client -> UiClock.GAME.motion()), "-Dk8bas.ui.motion=off turns the game's source off");
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		boolean on = context.computeOnClient(client -> toggleValue(screen(client)));
+		float from = on ? 1F : 0F;
+		check(context.computeOnClient(client -> knob(screen(client), time)) == from, "the knob has settled");
+		click(context, title);
+		float clicked = context.computeOnClient(client -> knob(screen(client), time));
+		clock.addAndGet(75);
+		context.waitTicks(2);
+		float halfway = context.computeOnClient(client -> knob(screen(client), time));
+		clock.addAndGet(200);
+		context.waitTicks(2);
+		float ended = context.computeOnClient(client -> knob(screen(client), time));
+		check(clicked == from && halfway > 0F && halfway < 1F && ended == 1F - from,
+				"the knob follows the test clock: " + clicked + ", " + halfway + ", " + ended);
+		click(context, title);
+		check(context.computeOnClient(client -> settings()).equals(before), "and back");
+	}
+
+	/**
+	 * AC-UI-40 [C]: with Animations OFF everything is at its end at once, on a source whose motion reads the switch as the
+	 * game's does without the gametests' property; the clock stands still throughout, so anything still moving would show.
+	 */
+	private static void withAnimationsOff(ClientGameTestContext context, AtomicLong clock) {
+		Boolean before = context.computeOnClient(client -> ConfigManager.general().animations);
+		UiTime time = UiTime.of(clock::get, () -> ConfigManager.general().animations());
+		try {
+			context.runOnClient(client -> ConfigManager.general().animations = false);
+			check(!context.computeOnClient(client -> ConfigManager.general().animations()), "Animations reads OFF");
+			context.setScreen(() -> new ConfigScreen(Minecraft.getInstance().gui.screen(), OptionCatalog.live(), time));
+			context.waitForScreen(ConfigScreen.class);
+			context.getInput().setCursorPos(2, 2);
+			context.waitTicks(2);
+			float scale = context.computeOnClient(client -> screen(client).motion().scale());
+			check(scale == 1F, "the panel is at full size from its first frame: " + scale);
+			context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+			context.waitTicks(2);
+			int slide = context.computeOnClient(client -> screen(client).motion().slideOffset());
+			int veil = context.computeOnClient(client -> screen(client).motion().veilAlpha());
+			check(slide == 0 && veil == 0, "a category shows unslid at once: slide " + slide + ", veil " + veil);
+			int[] title = context.computeOnClient(client -> {
+				Widget card = screen(client).page().card(toggleRow(screen(client)).option());
+				return new int[] {card.x() + 12, card.y() + card.height() / 2};
+			});
+			boolean was = context.computeOnClient(client -> toggleValue(screen(client)));
+			context.getInput().setCursorPos(context.computeOnClient(client -> window(title[0], title[1]))[0],
+					context.computeOnClient(client -> window(title[0], title[1]))[1]);
+			context.waitTicks(2);
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			// The first frame after the click.
+			context.waitTick();
+			Path shot = context.takeScreenshot("t3.24-animations-off-toggle");
+			boolean now = context.computeOnClient(client -> toggleValue(screen(client)));
+			check(now != was, "the click flipped the toggle");
+			float knob = context.computeOnClient(client -> knob(screen(client), time));
+			check(knob == (now ? 1F : 0F), "the knob is at its end at once: " + knob);
+			int[] ends = context.computeOnClient(client -> {
+				Widget control = screen(client).page().control(toggleRow(screen(client)).option());
+				int knobSize = control.height() - 4;
+				int off = control.x() + 2 + knobSize / 2;
+				int on = control.x() + control.width() - 2 - knobSize / 2 - 1;
+				return new int[] {now ? on : off, now ? off : on, control.y() + control.height() / 2};
+			});
+			int atEnd = pixel(context, shot, ends[0], ends[2]);
+			int atStart = pixel(context, shot, ends[1], ends[2]);
+			int knobColour = (now ? Theme.TEXT_PRIMARY : Theme.TEXT_SECONDARY) & 0xFFFFFF;
+			check(atEnd == knobColour && atStart != knobColour, "the screenshot shows the knob at its end: " + Integer.toHexString(atEnd) + " at the end, "
+					+ Integer.toHexString(atStart) + " at the start");
+
+			// Switched ON in the open screen, the next click slides on the still clock: the knob stays at its start.
+			context.runOnClient(client -> ConfigManager.general().animations = true);
+			click(context, title);
+			float start = context.computeOnClient(client -> knob(screen(client), time));
+			check(start == (now ? 1F : 0F), "ON again applies at once: the knob starts its slide " + start);
+			click(context, title);
+			context.setScreen(() -> null);
+		} finally {
+			context.runOnClient(client -> ConfigManager.general().animations = before);
+		}
+	}
+
+	/** The first toggle's knob as the screen's frames see it: read on the screen's source, as they are drawn. */
+	private static float knob(ConfigScreen screen, UiTime time) {
+		UiTime previous = UiClock.enter(time);
+		try {
+			return ((ToggleSwitch) screen.page().control(toggleRow(screen).option())).knob();
+		} finally {
+			UiClock.leave(previous);
+		}
 	}
 
 	/** A dropdown opened mid-switch settles the motion, so the list is placed at its settled box. */

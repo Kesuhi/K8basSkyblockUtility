@@ -10,6 +10,33 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AnimatedTest {
 	private final long[] now = {1000};
 
+	/** AC-UI-40 (REQ-UI-39, T3.24): with motion off a value is at its end at 0 ms, also when motion goes off mid-way. */
+	@Test
+	void withMotionOffAValueIsAtItsEndAtOnce() {
+		boolean[] motion = {false};
+		Animated value = new Animated(0F, 150, UiTime.of(() -> now[0], () -> motion[0]));
+		value.animateTo(1F);
+		assertEquals(1F, value.value(), "at 0 ms");
+		assertTrue(value.settled());
+		motion[0] = true;
+		value.animateTo(0F);
+		now[0] += 50;
+		assertTrue(value.value() > 0F && value.value() < 1F, "on: still moving");
+		motion[0] = false;
+		assertEquals(0F, value.value(), "switched off mid-way: at its end at once");
+		assertTrue(value.settled());
+	}
+
+	/** EC-UI-23: a 500 ms hitch shows the value at the elapsed time, at its end and never past it. */
+	@Test
+	void aHitchLandsOnTheEnd() {
+		Animated value = new Animated(0F, 150, () -> now[0]);
+		value.animateTo(1F);
+		now[0] += 500;
+		assertEquals(1F, value.value());
+		assertTrue(value.settled());
+	}
+
 	@Test
 	void easeOutCubic() {
 		assertEquals(0F, Easing.outCubic(0F));

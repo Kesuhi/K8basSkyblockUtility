@@ -114,6 +114,8 @@ class OptionCatalogTest {
 		expected.put("general.accentColor", 0x29B6B2);
 		// R46 (REQ-UI-29): Smooth corners ON from 1.3.0 (R32 had OFF); a saved OFF stays OFF.
 		expected.put("general.smoothCorners", true);
+		// R46 (REQ-UI-39): Animations ON until picked.
+		expected.put("general.animations", true);
 		expected.put("general.noticePosition", NoticePosition.TOP_RIGHT);
 		expected.put("general.noticeSeconds", 5);
 		expected.put("modules.mob_highlighter.enabled", true);

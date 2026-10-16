@@ -15,7 +15,8 @@ import java.util.function.ToIntFunction
 /**
  * Posting and drawing notices (REQ-UI-21). The position and duration come from the General settings
  * at the time of drawing and posting. Drawn over the HUD and every screen; notices are never part of
- * any screen's input, so the mouse and keyboard always reach what lies under them.
+ * any screen's input, so the mouse and keyboard always reach what lies under them. They belong to no screen, so they
+ * run on the game's UI clock source (REQ-UI-39): its time, and with Animations OFF no slide.
  */
 object Notices {
 	private val QUEUE = NoticeQueue()
@@ -23,7 +24,7 @@ object Notices {
 	/** Shows a notice; safe from any thread. */
 	@JvmStatic
 	fun post(notice: Notice) {
-		QUEUE.post(notice, UiClock.MILLIS.asLong, durationMs(general()))
+		QUEUE.post(notice, UiClock.GAME.millis(), durationMs(general()))
 	}
 
 	/** The configured duration (REQ-UI-21). */
@@ -32,7 +33,7 @@ object Notices {
 
 	/** The notices on screen now, for tests. */
 	@JvmStatic
-	fun visible(): List<NoticeQueue.Entry> = QUEUE.visible(UiClock.MILLIS.asLong)
+	fun visible(): List<NoticeQueue.Entry> = QUEUE.visible(UiClock.GAME.millis())
 
 	/** Drops every notice (a test's clean start). */
 	@JvmStatic
@@ -48,8 +49,8 @@ object Notices {
 	}
 
 	private fun placed(screenWidth: Int, screenHeight: Int, measure: ToIntFunction<String>): List<NoticeLayout.Placed> {
-		val now = UiClock.MILLIS.asLong
-		return NoticeLayout.place(QUEUE.visible(now), general().noticePosition(), screenWidth, screenHeight, now, measure)
+		val now = UiClock.GAME.millis()
+		return NoticeLayout.place(QUEUE.visible(now), general().noticePosition(), screenWidth, screenHeight, now, measure, UiClock.GAME.motion())
 	}
 
 	@JvmStatic

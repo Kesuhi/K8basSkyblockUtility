@@ -6,6 +6,13 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+### Added
+
+- "Animations" (General › Interface, ON by default): switched off, this mod's screens and notices show
+  every change at once, without sliding or fading: the settings opening, a category switch, hover,
+  switches and notices. Tooltips still wait the same time before they show. The change applies at once,
+  also in an open settings screen.
+
 ### Changed
 
 - "Smooth corners" (General › Interface) is now ON by default, so rounded corners have soft edges. The
