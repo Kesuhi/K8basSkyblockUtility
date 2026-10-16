@@ -78,6 +78,12 @@ public final class Dropdown<E> extends Widget {
 		return true;
 	}
 
+	/** The hand; half scrolled out of view, where a press does not open it, the widget below decides. */
+	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return fullyShowing() ? PointerShape.HAND : null;
+	}
+
 	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		// Half scrolled out of view it does not open: its list would have nothing to hang from.
@@ -234,6 +240,21 @@ public final class Dropdown<E> extends Widget {
 			private final ScrollbarPainter scrollbar = new ScrollbarPainter();
 			/** While the thumb is dragged: where it was grabbed, from its top; else -1. */
 			private int grab = -1;
+
+			/** The hand over an entry and the scrollbar; the arrow over the padding at the list's ends. */
+			@Override
+			public PointerShape cursorAt(double mouseX, double mouseY) {
+				if (overflows() && ScrollbarPainter.inHitArea(x, width, mouseX)) {
+					return PointerShape.HAND;
+				}
+				return model.rowAt(mouseY - y - LIST_PADDING, ROW_HEIGHT) >= 0 ? PointerShape.HAND : PointerShape.DEFAULT;
+			}
+
+			/** While its thumb is dragged, the vertical-resize pointer (REQ-UI-43). */
+			@Override
+			public PointerShape dragCursor() {
+				return grab >= 0 ? PointerShape.RESIZE_VERTICAL : null;
+			}
 
 			@Override
 			public boolean press(double mouseX, double mouseY, int button) {

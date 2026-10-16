@@ -54,6 +54,9 @@ class HudEditorModel(items: List<Item>, opened: Map<String, HudPosition>, privat
 
 	fun items(): List<Item> = items
 
+	/** Whether an element is grabbed: pressed and not yet released (the editor shows the move pointer, REQ-UI-43). */
+	fun dragging(): Boolean = dragging
+
 	/** Where element [id] was when the editor opened. */
 	fun opened(id: String): HudPosition? = opened[id]
 

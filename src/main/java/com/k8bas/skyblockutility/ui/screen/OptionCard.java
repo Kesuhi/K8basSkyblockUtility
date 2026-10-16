@@ -7,6 +7,7 @@ import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.ToggleSwitch;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.minecraft.client.gui.Font;
@@ -40,6 +41,12 @@ final class OptionCard extends Widget {
 
 	void setIndent(int indent) {
 		this.indent = indent;
+	}
+
+	/** The hand on a toggle card, where a click anywhere flips its switch; the arrow on other cards. */
+	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return toggle != null ? PointerShape.HAND : PointerShape.DEFAULT;
 	}
 
 	@Override

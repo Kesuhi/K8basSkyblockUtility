@@ -391,6 +391,17 @@ class RuleCardsTest {
 		assertFalse(page.control(label).showing(), "and hidden");
 	}
 
+	/** AC-UI-44 [A] (REQ-UI-43, T3.33): a rule header shows the hand; over its Remove button that button decides. */
+	@Test
+	void aRuleHeaderShowsTheHand() {
+		mobs.rules.add(mob("mob-1", "Zealot", "Zealot"));
+		RuleHeaderWidget header = new RuleHeaderWidget(mobCards.groups().get(0), () -> { });
+		header.setBounds(0, 0, 400, ConfigLayout.RULE_HEADER);
+		header.setActionRoom(70);
+		assertEquals(com.k8bas.skyblockutility.ui.widget.PointerShape.HAND, header.cursorAt(100, 5), "the header");
+		assertNull(header.cursorAt(350, 5), "over its Remove button: that button decides");
+	}
+
 	/** REQ-UI-18 (T2.9b): Enter opens or closes a rule; Right opens a closed one, Left closes an open one; the ring stops before Remove. */
 	@Test
 	void aRuleHeaderTakesTheKeyboard() {

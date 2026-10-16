@@ -108,6 +108,19 @@ public abstract class Widget {
 		return tooltip;
 	}
 
+	/**
+	 * The pointer shape over this widget (REQ-UI-43), asked only while it is the topmost enabled one there; null lets the
+	 * widget below decide (a part that belongs to another widget). Clickable widgets give the hand.
+	 */
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return PointerShape.DEFAULT;
+	}
+
+	/** The pointer shape while a press on it is held, wherever the mouse is (a slider being dragged); null for no drag. */
+	public PointerShape dragCursor() {
+		return null;
+	}
+
 	public abstract void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY);
 
 	/** A mouse press; true if this widget takes it (and then gets the drag and release). */

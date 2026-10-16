@@ -12,6 +12,8 @@ import com.k8bas.skyblockutility.module.npcsearch.NpcRule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcRulesForTests;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.RuleDatabase;
+import com.k8bas.skyblockutility.ui.widget.PointerProbe;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -87,6 +89,14 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		String line = HairlineProbe.check(HairlineProbe.read(folderShot), "the database picker's outline", pickerScale,
 				(panel[0] + panel[2] / 2) * pickerScale, panel[1] * pickerScale, 0, 1, Theme.SEPARATOR);
 		check(line.isEmpty(), line);
+		// AC-UI-44 [C] (T3.33): the hand over a folder; the arrow over the settings under the modal picker.
+		double[] folder = context.computeOnClient(client -> {
+			Widget list = picker(client).list();
+			return new double[] {list.x() + 20, list.y() + DatabasePickerOverlay.ROW_HEIGHT / 2.0};
+		});
+		PointerProbe.expect(context, folder[0], folder[1], PointerShape.HAND, "a picker folder");
+		double[] under = context.computeOnClient(client -> ConfigScreenGameTest.controlOutsideTheOverlay(screen(client)));
+		PointerProbe.expect(context, under[0], under[1], PointerShape.DEFAULT, "a settings control under the modal picker");
 		int[] field = context.computeOnClient(client -> centreOf(picker(client).searchField()));
 		click(context, field);
 		context.getInput().typeChars("zeal");
@@ -94,6 +104,11 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		List<String> found = context.computeOnClient(client -> picker(client).rows().stream().map(PickerRows.Row::label).toList());
 		check(found.equals(List.of("The End", "Special Zealot", "Zealot")), "\"zeal\" finds both Zealots in their open folder: " + found);
 		context.takeScreenshot("t2.5c-picker-search");
+		// AC-UI-44 [C]: the hand over an entry's Add button, the arrow over its name, the I-beam over the search box.
+		int[] zealotAdd = addButton(context, "Zealot");
+		PointerProbe.expect(context, zealotAdd[0], zealotAdd[1], PointerShape.HAND, "an entry's Add button");
+		PointerProbe.expect(context, zealotAdd[0] - DatabasePickerOverlay.ADD_WIDTH - 20, zealotAdd[1], PointerShape.DEFAULT, "an entry's name");
+		PointerProbe.expect(context, field[0], field[1], PointerShape.TEXT, "the picker's search box");
 		int before = context.computeOnClient(client -> ConfigManager.saveRequests());
 		click(context, addButton(context, "Zealot"));
 		List<HighlightRule> rules = context.computeOnClient(client -> MobRulesForTests.rules());
@@ -103,13 +118,20 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 		List<String> after = context.computeOnClient(client -> picker(client).rows().stream().map(PickerRows.Row::label).toList());
 		check(after.equals(List.of("The End", "Special Zealot")), "the added entry left the picker: " + after);
-		click(context, context.computeOnClient(client -> centreOf(picker(client).doneButton())));
+		int[] done = context.computeOnClient(client -> centreOf(picker(client).doneButton()));
+		PointerProbe.expect(context, done[0], done[1], PointerShape.HAND, "the picker's Done button");
+		click(context, done);
 		check(context.computeOnClient(client -> screen(client).overlay()) == null, "Done closes the picker");
 		check(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen, "with no prompt; the settings stay open");
 		List<String> cards = context.computeOnClient(client -> screen(client).page().page().rows().stream()
 				.filter(row -> row instanceof ConfigLayout.RuleHeader).map(row -> screen(client).page().header(((ConfigLayout.RuleHeader) row).rule()).title())
 				.toList());
 		check(cards.equals(List.of("Voidgloom", "Delete me", "Zealot")), "its card is in the list: " + cards);
+		// AC-UI-44 [C]: the hand over a rule header and over its Remove button.
+		int[] header = RuleCardsGameTest.headerPoint(context, "Zealot");
+		PointerProbe.expect(context, header[0], header[1], PointerShape.HAND, "a rule header");
+		int[] remove = RuleCardsGameTest.removeCentre(context, "mob_highlighter.rule.drop");
+		PointerProbe.expect(context, remove[0], remove[1], PointerShape.HAND, "a rule's Remove button");
 
 		// The added rule edited (its slim card: entity type and colour, R31), only the colour of the second changed,
 		// the third removed with its header's button; then a restart.

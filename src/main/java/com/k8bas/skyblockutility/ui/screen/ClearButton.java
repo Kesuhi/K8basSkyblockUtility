@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -31,6 +32,11 @@ final class ClearButton extends Widget {
 	@Override
 	public boolean contains(double mouseX, double mouseY) {
 		return hasText.getAsBoolean() && super.contains(mouseX, mouseY);
+	}
+
+	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return PointerShape.HAND;
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import com.k8bas.skyblockutility.ui.widget.Button;
 import com.k8bas.skyblockutility.ui.widget.GameClipboard;
 import com.k8bas.skyblockutility.ui.widget.Overlay;
 import com.k8bas.skyblockutility.ui.widget.OverlayHost;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.TextEditModel;
 import com.k8bas.skyblockutility.ui.widget.TextField;
 import com.k8bas.skyblockutility.ui.widget.VirtualList;
@@ -62,6 +63,7 @@ public final class DatabasePickerOverlay extends Overlay {
 		this.search = TextField.of(new TextEditModel(35, GameClipboard.INSTANCE), "Search " + database.title(), text -> queryChanged());
 		this.list = new VirtualList(ROW_HEIGHT, () -> rows.size(), this::drawRow, index -> { });
 		list.onRowClick(this::clickRow);
+		list.setRowCursor(this::rowCursor);
 		this.done = new Button("Done", Button.Style.PRIMARY, () -> host.close(this), clickSound);
 		this.widgets = List.of(search, list, done);
 	}
@@ -142,6 +144,20 @@ public final class DatabasePickerOverlay extends Overlay {
 	/** An entry's Add button, from its row's top left: x, y, width, height. Drawing and clicks both use it. */
 	static int[] addButton(int rowWidth, int rowHeight) {
 		return new int[] {rowWidth - ADD_WIDTH - 4, 2, ADD_WIDTH, rowHeight - 5};
+	}
+
+	/** The hand where a click does something: on a folder, and on an entry's Add button (REQ-UI-43). */
+	private PointerShape rowCursor(int index, double x, double y, int width, int height) {
+		if (index >= rows.size()) {
+			return PointerShape.DEFAULT;
+		}
+		PickerRows.Row row = rows.get(index);
+		if (row.entry() == null) {
+			return PointerShape.HAND;
+		}
+		int[] add = addButton(width, height);
+		boolean onAdd = row.entry().addable() && x >= add[0] && x < add[0] + add[2] && y >= add[1] && y < add[1] + add[3];
+		return onAdd ? PointerShape.HAND : PointerShape.DEFAULT;
 	}
 
 	private void clickRow(int index, double x, double y, int width, int height) {

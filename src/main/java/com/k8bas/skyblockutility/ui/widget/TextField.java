@@ -130,6 +130,11 @@ public final class TextField extends Widget {
 	}
 
 	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return PointerShape.TEXT;
+	}
+
+	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {
 			return false;

@@ -8,6 +8,7 @@ import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
 import com.k8bas.skyblockutility.ui.widget.NavKey;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -104,6 +105,12 @@ final class RuleHeaderWidget extends Widget {
 	String title() {
 		String label = rule.label().get();
 		return label == null || label.isBlank() ? UNNAMED : label.strip();
+	}
+
+	/** The hand (a click opens or closes the rule); over its Remove button, that button decides. */
+	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return overAction(mouseX) ? null : PointerShape.HAND;
 	}
 
 	@Override

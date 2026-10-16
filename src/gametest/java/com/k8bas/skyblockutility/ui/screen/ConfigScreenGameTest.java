@@ -14,6 +14,17 @@ import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.widget.Button;
+import com.k8bas.skyblockutility.ui.widget.ColorSwatch;
+import com.k8bas.skyblockutility.ui.widget.Dropdown;
+import com.k8bas.skyblockutility.ui.widget.KeybindButton;
+import com.k8bas.skyblockutility.ui.widget.Overlay;
+import com.k8bas.skyblockutility.ui.widget.PointerProbe;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
+import com.k8bas.skyblockutility.ui.widget.ScrollArea;
+import com.k8bas.skyblockutility.ui.widget.Slider;
+import com.k8bas.skyblockutility.ui.widget.TextField;
+import com.k8bas.skyblockutility.ui.widget.ToggleSwitch;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -94,7 +105,8 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			cornerRadii(context);
 			panelShadow(context);
 			sliderValuesFit(context);
-			// Last: it opens a settings screen of its own and closes it.
+			// These two open a settings screen of their own and close it.
+			pointers(context);
 			contentScrollbar(context);
 		} finally {
 			context.runOnClient(client -> {
@@ -1355,6 +1367,245 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 	}
 
+	/** One place the pointer is checked at: the kind of thing there, what it is, and the shape it must show. */
+	private record PointerTarget(String kind, String what, double x, double y, PointerShape shape) {
+	}
+
+	/**
+	 * AC-UI-44 [C] (REQ-UI-43, T3.33) at GUI scale 2: on every page, scrolled through, the shape over each fully shown card's text
+	 * (the hand only on a toggle card) and over its control by kind (the arrow when disabled); the hand over a sidebar tab, the
+	 * I-beam over the search box, the arrow over the header and off the panel; with a dropdown's list open, the hand over an
+	 * entry and the arrow over the screen under it. The scrollbar's are checked with AC-UI-37 below.
+	 */
+	private static void pointers(ClientGameTestContext context) {
+		int before = context.computeOnClient(client -> client.options.guiScale().get());
+		context.getInput().resizeWindow(1280, 960);
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.waitTicks(2);
+		java.util.Map<String, Integer> seen = new java.util.TreeMap<>();
+		try {
+			List<Category> categories = context.computeOnClient(client -> List.copyOf(screen(client).categories()));
+			for (Category category : categories) {
+				context.runOnClient(client -> {
+					screen(client).select(category);
+					screen(client).scrollTo(0);
+				});
+				context.waitTicks(2);
+				java.util.Set<Option> done = new java.util.HashSet<>();
+				for (int screenful = 0; screenful < 50; screenful++) {
+					List<PointerTarget> targets = context.computeOnClient(client -> pointerTargets(screen(client), done));
+					for (PointerTarget target : targets) {
+						PointerProbe.expect(context, target.x(), target.y(), target.shape(), category + ": " + target.what());
+						seen.merge(target.kind(), 1, Integer::sum);
+					}
+					boolean more = context.computeOnClient(client -> {
+						ScrollArea area = screen(client).scrollArea();
+						if (area.scroll() >= area.maxScroll()) {
+							return false;
+						}
+						screen(client).scrollTo(area.scroll() + Math.max(20, area.height() - 60));
+						return true;
+					});
+					if (!more) {
+						break;
+					}
+					context.waitTicks(2);
+				}
+			}
+			double[] tab = context.computeOnClient(client -> {
+				Widget tabs = screen(client).tabs();
+				return new double[] {tabs.x() + tabs.width() / 2.0, tabs.y() + ConfigLayout.TAB / 2.0};
+			});
+			PointerProbe.expect(context, tab[0], tab[1], PointerShape.HAND, "a sidebar tab");
+			double[] search = context.computeOnClient(client -> {
+				Widget field = screen(client).search();
+				return new double[] {field.x() + field.width() / 2.0, field.y() + field.height() / 2.0};
+			});
+			PointerProbe.expect(context, search[0], search[1], PointerShape.TEXT, "the search box");
+			double[] header = context.computeOnClient(client -> {
+				ConfigLayout.Rect rect = screen(client).frame().header();
+				return new double[] {rect.x() + 4, rect.y() + 4};
+			});
+			PointerProbe.expect(context, header[0], header[1], PointerShape.DEFAULT, "the header");
+			PointerProbe.expect(context, 1, 1, PointerShape.DEFAULT, "off the panel");
+			// A dropdown's list: the hand over an entry; nothing under it shows its shape.
+			Category withChoice = context.computeOnClient(client -> {
+				for (Category category : screen(client).categories()) {
+					screen(client).select(category);
+					if (screen(client).page().page().rows().stream()
+							.anyMatch(row -> row instanceof ConfigLayout.OptionRow option && option.option() instanceof com.k8bas.skyblockutility.ui.option.Choice<?>)) {
+						return category;
+					}
+				}
+				throw new AssertionError("FAILED: no page has a dropdown");
+			});
+			context.runOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				screen.select(withChoice);
+				ConfigLayout.OptionRow row = optionRow(screen, option -> option instanceof com.k8bas.skyblockutility.ui.option.Choice<?>);
+				screen.scrollTo(Math.max(0, row.y() - 20));
+			});
+			context.waitTicks(2);
+			double[] box = context.computeOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				Widget dropdown = screen.page().control(optionRow(screen, option -> option instanceof com.k8bas.skyblockutility.ui.option.Choice<?>).option());
+				return new double[] {dropdown.x() + dropdown.width() / 2.0, dropdown.y() + dropdown.height() / 2.0};
+			});
+			PointerProbe.expect(context, box[0], box[1], PointerShape.HAND, "a dropdown");
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTicks(2);
+			double[] entry = context.computeOnClient(client -> {
+				Overlay list = screen(client).overlay();
+				if (list == null) {
+					throw new AssertionError("FAILED: a click on the dropdown opens its list");
+				}
+				Widget rows = list.widgets().get(0);
+				return new double[] {rows.x() + 10, rows.y() + Dropdown.LIST_PADDING + 7};
+			});
+			PointerProbe.expect(context, entry[0], entry[1], PointerShape.HAND, "an entry of the open list");
+			PointerProbe.expect(context, tab[0], tab[1], PointerShape.DEFAULT, "a sidebar tab under the open list");
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTicks(2);
+			check(context.computeOnClient(client -> screen(client).overlay()) == null, "Esc closes the list");
+			colourPickerPointers(context);
+			// The search box's clear button, once there is text to clear.
+			PointerProbe.move(context, search[0], search[1]);
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTicks(2);
+			context.getInput().typeChars("zz");
+			context.waitTicks(2);
+			double[] clear = context.computeOnClient(client -> {
+				Widget button = screen(client).allWidgets().stream().filter(ClearButton.class::isInstance).findFirst().orElseThrow();
+				return new double[] {button.x() + button.width() / 2.0, button.y() + button.height() / 2.0};
+			});
+			PointerProbe.expect(context, clear[0], clear[1], PointerShape.HAND, "the search box's clear button");
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTicks(2);
+			check(context.computeOnClient(client -> screen(client).query()).isEmpty(), "the clear button emptied the search");
+			PointerProbe.check(context, PointerShape.TEXT, "the search box, where its clear button was");
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(before));
+			context.getInput().setCursorPos(2, 2);
+			context.setScreen(() -> null);
+		}
+		LOGGER.info("pointer shapes on the settings screen, by kind: {}", seen);
+		for (String kind : List.of("toggle card", "card", "ToggleSwitch", "Slider", "Dropdown", "KeybindButton", "ColorSwatch", "Button")) {
+			check(seen.containsKey(kind), "the pages have a " + kind + " to check: " + seen);
+		}
+	}
+
+	/**
+	 * AC-UI-44 [C] (T3.33): the colour picker, a modal, opened from a swatch: the hand over its wheel, sliders, presets and
+	 * buttons, the I-beam over its hex field, the arrow over a control under it. Closed with Esc.
+	 */
+	private static void colourPickerPointers(ClientGameTestContext context) {
+		context.runOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			for (Category category : screen.categories()) {
+				screen.select(category);
+				if (screen.page().page().rows().stream()
+						.anyMatch(row -> row instanceof ConfigLayout.OptionRow option && option.option() instanceof com.k8bas.skyblockutility.ui.option.ColorOption)) {
+					break;
+				}
+			}
+			ConfigLayout.OptionRow row = optionRow(screen, option -> option instanceof com.k8bas.skyblockutility.ui.option.ColorOption);
+			screen.scrollTo(Math.max(0, row.y() - 20));
+		});
+		context.waitTicks(2);
+		double[] swatch = context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			Widget control = screen.page().control(optionRow(screen, option -> option instanceof com.k8bas.skyblockutility.ui.option.ColorOption).option());
+			return new double[] {control.x() + control.width() / 2.0, control.y() + control.height() / 2.0};
+		});
+		PointerProbe.move(context, swatch[0], swatch[1]);
+		context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		try {
+			List<PointerTarget> targets = context.computeOnClient(client -> {
+				Overlay picker = screen(client).overlay();
+				if (!(picker instanceof com.k8bas.skyblockutility.ui.widget.ColorPickerOverlay)) {
+					throw new AssertionError("FAILED: a click on the swatch opens the colour picker: " + picker);
+				}
+				List<PointerTarget> found = new ArrayList<>();
+				for (Widget widget : picker.widgets()) {
+					if (widget.width() <= 0) {
+						continue;
+					}
+					String kind = widget.getClass().getSimpleName();
+					found.add(new PointerTarget(kind, "the colour picker's " + kind, widget.x() + widget.width() / 2.0, widget.y() + widget.height() / 2.0,
+							widget instanceof TextField ? PointerShape.TEXT : PointerShape.HAND));
+				}
+				return found;
+			});
+			java.util.Set<String> kinds = new java.util.TreeSet<>();
+			for (PointerTarget target : targets) {
+				PointerProbe.expect(context, target.x(), target.y(), target.shape(), target.what());
+				kinds.add(target.kind());
+			}
+			check(kinds.containsAll(List.of("ColorWheel", "GradientSlider", "PresetSwatch", "TextField", "Button")), "the picker's controls: " + kinds);
+			double[] under = context.computeOnClient(client -> controlOutsideTheOverlay(screen(client)));
+			PointerProbe.expect(context, under[0], under[1], PointerShape.DEFAULT, "a settings control under the modal colour picker");
+		} finally {
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTicks(2);
+		}
+		check(context.computeOnClient(client -> screen(client).overlay()) == null, "Esc closes the colour picker");
+	}
+
+	/**
+	 * The middle of a settings control outside the open overlay that shows a shape other than the arrow without it, for
+	 * "under a modal, the arrow" (AC-UI-44 [C]).
+	 */
+	static double[] controlOutsideTheOverlay(ConfigScreen screen) {
+		for (Widget widget : screen.allWidgets()) {
+			double x = widget.x() + widget.width() / 2.0;
+			double y = widget.y() + widget.height() / 2.0;
+			if (widget.width() <= 0 || !widget.isEnabled() || !widget.fullyShowing() || screen.overlay().contains(x, y)) {
+				continue;
+			}
+			PointerShape shape = widget.cursorAt(x, y);
+			if (shape != null && shape != PointerShape.DEFAULT) {
+				return new double[] {x, y};
+			}
+		}
+		throw new AssertionError("FAILED: no settings control outside the overlay");
+	}
+
+	/** The fully shown cards and controls of the page as laid out now that {@code done} does not have yet. */
+	private static List<PointerTarget> pointerTargets(ConfigScreen screen, java.util.Set<Option> done) {
+		List<PointerTarget> targets = new ArrayList<>();
+		for (Widget widget : screen.page().widgets()) {
+			if (!(widget instanceof OptionCard card) || card.width() <= 0 || !card.fullyShowing() || !done.add(card.option())) {
+				continue;
+			}
+			Option option = card.option();
+			boolean toggleCard = option instanceof Toggle;
+			targets.add(new PointerTarget(toggleCard ? "toggle card" : "card", option.id() + "'s text", card.x() + 20, card.y() + 10,
+					card.isEnabled() && toggleCard ? PointerShape.HAND : PointerShape.DEFAULT));
+			Widget control = screen.page().control(option);
+			if (control == null || control.width() <= 0 || !control.fullyShowing()) {
+				continue;
+			}
+			String kind = control.getClass().getSimpleName();
+			PointerShape shape = switch (control) {
+				case ToggleSwitch ignored -> PointerShape.HAND;
+				case Slider ignored -> PointerShape.HAND;
+				case Dropdown<?> ignored -> PointerShape.HAND;
+				case Button ignored -> PointerShape.HAND;
+				case KeybindButton ignored -> PointerShape.HAND;
+				case ColorSwatch ignored -> PointerShape.HAND;
+				case TextField ignored -> PointerShape.TEXT;
+				case InfoText ignored -> PointerShape.DEFAULT;
+				default -> throw new AssertionError("FAILED: a control of a kind this check does not know: " + kind);
+			};
+			targets.add(new PointerTarget(kind, option.id() + "'s " + kind, control.x() + control.width() / 2.0, control.y() + control.height() / 2.0,
+					control.isEnabled() ? shape : PointerShape.DEFAULT));
+		}
+		return targets;
+	}
+
 	/** AC-UI-37 [C] (REQ-UI-36, T3.27): the content area's scrollbar idle and hovered at GUI scales 1-4, on the Waypoints page. */
 	private static void contentScrollbar(ClientGameTestContext context) {
 		int before = context.computeOnClient(client -> client.options.guiScale().get());
@@ -1387,6 +1638,13 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 						context.getInput().setCursorPos(off[0], off[1]);
 						context.waitTicks(2);
 					}
+					// AC-UI-44 [C] (T3.33): the arrow off the panel, the hand over the scrollbar, the vertical resize while its thumb is dragged.
+					PointerShape shape = switch (state) {
+						case "idle" -> PointerShape.DEFAULT;
+						case "hovered" -> PointerShape.HAND;
+						default -> PointerShape.RESIZE_VERTICAL;
+					};
+					PointerProbe.check(context, shape, "the content area's " + state + " scrollbar at GUI scale " + s);
 					java.awt.image.BufferedImage shot = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(
 							context.takeScreenshot("t3.27-content-" + state + "-scale-" + s));
 					if (state.equals("dragged")) {

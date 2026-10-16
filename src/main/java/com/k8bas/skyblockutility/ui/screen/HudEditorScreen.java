@@ -19,6 +19,7 @@ import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiSound;
 import com.k8bas.skyblockutility.ui.render.UiText;
 import com.k8bas.skyblockutility.ui.widget.Button;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.SavesOnClose;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import com.k8bas.skyblockutility.ui.widget.WidgetScreen;
@@ -360,6 +361,18 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	private final class Canvas extends Widget {
 		@Override
 		public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
+		}
+
+		/** The move pointer over an element, which a press grabs (REQ-UI-43). */
+		@Override
+		public PointerShape cursorAt(double mouseX, double mouseY) {
+			return model.at(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height) != null ? PointerShape.MOVE : PointerShape.DEFAULT;
+		}
+
+		/** And while one is dragged, wherever the mouse goes. */
+		@Override
+		public PointerShape dragCursor() {
+			return model.dragging() ? PointerShape.MOVE : null;
 		}
 
 		@Override

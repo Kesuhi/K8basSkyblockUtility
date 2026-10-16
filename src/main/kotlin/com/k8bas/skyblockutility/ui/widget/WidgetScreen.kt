@@ -10,6 +10,8 @@ import com.k8bas.skyblockutility.ui.render.UiFade
 import com.k8bas.skyblockutility.ui.render.UiText
 import com.k8bas.skyblockutility.ui.render.UiTime
 import com.mojang.blaze3d.platform.InputConstants
+import com.mojang.blaze3d.platform.cursor.CursorType
+import com.mojang.blaze3d.platform.cursor.CursorTypes
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -34,6 +36,8 @@ import kotlin.math.sign
  *   input. A click outside closes a plain overlay unchanged and is not passed on; a modal stays.
  *   Esc closes it without applying anything.
  * - The hovered widget's tooltip is drawn last, over everything, inside the window (REQ-UI-19).
+ * - Each frame it asks the game for the pointer shape of the widget under the mouse, or of the one being dragged
+ *   (REQ-UI-43), through the call the game's own widgets use.
  * - A screen that opts in ([keyboardNavigation], REQ-UI-18) is also run from the keyboard: Tab and Shift+Tab move a
  *   focus marked by an accent ring, Space/Enter activate, the arrows operate the focused control. Tab is the one
  *   key a typing field or a plain overlay lets go of (to the next control); a modal keeps Tab inside. The Esc
@@ -89,6 +93,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	/** Counts focus requests, so a press that asked for one (even for the widget that already had it) keeps it. */
 	private var focusRequests = 0
 	private var lastTooltip: TooltipLayout.Box? = null
+
+	/** The pointer shape asked for in the last frame. */
+	private var requestedPointer = PointerShape.DEFAULT
 
 	protected fun <W : Widget> add(widget: W): W {
 		widgets.add(widget)
@@ -290,8 +297,25 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
 		val now = time.millis()
 		val source = time
-		timed(UiTime.of({ now }, source::motion)) { extractFrame(graphics, mouseX, mouseY, partialTick) }
+		timed(UiTime.of({ now }, source::motion)) {
+			extractFrame(graphics, mouseX, mouseY, partialTick)
+			requestPointer(graphics, mouseX, mouseY)
+		}
 	}
+
+	/**
+	 * Asks the game for this frame's pointer shape (REQ-UI-43): a held drag's, or the topmost widget's under the mouse, as
+	 * input meets it (only the overlay's while one is open). The game starts each frame's request at the default and applies
+	 * it after the frame, so the arrow is back in the first frame without this screen (EC-UI-27).
+	 */
+	private fun requestPointer(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
+		val shape = PointerPick.pick(activeWidgets(), pressed, localX(mouseX.toDouble()), localY(mouseY.toDouble()))
+		requestedPointer = shape
+		graphics.requestCursor(cursorType(shape))
+	}
+
+	/** For tests: the pointer shape asked for in the last frame. */
+	fun requestedPointer(): PointerShape = requestedPointer
 
 	private fun extractFrame(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
 		super.extractRenderState(graphics, mouseX, mouseY, partialTick)
@@ -824,6 +848,16 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	companion object {
 		private const val KEY_ESCAPE = 256
+
+		/** The game's cursor for a shape; the default is the one the game starts each frame with. */
+		private fun cursorType(shape: PointerShape): CursorType = when (shape) {
+			PointerShape.DEFAULT -> CursorType.DEFAULT
+			PointerShape.HAND -> CursorTypes.POINTING_HAND
+			PointerShape.TEXT -> CursorTypes.IBEAM
+			PointerShape.RESIZE_HORIZONTAL -> CursorTypes.RESIZE_EW
+			PointerShape.RESIZE_VERTICAL -> CursorTypes.RESIZE_NS
+			PointerShape.MOVE -> CursorTypes.RESIZE_ALL
+		}
 		private const val KEY_SPACE = 32
 
 		/** What a key means for navigation; Ctrl and Alt read from the keyboard too, as gametest input carries no modifiers. */

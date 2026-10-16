@@ -126,6 +126,18 @@ public final class ScrollArea extends Widget {
 		return rows.overflows() && ScrollbarPainter.inHitArea(x, width, mouseX);
 	}
 
+	/** The hand over its scrollbar, which a press takes; elsewhere it lets presses through, and the pointer too. */
+	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return onScrollbar(mouseX) ? PointerShape.HAND : null;
+	}
+
+	/** While its thumb is dragged, the vertical-resize pointer (REQ-UI-43). */
+	@Override
+	public PointerShape dragCursor() {
+		return grab >= 0 ? PointerShape.RESIZE_VERTICAL : null;
+	}
+
 	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		grab = -1;

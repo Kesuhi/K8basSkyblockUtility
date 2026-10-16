@@ -14,6 +14,12 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   every change at once, without sliding or fading: the settings opening, a category switch, hover,
   switches and notices. Tooltips still wait the same time before they show. The change applies at once,
   also in an open settings screen.
+- The mouse pointer shows what a click does in this mod's screens: a hand over buttons, switches, toggle
+  cards, the sidebar's categories, dropdowns and their entries, colour swatches, key binding buttons,
+  rule headers and the database picker's folders and Add buttons; a text cursor over text fields; a
+  sideways arrow while you drag a slider and an up-and-down arrow while you drag a scrollbar; a move
+  arrow over the HUD editor's elements. Over a control that is unavailable it stays the normal arrow.
+  It follows the game's "Allow Cursor Changes" option.
 
 ### Changed
 

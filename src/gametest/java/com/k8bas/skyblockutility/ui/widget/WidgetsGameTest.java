@@ -67,6 +67,8 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			wheelOverASlider(context);
 			dragCommitsOnce(context);
 			typingAndShortcuts(context);
+			// It closes the screen itself.
+			pointerShapes(context);
 			context.setScreen(() -> null);
 			focusedFieldTakesTheKeys(context);
 		} finally {
@@ -574,6 +576,64 @@ public class WidgetsGameTest implements FabricClientGameTest {
 			context.waitTick();
 		}
 		return context.computeOnClient(client -> screen(client.gui.screen()).pageScroll());
+	}
+
+	/**
+	 * AC-UI-44 [C] (REQ-UI-43, T3.33) at GUI scale 2: the hand over an enabled toggle and slider, the I-beam over a text field,
+	 * the arrow over their disabled twins and empty space; a dragged slider keeps the horizontal-resize pointer off its track
+	 * and gives it up on release. EC-UI-27: closed while a text field or a slider drag shows its shape, the screen leaves the
+	 * window's default cursor at once.
+	 */
+	private static void pointerShapes(ClientGameTestContext context) {
+		PointerProbe.expect(context, 8 + ToggleSwitch.WIDTH / 2.0, 8 + ToggleSwitch.HEIGHT / 2.0, PointerShape.HAND, "a toggle");
+		PointerProbe.expect(context, 72 + ToggleSwitch.WIDTH / 2.0, 8 + ToggleSwitch.HEIGHT / 2.0, PointerShape.DEFAULT, "a disabled toggle");
+		PointerProbe.expect(context, 257, 54, PointerShape.HAND, "a slider");
+		PointerProbe.expect(context, 170, 54, PointerShape.DEFAULT, "a disabled slider");
+		PointerProbe.expect(context, 78, 140, PointerShape.TEXT, "a text field");
+		PointerProbe.expect(context, 230, 182, PointerShape.DEFAULT, "a disabled text field");
+		PointerProbe.expect(context, 630, 470, PointerShape.DEFAULT, "empty space");
+		// A drag: the shape stays with the slider wherever the pointer goes, until the release.
+		int[] start = context.computeOnClient(client -> screen(client.gui.screen()).sliderPoint(0.5));
+		context.getInput().setCursorPos(start[0], start[1]);
+		context.waitTicks(2);
+		PointerProbe.check(context, PointerShape.HAND, "the live slider");
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		try {
+			context.waitTicks(2);
+			PointerProbe.check(context, PointerShape.RESIZE_HORIZONTAL, "the live slider, pressed");
+			PointerProbe.move(context, 400, 300);
+			PointerProbe.check(context, PointerShape.RESIZE_HORIZONTAL, "the live slider, dragged far off its track");
+		} finally {
+			context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTicks(2);
+		}
+		PointerProbe.check(context, PointerShape.DEFAULT, "empty space after the release");
+		// EC-UI-27: a text field's I-beam, then the screen closes.
+		PointerProbe.expect(context, 78, 140, PointerShape.TEXT, "a text field, before the screen closes");
+		context.setScreen(() -> null);
+		context.waitTicks(2);
+		check(PointerProbe.windowCursor(context) == com.mojang.blaze3d.platform.cursor.CursorType.DEFAULT,
+				"closed over a text field, the window's cursor is the default: " + PointerProbe.windowCursor(context));
+		// And a slider drag, held while the screen closes.
+		context.setScreen(WidgetTestScreen::new);
+		context.waitForScreen(WidgetTestScreen.class);
+		context.waitTicks(2);
+		int[] again = context.computeOnClient(client -> screen(client.gui.screen()).sliderPoint(0.5));
+		context.getInput().setCursorPos(again[0], again[1]);
+		context.waitTicks(2);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		PointerProbe.check(context, PointerShape.RESIZE_HORIZONTAL, "the live slider, pressed, before the screen closes");
+		try {
+			context.setScreen(() -> null);
+			context.waitTicks(2);
+			check(PointerProbe.windowCursor(context) == com.mojang.blaze3d.platform.cursor.CursorType.DEFAULT,
+					"closed during a slider drag, the window's cursor is the default: " + PointerProbe.windowCursor(context));
+		} finally {
+			context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+		}
+		LOGGER.info("pointer shapes on the widget test screen: hand, I-beam, arrow when disabled, horizontal resize while dragged; the default after a close");
 	}
 
 	/** REQ-UI-15: a drag through the real screen follows the pointer and commits once, on release. */

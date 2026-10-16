@@ -42,6 +42,7 @@ public final class VirtualList extends Widget {
 	private RowClick rowClick;
 	/** While the thumb is dragged: where it was grabbed, from its top; else -1. */
 	private int grab = -1;
+	private RowCursor rowCursor;
 	private VirtualRows.Range lastDrawn = new VirtualRows.Range(0, 0);
 
 	public VirtualList(int rowHeight, IntSupplier count, RowPainter painter, IntConsumer onClick) {
@@ -116,6 +117,17 @@ public final class VirtualList extends Widget {
 		this.rowClick = rowClick;
 	}
 
+	/** A row's pointer shape (REQ-UI-43), with where in the row the mouse is, as {@link RowClick} gets a click. */
+	@FunctionalInterface
+	public interface RowCursor {
+		PointerShape at(int index, double x, double y, int width, int height);
+	}
+
+	/** The shape over each row, for rows only parts of which a click reaches; without one every row shows the hand. */
+	public void setRowCursor(RowCursor rowCursor) {
+		this.rowCursor = rowCursor;
+	}
+
 	/** Keyboard steps through the list (REQ-UI-18, T2.9b): true if the key was used. */
 	@FunctionalInterface
 	public interface KeyHandler {
@@ -185,6 +197,27 @@ public final class VirtualList extends Widget {
 			return -1;
 		}
 		return rows.rowAt(mouseY - y);
+	}
+
+	/** The hand over its scrollbar and its rows (a click picks one), or what the rows ask for; the arrow below them. */
+	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		if (onScrollbar(mouseX)) {
+			return PointerShape.HAND;
+		}
+		// The rows as a press would find them now.
+		rows.setCount(count.getAsInt());
+		int row = rows.rowAt(mouseY - y);
+		if (row < 0) {
+			return PointerShape.DEFAULT;
+		}
+		return rowCursor == null ? PointerShape.HAND : rowCursor.at(row, mouseX - x, mouseY - y - rows.rowTop(row), rowWidth(), rows.rowHeight());
+	}
+
+	/** While its thumb is dragged, the vertical-resize pointer (REQ-UI-43). */
+	@Override
+	public PointerShape dragCursor() {
+		return grab >= 0 ? PointerShape.RESIZE_VERTICAL : null;
 	}
 
 	@Override

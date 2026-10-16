@@ -72,6 +72,7 @@ public class HudEditorGameTest implements FabricClientGameTest {
 			try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
 				singleplayer.getConnection().waitForChunksRender();
 				drawnOnceByTheEditor(context);
+				pointerShapes(context);
 				dragNudgeScaleAndSave(context);
 				cancelAndResets(context);
 				snapsToTheCentreLine(context);
@@ -117,6 +118,53 @@ public class HudEditorGameTest implements FabricClientGameTest {
 		String outline = HairlineProbe.check(editorShot, "box B's outline", editorScale, bx * editorScale, by * editorScale, 0, 1, Theme.TEXT_DISABLED);
 		check(outline.isEmpty(), outline);
 		LOGGER.info("hud editor: {} drawn once each by the editor, none by the HUD", drawn);
+	}
+
+	/**
+	 * AC-UI-44 [C] (REQ-UI-43, T3.33): the move pointer over an element and while it is dragged, the hand over a button, the arrow
+	 * over empty space. The drag is cancelled, and the editor opened again as it was.
+	 */
+	private static void pointerShapes(ClientGameTestContext context) {
+		HudRect start = rect(context, A);
+		double[] a = centre(start);
+		com.k8bas.skyblockutility.ui.widget.PointerProbe.expect(context, a[0], a[1], com.k8bas.skyblockutility.ui.widget.PointerShape.MOVE, "a HUD element");
+		double[] save = centre(context.computeOnClient(client -> bounds(editor(client).saveButton())));
+		com.k8bas.skyblockutility.ui.widget.PointerProbe.expect(context, save[0], save[1], com.k8bas.skyblockutility.ui.widget.PointerShape.HAND, "the Save button");
+		// Empty space: the first point down the middle column with no element and no button.
+		double[] empty = context.computeOnClient(client -> {
+			HudEditorScreen editor = editor(client);
+			double w = client.getWindow().getGuiScaledWidth();
+			double h = client.getWindow().getGuiScaledHeight();
+			for (double y = 10; y < h - 40; y += 10) {
+				double x = w / 2 + 0.5;
+				if (editor.model().at(x, y + 0.5, w, h) == null && !editor.saveButton().contains(x, y) && !editor.cancelButton().contains(x, y)
+						&& !editor.resetAllButton().contains(x, y) && !editor.resetSelectedButton().contains(x, y)) {
+					return new double[] {x, y};
+				}
+			}
+			throw new AssertionError("FAILED: no empty point in the editor's middle column");
+		});
+		com.k8bas.skyblockutility.ui.widget.PointerProbe.expect(context, empty[0], empty[1], com.k8bas.skyblockutility.ui.widget.PointerShape.DEFAULT,
+				"empty space in the editor");
+		cursor(context, a[0], a[1]);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		try {
+			context.waitTicks(2);
+			com.k8bas.skyblockutility.ui.widget.PointerProbe.check(context, com.k8bas.skyblockutility.ui.widget.PointerShape.MOVE, "a HUD element, grabbed");
+			// Dragged onto the Save button, which lies over the canvas: the drag's move pointer, not the button's hand.
+			cursor(context, save[0], save[1]);
+			com.k8bas.skyblockutility.ui.widget.PointerProbe.check(context, com.k8bas.skyblockutility.ui.widget.PointerShape.MOVE,
+					"a HUD element, dragged onto the Save button");
+		} finally {
+			context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTicks(2);
+		}
+		check(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen, "the release over Save did not press it");
+		click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closed the editor");
+		open(context, null);
+		HudRect after = rect(context, A);
+		check(after.x() == start.x() && after.y() == start.y(), "the cancelled drag left element A where it was: " + start + " -> " + after);
 	}
 
 	/** AC-HUD-04 [C], AC-HUD-05, REQ-HUD-05. */

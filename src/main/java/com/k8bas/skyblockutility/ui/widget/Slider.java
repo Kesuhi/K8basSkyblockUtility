@@ -74,6 +74,18 @@ public final class Slider extends Widget {
 		this.forcedHot = hot;
 	}
 
+	/** The hand, as the game's own sliders show. */
+	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return PointerShape.HAND;
+	}
+
+	/** While dragged, the horizontal-resize pointer, wherever the mouse goes (REQ-UI-43). */
+	@Override
+	public PointerShape dragCursor() {
+		return dragging ? PointerShape.RESIZE_HORIZONTAL : null;
+	}
+
 	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {

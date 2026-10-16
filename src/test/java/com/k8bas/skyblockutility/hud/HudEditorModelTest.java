@@ -53,6 +53,24 @@ class HudEditorModelTest {
 		assertTrue(model.guides(W, H).isEmpty(), "no guide after the drop");
 	}
 
+	/** AC-UI-44 [A] (REQ-UI-43, T3.33): the editor shows the move pointer while an element is dragged, and only then. */
+	@Test
+	void itKnowsWhileAnElementIsDragged() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		assertEquals("odds", model.at(210, 110, W, H), "over an element (the editor shows the move pointer there)");
+		assertNull(model.at(5, 5, W, H), "over empty space");
+		assertFalse(model.dragging(), "before a press");
+		model.press(5, 5, W, H);
+		assertFalse(model.dragging(), "a press on empty space");
+		model.release(W, H);
+		model.press(210, 110, W, H);
+		assertTrue(model.dragging(), "a press on an element grabs it");
+		model.drag(250, 110, W, H, false);
+		assertTrue(model.dragging(), "while it moves");
+		model.release(W, H);
+		assertFalse(model.dragging(), "dropped");
+	}
+
 	/** AC-HUD-14 [A]: with Alt held (no snap) the element follows the mouse exactly and no guide shows. */
 	@Test
 	void withoutSnappingTheDragFollowsTheMouse() {
