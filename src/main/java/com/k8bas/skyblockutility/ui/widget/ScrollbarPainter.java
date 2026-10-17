@@ -59,6 +59,14 @@ public final class ScrollbarPainter {
 	}
 
 	/**
+	 * The mask a pill {@code length} GUI px long and {@code w} wide borrows (REQ-UI-47): {@code mask}, the width's, only if it
+	 * is at least as long as it is wide; a shorter pill's diameter is its length, so it keeps its own mask (0).
+	 */
+	static int pillMask(float length, float w, int mask) {
+		return length >= w ? mask : 0;
+	}
+
+	/**
 	 * Draws the scrollbar of a region from (x, y), width × height GUI px, whose thumb lies from {@code thumbTop} for
 	 * {@code thumbLength} GUI px down from the region's top; {@code fade} dims a colour as its widget does.
 	 */
@@ -67,15 +75,14 @@ public final class ScrollbarPainter {
 		float w = width(hot);
 		float t = (w - IDLE_WIDTH) / (WIDE_WIDTH - IDLE_WIDTH);
 		float right = thumbRight(x, width);
-		// Only a pill as long as it is wide has the width as its diameter; a shorter one keeps its own mask.
 		int mask = maskPx(w, Shapes.guiScale());
 		if (t > 0F) {
 			// The faint track, as wide as the thumb, shows as it widens.
 			int track = ColorMath.withAlpha(Math.round(0x80 * t), Theme.SEPARATOR & 0xFFFFFF);
-			Shapes.pillV(graphics, right - w, y + 1, right, y + height - 1, height - 2 >= w ? mask : 0, fade.applyAsInt(track));
+			Shapes.pillV(graphics, right - w, y + 1, right, y + height - 1, pillMask(height - 2, w, mask), fade.applyAsInt(track));
 		}
 		int colour = ColorMath.lerp(Theme.TEXT_DISABLED, Theme.TEXT_SECONDARY, t);
-		Shapes.pillV(graphics, right - w, y + thumbTop + 1, right, y + thumbTop + thumbLength - 1, thumbLength - 2 >= w ? mask : 0,
+		Shapes.pillV(graphics, right - w, y + thumbTop + 1, right, y + thumbTop + thumbLength - 1, pillMask(thumbLength - 2, w, mask),
 				fade.applyAsInt(colour));
 	}
 }

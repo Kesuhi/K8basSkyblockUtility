@@ -289,6 +289,23 @@ class DiscsAndPillsTest {
 		assertEquals(MaskKey.disc(21), zero.plan().maskKey(), "0 borrows nothing");
 	}
 
+	/**
+	 * AC-UI-53 (REQ-UI-47, T3.43): a borrowed diameter is used only up to the largest mask the cache bakes, twice
+	 * {@link CornerMask#MAX_RADIUS}; above it the disc or pill keeps its own mask, as a larger one could not be made.
+	 */
+	@Test
+	void aBorrowedDiameterAboveTheLargestMaskIsNotUsed() {
+		int largest = 2 * CornerMask.MAX_RADIUS;
+		ShapePlan.Drawn<String> atTheBound = ShapePlan.resolve(AT, 3, 5, 21, 21, 11, 0, Corners.ALL, 2, true, largest, null, key -> "mask " + key);
+		assertEquals(MaskKey.disc(largest), atTheBound.plan().maskKey(), "the largest mask is borrowed");
+		for (int[] s : new int[][] {{21, 21, 11, Corners.ALL}, {9, 40, 5, Corners.ALL}, {30, 8, 4, Corners.LEFT}}) {
+			ShapePlan.Drawn<String> above = ShapePlan.resolve(AT, 3, 5, s[0], s[1], s[2], 0, s[3], 2, true, largest + 1, null, key -> "mask " + key);
+			ShapePlan.Drawn<String> own = ShapePlan.resolve(AT, 3, 5, s[0], s[1], s[2], 0, s[3], 2, true, null, key -> "mask " + key);
+			assertTrue(MaskKey.isDisc(own.plan().maskKey()), s[0] + "x" + s[1] + " is drawn from a disc mask");
+			assertEquals(own.plan().maskKey(), above.plan().maskKey(), s[0] + "x" + s[1] + ": " + (largest + 1) + " px keeps its own mask");
+		}
+	}
+
 	/** AC-UI-31: the masks' texture setup samples linear and clamped to the edge (REQ-UI-31), the sampler cache's shared one. */
 	@Test
 	void masksSampleLinearAndClampedToTheEdge() {

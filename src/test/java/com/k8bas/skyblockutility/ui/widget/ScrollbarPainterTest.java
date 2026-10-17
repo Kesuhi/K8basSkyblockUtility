@@ -101,6 +101,19 @@ class ScrollbarPainterTest {
 		}
 	}
 
+	/**
+	 * AC-UI-53 (REQ-UI-47, T3.43): a thumb or track shorter than it is wide has its length as its diameter, so it keeps its
+	 * own mask (0) rather than the width's; one at least as long as it is wide borrows the width's.
+	 */
+	@Test
+	void aPillShorterThanItIsWideKeepsItsOwnMask() {
+		int wide = ScrollbarPainter.maskPx(4F, 2);
+		assertEquals(0, ScrollbarPainter.pillMask(3F, 4F, wide), "3 long, 4 wide: its own");
+		assertEquals(0, ScrollbarPainter.pillMask(Math.nextDown(4F), 4F, wide), "a hair shorter: its own");
+		assertEquals(wide, ScrollbarPainter.pillMask(4F, 4F, wide), "as long as wide: the width's");
+		assertEquals(wide, ScrollbarPainter.pillMask(40F, 4F, wide), "longer: the width's");
+	}
+
 	@Test
 	void withAnimationsOffItWidensAtOnce() {
 		motion[0] = false;
