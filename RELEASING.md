@@ -333,6 +333,33 @@ published. The 2.0.0 steps extend this document (PLAN T7.2c).
 
 ## Release records
 
+### v1.3.0, published 2026-10-17
+
+- **PR #4** was merged as merge commit `2f1a105`; its head `b67e08f` was the approved commit, with CI
+  green on it. The maintainer's message of 2026-10-17 ("When finished and everything checks green, put
+  everything in the open pull request, merge the trees, ship version 1.3.0") counted as "merge" and
+  "ship" for the PR's final head once everything on it was green, which it was (Checkpoint G3v). The
+  annotated tag `v1.3.0` is on the merge commit, with the noreply identity. It is a MINOR release:
+  the Animations option and the Smooth corners default (REQ-REL-06).
+- **Build:** `./gradlew clean build` ran from the detached tag; its test results show 1090 tests and
+  no failure.
+  - Jar: `sha256:02496d000b8b50165e11e6b697705b1e51d35e7903dfc05dd049340724a7495c` (1,233,428 bytes).
+    It nests only Render Chest.
+  - Sidecar: `sha256:7266613ff9dd420ceb22d0aeef72fa164b6e8a5f24910a1cc9faf4bdc2e1fe85`.
+- **Draft checks:** `release-check.sh v1.3.0` printed PASS, with all five steps `[ok]`. It ran
+  before and after the tier D boot.
+- **Tier D:** a copy of the maintainer's 50-jar `26.2 Skyblock` mod set with Iris and the shaderpack.
+  The baseline loaded 183 mods without this mod (no `- k8bas_skyblock_utility` line); both boots
+  reached the title screen. The release run loaded 184 mods, among them
+  `k8bas_skyblock_utility 1.3.0+26.2` and `fabric-language-kotlin 1.14.2+kotlin.2.4.21`. Both had
+  the same 7 distinct ERROR messages (offline-account log-ins of other mods, Skyblocker item builds)
+  once thread names and object hashes are removed, so the release jar added no ERROR line. Its one
+  WARN line naming this mod is Iris's known `Found okay program match for
+  k8bas_skyblock_utility:pipeline/marker_ring: BASIC_COLOR`, as in v1.2.1.
+- **Published** as Latest, not as a pre-release, at 2026-10-17T17:18:15Z. The assets are only the
+  jar and the sidecar, and the body equals the CHANGELOG section. An anonymous
+  `GET …/releases/latest` is v1.3.0.
+
 ### v1.2.1, published 2026-10-15
 
 - **PR #3** was merged as merge commit `ea32dea` after the maintainer's approval ("merge"); its head
