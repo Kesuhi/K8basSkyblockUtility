@@ -81,6 +81,7 @@ public class HudEditorGameTest implements FabricClientGameTest {
 				toolbar(context);
 				hintGoesAtTheFirstDrag(context);
 				hintGoesAtOnceWithAnimationsOff(context);
+				aHandleDragOverTheCardFadesIt(context);
 				snapsToTheCentreLine(context);
 				cornerHandles(context);
 				centresSnapToEachOther(context);
@@ -557,6 +558,48 @@ public class HudEditorGameTest implements FabricClientGameTest {
 			click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
 			check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closes it");
 		}
+	}
+
+	/**
+	 * AC-HUD-15 [A] with REQ-HUD-15 (T3.54 follow-up): on a test clock with motion on, A under the card is selected and its
+	 * bottom-right handle, just below the card, dragged up-left over it: the card fades to 30 % as for a move, and is back
+	 * 150 ms after the release. Cancelled, so nothing is kept.
+	 */
+	private static void aHandleDragOverTheCardFadesIt(ClientGameTestContext context) {
+		java.util.concurrent.atomic.AtomicLong clock = new java.util.concurrent.atomic.AtomicLong(400_000);
+		context.setScreen(() -> new HudEditorScreen(null, null, UiTime.of(clock::get, () -> true)));
+		context.waitForScreen(HudEditorScreen.class);
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		HudRect resetAll = context.computeOnClient(client -> bounds(editor(client).resetAllButton()));
+		context.runOnClient(client -> editor(client).model().positions().put(A, new HudPosition(HudAnchor.TOP_LEFT, (int) resetAll.x() - 10,
+				(int) resetAll.y() - 4, 1)));
+		context.waitTicks(2);
+		double[] gap = {resetAll.x() - 2, resetAll.y() + 9};
+		check(!onAButton(context, gap), "A is selected between the buttons");
+		click(context, gap);
+		check(A.equals(context.computeOnClient(client -> editor(client).model().selected())), "A is selected");
+		double[] handle = context.computeOnClient(client -> {
+			double[] centres = editor(client).model().handleCentres(client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight());
+			return new double[] {centres[6], centres[7]};
+		});
+		check(!onAButton(context, handle), "its bottom-right handle is off the buttons: " + java.util.Arrays.toString(handle));
+		cursorExact(context, handle[0], handle[1]);
+		context.waitTicks(2);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		check(context.computeOnClient(client -> editor(client).model().scaling()), "the press took the handle");
+		cursorExact(context, handle[0] - 10, handle[1] - 5);
+		context.waitTicks(2);
+		clock.addAndGet(150);
+		float dimmed = cardAlpha(context);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		clock.addAndGet(150);
+		float back = cardAlpha(context);
+		check(Math.abs(dimmed - 0.3F) < 1e-4 && back == 1F, "a handle drag over the card fades it to 30 %, then back: " + dimmed + ", " + back);
+		click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closes it");
 	}
 
 	private static float hintAlpha(ClientGameTestContext context) {

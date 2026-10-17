@@ -278,7 +278,7 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		int accent = Theme.current().accent();
 		// REQ-HUD-08: the toolbar card first, so an element under it is drawn above its background and below its buttons; at
 		// 30 % while an element is dragged over it.
-		String dragged = model.dragging() && draggedSincePress ? model.selected() : null;
+		String dragged = (model.dragging() || model.scaling()) && draggedSincePress ? model.selected() : null;
 		cardAlpha = toolbar.cardAlpha(dragged != null && overCard(model.rect(dragged, width, height)));
 		float fade = UiFade.enter(cardAlpha);
 		try {
@@ -625,7 +625,8 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 				draggedSincePress = true;
 				toolbar.acted();
 			} else if (model.scaling()) {
-				// A handle drag is a scale: the hint starts to fade too.
+				// A handle drag is a scale: the hint starts to fade too, and it counts as a drag for the card.
+				draggedSincePress = true;
 				toolbar.acted();
 			}
 		}
