@@ -22,7 +22,8 @@ import java.util.function.Consumer;
  */
 final class UpdateStateStore {
 	static final String FILE_NAME = "k8bas_skyblock_utility-update-state.json";
-	/** No steps yet; the next change to the state file's shape adds step 1. */
+	/** No steps yet: new optional fields (T4.1) load as empty from an older file and need none. A renamed or removed field,
+	 *  or a changed meaning, adds step 1. */
 	static final Migrator MIGRATOR = new Migrator("stateVersion", List.of());
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 

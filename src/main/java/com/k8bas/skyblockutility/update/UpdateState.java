@@ -23,6 +23,23 @@ public final class UpdateState {
 	public int errorStreak;
 	/** When automatic requests were sent, for the rolling 24 h cap. */
 	public List<Long> automaticRequestsMs = new ArrayList<>();
+	/** When the last manual request was sent, for the 60 s cooldown (REQ-UPD-04). */
+	public long lastManualMs;
+	/** Why {@link #nextAllowedMs} holds requests back: {@link #WAIT_RATE_LIMIT}, {@link #WAIT_ERROR}, {@link #WAIT_NOT_FOUND} or null. */
+	public String waitKind;
+	/** The version the player chose to skip: no notice for it, marked "skipped" in a manual check (REQ-UPD-08). */
+	public String skippedVersion;
+	/** An update staged for install, or null (T4.3). */
+	public PendingInstall pendingInstall;
+	/** Files the player was already warned about (T4.3b), so each is named once. */
+	public List<String> warnedFiles = new ArrayList<>();
+
+	/** A 403 or 429: manual checks wait too (REQ-UPD-09). */
+	public static final String WAIT_RATE_LIMIT = "rate-limit";
+	/** A 5xx, no response, a malformed body or a bad redirect. */
+	public static final String WAIT_ERROR = "error";
+	/** A 404. */
+	public static final String WAIT_NOT_FOUND = "not-found";
 
 	/** Repairs what Gson leaves null in a hand-edited or partial file. */
 	void normalize() {
@@ -34,6 +51,10 @@ public final class UpdateState {
 			automaticRequestsMs = new ArrayList<>();
 		}
 		automaticRequestsMs.removeIf(time -> time == null);
+		if (warnedFiles == null) {
+			warnedFiles = new ArrayList<>();
+		}
+		warnedFiles.removeIf(name -> name == null);
 		secondaryStreak = Math.max(0, secondaryStreak);
 		errorStreak = Math.max(0, errorStreak);
 	}
