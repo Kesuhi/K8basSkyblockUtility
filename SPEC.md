@@ -1072,7 +1072,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
 *Motion*
 - **REQ-UI-55** Overlay close animations [decided R47 (b); amends REQ-UI-38].
-  - Closing the dropdown list, the colour picker or the database picker fades it out and scales it from 1.00 to 0.96 about its anchor over 90 ms (ease-out cubic of the reversed time); the modal backdrop fades with it.
+  - Closing the dropdown list, the colour picker or the database picker fades it out and scales it from 1.00 to 0.96 about its anchor over 90 ms: its opacity is the opacity it closed at times 1 − outCubic(t / 90 ms), so most of the fade comes first, as the settings panel closes; the modal backdrop fades with it.
   - What closed it (a chosen entry, Save, Cancel, Esc, a click outside) takes effect at once. From that moment the closing overlay takes no input: the click outside that closed a dropdown is not passed on (as today), and the next input reaches the screen under it. Opening another overlay drops the closing one at once.
   - A GUI scale change or the screen closing drops it at once. With Animations OFF it disappears at once.
 
