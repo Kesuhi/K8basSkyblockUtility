@@ -20,6 +20,26 @@ class SliderTrackTest {
 	private static final int TRACK_X = 20;
 	private static final int TRACK_W = 120;
 
+	/**
+	 * REQ-UI-47: the disc mask chosen for the knob is its own at rest and the grown knob's from the first frame it grows until
+	 * it has shrunk back, so the in-between sizes need no masks of their own (at GUI scale 9 they would be 19 of the 64).
+	 * ConfigMotionGameTest counts the masks a drawn knob adds.
+	 */
+	@Test
+	void sizesInBetweenBorrowTheGrownMask() {
+		for (int scale = 1; scale <= 10; scale++) {
+			java.util.Set<Integer> masks = new java.util.TreeSet<>();
+			for (int step = 0; step <= 1000; step++) {
+				masks.add(Slider.knobMaskPx(step / 1000F, scale));
+			}
+			assertEquals(java.util.Set.of(Slider.KNOB_SIZE * scale, Slider.KNOB_GROWN * scale), masks,
+					"scale " + scale + ": the masks of the resting and the grown knob only");
+			assertEquals(Slider.KNOB_SIZE * scale, Slider.knobMaskPx(0F, scale), "at rest, its own");
+			assertEquals(Slider.KNOB_GROWN * scale, Slider.knobMaskPx(1F, scale), "grown, its own");
+			assertEquals(Slider.KNOB_GROWN * scale, Slider.knobMaskPx(Float.MIN_VALUE, scale), "the grown knob's from the first frame");
+		}
+	}
+
 	@Test
 	void fillAndTrackEndAtTheKnob() {
 		int checked = 0;

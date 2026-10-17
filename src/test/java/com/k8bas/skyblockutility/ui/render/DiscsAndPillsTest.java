@@ -264,6 +264,31 @@ class DiscsAndPillsTest {
 		assertTrue(made.plan().elements().get(0).textured());
 	}
 
+	/**
+	 * REQ-UI-47: a disc or pill can borrow the disc mask of another diameter (a knob or thumb between its two sizes): the same
+	 * quads and texture coordinates, the borrowed mask's key; a shape that is no disc or pill ignores it.
+	 */
+	@Test
+	void aDiscOrPillCanBorrowAnotherDiametersMask() {
+		int[][] shapes = {{21, 21, 11, Corners.ALL}, {9, 40, 5, Corners.ALL}, {48, 24, 12, Corners.ALL}, {30, 8, 4, Corners.LEFT}};
+		for (int[] s : shapes) {
+			String what = s[0] + "x" + s[1] + " radius " + s[2] + " corners " + s[3];
+			ShapePlan.Drawn<String> own = ShapePlan.resolve(AT, 3, 5, s[0], s[1], s[2], 0, s[3], 2, true, null, key -> "mask " + key);
+			ShapePlan.Drawn<String> borrowed = ShapePlan.resolve(AT, 3, 5, s[0], s[1], s[2], 0, s[3], 2, true, 60, null, key -> "mask " + key);
+			assertEquals(MaskKey.disc(60), borrowed.plan().maskKey(), what);
+			assertEquals("mask " + MaskKey.disc(60), borrowed.mask(), what);
+			assertEquals(own.plan().elements().size(), borrowed.plan().elements().size(), what);
+			for (int i = 0; i < own.plan().elements().size(); i++) {
+				assertArrayEquals(own.plan().elements().get(i).quads(), borrowed.plan().elements().get(i).quads(), what);
+				assertArrayEquals(own.plan().elements().get(i).uvs(), borrowed.plan().elements().get(i).uvs(), what);
+			}
+		}
+		ShapePlan.Drawn<String> card = ShapePlan.resolve(AT, 3, 5, 40, 30, 6, 0, Corners.ALL, 2, true, 60, null, key -> "mask " + key);
+		assertEquals(MaskKey.corner(6, 0), card.plan().maskKey(), "a rounded rectangle keeps its corner mask");
+		ShapePlan.Drawn<String> zero = ShapePlan.resolve(AT, 3, 5, 21, 21, 11, 0, Corners.ALL, 2, true, 0, null, key -> "mask " + key);
+		assertEquals(MaskKey.disc(21), zero.plan().maskKey(), "0 borrows nothing");
+	}
+
 	/** AC-UI-31: the masks' texture setup samples linear and clamped to the edge (REQ-UI-31), the sampler cache's shared one. */
 	@Test
 	void masksSampleLinearAndClampedToTheEdge() {

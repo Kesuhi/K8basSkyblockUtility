@@ -83,11 +83,16 @@ public final class Shapes {
 	 * disc (REQ-UI-30).
 	 */
 	public static void disc(GuiGraphicsExtractor graphics, float cx, float cy, float diameter, int argb) {
+		disc(graphics, cx, cy, diameter, 0, argb);
+	}
+
+	/** As above, drawn from the disc mask {@code maskPx} screen px across when that is above 0 (REQ-UI-47, {@link ShapePlan}). */
+	public static void disc(GuiGraphicsExtractor graphics, float cx, float cy, float diameter, int maskPx, int argb) {
 		int scale = guiScale();
 		int d = Math.max(1, Math.round(diameter * scale));
 		float left = Math.round(cx * scale - d / 2F) / (float) scale;
 		float top = Math.round(cy * scale - d / 2F) / (float) scale;
-		draw(graphics, left, top, d, d, (d + 1) / 2, 0, Corners.ALL, argb);
+		draw(graphics, left, top, d, d, (d + 1) / 2, 0, Corners.ALL, maskPx, argb);
 	}
 
 	/**
@@ -192,13 +197,18 @@ public final class Shapes {
 	 * a scrollbar's thumb or track (REQ-UI-36), smooth whatever the setting, as one GUI element.
 	 */
 	public static void pillV(GuiGraphicsExtractor graphics, float x0, float y0, float x1, float y1, int argb) {
+		pillV(graphics, x0, y0, x1, y1, 0, argb);
+	}
+
+	/** As above, drawn from the disc mask {@code maskPx} screen px across when that is above 0 (REQ-UI-47, {@link ShapePlan}). */
+	public static void pillV(GuiGraphicsExtractor graphics, float x0, float y0, float x1, float y1, int maskPx, int argb) {
 		int scale = guiScale();
 		int left = Math.round(x0 * scale);
 		int top = Math.round(y0 * scale);
 		int w = Math.round(x1 * scale) - left;
 		int h = Math.round(y1 * scale) - top;
 		if (w > 0 && h > 0) {
-			draw(graphics, (float) left / scale, (float) top / scale, w, h, (Math.min(w, h) + 1) / 2, 0, Corners.ALL, argb);
+			draw(graphics, (float) left / scale, (float) top / scale, w, h, (Math.min(w, h) + 1) / 2, 0, Corners.ALL, maskPx, argb);
 		}
 	}
 
@@ -210,6 +220,12 @@ public final class Shapes {
 	 * are round.
 	 */
 	private static void draw(GuiGraphicsExtractor graphics, float x, float y, int w, int h, int radius, int thickness, int corners, int colour) {
+		draw(graphics, x, y, w, h, radius, thickness, corners, 0, colour);
+	}
+
+	/** As above; a disc or pill is drawn from the disc mask {@code discMask} screen px across when that is above 0. */
+	private static void draw(GuiGraphicsExtractor graphics, float x, float y, int w, int h, int radius, int thickness, int corners, int discMask,
+			int colour) {
 		int argb = UiFade.apply(colour);
 		int scale = guiScale();
 		Matrix3x2fStack outer = graphics.pose();
@@ -218,7 +234,7 @@ public final class Shapes {
 		}
 		ScreenRectangle scissor = graphics.scissorStack.peek();
 		boolean smooth = ShapePlan.alwaysSmooth(w, h, radius, thickness, corners) || smooth();
-		ShapePlan.Drawn<Identifier> drawn = ShapePlan.resolve(outer, x, y, w, h, radius, thickness, corners, scale, smooth, clip(scissor),
+		ShapePlan.Drawn<Identifier> drawn = ShapePlan.resolve(outer, x, y, w, h, radius, thickness, corners, scale, smooth, discMask, clip(scissor),
 				key -> CornerTextures.mask(scale, key));
 		ShapePlan.Result plan = drawn.plan();
 		if (plan.elements().isEmpty()) {

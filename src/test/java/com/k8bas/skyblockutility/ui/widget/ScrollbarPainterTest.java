@@ -80,6 +80,27 @@ class ScrollbarPainterTest {
 		assertEquals(3F, painter.width(false), "150 ms after leaving");
 	}
 
+	/**
+	 * REQ-UI-47: the disc mask chosen for the thumb and its track is the idle width's while idle and the widened width's from
+	 * the first frame it widens, so the in-between widths need no masks of their own. ConfigMotionGameTest counts the masks a
+	 * drawn scrollbar adds.
+	 */
+	@Test
+	void widthsInBetweenBorrowTheWidenedMask() {
+		for (int scale = 1; scale <= 10; scale++) {
+			java.util.Set<Integer> masks = new java.util.TreeSet<>();
+			for (int step = 0; step <= 1000; step++) {
+				masks.add(ScrollbarPainter.maskPx(ScrollbarPainter.IDLE_WIDTH + (ScrollbarPainter.WIDE_WIDTH - ScrollbarPainter.IDLE_WIDTH) * step / 1000F,
+						scale));
+			}
+			assertEquals(java.util.Set.of(ScrollbarPainter.IDLE_WIDTH * scale, ScrollbarPainter.WIDE_WIDTH * scale), masks,
+					"scale " + scale + ": the masks of the idle and the widened thumb only");
+			assertEquals(ScrollbarPainter.IDLE_WIDTH * scale, ScrollbarPainter.maskPx(ScrollbarPainter.IDLE_WIDTH, scale), "idle, its own");
+			assertEquals(ScrollbarPainter.WIDE_WIDTH * scale, ScrollbarPainter.maskPx(Math.nextUp((float) ScrollbarPainter.IDLE_WIDTH), scale),
+					"the widened thumb's from the first frame");
+		}
+	}
+
 	@Test
 	void withAnimationsOffItWidensAtOnce() {
 		motion[0] = false;

@@ -8,12 +8,15 @@ import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.ClipRect;
+import com.k8bas.skyblockutility.ui.render.CornerTextures;
 import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.ui.render.ScaleAbout;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiClock;
 import com.k8bas.skyblockutility.ui.render.UiTime;
+import com.k8bas.skyblockutility.ui.widget.ScrollArea;
+import com.k8bas.skyblockutility.ui.widget.Slider;
 import com.k8bas.skyblockutility.ui.widget.ToggleSwitch;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -58,6 +61,8 @@ import java.util.concurrent.atomic.AtomicLong;
  *       60 and 120 ms after opening: a point inside each, and the modal backdrop, are unchanged at 0 ms, between at 60 ms and
  *       at their end from 120 ms on; closing is at once; a click on a dropdown entry 10 ms after opening picks that entry.
  *       With Animations OFF a dropdown list is fully drawn in its first frame (AC-UI-40).</li>
+ *   <li>REQ-UI-47 (Checkpoint G3u): at GUI scale 4, frame by frame, a slider's knob growing on hover and the content area's
+ *       scrollbar widening each add at most one mask to the cache, their grown size's, not one per size they pass.</li>
  * </ul>
  */
 public class ConfigMotionGameTest implements FabricClientGameTest {
@@ -91,6 +96,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			listHoversEase(context, clock);
 			theWheelGlides(context, clock, time);
 			overlaysFadeIn(context, clock);
+			growingShapesBorrowMasks(context, clock);
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 			context.waitTicks(2);
 			check(!(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen), "Esc closes the screen");
@@ -818,6 +824,65 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 	/** The image's pixel at the middle of a GUI pixel, as {@link #pixel} reads it. */
 	private static int at(BufferedImage image, int[] gui, int guiX, int guiY) {
 		return image.getRGB((int) Math.floor((guiX + 0.5) * image.getWidth() / gui[0]), (int) Math.floor((guiY + 0.5) * image.getHeight() / gui[1])) & 0xFFFFFF;
+	}
+
+	/**
+	 * REQ-UI-47 (Checkpoint G3u) at GUI scale 4 on the test clock, motion on: a slider's knob grows 40 to 48 px and the content
+	 * area's scrollbar widens 12 to 20 px over 150 ms; drawn every 4 ms, each adds at most one disc mask (its grown size's),
+	 * where drawing every size it passes from its own mask would add up to 8.
+	 */
+	private static void growingShapesBorrowMasks(ClientGameTestContext context, AtomicLong clock) {
+		context.getInput().setCursorPos(2, 2);
+		context.runOnClient(client -> {
+			client.options.guiScale().set(4);
+			screen(client).select(Category.FISHING);
+		});
+		clock.addAndGet(1_000);
+		context.waitTicks(3);
+		check(context.computeOnClient(client -> Shapes.guiScale()) == 4, "GUI scale 4");
+		context.runOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.OptionRow row = screen.page().page().rows().stream()
+					.filter(r -> r instanceof ConfigLayout.OptionRow o && screen.page().control(o.option()) instanceof Slider slider && slider.isEnabled())
+					.map(r -> (ConfigLayout.OptionRow) r).findFirst().orElseThrow();
+			screen.scrollArea().ensureVisible(row.y(), row.y() + row.height());
+			screen.scrollArea().setScroll(screen.scrollArea().target());
+		});
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		int[] knob = context.computeOnClient(client -> {
+			Slider slider = (Slider) screen(client).page().widgets().stream()
+					.filter(widget -> widget instanceof Slider shown && shown.fullyShowing() && shown.isEnabled()).findFirst().orElseThrow();
+			return new int[] {slider.x() + slider.width() / 2, slider.y() + slider.height() / 2};
+		});
+		grows(context, clock, knob, "a slider's knob growing on hover");
+		int[] bar = context.computeOnClient(client -> {
+			ScrollArea area = screen(client).scrollArea();
+			check(area.maxScroll() > 0, "the Fishing page scrolls at GUI scale 4");
+			return new int[] {area.x() + area.width() - 2, area.y() + area.height() / 2};
+		});
+		grows(context, clock, bar, "the content area's scrollbar widening");
+		context.getInput().setCursorPos(2, 2);
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		clock.addAndGet(1_000);
+		context.waitTicks(3);
+	}
+
+	/** Moves the pointer onto GUI point {@code at} and draws 150 ms of frames 4 ms apart; checks the masks they added. */
+	private static void grows(ClientGameTestContext context, AtomicLong clock, int[] at, String what) {
+		context.getInput().setCursorPos(2, 2);
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		int before = context.computeOnClient(client -> CornerTextures.cachedForTests()[1]);
+		int[] window = context.computeOnClient(client -> window(at[0], at[1]));
+		context.getInput().setCursorPos(window[0], window[1]);
+		for (int t = 0; t <= 160; t += 4) {
+			context.waitTick();
+			clock.addAndGet(4);
+		}
+		context.waitTick();
+		int after = context.computeOnClient(client -> CornerTextures.cachedForTests()[1]);
+		check(after - before <= 1, what + " adds " + (after - before) + " masks (" + before + " to " + after + "), at most its grown size's 1");
 	}
 
 	/** A control's centre in GUI px, scrolled into view at once first. */

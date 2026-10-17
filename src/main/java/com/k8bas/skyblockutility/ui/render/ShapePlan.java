@@ -83,6 +83,11 @@ public final class ShapePlan {
 	 */
 	public static Result ofPixels(Matrix3x2fc outer, float x, float y, int sw, int sh, int sr, int st, int corners, int scale, boolean smooth,
 			int[] scissor) {
+		return ofPixels(outer, x, y, sw, sh, sr, st, corners, scale, smooth, 0, scissor);
+	}
+
+	private static Result ofPixels(Matrix3x2fc outer, float x, float y, int sw, int sh, int sr, int st, int corners, int scale, boolean smooth,
+			int discMask, int[] scissor) {
 		if (sw <= 0 || sh <= 0) {
 			return Result.EMPTY;
 		}
@@ -91,7 +96,7 @@ public final class ShapePlan {
 			return Result.EMPTY;
 		}
 		if (smooth) {
-			Result masked = st == 0 ? round(box, sw, sh, sr, corners) : null;
+			Result masked = st == 0 ? round(box, sw, sh, sr, corners, discMask) : null;
 			if (masked == null) {
 				masked = masked(box, sw, sh, sr, st, corners);
 			}
@@ -133,7 +138,17 @@ public final class ShapePlan {
 	 */
 	public static <V> Drawn<V> resolve(Matrix3x2fc outer, float x, float y, int sw, int sh, int sr, int st, int corners, int scale,
 			boolean smooth, int[] scissor, IntFunction<V> masks) {
-		Result plan = ofPixels(outer, x, y, sw, sh, sr, st, corners, scale, smooth, scissor);
+		return resolve(outer, x, y, sw, sh, sr, st, corners, scale, smooth, 0, scissor, masks);
+	}
+
+	/**
+	 * As above; a disc or pill is drawn from the disc mask {@code discMask} screen px across instead of its own when that is
+	 * above 0 (REQ-UI-47): a knob or thumb between its two sizes borrows one of theirs, sampled linear to its size, so its
+	 * frames in between add no masks to the cache.
+	 */
+	public static <V> Drawn<V> resolve(Matrix3x2fc outer, float x, float y, int sw, int sh, int sr, int st, int corners, int scale,
+			boolean smooth, int discMask, int[] scissor, IntFunction<V> masks) {
+		Result plan = ofPixels(outer, x, y, sw, sh, sr, st, corners, scale, smooth, discMask, scissor);
 		if (plan.maskKey() < 0) {
 			return new Drawn<>(plan, null);
 		}
@@ -145,9 +160,10 @@ public final class ShapePlan {
 	 * A disc, pill or one-cap pill (REQ-UI-30) from the disc mask of its diameter, the shorter side (a one-cap pill's height),
 	 * or null for any other shape. A disc is one quad showing the whole mask. A pill is its two caps, each the outer half of
 	 * the mask (an odd diameter's middle column goes to the straight part), then the straight middle. A one-cap pill is its
-	 * cap, or the part of the cap before its square end, then the rest.
+	 * cap, or the part of the cap before its square end, then the rest. A {@code discMask} above 0 is the diameter of the
+	 * disc mask to use instead (the texture coordinates stay fractions of the shape's own).
 	 */
-	private static Result round(int[] box, int w, int h, int r, int corners) {
+	private static Result round(int[] box, int w, int h, int r, int corners, int discMask) {
 		boolean oneCap = Corners.oneCap(corners);
 		int d = oneCap ? h : Math.min(w, h);
 		if ((!oneCap && corners != Corners.ALL) || 2 * r < d || d < 2 || d > 2 * CornerMask.MAX_RADIUS) {
@@ -155,7 +171,7 @@ public final class ShapePlan {
 		}
 		int cap = d / 2;
 		float size = d;
-		int key = MaskKey.disc(d);
+		int key = MaskKey.disc(discMask > 0 && discMask <= 2 * CornerMask.MAX_RADIUS ? discMask : d);
 		if (oneCap) {
 			int shown = Math.min(cap, w);
 			int[] rest = w > shown ? new int[] {corners == Corners.LEFT ? shown : 0, 0, corners == Corners.LEFT ? w : w - shown, d} : new int[0];

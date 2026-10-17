@@ -98,6 +98,14 @@ public final class Slider extends Widget {
 		return KNOB_SIZE + (KNOB_GROWN - KNOB_SIZE) * hover;
 	}
 
+	/**
+	 * The diameter in screen px of the disc mask the knob is drawn from at this hover and GUI scale (REQ-UI-47): the resting
+	 * knob's at hover 0, else the grown knob's, also while it grows or shrinks, so the sizes in between add no masks to the cache.
+	 */
+	static int knobMaskPx(float hover, int scale) {
+		return Math.round((hover <= 0F ? KNOB_SIZE : KNOB_GROWN) * scale);
+	}
+
 	/** The knob as drawn last, in screen pixels: left, top and size (for gametests). */
 	public int[] drawnKnob() {
 		return drawnKnob.clone();
@@ -244,7 +252,7 @@ public final class Slider extends Widget {
 		Shapes.bar(graphics, x, gap[0], trackY, TRACK_HEIGHT, Corners.LEFT, faded(fill));
 		Shapes.bar(graphics, gap[1], x + width, trackY, TRACK_HEIGHT, Corners.RIGHT, faded(Theme.SEPARATOR));
 		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, hover) : Theme.TEXT_DISABLED;
-		Shapes.disc(graphics, centreX, centreY, size / (float) scale, faded(knobColor));
+		Shapes.disc(graphics, centreX, centreY, size / (float) scale, knobMaskPx(hover, scale), faded(knobColor));
 		UiText.draw(graphics, font, label.apply(value), labelX(), y + (height - font.lineHeight) / 2 + 1, faded(labelColor(theme)));
 	}
 

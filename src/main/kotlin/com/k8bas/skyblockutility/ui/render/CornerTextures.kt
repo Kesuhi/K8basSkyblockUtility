@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory
 /**
  * The anti-aliased masks as textures (REQ-UI-18, T2.9d, R32; REQ-UI-30, T3.18): white, with the [CornerMask] coverage as
  * alpha, a corner mask per radius and thickness, a disc mask per diameter and a shadow mask per corner radius and blur
- * ([ShadowMask], T3.31), all in screen pixels, so one texel is one
- * screen pixel and the colour comes from the tint. Uploaded through the game's texture API (no direct GL, REQ-PORT-12), as
+ * ([ShadowMask], T3.31), all in screen pixels, so one texel is one screen pixel (a knob or scrollbar between its two sizes
+ * borrows one of theirs, sampled linear) and the colour comes from the tint. Uploaded through the game's texture API (no direct GL, REQ-PORT-12), as
  * the colour wheel is.
  */
 internal object CornerTextures {
@@ -50,16 +50,23 @@ internal object CornerTextures {
 		}
 		val id = Identifier.fromNamespaceAndPath("k8bas_skyblock_utility", "dynamic/$name")
 		val image = NativeImage(size, size, false)
-		try {
+		val texture = try {
 			for (y in 0 until size) {
 				for (x in 0 until size) {
 					image.setPixelABGR(x, y, alpha[y * size + x] shl 24 or 0xFFFFFF)
 				}
 			}
-			// Once registered, the texture owns the image and closes it when released.
-			Minecraft.getInstance().textureManager.register(id, DynamicTexture({ "k8bas mask $name" }, image))
+			DynamicTexture({ "k8bas mask $name" }, image)
 		} catch (e: RuntimeException) {
 			image.close()
+			throw e
+		}
+		try {
+			// Once registered, the texture owns the image and closes it when released.
+			Minecraft.getInstance().textureManager.register(id, texture)
+		} catch (e: RuntimeException) {
+			// Once made, close() frees the image and the GPU texture alike.
+			texture.close()
 			throw e
 		}
 		return id
