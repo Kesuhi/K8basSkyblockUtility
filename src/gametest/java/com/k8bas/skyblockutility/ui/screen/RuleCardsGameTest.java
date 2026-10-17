@@ -76,6 +76,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 			searchOpensTheRule(context);
 			searchMarksItsMatches(context);
 			anyNameWithoutATypeWarns(context);
+			anEmptyListShowsItsPlaceholder(context);
 		} finally {
 			context.runOnClient(client -> {
 				MobRulesForTests.use(mobsBefore);
@@ -404,6 +405,46 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		int left = context.computeOnClient(client -> screen(client).page().card(option(screen(client), "mob_highlighter.scan_range")).marksForTests().size());
 		check(cleared.isEmpty() && left == 0, "a cleared query leaves no box: \"" + cleared + "\", " + left + " boxes");
 		LOGGER.info("search marks: {}", log);
+	}
+
+	/**
+	 * AC-UI-58 [C] (REQ-UI-54, T3.47) at GUI scale 2: with no mob rules, the Mob Highlighter's rule list shows its placeholder
+	 * row, outlined, with its hint; while a search runs it is not shown. The rules come back in the test's finally.
+	 */
+	private static void anEmptyListShowsItsPlaceholder(ClientGameTestContext context) {
+		context.setScreen(() -> null);
+		context.runOnClient(client -> MobRulesForTests.use(List.of()));
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.getInput().setCursorPos(2, 2);
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(3);
+		List<ConfigLayout.RuleEmpty> rows = context.computeOnClient(client -> screen(client).page().page().rows().stream()
+				.filter(ConfigLayout.RuleEmpty.class::isInstance).map(ConfigLayout.RuleEmpty.class::cast).toList());
+		check(rows.size() == 1, "the empty Mob Highlighter list shows one placeholder row: " + rows.size());
+		Path shot = context.takeScreenshot("t3.47-empty-rule-list");
+		int[] rect = context.computeOnClient(client -> {
+			ConfigLayout.Rect r = ConfigLayout.row(screen(client).frame(), screen(client).scrollArea().scroll(), rows.get(0));
+			return new int[] {r.x(), r.y(), r.w(), r.h()};
+		});
+		// Its hint in the secondary text colour, left in the row.
+		int brightest = brightest(readImage(shot), (rect[0] + 8) * 2, (rect[0] + 120) * 2, rect[1] * 2, (rect[1] + rect[3]) * 2);
+		check(distance(brightest, Theme.TEXT_SECONDARY & 0xFFFFFF) <= 6, "the hint is drawn in the secondary text colour: " + Integer.toHexString(brightest));
+		focusSearch(context);
+		replaceQuery(context, "range");
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(2);
+		boolean none = context.computeOnClient(client -> screen(client).page().page().rows().stream().noneMatch(ConfigLayout.RuleEmpty.class::isInstance));
+		check(none, "no placeholder while searching");
+		LOGGER.info("empty rule list: one placeholder row at {}, its hint {}", java.util.Arrays.toString(rect), Integer.toHexString(brightest));
+	}
+
+	private static java.awt.image.BufferedImage readImage(Path shot) {
+		try {
+			return javax.imageio.ImageIO.read(shot.toFile());
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
 	}
 
 	/** Clicks into the search box, so the keys reach it. */

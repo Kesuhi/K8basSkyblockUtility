@@ -51,7 +51,9 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	public static final String TITLE = "Edit HUD layout";
 	static final String HINT = "Drag to move · Scroll to scale · Arrows nudge (Shift: 10 px) · Esc saves";
 	static final String NOTHING_SELECTED = "Click a HUD to select it";
-	static final String NO_ELEMENTS = "No HUD elements yet: features that show one on screen add it here";
+	/** The empty editor's card (REQ-UI-54): its title and its line. */
+	static final String NO_ELEMENTS = "No HUD elements yet";
+	static final String NO_ELEMENTS_LINE = "Features that show something on screen add it here.";
 	/** Boxes in the top this many pixels have their name below them. */
 	static final int LABEL_FLIP = 48;
 	private static final int GREY = 0xB0202226;
@@ -73,6 +75,8 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	/** Elements whose entry this editor has written (a reset); Cancel puts theirs back. */
 	private final Set<String> written = new HashSet<>();
 	private boolean finished;
+	/** The empty editor's card as drawn last, {x, y, w, h} in GUI px; null while there are elements. */
+	private int[] emptyCard;
 
 	public HudEditorScreen(Screen parent) {
 		this(parent, null);
@@ -215,6 +219,9 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 				Shapes.hairlineH(graphics, 0, guide.at(), width, accent);
 			}
 		}
+		if (elements.isEmpty()) {
+			drawEmptyCard(graphics);
+		}
 		// Above the buttons, clear of the top edge where HUDs usually sit, on a panel over the game's own HUD.
 		String status = status();
 		int panelW = Math.max(font.width(status), font.width(HINT)) + 16;
@@ -225,10 +232,32 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		UiText.centred(graphics, font, HINT, width / 2, panelY + 16, Theme.TEXT_SECONDARY);
 	}
 
-	/** The selected element's name, place and scale, or how to select one. */
+	/**
+	 * REQ-UI-54: with no element registered, a card at the screen's centre says so; the status line stays empty then. In
+	 * play the shipped "Corpse ding" is always registered, so tests show it with an empty registry.
+	 */
+	private void drawEmptyCard(GuiGraphicsExtractor graphics) {
+		int cardW = Math.max(font.width(NO_ELEMENTS), font.width(NO_ELEMENTS_LINE)) + 24;
+		int cardH = 2 * 12 + 14;
+		int cardX = (width - cardW) / 2;
+		int cardY = (height - cardH) / 2;
+		Shapes.shadow(graphics, cardX, cardY, cardW, cardH, Shapes.RADIUS_CARD);
+		Shapes.roundedRect(graphics, cardX, cardY, cardW, cardH, Shapes.RADIUS_CARD, PANEL);
+		graphics.nextStratum();
+		UiText.centred(graphics, font, NO_ELEMENTS, width / 2, cardY + 8, Theme.TEXT_PRIMARY);
+		UiText.centred(graphics, font, NO_ELEMENTS_LINE, width / 2, cardY + 20, Theme.TEXT_SECONDARY);
+		emptyCard = new int[] {cardX, cardY, cardW, cardH};
+	}
+
+	/** The empty editor's card as drawn last, {x, y, w, h} in GUI px, or null (for gametests). */
+	int[] emptyCardForTests() {
+		return emptyCard;
+	}
+
+	/** The selected element's name, place and scale, or how to select one; nothing with no element (REQ-UI-54). */
 	String status() {
 		if (elements.isEmpty()) {
-			return NO_ELEMENTS;
+			return "";
 		}
 		String selected = model.selected();
 		if (selected == null) {

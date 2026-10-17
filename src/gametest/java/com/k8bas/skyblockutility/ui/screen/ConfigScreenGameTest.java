@@ -544,7 +544,33 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		SearchView none = context.computeOnClient(client -> screen(client).view());
 		check(none.nothingFound() && none.categories().isEmpty(), "\"zzzz\" finds nothing and empties the sidebar");
 		check(context.computeOnClient(client -> optionIds(screen(client))).isEmpty(), "and no card shows");
-		context.takeScreenshot("t2.4b-search-nothing-found");
+		Path nothing = context.takeScreenshot("t2.4b-search-nothing-found");
+		// AC-UI-58 (T3.47): the search glass over the line, and a "Clear search" button under it.
+		int[] glass = context.computeOnClient(client -> {
+			ConfigLayout.Rect area = screen(client).frame().content();
+			return new int[] {area.x() + (area.w() - ConfigScreen.NO_HIT_ICON) / 2, area.y() + ConfigScreen.NO_HIT_ICON_Y,
+					client.getWindow().getGuiScale()};
+		});
+		int[] ink = inkedBounds(nothing, glass[0] - 4, glass[1] - 4, ConfigScreen.NO_HIT_ICON + 8, glass[2]);
+		check(ink[2] >= (ConfigScreen.NO_HIT_ICON - 4) * glass[2] && ink[3] >= (ConfigScreen.NO_HIT_ICON - 4) * glass[2],
+				"the search glass shows, about 24 GUI px across: " + ink[2] + "x" + ink[3] + " physical px drawn");
+		int[] clearBox = context.computeOnClient(client -> {
+			Widget button = screen(client).clearSearchButton();
+			return new int[] {button.x(), button.y(), button.width(), button.height()};
+		});
+		int lineY = context.computeOnClient(client -> screen(client).frame().content().y() + ConfigScreen.NO_HIT_TEXT_Y);
+		check(lineY >= glass[1] + ConfigScreen.NO_HIT_ICON && clearBox[1] >= lineY + 9, "the line between the glass and the button: glass ends "
+				+ (glass[1] + ConfigScreen.NO_HIT_ICON) + ", line " + lineY + ", button " + clearBox[1]);
+		check(clearBox[2] > 0 && clearBox[3] > 0, "a Clear search button under the line: " + java.util.Arrays.toString(clearBox));
+		// Tab reaches it after the search box.
+		context.getInput().pressKey(GLFW.GLFW_KEY_TAB);
+		context.waitTick();
+		check(context.computeOnClient(client -> screen(client).navFocus() == screen(client).clearSearchButton()),
+				"Tab from the box reaches the Clear search button");
+		context.getInput().holdShift();
+		context.getInput().pressKey(GLFW.GLFW_KEY_TAB);
+		context.getInput().releaseShift();
+		context.waitTick();
 
 		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 		context.waitTick();
@@ -556,6 +582,19 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 		check(context.computeOnClient(client -> screen(client).query()).isEmpty(), "× empties the box");
 		check(context.computeOnClient(client -> screen(client).view().categories().equals(screen(client).categories())), "and every category is back");
 		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "and the box has the keyboard again");
+		check(context.computeOnClient(client -> screen(client).clearSearchButton().width()) == 0, "the Clear search button goes with the hits back");
+
+		// AC-UI-58: "Clear search" does what × does.
+		context.getInput().typeChars("zzzz");
+		context.waitTicks(2);
+		int[] clearSearch = context.computeOnClient(client -> {
+			Widget button = screen(client).clearSearchButton();
+			return new int[] {button.x() + button.width() / 2, button.y() + button.height() / 2};
+		});
+		click(context, clearSearch);
+		check(context.computeOnClient(client -> screen(client).query()).isEmpty(), "Clear search empties the box");
+		check(context.computeOnClient(client -> screen(client).view().categories().equals(screen(client).categories())), "and every category is back");
+		check(context.computeOnClient(client -> screen(client).keyboardFocus() == screen(client).search()), "and the box keeps the keyboard");
 
 		// A query matching several categories survives a click on another tab.
 		context.getInput().typeChars("npc");
@@ -1401,6 +1440,35 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 
 	private static boolean mobHighlighterOn() {
 		return ModuleManager.modules().stream().filter(module -> module.id().equals("mob_highlighter")).findFirst().orElseThrow().isEnabled();
+	}
+
+	/**
+	 * The bounding box {x, y, w, h} in physical px of what is drawn in a size × size GUI px box at (x, y): the pixels that
+	 * differ from the box's top-left pixel. {0, 0, 0, 0} for nothing.
+	 */
+	private static int[] inkedBounds(Path shot, int x, int y, int size, int scale) {
+		try {
+			java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(shot.toFile());
+			int background = image.getRGB(x * scale, y * scale) & 0xFFFFFF;
+			int left = Integer.MAX_VALUE;
+			int top = Integer.MAX_VALUE;
+			int right = -1;
+			int bottom = -1;
+			for (int py = y * scale; py < (y + size) * scale; py++) {
+				for (int px = x * scale; px < (x + size) * scale; px++) {
+					int rgb = image.getRGB(px, py) & 0xFFFFFF;
+					if (Math.abs((rgb >> 8 & 0xFF) - (background >> 8 & 0xFF)) > 24) {
+						left = Math.min(left, px);
+						top = Math.min(top, py);
+						right = Math.max(right, px);
+						bottom = Math.max(bottom, py);
+					}
+				}
+			}
+			return right < 0 ? new int[4] : new int[] {left, top, right - left + 1, bottom - top + 1};
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
 	}
 
 	private static void replaceQuery(ClientGameTestContext context, String query) {

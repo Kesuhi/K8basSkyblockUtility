@@ -182,9 +182,24 @@ object ConfigLayout {
 		override fun toString(): String = "RuleProblem[rule=$rule, lines=$lines, y=$y, height=$height, clipBottom=$clipBottom]"
 	}
 
+	/**
+	 * Where a feature's rules would start when it has none (REQ-UI-54): a row a rule header high with a hint how to add one.
+	 * Not a control.
+	 */
+	data class RuleEmpty(@get:JvmName("card") val card: Card, private val y: Int) : Row {
+		override fun y(): Int = y
+
+		override fun height(): Int = RULE_HEADER
+
+		override fun toString(): String = "RuleEmpty[card=$card, y=$y]"
+	}
+
 	/** What a page shows: which options and rules (a search, REQ-UI-08/09) and which rules are open. */
 	fun interface Filter {
 		fun shows(option: Option): Boolean
+
+		/** Whether a search filters the page; an empty rule list's placeholder shows only when none does (REQ-UI-54). */
+		fun searching(): Boolean = false
 
 		fun shows(rule: RuleGroup): Boolean = true
 
@@ -273,6 +288,10 @@ object ConfigLayout {
 				}
 				rows.add(OptionRow(card, option, option === card.toggle, y))
 				y += CARD + CARD_GAP
+			}
+			if (card.hasRuleList() && card.rules().isEmpty() && !filter.searching()) {
+				rows.add(RuleEmpty(card, y))
+				y += RULE_HEADER + RULE_GAP
 			}
 			for (rule in rules) {
 				val expanded = filter.expanded(rule)

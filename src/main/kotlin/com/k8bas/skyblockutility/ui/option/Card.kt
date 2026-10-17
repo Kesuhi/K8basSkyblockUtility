@@ -11,7 +11,7 @@ import java.util.function.Supplier
  * accessors `id()`, `category()`, `title()`, `toggle()`, `options()`, `ruleSource()`.
  *
  * @param toggle      the feature's own toggle, or null for a section
- * @param ruleSource  the feature's rules now, in list order; none for most cards
+ * @param ruleSource  the feature's rules now, in list order; null for a card without a rule list (most cards)
  */
 class Card @JvmOverloads constructor(
 	@get:JvmName("id") val id: String,
@@ -19,7 +19,7 @@ class Card @JvmOverloads constructor(
 	@get:JvmName("title") val title: String,
 	@get:JvmName("toggle") val toggle: Toggle?,
 	options: List<Option>,
-	@get:JvmName("ruleSource") val ruleSource: Supplier<List<RuleGroup>> = Supplier { java.util.List.of() },
+	@get:JvmName("ruleSource") val ruleSource: Supplier<List<RuleGroup>>? = null,
 ) {
 	@get:JvmName("options")
 	val options: List<Option> = java.util.List.copyOf(options)
@@ -30,8 +30,11 @@ class Card @JvmOverloads constructor(
 		addAll(options)
 	}
 
-	/** The rules now. */
-	fun rules(): List<RuleGroup> = ruleSource.get()
+	/** The rules now; none for a card without a rule list. */
+	fun rules(): List<RuleGroup> = ruleSource?.get() ?: java.util.List.of()
+
+	/** Whether the feature keeps a rule list, which may be empty (its placeholder, REQ-UI-54). */
+	fun hasRuleList(): Boolean = ruleSource != null
 
 	override fun equals(other: Any?): Boolean = other is Card && id == other.id && category == other.category && title == other.title &&
 		toggle == other.toggle && options == other.options && ruleSource == other.ruleSource

@@ -326,6 +326,76 @@ class RuleCardsTest {
 		assertEquals(clipY - 30, page.header(second).y(), "and the next header with it");
 	}
 
+	/**
+	 * AC-UI-58 (REQ-UI-54, T3.47): a feature whose rule list is empty gets one placeholder row where its rules would start,
+	 * after its options, a rule header high; none while searching, none once a rule exists, and none on a card that has no
+	 * rule list. It is not a control: no widget lies there, so a click on it reaches nothing.
+	 */
+	@Test
+	void anEmptyRuleListShowsAPlaceholderRow() {
+		java.util.function.ToIntFunction<String> measure = text -> text.length() * 6;
+		ConfigLayout.Page page = ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure);
+		List<ConfigLayout.RuleEmpty> empty = page.rows().stream().filter(ConfigLayout.RuleEmpty.class::isInstance).map(ConfigLayout.RuleEmpty.class::cast)
+				.toList();
+		assertEquals(1, empty.size(), "the Mob Highlighter's empty list: " + page.rows());
+		ConfigLayout.RuleEmpty row = empty.get(0);
+		assertEquals(ConfigLayout.RULE_HEADER, row.height());
+		ConfigLayout.Row before = page.rows().get(page.rows().indexOf(row) - 1);
+		assertTrue(before instanceof ConfigLayout.OptionRow option && option.card() == row.card(), "right after the card's options: " + before);
+		// On Waypoints, NPC Search (a rule list) gets one, Island beam colours (none) does not.
+		List<ConfigLayout.RuleEmpty> waypoints = ConfigLayout.page(cards(), Category.WAYPOINTS, 600, measure).rows().stream()
+				.filter(ConfigLayout.RuleEmpty.class::isInstance).map(ConfigLayout.RuleEmpty.class::cast).toList();
+		assertEquals(1, waypoints.size(), "one placeholder on Waypoints");
+		assertTrue(waypoints.get(0).card().hasRuleList() && waypoints.get(0).card().id().equals(npcCardOf(cards()).id()), "NPC Search's");
+		String npcId = npcCardOf(cards()).id();
+		assertTrue(cards().stream().filter(card -> card.category() == Category.WAYPOINTS && !card.id().equals(npcId)).noneMatch(Card::hasRuleList),
+				"the other Waypoints cards keep no rule list");
+
+		ConfigLayout.Filter searching = new ConfigLayout.Filter() {
+			@Override
+			public boolean shows(Option option) {
+				return true;
+			}
+
+			@Override
+			public boolean searching() {
+				return true;
+			}
+		};
+		assertTrue(ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure, searching).rows().stream().noneMatch(ConfigLayout.RuleEmpty.class::isInstance),
+				"none while searching");
+		mobs.rules.add(mob("mob-1", "Zealot", "Zealot"));
+		assertTrue(ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure).rows().stream().noneMatch(ConfigLayout.RuleEmpty.class::isInstance),
+				"none once a rule exists");
+		mobs.rules.clear();
+
+		ConfigPage placed = new ConfigPage(Category.HIGHLIGHTS, cards(), option -> new Widget() {
+			@Override
+			public boolean press(double mouseX, double mouseY, int button) {
+				return contains(mouseX, mouseY);
+			}
+
+			@Override
+			public void draw(net.minecraft.client.gui.GuiGraphicsExtractor graphics, net.minecraft.client.gui.Font font, int mouseX, int mouseY) {
+			}
+		});
+		ConfigLayout.Frame frame = ConfigLayout.frame(1280, 720);
+		ConfigLayout.Page laidOut = placed.layout(frame, 0, measure, ConfigLayout.Filter.of(option -> true));
+		ConfigLayout.RuleEmpty shown = laidOut.rows().stream().filter(ConfigLayout.RuleEmpty.class::isInstance).map(ConfigLayout.RuleEmpty.class::cast)
+				.findFirst().orElseThrow();
+		ConfigLayout.Rect rect = ConfigLayout.row(frame, 0, shown);
+		assertEquals(null, routed(placed, rect.x() + rect.w() / 2.0, rect.y() + rect.h() / 2.0), "a click on the placeholder reaches nothing");
+		List<Widget> focus = new ArrayList<>();
+		placed.focusOrder(focus);
+		assertTrue(focus.stream().noneMatch(widget -> widget.y() <= rect.y() + 2 && widget.y() + widget.height() >= rect.bottom() - 2),
+				"no keyboard stop lies on the placeholder: " + focus.size() + " stops");
+	}
+
+	/** NPC Search's card among {@code cards}: the one with a rule list on Waypoints. */
+	private static Card npcCardOf(List<Card> cards) {
+		return cards.stream().filter(card -> card.category() == Category.WAYPOINTS && card.hasRuleList()).findFirst().orElseThrow();
+	}
+
 	private static ConfigLayout.RuleHeader headerRow(ConfigLayout.Page page, RuleGroup rule) {
 		return page.rows().stream().filter(row -> row instanceof ConfigLayout.RuleHeader header && header.rule() == rule)
 				.map(row -> (ConfigLayout.RuleHeader) row).findFirst().orElseThrow();

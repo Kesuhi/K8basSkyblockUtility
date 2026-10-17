@@ -12,6 +12,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   name, sits on a soft box in the accent colour, so you see at once why a setting is listed.
 - Cards that switch a feature on or off, rule headers and switches darken a little while you hold the mouse
   button on them, and fade back when you let go.
+- A search that finds nothing shows a search glass above its message and a "Clear search" button below
+  it, and a rule list without rules (Mob Highlighter, NPC Search) says where to add one.
 
 ### Changed
 

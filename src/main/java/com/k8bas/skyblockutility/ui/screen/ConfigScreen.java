@@ -80,6 +80,17 @@ import java.util.Set;
  */
 public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	public static final String NAME = "K8bas Skyblock Utility";
+	/** Where an empty rule list's rules would start (REQ-UI-54). */
+	static final String EMPTY_RULES = "No rules yet. Use \"Add from database\" above.";
+	/** The no-hit view's button (REQ-UI-54). */
+	static final String CLEAR_SEARCH = "Clear search";
+	/** The no-hit view's search glass, in GUI px. */
+	static final int NO_HIT_ICON = 24;
+	/** The no-hit view from the content's top, in GUI px: the glass, the line under it, the button under that. */
+	static final int NO_HIT_ICON_Y = 24;
+	static final int NO_HIT_TEXT_Y = NO_HIT_ICON_Y + NO_HIT_ICON + 10;
+	static final int NO_HIT_BUTTON_Y = NO_HIT_TEXT_Y + 18;
+	private static final int CLEAR_WIDTH = 90;
 
 	private final Screen parent;
 	private final List<Card> cards;
@@ -105,6 +116,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private final VirtualList tabs;
 	private final TextField search;
 	private final ClearButton clear;
+	/** Under "No settings found": empties the query and keeps the search box focused (REQ-UI-54). */
+	private final Button clearSearch;
 	/** What the current query shows: the categories, badges and options (REQ-UI-08). */
 	private SearchView view;
 	private Category selected;
@@ -181,6 +194,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			applyQuery("");
 			focus(search);
 		}));
+		clearSearch = add(new Button(CLEAR_SEARCH, Button.Style.NORMAL, () -> {
+			search.model().setText("");
+			applyQuery("");
+			focus(search);
+		}, UiSound::click));
 		show(view.selected(), false);
 	}
 
@@ -308,6 +326,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		public float reveal(RuleGroup rule) {
 			return ruleMotion.reveal(rule.id(), expanded(rule));
 		}
+
+		@Override
+		public boolean searching() {
+			return view.filtering();
+		}
 	};
 
 	public Category selected() {
@@ -361,6 +384,13 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		ConfigLayout.Rect box = frame.search();
 		search.setBounds(box.x(), box.y(), box.w(), box.h());
 		clear.setBounds(box.right() - ClearButton.SIZE - 2, box.y() + (box.h() - ClearButton.SIZE) / 2, ClearButton.SIZE, ClearButton.SIZE);
+		// REQ-UI-54: the no-hit view's button, under its line; away (no size) while anything is found.
+		ConfigLayout.Rect area = frame.content();
+		if (view.nothingFound() && area.h() >= NO_HIT_BUTTON_Y + 18 + ConfigLayout.PAD) {
+			clearSearch.setBounds(area.x() + (area.w() - CLEAR_WIDTH) / 2, area.y() + NO_HIT_BUTTON_Y, CLEAR_WIDTH, 18);
+		} else {
+			clearSearch.setBounds(0, 0, 0, 0);
+		}
 		ConfigLayout.Rect content = frame.content();
 		scrollArea.setBounds(content.x(), content.y(), content.w(), content.h());
 		// The content's bottom right corner is the panel's: its scrollbar ends clear of the rounding.
@@ -485,8 +515,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private void drawPageRows(GuiGraphicsExtractor graphics, Theme theme, int mouseX, int mouseY, ConfigLayout.Rect content) {
 		int scroll = pageScroll;
 		if (view.nothingFound()) {
+			// REQ-UI-54: the search glass over the line, and the button (a widget) under it.
+			Shapes.icon(graphics, IconShapes.Icon.SEARCH, content.x() + (content.w() - NO_HIT_ICON) / 2, content.y() + NO_HIT_ICON_Y, NO_HIT_ICON,
+					Theme.TEXT_SECONDARY);
 			String message = Ellipsis.fit(view.message(), content.w() - 2 * ConfigLayout.PAD, font::width);
-			UiText.centred(graphics, font, message, content.x() + content.w() / 2, content.y() + 40, Theme.TEXT_SECONDARY);
+			UiText.centred(graphics, font, message, content.x() + content.w() / 2, content.y() + NO_HIT_TEXT_Y, Theme.TEXT_SECONDARY);
 			return;
 		}
 		for (ConfigLayout.Row row : page.page().rows()) {
@@ -519,6 +552,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 						lineY += 10;
 					}
 				}
+			} else if (row instanceof ConfigLayout.RuleEmpty) {
+				// REQ-UI-54: where the rules would start, outlined like a rule header, with how to add one.
+				Shapes.roundedHairline(graphics, rect.x(), rect.y(), rect.w(), rect.h(), Shapes.RADIUS_CONTROL, Theme.SEPARATOR);
+				String hint = Ellipsis.fit(EMPTY_RULES, rect.w() - 16, font::width);
+				UiText.draw(graphics, font, hint, rect.x() + 8, rect.y() + (rect.h() - font.lineHeight) / 2 + 1, Theme.TEXT_SECONDARY);
 			} else if (row instanceof ConfigLayout.Section section) {
 				String title = Ellipsis.fit(section.card().title(), rect.w(), font::width);
 				int textY = rect.y() + 8;
@@ -695,6 +733,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			out.add(tabs);
 		}
 		out.add(search);
+		// REQ-UI-54: the no-hit view's button, the stop after the box while it shows.
+		if (clearSearch.width() > 0) {
+			out.add(clearSearch);
+		}
 		page.focusOrder(out);
 	}
 
@@ -789,6 +831,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			pageScroll = scrollArea.scroll();
 		}
 		super.open(overlay);
+	}
+
+	/** The no-hit view's button (REQ-UI-54), for tests. */
+	Button clearSearchButton() {
+		return clearSearch;
 	}
 
 	/** For gametests: the motion, to step through or check. */

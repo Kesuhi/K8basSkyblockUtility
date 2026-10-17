@@ -81,6 +81,7 @@ public class HudEditorGameTest implements FabricClientGameTest {
 				entryPoints(context, singleplayer);
 			}
 			fromTheTitleScreen(context);
+			noElements(context);
 		} finally {
 			context.runOnClient(client -> {
 				HudRegistry.unregister(A);
@@ -95,6 +96,30 @@ public class HudEditorGameTest implements FabricClientGameTest {
 			context.restoreDefaultGameOptions();
 			context.getInput().resizeWindow(854, 480);
 		}
+	}
+
+	/**
+	 * AC-UI-58 [C] (REQ-UI-54, T3.47): with no element registered (in play the shipped corpse ding always is), the editor
+	 * shows a card at the screen's centre saying so, and its status line stays empty. From the title screen.
+	 */
+	private static void noElements(ClientGameTestContext context) {
+		context.runOnClient(client -> {
+			HudRegistry.unregister(A);
+			HudRegistry.unregister(B);
+			HudRegistry.unregister(C);
+		});
+		context.setScreen(() -> new HudEditorScreen(null));
+		context.waitForScreen(HudEditorScreen.class);
+		context.waitTicks(2);
+		context.takeScreenshot("t3.47-hud-editor-no-elements");
+		String status = context.computeOnClient(client -> ((HudEditorScreen) client.gui.screen()).status());
+		int[] card = context.computeOnClient(client -> ((HudEditorScreen) client.gui.screen()).emptyCardForTests());
+		int[] size = context.computeOnClient(client -> new int[] {client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()});
+		check(status.isEmpty(), "with no element the status line is empty: \"" + status + "\"");
+		check(card != null && Math.abs(card[0] + card[2] / 2 - size[0] / 2) <= 1 && Math.abs(card[1] + card[3] / 2 - size[1] / 2) <= 1,
+				"the card says so at the screen's centre: " + (card == null ? "none" : java.util.Arrays.toString(card)) + " in " + size[0] + "x" + size[1]);
+		context.setScreen(() -> null);
+		LOGGER.info("HUD editor with no element: the card at {}", java.util.Arrays.toString(card));
 	}
 
 	/** AC-HUD-08, AC-HUD-07, AC-HUD-13. */
