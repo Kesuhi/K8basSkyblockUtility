@@ -7,7 +7,7 @@ this file, so every backend reads the same rules. The maintainer's words in a se
 
 A client-side Fabric mod for Hypixel SkyBlock on Minecraft 26.2 (Java 25 + Kotlin, Gradle with Fabric Loom).
 `SPEC.md` holds the requirements (REQ-…), acceptance criteria (AC-…), edge cases (EC-…), the boundaries (§8) and
-every decision (D-…, R1–R46 in §12). `PLAN.md` holds the tasks in order; a ticked box is a finished task. Phase 3u
+every decision (D-…, R1–R47 in §12). `PLAN.md` holds the tasks in order; a ticked box is a finished task. Phase 3u
 code tasks carry a "Done" note with a nested "Review" line (see T3.15–T3.17); older tasks may use "Status: done".
 `RELEASING.md` is the release procedure. Read the parts a task names before changing anything; SPEC is large, so
 search it by id.
@@ -16,8 +16,10 @@ search it by id.
 
 - Branch `update/26.2`. v1.2.1 is released (tag `v1.2.1` on the merge commit `ea32dea` on `main`).
 - Current phase: **Phase 3u, the UI review released as 1.3.0** (PLAN.md, "Phase 3u"). Done: T3.14–T3.38 and
-  Checkpoint G3u (with its fix `7b9ac08`). **Now: T3.39**, the release PR `update/26.2` → `main`, open and waiting
-  for the maintainer's "merge"; then T3.40 (tag and publish) only after a separate "ship". Phase 4 follows.
+  Checkpoint G3u (with its fix `7b9ac08`). The release PR (T3.39) is open as PR #4, **not to be merged yet**: R47
+  (approved 2026-10-17) adds the rest of the UI review to 1.3.0. **Now: T3.41–T3.56** in order, then Checkpoint G3v
+  and the docs task T3.57; then PR #4 waits for the maintainer's "merge", and T3.40 (tag and publish) for a separate
+  "ship". Phase 4 follows.
 - Commit on `update/26.2` itself (`git branch --show-current`). If you were started in a worktree or on another
   branch, ask before committing: the scan and build ranges are `main..update/26.2`.
 ## How work is done
