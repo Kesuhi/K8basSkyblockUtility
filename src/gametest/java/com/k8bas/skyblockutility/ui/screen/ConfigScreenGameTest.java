@@ -108,6 +108,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			// These two open a settings screen of their own and close it.
 			pointers(context);
 			contentScrollbar(context);
+			edgeFades(context);
 		} finally {
 			context.runOnClient(client -> {
 				modules.restore();
@@ -1754,6 +1755,127 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	}
 
 	/** AC-UI-37 [C] (REQ-UI-36, T3.27): the content area's scrollbar idle and hovered at GUI scales 1-4, on the Waypoints page. */
+	/**
+	 * AC-UI-60 [C] (REQ-UI-56, T3.49) at GUI scales 1-4 on Waypoints: at the top, a card that crosses the content area's
+	 * bottom edge is drawn in the panel's colour at that edge (faded) and in its own colour 10 GUI px above; at the end, the
+	 * same at the top edge. At GUI scale 2 on Fishing, a click on a toggle card whose middle lies under the bottom fade still flips it.
+	 */
+	private static void edgeFades(ClientGameTestContext context) {
+		int before = context.computeOnClient(client -> client.options.guiScale().get());
+		context.getInput().resizeWindow(1280, 960);
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.getInput().setCursorPos(2, 2);
+		try {
+			context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+			StringBuilder log = new StringBuilder();
+			for (int scale = 1; scale <= 4; scale++) {
+				int s = scale;
+				context.runOnClient(client -> client.options.guiScale().set(s));
+				context.waitTicks(3);
+				check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == s, "GUI scale " + s + " applies");
+				for (boolean atEnd : new boolean[] {false, true}) {
+					// At the top (or the end), or as few px from it as it takes for a card to cross the edge (a gap may lie there).
+					int[] probe = null;
+					for (int away = 0; away <= 40 && probe == null; away += 2) {
+						int offset = away;
+						context.runOnClient(client -> {
+							ScrollArea area = screen(client).scrollArea();
+							area.setScroll(atEnd ? area.maxScroll() - offset : offset);
+						});
+						context.waitTicks(2);
+						probe = crossingCard(context, atEnd);
+					}
+					check(probe != null, "scale " + s + (atEnd ? ", near the end" : ", near the top") + ": a card crosses the edge to probe");
+					Path shot = context.takeScreenshot("t3.49-content-" + (atEnd ? "end" : "top") + "-scale-" + s);
+					java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(shot.toFile());
+					int edgeY = atEnd ? probe[1] * s : (probe[1] + 1) * s - 1;
+					int edgePixel = image.getRGB(probe[0] * s, edgeY) & 0xFFFFFF;
+					int innerPixel = image.getRGB(probe[0] * s, probe[2] * s) & 0xFFFFFF;
+					int panel = Theme.PANEL & 0xFFFFFF;
+					check(colourDistance(edgePixel, panel) <= 6, "scale " + s + (atEnd ? ", at the end: the top" : ", at the top: the bottom")
+							+ " edge of a card is faded into the panel: " + Integer.toHexString(edgePixel));
+					check(colourDistance(innerPixel, panel) > 12, "scale " + s + ": 10 GUI px in, the card keeps its colour: " + Integer.toHexString(innerPixel));
+					log.append(" scale ").append(s).append(atEnd ? " end " : " top ").append(Integer.toHexString(edgePixel)).append('/')
+							.append(Integer.toHexString(innerPixel)).append(';');
+				}
+			}
+			// At GUI scale 2, a toggle card scrolled so its middle lies 3 GUI px above the content's bottom: a click there flips it.
+			context.runOnClient(client -> {
+				client.options.guiScale().set(2);
+				screen(client).select(Category.FISHING);
+			});
+			context.waitTicks(3);
+			String toggled = context.computeOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				ConfigLayout.Rect content = screen.frame().content();
+				for (ConfigLayout.Row row : screen.page().page().rows()) {
+					if (row instanceof ConfigLayout.OptionRow option && option.option() instanceof Toggle) {
+						int scroll = row.y() + row.height() / 2 + 3 - content.h();
+						if (scroll >= 0 && scroll <= screen.scrollArea().maxScroll()) {
+							screen.scrollArea().setScroll(scroll);
+							return option.option().id();
+						}
+					}
+				}
+				return null;
+			});
+			check(toggled != null, "a toggle card can be scrolled under the bottom fade");
+			context.waitTicks(3);
+			boolean was = context.computeOnClient(client -> ((Toggle) option(screen(client), toggled)).binding().get());
+			int[] under = context.computeOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				ConfigLayout.Rect content = screen.frame().content();
+				Widget card = screen.page().card(option(screen, toggled));
+				return new int[] {card.x() + 30, content.bottom() - 3};
+			});
+			click(context, under);
+			boolean now = context.computeOnClient(client -> ((Toggle) option(screen(client), toggled)).binding().get());
+			check(now != was, "a click under the bottom fade reaches the card there: " + toggled + " " + was + " to " + now);
+			context.runOnClient(client -> ((Toggle) option(screen(client), toggled)).binding().set(was));
+			LOGGER.info("edge fades (edge/inner):{} a click under the fade flipped {}", log, toggled);
+		} catch (IOException e) {
+			throw new AssertionError("cannot read a screenshot", e);
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(before));
+			context.setScreen(() -> null);
+		}
+	}
+
+	/**
+	 * A card that crosses the content area's bottom edge (or, {@code atEnd}, its top edge) with 10 GUI px of it inside: {column,
+	 * edge row, row 10 in} in GUI px; null for none.
+	 */
+	private static int[] crossingCard(ClientGameTestContext context, boolean atEnd) {
+		return context.computeOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.Rect content = screen.frame().content();
+			int scroll = screen.scrollArea().scroll();
+			for (ConfigLayout.Row row : screen.page().page().rows()) {
+				if (!(row instanceof ConfigLayout.OptionRow)) {
+					continue;
+				}
+				ConfigLayout.Rect card = ConfigLayout.row(screen.frame(), scroll, row);
+				int edge = atEnd ? content.y() : content.bottom() - 1;
+				int inner = atEnd ? edge + 10 : edge - 10;
+				if (card.y() <= Math.min(edge, inner) && card.bottom() > Math.max(edge, inner)) {
+					return new int[] {card.x() + 30, edge, inner};
+				}
+			}
+			return null;
+		});
+	}
+
+	/** The option {@code id} laid out on the shown page. */
+	private static com.k8bas.skyblockutility.ui.option.Option option(ConfigScreen screen, String id) {
+		return screen.page().page().rows().stream().filter(row -> row instanceof ConfigLayout.OptionRow o && o.option().id().equals(id))
+				.map(row -> ((ConfigLayout.OptionRow) row).option()).findFirst().orElseThrow();
+	}
+
+	private static int colourDistance(int a, int b) {
+		return Math.abs((a >> 16 & 0xFF) - (b >> 16 & 0xFF)) + Math.abs((a >> 8 & 0xFF) - (b >> 8 & 0xFF)) + Math.abs((a & 0xFF) - (b & 0xFF));
+	}
+
 	private static void contentScrollbar(ClientGameTestContext context) {
 		int before = context.computeOnClient(client -> client.options.guiScale().get());
 		// Big enough for GUI scale 4 (the steps before leave a smaller window, where the game caps the scale).

@@ -62,6 +62,7 @@ public final class DatabasePickerOverlay extends Overlay {
 		this.clickSound = clickSound;
 		this.search = TextField.of(new TextEditModel(35, GameClipboard.INSTANCE), "Search " + database.title(), text -> queryChanged());
 		this.list = new VirtualList(ROW_HEIGHT, () -> rows.size(), this::drawRow, index -> { });
+		list.setEdgeFade(Theme.PANEL);
 		list.onRowClick(this::clickRow);
 		list.setRowCursor(this::rowCursor);
 		this.done = new Button("Done", Button.Style.PRIMARY, () -> host.close(this), clickSound);

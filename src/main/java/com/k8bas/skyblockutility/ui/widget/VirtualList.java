@@ -39,6 +39,8 @@ public final class VirtualList extends Widget {
 
 	private final VirtualRows rows;
 	private final SmoothScroll smooth = new SmoothScroll(UiClock.SOURCE);
+	/** The background its edge fades blend into (REQ-UI-56), or 0 for none. */
+	private int edgeFade;
 	private final ScrollbarPainter scrollbar = new ScrollbarPainter();
 	private final IntSupplier count;
 	private final RowPainter painter;
@@ -327,6 +329,11 @@ public final class VirtualList extends Widget {
 		out[3] = Math.max(0, bottom - top);
 	}
 
+	/** Fades its rows into {@code background} at an edge with more rows beyond (REQ-UI-56); 0 for no fades. */
+	public void setEdgeFade(int background) {
+		this.edgeFade = background;
+	}
+
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		rows.setCount(count.getAsInt());
@@ -358,6 +365,10 @@ public final class VirtualList extends Widget {
 				}
 			} finally {
 				graphics.pose().popMatrix();
+			}
+			// REQ-UI-56: above the rows, below the scrollbar.
+			if (edgeFade != 0) {
+				EdgeFade.draw(graphics, x, y, rowWidth, height, smooth.shown(), smooth.max(), edgeFade);
 			}
 			if (rows.overflows()) {
 				VirtualRows.Thumb thumb = rows.thumb(height);

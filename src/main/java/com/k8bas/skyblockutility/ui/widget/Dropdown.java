@@ -355,6 +355,9 @@ public final class Dropdown<E> extends Widget {
 						} finally {
 							graphics.pose().popMatrix();
 						}
+						// REQ-UI-56: the rows fade into the list at an edge with more beyond, below its scrollbar.
+						EdgeFade.draw(graphics, x, y + LIST_PADDING, width, listHeight(), model.shownRows() * ROW_HEIGHT,
+								Math.max(0, count * ROW_HEIGHT - listHeight()), Theme.CARD);
 					}
 				}
 				Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, Theme.SEPARATOR);

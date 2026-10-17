@@ -175,6 +175,18 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 				+ "colour-only change and a Remove survived a restart, and Zealot stayed out of the picker", folders, found);
 	}
 
+	/** The brightest pixel's r + g + b in the GUI box from (x0, y0) to (x1, y1) of a screenshot at GUI scale {@code scale}. */
+	private static int brightest(java.awt.image.BufferedImage image, int x0, int y0, int x1, int y1, int scale) {
+		int best = 0;
+		for (int y = Math.max(0, y0 * scale); y < Math.min(image.getHeight(), y1 * scale); y++) {
+			for (int x = Math.max(0, x0 * scale); x < Math.min(image.getWidth(), x1 * scale); x++) {
+				int rgb = image.getRGB(x, y);
+				best = Math.max(best, (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF));
+			}
+		}
+		return best;
+	}
+
 	/** AC-UI-18 [C]: the NPC picker scrolls from start to end. */
 	private static void scrollSequence(ClientGameTestContext context) {
 		openPicker(context, Category.WAYPOINTS, "npc_search.add_from_database");
@@ -184,7 +196,16 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 		int total = context.computeOnClient(client -> picker(client).rows().size());
 		check(total > 150, "every folder and NPC: " + total + " rows");
-		context.takeScreenshot("t2.5c-npc-picker-start");
+		java.nio.file.Path start = context.takeScreenshot("t2.5c-npc-picker-start");
+		// AC-UI-60 [C] (T3.49): at the top, more rows below: the bottom band's text is faded, dimmer than the middle rows'.
+		int[] box = context.computeOnClient(client -> {
+			Widget list = picker(client).list();
+			return new int[] {list.x(), list.y(), list.x() + list.width() - 8, list.y() + list.height(), client.getWindow().getGuiScale()};
+		});
+		java.awt.image.BufferedImage image = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(start);
+		int bottomBand = brightest(image, box[0], box[3] - 6, box[2], box[3], box[4]);
+		int middleRows = brightest(image, box[0], (box[1] + box[3]) / 2 - 27, box[2], (box[1] + box[3]) / 2 + 27, box[4]);
+		check(bottomBand + 20 < middleRows, "the picker list fades at its bottom: " + bottomBand + " against " + middleRows + " in the middle");
 		int[] middle = context.computeOnClient(client -> centreOf(picker(client).list()));
 		int[] window = context.computeOnClient(client -> window(middle[0], middle[1]));
 		context.getInput().setCursorPos(window[0], window[1]);

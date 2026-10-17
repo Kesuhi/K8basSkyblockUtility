@@ -34,6 +34,8 @@ import com.k8bas.skyblockutility.ui.render.UiSound;
 import com.k8bas.skyblockutility.ui.render.UiText;
 import com.k8bas.skyblockutility.ui.render.UiTime;
 import com.k8bas.skyblockutility.ui.widget.Button;
+import com.k8bas.skyblockutility.ui.widget.EdgeFade;
+import com.k8bas.skyblockutility.ui.widget.ScrollbarPainter;
 import com.k8bas.skyblockutility.ui.widget.ColorSwatch;
 import com.k8bas.skyblockutility.ui.widget.Dropdown;
 import com.k8bas.skyblockutility.ui.widget.GameClipboard;
@@ -188,6 +190,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		tabs.setKeys(this::tabKey);
 		tabs.setFocusRow(() -> view.categories().indexOf(selected));
 		tabs.setUnderlay(this::drawTabIndicator);
+		tabs.setEdgeFade(Theme.SIDEBAR);
 		clear = add(new ClearButton(() -> !search.model().text().isEmpty(), () -> {
 			UiSound.click();
 			search.model().setText("");
@@ -805,6 +808,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	 */
 	@Override
 	protected void drawOverWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		// REQ-UI-56: the page fades into the panel at an edge with more beyond, clear of the scrollbar and the panel's corner.
+		ConfigLayout.Rect area = frame.content();
+		int fadeWidth = area.w() - Math.max(ScrollbarPainter.HIT_WIDTH, Shapes.RADIUS_PANEL);
+		EdgeFade.draw(graphics, area.x(), area.y(), fadeWidth, area.h(), scrollArea.drawnScroll(Shapes.guiScale()), scrollArea.maxScroll(), Theme.PANEL);
 		int veil = motion.veilAlpha();
 		if (veil > 0) {
 			ConfigLayout.Rect content = frame.content();

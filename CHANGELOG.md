@@ -14,6 +14,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   button on them, and fade back when you let go.
 - A search that finds nothing shows a search glass above its message and a "Clear search" button below
   it, and a rule list without rules (Mob Highlighter, NPC Search) says where to add one.
+- Scrolling areas (the settings page, the database picker, long dropdown lists) fade their content softly
+  at an edge where there is more to scroll to, so you can tell there is more above or below.
 
 ### Changed
 

@@ -125,8 +125,15 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		// The wheel scrolls the list by one row: the first visible row is then Entry 2.
 		click(context, screen -> screen.centre(screen.longDropdown));
 		move(context, screen -> screen.visibleRow(screen.longDropdown, 0));
+		// AC-UI-60 [C] (T3.49): the list's top 6 GUI px (its first row's glyph tops under the stronger part of the fade), at its top
+		// (nothing above, no fade) and one notch down (rows above, faded).
+		int[] listBox = context.computeOnClient(client -> screen(client).overlay().bounds());
+		int bandTop = listBox[1] + com.k8bas.skyblockutility.ui.widget.Dropdown.LIST_PADDING;
+		int unfaded = brightness(HairlineProbe.read(context.takeScreenshot("t3.49-dropdown-top")), listBox[0], bandTop, listBox[2] - 8, bandTop + 6, 2);
 		context.getInput().scroll(-1.0);
 		context.waitTick();
+		int faded = brightness(HairlineProbe.read(context.takeScreenshot("t3.49-dropdown-edge-fade")), listBox[0], bandTop, listBox[2] - 8, bandTop + 6, 2);
+		check(faded + 20 < unfaded, "scrolled, the list's top band is faded: its text " + faded + " against " + unfaded + " at the top");
 		click(context, screen -> screen.visibleRow(screen.longDropdown, 0));
 		String afterScroll = context.computeOnClient(client -> screen(client).longValue);
 		check("Entry 2".equals(afterScroll), "one wheel notch scrolls one row: " + afterScroll);
@@ -869,6 +876,18 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			}
 		}
 		return true;
+	}
+
+	/** The brightest pixel's r + g + b in the GUI box from (x0, y0) to (x1, y1) of a screenshot at GUI scale {@code scale}. */
+	private static int brightness(java.awt.image.BufferedImage image, int x0, int y0, int x1, int y1, int scale) {
+		int best = 0;
+		for (int y = Math.max(0, y0 * scale); y < Math.min(image.getHeight(), y1 * scale); y++) {
+			for (int x = Math.max(0, x0 * scale); x < Math.min(image.getWidth(), x1 * scale); x++) {
+				int rgb = image.getRGB(x, y);
+				best = Math.max(best, (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF));
+			}
+		}
+		return best;
 	}
 
 	private static int pixel(Path screenshot, int[] point) {
