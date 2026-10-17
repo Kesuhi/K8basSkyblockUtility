@@ -356,6 +356,10 @@ object ConfigManager {
 	/** The platform type is inferred on purpose: like Java, it hands back whatever the field holds, unchecked. */
 	fun general() = root!!.general
 
+	/** The general section, or null before a config is loaded (the UI clock asks it each frame, REQ-UI-39). */
+	@JvmStatic
+	fun generalOrNull(): GeneralConfig? = root?.general
+
 	/**
 	 * The module's typed section. An unreadable section (wrong types) is backed up with the whole
 	 * file and replaced by defaults, and the other sections stay as they are (REQ-CFG-06). Invalid

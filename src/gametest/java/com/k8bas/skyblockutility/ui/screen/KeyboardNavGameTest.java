@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.gametest.ModuleStates;
 import com.k8bas.skyblockutility.module.ModuleManager;
@@ -94,6 +95,10 @@ public class KeyboardNavGameTest implements FabricClientGameTest {
 		});
 		int pixel = pixel(context, shot, ringTop[0], ringTop[1]);
 		check(pixel == (Theme.current().accent() & 0xFFFFFF), "the ring is in the accent colour: " + Integer.toHexString(pixel));
+		// AC-UI-34 [C] (T3.23): a focus ring stays 1 GUI px, guiScale physical px, unlike the hairlines.
+		int ringScale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		int ring = HairlineProbe.run(HairlineProbe.read(shot), ringTop[0] * ringScale, ringTop[1] * ringScale, 0, 1, Theme.current().accent());
+		check(ring == ringScale, "the focus ring is 1 GUI px, " + ringScale + " physical px: " + ring);
 
 		key(context, GLFW.GLFW_KEY_DOWN);
 		check(context.computeOnClient(client -> screen(client).selected()) == Category.HIGHLIGHTS, "Down: the next category");

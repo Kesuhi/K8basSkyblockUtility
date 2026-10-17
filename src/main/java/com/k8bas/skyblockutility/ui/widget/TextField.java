@@ -2,6 +2,8 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.render.Clip;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
+import com.k8bas.skyblockutility.ui.render.Ellipsis;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiClock;
@@ -21,6 +23,9 @@ import java.util.function.ToIntFunction;
  */
 public final class TextField extends Widget {
 	static final int PADDING = 4;
+	/** The room a left icon takes: the icon and a gap before the text (T3.21). */
+	static final int LEFT_ICON = 11;
+	private static final int ICON_SIZE = 8;
 	private static final long BLINK_MS = 300;
 
 	private final TextEditModel model;
@@ -37,6 +42,8 @@ public final class TextField extends Widget {
 	private BooleanSupplier invalid = () -> false;
 	/** Room kept free at the right end, e.g. for a clear button drawn over the field. */
 	private int rightInset;
+	/** The icon at the left end (the search box's glass, REQ-UI-32), or null. */
+	private IconShapes.Icon leftIcon;
 
 	public TextField(TextEditModel model, String placeholder, Consumer<String> onChange, LongSupplier clock) {
 		this.model = model;
@@ -73,7 +80,21 @@ public final class TextField extends Widget {
 	}
 
 	int innerWidth() {
-		return Math.max(0, width - 2 * PADDING - rightInset);
+		return Math.max(0, width - 2 * PADDING - rightInset - leftInset());
+	}
+
+	/** Where the text starts: inside the padding, after the left icon's room. */
+	private int textLeft() {
+		return x + PADDING + leftInset();
+	}
+
+	private int leftInset() {
+		return leftIcon == null ? 0 : LEFT_ICON;
+	}
+
+	/** Draws {@code icon} at the left end, in the secondary text colour (the disabled one while disabled), and keeps the text right of it. */
+	public void leftIcon(IconShapes.Icon icon) {
+		this.leftIcon = icon;
 	}
 
 	/** Keeps {@code pixels} at the right end free of text, for a control drawn over the field there. */
@@ -109,6 +130,11 @@ public final class TextField extends Widget {
 	}
 
 	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return PointerShape.TEXT;
+	}
+
+	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {
 			return false;
@@ -124,7 +150,7 @@ public final class TextField extends Widget {
 		if (!selectingWithMouse) {
 			return;
 		}
-		if (mouseX < x + PADDING && validScroll() > 0) {
+		if (mouseX < textLeft() && validScroll() > 0) {
 			// Past the left edge: select one character further left; the view follows.
 			String text = model.text();
 			model.moveTo(text.offsetByCodePoints(validScroll(), -1), true);
@@ -180,7 +206,7 @@ public final class TextField extends Widget {
 		if (widths == null) {
 			return text.length();
 		}
-		double target = mouseX - (x + PADDING);
+		double target = mouseX - textLeft();
 		int best = start;
 		double bestDistance = Double.MAX_VALUE;
 		int i = start;
@@ -225,28 +251,33 @@ public final class TextField extends Widget {
 		float hover = forcedHot ? 1F : hoverAmount(hot);
 		int outline = !enabled ? Theme.CARD_HOVER : wrong ? Theme.ERROR : focused ? theme.accent()
 				: ColorMath.lerp(Theme.SEPARATOR, Theme.TEXT_DISABLED, hover);
-		Shapes.roundedOutline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, 1, faded(outline));
+		Shapes.roundedHairline(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(outline));
 		String text = model.text();
 		keepCaretVisible();
 		int textY = y + (height - font.lineHeight) / 2 + 1;
-		try (Clip clip = Clip.push(graphics, x + PADDING, y + 1, innerWidth(), height - 2)) {
+		if (leftIcon != null) {
+			Shapes.icon(graphics, leftIcon, x + PADDING, y + (height - ICON_SIZE) / 2, ICON_SIZE, faded(enabled ? Theme.TEXT_SECONDARY : Theme.TEXT_DISABLED));
+		}
+		try (Clip clip = Clip.push(graphics, textLeft(), y + 1, innerWidth(), height - 2)) {
 			if (!clip.visible()) {
 				return;
 			}
 			if (text.isEmpty() && !focused) {
-				UiText.draw(graphics, font, placeholder, x + PADDING, textY, faded(Theme.TEXT_DISABLED));
+				// Cut with "..." where the field is too narrow for it (beside an icon in a small window).
+				UiText.draw(graphics, font, Ellipsis.fit(placeholder, innerWidth(), font::width), textLeft(), textY, faded(Theme.TEXT_DISABLED));
 				return;
 			}
-			int originX = x + PADDING - font.width(text.substring(0, scroll));
+			int originX = textLeft() - font.width(text.substring(0, scroll));
 			if (model.hasSelection()) {
 				int from = originX + font.width(text.substring(0, model.selectionStart()));
 				int to = originX + font.width(text.substring(0, model.selectionEnd()));
-				graphics.fill(from, textY - 1, to, textY + font.lineHeight, theme.accentBackground());
+				Shapes.plain(graphics, from, textY - 1, to, textY + font.lineHeight, theme.accentBackground());
 			}
 			UiText.draw(graphics, font, text, originX, textY, faded(enabled ? Theme.TEXT_PRIMARY : Theme.TEXT_DISABLED));
 			if (focused && ((clock.getAsLong() - focusedAt) / BLINK_MS) % 2 == 0) {
 				int caretX = originX + font.width(text.substring(0, model.caret()));
-				graphics.fill(caretX, textY - 1, caretX + 1, textY + font.lineHeight - 1, Theme.TEXT_PRIMARY);
+				// REQ-UI-33: the caret is a hairline on the screen pixel grid.
+				Shapes.hairlineV(graphics, caretX, textY - 1, font.lineHeight, Theme.TEXT_PRIMARY);
 			}
 		}
 	}

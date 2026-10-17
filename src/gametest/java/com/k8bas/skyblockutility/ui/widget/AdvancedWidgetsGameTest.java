@@ -1,14 +1,31 @@
 package com.k8bas.skyblockutility.ui.widget;
 
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.settings.SettingsKeybind;
+import com.k8bas.skyblockutility.ui.color.Hsv;
+import com.k8bas.skyblockutility.ui.color.WheelGeometry;
 import com.k8bas.skyblockutility.ui.option.Keybind;
+import com.k8bas.skyblockutility.ui.render.CornerMask;
+import com.k8bas.skyblockutility.ui.render.IconProbe;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
+import com.k8bas.skyblockutility.ui.render.ShapeRenderState;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.AddressMode;
+import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.blaze3d.textures.GpuSampler;
+import com.mojang.blaze3d.textures.GpuTextureView;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.state.gui.BlitRenderState;
+import net.minecraft.client.renderer.state.gui.GuiRenderState;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +33,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * T2.3b, the dropdown and keybind capture in a real client:
@@ -28,6 +48,12 @@ import java.nio.file.Path;
  *       (absent before), F2 is not captured, Esc unbinds and is written, a left click while armed
  *       cancels, a right click resets (to a real default on a second widget); E binds and shows the
  *       conflict with the inventory key; F3 binds without toggling the debug overlay.</li>
+ *   <li>REQ-UI-30 (T3.18): the colour wheel's marker is two discs of the disc mask at GUI scale 2.</li>
+ *   <li>AC-UI-32 (T3.19): at GUI scales 1-4, in the first frame after a change from 2 to 3, and after a brightness drag,
+ *       the wheel is a texture of its size times the scale, drawn 1:1 with linear sampling, its rim anti-aliased and its
+ *       colours the colours picked; if it cannot be made, the 1.2.1 wheel is drawn (REQ-UI-47).</li>
+ *   <li>AC-UI-51 (T3.41): a brightness drag over 60 frames bakes no wheel texture and keeps one of 160 px; the dimmed wheel
+ *       shows each pixel's colour at that brightness, and the 1.2.1 fallback is tinted to it too.</li>
  * </ul>
  */
 public class AdvancedWidgetsGameTest implements FabricClientGameTest {
@@ -48,6 +74,10 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			}
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
+			swatchCheckerboard(context);
+			listOutlineIsAHairline(context);
+			dropdownIcons(context);
+			dropdownScrollbar(context);
 			dropdowns(context);
 			keybinds(context);
 			colourPicker(context);
@@ -96,8 +126,15 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		// The wheel scrolls the list by one row: the first visible row is then Entry 2.
 		click(context, screen -> screen.centre(screen.longDropdown));
 		move(context, screen -> screen.visibleRow(screen.longDropdown, 0));
+		// AC-UI-60 [C] (T3.49): the list's top 6 GUI px (its first row's glyph tops under the stronger part of the fade), at its top
+		// (nothing above, no fade) and one notch down (rows above, faded).
+		int[] listBox = context.computeOnClient(client -> screen(client).overlay().bounds());
+		int bandTop = listBox[1] + com.k8bas.skyblockutility.ui.widget.Dropdown.LIST_PADDING;
+		int unfaded = brightness(HairlineProbe.read(context.takeScreenshot("t3.49-dropdown-top")), listBox[0], bandTop, listBox[2] - 8, bandTop + 6, 2);
 		context.getInput().scroll(-1.0);
 		context.waitTick();
+		int faded = brightness(HairlineProbe.read(context.takeScreenshot("t3.49-dropdown-edge-fade")), listBox[0], bandTop, listBox[2] - 8, bandTop + 6, 2);
+		check(faded + 20 < unfaded, "scrolled, the list's top band is faded: its text " + faded + " against " + unfaded + " at the top");
 		click(context, screen -> screen.visibleRow(screen.longDropdown, 0));
 		String afterScroll = context.computeOnClient(client -> screen(client).longValue);
 		check("Entry 2".equals(afterScroll), "one wheel notch scrolls one row: " + afterScroll);
@@ -178,14 +215,180 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 				+ "E bound with a conflict, F3 bound");
 	}
 
+	/**
+	 * AC-UI-34 [C] (REQ-UI-33, T3.22): at GUI scales 2, 3 and 4 the open short dropdown list's outline measures
+	 * ceil(guiScale / 2) physical px on its top edge; back at scale 2 afterwards.
+	 */
+	private static void listOutlineIsAHairline(ClientGameTestContext context) {
+		try {
+			for (int scale = 2; scale <= 4; scale++) {
+				int s = scale;
+				context.runOnClient(client -> client.options.guiScale().set(s));
+				context.waitTicks(3);
+				click(context, screen -> screen.centre(screen.shortDropdown));
+				int[] list = context.computeOnClient(client -> {
+					Widget rows = screen(client).openListWidget();
+					return new int[] {rows.x, rows.y, rows.width};
+				});
+				context.getInput().setCursorPos(1, 1);
+				context.waitTicks(2);
+				java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(context.takeScreenshot("t3.22-list-outline-scale-" + scale).toFile());
+				context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+				context.waitTick();
+				// REQ-UI-33's rule written out, not read from the code under test.
+				int thick = (int) Math.ceil(scale / 2.0);
+				int listEdge = 0;
+				while (near(image.getRGB((list[0] + list[2] / 2) * scale, list[1] * scale + listEdge) & 0xFFFFFF, Theme.SEPARATOR & 0xFFFFFF)) {
+					listEdge++;
+				}
+				LOGGER.info("dropdown list outline at scale {}: {} px (rule {})", scale, listEdge, thick);
+				check(listEdge == thick, "scale " + scale + ": the open list's outline is " + listEdge + " px, the hairline " + thick);
+			}
+		} catch (IOException e) {
+			throw new AssertionError("cannot read a screenshot", e);
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(2));
+			context.waitTicks(3);
+		}
+	}
+
+	/**
+	 * AC-UI-37 [C] (REQ-UI-36, T3.27): the open long dropdown's scrollbar (12 entries, 8 in view) at GUI scales 1-4: idle,
+	 * hovered, and dragged (held on the thumb, the pointer moved off it sideways), and the drag scrolls the list.
+	 */
+	private static void dropdownScrollbar(ClientGameTestContext context) {
+		try {
+			for (int scale = 1; scale <= 4; scale++) {
+				int s = scale;
+				context.runOnClient(client -> client.options.guiScale().set(s));
+				context.waitTicks(3);
+				int[] box = context.computeOnClient(client -> {
+					Dropdown<String> dropdown = screen(client).longDropdown;
+					return windowPoint(dropdown.x + dropdown.width / 2, dropdown.y + dropdown.height / 2);
+				});
+				context.getInput().setCursorPos(box[0], box[1]);
+				context.waitTicks(2);
+				context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+				context.waitTicks(2);
+				check(context.computeOnClient(client -> screen(client).listOpen()), "scale " + s + ": the long list opened");
+				for (String state : java.util.List.of("idle", "hovered", "dragged")) {
+					int[] g = context.computeOnClient(client -> {
+						Widget rows = screen(client).openListWidget();
+						int[] thumb = screen(client).longDropdown.openThumb();
+						return new int[] {rows.x + rows.width, rows.y, rows.y + rows.height, thumb[0], thumb[1], rows.x};
+					});
+					int[] at = context.computeOnClient(client -> state.equals("idle") ? windowPoint(g[5] + 20, g[1] + 3 * Dropdown.ROW_HEIGHT)
+							: windowPoint(g[0] - 3, g[3] + g[4] / 2));
+					context.getInput().setCursorPos(at[0], at[1]);
+					context.waitTicks(2);
+					if (state.equals("dragged")) {
+						context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+						context.waitTick();
+						check(context.computeOnClient(client -> screen(client).listOpen()), "scale " + s + ": a press on the thumb grabs it and picks no entry");
+						int[] off = context.computeOnClient(client -> windowPoint(g[5] + 20, g[3] + g[4] / 2));
+						context.getInput().setCursorPos(off[0], off[1]);
+						context.waitTicks(2);
+					}
+					java.awt.image.BufferedImage shot = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(
+							context.takeScreenshot("t3.27-dropdown-" + state + "-scale-" + s));
+					String problem = ScrollbarProbe.check(shot, "the dropdown list's " + state + " scrollbar", s, g[0], g[1], g[2], g[3], g[4],
+							!state.equals("idle"));
+					if (state.equals("dragged")) {
+						// Down by half the list's height: the list follows the thumb.
+						int[] down = context.computeOnClient(client -> windowPoint(g[5] + 20, g[3] + g[4] / 2 + (g[2] - g[1]) / 2));
+						context.getInput().setCursorPos(down[0], down[1]);
+						context.waitTicks(2);
+						int top = context.computeOnClient(client -> screen(client).longDropdown.openThumb()[0]);
+						context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+						context.waitTicks(2);
+						check(top > g[3], "scale " + s + ": dragging the thumb scrolls the list: its top " + g[3] + " -> " + top);
+						check(context.computeOnClient(client -> screen(client).listOpen()), "scale " + s + ": and leaves it open");
+					}
+					check(problem.isEmpty(), problem);
+				}
+				context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+				context.waitTicks(2);
+			}
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(2));
+			context.waitTicks(3);
+		}
+	}
+
+	private static int colourDistance(int a, int b) {
+		int d = 0;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			d += Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF));
+		}
+		return d;
+	}
+
+	private static int luminance(int rgb) {
+		return (rgb >> 16 & 0xFF) * 3 + (rgb >> 8 & 0xFF) * 6 + (rgb & 0xFF);
+	}
+
+	private static int[] windowPoint(int guiX, int guiY) {
+		var window = Minecraft.getInstance().getWindow();
+		return new int[] {(int) Math.round((guiX + 0.5) * window.getScreenWidth() / window.getGuiScaledWidth()),
+				(int) Math.round((guiY + 0.5) * window.getScreenHeight() / window.getGuiScaledHeight())};
+	}
+
+	/**
+	 * AC-UI-33 [C] (T3.21), at GUI scale 2: the closed short dropdown (GUI 8, 8, 120x16) shows the kit's down chevron 12 px
+	 * from its right end in the text colour; open, its list shows the kit's check mark beside the selected entry, in the
+	 * accent; both drawn 1:1 with anti-aliased edges.
+	 */
+	private static void dropdownIcons(ClientGameTestContext context) {
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		check(scale == 2, "the dropdown icons are checked at GUI scale 2: " + scale);
+		Path closed = context.takeScreenshot("t3.21-dropdown-closed-scale-2");
+		String chevron = IconProbe.check(closed, IconShapes.Icon.CHEVRON_DOWN, 8 + 120 - 12, 8 + (16 - 8) / 2, 8, scale, Theme.TEXT_PRIMARY);
+		check(chevron.isEmpty(), "the dropdown's chevron: " + chevron);
+		click(context, screen -> screen.centre(screen.shortDropdown));
+		int[] rows = context.computeOnClient(client -> {
+			Widget list = screen(client).openListWidget();
+			return new int[] {list.x, list.y, list.width};
+		});
+		int selected = context.computeOnClient(client -> screen(client).shortDropdownSelectedRow());
+		context.getInput().setCursorPos(1, 1);
+		context.waitTicks(2);
+		Path open = context.takeScreenshot("t3.21-dropdown-open-scale-2");
+		int rowY = rows[1] + Dropdown.LIST_PADDING + selected * Dropdown.ROW_HEIGHT;
+		String check = IconProbe.check(open, IconShapes.Icon.CHECK, rows[0] + rows[2] - 15, rowY + (Dropdown.ROW_HEIGHT - 8) / 2, 8, scale,
+				Theme.current().accent());
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
+		check(check.isEmpty(), "the open list's check mark: " + check);
+	}
+
 	/** AC-UI-12 with real input: hex typed and saved, Cancel and Esc discard, an invalid hex is marked, alpha only where stored. */
 	private static void colourPicker(ClientGameTestContext context) {
 		click(context, screen -> screen.centre(screen.ruleSwatch));
 		check(!context.computeOnClient(client -> screen(client).picker().hasAlphaControl()), "a rule colour shows no alpha control");
-		for (int scale : new int[] {4, 2}) {
-			context.runOnClient(client -> client.options.guiScale().set(scale));
-			context.waitTicks(3);
+		// AC-UI-32: at GUI scales 1-4 the wheel is baked for the scale. The option resizes the GUI at once and the screenshot
+		// renders its own frame, so from 2 to 3 the frame checked is the first one after the change.
+		for (int scale = 1; scale <= 4; scale++) {
+			int s = scale;
+			context.runOnClient(client -> client.options.guiScale().set(s));
+			if (scale != 3) {
+				context.waitTicks(3);
+			}
 			Path shot = context.takeScreenshot("t2.3b-picker-rgb-scale-" + scale);
+			wheelIsBakedForTheScale(context, shot, scale);
+			if (scale >= 2) {
+				// AC-UI-34 [C] (T3.23): the picker panel's outline is a hairline; its top edge lies 24 GUI px above the wheel.
+				int[] wheel = context.computeOnClient(client -> new int[] {screen(client).picker().wheel().x, screen(client).picker().wheel().y});
+				String line = HairlineProbe.check(HairlineProbe.read(shot), "the colour picker's outline", scale, (wheel[0] + 40) * scale,
+						(wheel[1] - 24) * scale, 0, 1, Theme.SEPARATOR);
+				// The brightness slider's outline lies just outside it: measured up from the row above its top edge.
+				int[] slider = context.computeOnClient(client -> {
+					Widget bar = screen(client).picker().brightnessSlider();
+					return new int[] {bar.x + bar.width / 2, bar.y};
+				});
+				line += HairlineProbe.check(HairlineProbe.read(shot), "the brightness slider's outline", scale, slider[0] * scale, slider[1] * scale - 1, 0,
+						-1, Theme.SEPARATOR);
+				check(line.isEmpty(), line);
+			}
 			// The whole wheel shows: red at the left edge, cyan at the right, the panel in the box's corner.
 			int[] left = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.06, 0.5));
 			int[] right = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.94, 0.5));
@@ -195,6 +398,9 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			check((r & 0xFF) > (r >> 16 & 0xFF) + 40 && (r >> 8 & 0xFF) > (r >> 16 & 0xFF) + 40, "scale " + scale + ": cyan at the right: " + Integer.toHexString(r));
 			check(c == (Theme.PANEL & 0xFFFFFF), "scale " + scale + ": outside the circle is the panel: " + Integer.toHexString(c));
 		}
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		context.waitTicks(3);
+		wheelFallsBack(context);
 		// Typed and saved: applies once, with one commit.
 		click(context, screen -> screen.centre(screen.picker().hexField()));
 		context.getInput().holdControl();
@@ -205,7 +411,12 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		check(!context.computeOnClient(client -> screen(client).picker().state().hexValid()), "#GG1234 is marked invalid");
 		check(context.computeOnClient(client -> screen(client).picker().state().color()) == 0x0AA351, "and keeps the last valid colour");
 		Path invalidShot = context.takeScreenshot("t2.3b-picker-invalid-hex");
-		int[] fieldTop = context.computeOnClient(client -> screen(client).point(screen(client).picker().hexField(), 0.5, 0));
+		// The outline is a hairline (T3.22): its first physical row, at the field's top edge.
+		int[] fieldTop = context.computeOnClient(client -> {
+			Widget field = screen(client).picker().hexField();
+			int scale = client.getWindow().getGuiScale();
+			return new int[] {(field.x + field.width / 2) * scale, field.y * scale};
+		});
 		int outline = pixel(invalidShot, fieldTop);
 		check(outline == (Theme.ERROR & 0xFFFFFF), "the invalid field has the error outline: " + Integer.toHexString(outline));
 		context.getInput().holdControl();
@@ -254,6 +465,31 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		float saturation = context.computeOnClient(client -> screen(client).picker().state().hsv().s());
 		check(Math.abs(hue - 200F / 360F) <= 1F / 360F && Math.abs(saturation - 0.8F) <= 0.01F,
 				"and back to full keeps hue 200 and saturation 0.8: " + hue * 360 + ", " + saturation);
+		// T3.19, T3.41: after the drag the wheel shows full brightness again (its texture tinted white).
+		wheelIsBakedForTheScale(context, context.takeScreenshot("t3.19-wheel-after-brightness"), 2);
+		wheelMarkerIsADisc(context);
+		// AC-UI-51 (T3.41): a brightness drag over 60 frames bakes no wheel texture; the wheel shows each brightness's colours.
+		int bakes = context.computeOnClient(client -> WheelTexture.bakesForTests());
+		move(context, screen -> screen.point(screen.picker().brightnessSlider(), 0.95, 0.5));
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		java.util.Set<Float> values = new java.util.HashSet<>();
+		for (int frame = 1; frame <= 60; frame++) {
+			double at = 0.95 - 0.6 * frame / 60;
+			move(context, screen -> screen.point(screen.picker().brightnessSlider(), at, 0.5));
+			values.add(context.computeOnClient(client -> screen(client).picker().state().hsv().v()));
+			int[] cached = context.computeOnClient(client -> WheelTexture.cachedForTests());
+			check(cached[0] == 1 && cached[1] == 160, "frame " + frame + " of the drag: one wheel texture of 160 px: " + cached[0] + ", " + cached[1]);
+		}
+		check(values.size() >= 50, "the drag changed the brightness on most of its 60 frames: " + values.size() + " values");
+		float dimmed = context.computeOnClient(client -> screen(client).picker().state().hsv().v());
+		wheelIsBakedForTheScale(context, context.takeScreenshot("t3.41-wheel-dimmed"), 2);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		int baked = context.computeOnClient(client -> WheelTexture.bakesForTests()) - bakes;
+		LOGGER.info("brightness drag over 60 frames to {}: the wheel was baked {} times", dimmed, baked);
+		check(dimmed > 0.2F && dimmed < 0.5F, "the drag dimmed the picker to about 0.35: " + dimmed);
+		check(baked == 0, "a brightness drag over 60 frames baked the wheel " + baked + " times; it is baked once, at full brightness");
 		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 		context.waitTick();
 
@@ -305,6 +541,62 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		click(context, screen -> screen.centre(screen.picker().saveButton()));
 		int typed = context.computeOnClient(client -> screen(client).alphaColour);
 		check(typed == 0x4029B6B2, "#4029B6B2 typed key by key saves with its alpha: " + Integer.toHexString(typed));
+		// AC-UI-41 [C] (REQ-UI-40, T3.30): the gradient sliders have a pill track (its outline's corner half its height) and the
+		// round outlined knob: light at its centre, with a dark ring around it.
+		click(context, screen -> screen.centre(screen.alphaSwatch));
+		for (int gradientScale = 1; gradientScale <= 2; gradientScale++) {
+		int gs = gradientScale;
+		context.runOnClient(client -> client.options.guiScale().set(gs));
+		context.waitTicks(3);
+		var gradientShot = HairlineProbe.read(context.takeScreenshot("t3.30-gradient-sliders-scale-" + gs));
+		for (boolean alphaSlider : new boolean[] {false, true}) {
+			int[] bar = context.computeOnClient(client -> {
+				GradientSlider slider = (GradientSlider) (alphaSlider ? screen(client).picker().alphaSlider() : screen(client).picker().brightnessSlider());
+				return new int[] {slider.x, slider.y, slider.width, slider.height, Math.round(slider.knobCentre() * gs)};
+			});
+			int s = gs;
+			// Its box's corner pixel lies outside the round end: the panel shows there (at most touched by the outline's soft edge),
+			// not the gradient that fills the track just inside its end.
+			int boxCorner = gradientShot.getRGB(bar[0] * s, bar[1] * s);
+			int insideEnd = gradientShot.getRGB((bar[0] + bar[3] / 2 + 1) * s, (bar[1] + bar[3] / 2) * s);
+			check(colourDistance(boxCorner, com.k8bas.skyblockutility.ui.render.Theme.PANEL) < colourDistance(boxCorner, insideEnd),
+					"the track's round end leaves its box's corner to the panel at scale " + s + ": " + Integer.toHexString(boxCorner) + " (the track "
+							+ Integer.toHexString(insideEnd) + ")");
+			int ring = com.k8bas.skyblockutility.ui.render.Shapes.hairlinePx(s);
+			String corner = com.k8bas.skyblockutility.ui.render.RadiusProbe.check(gradientShot, (alphaSlider ? "the alpha" : "the brightness")
+					+ " slider's track", bar[0] * s - ring, bar[1] * s - ring, bar[3] * s + 2 * ring, bar[3] * s / 2 + ring);
+			check(corner.isEmpty(), corner);
+			int centreY = (bar[1] * 2 + bar[3]) * s / 2;
+			int knobCentre = gradientShot.getRGB(bar[4], centreY) & 0xFFFFFF;
+			int edge = bar[4] + Slider.KNOB_SIZE * s / 2 + s / 2;
+			check(knobCentre == (com.k8bas.skyblockutility.ui.render.Theme.TEXT_PRIMARY & 0xFFFFFF), "the knob is light at its centre: "
+					+ Integer.toHexString(knobCentre));
+			check(luminance(gradientShot.getRGB(edge, centreY)) < luminance(gradientShot.getRGB(edge + 2 * s, centreY)),
+					"a dark ring outlines the knob: " + Integer.toHexString(gradientShot.getRGB(edge, centreY)) + " beside "
+							+ Integer.toHexString(gradientShot.getRGB(edge + 2 * s, centreY)));
+		}
+		}
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		context.waitTicks(3);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
+		// AC-UI-38 (REQ-UI-37, T3.28): 3 notches each way over the brightness and the alpha slider leave both values.
+		click(context, screen -> screen.centre(screen.alphaSwatch));
+		int pickerBefore = context.computeOnClient(client -> screen(client).picker().state().color());
+		float alphaBefore = context.computeOnClient(client -> screen(client).picker().state().alpha());
+		for (boolean overAlpha : new boolean[] {false, true}) {
+			move(context, screen -> screen.point(overAlpha ? screen.picker().alphaSlider() : screen.picker().brightnessSlider(), 0.3, 0.5));
+			for (double notch : new double[] {1, 1, 1, -1, -1, -1}) {
+				context.getInput().scroll(notch);
+				context.waitTick();
+			}
+		}
+		int pickerAfter = context.computeOnClient(client -> screen(client).picker().state().color());
+		float alphaAfter = context.computeOnClient(client -> screen(client).picker().state().alpha());
+		check(pickerAfter == pickerBefore && alphaAfter == alphaBefore, "the wheel over the brightness and alpha sliders leaves them: "
+				+ Integer.toHexString(pickerBefore) + " -> " + Integer.toHexString(pickerAfter) + ", alpha " + alphaBefore + " -> " + alphaAfter);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTick();
 		LOGGER.info("colour picker: #GG1234 marked, #1A2B3C saved with one commit, the wheel then Cancel and Esc applied nothing, brightness "
 				+ "to 0 and back kept hue and saturation, #80FF0000 dropped its alpha, an invalid hex saved the last valid colour, a preset "
 				+ "set the hex, alpha only where stored and saved at 0 and typed");
@@ -349,6 +641,278 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			throw new AssertionError("FAILED: the test screen is not open: " + client.gui.screen());
 		}
 		return screen;
+	}
+
+	/**
+	 * REQ-UI-30 (T3.18), at GUI scale 2 with the picker at hue 200, saturation 0.8 and full brightness: the wheel's marker is
+	 * an 8 GUI px white disc with a 6 GUI px disc of the picked colour inside it, both of the disc mask. Where the white disc
+	 * covers at most three quarters of a pixel (its box's corners and its rim), the wheel shows, not white; the colour disc's
+	 * rim, over the opaque white, is the colour over white by its coverage, to within 3 per channel. A square marker is white
+	 * in its box's corners and has no blended rim.
+	 */
+	private static void wheelMarkerIsADisc(ClientGameTestContext context) {
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		check(scale == 2, "the marker check runs at GUI scale 2: " + scale);
+		int[] marker = context.computeOnClient(client -> screen(client).wheelMarker());
+		int colour = context.computeOnClient(client -> screen(client).picker().state().hsv().toRgb());
+		Path shot = context.takeScreenshot("t3.18-wheel-marker-scale-2");
+		java.awt.image.BufferedImage image;
+		try {
+			image = javax.imageio.ImageIO.read(shot.toFile());
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
+		int d = 8 * scale;
+		int inner = 6 * scale;
+		int x0 = (marker[0] - 4) * scale;
+		int y0 = (marker[1] - 4) * scale;
+		int wheel = 0;
+		int blended = 0;
+		int wrong = 0;
+		String first = "";
+		for (int y = 0; y < d; y++) {
+			for (int x = 0; x < d; x++) {
+				int white = CornerMask.discAlpha(d, x, y);
+				int ix = x - scale;
+				int iy = y - scale;
+				int dot = ix >= 0 && iy >= 0 && ix < inner && iy < inner ? CornerMask.discAlpha(inner, ix, iy) : 0;
+				int actual = image.getRGB(x0 + x, y0 + y) & 0xFFFFFF;
+				boolean ok = true;
+				if (dot == 0 && white <= 192) {
+					ok = !near(actual, 0xFFFFFF);
+					wheel++;
+				} else if (dot == 0 && white == 255) {
+					ok = near(actual, 0xFFFFFF);
+				} else if (white == 255) {
+					int expected = blend(colour, 0xFFFFFF, dot);
+					ok = within(actual, expected, 3);
+					if (!near(expected, colour) && !near(expected, 0xFFFFFF)) {
+						blended++;
+					}
+				}
+				if (!ok && wrong++ == 0) {
+					first = " (first at " + x + "," + y + ": " + Integer.toHexString(actual) + ", white " + white + ", dot " + dot + ")";
+				}
+			}
+		}
+		LOGGER.info("wheel marker at scale 2: {} pixels show the wheel past the white disc, {} blend the colour disc over white, {} wrong", wheel,
+				blended, wrong);
+		check(wrong == 0, "the wheel's marker is two discs of the disc mask: " + wrong + " pixels differ" + first);
+		check(wheel > 0 && blended > 0, "the marker's rims are anti-aliased: " + wheel + " wheel pixels, " + blended + " blended");
+	}
+
+	/**
+	 * AC-UI-32 [C] (T3.19), at one GUI scale with the picker open: drawn into a fresh render state, the wheel is one textured
+	 * element whose texture measures wheel size × GUI scale, shown whole and 1:1 with the sampler cache's linear, clamp-to-edge
+	 * sampler; and in the screenshot each pixel of its box (but the marker's) is the colour a pick at its centre gives, at the
+	 * picker's brightness, over the panel by the disc mask's coverage, within 3 per channel. So the rim is anti-aliased, with no
+	 * stair step, and the colours drawn are the colours picked. The screenshot is checked first, so a wrong wheel shows how many
+	 * pixels are off.
+	 */
+	private static void wheelIsBakedForTheScale(ClientGameTestContext context, Path shot, int scale) {
+		check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == scale, "the wheel check runs at GUI scale " + scale);
+		int[] box = context.computeOnClient(client -> {
+			Widget wheel = screen(client).picker().wheel();
+			return new int[] {wheel.x, wheel.y, wheel.width};
+		});
+		int[] marker = context.computeOnClient(client -> screen(client).wheelMarker());
+		float value = context.computeOnClient(client -> screen(client).picker().state().hsv().v());
+		java.awt.image.BufferedImage image;
+		try {
+			image = javax.imageio.ImageIO.read(shot.toFile());
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
+		int size = box[2] * scale;
+		double radius = size / 2.0;
+		int blended = 0;
+		int wrong = 0;
+		String first = "";
+		for (int y = 0; y < size; y++) {
+			for (int x = 0; x < size; x++) {
+				if (Math.abs(box[0] + x / scale - marker[0]) <= 5 && Math.abs(box[1] + y / scale - marker[1]) <= 5) {
+					continue;
+				}
+				int alpha = CornerMask.discAlpha(size, x, y);
+				float[] hs = WheelGeometry.hsAt(x + 0.5 - radius, y + 0.5 - radius, radius, 0F);
+				int colour = new Hsv(hs[0], hs[1], value).toRgb();
+				int actual = image.getRGB(box[0] * scale + x, box[1] * scale + y) & 0xFFFFFF;
+				if (!within(actual, blend(colour, Theme.PANEL & 0xFFFFFF, alpha), 3) && wrong++ == 0) {
+					first = " (first at " + x + "," + y + ": " + Integer.toHexString(actual) + ", expected "
+							+ Integer.toHexString(blend(colour, Theme.PANEL & 0xFFFFFF, alpha)) + ")";
+				}
+				// A rim pixel as drawn: neither the panel nor the wheel's colour, but a blend of the two.
+				if (alpha > 0 && alpha < 255 && !within(actual, Theme.PANEL & 0xFFFFFF, 3) && !within(actual, colour, 3)) {
+					blended++;
+				}
+			}
+		}
+		LOGGER.info("colour wheel at scale {}: {} px, {} rim pixels blend the wheel over the panel, {} wrong", scale, size, blended, wrong);
+		check(wrong == 0, "scale " + scale + ": " + wrong + " wheel pixels differ from the colour picked there over the panel" + first);
+		check(blended > 0, "scale " + scale + ": the wheel's rim is anti-aliased");
+		String element = context.computeOnClient(client -> wheelElement(screen(client).picker().wheel(), scale));
+		check(element.isEmpty(), "scale " + scale + ": the wheel is not one texture of its size drawn 1:1: " + element);
+	}
+
+	/**
+	 * REQ-UI-47 (T3.19), at GUI scale 2: while the wheel's texture counts as not made, the picker draws the 1.2.1 wheel, one
+	 * blit of the whole 128 px texture over the wheel's bounds and no 1:1 wheel element: red at the wheel's left, cyan at its
+	 * right and the panel outside the circle. Cleared, the hook frees the fallback's texture again.
+	 */
+	private static void wheelFallsBack(ClientGameTestContext context) {
+		context.runOnClient(client -> WheelTexture.setFallbackForTests(true));
+		try {
+			context.waitTicks(2);
+			Path shot = context.takeScreenshot("t3.19-wheel-fallback-scale-2");
+			String element = context.computeOnClient(client -> wheelElement(screen(client).picker().wheel(), 2));
+			check(!element.isEmpty(), "the fallback is not the wheel baked for the scale");
+			String blit = context.computeOnClient(client -> legacyBlit(screen(client).picker().wheel()));
+			check(blit.isEmpty(), "the fallback is not one blit of the 1.2.1 wheel over the wheel's bounds: " + blit);
+			int[] left = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.06, 0.5));
+			int[] right = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.94, 0.5));
+			int[] corner = context.computeOnClient(client -> screen(client).wheelBoxPoint(0.02, 0.02));
+			int l = pixel(shot, left), r = pixel(shot, right), c = pixel(shot, corner);
+			LOGGER.info("colour wheel fallback: left {}, right {}, corner {}", Integer.toHexString(l), Integer.toHexString(r), Integer.toHexString(c));
+			check((l >> 16 & 0xFF) > (l >> 8 & 0xFF) + 40 && (l >> 16 & 0xFF) > (l & 0xFF) + 40, "the fallback wheel: red at the left: " + Integer.toHexString(l));
+			check((r & 0xFF) > (r >> 16 & 0xFF) + 40 && (r >> 8 & 0xFF) > (r >> 16 & 0xFF) + 40, "the fallback wheel: cyan at the right: " + Integer.toHexString(r));
+			check(c == (Theme.PANEL & 0xFFFFFF), "the fallback wheel: outside the circle is the panel: " + Integer.toHexString(c));
+			// AC-UI-51 (T3.41): the fallback is tinted to the brightness as well: at half brightness its red is about half.
+			float value = context.computeOnClient(client -> screen(client).picker().state().hsv().v());
+			context.runOnClient(client -> screen(client).picker().state().setBrightness(value / 2));
+			try {
+				context.waitTicks(2);
+				int half = pixel(context.takeScreenshot("t3.41-wheel-fallback-half-brightness"), left);
+				LOGGER.info("colour wheel fallback at brightness {}: left {}", value / 2, Integer.toHexString(half));
+				check(Math.abs((half >> 16 & 0xFF) - (l >> 16 & 0xFF) / 2) <= 4,
+						"the fallback wheel at half brightness: red " + (half >> 16 & 0xFF) + ", about half of " + (l >> 16 & 0xFF));
+			} finally {
+				context.runOnClient(client -> screen(client).picker().state().setBrightness(value));
+			}
+		} finally {
+			context.runOnClient(client -> WheelTexture.setFallbackForTests(false));
+		}
+	}
+
+	/**
+	 * On the client thread: the wheel drawn into a fresh render state, and "" if that is one blit of the whole
+	 * {@link WheelTexture#LEGACY_SIZE} px texture over the wheel's bounds, else what differs.
+	 */
+	private static String legacyBlit(ColorWheel wheel) {
+		GuiRenderState state = new GuiRenderState();
+		wheel.draw(new GuiGraphicsExtractor(Minecraft.getInstance(), state, 0, 0), Minecraft.getInstance().font, -1, -1);
+		List<BlitRenderState> blits = new ArrayList<>();
+		state.forEachElement(element -> {
+			if (element instanceof BlitRenderState blit) {
+				blits.add(blit);
+			}
+		}, GuiRenderState.TraverseRange.ALL);
+		if (blits.size() != 1) {
+			return blits.size() + " blits";
+		}
+		BlitRenderState blit = blits.get(0);
+		GpuTextureView view = blit.textureSetup().texure0();
+		if (view.getWidth(0) != WheelTexture.LEGACY_SIZE || view.getHeight(0) != WheelTexture.LEGACY_SIZE) {
+			return "a texture of " + view.getWidth(0) + "x" + view.getHeight(0);
+		}
+		if (blit.x0() != wheel.x || blit.y0() != wheel.y || blit.x1() != wheel.x + wheel.width || blit.y1() != wheel.y + wheel.height) {
+			return "drawn over " + blit.x0() + "," + blit.y0() + ".." + blit.x1() + "," + blit.y1();
+		}
+		return blit.u0() == 0 && blit.v0() == 0 && blit.u1() == 1 && blit.v1() == 1 ? "" : "not the whole texture";
+	}
+
+	/**
+	 * On the client thread: the wheel drawn into a fresh render state, and "" if its largest textured element shows its whole
+	 * texture of wheel size × scale texels 1:1 with the linear, clamp-to-edge sampler, else what differs.
+	 */
+	private static String wheelElement(ColorWheel wheel, int scale) {
+		GuiRenderState state = new GuiRenderState();
+		wheel.draw(new GuiGraphicsExtractor(Minecraft.getInstance(), state, 0, 0), Minecraft.getInstance().font, -1, -1);
+		ShapeRenderState[] largest = {null};
+		state.forEachElement(element -> {
+			if (element instanceof ShapeRenderState shape && shape.uvs() != null && (largest[0] == null || shape.quads()[2] > largest[0].quads()[2])) {
+				largest[0] = shape;
+			}
+		}, GuiRenderState.TraverseRange.ALL);
+		int size = wheel.width * scale;
+		ShapeRenderState shape = largest[0];
+		if (shape == null) {
+			return "no textured shape element";
+		}
+		if (!Arrays.equals(shape.quads(), new int[] {0, 0, size, size}) || !Arrays.equals(shape.uvs(), new float[] {0, 0, 1, 1})) {
+			return "quad " + Arrays.toString(shape.quads()) + " uv " + Arrays.toString(shape.uvs()) + ", expected the whole texture at " + size + " px";
+		}
+		GpuTextureView view = shape.textureSetup().texure0();
+		if (view.getWidth(0) != size || view.getHeight(0) != size) {
+			return "a texture of " + view.getWidth(0) + "x" + view.getHeight(0) + ", expected " + size;
+		}
+		Vector2f from = shape.pose().transformPosition(0, 0, new Vector2f());
+		Vector2f to = shape.pose().transformPosition(size, size, new Vector2f());
+		if (Math.abs(to.x - from.x - wheel.width) > 1e-3 || Math.abs(to.y - from.y - wheel.height) > 1e-3) {
+			return "drawn " + (to.x - from.x) + " GUI px wide, not 1:1";
+		}
+		GpuSampler linear = RenderSystem.getSamplerCache().getSampler(AddressMode.CLAMP_TO_EDGE, AddressMode.CLAMP_TO_EDGE, FilterMode.LINEAR,
+				FilterMode.LINEAR, false);
+		return shape.textureSetup().sampler0() == linear ? "" : "not the linear, clamp-to-edge sampler";
+	}
+
+	/** {@code top} over {@code bottom} (both 0xRRGGBB) at coverage {@code alpha} (0-255), as the GUI blend draws it. */
+	private static int blend(int top, int bottom, int alpha) {
+		int out = 0;
+		for (int shift = 0; shift <= 16; shift += 8) {
+			out |= Math.round(((top >> shift & 0xFF) * alpha + (bottom >> shift & 0xFF) * (255 - alpha)) / 255F) << shift;
+		}
+		return out;
+	}
+
+	/** Within 8 per colour channel. */
+	private static boolean near(int a, int b) {
+		return within(a, b, 8);
+	}
+
+	/** Whether each colour channel of a and b differs by at most {@code tolerance}. */
+	private static boolean within(int a, int b, int tolerance) {
+		for (int shift = 0; shift <= 16; shift += 8) {
+			if (Math.abs((a >> shift & 0xFF) - (b >> shift & 0xFF)) > tolerance) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * AC-UI-64 [C] (REQ-UI-60, T3.50) at GUI scale 2: the translucent swatch's board has 3 GUI px cells from its top-left
+	 * corner: on its third cell row (GUI 6-8 down, clear of the rounded corners), GUI px 4 and 5 lie in one dark cell, 7 in a
+	 * light one, 10 in a dark one and 13 in a light one; beside the rounded corner the dark cell at GUI 4, 1 is drawn too.
+	 */
+	private static void swatchCheckerboard(ClientGameTestContext context) {
+		int[] box = context.computeOnClient(client -> new int[] {screen(client).alphaSwatch.x(), screen(client).alphaSwatch.y()});
+		java.awt.image.BufferedImage image = HairlineProbe.read(context.takeScreenshot("t3.50-swatch-checkerboard"));
+		int row = (box[1] + 7) * 2;
+		int[] at = new int[5];
+		int[] columns = {4, 5, 7, 10, 13};
+		for (int i = 0; i < columns.length; i++) {
+			int rgb = image.getRGB((box[0] + columns[i]) * 2, row);
+			at[i] = (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF);
+		}
+		check(at[0] == at[1] && at[0] + 30 < at[2] && at[3] + 30 < at[2] && at[3] + 30 < at[4],
+				"3 GUI px cells from the corner: dark, dark, light, dark, light at 4, 5, 7, 10, 13: " + java.util.Arrays.toString(at));
+		// Beside the rounded top-left corner, inside the outline, the dark cell from 3 to 6 is drawn there too (GUI 4, 1).
+		int besideCorner = image.getRGB((box[0] + 4) * 2, (box[1] + 1) * 2);
+		int corner = (besideCorner >> 16 & 0xFF) + (besideCorner >> 8 & 0xFF) + (besideCorner & 0xFF);
+		check(Math.abs(corner - at[0]) <= 6, "the dark cell beside the corner is drawn: " + corner + " against a dark cell's " + at[0]);
+		LOGGER.info("swatch checkerboard at 4, 5, 7, 10, 13: {}", java.util.Arrays.toString(at));
+	}
+
+	/** The brightest pixel's r + g + b in the GUI box from (x0, y0) to (x1, y1) of a screenshot at GUI scale {@code scale}. */
+	private static int brightness(java.awt.image.BufferedImage image, int x0, int y0, int x1, int y1, int scale) {
+		int best = 0;
+		for (int y = Math.max(0, y0 * scale); y < Math.min(image.getHeight(), y1 * scale); y++) {
+			for (int x = Math.max(0, x0 * scale); x < Math.min(image.getWidth(), x1 * scale); x++) {
+				int rgb = image.getRGB(x, y);
+				best = Math.max(best, (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF));
+			}
+		}
+		return best;
 	}
 
 	private static int pixel(Path screenshot, int[] point) {

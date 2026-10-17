@@ -333,6 +333,31 @@ published. The 2.0.0 steps extend this document (PLAN T7.2c).
 
 ## Release records
 
+### v1.2.1, published 2026-10-15
+
+- **PR #3** was merged as merge commit `ea32dea` after the maintainer's approval ("merge"); its head
+  `2d44ce6` was the approved commit, and CI was green on both. The annotated tag `v1.2.1` is on the
+  merge commit, with the noreply identity, pushed after the maintainer's "ship". The number is the
+  maintainer's choice (R45): the release adds features under a PATCH number.
+- **Build:** `./gradlew clean build` ran from the detached tag. All 882 unit tests passed.
+  - Jar: `sha256:5f95dab1802dcdd5d52c7b10f186c0679628a38464be597c1fa829b6f8c5cbb7` (1,126,838 bytes).
+    It nests only Render Chest.
+  - Sidecar: `sha256:25d17d47bd7156756dbeb1ab7db06bf0c041d0ac4533b2ccb1489a9d61fb4f9d`.
+- **Draft checks:** `release-check.sh v1.2.1` printed PASS, with all five steps `[ok]`. It ran
+  before and after the tier D boot.
+- **Tier D:** the maintainer's 51-jar `26.2 Skyblock` mod set (copied; its installed 1.2.0 jar
+  left out by the task). The baseline loaded 183 mods without this mod (no `- k8bas_skyblock_utility`
+  line); both boots reached the title screen. The release run loaded 184 mods, among them
+  `k8bas_skyblock_utility 1.2.1+26.2` and `fabric-language-kotlin 1.14.2+kotlin.2.4.21`. Both had
+  the same 8 distinct ERROR messages (offline-account log-ins of other mods) once thread names and
+  object hashes are removed, so the release jar added no ERROR line. It added one WARN line, from
+  Iris: `Found okay program match for k8bas_skyblock_utility:pipeline/marker_ring: BASIC_COLOR`.
+  That is Iris accepting the hotspot ring's own pipeline, which the mod assigns to Iris's basic
+  program so that rings show with shaderpacks; it is expected and not a fault.
+- **Published** as Latest, not as a pre-release, at 2026-10-15T16:59:09Z. The assets are only the
+  jar and the sidecar, both `uploaded`, and the body equals the CHANGELOG section. An anonymous
+  `GET …/releases/latest` is v1.2.1.
+
 ### v1.2.0, published 2026-10-09
 
 - **PR #2** was merged as merge commit `c33ba20` after the maintainer's approval ("merge"); its head

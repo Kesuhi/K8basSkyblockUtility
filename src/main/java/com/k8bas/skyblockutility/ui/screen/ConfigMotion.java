@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.ui.screen;
 
 import com.k8bas.skyblockutility.ui.render.Easing;
+import com.k8bas.skyblockutility.ui.render.Shapes;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
@@ -31,12 +32,14 @@ final class ConfigMotion {
 	private int direction;
 
 	private float scale = 1F;
+	/** How far the slide still has to go this frame, in GUI px, unrounded and unsigned. */
+	private float slideRest;
 	private int slide;
 	private int veil;
 
 	/**
-	 * @param clock   milliseconds (UiClock.MILLIS in the game)
-	 * @param enabled false: nothing ever animates (the gametests, unless one turns it on)
+	 * @param clock   milliseconds, of the screen's UI clock source (REQ-UI-39)
+	 * @param enabled that source's motion; false (Animations OFF, the gametests' default): nothing animates
 	 */
 	ConfigMotion(LongSupplier clock, BooleanSupplier enabled) {
 		this.clock = clock;
@@ -64,6 +67,7 @@ final class ConfigMotion {
 		switchArmed = false;
 		switching = false;
 		scale = 1F;
+		slideRest = 0F;
 		slide = 0;
 		veil = 0;
 	}
@@ -94,6 +98,7 @@ final class ConfigMotion {
 				scale = OPEN_FROM + (1F - OPEN_FROM) * Easing.outCubic(progress);
 			}
 		}
+		slideRest = 0F;
 		slide = 0;
 		veil = 0;
 		if (switching) {
@@ -102,7 +107,8 @@ final class ConfigMotion {
 				switching = false;
 			} else {
 				float rest = 1F - Easing.outCubic(progress);
-				slide = Math.round(rest * SLIDE_PX) * direction;
+				slideRest = rest * SLIDE_PX;
+				slide = Math.round(slideRest) * direction;
 				veil = Math.round(rest * 255);
 			}
 		}
@@ -121,9 +127,17 @@ final class ConfigMotion {
 		return scale;
 	}
 
-	/** How far the content is drawn below (positive) or above its place this frame, in GUI px. */
+	/** How far the content is laid out below (positive) or above its place this frame, in whole GUI px: where clicks meet it. */
 	int slideOffset() {
 		return slide;
+	}
+
+	/**
+	 * How far the content is drawn below or above its place this frame (REQ-UI-34): on the physical-pixel grid at GUI scale
+	 * {@code scale}, within half a GUI px of {@link #slideOffset()}.
+	 */
+	float slideDrawn(int scale) {
+		return slideRest == 0F ? 0F : Shapes.snap(slideRest, scale) * direction;
 	}
 
 	/** The alpha of the panel-coloured veil over the content this frame: 255 at the switch, 0 once settled. */

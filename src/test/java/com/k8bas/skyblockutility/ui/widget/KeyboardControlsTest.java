@@ -17,6 +17,86 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** REQ-UI-18 (T2.9b): what Space/Enter and the arrows do to each focused control, and which controls are Tab stops. */
 class KeyboardControlsTest {
+	/**
+	 * AC-UI-06 as amended (R46, your change of 2026-10-15): a 0.1-step slider at 1.00 takes no wheel, and with keyboard focus 3
+	 * presses of the right arrow raise it to 1.30, Shift giving the fine step to 1.31.
+	 */
+	@Test
+	void aDecimalSliderStepsByKeyAndNotByWheel() {
+		long[] value = {100};
+		Slider slider = new Slider(SliderModel.ofDecimal(0.5, 3.0, 0.1, 2), () -> value[0], v -> value[0] = v, () -> { }, Long::toString, () -> { });
+		slider.setBounds(0, 0, 110, 12);
+		assertFalse(slider.scroll(50, 6, 3, false), "the wheel is not taken");
+		assertEquals(100, value[0]);
+		for (int i = 0; i < 3; i++) {
+			assertTrue(slider.navKey(NavKey.RIGHT, false));
+		}
+		assertEquals(130, value[0], "3 right arrows: 1.30");
+		assertTrue(slider.navKey(NavKey.RIGHT, true));
+		assertEquals(131, value[0], "Shift: the fine step, 1.31");
+	}
+
+	/**
+	 * REQ-UI-40 (T3.30): the colour picker's slider has the slider's round knob, whose centre runs inside the track: a press at
+	 * the knob's half width from either end is 0 or 1, and the middle is a half.
+	 */
+	@Test
+	void aGradientSlidersKnobRunsInsideItsTrack() {
+		float[] set = {0.5F};
+		GradientSlider gradient = new GradientSlider(() -> set[0], v -> set[0] = v, step -> step, false);
+		gradient.setBounds(0, 0, 110, 10);
+		int half = Slider.KNOB_SIZE / 2;
+		gradient.press(half, 5, 0);
+		assertEquals(0F, set[0], 1e-6, "the left end");
+		gradient.drag(110 - half, 5);
+		assertEquals(1F, set[0], 1e-6, "the right end");
+		gradient.drag(55, 5);
+		assertEquals(0.5F, set[0], 1e-6, "the middle");
+		gradient.release(55, 5);
+		assertEquals(55F, gradient.knobCentre(), 1e-4, "its knob is drawn there");
+	}
+
+	/** REQ-UI-40: a region in a rounded panel's corner keeps its scrollbar's track short of the corner. */
+	@Test
+	void aRegionsTrackCanStopShortOfItsBottom() {
+		ScrollArea area = new ScrollArea();
+		area.setBounds(0, 0, 300, 200);
+		area.setContentHeight(2000);
+		area.setTrackInset(4);
+		area.setScroll(area.maxScroll());
+		var thumb = area.thumb();
+		assertEquals(196, thumb.offset() + thumb.length(), "at the bottom the thumb ends 4 GUI px up");
+		assertTrue(area.press(298, 199, 0), "a press below the track still takes the scrollbar");
+		area.release(298, 199);
+	}
+
+	/** REQ-UI-37, EC-UI-25: while dragged, the colour picker's slider and a region's thumb block the wheel, and not otherwise. */
+	@Test
+	void dragsBlockTheWheel() {
+		float[] set = {0F};
+		GradientSlider gradient = new GradientSlider(() -> set[0], v -> set[0] = v, step -> step, false);
+		gradient.setBounds(0, 0, 100, 10);
+		assertFalse(gradient.blocksWheel());
+		assertTrue(gradient.press(50, 5, 0));
+		assertTrue(gradient.blocksWheel(), "the gradient slider while dragged");
+		gradient.release(50, 5);
+		assertFalse(gradient.blocksWheel());
+		ScrollArea area = new ScrollArea();
+		area.setBounds(0, 0, 300, 200);
+		area.setContentHeight(2000);
+		assertTrue(area.press(298, 2, 0), "the thumb");
+		assertTrue(area.blocksWheel(), "a region while its thumb is dragged");
+		area.release(298, 2);
+		assertFalse(area.blocksWheel());
+		VirtualList list = new VirtualList(18, () -> 5000, (graphics, font, index, x, y, w, h, hovered) -> { }, index -> { });
+		list.setBounds(0, 0, 160, 200);
+		assertTrue(list.press(158, 2, 0));
+		assertTrue(list.blocksWheel(), "a list while its thumb is dragged");
+		list.release(158, 2);
+		assertFalse(list.blocksWheel());
+		assertTrue(list.press(50, 2, 0), "a row");
+		assertFalse(list.blocksWheel(), "a press on a row does not");
+	}
 	private int clicks;
 
 	// --- Toggle ---

@@ -3,13 +3,18 @@ package com.k8bas.skyblockutility.ui.screen;
 import com.k8bas.skyblockutility.ui.option.RuleGroup;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
 import com.k8bas.skyblockutility.ui.widget.NavKey;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * A rule's header (REQ-UI-11): a chevron, the rule's colour dot and its label, cut with "..." when long
@@ -24,17 +29,42 @@ final class RuleHeaderWidget extends Widget {
 
 	private final RuleGroup rule;
 	private final Runnable toggle;
+	/** The query as the search sees it; its matches in the label are marked (REQ-UI-51). */
+	private final Supplier<String> query;
+	/** The match boxes as drawn last, {x, y, w, h} in GUI px (for gametests). */
+	private List<int[]> drawnMarks = List.of();
 	private boolean expanded;
+	/** How far its card is open, 0 to 1, eased while it opens or closes (REQ-UI-52); the chevron turns with it. */
+	private float reveal;
 	/** The width kept free at the right end for the Remove button, 0 when there is none. */
 	private int actionRoom;
 
 	RuleHeaderWidget(RuleGroup rule, Runnable toggle) {
+		this(rule, toggle, () -> "");
+	}
+
+	RuleHeaderWidget(RuleGroup rule, Runnable toggle, Supplier<String> query) {
 		this.rule = rule;
 		this.toggle = toggle;
+		this.query = query;
+	}
+
+	/** The match boxes as drawn last, {x, y, w, h} in GUI px (for gametests). */
+	List<int[]> marksForTests() {
+		return drawnMarks;
 	}
 
 	void setExpanded(boolean expanded) {
 		this.expanded = expanded;
+	}
+
+	void setReveal(float reveal) {
+		this.reveal = reveal;
+	}
+
+	/** How far its card is open, 0 to 1, as the chevron shows it. */
+	float reveal() {
+		return reveal;
 	}
 
 	boolean expanded() {
@@ -105,13 +135,25 @@ final class RuleHeaderWidget extends Widget {
 		return label == null || label.isBlank() ? UNNAMED : label.strip();
 	}
 
+	/** The hand (a click opens or closes the rule); over its Remove button, that button decides. */
+	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return overAction(mouseX) ? null : PointerShape.HAND;
+	}
+
 	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		if (button != 0 || !contains(mouseX, mouseY) || overAction(mouseX)) {
 			return false;
 		}
+		held = true;
 		toggle.run();
 		return true;
+	}
+
+	@Override
+	public void release(double mouseX, double mouseY) {
+		held = false;
 	}
 
 	@Override
@@ -123,9 +165,26 @@ final class RuleHeaderWidget extends Widget {
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		float hover = hoverAmount(contains(mouseX, mouseY) && !overAction(mouseX));
-		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover)));
+		// REQ-UI-53: held down, mixed toward black over its eased hover colour.
+		int background = pressed(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover), pressLook(mouseX, mouseY));
+		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(background));
 		int midY = y + height / 2;
-		drawChevron(graphics, x + 10, midY);
+		// REQ-UI-32: the kit's chevron, pointing right while closed, down while open; REQ-UI-52: turning between them as the
+		// card opens or closes, a quarter turn about its centre.
+		if (reveal > 0F && reveal < 1F) {
+			graphics.pose().pushMatrix();
+			try {
+				graphics.pose().translate(x + 10, midY);
+				graphics.pose().rotate((float) (reveal * Math.PI / 2));
+				graphics.pose().translate(-(x + 10), -midY);
+				Shapes.icon(graphics, IconShapes.Icon.CHEVRON_RIGHT, x + 6, midY - 4, 8, faded(Theme.TEXT_SECONDARY));
+			} finally {
+				graphics.pose().popMatrix();
+			}
+		} else {
+			Shapes.icon(graphics, reveal >= 1F ? IconShapes.Icon.CHEVRON_DOWN : IconShapes.Icon.CHEVRON_RIGHT, x + 6, midY - 4, 8,
+					faded(Theme.TEXT_SECONDARY));
+		}
 		Shapes.roundedRect(graphics, x + 22, midY - DOT / 2, DOT, DOT, DOT / 2, faded(0xFF000000 | rule.colour().getAsInt()));
 		int textX = x + 22 + DOT + 6;
 		int textY = y + (height - font.lineHeight) / 2 + 1;
@@ -137,19 +196,12 @@ final class RuleHeaderWidget extends Widget {
 			room -= warning;
 		}
 		String title = title();
-		UiText.draw(graphics, font, Ellipsis.fit(title, room, font::width), textX, textY,
-				faded(title.equals(UNNAMED) ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY));
+		String shown = Ellipsis.fit(title, room, font::width);
+		// REQ-UI-51: the label's matches on tinted boxes; "(unnamed)" is no label, so it has none.
+		drawnMarks = title.equals(UNNAMED) ? List.of()
+				: OptionCard.drawMarks(graphics, font, title, List.of(shown), !shown.equals(title), query.get(), textX, textY, 0,
+						faded(OptionCard.markColour(Theme.current().accent())));
+		UiText.draw(graphics, font, shown, textX, textY, faded(title.equals(UNNAMED) ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY));
 	}
 
-	/** A small triangle: pointing right while closed, down while open. */
-	private void drawChevron(GuiGraphicsExtractor graphics, int cx, int cy) {
-		int colour = faded(Theme.TEXT_SECONDARY);
-		for (int i = 0; i < 4; i++) {
-			if (expanded) {
-				graphics.fill(cx - 3 + i, cy - 2 + i, cx + 4 - i, cy - 1 + i, colour);
-			} else {
-				graphics.fill(cx - 2 + i, cy - 3 + i, cx - 1 + i, cy + 4 - i, colour);
-			}
-		}
-	}
 }

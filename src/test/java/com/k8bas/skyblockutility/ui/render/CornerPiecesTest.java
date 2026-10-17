@@ -2,9 +2,6 @@ package com.k8bas.skyblockutility.ui.render;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -71,6 +68,36 @@ class CornerPiecesTest {
 		}
 	}
 
+	/**
+	 * REQ-UI-28 (T3.16): a one-cap pill, round on one side and square on the other, still covers its box exactly once, and
+	 * matches the fill-based one-cap shape; its square corners are fills.
+	 */
+	@Test
+	void oneCapPillsTileAndMatchTheFillShape() {
+		for (int corners : new int[] {Corners.LEFT, Corners.RIGHT}) {
+			for (int r = 1; r <= 8; r++) {
+				int[] fillMask = CornerMask.bakeFill(r);
+				for (int w = 2 * r; w <= 24; w++) {
+					int h = 2 * r;
+					int n = CornerPieces.fill(w, h, r, corners, pieces);
+					int[][] count = count(n, w, h);
+					for (int y = 0; y < h; y++) {
+						for (int x = 0; x < w; x++) {
+							assertEquals(1, count[y][x], w + "x" + h + " radius " + r + " corners " + corners + ", pixel " + x + "," + y);
+						}
+					}
+					assertSameShape(draw(n, fillMask, r, w, h), CornerMaskTest.cover(Corners.fill(w, h, r, corners), w, h),
+							w + "x" + h + " radius " + r + " corners " + corners);
+					int masks = 0;
+					for (int i = 0; i < n; i++) {
+						masks += pieces[i * CornerPieces.STRIDE] == CornerPieces.KIND_MASK ? 1 : 0;
+					}
+					assertEquals(2, masks, "only the round side's two corners are masks");
+				}
+			}
+		}
+	}
+
 	@Test
 	void maskQuadsUseTheirOwnQuadrant() {
 		int n = CornerPieces.fill(30, 20, 6, pieces);
@@ -128,16 +155,6 @@ class CornerPiecesTest {
 		assertEquals(CornerMask.MAX_RADIUS, CornerPieces.clampRadius(1000, 1000, CornerMask.MAX_RADIUS));
 		assertEquals(4, CornerPieces.clampRadius(9, 9, 6), "half the shorter side");
 		assertEquals(0, CornerPieces.clampRadius(9, 9, -2));
-	}
-
-	@Test
-	void keysAreDistinct() {
-		Set<Integer> keys = new HashSet<>();
-		for (int r = 1; r <= CornerMask.MAX_RADIUS; r++) {
-			for (int t = 0; t <= r; t++) {
-				assertTrue(keys.add(CornerPieces.key(r, t)), r + "/" + t);
-			}
-		}
 	}
 
 	private int[][] count(int n, int w, int h) {

@@ -71,6 +71,16 @@ class HudSnapTest {
 		assertEquals(120, snap(new HudRect(600, 123, 60, 30), List.of(other)).y(), "top 123 to its bottom 120");
 	}
 
+	/** REQ-HUD-14 [R47], AC-HUD-16 [A] (T3.54): an element's centre lines snap to another's within 4 px, with a guide each; 5 px is too far. */
+	@Test
+	void centresSnapToOtherElementsCentres() {
+		HudRect other = new HudRect(100, 300, 80, 40);
+		HudRect snapped = snap(new HudRect(128, 313, 30, 10), List.of(other));
+		assertEquals(new HudRect(125, 315, 30, 10), snapped, "centre (143, 318) to its centre (140, 320)");
+		assertEquals(List.of(new HudSnap.Guide(true, 140), new HudSnap.Guide(false, 320)), HudSnap.guides(snapped, W, H, List.of(other)));
+		assertEquals(new HudRect(130, 100, 30, 10), snap(new HudRect(130, 100, 30, 10), List.of(other)), "5 px from its centre line: no snap");
+	}
+
 	@Test
 	void theNearestTargetWins() {
 		List<HudRect> others = List.of(new HudRect(200, 400, 10, 10), new HudRect(264, 400, 10, 10));

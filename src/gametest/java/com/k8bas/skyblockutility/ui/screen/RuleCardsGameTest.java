@@ -1,5 +1,8 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import com.k8bas.skyblockutility.ui.render.IconProbe;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
+import com.k8bas.skyblockutility.ui.render.Theme;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -66,11 +69,14 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 			context.getInput().setCursorPos(2, 2);
 			context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
 			context.waitTicks(3);
+			ruleHeaderChevron(context);
 			originalValues(context);
 			invalidRegex(context);
 			editsSurviveTheClose(context);
 			searchOpensTheRule(context);
+			searchMarksItsMatches(context);
 			anyNameWithoutATypeWarns(context);
+			anEmptyListShowsItsPlaceholder(context);
 		} finally {
 			context.runOnClient(client -> {
 				MobRulesForTests.use(mobsBefore);
@@ -168,6 +174,25 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 
 	private static boolean shown(ConfigScreen screen, String id) {
 		return screen.page().page().rows().stream().anyMatch(row -> row instanceof ConfigLayout.OptionRow option && option.option().id().equals(id));
+	}
+
+	/**
+	 * AC-UI-33 [C] (T3.21): at GUI scale 2 the first rule header's chevron is the kit's, right while the rule is closed and
+	 * down while open, drawn 1:1 with anti-aliased edges in the secondary text colour (at 45 % on a dimmed card).
+	 */
+	private static void ruleHeaderChevron(ClientGameTestContext context) {
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		check(scale == 2, "the rule header chevron is checked at GUI scale 2: " + scale);
+		Path shot = context.takeScreenshot("t3.21-rule-header-scale-2");
+		int[] at = context.computeOnClient(client -> {
+			RuleHeaderWidget header = (RuleHeaderWidget) screen(client).page().header(headers(screen(client)).get(0).rule());
+			return new int[] {header.x(), header.y(), header.height(), header.expanded() ? 1 : 0, header.isDimmed() ? 1 : 0};
+		});
+		// A dimmed widget draws at 45 % of its alpha (Widget.faded).
+		int colour = at[4] == 1 ? (0xFF * 45 / 100) << 24 | Theme.TEXT_SECONDARY & 0xFFFFFF : Theme.TEXT_SECONDARY;
+		String chevron = IconProbe.check(shot, at[3] == 1 ? IconShapes.Icon.CHEVRON_DOWN : IconShapes.Icon.CHEVRON_RIGHT, at[0] + 6, at[1] + at[2] / 2 - 4, 8,
+				scale, colour);
+		check(chevron.isEmpty(), "the rule header's chevron: " + chevron);
 	}
 
 	/** AC-UI-15 [C]: the original label, dot colour, island, pattern and colour. */
@@ -324,6 +349,175 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		rule.namePattern = label;
 		rule.island = island;
 		return rule;
+	}
+
+	/**
+	 * AC-UI-55 [C] (T3.44) at GUI scale 2, after {@link #searchOpensTheRule}: "trini" puts a tinted box behind "Trini" of
+	 * Trinity's label; "mob" behind "Mob" of the scan range's title and "mob" of its description. In each box the row above
+	 * the glyphs is tinted toward the accent against the card just above it, and its brightest glyph pixel is the line's
+	 * text colour as outside the box; a cleared query leaves no box.
+	 */
+	private static void searchMarksItsMatches(ClientGameTestContext context) {
+		check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == 2, "the search marks are checked at GUI scale 2");
+		// "trini": one box, as wide as "Trini" in the game's font, behind the start of Trinity's label.
+		List<int[]> label = context.computeOnClient(client -> screen(client).page().header(headerRule(screen(client), "Trinity")).marksForTests());
+		int trini = context.computeOnClient(client -> client.font.width("Trini"));
+		Path triniShot = context.takeScreenshot("t3.44-search-marks-trini");
+		int headerRight = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().header(headerRule(screen(client), "Trinity"));
+			return widget.x() + widget.width();
+		});
+		check(label.size() == 1 && label.get(0)[2] == trini, "\"trini\" marks \"Trini\" of Trinity's label, " + trini + " GUI px: "
+				+ label.stream().map(java.util.Arrays::toString).toList());
+		String log = markProbe(triniShot, label.get(0), headerRight, "Trinity's label");
+		// "mob": two boxes on the scan range's card, "Mob" on its title row and "mob" of "mobs" on a description row.
+		replaceQuery(context, "mob");
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(3);
+		List<int[]> card = context.computeOnClient(client -> screen(client).page().card(option(screen(client), "mob_highlighter.scan_range")).marksForTests());
+		int[] cardBox = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().card(option(screen(client), "mob_highlighter.scan_range"));
+			return new int[] {widget.x() + widget.width(), widget.y()};
+		});
+		int[] widths = context.computeOnClient(client -> new int[] {client.font.width("Mob"), client.font.width("mob")});
+		Path mob = context.takeScreenshot("t3.44-search-marks-mob");
+		check(card.size() == 2, "\"mob\" marks the scan range's title and description, one box each: " + card.size() + " boxes");
+		check(card.get(0)[1] == cardBox[1] + 7 && card.get(0)[2] == widths[0], "\"Mob\" on the title row (card y + 8, less 1), "
+				+ widths[0] + " GUI px wide: " + java.util.Arrays.toString(card.get(0)));
+		check((card.get(1)[1] == cardBox[1] + 19 || card.get(1)[1] == cardBox[1] + 29) && card.get(1)[2] == widths[1],
+				"\"mob\" on a description row, " + widths[1] + " GUI px wide: " + java.util.Arrays.toString(card.get(1)));
+		for (int[] box : card) {
+			log += "; " + markProbe(mob, box, cardBox[0], "the scan range card");
+		}
+		// "radius" is one of the scan range's keywords, not in its text: the card is shown, with no box.
+		focusSearch(context);
+		replaceQuery(context, "radius");
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(3);
+		boolean shown = context.computeOnClient(client -> screen(client).page().page().rows().stream()
+				.anyMatch(r -> r instanceof ConfigLayout.OptionRow o && o.option().id().equals("mob_highlighter.scan_range")));
+		int keyword = context.computeOnClient(client -> screen(client).page().card(option(screen(client), "mob_highlighter.scan_range")).marksForTests().size());
+		check(shown && keyword == 0, "a match only in a keyword shows the card with no box: shown " + shown + ", " + keyword + " boxes");
+		// Cleared with the keys, as a player clears it: in the next frame the card has no box.
+		focusSearch(context);
+		replaceQuery(context, "");
+		String cleared = context.computeOnClient(client -> screen(client).query());
+		int left = context.computeOnClient(client -> screen(client).page().card(option(screen(client), "mob_highlighter.scan_range")).marksForTests().size());
+		check(cleared.isEmpty() && left == 0, "a cleared query leaves no box: \"" + cleared + "\", " + left + " boxes");
+		LOGGER.info("search marks: {}", log);
+	}
+
+	/**
+	 * AC-UI-58 [C] (REQ-UI-54, T3.47) at GUI scale 2: with no mob rules, the Mob Highlighter's rule list shows its placeholder
+	 * row, outlined, with its hint; while a search runs it is not shown. The rules come back in the test's finally.
+	 */
+	private static void anEmptyListShowsItsPlaceholder(ClientGameTestContext context) {
+		context.setScreen(() -> null);
+		context.runOnClient(client -> MobRulesForTests.use(List.of()));
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.getInput().setCursorPos(2, 2);
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(3);
+		List<ConfigLayout.RuleEmpty> rows = context.computeOnClient(client -> screen(client).page().page().rows().stream()
+				.filter(ConfigLayout.RuleEmpty.class::isInstance).map(ConfigLayout.RuleEmpty.class::cast).toList());
+		check(rows.size() == 1, "the empty Mob Highlighter list shows one placeholder row: " + rows.size());
+		Path shot = context.takeScreenshot("t3.47-empty-rule-list");
+		int[] rect = context.computeOnClient(client -> {
+			ConfigLayout.Rect r = ConfigLayout.row(screen(client).frame(), screen(client).scrollArea().scroll(), rows.get(0));
+			return new int[] {r.x(), r.y(), r.w(), r.h()};
+		});
+		// Its hint in the secondary text colour, left in the row.
+		int brightest = brightest(readImage(shot), (rect[0] + 8) * 2, (rect[0] + 120) * 2, rect[1] * 2, (rect[1] + rect[3]) * 2);
+		check(distance(brightest, Theme.TEXT_SECONDARY & 0xFFFFFF) <= 6, "the hint is drawn in the secondary text colour: " + Integer.toHexString(brightest));
+		focusSearch(context);
+		replaceQuery(context, "range");
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(2);
+		boolean none = context.computeOnClient(client -> screen(client).page().page().rows().stream().noneMatch(ConfigLayout.RuleEmpty.class::isInstance));
+		check(none, "no placeholder while searching");
+		LOGGER.info("empty rule list: one placeholder row at {}, its hint {}", java.util.Arrays.toString(rect), Integer.toHexString(brightest));
+	}
+
+	private static java.awt.image.BufferedImage readImage(Path shot) {
+		try {
+			return javax.imageio.ImageIO.read(shot.toFile());
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
+	}
+
+	/** Clicks into the search box, so the keys reach it. */
+	private static void focusSearch(ClientGameTestContext context) {
+		int[] box = context.computeOnClient(client -> {
+			ConfigLayout.Rect search = screen(client).frame().search();
+			return new int[] {search.x() + 20, search.y() + search.h() / 2};
+		});
+		click(context, box);
+	}
+
+	/** The rule whose header shows {@code label} on the shown page. */
+	private static com.k8bas.skyblockutility.ui.option.RuleGroup headerRule(ConfigScreen screen, String label) {
+		return headers(screen).stream().map(ConfigLayout.RuleHeader::rule).filter(rule -> label.equals(rule.label().get())).findFirst().orElseThrow();
+	}
+
+	/** Checks one match box at GUI scale 2 in the screenshot, its line running to {@code right}; returns a log line. */
+	private static String markProbe(Path shot, int[] box, int right, String what) {
+		java.awt.image.BufferedImage image;
+		try {
+			image = javax.imageio.ImageIO.read(shot.toFile());
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
+		int scale = 2;
+		// The box's top row lies above the glyphs; the row above the box is the card.
+		int inside = image.getRGB((box[0] + box[2] / 2) * scale, box[1] * scale) & 0xFFFFFF;
+		int above = image.getRGB((box[0] + box[2] / 2) * scale, box[1] * scale - 1) & 0xFFFFFF;
+		int accent = Theme.current().accent() & 0xFFFFFF;
+		check(distance(inside, accent) + 20 < distance(above, accent),
+				what + ": the box's top row " + Integer.toHexString(inside) + " is tinted toward the accent against " + Integer.toHexString(above));
+		int brightInside = brightest(image, box[0] * scale, (box[0] + box[2]) * scale, box[1] * scale, (box[1] + box[3]) * scale);
+		// The glyphs just after the box on the same line (each box here is followed by text): not the colour dot or a button.
+		int after = box[0] + box[2];
+		int brightOutside = brightest(image, after * scale, Math.min(right, after + 12) * scale, box[1] * scale, (box[1] + box[3]) * scale);
+		check(distance(brightInside, brightOutside) <= 6,
+				what + ": the text in the box keeps its colour: " + Integer.toHexString(brightInside) + " against " + Integer.toHexString(brightOutside));
+		return what + " box " + box[0] + "," + box[1] + " " + box[2] + "x" + box[3] + " top " + Integer.toHexString(inside) + " over "
+				+ Integer.toHexString(above) + ", text " + Integer.toHexString(brightInside);
+	}
+
+	/** The brightest pixel (by r + g + b) in the physical-pixel rectangle; 0 for an empty one. */
+	private static int brightest(java.awt.image.BufferedImage image, int x0, int x1, int y0, int y1) {
+		int best = 0;
+		for (int y = Math.max(0, y0); y < Math.min(image.getHeight(), y1); y++) {
+			for (int x = Math.max(0, x0); x < Math.min(image.getWidth(), x1); x++) {
+				int rgb = image.getRGB(x, y) & 0xFFFFFF;
+				if (sum(rgb) > sum(best)) {
+					best = rgb;
+				}
+			}
+		}
+		return best;
+	}
+
+	private static int sum(int rgb) {
+		return (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF);
+	}
+
+	private static int distance(int a, int b) {
+		return Math.abs((a >> 16 & 0xFF) - (b >> 16 & 0xFF)) + Math.abs((a >> 8 & 0xFF) - (b >> 8 & 0xFF)) + Math.abs((a & 0xFF) - (b & 0xFF));
+	}
+
+	private static void replaceQuery(ClientGameTestContext context, String query) {
+		context.getInput().holdControl();
+		context.getInput().pressKey(GLFW.GLFW_KEY_A);
+		context.getInput().releaseControl();
+		if (query.isEmpty()) {
+			context.getInput().pressKey(GLFW.GLFW_KEY_BACKSPACE);
+		} else {
+			context.getInput().typeChars(query);
+		}
+		context.waitTicks(2);
 	}
 
 	private static List<ConfigLayout.RuleHeader> headers(ConfigScreen screen) {

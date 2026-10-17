@@ -2,6 +2,8 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A slider's values (REQ-UI-06, AC-UI-06), in whole units of its precision so decimal steps never
@@ -62,7 +64,7 @@ public final class SliderModel {
 	}
 
 	/**
-	 * The value after {@code notches} steps (scroll wheel or keys), up for positive. Off the grid, the
+	 * The value after {@code notches} steps (the arrow keys), up for positive. Off the grid, the
 	 * first step goes to the neighbouring grid value in that direction.
 	 */
 	public long stepFrom(long stored, int notches, boolean useFine) {
@@ -94,6 +96,22 @@ public final class SliderModel {
 		long grid = useFine ? fine : step;
 		long steps = Math.round(fraction * (max - min) / grid);
 		return shown(min + steps * grid);
+	}
+
+	/** How many values its steps reach from the minimum, the maximum always among them. */
+	public long valueCount() {
+		long count = (max - min) / step + 1;
+		return (max - min) % step == 0 ? count : count + 1;
+	}
+
+	/** The values its steps reach from the minimum, in order, the maximum the last (for the tick dots, REQ-UI-58). */
+	public List<Long> values() {
+		List<Long> values = new ArrayList<>();
+		for (long value = min; value < max; value += step) {
+			values.add(value);
+		}
+		values.add(max);
+		return values;
 	}
 
 	/** Where a value sits on the track, 0 to 1. */

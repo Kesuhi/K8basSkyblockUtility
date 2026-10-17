@@ -5,8 +5,13 @@ import com.k8bas.skyblockutility.ui.render.ScaleAbout
 import com.k8bas.skyblockutility.ui.render.Shapes
 import com.k8bas.skyblockutility.ui.render.Theme
 import com.k8bas.skyblockutility.ui.render.TooltipLayout
+import com.k8bas.skyblockutility.ui.render.UiClock
+import com.k8bas.skyblockutility.ui.render.UiFade
 import com.k8bas.skyblockutility.ui.render.UiText
+import com.k8bas.skyblockutility.ui.render.UiTime
 import com.mojang.blaze3d.platform.InputConstants
+import com.mojang.blaze3d.platform.cursor.CursorType
+import com.mojang.blaze3d.platform.cursor.CursorTypes
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -30,7 +35,10 @@ import kotlin.math.sign
  * - One overlay (a dropdown's list, a modal) can be open; it is drawn over everything and gets all
  *   input. A click outside closes a plain overlay unchanged and is not passed on; a modal stays.
  *   Esc closes it without applying anything.
- * - The hovered widget's tooltip is drawn last, over everything, inside the window (REQ-UI-19).
+ * - The hovered widget's tooltip is drawn last, over everything, inside the window (REQ-UI-19), beside its control after the
+ *   pointer has rested there, fading in (REQ-UI-44, [TooltipTimer]).
+ * - Each frame it asks the game for the pointer shape of the widget under the mouse, or of the one being dragged
+ *   (REQ-UI-43), through the call the game's own widgets use.
  * - A screen that opts in ([keyboardNavigation], REQ-UI-18) is also run from the keyboard: Tab and Shift+Tab move a
  *   focus marked by an accent ring, Space/Enter activate, the arrows operate the focused control. Tab is the one
  *   key a typing field or a plain overlay lets go of (to the next control); a modal keeps Tab inside. The Esc
@@ -39,9 +47,16 @@ import kotlin.math.sign
  * The game checks a few keys (the narrator hotkey) before the screen sees them and turns the input
  * method off each tick unless a vanilla text box is focused, so while one of our text fields has the
  * keyboard an invisible vanilla box is the screen's focused element; it never draws or gets input.
+ *
+ * Each frame and input event runs on the screen's UI clock source, [time] (REQ-UI-39): the game's, or a motion
+ * gametest's test clock with motion on. A frame reads its time once, so its layout and its drawing see the same moment
+ * of every animation and glide.
  */
 abstract class WidgetScreen protected constructor(title: Component) : Screen(title), OverlayHost {
 	private val widgets = ArrayList<Widget>()
+
+	/** The UI clock source this screen's frames and input run on (REQ-UI-39); a motion gametest sets its own. */
+	protected var time: UiTime = UiClock.GAME
 	private val keysTaken = HashSet<Int>()
 	private var pressed: Widget? = null
 	private var pressedButton = -1
@@ -52,12 +67,36 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	private var textInputGuard: EditBox? = null
 	private var keyGuard: EditBox? = null
 	private var overlay: Overlay? = null
+	/** The open overlay's open transition (REQ-UI-38): drawing only; input meets its final layout. */
+	private var transition: OverlayTransition? = null
+	/** An overlay that closed and fades out (REQ-UI-55): drawn only, never given input; its `closed()` runs once it is gone. */
+	private var closing: Overlay? = null
+	private var closingTransition: OverlayTransition? = null
 
 	/** Scrolling left over from fractional wheel or trackpad events, below one notch. */
 	private var scrollRest = 0.0
 
-	/** Asked for by [drawContent] this frame. */
+	/** Asked for by [drawContent] this frame, with what it is placed beside. */
 	private var requestedTooltip = ""
+	private val requestedAnchor = IntArray(4)
+
+	/** When the tooltip shows and how far it has faded in (REQ-UI-44). */
+	private val tooltipTimer = TooltipTimer()
+	private val tooltipAnchor = IntArray(4)
+
+	/**
+	 * The mouse buttons pressed on this screen and not released yet, one bit each: no tooltip shows while one is held, whether a
+	 * widget took the press or not (REQ-UI-44). The game keeps its own pressed flags only while no screen is open.
+	 */
+	private var buttonsHeld = 0
+
+	/** The mouse in the last frame, so the tooltip timer knows whether it moved. */
+	private var lastMouseX = Int.MIN_VALUE
+	private var lastMouseY = Int.MIN_VALUE
+
+	/** A gametest's tooltip box, drawn as it is instead of the hovered one (AC-UI-29, AC-UI-49); null for none. */
+	private var placedTooltip: TooltipLayout.Box? = null
+	private var lastTooltipAlpha = 0F
 
 	/** The content's scale and its centre as drawn last (T2.9); the mouse maps back through them until the next frame. */
 	private var frameScale = 1F
@@ -77,6 +116,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	/** Counts focus requests, so a press that asked for one (even for the widget that already had it) keeps it. */
 	private var focusRequests = 0
 	private var lastTooltip: TooltipLayout.Box? = null
+
+	/** The pointer shape asked for in the last frame. */
+	private var requestedPointer = PointerShape.DEFAULT
 
 	protected fun <W : Widget> add(widget: W): W {
 		widgets.add(widget)
@@ -129,8 +171,16 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (overlay !== opened) {
 			closeOverlay(true)
 		}
+		// Another overlay opening drops one still fading out (REQ-UI-55, EC-UI-31).
+		dropClosing()
 		focus(null)
 		nav.overlayOpened()
+		if (overlay !== opened) {
+			// It opens on the screen's clock source, also when opened from outside an event.
+			transition = timed { OverlayTransition(UiClock.SOURCE) }
+			// A tooltip hides, and the delay starts again over the overlay (EC-UI-26).
+			tooltipTimer.restart()
+		}
 		overlay = opened
 		updateFocusGuard()
 	}
@@ -189,8 +239,22 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	 * the guard for a focused field, armed keybind or open overlay is put back (EC-UI-01).
 	 */
 	override fun init() {
-		super.init()
-		updateFocusGuard()
+		// A new size or GUI scale drops an overlay still fading out (REQ-UI-55).
+		dropClosing()
+		timed {
+			super.init()
+			updateFocusGuard()
+		}
+	}
+
+	/** Runs [block] with [source] as the UI clock source in effect, then puts the one before back. */
+	private inline fun <T> timed(source: UiTime = time, block: () -> T): T {
+		val previous = UiClock.enter(source)
+		try {
+			return block()
+		} finally {
+			UiClock.leave(previous)
+		}
 	}
 
 	/** Closes the open overlay; [cancel] first when it closes without applying. */
@@ -199,9 +263,18 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (cancel) {
 			open.cancel()
 		}
+		// REQ-UI-55: what closed it has taken effect; from here it is only drawn, fading from where it was, and takes no input.
+		dropClosing()
+		val opacity = transition?.opacity() ?: 1F
 		overlay = null
-		pressed = null
-		pressedButton = -1
+		transition = null
+		closing = open
+		closingTransition = timed { OverlayTransition.closing(UiClock.SOURCE, opacity) }
+		if (closingTransition?.done() != false) {
+			dropClosing()
+		}
+		dropPress()
+		tooltipTimer.restart()
 		nav.overlayClosed()
 		updateFocusGuard()
 	}
@@ -210,6 +283,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (overlay != null) {
 			closeOverlay(true)
 		}
+		dropClosing()
 		focus(null)
 		nav.clear()
 		keysTaken.clear()
@@ -243,6 +317,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	protected open fun drawContent(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
 	}
 
+	/** The opacity a page widget is drawn at, 1 unless a screen fades it (the HUD editor's toolbar under a drag, REQ-HUD-08). */
+	protected open fun widgetOpacity(widget: Widget): Float = 1F
+
 	/** Draws over the widgets, under any overlay and the tooltip (a fade veil); in the same scale as the content. */
 	protected open fun drawOverWidgets(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
 	}
@@ -259,6 +336,29 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	private fun localY(y: Double): Double = ScaleAbout.toLocal(y, frameCy.toDouble(), frameScale)
 
 	override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
+		val now = time.millis()
+		val source = time
+		timed(UiTime.of({ now }, source::motion)) {
+			extractFrame(graphics, mouseX, mouseY, partialTick)
+			requestPointer(graphics, mouseX, mouseY)
+		}
+	}
+
+	/**
+	 * Asks the game for this frame's pointer shape (REQ-UI-43): a held drag's, or the topmost widget's under the mouse, as
+	 * input meets it (only the overlay's while one is open). The game starts each frame's request at the default and applies
+	 * it after the frame, so the arrow is back in the first frame without this screen (EC-UI-27).
+	 */
+	private fun requestPointer(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
+		val shape = PointerPick.pick(activeWidgets(), pressed, localX(mouseX.toDouble()), localY(mouseY.toDouble()))
+		requestedPointer = shape
+		graphics.requestCursor(cursorType(shape))
+	}
+
+	/** For tests: the pointer shape asked for in the last frame. */
+	fun requestedPointer(): PointerShape = requestedPointer
+
+	private fun extractFrame(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
 		super.extractRenderState(graphics, mouseX, mouseY, partialTick)
 		revealPending?.let {
 			revealPending = null
@@ -283,7 +383,12 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		try {
 			drawContent(graphics, underX, underY)
 			for (widget in widgets) {
-				drawClipped(graphics, widget, underX, underY)
+				val fade = UiFade.enter(widgetOpacity(widget))
+				try {
+					drawClipped(graphics, widget, underX, underY)
+				} finally {
+					UiFade.leave(fade)
+				}
 			}
 			drawFocusRing(graphics, false)
 			drawOverWidgets(graphics, underX, underY)
@@ -292,27 +397,111 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 				graphics.pose().popMatrix()
 			}
 		}
+		// An overlay that closed fades out over the page (REQ-UI-55): drawn as it was, with no hover, no focus and no input.
+		val ghost = closing
+		val fading = closingTransition
+		if (ghost != null && fading != null) {
+			ghost.layout(width, height)
+			if (fading.done() || !ghost.stillAnchored()) {
+				dropClosing()
+			} else {
+				drawOverlayLayer(graphics, ghost, fading, NOWHERE_PIXEL, NOWHERE_PIXEL, false)
+			}
+		}
 		val open = overlay
 		if (open != null) {
 			open.layout(width, height)
 			if (!open.stillAnchored()) {
+				// Its anchor is gone: no fade out where it no longer belongs.
 				closeOverlay(true)
+				dropClosing()
 				lastTooltip = null
+				lastTooltipAlpha = 0F
 				return
 			}
-			graphics.nextStratum()
-			if (open.modal()) {
-				graphics.fill(0, 0, width, height, Theme.BACKDROP)
-				graphics.nextStratum()
-			}
-			open.drawFrame(graphics, font, mouseX, mouseY)
-			for (widget in open.widgets()) {
-				drawClipped(graphics, widget, mouseX, mouseY)
-			}
-			drawFocusRing(graphics, true)
+			drawOverlayLayer(graphics, open, transition, mouseX, mouseY, true)
 		}
 		drawTooltip(graphics, mouseX, mouseY, lookX, lookY)
 	}
+
+	/**
+	 * Draws an overlay over the page: its backdrop if modal and its shadow, frame and widgets, fading and scaling as [shown]
+	 * says (REQ-UI-38, REQ-UI-55), and, if [live], its focus ring.
+	 */
+	private fun drawOverlayLayer(graphics: GuiGraphicsExtractor, layer: Overlay, shown: OverlayTransition?, mouseX: Int, mouseY: Int, live: Boolean) {
+		graphics.nextStratum()
+		if (layer.modal()) {
+			// The backdrop eases in and out with the overlay (REQ-UI-38, REQ-UI-55).
+			val alpha = shown?.backdropAlpha(Theme.BACKDROP ushr 24) ?: (Theme.BACKDROP ushr 24)
+			graphics.fill(0, 0, width, height, (alpha shl 24) or (Theme.BACKDROP and 0xFFFFFF))
+			graphics.nextStratum()
+		}
+		val fade = UiFade.enter(shown?.opacity() ?: 1F)
+		var scaled = false
+		try {
+			scaled = scaleIn(graphics, layer, shown)
+			// Its soft shadow first, under it, fading and scaling with it (REQ-UI-41).
+			layer.bounds()?.let { box ->
+				val region = layer.shadowClip()
+				if (region == null) {
+					Shapes.shadow(graphics, box[0], box[1], box[2] - box[0], box[3] - box[1], layer.radius())
+				} else {
+					Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
+						if (clip.visible()) {
+							Shapes.shadow(graphics, box[0], box[1], box[2] - box[0], box[3] - box[1], layer.radius())
+						}
+					}
+				}
+			}
+			layer.drawFrame(graphics, font, mouseX, mouseY)
+			for (widget in layer.widgets()) {
+				drawClipped(graphics, widget, mouseX, mouseY)
+			}
+			if (live) {
+				drawFocusRing(graphics, true)
+			}
+		} finally {
+			if (scaled) {
+				graphics.pose().popMatrix()
+			}
+			UiFade.leave(fade)
+		}
+	}
+
+	/** Ends a closing overlay's fade: it is no longer drawn, and its `closed()` frees what it held (the wheel's texture). */
+	protected fun dropClosing() {
+		val ghost = closing ?: return
+		closing = null
+		closingTransition = null
+		ghost.closed()
+	}
+
+	/** For tests: the overlay still fading out after it closed, or null (REQ-UI-55). */
+	fun closingOverlay(): Overlay? = closing
+
+	/** For tests: the closing overlay's opacity on this screen's clock (as it is drawn), or -1 for none. */
+	fun closingOpacityForTests(): Float = timed { if (closing == null) -1F else closingTransition?.opacity() ?: -1F }
+
+	/**
+	 * While [open] scales in, maps its box onto the scaled one about its anchor, whose edges lie on the physical-pixel grid
+	 * (REQ-UI-34); returns whether a pose was pushed. Input is not mapped: it meets the final layout.
+	 */
+	private fun scaleIn(graphics: GuiGraphicsExtractor, open: Overlay, shown: OverlayTransition?): Boolean {
+		if (shown == null || shown.scale() >= 1F) {
+			return false
+		}
+		val box = open.bounds() ?: return false
+		val anchor = open.anchor() ?: return false
+		val map = shown.pose(box[0], box[1], box[2], box[3], anchor[0], anchor[1], Shapes.guiScale()) ?: return false
+		graphics.pose().pushMatrix()
+		graphics.pose().translate(map[0], map[1])
+		graphics.pose().scale(map[2], map[3])
+		graphics.pose().translate(-box[0].toFloat(), -box[1].toFloat())
+		return true
+	}
+
+	/** For tests: the open overlay's transition, or null. */
+	fun overlayTransition(): OverlayTransition? = transition
 
 	/**
 	 * The keyboard focus ring in the accent colour (REQ-UI-17), in the layer that has the focus ([inOverlay]); none after a
@@ -329,22 +518,45 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		target.focusRing(ring)
 		val accent = Theme.current().accent()
 		val region = target.clip()
+		val shift = drawShiftY(target)
 		if (region == null) {
-			Shapes.roundedOutline(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), 1, accent)
+			shifted(graphics, shift) { Shapes.focusRing(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), accent) }
 			return
 		}
 		Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
 			if (clip.visible()) {
-				Shapes.roundedOutline(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), 1, accent)
+				shifted(graphics, shift) { Shapes.focusRing(graphics, ring[0], ring[1], ring[2], ring[3], target.focusRadius(), accent) }
 			}
+		}
+	}
+
+	/**
+	 * How far [widget] is drawn below its laid-out place this frame, less than 1 GUI px: the fraction of a slide drawn on the
+	 * physical-pixel grid (REQ-UI-34). Input still meets the whole-px layout.
+	 */
+	protected open fun drawShiftY(widget: Widget): Float = 0F
+
+	/** Runs [block] moved down by [shift] GUI px; inside a clip, so the clip stays where it is. */
+	private inline fun shifted(graphics: GuiGraphicsExtractor, shift: Float, block: () -> Unit) {
+		if (shift == 0F) {
+			block()
+			return
+		}
+		graphics.pose().pushMatrix()
+		try {
+			graphics.pose().translate(0F, shift)
+			block()
+		} finally {
+			graphics.pose().popMatrix()
 		}
 	}
 
 	/** Draws a widget inside its clip region, if it has one; the mouse outside the region is no hover. */
 	private fun drawClipped(graphics: GuiGraphicsExtractor, widget: Widget, mouseX: Int, mouseY: Int) {
 		val region = widget.clip()
+		val shift = drawShiftY(widget)
 		if (region == null) {
-			widget.draw(graphics, font, mouseX, mouseY)
+			shifted(graphics, shift) { widget.draw(graphics, font, mouseX, mouseY) }
 			return
 		}
 		if (!widget.showing()) {
@@ -353,66 +565,131 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		val inside = region.contains(mouseX.toDouble(), mouseY.toDouble())
 		Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
 			if (clip.visible()) {
-				widget.draw(graphics, font, if (inside) mouseX else -1, if (inside) mouseY else -1)
+				shifted(graphics, shift) { widget.draw(graphics, font, if (inside) mouseX else -1, if (inside) mouseY else -1) }
 			}
 		}
 	}
 
 	/**
-	 * Shows a tooltip at the mouse this frame, for something drawn in [drawContent] rather than
-	 * a widget (e.g. a label cut with "..."). A widget's own tooltip under the mouse comes first.
+	 * Shows a tooltip this frame, for something drawn in [drawContent] rather than a widget (e.g. a label cut with "..."), placed
+	 * beside it: [x], [y], [width] by [height]. A widget's own tooltip under the mouse comes first.
 	 */
-	protected fun showTooltip(text: String?) {
+	protected fun showTooltip(text: String?, x: Int, y: Int, width: Int, height: Int) {
 		requestedTooltip = text ?: ""
+		requestedAnchor[0] = x
+		requestedAnchor[1] = y
+		requestedAnchor[2] = width
+		requestedAnchor[3] = height
 	}
 
 	/** The tooltip drawn in the last frame, or null. */
 	protected fun lastTooltip(): TooltipLayout.Box? = lastTooltip
 
+	/** The last drawn tooltip's opacity, 0 to 1, for tests. */
+	protected fun lastTooltipAlpha(): Float = lastTooltipAlpha
+
 	/**
-	 * The tooltip of the topmost widget under the mouse that has one, over everything else (REQ-UI-19):
-	 * a control without one shows its card's. With an overlay open only its widgets count. None while a
-	 * press is held, so a drag is not covered.
+	 * For gametests: draws a tooltip with [text] in a box at [x], [y], [width] by [height] in every frame, whatever is hovered, so
+	 * it can be put over a slider (AC-UI-29, AC-UI-49); a null [text] goes back to the hovered tooltip. The text wraps to the
+	 * box's width; lines past its height are drawn below it.
+	 */
+	fun placeTooltipForTests(text: String?, x: Int, y: Int, width: Int, height: Int) {
+		placedTooltip = text?.let {
+			TooltipLayout.Box(java.util.List.copyOf(TooltipLayout.wrap(it, maxOf(1, width - 2 * TooltipLayout.PADDING), font::width)), x, y, width, height)
+		}
+	}
+
+	/**
+	 * The tooltip of the topmost widget under the mouse that has one, over everything else (REQ-UI-19): a control without one
+	 * shows its card's. With an overlay open only its widgets count. None while a press is held, so a drag is not covered.
+	 * It shows once the pointer has rested on its control, beside that control (the widget the text is from, or a list's row,
+	 * as much of it as its region shows), and fades in (REQ-UI-44).
 	 */
 	private fun drawTooltip(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, lookX: Double, lookY: Double) {
 		lastTooltip = null
-		if (pressed != null) {
+		lastTooltipAlpha = 0F
+		val moved = mouseX != lastMouseX || mouseY != lastMouseY
+		lastMouseX = mouseX
+		lastMouseY = mouseY
+		placedTooltip?.let {
+			drawTooltipBox(graphics, it, 1F)
 			return
 		}
 		var text = ""
-		val active = activeWidgets()
-		for (i in active.size - 1 downTo 0) {
-			val widget = active[i]
-			// The widget under the mouse in the layout (the content may be scaled); the box itself at the real mouse, unscaled.
-			if (widget.contains(lookX, lookY) && widget.inClip(lookX, lookY)) {
-				val own = widget.tooltipAt(lookX, lookY)
-				if (!own.isNullOrEmpty()) {
-					text = own
-					break
+		var owner: Any? = null
+		// None while a mouse button is held, whether a widget took the press or not.
+		if (pressed == null && buttonsHeld == 0) {
+			val active = activeWidgets()
+			for (i in active.size - 1 downTo 0) {
+				val widget = active[i]
+				// The widget under the mouse in the layout (the content may be scaled).
+				if (widget.contains(lookX, lookY) && widget.inClip(lookX, lookY)) {
+					val own = widget.tooltipAt(lookX, lookY)
+					if (!own.isNullOrEmpty()) {
+						text = own
+						owner = widget
+						widget.tooltipAnchor(lookX, lookY, tooltipAnchor)
+						cutToRegion(widget.clip())
+						break
+					}
 				}
 			}
+			if (text.isEmpty() && overlay == null && requestedTooltip.isNotEmpty()) {
+				text = requestedTooltip
+				owner = this
+				requestedAnchor.copyInto(tooltipAnchor)
+			}
 		}
-		if (text.isEmpty() && overlay == null) {
-			text = requestedTooltip
-		}
-		if (text.isEmpty()) {
+		val time = UiClock.SOURCE
+		if (!tooltipTimer.update(time.millis(), owner, text, tooltipAnchor[0], tooltipAnchor[1], tooltipAnchor[2], tooltipAnchor[3], moved, time.motion())) {
 			return
 		}
-		val box = TooltipLayout.layout(text, mouseX, mouseY, width, height, font::width)
+		val box = TooltipLayout.anchored(text, tooltipAnchor[0], tooltipAnchor[1], tooltipAnchor[2], tooltipAnchor[3], width, height, font::width)
+		drawTooltipBox(graphics, box, tooltipTimer.alpha())
+	}
+
+	/** The tooltip's anchor cut to [region], so it goes beside what shows of its control. */
+	private fun cutToRegion(region: com.k8bas.skyblockutility.ui.render.ClipRect?) {
+		if (region == null) {
+			return
+		}
+		val left = maxOf(tooltipAnchor[0], region.x)
+		val top = maxOf(tooltipAnchor[1], region.y)
+		val right = minOf(tooltipAnchor[0] + tooltipAnchor[2], region.right())
+		val bottom = minOf(tooltipAnchor[1] + tooltipAnchor[3], region.bottom())
+		tooltipAnchor[0] = left
+		tooltipAnchor[1] = top
+		tooltipAnchor[2] = maxOf(0, right - left)
+		tooltipAnchor[3] = maxOf(0, bottom - top)
+	}
+
+	private fun drawTooltipBox(graphics: GuiGraphicsExtractor, box: TooltipLayout.Box, alpha: Float) {
 		lastTooltip = box
+		lastTooltipAlpha = alpha
 		graphics.nextStratum()
-		Shapes.roundedRect(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SIDEBAR)
-		Shapes.roundedOutline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, 1, Theme.SEPARATOR)
-		var lineY = box.y() + TooltipLayout.PADDING
-		for (line in box.lines()) {
-			UiText.draw(graphics, font, line, box.x() + TooltipLayout.PADDING, lineY, Theme.TEXT_PRIMARY)
-			lineY += TooltipLayout.LINE_HEIGHT
+		val fade = UiFade.enter(alpha)
+		try {
+			Shapes.shadow(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL)
+			Shapes.roundedRect(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SIDEBAR)
+			Shapes.roundedHairline(graphics, box.x(), box.y(), box.width(), box.height(), Shapes.RADIUS_CONTROL, Theme.SEPARATOR)
+			var lineY = box.y() + TooltipLayout.PADDING
+			for (line in box.lines()) {
+				UiText.draw(graphics, font, line, box.x() + TooltipLayout.PADDING, lineY, Theme.TEXT_PRIMARY)
+				lineY += TooltipLayout.LINE_HEIGHT
+			}
+		} finally {
+			UiFade.leave(fade)
 		}
 	}
 
 	private fun activeWidgets(): List<Widget> = overlay?.widgets() ?: widgets
 
-	override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
+	override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean = timed {
+		buttonsHeld = buttonsHeld or buttonBit(event.button())
+		handleClick(event, doubleClick)
+	}
+
+	private fun handleClick(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
 		// An armed keybind takes the button as its input (R27: left cancels, right resets, others bind).
 		val focused = keyboardFocus
 		if (focused != null && focused.capturesKeys()) {
@@ -432,6 +709,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			val requestsBefore = focusRequests
 			val overlayBefore = overlay
 			if (widget.press(x, y, event.button())) {
+				if (pressed !== widget) {
+					dropPress()
+				}
 				pressed = widget
 				pressedButton = event.button()
 				if (keyboardNavigation()) {
@@ -471,7 +751,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return super.mouseClicked(event, doubleClick)
 	}
 
-	override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean {
+	override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean = timed { handleDrag(event, dragX, dragY) }
+
+	private fun handleDrag(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean {
 		val held = pressed
 		if (held != null && event.button() == pressedButton) {
 			held.drag(localX(event.x()), localY(event.y()))
@@ -480,7 +762,25 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return super.mouseDragged(event, dragX, dragY)
 	}
 
-	override fun mouseReleased(event: MouseButtonEvent): Boolean {
+	override fun mouseReleased(event: MouseButtonEvent): Boolean = timed {
+		// After any release the tooltip's delay starts again (REQ-UI-44).
+		buttonsHeld = buttonsHeld and buttonBit(event.button()).inv()
+		tooltipTimer.restart()
+		handleRelease(event)
+	}
+
+	/**
+	 * Ends a press whose release will not come to its widget: another button's press took over, or its overlay closed. The
+	 * widget is released away from everything, so it lets go (a held look ends, REQ-UI-53) without acting as on a click.
+	 */
+	private fun dropPress() {
+		val held = pressed ?: return
+		pressed = null
+		pressedButton = -1
+		held.release(NOWHERE, NOWHERE)
+	}
+
+	private fun handleRelease(event: MouseButtonEvent): Boolean {
 		val held = pressed
 		if (held != null && event.button() == pressedButton) {
 			pressed = null
@@ -500,7 +800,17 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	 * step. Shift gives the fine step (on macOS Shift turns the wheel horizontal, which counts too).
 	 * With an overlay open the wheel only reaches the overlay.
 	 */
-	override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
+	override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean =
+		timed { handleScroll(mouseX, mouseY, scrollX, scrollY) }
+
+	private fun handleScroll(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
+		// The wheel hides a tooltip, and the delay starts again for what is then under the pointer (EC-UI-26).
+		tooltipTimer.restart()
+		// During a slider drag the wheel is ignored, wherever the pointer is (REQ-UI-37).
+		if (pressed?.blocksWheel() == true) {
+			scrollRest = 0.0
+			return true
+		}
 		val fine = Minecraft.getInstance().hasShiftDown()
 		val amount = if (scrollY != 0.0) scrollY else if (fine) scrollX else 0.0
 		val notches: Int
@@ -525,7 +835,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return overlay != null || super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)
 	}
 
-	override fun keyPressed(event: KeyEvent): Boolean {
+	override fun keyPressed(event: KeyEvent): Boolean = timed { handleKey(event) }
+
+	private fun handleKey(event: KeyEvent): Boolean {
 		val navigating = keyboardNavigation()
 		val navKey = if (navigating) navKeyOf(event) else NavKey.NONE
 		// A held Space or Enter that just activated a control must not pick in the list it opened, bind the capture it armed
@@ -675,7 +987,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	}
 
 	/** Releases of keys taken above are taken too; others reach the game, so no key stays held. */
-	override fun keyReleased(event: KeyEvent): Boolean {
+	override fun keyReleased(event: KeyEvent): Boolean = timed { handleKeyRelease(event) }
+
+	private fun handleKeyRelease(event: KeyEvent): Boolean {
 		nav.released(keyId(event))
 		if (keysTaken.remove(keyId(event))) {
 			return true
@@ -683,7 +997,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		return super.keyReleased(event)
 	}
 
-	override fun charTyped(event: CharacterEvent): Boolean {
+	override fun charTyped(event: CharacterEvent): Boolean = timed { handleChar(event) }
+
+	private fun handleChar(event: CharacterEvent): Boolean {
 		// The space that follows a Space activation types nowhere.
 		if (keyboardNavigation() && nav.takeSpaceChar(event.codepoint())) {
 			return true
@@ -698,6 +1014,26 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	companion object {
 		private const val KEY_ESCAPE = 256
+
+		/** A point away from every widget, for a release that must not act as a click ([dropPress]). */
+		private const val NOWHERE = -1.0e9
+
+		/** A pointer away from every widget, for drawing a closing overlay with no hover. */
+		private const val NOWHERE_PIXEL = -100_000
+
+		/** A mouse button's bit in [buttonsHeld]; none for a button number past 31. */
+		private fun buttonBit(button: Int): Int = if (button in 0..31) 1 shl button else 0
+
+		/** The game's cursor for a shape; the default is the one the game starts each frame with. */
+		private fun cursorType(shape: PointerShape): CursorType = when (shape) {
+			PointerShape.DEFAULT -> CursorType.DEFAULT
+			PointerShape.HAND -> CursorTypes.POINTING_HAND
+			PointerShape.TEXT -> CursorTypes.IBEAM
+			PointerShape.RESIZE_HORIZONTAL -> CursorTypes.RESIZE_EW
+			PointerShape.RESIZE_VERTICAL -> CursorTypes.RESIZE_NS
+			PointerShape.MOVE -> CursorTypes.RESIZE_ALL
+			PointerShape.CROSSHAIR -> CursorTypes.CROSSHAIR
+		}
 		private const val KEY_SPACE = 32
 
 		/** What a key means for navigation; Ctrl and Alt read from the keyboard too, as gametest input carries no modifiers. */

@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.notice;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Toggle;
+import com.k8bas.skyblockutility.ui.render.Easing;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -72,6 +73,75 @@ class NoticeTest {
 		new Notice("Title only", List.of());
 		assertThrows(IllegalArgumentException.class, () -> new Notice("x", List.of("1", "2", "3")));
 		assertThrows(IllegalArgumentException.class, () -> new Notice(" ", List.of()));
+	}
+
+	/**
+	 * AC-UI-40 (REQ-UI-39, T3.24): with motion off a notice is in place from the moment it is posted, as when its slide has
+	 * ended, and a leaving one is gone at once: no slide in or out.
+	 */
+	@Test
+	void withMotionOffANoticeIsInPlaceAtOnce() {
+		for (NoticePosition position : NoticePosition.values()) {
+			NoticeQueue queue = new NoticeQueue();
+			queue.post(new Notice("Notice", List.of("one")), 0, 5 * SECOND);
+			NoticeLayout.Placed settled = NoticeLayout.place(queue.visible(SECOND), position, 1280, 960, SECOND).get(0);
+			NoticeLayout.Placed atOnce = NoticeLayout.place(queue.visible(0), position, 1280, 960, 0, text -> 0, false).get(0);
+			assertEquals(settled, atOnce, position + ": at 0 ms where the slide ends");
+			NoticeLayout.Placed sliding = NoticeLayout.place(queue.visible(0), position, 1280, 960, 0, text -> 0, true).get(0);
+			assertFalse(settled.equals(sliding), position + ": with motion on it still slides in at 0 ms");
+			long leaving = 5 * SECOND + NoticeQueue.SLIDE_TIME_MS / 2 + 1;
+			assertEquals(List.of(), NoticeLayout.place(queue.visible(leaving), position, 1280, 960, leaving, text -> 0, false),
+					position + ": leaving, it is gone at once");
+		}
+	}
+
+	/**
+	 * AC-UI-35 (REQ-UI-34, T3.25): stepped every 10 ms at GUI scale 2, a notice slides in and out at multiples of 0.5 GUI px,
+	 * some on a half, within half a GUI px of its whole-px place; in place, both are the same.
+	 */
+	@Test
+	void aNoticeSlidesOnThePhysicalGrid() {
+		for (NoticePosition position : NoticePosition.values()) {
+			NoticeQueue queue = new NoticeQueue();
+			queue.post(new Notice("Notice", List.of("one")), 0, SECOND);
+			int halves = 0;
+			for (long now = 0; now < SECOND + NoticeQueue.SLIDE_TIME_MS; now += 10) {
+				for (NoticeLayout.Placed box : NoticeLayout.place(queue.visible(now), position, 1280, 960, now, text -> 0, true, 2)) {
+					String what = position + " at " + now + " ms: ";
+					assertEquals(Math.round(box.drawnX() * 2), box.drawnX() * 2, 1e-4F, what + box.drawnX());
+					assertEquals(Math.round(box.drawnY() * 2), box.drawnY() * 2, 1e-4F, what + box.drawnY());
+					assertTrue(Math.abs(box.drawnX() - box.x()) <= 0.5F && Math.abs(box.drawnY() - box.y()) <= 0.5F, what + box);
+					halves += Math.abs(box.drawnX() - box.x()) + Math.abs(box.drawnY() - box.y()) > 0.25F ? 1 : 0;
+					if (now <= NoticeQueue.SLIDE_TIME_MS / 2) {
+						// Sliding in: within half a physical px of the eased position, written out here.
+						float rest = 1F - Easing.outCubic(box.entry().shown(now));
+						int height = NoticeLayout.height(box.entry().notice());
+						float x = position == NoticePosition.TOP_CENTRE ? (1280 - NoticeLayout.WIDTH) / 2F
+								: position.left() ? NoticeLayout.MARGIN - rest * (NoticeLayout.WIDTH + NoticeLayout.MARGIN)
+								: 1280 - NoticeLayout.MARGIN - NoticeLayout.WIDTH + rest * (NoticeLayout.WIDTH + NoticeLayout.MARGIN);
+						float y = position == NoticePosition.TOP_CENTRE ? NoticeLayout.MARGIN - rest * (NoticeLayout.MARGIN + height)
+								: position.top() ? NoticeLayout.MARGIN : 960 - NoticeLayout.MARGIN - height;
+						assertTrue(Math.abs(box.drawnX() - x) <= 0.25F + 1e-4F && Math.abs(box.drawnY() - y) <= 0.25F + 1e-4F,
+								what + box + " for " + x + ", " + y);
+					}
+				}
+			}
+			assertTrue(halves > 0, position + ": some frames lie on a half GUI px");
+			NoticeLayout.Placed inPlace = NoticeLayout.place(queue.visible(SECOND / 2), position, 1280, 960, SECOND / 2, text -> 0, true, 2).get(0);
+			assertEquals(inPlace.x(), inPlace.drawnX());
+			assertEquals(inPlace.y(), inPlace.drawnY());
+		}
+	}
+
+	/** EC-UI-23: after a 500 ms hitch from its post, a notice is in place, where its slide ends, never past it. */
+	@Test
+	void aHitchLandsTheNoticeInPlace() {
+		for (NoticePosition position : NoticePosition.values()) {
+			NoticeQueue queue = new NoticeQueue();
+			queue.post(new Notice("Notice", List.of("one")), 0, 5 * SECOND);
+			NoticeLayout.Placed settled = NoticeLayout.place(queue.visible(2 * SECOND), position, 1280, 960, 2 * SECOND).get(0);
+			assertEquals(settled, NoticeLayout.place(queue.visible(500), position, 1280, 960, 500).get(0), position.toString());
+		}
 	}
 
 	@Test

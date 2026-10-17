@@ -39,6 +39,38 @@ class ShapesMathTest {
 		assertEquals(List.of(new Corners.Span(0, 0, 10, 5)), Corners.fill(10, 5, 0), "radius 0 is a plain rect");
 	}
 
+	/** REQ-UI-28 (T3.16): a one-cap pill is the rounded rect with the other side's corners square. */
+	@Test
+	void aOneCapPillRoundsOneSideOnly() {
+		List<Corners.Span> left = Corners.fill(20, 8, 4, Corners.LEFT);
+		assertEquals(new Corners.Span(2, 0, 20, 1), left.get(0), "the left end is cut, the right end is square");
+		assertEquals(new Corners.Span(2, 7, 20, 8), left.get(left.size() - 1));
+		List<Corners.Span> right = Corners.fill(20, 8, 4, Corners.RIGHT);
+		assertEquals(new Corners.Span(0, 0, 18, 1), right.get(0));
+		assertEquals(Corners.fill(20, 8, 4), Corners.fill(20, 8, 4, Corners.ALL));
+		assertEquals(List.of(new Corners.Span(0, 0, 20, 8)), Corners.fill(20, 8, 4, 0), "no round corner is a plain rect");
+	}
+
+	/** REQ-UI-30: a one-cap pill shorter than two caps shows the part of the full cap before its square end. */
+	@Test
+	void aShortOneCapPillIsTheCapCutAtItsSquareEnd() {
+		for (int r = 1; r <= 8; r++) {
+			int h = 2 * r;
+			boolean[][] longLeft = CornerMaskTest.cover(Corners.fill(40, h, r, Corners.LEFT), 40, h);
+			boolean[][] longRight = CornerMaskTest.cover(Corners.fill(40, h, r, Corners.RIGHT), 40, h);
+			for (int w = 1; w < 2 * r; w++) {
+				boolean[][] left = CornerMaskTest.cover(Corners.fill(w, h, r, Corners.LEFT), w, h);
+				boolean[][] right = CornerMaskTest.cover(Corners.fill(w, h, r, Corners.RIGHT), w, h);
+				for (int y = 0; y < h; y++) {
+					for (int x = 0; x < w; x++) {
+						assertEquals(longLeft[y][x], left[y][x], "LEFT " + w + "x" + h + " radius " + r + ", pixel " + x + "," + y);
+						assertEquals(longRight[y][40 - w + x], right[y][x], "RIGHT " + w + "x" + h + " radius " + r + ", pixel " + x + "," + y);
+					}
+				}
+			}
+		}
+	}
+
 	@Test
 	void anOutlineLiesBetweenTheOuterAndInnerShapes() {
 		List<Corners.Span> ring = Corners.ring(20, 20, 6, 1);

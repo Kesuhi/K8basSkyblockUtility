@@ -5,9 +5,9 @@ import kotlin.math.floor
 
 /**
  * Snapping in the HUD editor (REQ-HUD-14, T2.9c), pure: while an element is dragged, its edges and centre snap
- * within 4 px to the screen's centre lines, its edges to the screen's edges and to the other elements' edges; each
- * axis on its own, the nearest target winning (ties: the screen centre, then the screen edges, then the elements in
- * order). Works on the drawn rectangles (scaled, on whole pixels), so a snapped place is what is drawn and saved.
+ * within 4 px to the screen's centre lines, its edges to the screen's edges and to the other elements' edges, and
+ * from 1.3.0 its centre to the other elements' centres (R47); each axis on its own, the nearest target winning
+ * (ties: the screen centre, then the screen edges, then the elements in order). Works on the drawn rectangles (scaled, on whole pixels), so a snapped place is what is drawn and saved.
  */
 object HudSnap {
 	const val THRESHOLD: Double = 4.0
@@ -74,7 +74,7 @@ object HudSnap {
 		}
 	}
 
-	/** Every (line of the element, target) pair, in rank order: the screen centre, the screen edges, then the elements. */
+	/** Every (line of the element, target) pair, in rank order: the screen centre, the screen edges, then the elements (edges, then centre). */
 	private inline fun forEachPair(start: Double, size: Double, screen: Double, others: List<HudRect>, horizontal: Boolean, pair: (Double, Double) -> Unit) {
 		val low = start
 		val mid = start + size / 2
@@ -92,6 +92,7 @@ object HudSnap {
 			pair(low, otherHigh)
 			pair(high, otherLow)
 			pair(high, otherHigh)
+			pair(mid, (otherLow + otherHigh) / 2)
 		}
 	}
 }

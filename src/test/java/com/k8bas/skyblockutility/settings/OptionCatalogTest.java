@@ -72,6 +72,31 @@ class OptionCatalogTest {
 		return catalog().stream().flatMap(card -> card.all().stream()).toList();
 	}
 
+	/** AC-UI-30 (REQ-UI-29, R46): "Smooth corners" says it changes only how rounded corners are drawn, nothing else. */
+	@Test
+	void smoothCornersTalksAboutCornersOnly() {
+		Option smooth = options().stream().filter(option -> option.id().equals("interface.smooth_corners")).findFirst().orElseThrow();
+		String text = (smooth.text().description() + " " + smooth.text().tooltip()).toLowerCase(java.util.Locale.ROOT);
+		assertTrue(text.contains("rounded corners") && text.contains("only"), text);
+		for (String other : List.of("disc", "knob", "icon", "line", "outline", "shadow", "motion", "animation", "wheel")) {
+			assertFalse(text.contains(other), "names " + other + ": " + text);
+		}
+	}
+
+	/**
+	 * AC-UI-54 [A] (REQ-UI-50, T3.55): "Animations" names, in its description and tooltip, everything it stops (the motions of
+	 * R46 and R47) and that tooltips still wait.
+	 */
+	@Test
+	void animationsNamesWhatItStops() {
+		Option animations = options().stream().filter(option -> option.id().equals("interface.animations")).findFirst().orElseThrow();
+		String text = (animations.text().description() + " " + animations.text().tooltip()).toLowerCase(java.util.Locale.ROOT);
+		for (String motion : List.of("panel opening", "category switch", "hover", "press", "switches", "scrolling", "lists and dialogs opening and closing",
+				"rule cards", "hud editor", "notices", "tooltips still wait")) {
+			assertTrue(text.contains(motion), "names " + motion + ": " + text);
+		}
+	}
+
 	/** The options that store a value; a button (an action such as "Edit HUD layout", a database picker) stores nothing. */
 	private static List<Option> storedOptions() {
 		return options().stream().filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption)).toList();
@@ -101,8 +126,10 @@ class OptionCatalogTest {
 		expected.put("general.mobScanRangeBlocks", 64);
 		// D-8: teal accent; R28: notices top right for 5 s until picked.
 		expected.put("general.accentColor", 0x29B6B2);
-		// R32: smooth corners OFF.
-		expected.put("general.smoothCorners", false);
+		// R46 (REQ-UI-29): Smooth corners ON from 1.3.0 (R32 had OFF); a saved OFF stays OFF.
+		expected.put("general.smoothCorners", true);
+		// R46 (REQ-UI-39): Animations ON until picked.
+		expected.put("general.animations", true);
 		expected.put("general.noticePosition", NoticePosition.TOP_RIGHT);
 		expected.put("general.noticeSeconds", 5);
 		expected.put("modules.mob_highlighter.enabled", true);

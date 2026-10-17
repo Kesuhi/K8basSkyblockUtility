@@ -27,6 +27,84 @@ class ConfigLayoutTest {
 	}
 
 	/**
+	 * AC-UI-43 [A] (REQ-UI-42, T3.32), a guard: on every category page at several GUI sizes all slider tracks share their start
+	 * and end x and their value labels their left x (the track's end + 6 GUI px, where {@code Slider.draw} puts it); moving a
+	 * slider through its range moves no track; and a slider on an indented card (a rule's field) gets the same track.
+	 */
+	@Test
+	void sliderTracksAndValuesShareTheirColumn() {
+		List<Card> cards = catalog();
+		int sliders = 0;
+		// Every GUI width from the smallest up, so the widths where a track is shorter than its longest are crossed.
+		java.util.List<int[]> sizes = new java.util.ArrayList<>();
+		for (int width = 320; width <= 960; width += 8) {
+			sizes.add(new int[] {width, 480});
+		}
+		for (int[] gui : sizes) {
+			ConfigLayout.Frame frame = ConfigLayout.frame(gui[0], gui[1]);
+			for (Category category : ConfigLayout.categories(cards)) {
+				ConfigLayout.Page page = ConfigLayout.page(cards, category, frame.content().w(), WIDTH);
+				Integer left = null;
+				Integer right = null;
+				for (ConfigLayout.Row row : page.rows()) {
+					if (!(row instanceof ConfigLayout.OptionRow option) || !(option.option() instanceof com.k8bas.skyblockutility.ui.option.IntSlider slider)) {
+						continue;
+					}
+					sliders++;
+					String what = gui[0] + "x" + gui[1] + " " + category + " " + slider.id();
+					ConfigLayout.Rect track = ConfigLayout.control(ConfigLayout.card(frame, 0, option), slider, option.indent());
+					left = left == null ? track.x() : left;
+					right = right == null ? track.right() : right;
+					assertEquals(left, track.x(), what + ": the track starts where the page's others do");
+					assertEquals(right, track.right(), what + ": and ends there too");
+					// Where the slider draws its value: left-aligned 6 GUI px after the track's end.
+					com.k8bas.skyblockutility.ui.widget.Slider widget = new com.k8bas.skyblockutility.ui.widget.Slider(
+							com.k8bas.skyblockutility.ui.widget.SliderModel.ofInt(slider.min(), slider.max(), slider.step()), () -> 0L, v -> { }, () -> { },
+							v -> "", () -> { });
+					widget.setBounds(track.x(), track.y(), track.w(), track.h());
+					assertEquals(right + 6, widget.labelX(), what + ": its value 6 GUI px after the track's end");
+					// Through its range: the layout does not move.
+					int stored = slider.binding().get();
+					for (int value : new int[] {slider.min(), slider.max()}) {
+						slider.binding().set(value);
+						ConfigLayout.Page again = ConfigLayout.page(cards, category, frame.content().w(), WIDTH);
+						ConfigLayout.OptionRow same = (ConfigLayout.OptionRow) again.rows().get(page.rows().indexOf(row));
+						assertEquals(track, ConfigLayout.control(ConfigLayout.card(frame, 0, same), slider, same.indent()), what + " at " + value);
+					}
+					slider.binding().set(stored);
+					// On a card indented as a rule's field, the same track: its column is measured from the content's right edge.
+					ConfigLayout.Rect full = ConfigLayout.card(frame, 0, option);
+					ConfigLayout.Rect indented = new ConfigLayout.Rect(full.x() + 24, full.y(), full.w() - 24, full.h());
+					assertEquals(track, ConfigLayout.control(indented, slider, option.indent() + 24), what + ": an indented card's track");
+					// Its title and description end 8 GUI px before that track, where the card draws them.
+					assertEquals(track.x() - 8, ConfigLayout.text(indented, slider, option.indent() + 24).right(), what + ": an indented card's text");
+					assertEquals(track.x() - 8, ConfigLayout.text(full, slider, option.indent()).right(), what + ": its text");
+				}
+			}
+		}
+		assertTrue(sliders >= 4, "the catalogue's sliders were checked: " + sliders);
+	}
+
+	/**
+	 * AC-UI-43 [A] (REQ-UI-42, T3.32): for any card width and indent, also cards narrower than the catalogue's where the
+	 * track gives up length and the half-card limit applies, a slider on the indented card gets the unindented card's track.
+	 */
+	@Test
+	void anIndentedSliderKeepsTheColumnAtAnyWidth() {
+		com.k8bas.skyblockutility.ui.option.IntSlider slider = catalog().stream().flatMap(card -> card.options().stream())
+				.filter(com.k8bas.skyblockutility.ui.option.IntSlider.class::isInstance).map(com.k8bas.skyblockutility.ui.option.IntSlider.class::cast)
+				.findFirst().orElseThrow();
+		for (int width = 60; width <= 400; width++) {
+			ConfigLayout.Rect full = new ConfigLayout.Rect(10, 20, width, 40);
+			ConfigLayout.Rect track = ConfigLayout.control(full, slider);
+			for (int indent = 4; indent <= Math.min(80, width - 20); indent += 4) {
+				ConfigLayout.Rect indented = new ConfigLayout.Rect(full.x() + indent, full.y(), full.w() - indent, full.h());
+				assertEquals(track, ConfigLayout.control(indented, slider, indent), "width " + width + ", indent " + indent);
+			}
+		}
+	}
+
+	/**
 	 * REQ-UI-18 (T2.9b): what the page scrolls into view for a control the keyboard reached: its row with the gaps
 	 * around it; for a card's first option also its section title; for the page's first section from the top.
 	 */

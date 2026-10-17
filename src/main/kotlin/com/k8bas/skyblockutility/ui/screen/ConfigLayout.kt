@@ -130,7 +130,8 @@ object ConfigLayout {
 
 	/**
 	 * One option's card; [featureToggle] for the feature's own switch, which a click anywhere on it
-	 * flips; [indent] for a rule's field, under its rule's header.
+	 * flips; [indent] for a rule's field, under its rule's header; [clipBottom], in page px, where a rule card that is
+	 * opening or closing cuts it off (REQ-UI-52), [Int.MAX_VALUE] for nowhere.
 	 */
 	data class OptionRow @JvmOverloads constructor(
 		@get:JvmName("card") val card: Card,
@@ -138,49 +139,74 @@ object ConfigLayout {
 		@get:JvmName("featureToggle") val featureToggle: Boolean,
 		private val y: Int,
 		@get:JvmName("indent") val indent: Int = 0,
+		@get:JvmName("clipBottom") val clipBottom: Int = Int.MAX_VALUE,
 	) : Row {
 		override fun y(): Int = y
 
 		override fun height(): Int = CARD
 
-		override fun toString(): String = "OptionRow[card=$card, option=$option, featureToggle=$featureToggle, y=$y, indent=$indent]"
+		override fun toString(): String =
+			"OptionRow[card=$card, option=$option, featureToggle=$featureToggle, y=$y, indent=$indent, clipBottom=$clipBottom]"
 	}
 
-	/** A rule's header: label and colour dot; a click opens or closes the rule (REQ-UI-11). */
+	/**
+	 * A rule's header: label and colour dot; a click opens or closes the rule (REQ-UI-11). [reveal] is how far its card is
+	 * open, 0 to 1, eased while it opens or closes (REQ-UI-52).
+	 */
 	data class RuleHeader(
 		@get:JvmName("card") val card: Card,
 		@get:JvmName("rule") val rule: RuleGroup,
 		@get:JvmName("expanded") val expanded: Boolean,
 		private val y: Int,
+		@get:JvmName("reveal") val reveal: Float = if (expanded) 1f else 0f,
 	) : Row {
 		override fun y(): Int = y
 
 		override fun height(): Int = RULE_HEADER
 
-		override fun toString(): String = "RuleHeader[card=$card, rule=$rule, expanded=$expanded, y=$y]"
+		override fun toString(): String = "RuleHeader[card=$card, rule=$rule, expanded=$expanded, y=$y, reveal=$reveal]"
 	}
 
-	/** Why an open rule does nothing, under its header (REQ-GLOW-10, REQ-UI-12). */
+	/** Why an open rule does nothing, under its header (REQ-GLOW-10, REQ-UI-12); cut off at [clipBottom] as [OptionRow] is. */
 	data class RuleProblem(
 		@get:JvmName("rule") val rule: RuleGroup,
 		@get:JvmName("lines") val lines: List<String>,
 		private val y: Int,
 		private val height: Int,
+		@get:JvmName("clipBottom") val clipBottom: Int = Int.MAX_VALUE,
 	) : Row {
 		override fun y(): Int = y
 
 		override fun height(): Int = height
 
-		override fun toString(): String = "RuleProblem[rule=$rule, lines=$lines, y=$y, height=$height]"
+		override fun toString(): String = "RuleProblem[rule=$rule, lines=$lines, y=$y, height=$height, clipBottom=$clipBottom]"
+	}
+
+	/**
+	 * Where a feature's rules would start when it has none (REQ-UI-54): a row a rule header high with a hint how to add one.
+	 * Not a control.
+	 */
+	data class RuleEmpty(@get:JvmName("card") val card: Card, private val y: Int) : Row {
+		override fun y(): Int = y
+
+		override fun height(): Int = RULE_HEADER
+
+		override fun toString(): String = "RuleEmpty[card=$card, y=$y]"
 	}
 
 	/** What a page shows: which options and rules (a search, REQ-UI-08/09) and which rules are open. */
 	fun interface Filter {
 		fun shows(option: Option): Boolean
 
+		/** Whether a search filters the page; an empty rule list's placeholder shows only when none does (REQ-UI-54). */
+		fun searching(): Boolean = false
+
 		fun shows(rule: RuleGroup): Boolean = true
 
 		fun expanded(rule: RuleGroup): Boolean = false
+
+		/** How far the rule's card is open, 0 to 1: eased while it opens or closes (REQ-UI-52), else 1 open and 0 closed. */
+		fun reveal(rule: RuleGroup): Float = if (expanded(rule)) 1f else 0f
 
 		companion object {
 			@JvmStatic
@@ -263,24 +289,51 @@ object ConfigLayout {
 				rows.add(OptionRow(card, option, option === card.toggle, y))
 				y += CARD + CARD_GAP
 			}
+			if (card.hasRuleList() && card.rules().isEmpty() && !filter.searching()) {
+				rows.add(RuleEmpty(card, y))
+				y += RULE_HEADER + RULE_GAP
+			}
 			for (rule in rules) {
 				val expanded = filter.expanded(rule)
-				rows.add(RuleHeader(card, rule, expanded, y))
+				val reveal = filter.reveal(rule).coerceIn(0f, 1f)
+				rows.add(RuleHeader(card, rule, expanded, y, reveal))
 				y += RULE_HEADER + RULE_GAP
-				if (!expanded) {
+				if (reveal <= 0f) {
 					continue
 				}
+				// The open card's rows, then (REQ-UI-52) only as much of them as its eased height shows, rounded to whole GUI px:
+				// the rows below follow that height, and a row is cut off there, or left out where none of it would show.
+				val body = ArrayList<Row>()
+				val start = y
 				val problem = rule.problem.get()
 				if (problem != null) {
 					val lines = fitLines(problemText(problem), maxOf(1, textWidth - RULE_INDENT), 2, width)
 					val height = lines.lines.size * 10 + 2
-					rows.add(RuleProblem(rule, lines.lines, y, height))
+					body.add(RuleProblem(rule, lines.lines, y, height))
 					y += height + RULE_GAP
 				}
 				for (field in rule.fields) {
-					rows.add(OptionRow(card, field, false, y, RULE_INDENT))
+					body.add(OptionRow(card, field, false, y, RULE_INDENT))
 					y += CARD + CARD_GAP
 				}
+				if (reveal >= 1f) {
+					rows.addAll(body)
+					continue
+				}
+				val limit = start + Math.round(reveal * (y - start))
+				for (row in body) {
+					if (row.y() >= limit) {
+						continue
+					}
+					rows.add(
+						when (row) {
+							is RuleProblem -> row.copy(clipBottom = limit)
+							is OptionRow -> row.copy(clipBottom = limit)
+							else -> row
+						},
+					)
+				}
+				y = limit
 			}
 			y += SECTION_GAP - CARD_GAP
 		}
@@ -335,9 +388,14 @@ object ConfigLayout {
 	/**
 	 * The control on the right of a card: a switch, dropdown, key button or colour swatch, or a slider's track (its
 	 * value label sits in the [SLIDER_LABEL] px to the track's right, which a press does not reach).
+	 *
+	 * The slider column (REQ-UI-42): every slider's track ends [SLIDER_LABEL] + [PAD] GUI px left of the content's right edge
+	 * (a card's right edge, indented or not), and its length comes from the card's width before its [indent], so on one page
+	 * every track starts and ends at the same x and every value label starts 6 GUI px after it.
 	 */
 	@JvmStatic
-	fun control(card: Rect, option: Option): Rect {
+	@JvmOverloads
+	fun control(card: Rect, option: Option, indent: Int = 0): Rect {
 		var height = CONTROL_HEIGHT
 		var right = card.right() - PAD
 		var width = when (option) {
@@ -348,7 +406,7 @@ object ConfigLayout {
 			is IntSlider -> {
 				right -= SLIDER_LABEL
 				// A narrow card gives up track length first, so the title keeps some room.
-				maxOf(30, minOf(80, card.w - 2 * PAD - SLIDER_LABEL - 60))
+				maxOf(30, minOf(80, card.w + indent - 2 * PAD - SLIDER_LABEL - 60))
 			}
 			is Choice<*> -> 120
 			is TextOption -> 140
@@ -361,7 +419,8 @@ object ConfigLayout {
 			}
 			else -> 100
 		}
-		width = minOf(width, maxOf(0, card.w / 2 - PAD))
+		// A slider's half is also taken before the indent, so the clamp keeps its column too.
+		width = minOf(width, maxOf(0, (card.w + if (option is IntSlider) indent else 0) / 2 - PAD))
 		return Rect(right - width, card.y + (card.h - height) / 2, width, height)
 	}
 
@@ -376,10 +435,14 @@ object ConfigLayout {
 		return Rect(header.right() - HEADER_ACTION_INSET - width, header.y + (header.h - height) / 2, width, height)
 	}
 
-	/** Where a card's title, description and status go: from its left edge to just before the control. */
+	/**
+	 * Where a card's title, description and status go: from its left edge to just before the control (placed as
+	 * [control] places it, with the card's [indent]).
+	 */
 	@JvmStatic
-	fun text(card: Rect, option: Option): Rect {
-		val control = control(card, option)
+	@JvmOverloads
+	fun text(card: Rect, option: Option, indent: Int = 0): Rect {
+		val control = control(card, option, indent)
 		return Rect(card.x + PAD, card.y, control.x - 8 - (card.x + PAD), card.h)
 	}
 

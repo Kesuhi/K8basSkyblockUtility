@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -64,6 +65,50 @@ class ConfigManagerTest {
 		assertEquals(saved, Files.readString(file));
 		assertEquals(128, ConfigManager.general().mobScanRangeBlocks);
 		assertEquals(5, npcs().rules.size());
+	}
+
+	/** AC-UI-40 (REQ-UI-39, R46, T3.24): Animations is ON until picked, the key stays absent, and a saved value is kept. */
+	@Test
+	void animationsIsOnUntilPicked() throws IOException {
+		Path file = dir.resolve("animations.json");
+		ConfigManager.load(file);
+		ConfigManager.save();
+		ConfigManager.flush();
+		assertTrue(ConfigManager.general().animations(), "a fresh config reads ON");
+		assertFalse(Files.readString(file).contains("animations"), "and keeps the key absent");
+		for (boolean picked : new boolean[] {false, true}) {
+			ConfigManager.general().animations = picked;
+			ConfigManager.save();
+			ConfigManager.flush();
+			ConfigManager.load(file);
+			assertEquals(picked, ConfigManager.general().animations(), "a saved " + picked + " reads " + picked);
+			assertTrue(Files.readString(file).contains("\"animations\": " + picked), "and stays in the file");
+		}
+	}
+
+	/** AC-UI-30 (REQ-UI-29, R46): Smooth corners is ON until picked, the key stays absent, and a saved value is kept. */
+	@Test
+	void smoothCornersIsOnUntilPicked() throws IOException {
+		Path file = dir.resolve("smooth.json");
+		ConfigManager.load(file);
+		ConfigManager.save();
+		ConfigManager.flush();
+		assertTrue(ConfigManager.general().smoothCorners(), "a fresh config reads ON");
+		assertFalse(Files.readString(file).contains("smoothCorners"), "and keeps the key absent");
+
+		ConfigManager.load(file);
+		ConfigManager.save();
+		ConfigManager.flush();
+		assertFalse(Files.readString(file).contains("smoothCorners"), "loading and saving without a pick leaves it absent");
+
+		for (boolean picked : new boolean[] {false, true}) {
+			ConfigManager.general().smoothCorners = picked;
+			ConfigManager.save();
+			ConfigManager.flush();
+			ConfigManager.load(file);
+			assertEquals(picked, ConfigManager.general().smoothCorners(), "a saved " + picked + " reads " + picked);
+			assertTrue(Files.readString(file).contains("\"smoothCorners\": " + picked), "and stays in the file");
+		}
 	}
 
 	@Test

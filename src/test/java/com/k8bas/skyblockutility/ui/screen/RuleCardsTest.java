@@ -232,6 +232,181 @@ class RuleCardsTest {
 		assertTrue(group.fields().stream().noneMatch(option -> option instanceof ColorOption));
 	}
 
+	/**
+	 * AC-UI-56 (REQ-UI-52, T3.45): a rule card half open is laid out at its eased height rounded to whole GUI px: its rows
+	 * are clipped there, rows that would lie wholly past it are not placed, and the next rule's header follows at once, so a
+	 * click on it reaches it; closed, nothing of its body is placed; open, nothing is clipped.
+	 */
+	@Test
+	void aRuleCardPartlyOpenIsLaidOutAtItsEasedHeight() {
+		// A rule that does nothing (a broken pattern), so its card has the reason above its fields.
+		HighlightRule broken = mob("mob-1", "Zealot", "([");
+		broken.nameMatchMode = NameMatchMode.REGEX;
+		mobs.rules.add(broken);
+		mobs.rules.add(mob("mob-2", "Voidgloom", "Voidgloom"));
+		RuleGroup first = mobCards.groups().get(0);
+		RuleGroup second = mobCards.groups().get(1);
+		float[] reveal = {1F};
+		ConfigLayout.Filter filter = new ConfigLayout.Filter() {
+			@Override
+			public boolean shows(Option option) {
+				return true;
+			}
+
+			@Override
+			public boolean expanded(RuleGroup rule) {
+				return rule == first;
+			}
+
+			@Override
+			public float reveal(RuleGroup rule) {
+				return rule == first ? reveal[0] : 0F;
+			}
+		};
+		java.util.function.ToIntFunction<String> measure = text -> text.length() * 6;
+		ConfigLayout.Page open = ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure, filter);
+		int bodyStart = headerRow(open, first).y() + ConfigLayout.RULE_HEADER + ConfigLayout.RULE_GAP;
+		int full = headerRow(open, second).y() - bodyStart;
+		List<ConfigLayout.OptionRow> openBody = body(open, first);
+		assertTrue(openBody.size() >= 2 && openBody.stream().allMatch(row -> row.clipBottom() == Integer.MAX_VALUE), "open: nothing clipped");
+
+		reveal[0] = 0.3F;
+		ConfigLayout.Page partly = ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure, filter);
+		int shown = Math.round(0.3F * full);
+		assertEquals(bodyStart + shown, headerRow(partly, second).y(), "the next header follows the eased height");
+		List<ConfigLayout.OptionRow> partlyBody = body(partly, first);
+		assertTrue(!partlyBody.isEmpty() && partlyBody.size() < openBody.size(), "only the rows that show: " + partlyBody.size());
+		for (ConfigLayout.OptionRow row : partlyBody) {
+			assertEquals(bodyStart + shown, row.clipBottom(), row + " is clipped at the eased height");
+			assertTrue(row.y() < bodyStart + shown, row + " shows in part at least");
+		}
+		ConfigLayout.RuleProblem problem = partly.rows().stream().filter(row -> row instanceof ConfigLayout.RuleProblem)
+				.map(row -> (ConfigLayout.RuleProblem) row).findFirst().orElseThrow();
+		assertEquals(bodyStart + shown, problem.clipBottom(), "the reason the rule does nothing is clipped there too");
+		assertEquals(0.3F, headerRow(partly, first).reveal(), "the header knows how far its card is open, for the chevron");
+
+		reveal[0] = 0F;
+		ConfigLayout.Page closed = ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure, filter);
+		assertTrue(body(closed, first).isEmpty(), "closed: no body");
+		assertEquals(bodyStart, headerRow(closed, second).y());
+
+		// Placed, a field of the card is clipped there, and a click on the next header reaches that header.
+		reveal[0] = 0.3F;
+		ConfigPage page = new ConfigPage(Category.HIGHLIGHTS, cards(), option -> new Widget() {
+			@Override
+			public boolean press(double mouseX, double mouseY, int button) {
+				return contains(mouseX, mouseY);
+			}
+
+			@Override
+			public void draw(net.minecraft.client.gui.GuiGraphicsExtractor graphics, net.minecraft.client.gui.Font font, int mouseX, int mouseY) {
+			}
+		});
+		ConfigLayout.Frame frame = ConfigLayout.frame(1280, 720);
+		page.layout(frame, 0, measure, filter);
+		RuleHeaderWidget next = page.header(second);
+		assertEquals(frame.content().y() + bodyStart + shown, next.y(), "the next header where it is drawn");
+		assertSame(next, routed(page, next.x() + 30, next.y() + 5), "a click on the next header reaches it");
+		assertEquals(0.3F, page.header(first).reveal(), "its chevron turns with it");
+		Option option = partlyBody.get(partlyBody.size() - 1).option();
+		Widget field = page.card(option);
+		Widget control = page.control(option);
+		int clipY = frame.content().y() + bodyStart + shown;
+		assertEquals(clipY, field.clip().bottom(), "the field is clipped at the eased height");
+		assertEquals(clipY, control.clip().bottom(), "and so is its control");
+		// Input only where it shows: inside the field's box, above the clip it is reached, below it neither field nor control.
+		assertTrue(field.y() + field.height() > clipY + 2, "the field reaches past the clip");
+		assertTrue(field.inClip(field.x() + 4, clipY - 2));
+		assertFalse(field.inClip(field.x() + 4, clipY + 2), "below the clip the field takes no input");
+		assertFalse(control.inClip(control.x() + 2, clipY + 2), "nor its control");
+
+		// Scrolled, the clip moves with the rows.
+		page.layout(frame, 30, measure, filter);
+		assertEquals(clipY - 30, page.card(option).clip().bottom(), "scrolled by 30: the clip 30 higher");
+		assertEquals(clipY - 30, page.header(second).y(), "and the next header with it");
+	}
+
+	/**
+	 * AC-UI-58 (REQ-UI-54, T3.47): a feature whose rule list is empty gets one placeholder row where its rules would start,
+	 * after its options, a rule header high; none while searching, none once a rule exists, and none on a card that has no
+	 * rule list. It is not a control: no widget lies there, so a click on it reaches nothing.
+	 */
+	@Test
+	void anEmptyRuleListShowsAPlaceholderRow() {
+		java.util.function.ToIntFunction<String> measure = text -> text.length() * 6;
+		ConfigLayout.Page page = ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure);
+		List<ConfigLayout.RuleEmpty> empty = page.rows().stream().filter(ConfigLayout.RuleEmpty.class::isInstance).map(ConfigLayout.RuleEmpty.class::cast)
+				.toList();
+		assertEquals(1, empty.size(), "the Mob Highlighter's empty list: " + page.rows());
+		ConfigLayout.RuleEmpty row = empty.get(0);
+		assertEquals(ConfigLayout.RULE_HEADER, row.height());
+		ConfigLayout.Row before = page.rows().get(page.rows().indexOf(row) - 1);
+		assertTrue(before instanceof ConfigLayout.OptionRow option && option.card() == row.card(), "right after the card's options: " + before);
+		// On Waypoints, NPC Search (a rule list) gets one, Island beam colours (none) does not.
+		List<ConfigLayout.RuleEmpty> waypoints = ConfigLayout.page(cards(), Category.WAYPOINTS, 600, measure).rows().stream()
+				.filter(ConfigLayout.RuleEmpty.class::isInstance).map(ConfigLayout.RuleEmpty.class::cast).toList();
+		assertEquals(1, waypoints.size(), "one placeholder on Waypoints");
+		assertTrue(waypoints.get(0).card().hasRuleList() && waypoints.get(0).card().id().equals(npcCardOf(cards()).id()), "NPC Search's");
+		String npcId = npcCardOf(cards()).id();
+		assertTrue(cards().stream().filter(card -> card.category() == Category.WAYPOINTS && !card.id().equals(npcId)).noneMatch(Card::hasRuleList),
+				"the other Waypoints cards keep no rule list");
+
+		ConfigLayout.Filter searching = new ConfigLayout.Filter() {
+			@Override
+			public boolean shows(Option option) {
+				return true;
+			}
+
+			@Override
+			public boolean searching() {
+				return true;
+			}
+		};
+		assertTrue(ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure, searching).rows().stream().noneMatch(ConfigLayout.RuleEmpty.class::isInstance),
+				"none while searching");
+		mobs.rules.add(mob("mob-1", "Zealot", "Zealot"));
+		assertTrue(ConfigLayout.page(cards(), Category.HIGHLIGHTS, 600, measure).rows().stream().noneMatch(ConfigLayout.RuleEmpty.class::isInstance),
+				"none once a rule exists");
+		mobs.rules.clear();
+
+		ConfigPage placed = new ConfigPage(Category.HIGHLIGHTS, cards(), option -> new Widget() {
+			@Override
+			public boolean press(double mouseX, double mouseY, int button) {
+				return contains(mouseX, mouseY);
+			}
+
+			@Override
+			public void draw(net.minecraft.client.gui.GuiGraphicsExtractor graphics, net.minecraft.client.gui.Font font, int mouseX, int mouseY) {
+			}
+		});
+		ConfigLayout.Frame frame = ConfigLayout.frame(1280, 720);
+		ConfigLayout.Page laidOut = placed.layout(frame, 0, measure, ConfigLayout.Filter.of(option -> true));
+		ConfigLayout.RuleEmpty shown = laidOut.rows().stream().filter(ConfigLayout.RuleEmpty.class::isInstance).map(ConfigLayout.RuleEmpty.class::cast)
+				.findFirst().orElseThrow();
+		ConfigLayout.Rect rect = ConfigLayout.row(frame, 0, shown);
+		assertEquals(null, routed(placed, rect.x() + rect.w() / 2.0, rect.y() + rect.h() / 2.0), "a click on the placeholder reaches nothing");
+		List<Widget> focus = new ArrayList<>();
+		placed.focusOrder(focus);
+		assertTrue(focus.stream().noneMatch(widget -> widget.y() <= rect.y() + 2 && widget.y() + widget.height() >= rect.bottom() - 2),
+				"no keyboard stop lies on the placeholder: " + focus.size() + " stops");
+	}
+
+	/** NPC Search's card among {@code cards}: the one with a rule list on Waypoints. */
+	private static Card npcCardOf(List<Card> cards) {
+		return cards.stream().filter(card -> card.category() == Category.WAYPOINTS && card.hasRuleList()).findFirst().orElseThrow();
+	}
+
+	private static ConfigLayout.RuleHeader headerRow(ConfigLayout.Page page, RuleGroup rule) {
+		return page.rows().stream().filter(row -> row instanceof ConfigLayout.RuleHeader header && header.rule() == rule)
+				.map(row -> (ConfigLayout.RuleHeader) row).findFirst().orElseThrow();
+	}
+
+	/** The rows of a rule's fields on the page, in order. */
+	private static List<ConfigLayout.OptionRow> body(ConfigLayout.Page page, RuleGroup rule) {
+		return page.rows().stream().filter(row -> row instanceof ConfigLayout.OptionRow option && rule.fields().contains(option.option()))
+				.map(row -> (ConfigLayout.OptionRow) row).toList();
+	}
+
 	/** R31: the Remove button sits at the header's right end, over the header (so it gets the click), clear of the label. */
 	@Test
 	void theRemoveButtonSitsAtTheHeadersRightEnd() {
@@ -389,6 +564,17 @@ class RuleCardsTest {
 		page.layout(frame, 0, text -> text.length() * 6, filter);
 		assertFalse(page.widgets().contains(page.control(label)), "closed: gone from the page");
 		assertFalse(page.control(label).showing(), "and hidden");
+	}
+
+	/** AC-UI-44 [A] (REQ-UI-43, T3.33): a rule header shows the hand; over its Remove button that button decides. */
+	@Test
+	void aRuleHeaderShowsTheHand() {
+		mobs.rules.add(mob("mob-1", "Zealot", "Zealot"));
+		RuleHeaderWidget header = new RuleHeaderWidget(mobCards.groups().get(0), () -> { });
+		header.setBounds(0, 0, 400, ConfigLayout.RULE_HEADER);
+		header.setActionRoom(70);
+		assertEquals(com.k8bas.skyblockutility.ui.widget.PointerShape.HAND, header.cursorAt(100, 5), "the header");
+		assertNull(header.cursorAt(350, 5), "over its Remove button: that button decides");
 	}
 
 	/** REQ-UI-18 (T2.9b): Enter opens or closes a rule; Right opens a closed one, Left closes an open one; the ring stops before Remove. */

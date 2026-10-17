@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -51,6 +52,24 @@ class HudEditorModelTest {
 		assertEquals(0.5, model.positions().get("odds").anchor().fx(), "anchored to the centre column");
 		assertEquals(0, model.positions().get("odds").x(), "centred exactly");
 		assertTrue(model.guides(W, H).isEmpty(), "no guide after the drop");
+	}
+
+	/** AC-UI-44 [A] (REQ-UI-43, T3.33): the editor shows the move pointer while an element is dragged, and only then. */
+	@Test
+	void itKnowsWhileAnElementIsDragged() {
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		assertEquals("odds", model.at(210, 110, W, H), "over an element (the editor shows the move pointer there)");
+		assertNull(model.at(5, 5, W, H), "over empty space");
+		assertFalse(model.dragging(), "before a press");
+		model.press(5, 5, W, H);
+		assertFalse(model.dragging(), "a press on empty space");
+		model.release(W, H);
+		model.press(210, 110, W, H);
+		assertTrue(model.dragging(), "a press on an element grabs it");
+		model.drag(250, 110, W, H, false);
+		assertTrue(model.dragging(), "while it moves");
+		model.release(W, H);
+		assertFalse(model.dragging(), "dropped");
 	}
 
 	/** AC-HUD-14 [A]: with Alt held (no snap) the element follows the mouse exactly and no guide shows. */
@@ -336,5 +355,206 @@ class HudEditorModelTest {
 		HudRect small = model.rect("xp", 427, 240);
 		assertEquals(427 - 4 - 10 - 80, small.x(), 0, "still 14 px from the right edge");
 		assertEquals("xp", model.selected());
+	}
+
+	/** A 60×30 element (as AC-HUD-16's) at {@code at}, selected by a click on it. */
+	private HudEditorModel boxAt(HudPosition at) {
+		sizes.put("odds", new double[] {60, 30});
+		HudEditorModel model = model(at, XP_DEFAULT);
+		HudRect rect = model.rect("odds", W, H);
+		model.press(rect.x() + 1, rect.y() + 1, W, H);
+		model.release(W, H);
+		return model;
+	}
+
+	/** The handle {@code corner}'s centre (0 top-left, 1 top-right, 2 bottom-left, 3 bottom-right). */
+	private static double[] handle(HudEditorModel model, int corner) {
+		double[] centres = model.handleCentres(W, H);
+		return new double[] {centres[2 * corner], centres[2 * corner + 1]};
+	}
+
+	/** AC-HUD-16 [A] (REQ-HUD-15, T3.54): the selected element has a handle at each corner, none without a selection. */
+	@Test
+	void theSelectedElementHasFourHandles() {
+		sizes.put("odds", new double[] {60, 30});
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), XP_DEFAULT);
+		assertNull(model.handleCentres(W, H), "nothing selected: no handles");
+		model.press(210, 110, W, H);
+		model.release(W, H);
+		assertArrayEquals(new double[] {200, 100, 260, 100, 200, 130, 260, 130}, model.handleCentres(W, H));
+		assertEquals(3, model.handleAt(261, 129, W, H), "on the bottom-right handle");
+		assertEquals(0, model.handleAt(197, 102, W, H), "3 px off the top-left corner still takes it");
+		assertEquals(-1, model.handleAt(230, 115, W, H), "the element's middle is not a handle");
+		assertEquals(-1, model.handleAt(195.5, 100, W, H), "4.5 px off the top-left corner is out of reach");
+		model.press(5, 5, W, H);
+		assertEquals(-1, model.handleAt(261, 129, W, H), "deselected: no handle");
+	}
+
+	/** AC-HUD-16 [A]: the bottom-right handle dragged by (+30, +15) scales 1.0 to 1.5 about the top-left corner. */
+	@Test
+	void theBottomRightHandleScalesAboutTheTopLeft() {
+		HudEditorModel model = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1));
+		double[] grab = handle(model, 3);
+		model.press(grab[0], grab[1], W, H);
+		assertTrue(model.scaling(), "a press on a handle starts a scale");
+		assertFalse(model.dragging(), "not a move");
+		model.drag(grab[0] + 30, grab[1] + 15, W, H, true);
+		assertEquals(1.5, model.positions().get("odds").scale());
+		assertEquals(new HudRect(200, 100, 90, 45), model.rect("odds", W, H), "the top-left corner stays");
+		model.release(W, H);
+		assertFalse(model.scaling(), "released");
+		assertEquals(new HudRect(200, 100, 90, 45), model.rect("odds", W, H), "kept on release");
+	}
+
+	/** AC-HUD-16 [A]: the top-left handle dragged by (+15, +6) gives 0.8, the larger of 45/60 and 24/30, about the bottom-right. */
+	@Test
+	void theTopLeftHandleScalesAboutTheBottomRight() {
+		HudEditorModel model = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1));
+		double[] grab = handle(model, 0);
+		model.press(grab[0], grab[1], W, H);
+		model.drag(grab[0] + 15, grab[1] + 6, W, H, false);
+		assertEquals(0.8, model.positions().get("odds").scale());
+		assertEquals(new HudRect(212, 106, 48, 24), model.rect("odds", W, H), "the bottom-right corner (260, 130) stays");
+	}
+
+	/** AC-HUD-16 [A]: a drag past either end stays at 0.5 or 3.0, the opposite corner fixed. */
+	@Test
+	void aHandleDragStaysBetweenHalfAndThree() {
+		HudEditorModel model = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1));
+		double[] grab = handle(model, 3);
+		model.press(grab[0], grab[1], W, H);
+		model.drag(205, 102, W, H, false);
+		assertEquals(0.5, model.positions().get("odds").scale(), "shrunk past the end");
+		assertEquals(new HudRect(200, 100, 30, 15), model.rect("odds", W, H));
+		model.drag(150, 50, W, H, false);
+		assertEquals(0.5, model.positions().get("odds").scale(), "past the fixed corner too");
+		model.drag(500, 300, W, H, false);
+		assertEquals(3.0, model.positions().get("odds").scale(), "grown past the end");
+		assertEquals(new HudRect(200, 100, 180, 90), model.rect("odds", W, H));
+	}
+
+	/**
+	 * AC-HUD-16 [A], EC-HUD-12: a drag that would take the element out of the window stops at the scale where it still fits,
+	 * on the 0.1 step, the opposite corner fixed; at the window's top-left corner the same for the top-left handle.
+	 */
+	@Test
+	void aHandleDragStopsAtTheWindowEdge() {
+		HudEditorModel model = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 880, 100, 1));
+		double[] grab = handle(model, 3);
+		model.press(grab[0], grab[1], W, H);
+		model.drag(959, 160, W, H, false);
+		assertEquals(1.3, model.positions().get("odds").scale(), "80 px to the right edge: at most 1.33, so 1.3");
+		assertEquals(new HudRect(880, 100, 78, 39), model.rect("odds", W, H), "the top-left corner stays");
+		model.release(W, H);
+
+		// Grabbed 2 px inside the corner and dragged to the window's corner: 1.4 wanted (42 / 30), 1.3 fits.
+		HudEditorModel corner = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 20, 10, 1));
+		corner.press(22, 12, W, H);
+		assertTrue(corner.scaling(), "2 px inside the corner takes the handle");
+		corner.drag(0, 0, W, H, false);
+		assertEquals(1.3, corner.positions().get("odds").scale(), "1.4 would leave the window at the left and top: 1.3");
+		assertEquals(new HudRect(2, 1, 78, 39), corner.rect("odds", W, H), "the bottom-right corner (80, 40) stays");
+
+		// Flush with the right edge already: dragged outward, it stays at 1.0.
+		HudEditorModel flush = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 900, 100, 1));
+		double[] bottomRight = handle(flush, 3);
+		flush.press(bottomRight[0], bottomRight[1], W, H);
+		flush.drag(bottomRight[0] + 10, bottomRight[1] + 5, W, H, false);
+		assertEquals(1.0, flush.positions().get("odds").scale(), "no room to the right: it stays");
+		assertEquals(new HudRect(900, 100, 60, 30), flush.rect("odds", W, H));
+	}
+
+	/** REQ-HUD-15: a ratio exactly halfway between two steps rounds up (69 of 60 px: 1.15, so 1.2), as 45 of 60 (0.75) does. */
+	@Test
+	void aHalfwayRatioRoundsUp() {
+		HudEditorModel model = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1));
+		double[] grab = handle(model, 3);
+		model.press(grab[0], grab[1], W, H);
+		model.drag(grab[0] + 9, grab[1], W, H, false);
+		assertEquals(1.2, model.positions().get("odds").scale());
+	}
+
+	/**
+	 * REQ-HUD-15: an element of an odd size (61 × 9) scaled by its top-left handle to 0.5 (30.5 × 4.5, drawn 31 × 5) keeps its
+	 * drawn bottom-right corner (161, 59) exactly.
+	 */
+	@Test
+	void anOddSizeKeepsItsDrawnCorner() {
+		sizes.put("odds", new double[] {61, 9});
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 100, 50, 1), XP_DEFAULT);
+		model.press(130, 54, W, H);
+		model.release(W, H);
+		model.press(100, 50, W, H);
+		assertTrue(model.scaling());
+		model.drag(131, 55, W, H, false);
+		assertEquals(0.5, model.positions().get("odds").scale());
+		HudRect rect = model.rect("odds", W, H);
+		assertEquals(161, rect.x() + Math.ceil(rect.w()), 0, "right edge as drawn");
+		assertEquals(59, rect.y() + Math.ceil(rect.h()), 0, "bottom edge as drawn");
+	}
+
+	/** REQ-HUD-15: a 4 × 4 element keeps a middle a press moves; its handles reach only a quarter of its side (1 GUI px). */
+	@Test
+	void aSmallElementCanStillBeMoved() {
+		sizes.put("odds", new double[] {8, 8});
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 0.5), XP_DEFAULT);
+		model.press(202, 102, W, H);
+		model.release(W, H);
+		assertEquals("odds", model.selected());
+		model.press(202, 102, W, H);
+		assertTrue(model.dragging() && !model.scaling(), "its middle, 2.8 px from each corner, moves it");
+		model.release(W, H);
+		model.press(200.5, 100.5, W, H);
+		assertTrue(model.scaling(), "0.7 px from its corner scales it");
+	}
+
+	/** REQ-HUD-15: during a handle drag the arrow keys do nothing, and Cancel ends it. */
+	@Test
+	void aHandleDragIgnoresNudgesAndEndsOnCancel() {
+		HudEditorModel model = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1));
+		double[] grab = handle(model, 3);
+		model.press(grab[0], grab[1], W, H);
+		HudPosition before = model.positions().get("odds");
+		model.nudge(10, 0, W, H);
+		assertEquals(before, model.positions().get("odds"), "no nudge while scaling");
+		model.cancel();
+		assertFalse(model.scaling(), "Cancel ends it");
+	}
+
+	/** REQ-HUD-15: a handle drag does not snap, shows no guide, and on release the element is re-anchored as after a move. */
+	@Test
+	void aHandleDragDoesNotSnapAndReanchorsOnRelease() {
+		HudEditorModel model = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 400, 100, 1));
+		double[] grab = handle(model, 3);
+		model.press(grab[0], grab[1], W, H);
+		model.drag(478, 139, W, H, true);
+		assertEquals(1.3, model.positions().get("odds").scale());
+		assertEquals(478, model.rect("odds", W, H).x() + model.rect("odds", W, H).w(), 0, "its right edge 2 px from the centre line, not snapped");
+		assertTrue(model.guides(W, H).isEmpty(), "no guide");
+		assertEquals(HudAnchor.TOP_LEFT, model.positions().get("odds").anchor(), "before the release");
+		model.release(W, H);
+		assertEquals(0.5, model.positions().get("odds").anchor().fx(), "centre 439 lies in the middle third: anchored there");
+		assertEquals(new HudRect(400, 100, 78, 39), model.rect("odds", W, H), "where it was drawn");
+	}
+
+	/** REQ-HUD-15: the handles of an element at the window's edge are drawn just inside it (2.5 GUI px, half a handle, in). */
+	@Test
+	void handlesAtTheWindowEdgeStayInside() {
+		HudEditorModel model = boxAt(new HudPosition(HudAnchor.TOP_LEFT, 0, 0, 1));
+		assertArrayEquals(new double[] {2.5, 2.5, 60, 2.5, 2.5, 30, 60, 30}, model.handleCentres(W, H));
+		assertEquals(0, model.handleAt(1, 1, W, H), "the corner pixel takes the top-left handle");
+	}
+
+	/** REQ-HUD-15: a handle takes the press before the element under it; only the selected element has handles. */
+	@Test
+	void aHandleTakesThePressBeforeAnElement() {
+		sizes.put("odds", new double[] {60, 30});
+		HudEditorModel model = model(new HudPosition(HudAnchor.TOP_LEFT, 200, 100, 1), new HudPosition(HudAnchor.TOP_LEFT, 258, 128, 1));
+		model.press(210, 110, W, H);
+		model.release(W, H);
+		assertEquals("xp", model.at(259, 129, W, H), "xp lies on odds' bottom-right corner");
+		model.press(259, 129, W, H);
+		assertTrue(model.scaling(), "the handle of the selected odds takes the press");
+		assertEquals("odds", model.selected());
 	}
 }

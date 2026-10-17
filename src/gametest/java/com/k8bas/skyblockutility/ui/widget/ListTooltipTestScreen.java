@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.TooltipLayout;
+import com.k8bas.skyblockutility.ui.render.UiTime;
 import com.k8bas.skyblockutility.ui.render.UiText;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -23,12 +24,18 @@ public final class ListTooltipTestScreen extends WidgetScreen {
 		super(Component.literal("List and tooltip test"));
 		corner = add(new Button("?", Button.Style.NORMAL, () -> { }, () -> { }));
 		corner.setTooltip("§eSix lines\nThe second line\nA third, somewhat longer line of text\nFour\nFive\nAnd the sixth");
-		list = add(new VirtualList(ROW_HEIGHT, () -> ROWS, (graphics, font, index, x, y, w, h, hovered) -> {
+		list = add(new VirtualList(ROW_HEIGHT, () -> ROWS, (graphics, font, index, x, y, w, h, hover) -> {
 			paintingRows++;
-			graphics.fill(x, y, x + w, y + h - 1, hovered ? Theme.CARD_HOVER : index % 2 == 0 ? Theme.CARD : Theme.SIDEBAR);
+			graphics.fill(x, y, x + w, y + h - 1, com.k8bas.skyblockutility.ui.render.ColorMath.lerp(index % 2 == 0 ? Theme.CARD : Theme.SIDEBAR, Theme.CARD_HOVER, hover));
 			UiText.draw(graphics, font, "Row " + index, x + 4, y + 5, Theme.TEXT_PRIMARY);
 		}, index -> clicked = index));
 		list.setRowTooltip(index -> "Row " + index + " in full");
+	}
+
+	/** On a clock the test steps (T3.34), so the tooltip's 400 ms delay passes without waiting in real time. */
+	public ListTooltipTestScreen(UiTime time) {
+		this();
+		setTime(time);
 	}
 
 	/** Rows painted in the frame being drawn, and in the last whole frame. */
@@ -45,7 +52,7 @@ public final class ListTooltipTestScreen extends WidgetScreen {
 		// A label that is not a widget, with its tooltip asked for while hovered.
 		UiText.draw(graphics, font, "Label", LABEL_X, LABEL_Y, Theme.TEXT_SECONDARY);
 		if (mouseX >= LABEL_X && mouseX < LABEL_X + font.width("Label") && mouseY >= LABEL_Y && mouseY < LABEL_Y + font.lineHeight) {
-			showTooltip("The whole label");
+			showTooltip("The whole label", LABEL_X, LABEL_Y, font.width("Label"), font.lineHeight);
 		}
 	}
 
@@ -70,6 +77,10 @@ public final class ListTooltipTestScreen extends WidgetScreen {
 
 	TooltipLayout.Box tooltip() {
 		return lastTooltip();
+	}
+
+	float tooltipAlpha() {
+		return lastTooltipAlpha();
 	}
 
 	/** A widget's centre in window pixels. */

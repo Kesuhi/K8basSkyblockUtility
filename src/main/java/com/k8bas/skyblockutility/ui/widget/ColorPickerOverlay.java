@@ -111,6 +111,12 @@ public final class ColorPickerOverlay extends Overlay {
 		return alpha != null;
 	}
 
+	/** Its wheel's textures are freed, so no other GUI scale's is kept while it is closed (REQ-UI-47, AC-UI-48). */
+	@Override
+	public void closed() {
+		WheelTexture.release();
+	}
+
 	private void save() {
 		binding.set(state.color());
 		commit.run();
@@ -125,6 +131,16 @@ public final class ColorPickerOverlay extends Overlay {
 	@Override
 	public List<Widget> widgets() {
 		return widgets;
+	}
+
+	@Override
+	public int radius() {
+		return Shapes.RADIUS_CARD;
+	}
+
+	@Override
+	public int[] bounds() {
+		return new int[] {panelX, panelY, panelX + WIDTH, panelY + panelHeight};
 	}
 
 	@Override
@@ -166,28 +182,24 @@ public final class ColorPickerOverlay extends Overlay {
 	@Override
 	public void drawFrame(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		Shapes.roundedRect(graphics, panelX, panelY, WIDTH, panelHeight, Shapes.RADIUS_CARD, Theme.PANEL);
-		Shapes.roundedOutline(graphics, panelX, panelY, WIDTH, panelHeight, Shapes.RADIUS_CARD, 1, Theme.SEPARATOR);
+		Shapes.roundedHairline(graphics, panelX, panelY, WIDTH, panelHeight, Shapes.RADIUS_CARD, Theme.SEPARATOR);
 		UiText.draw(graphics, font, title, panelX + 8, panelY + 8, Theme.TEXT_PRIMARY);
 		int column = panelX + 8 + WHEEL + 12;
 		int previewWidth = WIDTH - (column - panelX) - 8;
 		// Before | after.
 		drawColour(graphics, column, panelY + 24, previewWidth / 2, 16, state.initial());
 		drawColour(graphics, column + previewWidth / 2, panelY + 24, previewWidth - previewWidth / 2, 16, state.color());
-		Shapes.roundedOutline(graphics, column - 1, panelY + 23, previewWidth + 2, 18, 2, 1, Theme.SEPARATOR);
+		Shapes.hairlineAround(graphics, column, panelY + 24, previewWidth, 16, 1, Theme.SEPARATOR);
 	}
 
 	/** A colour box; one with alpha shows a checkerboard behind it. */
 	private void drawColour(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int colour) {
 		if (state.storesAlpha()) {
-			for (int cx = 0; cx < w; cx += 4) {
-				for (int cy = 0; cy < h; cy += 4) {
-					graphics.fill(x + cx, y + cy, Math.min(x + w, x + cx + 4), Math.min(y + h, y + cy + 4),
-							((cx + cy) / 4) % 2 == 0 ? 0xFF9A9A9A : 0xFF5E5E5E);
-				}
-			}
-			graphics.fill(x, y, x + w, y + h, colour);
+			// REQ-UI-60: the board from the box's corner; the overlay fades it with everything else.
+			Checkerboard.draw(graphics, x, y, w, h, 0, argb -> argb);
+			Shapes.plain(graphics, x, y, x + w, y + h, colour);
 		} else {
-			graphics.fill(x, y, x + w, y + h, 0xFF000000 | colour);
+			Shapes.plain(graphics, x, y, x + w, y + h, 0xFF000000 | colour);
 		}
 	}
 
@@ -202,6 +214,11 @@ public final class ColorPickerOverlay extends Overlay {
 		}
 
 		@Override
+		public PointerShape cursorAt(double mouseX, double mouseY) {
+			return PointerShape.HAND;
+		}
+
+		@Override
 		public boolean press(double mouseX, double mouseY, int button) {
 			if (button != 0 || !contains(mouseX, mouseY)) {
 				return false;
@@ -213,10 +230,10 @@ public final class ColorPickerOverlay extends Overlay {
 
 		@Override
 		public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
-			graphics.fill(x, y, x + width, y + height, 0xFF000000 | rgb);
+			Shapes.plain(graphics, x, y, x + width, y + height, 0xFF000000 | rgb);
 			boolean current = (state.color() & 0xFFFFFF) == rgb;
 			int outline = current ? Theme.TEXT_PRIMARY : contains(mouseX, mouseY) ? Theme.TEXT_SECONDARY : Theme.SEPARATOR;
-			Shapes.roundedOutline(graphics, x - 1, y - 1, width + 2, height + 2, 1, 1, outline);
+			Shapes.hairlineAround(graphics, x, y, width, height, 0, outline);
 		}
 	}
 }

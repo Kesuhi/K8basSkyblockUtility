@@ -55,10 +55,16 @@ public final class GeneralOptions {
 								value -> config.accentColor = value & 0xFFFFFF)),
 				Toggle.of("interface.smooth_corners", "general.smoothCorners",
 						new OptionText("Smooth corners", "Draws rounded corners with soft edges.",
-								"Softens the rounded corners of this screen, the HUD editor and notices. Off draws them from whole pixels, "
-										+ "as before.",
+								"Changes only how rounded corners are drawn. Off cuts them from whole pixels, as in 1.2.",
 								List.of("smooth", "corners", "rounded", "anti-aliasing", "look")),
-						false, Binding.of(config::smoothCorners, value -> config.smoothCorners = value)),
+						true, Binding.of(config::smoothCorners, value -> config.smoothCorners = value)),
+				Toggle.of("interface.animations", "general.animations",
+						new OptionText("Animations", "Lets this mod's screens, lists, dialogs and notices move and fade.",
+								"Off shows every change at once: the panel opening, the category switch, hover and press, switches, scrolling, lists and "
+										+ "dialogs opening and closing, rule cards, the HUD editor's toolbar and hints, and notices. Tooltips still wait "
+										+ "before they show, then appear at once.",
+								List.of("animations", "motion", "fade", "slide", "reduce motion")),
+						true, Binding.of(config::animations, value -> config.animations = value)),
 				Choice.of("interface.notice_position", "general.noticePosition",
 						new OptionText("Notice position", "Where notices appear on the screen.",
 								"Notices are short messages, e.g. that your settings file was backed up. Vanilla toasts show top right too and are drawn "

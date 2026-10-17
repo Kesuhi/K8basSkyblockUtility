@@ -7,6 +7,7 @@ import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiClock;
 import com.k8bas.skyblockutility.ui.render.UiSound;
+import com.k8bas.skyblockutility.ui.render.UiTime;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
@@ -21,19 +22,29 @@ public final class ToggleSwitch extends Widget {
 	private final Runnable clickSound;
 	private final Animated knob;
 
+	/** On a clock alone, with motion always on (tests). */
 	public ToggleSwitch(Binding<Boolean> binding, Runnable clickSound, LongSupplier clock) {
-		this.binding = binding;
-		this.clickSound = clickSound;
-		this.knob = new Animated(binding.get() ? 1F : 0F, Animated.DEFAULT_DURATION_MS, clock);
+		this(binding, clickSound, UiTime.of(clock, () -> true));
 	}
 
-	/** A switch with the click sound, on the game's clock. */
+	public ToggleSwitch(Binding<Boolean> binding, Runnable clickSound, UiTime time) {
+		this.binding = binding;
+		this.clickSound = clickSound;
+		this.knob = new Animated(binding.get() ? 1F : 0F, Animated.DEFAULT_DURATION_MS, time);
+	}
+
+	/** A switch with the click sound, on the UI clock source (REQ-UI-39). */
 	public static ToggleSwitch of(Binding<Boolean> binding) {
-		return new ToggleSwitch(binding, UiSound::click, UiClock.MILLIS);
+		return new ToggleSwitch(binding, UiSound::click, UiClock.SOURCE);
 	}
 
 	public boolean value() {
 		return binding.get();
+	}
+
+	/** For tests: where the knob is drawn now, 0 at the off end to 1 at the on end. */
+	public float knob() {
+		return knob.value();
 	}
 
 	public void toggle() {
@@ -80,12 +91,23 @@ public final class ToggleSwitch extends Widget {
 	}
 
 	@Override
+	public PointerShape cursorAt(double mouseX, double mouseY) {
+		return PointerShape.HAND;
+	}
+
+	@Override
 	public boolean press(double mouseX, double mouseY, int button) {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {
 			return false;
 		}
+		held = true;
 		toggle();
 		return true;
+	}
+
+	@Override
+	public void release(double mouseX, double mouseY) {
+		held = false;
 	}
 
 	@Override
@@ -94,11 +116,31 @@ public final class ToggleSwitch extends Widget {
 		knob.animateTo(binding.get() ? 1F : 0F);
 		Theme theme = Theme.current();
 		float t = knob.value();
-		int track = enabled ? ColorMath.lerp(Theme.SEPARATOR, theme.accent(), t) : Theme.CARD_HOVER;
-		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, t) : Theme.TEXT_DISABLED;
+		// REQ-UI-53: pressed, the track as drawn now mixed toward black (asked each frame, so a look a disable cut short ends).
+		float press = pressLook(mouseX, mouseY);
+		int track = pressed(trackColour(t, theme.accent(), enabled), enabled ? press : 0F);
+		int knobColor = knobColour(t, enabled);
 		Shapes.roundedRect(graphics, x, y, width, height, height / 2, faded(track));
 		int knobSize = height - 4;
-		int knobX = x + 2 + Math.round((width - 4 - knobSize) * t);
-		Shapes.roundedRect(graphics, knobX, y + 2, knobSize, knobSize, knobSize / 2, faded(knobColor));
+		Shapes.roundedRect(graphics, knobX(x, width, height, t, Shapes.guiScale()), y + 2, knobSize, knobSize, knobSize / 2, faded(knobColor));
+	}
+
+	/** Its track at {@code t} (0 off, 1 on) for an enabled switch, or the disabled track. */
+	public static int trackColour(float t, int accent, boolean enabled) {
+		return enabled ? ColorMath.lerp(Theme.TOGGLE_OFF, accent, t) : Theme.CARD_HOVER;
+	}
+
+	/** Its knob at {@code t} for an enabled switch, or the disabled knob. */
+	static int knobColour(float t, boolean enabled) {
+		return enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, t) : Theme.TEXT_DISABLED;
+	}
+
+	/**
+	 * The knob's left edge in GUI px at {@code t} (0 off, 1 on) for a switch at x, w×h: on the physical-pixel grid at GUI
+	 * scale {@code scale} (REQ-UI-34), so it slides in screen-pixel steps.
+	 */
+	static float knobX(int x, int width, int height, float t, int scale) {
+		int knobSize = height - 4;
+		return Shapes.snap(x + 2 + (width - 4 - knobSize) * t, scale);
 	}
 }

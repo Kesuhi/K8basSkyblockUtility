@@ -16,7 +16,10 @@ public final class SmoothCornersTestScreen extends Screen {
 	static final int TOP = 10;
 	static final int W = 40;
 	static final int H = 24;
-	/** The probes' left edges: filled, faded, outline, half outside a clip, and a 9×9 box whose radius 6 is clamped. */
+	/**
+	 * The probes' left edges: filled, faded, outline, half outside a clip, a 9×9 box with radius 6 (a disc, T3.18), and a
+	 * 9×9 outline with radius 6, whose radius is clamped so an odd scale leaves a 1 px middle between its corner masks.
+	 */
 	static final int FILLED = 10;
 	static final int FADED = 60;
 	static final int OUTLINE = 110;
@@ -24,6 +27,10 @@ public final class SmoothCornersTestScreen extends Screen {
 	static final int CLIP_WIDTH = 20;
 	static final int SMALL = 210;
 	static final int SMALL_SIZE = 9;
+	static final int SMALL_OUTLINE = 230;
+	/** The icon probe (T3.20): the kit's × at 8 GUI px. */
+	static final int ICON = 250;
+	static final int ICON_SIZE = 8;
 
 	public SmoothCornersTestScreen() {
 		super(Component.literal("Smooth corners test"));
@@ -44,6 +51,8 @@ public final class SmoothCornersTestScreen extends Screen {
 			Shapes.roundedRect(graphics, CLIPPED, TOP, W, H, Shapes.RADIUS_CARD, GREEN);
 		}
 		Shapes.roundedRect(graphics, SMALL, TOP, SMALL_SIZE, SMALL_SIZE, Shapes.RADIUS_CARD, GREEN);
+		Shapes.roundedOutline(graphics, SMALL_OUTLINE, TOP, SMALL_SIZE, SMALL_SIZE, Shapes.RADIUS_CARD, 1, GREEN);
+		Shapes.icon(graphics, IconShapes.Icon.CROSS, ICON, TOP, ICON_SIZE, GREEN);
 		try (Clip empty = Clip.push(graphics, 10, 50, 0, 0)) {
 			Shapes.roundedRect(graphics, 10, 50, W, H, Shapes.RADIUS_CARD, MAGENTA);
 			Shapes.roundedOutline(graphics, 60, 50, W, H, Shapes.RADIUS_CARD, 1, MAGENTA);

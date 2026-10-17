@@ -22,6 +22,7 @@
 			"com.k8bas.skyblockutility.ui.screen.DatabasePickerGameTest",
 			"com.k8bas.skyblockutility.ui.screen.BundledListsGameTest",
 			"com.k8bas.skyblockutility.ui.screen.OpenCloseGameTest",
+			"com.k8bas.skyblockutility.ui.screen.UiReviewMatrixGameTest",
 			"com.k8bas.skyblockutility.hud.HudGameTest",
 			"com.k8bas.skyblockutility.ui.screen.HudEditorGameTest",
 			"com.k8bas.skyblockutility.highlight.HighlightGameTest",

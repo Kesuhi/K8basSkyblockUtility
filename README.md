@@ -17,7 +17,7 @@ hotspots, and a settings screen that finds every option.**
 </div>
 
 K8bas Skyblock Utility is not affiliated with or endorsed by Hypixel. This README describes
-version **1.2.1**.
+version **1.3.0**.
 
 ## Getting Started
 
@@ -27,10 +27,10 @@ version **1.2.1**.
    [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) and
    [Hypixel Mod API](https://modrinth.com/mod/hypixel-mod-api) (the Fabric build).
    [Mod Menu](https://modrinth.com/mod/modmenu) is optional. Then put
-   `k8bas_skyblock_utility-1.2.1+26.2.jar` from
+   `k8bas_skyblock_utility-1.3.0+26.2.jar` from
    [Releases](https://github.com/Kesuhi/K8basSkyblockUtility/releases/latest) into the same folder.
-2. **Check the download (optional):** `sha256sum -c k8bas_skyblock_utility-1.2.1+26.2.jar.sha256`,
-   or on Windows `certutil -hashfile k8bas_skyblock_utility-1.2.1+26.2.jar SHA256` and compare with
+2. **Check the download (optional):** `sha256sum -c k8bas_skyblock_utility-1.3.0+26.2.jar.sha256`,
+   or on Windows `certutil -hashfile k8bas_skyblock_utility-1.3.0+26.2.jar SHA256` and compare with
    the `.sha256` file next to the jar.
 3. **Open the settings** with `/ksu`, the "Open Settings" key or Mod Menu.
 4. **Add a rule:** under **Highlights**, press **Add from database** on the Mob Highlighter card,
@@ -54,7 +54,8 @@ and Waypoints until you add one; the Mining and Fishing features work without ru
 | Setting | Default | What it does |
 |---|---|---|
 | Accent colour | teal `#29B6B2` | The colour of selections, focus and section titles. |
-| Smooth corners | OFF | Draws rounded corners with soft edges, on this screen, the HUD editor and notices. |
+| Smooth corners | ON | Draws rounded corners with soft edges, on this screen, the HUD editor and notices. Off cuts only the corners of boxes, buttons, fields and outlines from whole pixels; round knobs and filled pills (switches, slider tracks, scrollbars) are always smooth. |
+| Animations | ON | Lets this mod's screens, lists, dialogs and notices move and fade. Off shows every change at once: the panel opening, the category switch, hover and press, switches, scrolling, lists and dialogs opening and closing, rule cards, the HUD editor's toolbar and hints, and notices. Tooltips still wait before they show, then appear at once. |
 | Notice position | Top right | Where the mod's notices appear on the screen. |
 | Notice duration | 5 s | How long a notice stays on screen (1–15 s). |
 
@@ -62,7 +63,7 @@ and Waypoints until you add one; the Mining and Fishing features work without ru
 
 | Setting | Default | What it does |
 |---|---|---|
-| Edit HUD layout | | Opens the HUD editor (also `/ksu hud`): drag an element to move it, scroll over it to scale it. In 1.2.1 the only element is the "Corpse ding" line (see Mining). |
+| Edit HUD layout | | Opens the HUD editor (also `/ksu hud`): drag an element to move it, drag a corner of the selected one or scroll over it to scale it. Its buttons sit in a card at the top; "Reset All" asks for a second click. Its only element is the "Corpse ding" line (see Mining). |
 
 **Keybinds**
 
@@ -219,6 +220,10 @@ Fabric Language Kotlin 1.14.1 or newer, Hypixel Mod API 1.0.2 or newer (its buil
 also runs on 26.2), Mod Menu optional. Render Chest 1.0.3 is bundled inside the jar. Minecraft
 26.1.x is no longer supported; 1.0.1 was the last build for it.
 
+**Optional mods:** [Caxton](https://modrinth.com/mod/caxton) (MIT, installed separately; its 26.2
+build is an alpha) draws all of the game's text with sharper fonts, this mod's screens included. It is
+not needed and not bundled.
+
 ## Licensing and credits
 
 - This mod is released under **CC0-1.0**; see [LICENSE](LICENSE). It started from the official
@@ -248,6 +253,6 @@ Open an [issue](https://github.com/Kesuhi/K8basSkyblockUtility/issues) or messag
 ./gradlew build
 ```
 
-It needs JDK 25, runs the unit tests and writes `build/libs/k8bas_skyblock_utility-1.2.1+26.2.jar`
+It needs JDK 25, runs the unit tests and writes `build/libs/k8bas_skyblock_utility-1.3.0+26.2.jar`
 and its `.sha256` file. For IDE setup, see the
 [Fabric documentation](https://docs.fabricmc.net/develop/getting-started/creating-a-project#setting-up).

@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.screen;
 import com.k8bas.skyblockutility.ui.option.RuleDatabase;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiText;
@@ -10,6 +11,7 @@ import com.k8bas.skyblockutility.ui.widget.Button;
 import com.k8bas.skyblockutility.ui.widget.GameClipboard;
 import com.k8bas.skyblockutility.ui.widget.Overlay;
 import com.k8bas.skyblockutility.ui.widget.OverlayHost;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.TextEditModel;
 import com.k8bas.skyblockutility.ui.widget.TextField;
 import com.k8bas.skyblockutility.ui.widget.VirtualList;
@@ -60,7 +62,9 @@ public final class DatabasePickerOverlay extends Overlay {
 		this.clickSound = clickSound;
 		this.search = TextField.of(new TextEditModel(35, GameClipboard.INSTANCE), "Search " + database.title(), text -> queryChanged());
 		this.list = new VirtualList(ROW_HEIGHT, () -> rows.size(), this::drawRow, index -> { });
+		list.setEdgeFade(Theme.PANEL);
 		list.onRowClick(this::clickRow);
+		list.setRowCursor(this::rowCursor);
 		this.done = new Button("Done", Button.Style.PRIMARY, () -> host.close(this), clickSound);
 		this.widgets = List.of(search, list, done);
 	}
@@ -93,8 +97,23 @@ public final class DatabasePickerOverlay extends Overlay {
 	}
 
 	@Override
+	public int radius() {
+		return Shapes.RADIUS_CARD;
+	}
+
+	@Override
+	public int[] bounds() {
+		return new int[] {panelX, panelY, panelX + panelWidth, panelY + panelHeight};
+	}
+
+	@Override
 	public boolean contains(double mouseX, double mouseY) {
 		return mouseX >= panelX && mouseY >= panelY && mouseX < panelX + panelWidth && mouseY < panelY + panelHeight;
+	}
+
+	/** The panel's left, top and width in GUI pixels, for gametests (T3.23). */
+	int[] panel() {
+		return new int[] {panelX, panelY, panelWidth};
 	}
 
 	@Override
@@ -120,12 +139,27 @@ public final class DatabasePickerOverlay extends Overlay {
 	private void queryChanged() {
 		closedInSearch.clear();
 		refresh();
-		list.rows().setScroll(0);
+		list.setScroll(0);
+		list.resetHover();
 	}
 
 	/** An entry's Add button, from its row's top left: x, y, width, height. Drawing and clicks both use it. */
 	static int[] addButton(int rowWidth, int rowHeight) {
 		return new int[] {rowWidth - ADD_WIDTH - 4, 2, ADD_WIDTH, rowHeight - 5};
+	}
+
+	/** The hand where a click does something: on a folder, and on an entry's Add button (REQ-UI-43). */
+	private PointerShape rowCursor(int index, double x, double y, int width, int height) {
+		if (index >= rows.size()) {
+			return PointerShape.DEFAULT;
+		}
+		PickerRows.Row row = rows.get(index);
+		if (row.entry() == null) {
+			return PointerShape.HAND;
+		}
+		int[] add = addButton(width, height);
+		boolean onAdd = row.entry().addable() && x >= add[0] && x < add[0] + add[2] && y >= add[1] && y < add[1] + add[3];
+		return onAdd ? PointerShape.HAND : PointerShape.DEFAULT;
 	}
 
 	private void clickRow(int index, double x, double y, int width, int height) {
@@ -140,6 +174,7 @@ public final class DatabasePickerOverlay extends Overlay {
 				toggled.add(row.folderKey());
 			}
 			refresh();
+			list.resetHover();
 			clickSound.run();
 			return;
 		}
@@ -155,7 +190,7 @@ public final class DatabasePickerOverlay extends Overlay {
 	@Override
 	public void drawFrame(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		Shapes.roundedRect(graphics, panelX, panelY, panelWidth, panelHeight, Shapes.RADIUS_CARD, Theme.PANEL);
-		Shapes.roundedOutline(graphics, panelX, panelY, panelWidth, panelHeight, Shapes.RADIUS_CARD, 1, Theme.SEPARATOR);
+		Shapes.roundedHairline(graphics, panelX, panelY, panelWidth, panelHeight, Shapes.RADIUS_CARD, Theme.SEPARATOR);
 		UiText.draw(graphics, font, Ellipsis.fit(database.title(), panelWidth - 16, font::width), panelX + 8, panelY + 8, Theme.TEXT_PRIMARY);
 		String message = message();
 		if (message != null) {
@@ -175,18 +210,20 @@ public final class DatabasePickerOverlay extends Overlay {
 		};
 	}
 
-	private void drawRow(GuiGraphicsExtractor graphics, Font font, int index, int x, int y, int width, int height, boolean hovered) {
+	private void drawRow(GuiGraphicsExtractor graphics, Font font, int index, int x, int y, int width, int height, float hover) {
 		if (index >= rows.size()) {
 			return;
 		}
 		PickerRows.Row row = rows.get(index);
-		if (hovered) {
-			graphics.fill(x, y, x + width, y + height - 1, Theme.CARD_HOVER);
+		if (hover > 0F) {
+			Shapes.plain(graphics, x, y, x + width, y + height - 1, ColorMath.withAlpha(Math.round(255 * hover), Theme.CARD_HOVER));
 		}
 		int textY = y + (height - font.lineHeight) / 2 + 1;
 		int indent = x + 4 + row.depth() * 12;
 		if (row.entry() == null) {
-			drawChevron(graphics, indent + 3, y + height / 2, row.open());
+			// REQ-UI-32: the kit's chevron, pointing right while closed, down while open.
+			Shapes.icon(graphics, row.open() ? IconShapes.Icon.CHEVRON_DOWN : IconShapes.Icon.CHEVRON_RIGHT, indent - 1, y + height / 2 - 4, 8,
+					Theme.TEXT_SECONDARY);
 			String count = Integer.toString(row.count());
 			UiText.rightAligned(graphics, font, count, x + width - 6, textY, Theme.TEXT_SECONDARY);
 			UiText.draw(graphics, font, Ellipsis.fit(row.label(), x + width - 12 - font.width(count) - (indent + 12), font::width), indent + 12, textY,
@@ -208,17 +245,9 @@ public final class DatabasePickerOverlay extends Overlay {
 		}
 		UiText.draw(graphics, font, Ellipsis.fit(row.label(), addX - 6 - (indent + 12), font::width), indent + 12, textY, Theme.TEXT_PRIMARY);
 		Theme theme = Theme.current();
-		Shapes.roundedRect(graphics, addX, y + add[1], add[2], add[3], Shapes.RADIUS_CONTROL, hovered ? theme.accent() : ColorMath.lerp(Theme.CARD, theme.accent(), 0.6F));
+		Shapes.roundedRect(graphics, addX, y + add[1], add[2], add[3], Shapes.RADIUS_CONTROL,
+				ColorMath.lerp(ColorMath.lerp(Theme.CARD, theme.accent(), 0.6F), theme.accent(), hover));
 		UiText.centred(graphics, font, "Add", addX + add[2] / 2, textY, theme.textOnAccent());
 	}
 
-	private static void drawChevron(GuiGraphicsExtractor graphics, int cx, int cy, boolean open) {
-		for (int i = 0; i < 4; i++) {
-			if (open) {
-				graphics.fill(cx - 3 + i, cy - 2 + i, cx + 4 - i, cy - 1 + i, Theme.TEXT_SECONDARY);
-			} else {
-				graphics.fill(cx - 2 + i, cy - 3 + i, cx - 1 + i, cy + 4 - i, Theme.TEXT_SECONDARY);
-			}
-		}
-	}
 }

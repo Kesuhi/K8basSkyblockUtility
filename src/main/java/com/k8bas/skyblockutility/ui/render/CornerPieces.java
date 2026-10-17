@@ -27,10 +27,15 @@ public final class CornerPieces {
 	 * @return the number of pieces, or -1 if a mask cannot draw it (the fill-based corners do)
 	 */
 	public static int fill(int w, int h, int r, int[] out) {
+		return fill(w, h, r, Corners.ALL, out);
+	}
+
+	/** As {@link #fill(int, int, int, int[])}, with only the given {@link Corners} corners round: a square corner is a fill. */
+	public static int fill(int w, int h, int r, int corners, int[] out) {
 		if (r < 1 || r > CornerMask.MAX_RADIUS || 2 * r > w || 2 * r > h) {
 			return -1;
 		}
-		int n = corners(w, h, r, out);
+		int n = corners(w, h, r, corners, out);
 		n = straight(out, n, r, 0, w - r, r);
 		n = straight(out, n, r, h - r, w - r, h);
 		return straight(out, n, 0, r, w, h - r);
@@ -45,23 +50,23 @@ public final class CornerPieces {
 		if (t < 1 || t > r || r > CornerMask.MAX_RADIUS || 2 * r > w || 2 * r > h || 2 * t >= w || 2 * t >= h) {
 			return -1;
 		}
-		int n = corners(w, h, r, out);
+		int n = corners(w, h, r, Corners.ALL, out);
 		n = straight(out, n, r, 0, w - r, t);
 		n = straight(out, n, r, h - t, w - r, h);
 		n = straight(out, n, 0, r, t, h - r);
 		return straight(out, n, w - t, r, w, h - r);
 	}
 
-	/** The mask's cache key: a fill has thickness 0. */
-	public static int key(int r, int t) {
-		return r << 9 | t;
+	private static int corners(int w, int h, int r, int round, int[] out) {
+		int n = corner(out, 0, round & Corners.TOP_LEFT, 0, 0, r, 0, 0);
+		n = corner(out, n, round & Corners.TOP_RIGHT, w - r, 0, r, r, 0);
+		n = corner(out, n, round & Corners.BOTTOM_LEFT, 0, h - r, r, 0, r);
+		return corner(out, n, round & Corners.BOTTOM_RIGHT, w - r, h - r, r, r, r);
 	}
 
-	private static int corners(int w, int h, int r, int[] out) {
-		int n = mask(out, 0, 0, 0, r, 0, 0);
-		n = mask(out, n, w - r, 0, r, r, 0);
-		n = mask(out, n, 0, h - r, r, 0, r);
-		return mask(out, n, w - r, h - r, r, r, r);
+	/** A round corner is a mask quad, a square one a plain r×r fill. */
+	private static int corner(int[] out, int n, int round, int x, int y, int r, int u, int v) {
+		return round != 0 ? mask(out, n, x, y, r, u, v) : straight(out, n, x, y, x + r, y + r);
 	}
 
 	private static int mask(int[] out, int n, int x, int y, int r, int u, int v) {

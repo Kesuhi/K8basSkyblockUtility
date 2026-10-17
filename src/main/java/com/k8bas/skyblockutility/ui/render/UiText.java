@@ -3,13 +3,13 @@ package com.k8bas.skyblockutility.ui.render;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
-/** Text in the vanilla font without a drop shadow (REQ-UI-17, D-8). */
+/** Text in the vanilla font without a drop shadow (REQ-UI-17, D-8), at the kit's fade (REQ-UI-38). */
 public final class UiText {
 	private UiText() {
 	}
 
 	public static void draw(GuiGraphicsExtractor graphics, Font font, String text, int x, int y, int argb) {
-		graphics.text(font, text, x, y, argb, false);
+		graphics.text(font, text, x, y, UiFade.apply(argb), false);
 	}
 
 	/** Centred on {@code centreX}; vanilla's centred text always has a shadow, so it is not used. */

@@ -23,14 +23,19 @@ import com.k8bas.skyblockutility.ui.option.TextOption;
 import com.k8bas.skyblockutility.ui.option.Toggle;
 import com.k8bas.skyblockutility.ui.render.Clip;
 import com.k8bas.skyblockutility.ui.render.ColorMath;
+import com.k8bas.skyblockutility.ui.render.Corners;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
+import com.k8bas.skyblockutility.ui.render.IconShapes;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
 import com.k8bas.skyblockutility.ui.render.UiClock;
 import com.k8bas.skyblockutility.ui.render.TooltipLayout;
 import com.k8bas.skyblockutility.ui.render.UiSound;
 import com.k8bas.skyblockutility.ui.render.UiText;
+import com.k8bas.skyblockutility.ui.render.UiTime;
 import com.k8bas.skyblockutility.ui.widget.Button;
+import com.k8bas.skyblockutility.ui.widget.EdgeFade;
+import com.k8bas.skyblockutility.ui.widget.ScrollbarPainter;
 import com.k8bas.skyblockutility.ui.widget.ColorSwatch;
 import com.k8bas.skyblockutility.ui.widget.Dropdown;
 import com.k8bas.skyblockutility.ui.widget.GameClipboard;
@@ -56,6 +61,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -64,8 +70,6 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BooleanSupplier;
-import java.util.function.LongSupplier;
 
 /**
  * The settings screen (T2.4a, REQ-UI-01): one centred panel over the dimmed game, with a header (name,
@@ -78,6 +82,17 @@ import java.util.function.LongSupplier;
  */
 public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	public static final String NAME = "K8bas Skyblock Utility";
+	/** Where an empty rule list's rules would start (REQ-UI-54). */
+	static final String EMPTY_RULES = "No rules yet. Use \"Add from database\" above.";
+	/** The no-hit view's button (REQ-UI-54). */
+	static final String CLEAR_SEARCH = "Clear search";
+	/** The no-hit view's search glass, in GUI px. */
+	static final int NO_HIT_ICON = 24;
+	/** The no-hit view from the content's top, in GUI px: the glass, the line under it, the button under that. */
+	static final int NO_HIT_ICON_Y = 24;
+	static final int NO_HIT_TEXT_Y = NO_HIT_ICON_Y + NO_HIT_ICON + 10;
+	static final int NO_HIT_BUTTON_Y = NO_HIT_TEXT_Y + 18;
+	private static final int CLEAR_WIDTH = 90;
 
 	private final Screen parent;
 	private final List<Card> cards;
@@ -103,6 +118,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private final VirtualList tabs;
 	private final TextField search;
 	private final ClearButton clear;
+	/** Under "No settings found": empties the query and keeps the search box focused (REQ-UI-54). */
+	private final Button clearSearch;
 	/** What the current query shows: the categories, badges and options (REQ-UI-08). */
 	private SearchView view;
 	private Category selected;
@@ -112,6 +129,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private int pendingScroll = -1;
 	/** The open scale and the category slide-and-fade (REQ-UI-18, T2.9). */
 	private final ConfigMotion motion;
+	/** Where the selected tab's highlight is, sliding on a switch (REQ-UI-45). */
+	private final TabIndicator tabIndicator;
+	/** How far each rule card is open, easing as it opens and closes (REQ-UI-52). */
+	private final RuleMotion ruleMotion;
+	private int plainBackground;
 	/** The scroll the page was laid out at this frame: the real scroll less the slide, so text and cards move together. */
 	private int pageScroll;
 	/** A page control a key reached, scrolled into view in the next layout (T2.9b). */
@@ -133,13 +155,19 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	}
 
 	ConfigScreen(Screen parent, List<Card> cards) {
-		this(parent, cards, UiClock.MILLIS, () -> UiClock.MOTION);
+		this(parent, cards, UiClock.GAME);
 	}
 
-	/** With the motion's clock and switch given, so a gametest can step through an animation (T2.9). */
-	ConfigScreen(Screen parent, List<Card> cards, LongSupplier clock, BooleanSupplier motionOn) {
+	/**
+	 * On a UI clock source of its own (REQ-UI-39), so a gametest can step through its animations (T2.9): the open and
+	 * category motion, and every animated value of the screen, which draws and takes input on it.
+	 */
+	ConfigScreen(Screen parent, List<Card> cards, UiTime time) {
 		super(Component.literal(NAME));
-		this.motion = new ConfigMotion(clock, motionOn);
+		setTime(time);
+		this.motion = new ConfigMotion(time::millis, time::motion);
+		this.tabIndicator = new TabIndicator(time);
+		this.ruleMotion = new RuleMotion(time);
 		this.parent = parent;
 		this.cards = cards;
 		this.categories = ConfigLayout.categories(cards);
@@ -155,16 +183,25 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			}
 		}));
 		search = add(TextField.of(new TextEditModel(SearchIndex.MAX_QUERY_LENGTH, GameClipboard.INSTANCE), "Search settings", this::applyQuery));
+		// REQ-UI-32: the kit's search glass at the box's left end.
+		search.leftIcon(IconShapes.Icon.SEARCH);
 		search.reserveRight(ClearButton.SIZE);
 		// One keyboard stop for the sidebar: Up/Down/Home/End pick the category at once, the query stays (T2.9b).
 		tabs.setKeys(this::tabKey);
 		tabs.setFocusRow(() -> view.categories().indexOf(selected));
+		tabs.setUnderlay(this::drawTabIndicator);
+		tabs.setEdgeFade(Theme.SIDEBAR);
 		clear = add(new ClearButton(() -> !search.model().text().isEmpty(), () -> {
 			UiSound.click();
 			search.model().setText("");
 			applyQuery("");
 			focus(search);
 		}));
+		clearSearch = add(new Button(CLEAR_SEARCH, Button.Style.NORMAL, () -> {
+			search.model().setText("");
+			applyQuery("");
+			focus(search);
+		}, UiSound::click));
 		show(view.selected(), false);
 	}
 
@@ -212,10 +249,24 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (category == selected || !categories.contains(category)) {
 			return;
 		}
+		// A list still fading out belongs to the page that goes (REQ-UI-55).
+		dropClosing();
 		if (!keepFocus) {
 			focus(null);
 		}
 		Category previous = selected;
+		// The selected tab's highlight slides to the new one from the old one's place in the tabs shown now (a search may have
+		// moved it); the first, or after the old one left the tabs, it is there at once (REQ-UI-45).
+		int tab = view.categories().indexOf(category);
+		int from = previous == null ? -1 : view.categories().indexOf(previous);
+		if (from < 0) {
+			tabIndicator.jumpTo(tab);
+		} else {
+			if (tabIndicator.target() != from) {
+				tabIndicator.jumpTo(from);
+			}
+			tabIndicator.slideTo(tab);
+		}
 		// A control of the page being left loses the keyboard focus; the sidebar and the search box keep it.
 		Widget focused = navFocus();
 		if (focused != null && focused != tabs && focused != search) {
@@ -223,11 +274,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		}
 		if (page != null) {
 			// A category shown and left before a frame was drawn keeps the scroll it came with.
-			scrolls.put(selected, pendingScroll >= 0 ? pendingScroll : scrollArea.scroll());
+			scrolls.put(selected, pendingScroll >= 0 ? pendingScroll : scrollArea.target());
 			widgets().removeAll(pageWidgets);
 		}
 		selected = category;
-		page = pages.computeIfAbsent(category, shown -> new ConfigPage(shown, cards, this::control, this::toggleRule));
+		page = pages.computeIfAbsent(category, shown -> new ConfigPage(shown, cards, this::control, this::toggleRule, this::query));
 		// Over the scroll area, under the sidebar and the search box.
 		pageWidgets = List.copyOf(page.widgets());
 		widgets().addAll(1, pageWidgets);
@@ -247,13 +298,17 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		pendingScroll = Math.max(0, y);
 	}
 
-	/** Opens or closes a rule card; while searching, a matching rule starts open (REQ-UI-09). */
+	/**
+	 * Opens or closes a rule card, easing it there (REQ-UI-52); while searching, a matching rule starts open (REQ-UI-09), at
+	 * once.
+	 */
 	void toggleRule(RuleGroup rule) {
 		UiSound.click();
 		Set<String> set = view.filtering() ? closedInSearch : openRules;
 		if (!set.remove(rule.id())) {
 			set.add(rule.id());
 		}
+		ruleMotion.toggled(rule.id(), filter.expanded(rule));
 	}
 
 	private final ConfigLayout.Filter filter = new ConfigLayout.Filter() {
@@ -270,6 +325,16 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		@Override
 		public boolean expanded(RuleGroup rule) {
 			return view.filtering() ? !closedInSearch.contains(rule.id()) : openRules.contains(rule.id());
+		}
+
+		@Override
+		public float reveal(RuleGroup rule) {
+			return ruleMotion.reveal(rule.id(), expanded(rule));
+		}
+
+		@Override
+		public boolean searching() {
+			return view.filtering();
 		}
 	};
 
@@ -324,8 +389,19 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		ConfigLayout.Rect box = frame.search();
 		search.setBounds(box.x(), box.y(), box.w(), box.h());
 		clear.setBounds(box.right() - ClearButton.SIZE - 2, box.y() + (box.h() - ClearButton.SIZE) / 2, ClearButton.SIZE, ClearButton.SIZE);
+		// REQ-UI-54: the no-hit view's button, under its line; away (no size) while anything is found.
+		ConfigLayout.Rect area = frame.content();
+		if (view.nothingFound() && area.h() >= NO_HIT_BUTTON_Y + 18 + ConfigLayout.PAD) {
+			clearSearch.setBounds(area.x() + (area.w() - CLEAR_WIDTH) / 2, area.y() + NO_HIT_BUTTON_Y, CLEAR_WIDTH, 18);
+		} else {
+			clearSearch.setBounds(0, 0, 0, 0);
+		}
 		ConfigLayout.Rect content = frame.content();
 		scrollArea.setBounds(content.x(), content.y(), content.w(), content.h());
+		// The content's bottom right corner is the panel's: its scrollbar ends clear of the rounding.
+		scrollArea.setTrackInset(Shapes.RADIUS_PANEL / 2);
+		// Before the scroll is read: a new GUI scale puts it on its target for the whole frame (EC-UI-18).
+		scrollArea.setScale(Shapes.guiScale());
 		// The slide moves the page, not the scroll: its widgets are laid out where they are drawn, so clicks meet them (AC-UI-03).
 		int slide = motion.slideOffset();
 		int scroll = scrollArea.scroll();
@@ -342,6 +418,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			if (row != null) {
 				int[] span = ConfigLayout.revealSpan(laidOut, row);
 				scrollArea.ensureVisible(span[0], span[1]);
+				// A list the key opened needs its box in view this frame, or it closes unanchored: no glide under an overlay.
+				if (overlay() != null) {
+					scrollArea.setScroll(scrollArea.target());
+				}
 			}
 		}
 		if (scrollArea.scroll() != scroll) {
@@ -372,8 +452,17 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+		if (plainBackground != 0) {
+			graphics.fill(0, 0, width, height, plainBackground);
+			return;
+		}
 		// The game stays visible around the panel, only dimmed.
 		extractDimmedGame(graphics, partialTick);
+	}
+
+	/** For gametests: one colour behind the panel instead of the dimmed game, so its shadow can be read; 0 for the game. */
+	void plainBackgroundForTests(int argb) {
+		plainBackground = argb;
 	}
 
 	@Override
@@ -382,10 +471,14 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		ConfigLayout.Rect panel = frame.panel();
 		ConfigLayout.Rect header = frame.header();
 		ConfigLayout.Rect sidebar = frame.sidebar();
-		graphics.fill(panel.x(), panel.y(), panel.right(), panel.bottom(), Theme.PANEL);
-		graphics.fill(header.x(), header.y(), header.right(), header.bottom(), Theme.HEADER);
+		// Its soft shadow first, under it: the only thing drawn outside it (REQ-UI-41, REQ-UI-02).
+		Shapes.shadow(graphics, panel.x(), panel.y(), panel.w(), panel.h(), Shapes.RADIUS_PANEL);
+		// One corner scale (REQ-UI-40): the panel rounded; its header follows the top corners, the sidebar the bottom left one.
+		Shapes.roundedRect(graphics, panel.x(), panel.y(), panel.w(), panel.h(), Shapes.RADIUS_PANEL, Theme.PANEL);
+		Shapes.roundedRect(graphics, header.x(), header.y(), header.w(), header.h(), Shapes.RADIUS_PANEL, Corners.TOP_LEFT | Corners.TOP_RIGHT,
+				Theme.HEADER);
 		graphics.fill(header.x(), header.bottom() - 1, header.right(), header.bottom(), theme.accent());
-		graphics.fill(sidebar.x(), sidebar.y(), sidebar.right(), sidebar.bottom(), Theme.SIDEBAR);
+		Shapes.roundedRect(graphics, sidebar.x(), sidebar.y(), sidebar.w(), sidebar.h(), Shapes.RADIUS_PANEL, Corners.BOTTOM_LEFT, Theme.SIDEBAR);
 		drawHeaderText(graphics, header);
 		drawPageText(graphics, theme, mouseX, mouseY);
 	}
@@ -409,62 +502,106 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	 */
 	private void drawPageText(GuiGraphicsExtractor graphics, Theme theme, int mouseX, int mouseY) {
 		ConfigLayout.Rect content = frame.content();
-		int scroll = pageScroll;
 		try (Clip clip = Clip.push(graphics, content.x(), content.y(), content.w(), content.h())) {
 			if (!clip.visible()) {
 				return;
 			}
-			if (view.nothingFound()) {
-				String message = Ellipsis.fit(view.message(), content.w() - 2 * ConfigLayout.PAD, font::width);
-				UiText.centred(graphics, font, message, content.x() + content.w() / 2, content.y() + 40, Theme.TEXT_SECONDARY);
-				return;
+			// With the page's widgets, the slide's fraction on the physical-pixel grid (REQ-UI-34).
+			graphics.pose().pushMatrix();
+			try {
+				graphics.pose().translate(0F, pageShift());
+				drawPageRows(graphics, theme, mouseX, mouseY, content);
+			} finally {
+				graphics.pose().popMatrix();
 			}
-			for (ConfigLayout.Row row : page.page().rows()) {
-				ConfigLayout.Rect rect = ConfigLayout.row(frame, scroll, row);
-				if (rect.bottom() < content.y() || rect.y() > content.bottom()) {
-					continue;
+		}
+	}
+
+	private void drawPageRows(GuiGraphicsExtractor graphics, Theme theme, int mouseX, int mouseY, ConfigLayout.Rect content) {
+		int scroll = pageScroll;
+		if (view.nothingFound()) {
+			// REQ-UI-54: the search glass over the line, and the button (a widget) under it.
+			Shapes.icon(graphics, IconShapes.Icon.SEARCH, content.x() + (content.w() - NO_HIT_ICON) / 2, content.y() + NO_HIT_ICON_Y, NO_HIT_ICON,
+					Theme.TEXT_SECONDARY);
+			String message = Ellipsis.fit(view.message(), content.w() - 2 * ConfigLayout.PAD, font::width);
+			UiText.centred(graphics, font, message, content.x() + content.w() / 2, content.y() + NO_HIT_TEXT_Y, Theme.TEXT_SECONDARY);
+			return;
+		}
+		for (ConfigLayout.Row row : page.page().rows()) {
+			ConfigLayout.Rect rect = ConfigLayout.row(frame, scroll, row);
+			if (rect.bottom() < content.y() || rect.y() > content.bottom()) {
+				continue;
+			}
+			if (row instanceof ConfigLayout.Heading heading) {
+				UiText.draw(graphics, font, Ellipsis.fit(heading.category().displayName(), rect.w(), font::width), rect.x(), rect.y(),
+						Theme.TEXT_PRIMARY);
+				int lineY = rect.y() + 14;
+				for (String line : heading.description()) {
+					UiText.draw(graphics, font, line, rect.x(), lineY, Theme.TEXT_SECONDARY);
+					lineY += 10;
 				}
-				if (row instanceof ConfigLayout.Heading heading) {
-					UiText.draw(graphics, font, Ellipsis.fit(heading.category().displayName(), rect.w(), font::width), rect.x(), rect.y(),
-							Theme.TEXT_PRIMARY);
-					int lineY = rect.y() + 14;
-					for (String line : heading.description()) {
-						UiText.draw(graphics, font, line, rect.x(), lineY, Theme.TEXT_SECONDARY);
-						lineY += 10;
-					}
-					if (heading.cut() && rect.contains(mouseX, mouseY) && content.contains(mouseX, mouseY)) {
-						showTooltip(heading.category().description());
-					}
-				} else if (row instanceof ConfigLayout.RuleProblem problem) {
-					// Why the rule does nothing, in the fixed error colour (REQ-GLOW-10, REQ-UI-12).
+				if (heading.cut() && rect.contains(mouseX, mouseY) && content.contains(mouseX, mouseY)) {
+					// Beside what shows of the heading: it may be scrolled partly under the header.
+					int top = Math.max(rect.y(), content.y());
+					int bottom = Math.min(rect.bottom(), content.bottom());
+					showTooltip(heading.category().description(), rect.x(), top, rect.w(), Math.max(0, bottom - top));
+				}
+			} else if (row instanceof ConfigLayout.RuleProblem problem) {
+				// Why the rule does nothing, in the fixed error colour (REQ-GLOW-10, REQ-UI-12); cut off at its card's eased
+				// height while the card opens or closes (REQ-UI-52).
+				int bottom = problem.clipBottom() == Integer.MAX_VALUE ? content.bottom() : Math.min(content.bottom(), content.y() + problem.clipBottom() - scroll);
+				try (Clip ignored = Clip.push(graphics, content.x(), content.y(), content.w(), Math.max(0, bottom - content.y()))) {
 					int lineY = rect.y() + 1;
 					for (String line : problem.lines()) {
 						UiText.draw(graphics, font, line, rect.x(), lineY, Theme.ERROR);
 						lineY += 10;
 					}
-				} else if (row instanceof ConfigLayout.Section section) {
-					String title = Ellipsis.fit(section.card().title(), rect.w(), font::width);
-					int textY = rect.y() + 8;
-					UiText.draw(graphics, font, title, rect.x(), textY, theme.accent());
-					int lineX = rect.x() + font.width(title) + 6;
-					if (lineX < rect.right()) {
-						graphics.fill(lineX, textY + 4, rect.right(), textY + 5, Theme.SEPARATOR);
-					}
+				}
+			} else if (row instanceof ConfigLayout.RuleEmpty) {
+				// REQ-UI-54: where the rules would start, outlined like a rule header, with how to add one.
+				Shapes.roundedHairline(graphics, rect.x(), rect.y(), rect.w(), rect.h(), Shapes.RADIUS_CONTROL, Theme.SEPARATOR);
+				String hint = Ellipsis.fit(EMPTY_RULES, rect.w() - 16, font::width);
+				UiText.draw(graphics, font, hint, rect.x() + 8, rect.y() + (rect.h() - font.lineHeight) / 2 + 1, Theme.TEXT_SECONDARY);
+			} else if (row instanceof ConfigLayout.Section section) {
+				String title = Ellipsis.fit(section.card().title(), rect.w(), font::width);
+				int textY = rect.y() + 8;
+				UiText.draw(graphics, font, title, rect.x(), textY, theme.accent());
+				int lineX = rect.x() + font.width(title) + 6;
+				if (lineX < rect.right()) {
+					Shapes.hairlineH(graphics, lineX, textY + 4, rect.right() - lineX, Theme.SEPARATOR);
 				}
 			}
 		}
 	}
 
-	private void drawTab(GuiGraphicsExtractor graphics, Font font, int row, int x, int y, int w, int h, boolean hovered) {
+	/**
+	 * The selected tab's highlight and its 2 px accent bar, under the tabs: where the indicator is, sliding to a newly selected
+	 * tab (REQ-UI-45), on the physical-pixel grid (REQ-UI-34). A search that moves the selected tab moves it at once.
+	 */
+	private void drawTabIndicator(GuiGraphicsExtractor graphics, int x, int firstRowTop, int rowWidth, int rowHeight) {
+		int tab = view.categories().indexOf(selected);
+		if (tab < 0) {
+			return;
+		}
+		if (tab != tabIndicator.target()) {
+			tabIndicator.jumpTo(tab);
+		}
+		Theme theme = Theme.current();
+		float top = tabIndicator.drawnTop(firstRowTop, rowHeight, Shapes.guiScale());
+		Shapes.roundedRect(graphics, x, top, rowWidth, ConfigLayout.TAB, Shapes.RADIUS_CONTROL, theme.accentBackground());
+		Shapes.fill(graphics, x, top + 4, x + 2, top + ConfigLayout.TAB - 4, theme.accent());
+	}
+
+	private void drawTab(GuiGraphicsExtractor graphics, Font font, int row, int x, int y, int w, int h, float hover) {
 		Category category = view.categories().get(row);
 		boolean current = category == selected;
 		Theme theme = Theme.current();
 		int tabHeight = ConfigLayout.TAB;
-		if (current) {
-			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_TAB, theme.accentBackground());
-			graphics.fill(x, y + 4, x + 2, y + tabHeight - 4, theme.accent());
-		} else if (hovered) {
-			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_TAB, Theme.CARD_HOVER);
+		// The selected tab's highlight is the indicator's; another tab's hover eases in and out (REQ-UI-45), faded where the
+		// sliding indicator passes over it, so the hover never covers it.
+		float away = Math.min(1F, Math.abs(tabIndicator.position() - row));
+		if (!current && hover * away > 0F) {
+			Shapes.roundedRect(graphics, x, y, w, tabHeight, Shapes.RADIUS_CONTROL, ColorMath.withAlpha(Math.round(255 * hover * away), Theme.CARD_HOVER));
 		}
 		// The number of options, or of hits while searching (REQ-UI-08).
 		String count = Integer.toString(view.badge(category));
@@ -555,12 +692,18 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	 */
 	@Override
 	public boolean keyPressed(KeyEvent event) {
-		if (event.key() == GLFW.GLFW_KEY_F && shortcutCtrl(event) && keyboardFocus() == null && overlay() == null && !pressHeld()) {
-			focus(search);
-			search.model().selectAll();
-			return true;
+		// On the screen's clock source, as in super, so the search box's caret starts on it too.
+		UiTime previous = UiClock.enter(getTime());
+		try {
+			if (event.key() == GLFW.GLFW_KEY_F && shortcutCtrl(event) && keyboardFocus() == null && overlay() == null && !pressHeld()) {
+				focus(search);
+				search.model().selectAll();
+				return true;
+			}
+			return super.keyPressed(event);
+		} finally {
+			UiClock.leave(previous);
 		}
-		return super.keyPressed(event);
 	}
 
 	@Override
@@ -595,6 +738,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			out.add(tabs);
 		}
 		out.add(search);
+		// REQ-UI-54: the no-hit view's button, the stop after the box while it shows.
+		if (clearSearch.width() > 0) {
+			out.add(clearSearch);
+		}
 		page.focusOrder(out);
 	}
 
@@ -616,7 +763,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (target != current) {
 			UiSound.click();
 			show(shown.get(target), true);
-			tabs.rows().ensureVisible(target);
+			tabs.ensureVisible(target);
 		}
 		return true;
 	}
@@ -627,15 +774,50 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	}
 
 	/**
+	 * How far the page is drawn below its whole-px layout this frame, under 1 GUI px, so clicks meet the layout (AC-UI-03): the
+	 * category slide on the physical-pixel grid less the whole GUI px it is laid out at (REQ-UI-34), and the scroll's glide
+	 * likewise (REQ-UI-35).
+	 */
+	private float pageShift() {
+		int scale = Shapes.guiScale();
+		return motion.slideDrawn(scale) + pageScroll - scrollArea.drawnScroll(scale);
+	}
+
+	@Override
+	protected float drawShiftY(Widget widget) {
+		float shift = pageShift();
+		return shift != 0F && pageWidgets.contains(widget) ? shift : 0F;
+	}
+
+	/** A press during a glide stops it where the page was drawn (EC-UI-25), so the pressed control stays under the pointer. */
+	@Override
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		UiTime previous = UiClock.enter(getTime());
+		try {
+			scrollArea.stopGlide();
+			scrollArea.endDrag();
+			return super.mouseClicked(event, doubleClick);
+		} finally {
+			UiClock.leave(previous);
+		}
+	}
+
+	/**
 	 * The fade of a category switch: a veil in the panel colour over the content, clearing over 200 ms. The content
 	 * lies on the opaque panel colour, so this looks the same as fading the content in, with no alpha on each widget.
 	 */
 	@Override
 	protected void drawOverWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		// REQ-UI-56: the page fades into the panel at an edge with more beyond, clear of the scrollbar and the panel's corner.
+		ConfigLayout.Rect area = frame.content();
+		int fadeWidth = area.w() - Math.max(ScrollbarPainter.HIT_WIDTH, Shapes.RADIUS_PANEL);
+		EdgeFade.draw(graphics, area.x(), area.y(), fadeWidth, area.h(), scrollArea.drawnScroll(Shapes.guiScale()), scrollArea.maxScroll(), Theme.PANEL);
 		int veil = motion.veilAlpha();
 		if (veil > 0) {
 			ConfigLayout.Rect content = frame.content();
-			graphics.fill(content.x(), content.y(), content.right(), content.bottom(), ColorMath.withAlpha(veil, Theme.PANEL & 0xFFFFFF));
+			// Its bottom right corner is the panel's: rounded with it (REQ-UI-40).
+			Shapes.roundedRect(graphics, content.x(), content.y(), content.w(), content.h(), Shapes.RADIUS_PANEL, Corners.BOTTOM_RIGHT,
+					ColorMath.withAlpha(veil, Theme.PANEL & 0xFFFFFF));
 		}
 	}
 
@@ -646,8 +828,12 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	 */
 	@Override
 	public void open(Overlay overlay) {
+		// A glide stops where the page was drawn, so the control that opened the overlay keeps its place.
+		scrollArea.stopGlide();
 		int slide = motion.slideOffset();
 		motion.finish();
+		// The rule cards too, so a list opened from a card under one that moves stays by its box.
+		ruleMotion.settle();
 		if (slide != 0 && page != null && frame != null) {
 			scrollArea.setScroll(scrollArea.scroll() - slide);
 			page.layout(frame, scrollArea.scroll(), font::width, filter);
@@ -656,7 +842,22 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		super.open(overlay);
 	}
 
+	/** The no-hit view's button (REQ-UI-54), for tests. */
+	Button clearSearchButton() {
+		return clearSearch;
+	}
+
 	/** For gametests: the motion, to step through or check. */
+	/** Puts the search box's text through the search, as typing does, for tests. */
+	void applyQueryForTests() {
+		applyQuery(search.model().text());
+	}
+
+	/** Where the selected tab's highlight is now, in tabs from the first, for tests. */
+	float tabIndicatorPosition() {
+		return tabIndicator.position();
+	}
+
 	ConfigMotion motion() {
 		return motion;
 	}

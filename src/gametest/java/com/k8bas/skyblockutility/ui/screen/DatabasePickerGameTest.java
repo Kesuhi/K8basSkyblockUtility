@@ -1,5 +1,8 @@
 package com.k8bas.skyblockutility.ui.screen;
 
+import java.nio.file.Path;
+import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.HairlineProbe;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.highlight.HighlightRule;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobDatabaseEntry;
@@ -9,6 +12,8 @@ import com.k8bas.skyblockutility.module.npcsearch.NpcRule;
 import com.k8bas.skyblockutility.module.npcsearch.NpcRulesForTests;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.RuleDatabase;
+import com.k8bas.skyblockutility.ui.widget.PointerProbe;
+import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -77,7 +82,21 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		openPicker(context, Category.HIGHLIGHTS, "mob_highlighter.add_from_database");
 		List<String> folders = context.computeOnClient(client -> picker(client).rows().stream().map(PickerRows.Row::label).toList());
 		check(folders.equals(List.of("Dwarven Mines", "Hub", "The End")), "the islands, as closed folders: " + folders);
-		context.takeScreenshot("t2.5c-picker-folders");
+		Path folderShot = context.takeScreenshot("t2.5c-picker-folders");
+		// AC-UI-34 [C] (T3.23): the picker panel's outline is a hairline, measured down from its top edge's middle.
+		int[] panel = context.computeOnClient(client -> picker(client).panel());
+		int pickerScale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		String line = HairlineProbe.check(HairlineProbe.read(folderShot), "the database picker's outline", pickerScale,
+				(panel[0] + panel[2] / 2) * pickerScale, panel[1] * pickerScale, 0, 1, Theme.SEPARATOR);
+		check(line.isEmpty(), line);
+		// AC-UI-44 [C] (T3.33): the hand over a folder; the arrow over the settings under the modal picker.
+		double[] folder = context.computeOnClient(client -> {
+			Widget list = picker(client).list();
+			return new double[] {list.x() + 20, list.y() + DatabasePickerOverlay.ROW_HEIGHT / 2.0};
+		});
+		PointerProbe.expect(context, folder[0], folder[1], PointerShape.HAND, "a picker folder");
+		double[] under = context.computeOnClient(client -> ConfigScreenGameTest.controlOutsideTheOverlay(screen(client)));
+		PointerProbe.expect(context, under[0], under[1], PointerShape.DEFAULT, "a settings control under the modal picker");
 		int[] field = context.computeOnClient(client -> centreOf(picker(client).searchField()));
 		click(context, field);
 		context.getInput().typeChars("zeal");
@@ -85,6 +104,11 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		List<String> found = context.computeOnClient(client -> picker(client).rows().stream().map(PickerRows.Row::label).toList());
 		check(found.equals(List.of("The End", "Special Zealot", "Zealot")), "\"zeal\" finds both Zealots in their open folder: " + found);
 		context.takeScreenshot("t2.5c-picker-search");
+		// AC-UI-44 [C]: the hand over an entry's Add button, the arrow over its name, the I-beam over the search box.
+		int[] zealotAdd = addButton(context, "Zealot");
+		PointerProbe.expect(context, zealotAdd[0], zealotAdd[1], PointerShape.HAND, "an entry's Add button");
+		PointerProbe.expect(context, zealotAdd[0] - DatabasePickerOverlay.ADD_WIDTH - 20, zealotAdd[1], PointerShape.DEFAULT, "an entry's name");
+		PointerProbe.expect(context, field[0], field[1], PointerShape.TEXT, "the picker's search box");
 		int before = context.computeOnClient(client -> ConfigManager.saveRequests());
 		click(context, addButton(context, "Zealot"));
 		List<HighlightRule> rules = context.computeOnClient(client -> MobRulesForTests.rules());
@@ -94,13 +118,20 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 		List<String> after = context.computeOnClient(client -> picker(client).rows().stream().map(PickerRows.Row::label).toList());
 		check(after.equals(List.of("The End", "Special Zealot")), "the added entry left the picker: " + after);
-		click(context, context.computeOnClient(client -> centreOf(picker(client).doneButton())));
+		int[] done = context.computeOnClient(client -> centreOf(picker(client).doneButton()));
+		PointerProbe.expect(context, done[0], done[1], PointerShape.HAND, "the picker's Done button");
+		click(context, done);
 		check(context.computeOnClient(client -> screen(client).overlay()) == null, "Done closes the picker");
 		check(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen, "with no prompt; the settings stay open");
 		List<String> cards = context.computeOnClient(client -> screen(client).page().page().rows().stream()
 				.filter(row -> row instanceof ConfigLayout.RuleHeader).map(row -> screen(client).page().header(((ConfigLayout.RuleHeader) row).rule()).title())
 				.toList());
 		check(cards.equals(List.of("Voidgloom", "Delete me", "Zealot")), "its card is in the list: " + cards);
+		// AC-UI-44 [C]: the hand over a rule header and over its Remove button.
+		int[] header = RuleCardsGameTest.headerPoint(context, "Zealot");
+		PointerProbe.expect(context, header[0], header[1], PointerShape.HAND, "a rule header");
+		int[] remove = RuleCardsGameTest.removeCentre(context, "mob_highlighter.rule.drop");
+		PointerProbe.expect(context, remove[0], remove[1], PointerShape.HAND, "a rule's Remove button");
 
 		// The added rule edited (its slim card: entity type and colour, R31), only the colour of the second changed,
 		// the third removed with its header's button; then a restart.
@@ -144,6 +175,18 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 				+ "colour-only change and a Remove survived a restart, and Zealot stayed out of the picker", folders, found);
 	}
 
+	/** The brightest pixel's r + g + b in the GUI box from (x0, y0) to (x1, y1) of a screenshot at GUI scale {@code scale}. */
+	private static int brightest(java.awt.image.BufferedImage image, int x0, int y0, int x1, int y1, int scale) {
+		int best = 0;
+		for (int y = Math.max(0, y0 * scale); y < Math.min(image.getHeight(), y1 * scale); y++) {
+			for (int x = Math.max(0, x0 * scale); x < Math.min(image.getWidth(), x1 * scale); x++) {
+				int rgb = image.getRGB(x, y);
+				best = Math.max(best, (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF));
+			}
+		}
+		return best;
+	}
+
 	/** AC-UI-18 [C]: the NPC picker scrolls from start to end. */
 	private static void scrollSequence(ClientGameTestContext context) {
 		openPicker(context, Category.WAYPOINTS, "npc_search.add_from_database");
@@ -153,7 +196,16 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 		int total = context.computeOnClient(client -> picker(client).rows().size());
 		check(total > 150, "every folder and NPC: " + total + " rows");
-		context.takeScreenshot("t2.5c-npc-picker-start");
+		java.nio.file.Path start = context.takeScreenshot("t2.5c-npc-picker-start");
+		// AC-UI-60 [C] (T3.49): at the top, more rows below: the bottom band's text is faded, dimmer than the middle rows'.
+		int[] box = context.computeOnClient(client -> {
+			Widget list = picker(client).list();
+			return new int[] {list.x(), list.y(), list.x() + list.width() - 8, list.y() + list.height(), client.getWindow().getGuiScale()};
+		});
+		java.awt.image.BufferedImage image = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(start);
+		int bottomBand = brightest(image, box[0], box[3] - 6, box[2], box[3], box[4]);
+		int middleRows = brightest(image, box[0], (box[1] + box[3]) / 2 - 27, box[2], (box[1] + box[3]) / 2 + 27, box[4]);
+		check(bottomBand + 20 < middleRows, "the picker list fades at its bottom: " + bottomBand + " against " + middleRows + " in the middle");
 		int[] middle = context.computeOnClient(client -> centreOf(picker(client).list()));
 		int[] window = context.computeOnClient(client -> window(middle[0], middle[1]));
 		context.getInput().setCursorPos(window[0], window[1]);
@@ -174,6 +226,40 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 		context.takeScreenshot("t2.5c-npc-picker-end");
 		int last = context.computeOnClient(client -> picker(client).list().rows().visible().end() - 1);
 		check(last == total - 1, "scrolled to the last row: " + last + " of " + (total - 1));
+		// AC-UI-37 [C] (T3.27): its scrollbar idle (the pointer over the rows), then hovered, at GUI scales 1-4.
+		for (int scale = 1; scale <= 4; scale++) {
+			int s = scale;
+			context.runOnClient(client -> client.options.guiScale().set(s));
+			context.waitTicks(3);
+			context.getInput().setCursorPos(window[0], window[1]);
+			context.waitTicks(2);
+			for (boolean hot : new boolean[] {false, true}) {
+				int[] g = context.computeOnClient(client -> {
+					var list = picker(client).list();
+					var thumb = list.rows().thumb(list.height());
+					return new int[] {list.x() + list.width(), list.y(), list.y() + list.height(), list.y() + thumb.offset(), thumb.length()};
+				});
+				if (hot) {
+					int[] at = context.computeOnClient(client -> window(g[0] - 2, g[3] + g[4] / 2));
+					context.getInput().setCursorPos(at[0], at[1]);
+					context.waitTicks(2);
+				}
+				java.awt.image.BufferedImage shot = com.k8bas.skyblockutility.ui.render.HairlineProbe.read(
+						context.takeScreenshot("t3.27-picker-" + (hot ? "hovered" : "idle") + "-scale-" + s));
+				check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == s, "GUI scale " + s + " applies");
+				String problem = com.k8bas.skyblockutility.ui.widget.ScrollbarProbe.check(shot, "the picker's " + (hot ? "hovered" : "idle") + " scrollbar",
+						s, g[0], g[1], g[2], g[3], g[4], hot);
+				check(problem.isEmpty(), problem);
+			}
+		}
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		context.waitTicks(3);
+		int[] back = context.computeOnClient(client -> {
+			int[] centre = centreOf(picker(client).list());
+			return window(centre[0], centre[1]);
+		});
+		context.getInput().setCursorPos(back[0], back[1]);
+		context.waitTicks(2);
 		// The first Esc leaves the search field (REQ-UI-22), the second closes the picker.
 		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 		context.waitTicks(2);
@@ -226,7 +312,7 @@ public class DatabasePickerGameTest implements FabricClientGameTest {
 			for (int i = 0; i < rows.size(); i++) {
 				if (rows.get(i).entry() != null && rows.get(i).label().equals(name)) {
 					Widget list = picker.list();
-					int[] add = DatabasePickerOverlay.addButton(list.width() - (picker.list().rows().overflows() ? 6 : 0), DatabasePickerOverlay.ROW_HEIGHT);
+					int[] add = DatabasePickerOverlay.addButton(list.width() - (picker.list().rows().overflows() ? com.k8bas.skyblockutility.ui.widget.ScrollbarPainter.HIT_WIDTH : 0), DatabasePickerOverlay.ROW_HEIGHT);
 					return new int[] {list.x() + add[0] + add[2] / 2, list.y() + picker.list().rows().rowTop(i) + add[1] + add[3] / 2};
 				}
 			}
