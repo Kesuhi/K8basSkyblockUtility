@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26–R27 at T2.3b (2026-10-03), R28–R34 during Phase 2 and the v1.2.0 release (2026-10-04 to 2026-10-09), R35 before G3 (2026-10-10), R36–R44 after the G3 field checks (2026-10-15) and R45 after Phase 3 and the G3 push (2026-10-15); all are listed in §12.3. R36 answers both field questions that R24 left for G3: the Frozen Corpses widget is enabled with `/widgets`, and a key held only in the Dwarven Sack opens a corpse. R41 corrects the second answer: a key held only in the Dwarven Sack does not open a corpse. R37 drops the drill re-equip fix (module drill-fix). R42 drops the Rare Drop Odds feature (module rare-drop-odds), built parts included. R38 leaves the four invisible-by-design mobs out of the bundled mob table. R39 changed D-7 to count sack keys too; R41 replaces R39: keys are counted in the inventory only again, with a reminder about keys seen in the sack. R40 reinstates the possible corpse spots (module corpse-waypoints), which R22 had dropped. R41 also hides Hypixel's hotspot particles on the client (REQ-HOT-14) and makes the Organ Donor ding hint concrete from your sound capture. R43, after the third G3 session, moves the ding hint to a HUD element "Corpse ding" and adds a "[Take out k]" chat button to the sack reminder: the one command the mod runs, and only when you click it (REQ-XC-RULES-02). R44, after the fourth G3 session, removes the possible corpse spots that cannot hold an unlooted corpse: once the Organ Donor has dinged in a shaft visit, a spot you stood near for 3 s without a ding is ruled out (REQ-CORPSE-12). R45, after Phase 3 and the G3 push, releases the Phase 3 changes as v1.2.1 in the REQ-REL-14 flow (they add features, which SemVer would number 1.3.0; you chose 1.2.1) and makes a UI review, released as 1.3.0, the next work before Phase 4; its requirements and criteria are written with you before any build. R46 (2026-10-15), your answers to the UI review proposal, writes that spec: the UI review requirements REQ-UI-27 to REQ-UI-47 with AC-UI-27 to AC-UI-50 in ui-config (the shape layering fix behind the slider-knob line, Smooth corners ON by default, sharper discs, icons, hairlines and the colour wheel, sub-pixel motion, smooth scrolling, overlay transitions with a new "Animations" switch, one corner language with soft shadows, pointer cursors and tooltip timing), released as 1.3.0; you approved it on 2026-10-15, before the first Phase 3u code commit (PLAN T3.14). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped Rn]` and keep their ids; reinstated ones carry `[reinstated R40]`; R39's replaced changes carry `[replaced R41]`, and R41's carry `[replaced R43]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
+| Status | **Approved on 2026-10-01**, together with `PLAN.md`. All questions are answered: D-1–D-29 and R1–R17 take the recommended options, except **R10 = b**, and the D-17 captures moved to G1. R18 and R19 were decided after the G1 review (2026-10-01), and R20–R24 after the G1 smoke (2026-10-01), R25 after T3.4 and R26–R27 at T2.3b (2026-10-03), R28–R34 during Phase 2 and the v1.2.0 release (2026-10-04 to 2026-10-09), R35 before G3 (2026-10-10), R36–R44 after the G3 field checks (2026-10-15) and R45 after Phase 3 and the G3 push (2026-10-15); all are listed in §12.3. R36 answers both field questions that R24 left for G3: the Frozen Corpses widget is enabled with `/widgets`, and a key held only in the Dwarven Sack opens a corpse. R41 corrects the second answer: a key held only in the Dwarven Sack does not open a corpse. R37 drops the drill re-equip fix (module drill-fix). R42 drops the Rare Drop Odds feature (module rare-drop-odds), built parts included. R38 leaves the four invisible-by-design mobs out of the bundled mob table. R39 changed D-7 to count sack keys too; R41 replaces R39: keys are counted in the inventory only again, with a reminder about keys seen in the sack. R40 reinstates the possible corpse spots (module corpse-waypoints), which R22 had dropped. R41 also hides Hypixel's hotspot particles on the client (REQ-HOT-14) and makes the Organ Donor ding hint concrete from your sound capture. R43, after the third G3 session, moves the ding hint to a HUD element "Corpse ding" and adds a "[Take out k]" chat button to the sack reminder: the one command the mod runs, and only when you click it (REQ-XC-RULES-02). R44, after the fourth G3 session, removes the possible corpse spots that cannot hold an unlooted corpse: once the Organ Donor has dinged in a shaft visit, a spot you stood near for 3 s without a ding is ruled out (REQ-CORPSE-12). R45, after Phase 3 and the G3 push, releases the Phase 3 changes as v1.2.1 in the REQ-REL-14 flow (they add features, which SemVer would number 1.3.0; you chose 1.2.1) and makes a UI review, released as 1.3.0, the next work before Phase 4; its requirements and criteria are written with you before any build. R46 (2026-10-15), your answers to the UI review proposal, writes that spec: the UI review requirements REQ-UI-27 to REQ-UI-47 with AC-UI-27 to AC-UI-50 in ui-config (the shape layering fix behind the slider-knob line, Smooth corners ON by default, sharper discs, icons, hairlines and the colour wheel, sub-pixel motion, smooth scrolling, overlay transitions with a new "Animations" switch, one corner language with soft shadows, pointer cursors and tooltip timing), released as 1.3.0; you approved it on 2026-10-15, before the first Phase 3u code commit (PLAN T3.14). R47 (2026-10-17, after Checkpoint G3u, your request to finish the UI rework in 1.3.0) adds the review's open items and its later candidates as REQ-UI-48 to REQ-UI-60 and REQ-HUD-15, without the per-option reset and the roomier cards you left out (draft until you approve it). Requirements carry `[decided D-xx]` / `[decided Rn]`; dropped ones carry `[dropped Rn]` and keep their ids; reinstated ones carry `[reinstated R40]`; R39's replaced changes carry `[replaced R41]`, and R41's carry `[replaced R43]`. This is a living spec: a change to a requirement is made here first, then in `PLAN.md`. |
 | Date | 2026-10-01 |
 | Inputs | Your original task prompt (verbatim) and the *SkyBlock XP Optimizer* addendum (verbatim), plus the research and decisions recorded in `PLAN.md` |
 | Relationship to PLAN.md | This file says **what** must be true and how we will know. `PLAN.md` says **how and in which order**. Every PLAN task names the requirement ids it implements (§13 Traceability). |
@@ -900,7 +900,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   *(Derived: UI review: knobs drawn as four corner quadrants or as row spans look stepped at scale 2; a pill of any width cannot come from one stretched mask)*
 - **REQ-UI-31** Sampling and the colour wheel [decided R46 (b)].
   - The mask textures (corners, discs, shadows) and the colour wheel are sampled with linear filtering and clamp-to-edge, so a mask drawn at a fractional position or under the open animation's scale resamples smoothly.
-  - The colour wheel is baked at its drawn size in physical pixels (wheel size × GUI scale) and drawn 1:1. It is rebaked when the GUI scale changes. It is no longer a fixed texture stretched by a non-integer factor.
+  - The colour wheel is baked at its drawn size in physical pixels (wheel size × GUI scale) and drawn 1:1. It is rebaked when the GUI scale changes. It is no longer a fixed texture stretched by a non-integer factor. A brightness change does not rebake it: it is baked at full brightness and drawn tinted (REQ-UI-48) [decided R47].
   - The open animation's corner shimmer is reduced, not removed: straight fills, text and vanilla elements still snap to pixels while the panel scales (REQ-UI-18).
 
   *(Derived: UI review: the 128 px wheel stretched to 80 GUI px with nearest sampling has a jagged rim; corner masks shimmer while the panel scales in)*
@@ -927,7 +927,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 *Motion and scrolling*
 - **REQ-UI-35** Smooth scrolling [decided R46 (d)].
   - The content area, the sidebar, the database picker list and open dropdown lists scroll smoothly. Each keeps a whole-GUI-px target offset and a shown offset that eases toward it exponentially with a time constant of about 50 ms.
-  - The easing is frame-rate independent: the shown offset depends only on the time since the target last changed and the shown offset at that moment, not on how many frames were drawn. It never passes the target and snaps to it within half a physical pixel.
+  - The easing is frame-rate independent: the shown offset depends only on the time since the target last changed and the shown offset at that moment, not on how many frames were drawn. It never passes the target and snaps to it within half a physical pixel. From R47 the shown offset reaches the target exactly when the glide ends, with no last step (REQ-UI-49); the half-pixel snap is only where it is drawn (REQ-UI-34) [decided R47].
   - The layout runs at the shown offset rounded to whole GUI px, so clicks hit what is drawn; the remaining fraction is drawn as a translation on the physical-pixel grid (REQ-UI-34).
   - A wheel notch adds to the target (24 GUI px in the content area, three rows in lists, as today). Dragging the scrollbar thumb or pressing its track sets the target and the shown offset together. Bringing a control into view (keyboard focus, a search, a rule opening) glides to it. A target outside the range after a resize or a filter change is clamped.
   - With Animations OFF (REQ-UI-39) the shown offset equals the target at once.
@@ -948,12 +948,12 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   *(Brief: you, 2026-10-15: "Sliders should not change with mouse wheel, only by dragging."; Derived: UI review: a slider under the pointer stops the page's scroll and changes its value, which is saved on close)*
 - **REQ-UI-38** Overlay transitions [decided R46 (d)].
   - The dropdown list, the colour picker and the database picker open with a fade from transparent to opaque and a scale from 0.96 to 1.00 about their anchor (a dropdown's field, a dialog's centre) over about 120 ms, easing out. The modal backdrop eases from transparent to its alpha over the same time.
-  - Input reaches the overlay at once, on its final, unscaled layout. There is no close animation: closing is instant.
+  - Input reaches the overlay at once, on its final, unscaled layout. R46 had no close animation; from R47 an overlay fades and scales out as it closes and takes no input while it does (REQ-UI-55) [decided R47].
 
   *(Derived: UI review: the panel opens with a 220 ms scale, but overlays and the backdrop snap in)*
 - **REQ-UI-39** Animations switch [decided R46 (d)].
   - General › Interface gets the switch "Animations", ON until picked; its key is absent from the file until then (REQ-UI-16).
-  - OFF makes every UI motion and fade instant: the panel's open animation, the category slide, hover and toggle easing, the knob slides and growth, the sliding tab indicator, smooth scrolling, the overlay transitions, the tooltip fade and the notices' slide. The tooltip delay stays (REQ-UI-44). Nothing else changes.
+  - OFF makes every UI motion and fade instant: the panel's open animation, the category slide, hover and toggle easing, the knob slides and growth, the sliding tab indicator, smooth scrolling, the overlay transitions (opening and closing, REQ-UI-55), the tooltip fade and the notices' slide; from R47 also the rule cards' opening and closing (REQ-UI-52), the press feedback's easing (REQ-UI-53) and the HUD editor's hint panel and toolbar card fades (REQ-HUD-08). The scroll edge fades follow the scroll position and have no timing of their own (REQ-UI-56). The tooltip delay stays (REQ-UI-44). Nothing else changes.
   - The change applies at once in an open screen.
   - Every animated value, the smooth scrolling, the overlay transitions, the tooltip timer and the notices read one UI clock source (the time and whether motion is on), which tests can override per screen. The system property `-Dk8bas.ui.motion=off` is only that source's default for the gametests (motion off, so clicks land on the settled layout); the motion gametests override it for their own screen with a test clock and motion on.
 
@@ -1017,23 +1017,100 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Only the game's own GUI pipelines (plain and textured) and its public texture and sampler APIs are used. No custom shader, render pipeline or mixin is added (REQ-UI-17, REQ-UI-18). Masks, icons, the wheel and the shadows are textures the mod makes at run time.
   - Per-scale textures are rebuilt when the GUI scale changes, before a frame draws with them, and the textures of the old scale are freed. Their caches are bounded per scale: at most 64 mask textures (corners, discs and shadows together), 16 icon textures and 1 wheel texture. A mask or icon beyond the bound is drawn from fill spans like a failed texture (a shadow beyond the bound is left out, as a failed shadow texture is) (below), and that is logged once per session.
   - If a texture cannot be made, its shapes fall back: discs, pills and icons to fill spans (the R32 path), the wheel to the 1.2.1 wheel, and shadows are left out. The failure is logged once per session.
+  - A disc or pill that grows or shrinks (a knob on hover, a scrollbar widening) is drawn, at the sizes in between, from the mask of its end size, sampled linearly (REQ-UI-31), so it adds no mask per size it passes; at rest it uses its own. A borrowed diameter larger than the cache's largest mask, and a scrollbar pill shorter than it is wide, use their own mask [decided R47 (a), the Checkpoint G3u fix].
   - The look is the same with Iris (with or without a shaderpack), because Iris replaces only world shaders.
   - Porting cost: this relies on the game's GUI element and texture-setup types, its screen rectangle, and the render-state and scissor fields that Fabric API makes public. Each Minecraft update re-checks them, like the other render code (PLAN §8).
 
   *(Derived: UI review; R46 (b) rules out the custom shader option; REQ-UI-17 "no private render internals")*
 
+**UI review, second part [decided R47].** REQ-UI-48 to REQ-UI-60 (and REQ-HUD-15 with the R47 amendments of REQ-HUD-07, REQ-HUD-08 and REQ-HUD-14) finish the UI review in 1.3.0, after Checkpoint G3u: the items its checks left open, and the later candidates of R46 (e) except the two you left out (Q-UI-11, Q-UI-12). They follow the rules of REQ-UI-27 to REQ-UI-47: the UI clock and the Animations switch (REQ-UI-39), the physical-pixel grid (REQ-UI-34), the render constraints (REQ-UI-47) and no change to what a click reaches unless a requirement says so.
+
+*Open items from Checkpoint G3u*
+- **REQ-UI-48** Colour wheel brightness without rebaking [decided R47 (a); amends REQ-UI-31].
+  - The wheel's texture is baked once per GUI scale at full brightness. A lower brightness v is drawn by tinting that texture with the grey (v, v, v), which gives the wheel's colours at brightness v exactly (an HSV brightness scales red, green and blue alike), and leaves its alpha, so its rim, unchanged.
+  - Dragging the brightness slider therefore bakes no texture; the wheel cache keeps its bound of one texture (REQ-UI-47).
+
+  *(Derived: Checkpoint G3u code review: the wheel was rebaked on every frame of a brightness drag)*
+- **REQ-UI-49** A glide ends exactly on its target [decided R47 (a); amends REQ-UI-35].
+  - The shown offset of a glide is target + (start − target) · (e^(−t/τ) − e^(−T/τ)) / (1 − e^(−T/τ)), with τ = 50 ms, T = 400 ms and t the time since the target last changed: it falls monotonically from the start at 0 ms to the target at 400 ms, stays frame-rate independent and never passes the target, and reaches it with no last step.
+
+  *(Derived: Checkpoint G3u code review: the plain exponential was cut off at 400 ms with 0.03 % of its distance left, a step of about one GUI px after a very long glide)*
+- **REQ-UI-50** The Animations option's help names what it stops [decided R47 (a)].
+  - The in-game description and tooltip of "Animations" name the same things as the README and the CHANGELOG: the panel opening, the category switch, hover, switches, scrolling, lists and dialogs opening and closing, rule cards, and notices; and that tooltips still wait before they show.
+
+  *(Derived: T3.38 review: the in-game help named fewer of them than the README)*
+
+*Search*
+- **REQ-UI-51** Search-match highlighting [decided R47 (b), Q-UI-10].
+  - While the search box holds a query, every occurrence of it (matched as the search matches, REQ-UI-08: trimmed, case-insensitive) in a shown option's title and description lines and in a shown rule header's label gets a rounded box behind it, in the accent colour at 35 % alpha, radius 2 GUI px, as wide as the matched glyphs' advance and as high as the line. The text keeps its colour.
+  - Overlapping or adjacent occurrences share one box. A match that the ellipsis cuts shows a box over its visible part only; the ellipsis has none. A match only in a field that is not drawn (keywords, dropdown entries, a rule's name pattern) gives no box; the card still shows, as today.
+  - The boxes follow the query in the frame it changes and are gone in the frame it is cleared. They are drawn below the text and above the card, on the physical-pixel grid (REQ-UI-34).
+
+  *(Derived: R46 (e) later candidate; your answer Q-UI-10)*
+
+*Rule cards and feedback*
+- **REQ-UI-52** Rule card open and close animation [decided R47 (b)].
+  - Opening or closing a rule card (its header's click, Space, Enter or the arrow keys, REQ-UI-11) eases the card's height between the header's and the open card's over 150 ms (ease-out cubic). The rows below move with it; the card's content is clipped to the eased height; the chevron turns between right and down in step.
+  - Each frame the page lays out at the eased height rounded to whole GUI px, so a click reaches what is drawn (REQ-UI-03); a control of the card takes input only where it shows.
+  - A click during the motion reverses it from its current height. A search that opens matching rules (REQ-UI-09) opens them at once, without the motion. With Animations OFF the card opens and closes at once.
+
+  *(Derived: R46 (e) later candidate)*
+- **REQ-UI-53** Press feedback [decided R47 (b)].
+  - While the left button is held on a whole-card toggle (an option card that toggles its feature), a rule header or a toggle switch, it shows a pressed look: its background as it is drawn at that moment (the card's or header's eased hover colour; the switch's track in its eased off-to-on colour) is mixed toward black by a press amount of 12 %, which is reached at once on the press. After the release, or when the pointer leaves it while held, the press amount eases from 12 % to 0 over 150 ms, over whatever colour the control is drawn in meanwhile. A disabled control shows none.
+  - Buttons keep their own pressed look (REQ-UI-17). With Animations OFF the look comes and goes at once.
+
+  *(Derived: R46 (e) later candidate)*
+
+*Empty states*
+- **REQ-UI-54** Empty states [decided R47 (b)].
+  - No search hit: the content area shows the search glass (REQ-UI-32) 24 GUI px high above today's `No settings found for "<query>"` line, and a "Clear search" button below it that empties the query, shows all categories again and keeps the search box focused. The sidebar stays empty, as today.
+  - An empty rule list (the Mob Highlighter's or NPC Search's rules, none added): one row where the rules would start, outlined with a hairline (REQ-UI-33) at the control radius, with the text `No rules yet. Use "Add from database" above.` in the secondary text colour. It is not a control, and it is not shown while searching.
+  - An empty HUD editor (no element registered): a card at the screen's centre with "No HUD elements yet" and, below it, "Features that show something on screen add it here." The toolbar's status line then stays empty (REQ-HUD-08). In 1.3.0 the shipped "Corpse ding" element is always registered (REQ-HUD-13), so players do not see this state; it is kept for builds without HUD features and is checked with a test registry that has no element.
+  - The no-hit view amends REQ-UI-08's empty result: the line stays, the glass and the button are added [decided R47].
+
+  *(Derived: R46 (e) later candidate; today an empty rule list shows nothing and the empty HUD editor only a status line)*
+
+*Motion*
+- **REQ-UI-55** Overlay close animations [decided R47 (b); amends REQ-UI-38].
+  - Closing the dropdown list, the colour picker or the database picker fades it out and scales it from 1.00 to 0.96 about its anchor over 90 ms (ease-out cubic of the reversed time); the modal backdrop fades with it.
+  - What closed it (a chosen entry, Save, Cancel, Esc, a click outside) takes effect at once. From that moment the closing overlay takes no input: the click outside that closed a dropdown is not passed on (as today), and the next input reaches the screen under it. Opening another overlay drops the closing one at once.
+  - A GUI scale change or the screen closing drops it at once. With Animations OFF it disappears at once.
+
+  *(Derived: R46 (e) later candidate, "close animations for overlays")*
+- **REQ-UI-56** Scroll edge fades [decided R47 (b)].
+  - The content area, the sidebar, the database picker list and open dropdown lists fade their content into their background over 8 GUI px at an edge with more content beyond it: at the top once scrolled down, at the bottom until scrolled to the end. An edge with nothing beyond has none.
+  - The fade is drawn above the content and below the scrollbar, in the region's own background colour, with an alpha that rises toward the edge on the physical-pixel grid; its strength is the distance scrolled beyond that edge divided by 8 GUI px, at most 1, so it grows and shrinks with the scroll (and eases with smooth scrolling).
+  - It changes no layout and no hit-testing: a control under a fade still takes clicks.
+
+  *(Derived: R46 (e) later candidate, "soft fades at the top and bottom of scroll viewports")*
+
+*Small polish*
+- **REQ-UI-57** Off-toggle contrast [decided R47 (b)].
+  - An enabled toggle that is off has a track with a contrast of at least 1.8:1 against the card's idle colour and 1.5:1 against its hovered colour (today 1.42:1 and 1.22:1), and a knob with at least 3:1 against that track.
+  - A disabled toggle stays visibly dimmer than an enabled off one: its track and knob keep a lower contrast against the card than the enabled off toggle's.
+
+  *(Derived: R46 (e) later candidate; contrast measured on the 1.3.0 theme colours)*
+- **REQ-UI-58** Tick dots on short sliders [decided R47 (b)].
+  - A slider with at most 15 values over its range, whose neighbouring values lie at least 4 GUI px apart on its track, has a dot position at each value: a 2 GUI px disc (REQ-UI-30) centred on the track, slightly lighter than the track on its unfilled part and slightly darker than the fill on its filled part. In 1.3.0 this is the notice duration slider (1–15 s: 15 values, about 5 GUI px apart).
+  - A dot is not drawn while the knob's disc at its drawn size (10 to 12 GUI px, REQ-UI-46) touches any of the dot's pixels, so the knob never sits on a dot (REQ-UI-28); the others are drawn. Dots dim with a dimmed slider (REQ-UI-05).
+
+  *(Derived: R46 (e) later candidate)*
+- **REQ-UI-59** Slider click only on a change [decided R47 (b)].
+  - Releasing a slider plays its click only if the drag or the press on its track changed the shown value. Keyboard steps stay silent, as today.
+
+  *(Derived: R46 (e) later candidate; today every release clicks)*
+- **REQ-UI-60** Transparency checkerboard [decided R47 (b)].
+  - The checkerboard behind translucent colours (the colour picker's before/after preview, its alpha slider, colour swatches) uses square cells of 3 GUI px on the physical-pixel grid, starting at each shape's top-left corner, so every swatch shows the same pattern; it is clipped to its shape's rounded outline.
+  - It dims with its widget (REQ-UI-05), as the colour over it does.
+
+  *(Derived: R46 (e) later candidate; today the cells are 4 GUI px and do not dim)*
+
 **Out of scope**
 - Copying anything from AlpakaAddons. Its non-UI features (chat blur, pause/main menu, viewmodel, item-size and block-overlay screens, command wheel, cosmetics).
 - TrueType/OFL menu fonts, blur effects and a custom GUI shader pipeline in v1 (shader corners only as an optional stretch item, REQ-UI-18) [decided D-8]. R46 keeps this for 1.3.0: no per-scale TrueType font (Caxton is the player's own option, REQ-REL-01) and no shader pipeline, so no fractional borders or glows (REQ-UI-47).
-- Not in the 1.3.0 UI review [decided R46 (e)]; each is a later candidate, not a task:
-  - the HUD editor's visual pass (rounded outlines with an accent fill, name chips, a fading hint panel, a toolbar card off the hotbar, a two-step Reset All) and corner scale handles with centre-to-centre snapping. Only its outlines and snap guides become hairlines (REQ-UI-33), and its elements get the move pointer (REQ-UI-43).
-  - highlighting search matches in titles and descriptions
-  - a per-option "changed" marker and reset to default
-  - the roomier card layout (descriptions wrapping before the ellipsis, cards sized to their content), except the aligned slider column (REQ-UI-42)
-  - a rule card open and close animation, and press feedback on cards, rule headers and toggles
-  - better empty states (no search hit, an empty rule list, an empty HUD editor)
-  - splitting the HUD editor's long help line, and the colour picker's checkerboard cell size
-  - also not named in R46 (d), so left out: soft fades at the top and bottom of scroll viewports, a higher-contrast off-toggle track, tick dots on short sliders, a click sound only when a slider's value changed, close animations for overlays
+- Not in the 1.3.0 UI review. R46 (e) left its later candidates out; R47 builds them in 1.3.0 (REQ-UI-48 to REQ-UI-60, REQ-HUD-07, REQ-HUD-08, REQ-HUD-14, REQ-HUD-15), except these, which stay out [decided R47]:
+  - a per-option "changed" marker and reset to default (you left it out, Q-UI-11). The keybind button's own reset and the HUD editor's resets stay.
+  - the roomier card layout: cards stay 44 GUI px with at most two description lines, cut with an ellipsis and shown whole in the tooltip (you kept them, Q-UI-12); the aligned slider column stays (REQ-UI-42)
   - a 1.2.2 hotfix for the slider-knob line: the fix ships in 1.3.0 only [decided R46 (a)]
 - Importing settings from other mods (e.g. the user's Alpaka accent `#FF5252`).
 - Translations: UI strings are English.
@@ -1205,7 +1282,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - in the colour picker, 3 notches over the brightness and alpha sliders leave both values unchanged
 
   **Given** the General page, scrolling with the pointer resting on the notice duration slider, before and after a click on it, scrolls the page and changes neither its value nor the file — [C]
-- **AC-UI-39** (REQ-UI-38) — [A]: an overlay's opacity and scale are 0 and 0.96 at 0 ms, between those and the end at 60 ms, and 1 and 1.00 from 120 ms on; the backdrop's alpha follows the same curve; a click on a dropdown entry 10 ms after opening selects that entry; closing is immediate. Screenshots of the dropdown list, the colour picker and the database picker at 0, 60 and 120 ms — [C]
+- **AC-UI-39** (REQ-UI-38) — [A]: an overlay's opacity and scale are 0 and 0.96 at 0 ms, between those and the end at 60 ms, and 1 and 1.00 from 120 ms on; the backdrop's alpha follows the same curve; a click on a dropdown entry 10 ms after opening selects that entry; closing is immediate (changed by R47: the close takes effect at once, and the overlay then fades and scales out without input, AC-UI-59). Screenshots of the dropdown list, the colour picker and the database picker at 0, 60 and 120 ms — [C]
 - **AC-UI-40** (REQ-UI-39) — [A]:
   - on a fresh config Animations is ON, its key is absent, and the catalogue default is ON, as in §12.H
   - with Animations OFF, every animated value named in REQ-UI-39 is at its end value at 0 ms, and the tooltip delay is still 400 ms
@@ -1251,6 +1328,22 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - that Animations OFF stops the motion
 
   Differences you name are fixed before the release or listed as later items.
+- **AC-UI-51** (REQ-UI-48, REQ-UI-31) — [A]: for brightness 0, 0.25, 0.5 and 1 and every pixel of the wheel at GUI scale 2, the tinted full-brightness texel equals the colour baked at that brightness within 1/255 per channel, and its alpha is the same. **Given** the colour picker at GUI scale 2, a brightness drag over 60 frames makes no wheel texture after the first, and the wheel cache holds one texture throughout — [C]
+- **AC-UI-52** (REQ-UI-49, REQ-UI-35) — [A], in the scroll easing test: from 0 to a target of 10 000 GUI px, the shown offset rises monotonically, is strictly below the target at 399 ms and equals it from 400 ms on, and the step between the frames at 396 and 400 ms is at most the step between those at 392 and 396 ms; AC-UI-36's frame-rate cases still hold
+- **AC-UI-53** (REQ-UI-47) — [A]: a disc asked to borrow a mask larger than the cache's largest (more than twice the largest corner radius) is drawn from its own mask; a scrollbar thumb or track shorter than it is wide is drawn from its own mask; each case fails when its guard is removed
+- **AC-UI-54** (REQ-UI-50) — [A]: the Animations option's description and tooltip name the panel opening, the category switch, hover, switches, scrolling, lists and dialogs, rule cards and notices, and that tooltips still wait; the README row and the CHANGELOG entry name the same — [R]
+- **AC-UI-55** (REQ-UI-51) — [A]: for the query "scan", the boxes of "Mob scan range" and its description cover exactly the advance of each "scan" (case-insensitive), with radius 2 and the accent at 35 % alpha; "an" in "banana" gives one merged box; a match cut by the ellipsis gives a box over its visible part only; a match only in a keyword gives none; clearing the query leaves none. **Given** a search at GUI scale 2 that hits an option title, a description and a rule label, the screenshot shows the boxes behind the text, with the text's pixels unchanged in colour — [C]
+- **AC-UI-56** (REQ-UI-52) — [A], with a test clock: a rule card's drawn height is the header's at 0 ms, strictly between at 75 ms and the open height from 150 ms on, and the reverse on closing; a click at 75 ms reverses from the height at that moment; the layout at each frame is the eased height rounded to whole GUI px, and a click on a row below the card reaches the row drawn there; with Animations OFF the height is final at 0 ms; a search hit opens its rule at once. Screenshots of a rule card at 0, 75 and 150 ms at GUI scale 2 — [C]
+- **AC-UI-57** (REQ-UI-53) — [A]: while pressed, the press amount of a whole-card toggle, a rule header and a toggle switch is 12 % and the drawn background (track) is the colour it would have without the press, mixed 12 % toward black; 75 ms after the release the amount is strictly between 12 % and 0, and 0 from 150 ms on; a disabled control's amount stays 0; with Animations OFF it is 0 at once after the release. A screenshot of each pressed control at GUI scale 2 — [C]
+- **AC-UI-58** (REQ-UI-54) **Given** GUI scale 2, screenshots show: the query "zzzz" with the 24 GUI px search glass, the "No settings found" line and a "Clear search" button, whose click empties the query, brings back every category and keeps the search box focused; a Mob Highlighter card with no rules showing the placeholder row with its text, and no placeholder while searching; the HUD editor opened with a test registry that has no element showing the centred card and an empty status line — [C]. The placeholder row takes no click and no keyboard focus — [A]
+- **AC-UI-59** (REQ-UI-55, REQ-UI-38) — [A], with a test clock: a closing overlay's opacity and scale are 1 and 1.00 at 0 ms, between at 45 ms and gone from 90 ms on, with the backdrop's alpha on the same curve; a dropdown entry chosen at 0 ms is applied at 0 ms; a click at 10 ms after the close reaches the control under it; opening another overlay at 10 ms drops the closing one; a GUI scale change drops it; with Animations OFF it is gone at 0 ms. Screenshots of the dropdown list and the colour picker closing at 0, 45 and 90 ms — [C]
+- **AC-UI-60** (REQ-UI-56) — [A]: a region scrolled to its top has no top fade and a full bottom fade when at least 8 GUI px lie below; 4 GUI px down, the top fade's strength is 0.5; at its end it has no bottom fade; a region that does not scroll has none; the fade's alpha rises monotonically toward the edge. **Given** the content area, the sidebar, the database picker and an open dropdown list at GUI scales 1–4, the fades show where content lies beyond, and a click on a control under a fade reaches it — [C]
+- **AC-UI-61** (REQ-UI-57) — [A]: from the theme's colours, the enabled off track's contrast is at least 1.8:1 against the card and 1.5:1 against the hovered card, the off knob's at least 3:1 against the track, and the disabled track's and knob's lower than the enabled off ones'
+- **AC-UI-62** (REQ-UI-58) — [A]: the notice duration slider has 15 dot positions, one per value from 1 to 15, centred on its track; a slider with 21 values (fill opacity) or with values closer than 4 GUI px has none; with the knob at 10 and 12 GUI px, at the minimum, the middle and the maximum, every drawn dot lies clear of the knob's disc and every dot clear of it is drawn. A screenshot of the notice duration slider at GUI scales 2 and 3 — [C]
+- **AC-UI-63** (REQ-UI-59) — [A]: a press and release on the knob without a change plays no click; a drag that changes the value, and a press on the track that moves it, play one click on release; arrow keys play none
+- **AC-UI-64** (REQ-UI-60) — [A]: the checkerboard's cells are 3 GUI px at GUI scales 1–4 and start at the shape's top-left corner, and a dimmed swatch's cells are dimmed by the same factor as its colour. A screenshot of a translucent colour's swatch, the picker's preview and its alpha slider at GUI scale 2 — [C]
+- **AC-UI-65** (REQ-UI-48 to REQ-UI-60, REQ-HUD-07, REQ-HUD-08, REQ-HUD-15) Screenshot matrix, second part — [C]. AC-UI-49's gametest also captures, at GUI scales 1–4 and at 3 on 1366×768, Smooth corners ON and OFF: a search with highlighted matches, a rule card half open, the empty states of AC-UI-58, the scroll edge fades, a pressed toggle card, the notice duration slider with its dots, a translucent swatch, and the HUD editor with a selected element, its handles, its toolbar card and a chip label. AC-UI-28, AC-UI-29, AC-UI-34 and AC-UI-37 still pass on every image, and AC-UI-48's cache bounds hold after the sweep. Claude reviews the set for the G3v report.
+- **AC-UI-66** (REQ-UI-48 to REQ-UI-60, REQ-HUD-07, REQ-HUD-08, REQ-HUD-14, REQ-HUD-15) Field check at G3v — [E]. With the candidate jar at GUI scale 2 and once at your usual scale, you confirm the search highlighting, the rule card motion, the press feedback, the empty states, the overlays closing, the edge fades, the toggles, sliders and checkerboard, and the HUD editor's look, toolbar, two-step Reset All, handles and centre snapping. Differences you name are fixed before the release or listed as later items.
 
 **Edge cases**
 - **EC-UI-01** The window is resized or the GUI scale changes while the screen is open → the layout is redone; scroll positions are clamped; the search query, focused field and expanded cards are kept.
@@ -1281,6 +1374,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-UI-26** [R46] The page scrolls, or an overlay opens, while a tooltip is waiting or shown → the tooltip hides and the delay starts again for whatever control is then under the pointer.
 - **EC-UI-27** [R46] The screen closes while a non-default pointer shows (a slider drag, a text field) → the default arrow returns at once, because the pointer is requested per frame.
 - **EC-UI-28** [R46] A 1.2.x file with `"smoothCorners": false` → OFF stays after the update. A file without the key → ON in 1.3.0; after a downgrade to 1.2.1 the same file reads OFF again, as 1.2.1 defines (the release notes say so).
+- **EC-UI-29** [R47] A query with characters that are special in patterns (`(`, `*`, `.`) or with letters whose lower case is longer or shorter (the Turkish dotted İ) → it is matched as plain text, as the search matches (REQ-UI-08), and a box covers only glyphs the match really spans; where the case change alters the length, the box covers the original text's glyphs of the match, never a neighbour's.
+- **EC-UI-30** [R47] A rule card is opened while the page glides, or the page is scrolled while a card opens → both motions run together from the UI clock; the layout follows both each frame, and a click reaches what is drawn.
+- **EC-UI-31** [R47] An overlay is closed and the same one opened again within its 90 ms → the closing one is dropped and the new one opens with its open transition from the start.
+- **EC-UI-32** [R47] A search clears while rules are open because they matched → rules that the search opened close at once, without the motion, as they do today; rules you opened yourself keep their state.
 
 **Open questions**
 - **Q-UI-01** (see D-8) Should the core UI decisions be accepted as recommended? They are: no UI library, vanilla font, rounded corners from fills, live-apply with save on close, and Cloth Config removed at the end of Phase 2. → decided D-8 (accept all)
@@ -1292,6 +1389,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **Q-UI-07** (UI review) Sharper text: a per-scale TrueType font, or the vanilla font? → decided R46 (c) (the vanilla font stays, D-8; the README names Caxton as an optional separate mod, REQ-REL-01)
 - **Q-UI-08** (UI review) Hairline thickness: 1 physical px at every scale, or ceil(guiScale / 2)? And do focus rings stay 1 GUI px? → decided R46 (b) by default (ceil(guiScale / 2), focus rings 1 GUI px, REQ-UI-33); you confirm or change it from the screenshot matrix at G3u (AC-UI-50)
 - **Q-UI-09** (UI review) A custom shape shader (a signed-distance-field pipeline) for any border width, glows and shadows? → decided R46 (b) (ruled out; REQ-UI-18's "no shader" stays; shadows come from baked masks, REQ-UI-41)
+- **Q-UI-10** (UI review, R47) How should a search match show: a tinted box behind it, the accent as its text colour, or an underline? → decided R47 (b), your answer (a tinted accent box behind the text, REQ-UI-51)
+- **Q-UI-11** (UI review, R47) A per-option "changed" marker and reset to default: a dot with a reset button on hover, a right-click reset, or a reset button always shown? → decided R47, your answer: no changed marker, and the per-option reset is not built (out of scope)
+- **Q-UI-12** (UI review, R47) Roomier cards: up to 4 description lines with growing cards, the full text, or today's 44 GUI px cards with 2 lines? → decided R47, your answer (today's cards stay; out of scope)
+- **Q-UI-13** (UI review, R47) Where should the HUD editor's toolbar go so it leaves the hotbar free: a card at the bottom above the hotbar, a card at the top centre, or a card you can move? → decided R47 (c), your answer (a card at the top centre, REQ-HUD-08)
 
 ---
 
@@ -1333,9 +1434,10 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 
   Closing the editor returns to the screen it was opened from. *(Brief: Phase 2 "HUD editor"; PLAN T2.8; research-alpaka-ui §9, §15)*
 - **REQ-HUD-07** Editor display.
-  - It has a dimmed full-screen backdrop, a line of instructions, and a status line with the selected element's name, X, Y and scale (or "Click a HUD to select it").
+  - It has a dimmed full-screen backdrop, a line of instructions, and a status line with the selected element's name, X, Y and scale (or "Click a HUD to select it"). From 1.3.0 the status line sits in the toolbar card at the top and the instructions in the hint panel below it (REQ-HUD-08) [decided R47].
   - Every registered element is drawn. Preview content is used when there is no live content.
   - Each element has a 1 px outline (from 1.3.0 a hairline in physical pixels, REQ-UI-33 [decided R46]) with distinct colours for idle, hovered, selected and disabled, and its name as a label above the box. The label goes below the box when the box is within the top 48 px.
+  - From 1.3.0 [decided R47 (c)]: the outline is rounded at the control radius (REQ-UI-40); a selected element is filled with the accent at 15 % alpha and a hovered one with white at 6 %, under its content; the label is a chip: the name on a rounded panel-coloured box with 3 GUI px of padding at each side, placed by the same rules.
   - Elements whose feature is off are drawn greyed with "(disabled)", so they can be placed before they are turned on.
 
   *(Brief: Phase 2 "HUD editor"; behaviour Derived: research-alpaka-ui §9)*
@@ -1347,9 +1449,14 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - Keys: arrow keys nudge the selection by 1 GUI px, and Shift+arrow by 10 px.
   - Drags and nudges keep the element inside the window.
   - Buttons:
-    - Reset Selected (disabled with no selection) and Reset All both restore defaults.
+    - Reset Selected (disabled with no selection) and Reset All both restore defaults. From 1.3.0 Reset All takes two clicks [decided R47 (c)]: the first turns it into "Confirm reset" in the error style for 3 s, a second click within them resets every element, and otherwise it turns back. Reset Selected stays one click.
     - Cancel restores every position and scale to what it was when the editor opened, then closes.
     - Save writes the changes and closes.
+  - Toolbar [decided R47 (c), Q-UI-13]: from 1.3.0 the four buttons and the status line sit in one rounded card (panel colour, card radius, soft shadow, REQ-UI-41) centred at the top of the screen, 6 GUI px from its top, so the hotbar stays free.
+    - The instructions are split into two short lines in a hint panel just below the card. The panel fades out over 300 ms, 4 s after the editor opens or at the first drag, nudge or scale, whichever comes first, and fades back in over 300 ms while the pointer rests on the card.
+    - Where an element lies under the card, the element is drawn above the card's background and below its buttons, and a press there outside a button reaches the element. The buttons take the press before an element's handles (REQ-HUD-15).
+    - While an element is dragged over the card, the card fades to 30 % opacity over 150 ms, and back after the drag.
+    - With Animations OFF the fades are instant.
   - Esc acts as Save: it writes the changes and closes. Only the Cancel button reverts.
   - An external close (disconnect, server transfer, another screen replacing the editor) is handled like Esc.
   - The config file is written only on Save, on a close or on a reset, never per drag event.
@@ -1365,9 +1472,17 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   *(Brief: Phase 5 "Make the displayed lines configurable"; Addendum "next best task with XP/h")*
 - **REQ-HUD-13** The default positions of shipped elements should not overlap one another, measured with preview content at 1920×1080 and GUI scale 2. *(Derived: up to 5 elements (Scatha, corpse and slayer odds panels, bestiary, next best task) must be usable on a fresh config; no drill fuel HUD is built [decided D-4]; rare-drop-odds REQ-ODDS-05. Since R42 the three odds panels are dropped, so 2 elements remain. R43 adds the corpse ding (REQ-CORPSE-11), so 3 are planned. Shipped now: 1, the corpse ding, until the bestiary (T5.3) and SkyBlock XP (T6.9) add theirs [decided R43])*
 - **REQ-HUD-14** The editor may snap edges within 4 px to the screen edges, the centre lines and other elements, showing 1 px guide lines while snapped (from 1.3.0 hairlines in physical pixels, REQ-UI-33 [decided R46]). Holding Alt disables snapping. [optional stretch, decided D-8; not required for 2.0.0] *(Derived: research-alpaka-ui §9 "NEW" proposal; PLAN T2.9c)*
+  - From 1.3.0 [decided R47 (c)] an element's vertical and horizontal centre lines also snap to other elements' centre lines within 4 px, with a guide line while snapped.
+- **REQ-HUD-15** Corner scale handles [decided R47 (c)].
+  - The selected element shows a round handle (a 5 GUI px disc in the accent with a dark hairline rim) at each of its corners. Dragging a handle scales the element about the opposite corner, which stays where it is: the scale is the box from that corner to the pointer over the element's unscaled size, taking the larger of the width and height ratios (so the element grows as soon as the pointer passes its edge on either axis and shrinks only once it is inside on both), clamped to 0.5–3.0 and rounded to the 0.1 step (REQ-HUD-05).
+  - The scale also stops where the element would leave the window, so the opposite corner never moves and the element stays fully inside (REQ-HUD-04 then shifts nothing). The wheel's scaling keeps REQ-HUD-04's draw-time shift.
+  - Handles take the press before the element under them; the pointer over a handle and while dragging one is the crosshair (26.2 has no diagonal-resize pointer). A handle drag does not snap. On release the element is re-anchored as after a move (REQ-HUD-03), and nothing is written until Save (REQ-HUD-08).
+  - The wheel keeps scaling (REQ-HUD-08). The handles stay inside the window: a handle at the window's edge is drawn just inside it.
+
+  *(Derived: R46 (e) later candidate; the HUD editor's out-of-scope "resize handles" is changed by R47)*
 
 **Out of scope**
-- Resize handles, a grid, selecting several elements at once, a right-click context menu, and per-element toggles inside the editor. Toggles live on the feature cards.
+- A grid, selecting several elements at once, a right-click context menu, and per-element toggles inside the editor. Toggles live on the feature cards. Corner scale handles are in from 1.3.0 (REQ-HUD-15) [decided R47].
 - Snapping and guide lines, except as the optional T2.9c stretch item (REQ-HUD-14).
 - Drawing HUD elements above a container or menu screen (no menu-context exception in v1, REQ-HUD-02).
 - The content, data and rule verdicts of individual HUDs (odds (dropped, R42), corpse ding (R43), bestiary, next best task, drill fuel). These are specified in their own modules.
@@ -1392,7 +1507,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
   - 3 scroll notches up from 1.00 give 1.30; scrolling up at 3.00 stays 3.00, and scrolling down at 0.50 stays 0.50
   - an arrow key moves it 1 px, and Shift+arrow 10 px
   - Cancel after several changes restores every element to its state when the editor opened
-  - Reset Selected resets only that element, and Reset All resets every element to its default
+  - Reset Selected resets only that element, and Reset All resets every element to its default (from 1.3.0 on Reset All's second click, AC-HUD-15 [decided R47])
 - **AC-HUD-05** (REQ-HUD-08) **Given** a drag of 100 mouse-move events, the config file is written 0 times before Save and exactly once on Save or Esc — [A]
 - **AC-HUD-06** (REQ-HUD-06) The editor opens from each entry point — [C]:
   - `/ksu hud` opens it
@@ -1410,6 +1525,13 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **AC-HUD-12** (REQ-HUD-13) **Given** all shipped elements with preview content at 1920×1080 and GUI scale 2, no two default rectangles intersect — [A]
 - **AC-HUD-13** (REQ-HUD-09) An editor screenshot shows buttons in the Phase 2 style (accent, rounded corners) — [C]
 - **AC-HUD-14** (REQ-HUD-14, only if built) Dragging an element to within 4 px of the vertical centre line snaps it there and shows a guide line; with Alt held, it does not snap — [C]
+- **AC-HUD-15** (REQ-HUD-07, REQ-HUD-08, REQ-UI-54) **Given** GUI scale 2 — [C] + [A]:
+  - a screenshot shows rounded hairline outlines, a selected element with its accent fill, a hovered one with its white fill, and chip labels; a disabled element stays greyed with "(disabled)"
+  - the toolbar card lies centred at the top, 6 GUI px from it, and no part of it or of the hint panel lies over the hotbar
+  - the hint panel is shown at 0 ms, fading from 4 s and gone at 4.3 s on a test clock, gone right after a first drag, and back while the pointer rests on the card
+  - with an element under the card, a press outside the buttons selects the element, and a press on a button presses it
+  - Reset All: one click changes nothing and shows "Confirm reset"; a second click within 3 s resets every element; after 3 s it is back and one click changes nothing again
+- **AC-HUD-16** (REQ-HUD-15, REQ-HUD-14) — [A] + [C]: dragging the bottom-right handle of a 60×30 element at scale 1.0 by (+30, +15) gives scale 1.5 with the top-left corner unchanged; dragging the top-left handle by (+15, +6) gives 0.8 (the larger of 45/60 and 24/30) with the bottom-right corner unchanged; a drag past either end stays at 0.5 or 3.0, and a drag that would take the element out of the window stops at the scale where it touches the window's edge; the pointer over a handle is the crosshair; the file is not written before Save. Dragging an element's centre to within 4 px of another's centre line snaps it there with a guide; with Alt held it does not snap. A screenshot of a selected element with its four handles at GUI scales 2 and 3 — [C]
 
 **Edge cases**
 - **EC-HUD-01** The GUI scale or window size changes while the editor is open → elements are laid out again from their anchors; the selection and the unsaved changes are kept; the status line updates.
@@ -1422,6 +1544,8 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **EC-HUD-08** The editor is opened from the title screen (Mod Menu → settings → Edit HUD layout) → it works with preview content over the backdrop and needs no world.
 - **EC-HUD-09** A feature is on but the player is not on SkyBlock or has no data → nothing is drawn in game; the editor shows the preview.
 - **EC-HUD-10** A fresh config gets a new HUD consumer in a later phase → its default rectangle does not overlap the existing defaults (REQ-HUD-13), checked when that element is added.
+- **EC-HUD-11** [R47] An element's default place lies under the toolbar card (top centre) → it is drawn above the card's background, can be pressed outside the buttons, and can be dragged out; its default does not change.
+- **EC-HUD-12** [R47] A handle is dragged while the element sits at a window edge, or so far that the element would leave the window → the scale stops where the element would leave the window, and the opposite corner stays fixed (REQ-HUD-15).
 
 **Open questions**
 - **Q-HUD-01** What should Esc, or an external close such as a disconnect, do in the HUD editor? → decided R12 (recommended: save and close; the Cancel button reverts)
@@ -4349,7 +4473,7 @@ Your reply (2026-10-01): **"R10 b, rest as recommended"**. Each row below is dec
 - the SBXP research priority uses your SkyHanni and SkyBlockAPI caches plus fresh-profile totals (D-18)
 - parser fixtures stay provisional and marked UNVERIFIED
 
-### 12.3 Decisions after G1 — R18–R46
+### 12.3 Decisions after G1 — R18–R47
 
 You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R24 after the G1 in-game smoke. R25–R35 followed during Phases 2 and 3 (2026-10-03 to 2026-10-10), R36–R40 after the G3 field checks, R41 after the second G3 field session, R42 after that, R43 after the third G3 session, R44 after the fourth, R45 after Phase 3 and the G3 push, and R46 with your answers to the UI review proposal (all 2026-10-15). Requirements and criteria written or changed by them carry the decision tag `[decided Rn]` where the change is made (for R23, the "once T3.4 lands" parts of REQ-PORT-06, AC-PORT-06 and AC-PORT-14); the items R22 dropped carry `[reinstated R40]` since R40, the items R37, R38 and R42 drop carry `[dropped R37]`, `[dropped R38]` or `[dropped R42]`, the requirement changes of R39 that R41 replaces carry `[replaced R41]`, those of R41 that R43 replaces carry `[replaced R43]`, and all keep their ids.
 
@@ -4384,6 +4508,7 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 | R44 | 2026-10-15, after the fourth G3 session with the jar at `95635db`. (a) Field results: the "Corpse ding" HUD element and its "Edit position" button work (AC-CORPSE-12 passed), and the "[Take out k]" button works (AC-MSA-15 passed). The privacy check AC-GS-12 [E] passed: after your sessions with capture off, the mod's config files hold no chat, tab, sidebar or dump text, and the profile store folder holds only its `profile.json` (profile id and name, the REQ-GS-12 exception). Observed limit: the per-profile store writes only once the profile id is known in that session (by design, PLAN T3.0d), so in a session without the "Profile ID:" line the sack amounts were kept in memory only. Every commit since G2 (50 commits, `b92bbfd` to `fbb0c56` at the time of the check) builds alone, with conforming subjects, the noreply author and the co-author line (the AC-XC-05 part of the G3 push item); the push still waits for your "push". (b) Your request: with the Organ Donor ding, the possible corpse spots that cannot hold an unlooted corpse are removed automatically, by silence only. Once a ding has been heard in the current shaft visit (so the accessory is known to work), a spot is ruled out when you spent 4 s (3 s at first, raised in the T3.3e review for lag; the samples must be back to back, and a ding counts within 8 blocks for this) within 16 blocks of it (3-D, to the spot's block centre, at every tick of that window) without any ding. The ding fires for an unlooted corpse within 20 blocks; 16 blocks and 3 s are safety margins, since dings repeat every 0.55–1.0 s in range. A ding never rules out far spots (there can be several corpses), and the pitch is not used to rule out. Ruled-out spots stay removed for the shaft visit; all come back when the Frozen Corpses widget lists more corpses than before (a Dead Man's Chest) or on entering another shaft. Own toggle "Remove ruled-out spots" on the corpse spots card, ON, effective only with "Organ Donor ding hint" ON. `/ksu corpses` still lists every spot and marks the ruled-out ones "· ruled out". The rule uses only the heard sound and your own position, never entity data or the sound's position. It is borderline under ground rule 5; REQ-XC-RULES-06 approval is your explicit request | Status, §2, REQ-XC-RULES-06, REQ-REL-03, corpse-waypoints (plan tasks, status, purpose, out of scope), REQ-CORPSE-04, REQ-CORPSE-06, REQ-CORPSE-12, AC-CORPSE-13, AC-CORPSE-14, AC-CORPSE-15, EC-CORPSE-11, EC-CORPSE-12, §12.H, §13; PLAN Status, §3 (verdict table, flagged list), T3.3, T3.3d, T3.2d, T3.3e, Checkpoint G3, §9 (D-6) |
 | R45 | 2026-10-15, after Phase 3 and the G3 push (CI green on `5978261`), your request to release the changes as 1.2.1 and then start the UI review as 1.3.0. (a) The Phase 3 changes on `update/26.2` ship as v1.2.1, an intermediate release in the REQ-REL-14 flow. The number is your choice: the changes add features, which SemVer would number 1.3.0; you chose 1.2.1, and 1.3.0 goes to the UI review. The release follows `RELEASING.md`: the CHANGELOG `[1.2.1]` section, the README and the mod description; every commit since `main` builds alone; the range and PR-body privacy scan; a release PR `update/26.2` → `main`, merged with a merge commit on your "merge"; then, on your separate "ship", the annotated tag on the merge commit, the draft, `release-check.sh` PASS, the tier D boot, publishing as Latest and the release record in `RELEASING.md`. Its PR summary starts at v1.2.0, which `main` already holds; the open opportunistic [E] checks AC-MSA-10 and AC-GLOW-11 go into the PR as known issues (EC-REL-13). (b) Next comes a review of the settings UI, released as 1.3.0, before Phase 4 (the auto-updater). It is your earlier request, marked "for later" in PLAN: a sharper, higher-resolution look, sliders that sometimes clip, and an overall smoother, nicer experience. Its requirements and acceptance criteria are written with you before any build (spec pending); until then it has no requirement ids, and its only task is the spec task T3.14. R46 writes that spec | Status, REQ-REL-06, REQ-REL-14, AC-REL-12, release (plan tasks), §13; PLAN Status, §6, T3.11, T3.12, T3.13, Checkpoint G3r, Phase 3u, T3.14, Phase 4 intro, "Not built in 2.0.0" |
 | R46 | 2026-10-15, your answers to the UI review proposal (a review of the screens at GUI scales 1–4 with a slider, resolution, screens and UX survey, a proposal and two critics' corrections). It writes the 1.3.0 UI review as REQ-UI-27 to REQ-UI-47 with AC-UI-27 to AC-UI-50, EC-UI-18 to EC-UI-28 and Q-UI-05 to Q-UI-09. (a) **The slider-knob line and the lost outline corners** are fixed in 1.3.0, with no 1.2.2 hotfix. Cause: 26.2 keeps two GUI elements in submission order only when their whole-GUI-pixel bounds overlap, and the fill-based corners submit each physical-pixel row with bounds up to 1 GUI px too small, so the slider's accent fill is layered over a knob row at GUI scales 2–4 (and a fill over outline corners at 3 and 4). The robust fix: one GUI element per rounded shape (or two back to back with identical bounds, REQ-UI-27), with bounds rounded outward (floor of the minimum, ceiling of the maximum of the transformed rectangle, not the game's own rounding), so it also holds at sub-pixel positions. A scale-2 pixel gametest is mandatory and must fail before the fix and pass after it. Dimmed knobs: no translucent knob over the fill (the fill and the track end at the knob's disc, REQ-UI-28). (b) **Sharpness, "core + fine details"** (the proposal's option A in full): Smooth corners ON by default, replacing R32's OFF (a saved OFF stays OFF; OFF now covers only the corners of rounded rectangles and outlines, and everything else applies regardless); discs as one mask quad (squares only; pills are two caps and a middle); linear sampling with clamp-to-edge for the masks and the colour wheel, the wheel baked per GUI scale and drawn 1:1; crisp icons (chevron, ×, check, search, reset) rasterised per scale; hairlines and outlines in physical pixels, ceil(guiScale / 2) thick, with focus rings kept at 1 GUI px (decided by default here, confirmed in the screenshot matrix at G3u); sub-pixel motion for the toggle and slider knobs, the category slide and notices. No custom shader (option B ruled out; REQ-UI-18's "no shader" stays). The open-animation shimmer is reduced, not claimed fixed. (c) **Text:** the vanilla font stays (D-8); the README names Caxton (MIT, a separate mod) as optional for sharper text everywhere. (d) **All four polish groups:** scrolling (eased, frame-rate-independent smooth scrolling in the content, the sidebar, the picker and dropdown lists; a rounded pill scrollbar that widens on hover; the wheel never changes a slider, in any state and on every screen: over a slider it scrolls the page, and during a slider drag it is ignored, REQ-UI-37 (changed by you on 2026-10-15, "Sliders should not change with mouse wheel, only by dragging", replacing the drafted rule that let a slider take the wheel while hovered and focused or dragged; the arrow keys on a keyboard-focused slider stay)); feedback (pointer cursors through the 26.2 cursor API: hand, I-beam, resize; tooltips after about 400 ms with a 100 ms fade, anchored beside their control and flipped to stay on screen, at once if one showed in the last 300 ms; eased hover in lists; a selection indicator that slides between categories; the slider keeps the grab offset, its knob grows on hover and drag, and its value shows in the accent while dragging); transitions (the dropdown, colour picker and database picker fade and scale in over about 120 ms, the backdrop eases; a new General › Interface switch "Animations", default ON; OFF makes all motion, fades and smooth scrolling instant, and the tooltip delay stays); corners and shadows (one radius scale: panel 8, card 6, control 4, pill half the height, applied to the panel, the dropdown list, the colour gradient slider and tooltips; soft 9-slice shadow masks baked per scale with linear sampling under the panel, overlays, the dropdown list and tooltips; no shader). (e) **Not in 1.3.0**, recorded as later candidates, not tasks: the HUD editor's visual pass and corner handles (but its element outlines and snap guides move to the hairline API, since "everywhere" includes the editor), search-match highlighting, a per-option changed marker and reset, the roomier card layout, a card open and close animation, press feedback, empty states, splitting the editor's help line, the checkerboard cell size. Claude's call within (e): the fixed-width value column that aligns slider tracks is cheap and in scope. The dependency order is: the layering fix; then the Smooth corners default, discs, samplers, wheel, icons and hairlines; then sub-pixel motion, smooth scrolling and the overlay transitions together with the Animations switch; then corners and shadows; then cursors, tooltips, hover and slider feel; then the README, CHANGELOG, version 1.3.0 and the release tasks. Every requirement is testable: unit tests (a bounds sweep over GUI scales 1–4, radii, sizes and pose translations of k/guiScale), a gametest screenshot matrix (scales 1–4, 1366×768 at scale 3, Smooth corners ON and OFF, slider minimum, middle and maximum, the dimmed state, a tooltip over a slider, a notice, an open dropdown, the pickers) and your [E] field check at G3u | Status, ui-config (origin, plan tasks, REQ-UI-01, REQ-UI-02, REQ-UI-06, REQ-UI-17, REQ-UI-18, REQ-UI-19, REQ-UI-27 to REQ-UI-47, out of scope, AC-UI-02, AC-UI-06, AC-UI-27 to AC-UI-50, EC-UI-18 to EC-UI-28, Q-UI-05 to Q-UI-09), REQ-HUD-07, REQ-HUD-14, hud (plan tasks), REQ-REL-01, REQ-REL-04, REQ-REL-06, REQ-REL-14, AC-REL-12, release (plan tasks), §12.H, §13; PLAN Status, §6, Phase 3u, T3.14, T3.15–T3.40, Checkpoints G3u and G3ur, §8, "Not built in 2.0.0". The 2026-10-15 wheel change: REQ-UI-06, REQ-UI-37, AC-UI-06, AC-UI-38, EC-UI-25, REQ-REL-04, §13.2; PLAN Phase 3u order, T3.28, T3.38 |
+| R47 | 2026-10-17, after Checkpoint G3u and PR #4, your request to "finish all the changes to the gui rework", answered as "the open items and the later ideas, in 1.3.0", with your answers to Q-UI-10 to Q-UI-13. **Draft until you approve it; no `src/` commit before.** (a) **The open items of Checkpoint G3u:** the colour wheel is baked once at full brightness and tinted for a lower brightness (REQ-UI-48); a glide ends exactly on its target (REQ-UI-49); the Animations help names everything it stops (REQ-UI-50); REQ-UI-47 records the Checkpoint G3u fix's mask borrowing, and its two untested guards get tests (AC-UI-53). (b) **R46 (e)'s later candidates in the settings screen:** search-match highlighting as a tinted accent box (REQ-UI-51, Q-UI-10); rule cards that open and close with a 150 ms motion (REQ-UI-52); press feedback on whole-card toggles, rule headers and switches (REQ-UI-53); empty states for no search hit, an empty rule list and an empty HUD editor (REQ-UI-54); overlays that fade and scale out over 90 ms as they close, taking no input (REQ-UI-55, amends REQ-UI-38); scroll edge fades (REQ-UI-56); a higher-contrast off toggle (REQ-UI-57); tick dots on sliders of at most 15 values (REQ-UI-58); a slider click only when its value changed (REQ-UI-59); a 3 GUI px checkerboard that dims with its widget (REQ-UI-60). (c) **The HUD editor:** rounded outlines with an accent fill, chip labels, a toolbar card at the top centre with a fading two-line hint panel, a two-step Reset All (REQ-HUD-07, REQ-HUD-08, Q-UI-13), centre-to-centre snapping (REQ-HUD-14) and corner scale handles (REQ-HUD-15, which changes the hud module's out-of-scope "resize handles"). (d) **Left out, by your answers:** the per-option changed marker and reset (Q-UI-11) and the roomier cards (Q-UI-12). No default changes (§12.H), no new option and no config migration. 1.3.0 stays the version; PR #4 stays open and gets the new commits, and T3.39's merge and T3.40's publishing wait for Checkpoint G3v and the updated release docs (T3.57). | Status, ui-config (REQ-UI-08, REQ-UI-31, REQ-UI-35, REQ-UI-38, REQ-UI-39, REQ-UI-47, REQ-UI-48 to REQ-UI-60, AC-UI-39, out of scope, AC-UI-51 to AC-UI-66, EC-UI-29 to EC-UI-32, Q-UI-10 to Q-UI-13), hud (REQ-HUD-07, REQ-HUD-08, REQ-HUD-14, REQ-HUD-15, out of scope, AC-HUD-04, AC-HUD-15, AC-HUD-16, EC-HUD-11, EC-HUD-12), §12.3, §13; PLAN Status, Phase 3u, T3.39, T3.41–T3.57, Checkpoint G3v, §8 risks, "Later candidates" |
 
 ### 12.H Defaults table (decided D-6, R1–R17, R20–R22, R28, R32, R37, R40, R41, R42, R43, R44 and R46)
 
@@ -4406,10 +4531,10 @@ You made these decisions on 2026-10-01: R18 and R19 after the G1 review, R20–R
 ## 13. Traceability (final)
 
 Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check script that runs both ways (the `Was Req:` and `Was Accept:` bullets of the dropped tasks T3.7 and T3.9a–T3.9h are excluded; §13.1 and §13.2 show them as "was …"):
-- 409 requirements: 366 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), and 38 dropped at G3 (REQ-DRILL-01 to REQ-DRILL-12, R37; REQ-ODDS-01 to REQ-ODDS-26, R42). None is left as not built by decision: REQ-ODDS-25 and REQ-ODDS-26 were, and are now dropped with their module. **None uncovered.**
-- 204 tasks: 195 active and 9 dropped (T3.7, R37; T3.9a–T3.9h, R42). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. The R36–R40 update added T3.2c, T3.8d, T3.10, T3.3c, T3.2b and T3.3b, made T3.3a and T3.3 active again (R40) and dropped T3.7 (R37). R41 adds T3.6c and rescopes T3.2b. R42 drops T3.9a–T3.9h. R43 adds T3.3d and T3.2d. R44 adds T3.3e. R45 adds T3.11, T3.12 and T3.13 (the v1.2.1 release) and T3.14 (the UI review spec). R46 adds T3.15–T3.37 (the UI review) and T3.38–T3.40 (the v1.3.0 release).
-- 377 acceptance criteria (withdrawn ones excluded): 353 are each named by a task or a checkpoint, and 24 are dropped (AC-DRILL-01 to AC-DRILL-06, R37; AC-ODDS-01 to AC-ODDS-18, R42). Within AC-NPCDB-09 the second bullet is dropped (R38); the criterion stays.
-- How these numbers were counted (2026-10-15): the requirement and criterion ids are the `- **REQ-…**` and `- **AC-…**` bullets in this file; the tasks are the `**T…**` items in PLAN §7 with their `Req:` and `Accept:` lines and the checkpoint lists. The summary before this update (384 requirements, 152 tasks, 342 criteria) dated from R20–R24 and missed later additions: the files held 385 requirements, 164 tasks and 343 criteria before this update. This update adds 1 requirement (REQ-CORPSE-11), 6 tasks and 4 criteria (AC-GS-19, AC-MSA-15, AC-CORPSE-11, AC-CORPSE-12); R37 moves 12 requirements (8 implemented, 4 not built) and 6 criteria to dropped; R40 moves 10 requirements and 10 criteria from dropped back to active. R41 (same day, same method) adds 1 requirement (REQ-HOT-14), 1 task (T3.6c) and 2 criteria (AC-HOT-12, AC-HOT-13); its rewrites of REQ-MSA-05, AC-MSA-13, AC-MSA-15, REQ-CORPSE-11 and AC-CORPSE-11 keep their ids and add nothing. R42 (same day, same method) adds nothing and moves 26 requirements (24 named by T3.9 tasks, 2 not built by decision), 8 tasks (T3.9a–T3.9h) and 18 criteria to dropped; T3.10 no longer names AC-ODDS-13. The totals stay 387, 171 and 349. R43 (same day, same method) adds 2 tasks (T3.3d, T3.2d) and 1 criterion (AC-XC-13, named by T3.2d) and no requirement; its rewrites of REQ-XC-RULES-02, REQ-MSA-05, REQ-CORPSE-11, AC-MSA-13 and AC-CORPSE-11 keep their ids and add nothing. The totals were then 387, 173 and 350. R44 (same day, same method) adds 1 requirement (REQ-CORPSE-12), 1 task (T3.3e) and 3 criteria (AC-CORPSE-13, AC-CORPSE-14 and AC-CORPSE-15, all named by T3.3e; AC-CORPSE-15 [E] at the next field check); its amendments of REQ-XC-RULES-06, REQ-REL-03, REQ-CORPSE-04 and REQ-CORPSE-06 keep their ids and add nothing, and T3.3e also names REQ-CORPSE-04 and REQ-CORPSE-06. The totals were then 388, 174 and 353. R45 (same day, same method) adds 4 tasks (T3.11–T3.13 for the v1.2.1 release, T3.14 for the UI review spec) and no requirement or criterion; its amendments of REQ-REL-06, REQ-REL-14 and AC-REL-12 keep their ids and add nothing. T3.14 names REQ-XC-PLAN-01 until the UI review spec gives it its own requirements. The totals were then 388, 178 and 353. R46 (same day, same method) adds 21 requirements (REQ-UI-27 to REQ-UI-47, each named by a Phase 3u task), 26 tasks (T3.15–T3.40) and 24 criteria (AC-UI-27 to AC-UI-50, each named by a task or by Checkpoint G3u; AC-UI-50 and the [E] part of AC-UI-44 at G3u, the [D] part of AC-UI-48 in T3.40); T3.14 keeps REQ-XC-PLAN-01, the spec task's own requirement. Its amendments of REQ-UI-01, REQ-UI-02, REQ-UI-06, REQ-UI-17, REQ-UI-18, REQ-UI-19, AC-UI-02, AC-UI-06, REQ-HUD-07, REQ-HUD-14, REQ-REL-01, REQ-REL-04, REQ-REL-06, REQ-REL-14 and AC-REL-12 keep their ids and add nothing; the Phase 3u tasks also name REQ-UI-01, -02, -03, -06, -13, -16, -17, -18, -19, -24, REQ-HUD-07, REQ-HUD-14, REQ-XC-TOGGLE-02, REQ-XC-GIT-02 and the release requirements of T3.11–T3.13. The ui-config heading in §13.1 said 25 before this update, although the module had 26 requirements; it now says 47. The totals are now 409, 204 and 377.
+- 423 requirements: 380 implemented by at least one task, 5 met at checkpoints (REQ-UPD-02, REQ-REL-17, REQ-XC-RULES-06, REQ-XC-SKILLS-01, REQ-XC-REPORT-01), and 38 dropped at G3 (REQ-DRILL-01 to REQ-DRILL-12, R37; REQ-ODDS-01 to REQ-ODDS-26, R42). None is left as not built by decision: REQ-ODDS-25 and REQ-ODDS-26 were, and are now dropped with their module. **None uncovered.**
+- 221 tasks: 212 active and 9 dropped (T3.7, R37; T3.9a–T3.9h, R42). Each active task names at least one requirement and has an `Accept:` line. There are no unknown ids, no dependency on a missing or dropped task, and no task larger than M. The R36–R40 update added T3.2c, T3.8d, T3.10, T3.3c, T3.2b and T3.3b, made T3.3a and T3.3 active again (R40) and dropped T3.7 (R37). R41 adds T3.6c and rescopes T3.2b. R42 drops T3.9a–T3.9h. R43 adds T3.3d and T3.2d. R44 adds T3.3e. R45 adds T3.11, T3.12 and T3.13 (the v1.2.1 release) and T3.14 (the UI review spec). R46 adds T3.15–T3.37 (the UI review) and T3.38–T3.40 (the v1.3.0 release). R47 adds T3.41–T3.57 (the rest of the UI review, its release docs in T3.57).
+- 395 acceptance criteria (withdrawn ones excluded): 371 are each named by a task or a checkpoint, and 24 are dropped (AC-DRILL-01 to AC-DRILL-06, R37; AC-ODDS-01 to AC-ODDS-18, R42). Within AC-NPCDB-09 the second bullet is dropped (R38); the criterion stays.
+- How these numbers were counted (2026-10-15; R47's additions on 2026-10-17: 14 requirements, 17 tasks, 18 criteria): the requirement and criterion ids are the `- **REQ-…**` and `- **AC-…**` bullets in this file; the tasks are the `**T…**` items in PLAN §7 with their `Req:` and `Accept:` lines and the checkpoint lists. The summary before this update (384 requirements, 152 tasks, 342 criteria) dated from R20–R24 and missed later additions: the files held 385 requirements, 164 tasks and 343 criteria before this update. This update adds 1 requirement (REQ-CORPSE-11), 6 tasks and 4 criteria (AC-GS-19, AC-MSA-15, AC-CORPSE-11, AC-CORPSE-12); R37 moves 12 requirements (8 implemented, 4 not built) and 6 criteria to dropped; R40 moves 10 requirements and 10 criteria from dropped back to active. R41 (same day, same method) adds 1 requirement (REQ-HOT-14), 1 task (T3.6c) and 2 criteria (AC-HOT-12, AC-HOT-13); its rewrites of REQ-MSA-05, AC-MSA-13, AC-MSA-15, REQ-CORPSE-11 and AC-CORPSE-11 keep their ids and add nothing. R42 (same day, same method) adds nothing and moves 26 requirements (24 named by T3.9 tasks, 2 not built by decision), 8 tasks (T3.9a–T3.9h) and 18 criteria to dropped; T3.10 no longer names AC-ODDS-13. The totals stay 387, 171 and 349. R43 (same day, same method) adds 2 tasks (T3.3d, T3.2d) and 1 criterion (AC-XC-13, named by T3.2d) and no requirement; its rewrites of REQ-XC-RULES-02, REQ-MSA-05, REQ-CORPSE-11, AC-MSA-13 and AC-CORPSE-11 keep their ids and add nothing. The totals were then 387, 173 and 350. R44 (same day, same method) adds 1 requirement (REQ-CORPSE-12), 1 task (T3.3e) and 3 criteria (AC-CORPSE-13, AC-CORPSE-14 and AC-CORPSE-15, all named by T3.3e; AC-CORPSE-15 [E] at the next field check); its amendments of REQ-XC-RULES-06, REQ-REL-03, REQ-CORPSE-04 and REQ-CORPSE-06 keep their ids and add nothing, and T3.3e also names REQ-CORPSE-04 and REQ-CORPSE-06. The totals were then 388, 174 and 353. R45 (same day, same method) adds 4 tasks (T3.11–T3.13 for the v1.2.1 release, T3.14 for the UI review spec) and no requirement or criterion; its amendments of REQ-REL-06, REQ-REL-14 and AC-REL-12 keep their ids and add nothing. T3.14 names REQ-XC-PLAN-01 until the UI review spec gives it its own requirements. The totals were then 388, 178 and 353. R46 (same day, same method) adds 21 requirements (REQ-UI-27 to REQ-UI-47, each named by a Phase 3u task), 26 tasks (T3.15–T3.40) and 24 criteria (AC-UI-27 to AC-UI-50, each named by a task or by Checkpoint G3u; AC-UI-50 and the [E] part of AC-UI-44 at G3u, the [D] part of AC-UI-48 in T3.40); T3.14 keeps REQ-XC-PLAN-01, the spec task's own requirement. Its amendments of REQ-UI-01, REQ-UI-02, REQ-UI-06, REQ-UI-17, REQ-UI-18, REQ-UI-19, AC-UI-02, AC-UI-06, REQ-HUD-07, REQ-HUD-14, REQ-REL-01, REQ-REL-04, REQ-REL-06, REQ-REL-14 and AC-REL-12 keep their ids and add nothing; the Phase 3u tasks also name REQ-UI-01, -02, -03, -06, -13, -16, -17, -18, -19, -24, REQ-HUD-07, REQ-HUD-14, REQ-XC-TOGGLE-02, REQ-XC-GIT-02 and the release requirements of T3.11–T3.13. The ui-config heading in §13.1 said 25 before this update, although the module had 26 requirements; it now says 47. The totals are now 409, 204 and 377.
 
 ### 13.1 Requirement → PLAN tasks, by module
 
@@ -4485,7 +4610,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-GLOW-16 | T1.10 |
 | REQ-GLOW-17 | T1.10 |
 
-**ui-config** (47)
+**ui-config** (60)
 
 | Requirement | PLAN tasks |
 |---|---|
@@ -4496,7 +4621,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-UI-05 | T2.1, T2.4a |
 | REQ-UI-06 | T2.3a, T2.3b, T3.28 |
 | REQ-UI-07 | T2.1, T2.4a |
-| REQ-UI-08 | T2.1, T2.4b |
+| REQ-UI-08 | T2.1, T2.4b, T3.47 |
 | REQ-UI-09 | T2.5a |
 | REQ-UI-10 | T2.5b, T2.8b, T4.4 |
 | REQ-UI-11 | T2.5a, T2.5c, T3.8c, T2.11 |
@@ -4519,15 +4644,15 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-UI-28 | T3.16, T3.37 |
 | REQ-UI-29 | T3.17, T3.37 |
 | REQ-UI-30 | T3.18 |
-| REQ-UI-31 | T3.18, T3.19, T3.31 |
+| REQ-UI-31 | T3.18, T3.19, T3.31, T3.41 |
 | REQ-UI-32 | T3.20, T3.21 |
 | REQ-UI-33 | T3.22, T3.23, T3.37 |
 | REQ-UI-34 | T3.25 |
-| REQ-UI-35 | T3.26 |
+| REQ-UI-35 | T3.26, T3.42 |
 | REQ-UI-36 | T3.27, T3.37 |
 | REQ-UI-37 | T3.28 |
-| REQ-UI-38 | T3.29 |
-| REQ-UI-39 | T3.24, T3.29 |
+| REQ-UI-38 | T3.29, T3.48 |
+| REQ-UI-39 | T3.24, T3.29, T3.45, T3.46, T3.48, T3.53 |
 | REQ-UI-40 | T3.30 |
 | REQ-UI-41 | T3.31 |
 | REQ-UI-42 | T3.32 |
@@ -4535,9 +4660,22 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-UI-44 | T3.34 |
 | REQ-UI-45 | T3.35 |
 | REQ-UI-46 | T3.36 |
-| REQ-UI-47 | T3.15, T3.18, T3.19, T3.31, T3.37 |
+| REQ-UI-47 | T3.15, T3.18, T3.19, T3.31, T3.37, T3.41, T3.43 |
+| REQ-UI-48 | T3.41 |
+| REQ-UI-49 | T3.42 |
+| REQ-UI-50 | T3.55 |
+| REQ-UI-51 | T3.44, T3.56 |
+| REQ-UI-52 | T3.45, T3.56 |
+| REQ-UI-53 | T3.46, T3.56 |
+| REQ-UI-54 | T3.47, T3.53, T3.56 |
+| REQ-UI-55 | T3.48 |
+| REQ-UI-56 | T3.49, T3.56 |
+| REQ-UI-57 | T3.50 |
+| REQ-UI-58 | T3.51, T3.56 |
+| REQ-UI-59 | T3.51 |
+| REQ-UI-60 | T3.50, T3.56 |
 
-**hud** (14)
+**hud** (15)
 
 | Requirement | PLAN tasks |
 |---|---|
@@ -4547,14 +4685,15 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | REQ-HUD-04 | T2.7 |
 | REQ-HUD-05 | T2.7, T2.8 |
 | REQ-HUD-06 | T2.8b |
-| REQ-HUD-07 | T2.8, T3.23 |
-| REQ-HUD-08 | T2.8 |
+| REQ-HUD-07 | T2.8, T3.23, T3.52, T3.56 |
+| REQ-HUD-08 | T2.8, T3.53, T3.56 |
 | REQ-HUD-09 | T2.8 |
 | REQ-HUD-10 | T2.7, T7.4 |
 | REQ-HUD-11 | T2.7 |
 | REQ-HUD-12 | T2.7b |
 | REQ-HUD-13 | T2.7b, T3.3d, T5.3, T6.9 |
-| REQ-HUD-14 | T2.9c, T3.23 |
+| REQ-HUD-14 | T2.9c, T3.23, T3.54 |
+| REQ-HUD-15 | T3.54, T3.56 |
 
 **data-registry** (13)
 
@@ -5090,6 +5229,23 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T3.38 | docs(release): README, CHANGELOG, mod description and version for v1.3.0 | REQ-REL-14, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-REL-05, REQ-REL-06 |
 | T3.39 | chore(release): intermediate PR `update/26.2` → `main` for v1.3.0 | REQ-REL-14, REQ-REL-08, REQ-REL-09, REQ-XC-GIT-02 |
 | T3.40 | chore(release): tag and publish v1.3.0 | REQ-REL-14, REQ-REL-10, REQ-REL-11 |
+| T3.41 | perf(ui): colour wheel baked once, tinted for brightness | REQ-UI-48, REQ-UI-31, REQ-UI-47 |
+| T3.42 | fix(ui): a glide ends exactly on its target | REQ-UI-49, REQ-UI-35 |
+| T3.43 | test(render): the borrowed mask's guards | REQ-UI-47 |
+| T3.44 | feat(ui): search-match highlighting | REQ-UI-51 |
+| T3.45 | feat(ui): rule cards open and close with a motion | REQ-UI-52, REQ-UI-39 |
+| T3.46 | feat(ui): press feedback | REQ-UI-53, REQ-UI-39 |
+| T3.47 | feat(ui): empty states | REQ-UI-54, REQ-UI-08 |
+| T3.48 | feat(ui): overlay close animations | REQ-UI-55, REQ-UI-38, REQ-UI-39 |
+| T3.49 | feat(ui): scroll edge fades | REQ-UI-56 |
+| T3.50 | feat(ui): off-toggle contrast and the checkerboard | REQ-UI-57, REQ-UI-60 |
+| T3.51 | feat(ui): tick dots and the slider click | REQ-UI-58, REQ-UI-59 |
+| T3.52 | feat(hud): HUD editor outlines, fills and chip labels | REQ-HUD-07 |
+| T3.53 | feat(hud): HUD editor toolbar card, hint panel and two-step Reset All | REQ-HUD-08, REQ-UI-54, REQ-UI-39 |
+| T3.54 | feat(hud): corner scale handles and centre snapping | REQ-HUD-15, REQ-HUD-14 |
+| T3.55 | fix(ui): the Animations help names what it stops | REQ-UI-50 |
+| T3.56 | test(ui): screenshot matrix, second part | REQ-UI-51, REQ-UI-52, REQ-UI-53, REQ-UI-54, REQ-UI-56, REQ-UI-58, REQ-UI-60, REQ-HUD-07, REQ-HUD-08, REQ-HUD-15 |
+| T3.57 | docs(release): 1.3.0 docs for R47 | REQ-REL-14, REQ-REL-01, REQ-REL-02, REQ-REL-03, REQ-REL-04, REQ-REL-05, REQ-REL-06 |
 | T4.1 | feat(update): check outcomes, manual checks and state | REQ-CFG-12, REQ-UPD-04, REQ-UPD-09, REQ-UPD-19, REQ-UPD-08 |
 | T4.2 | feat(update): secure download + integrity + jar validation | REQ-UPD-09, REQ-UPD-20, REQ-UPD-08, REQ-UPD-13, REQ-UPD-14, REQ-UPD-15 |
 | T4.3 | feat(update): install eligibility + staged install via helper | REQ-UPD-16, REQ-UPD-17 |
