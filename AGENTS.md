@@ -15,11 +15,9 @@ search it by id.
 ## Where the work stands (2026-10-17)
 
 - Branch `update/26.2`. v1.2.1 is released (tag `v1.2.1` on the merge commit `ea32dea` on `main`).
-- Current phase: **Phase 3u, the UI review released as 1.3.0** (PLAN.md, "Phase 3u"). Done: T3.14–T3.37, every
-  build task of the review (the last, T3.37, is the screenshot matrix `UiReviewMatrixGameTest`). **Next: Checkpoint
-  G3u** (its automatic items, then the maintainer's field check at GUI scale 2 and the hairline rule, Q-UI-08), then
-  the 1.3.0 release tasks T3.38–T3.40 (README, CHANGELOG and version; the release PR; tag and publish), each step
-  with the approvals below.
+- Current phase: **Phase 3u, the UI review released as 1.3.0** (PLAN.md, "Phase 3u"). Done: T3.14–T3.38 and
+  Checkpoint G3u (with its fix `7b9ac08`). **Now: T3.39**, the release PR `update/26.2` → `main`, open and waiting
+  for the maintainer's "merge"; then T3.40 (tag and publish) only after a separate "ship". Phase 4 follows.
 - Commit on `update/26.2` itself (`git branch --show-current`). If you were started in a worktree or on another
   branch, ask before committing: the scan and build ranges are `main..update/26.2`.
 ## How work is done
