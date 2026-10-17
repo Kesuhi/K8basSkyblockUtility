@@ -16,6 +16,7 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   it, and a rule list without rules (Mob Highlighter, NPC Search) says where to add one.
 - Scrolling areas (the settings page, the database picker, long dropdown lists) fade their content softly
   at an edge where there is more to scroll to, so you can tell there is more above or below.
+- A slider with only a few values (the notice duration) shows a small dot at each of them.
 
 ### Changed
 
@@ -26,6 +27,7 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   fade in when they open. What closed them (a choice, Save, Cancel, Esc) takes effect at once, and the next
   click already reaches what lies under them. With "Animations" off they disappear at once.
 - Switches that are off stand out more from their cards.
+- A slider plays its click sound on release only when you changed its value.
 - The checkerboard behind see-through colours (colour swatches, the colour picker) has smaller cells, keeps
   a swatch's rounded corners and dims with a setting that is switched off.
 

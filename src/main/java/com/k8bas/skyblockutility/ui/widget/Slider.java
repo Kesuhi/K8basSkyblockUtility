@@ -8,6 +8,7 @@ import com.k8bas.skyblockutility.ui.render.UiText;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
+import java.util.List;
 import java.util.function.LongConsumer;
 import java.util.function.LongFunction;
 import java.util.function.LongSupplier;
@@ -27,6 +28,11 @@ public final class Slider extends Widget {
 	public static final int KNOB_SIZE = 10;
 	/** The knob's drawn size on hover and while dragged (REQ-UI-46). */
 	public static final int KNOB_GROWN = 12;
+	/** Tick dots (REQ-UI-58): only on a slider of at most this many values, ... */
+	static final int MAX_DOTS = 15;
+	/** ... at least this many GUI px apart, each a disc this many GUI px across. */
+	static final int DOT_SPACING = 4;
+	static final int DOT = 2;
 
 	private final SliderModel model;
 	private final LongSupplier get;
@@ -47,7 +53,7 @@ public final class Slider extends Widget {
 	 * @param set        stores a value at once (live apply)
 	 * @param onCommit   runs once after a drag that changed the value
 	 * @param label      the value as shown next to the track
-	 * @param clickSound played when a press on the track is released
+	 * @param clickSound played on a release that changed the shown value (REQ-UI-59)
 	 */
 	public Slider(SliderModel model, LongSupplier get, LongConsumer set, Runnable onCommit, LongFunction<String> label, Runnable clickSound) {
 		this.model = model;
@@ -168,8 +174,12 @@ public final class Slider extends Widget {
 			return;
 		}
 		dragging = false;
-		clickSound.run();
-		if (get.getAsLong() != valueAtPress) {
+		// REQ-UI-59: the click only when the drag or the press on the track changed the shown value; the commit when the stored one changed.
+		long now = get.getAsLong();
+		if (model.shown(now) != model.shown(valueAtPress)) {
+			clickSound.run();
+		}
+		if (now != valueAtPress) {
 			onCommit.run();
 		}
 	}
@@ -251,9 +261,47 @@ public final class Slider extends Widget {
 		int fill = enabled ? ColorMath.lerp(theme.accent(), theme.accentHover(), hover) : Theme.SEPARATOR;
 		Shapes.bar(graphics, x, gap[0], trackY, TRACK_HEIGHT, Corners.LEFT, faded(fill));
 		Shapes.bar(graphics, gap[1], x + width, trackY, TRACK_HEIGHT, Corners.RIGHT, faded(Theme.SEPARATOR));
+		// REQ-UI-58: a dot at each value of a short slider, slightly lighter than the track or darker than the fill, none the knob
+		// touches at its drawn size.
+		float trackCentre = trackY + TRACK_HEIGHT / 2F;
+		for (float dot : dotCentres(model, x, width)) {
+			if (underKnob(dot, centreX, size / (float) scale)) {
+				continue;
+			}
+			int colour = dot < centreX ? ColorMath.lerp(fill, 0xFF000000, 0.25F) : ColorMath.lerp(Theme.SEPARATOR, Theme.TEXT_SECONDARY, 0.35F);
+			Shapes.roundedRect(graphics, dot - DOT / 2F, trackCentre - DOT / 2F, DOT, DOT, DOT / 2, faded(colour));
+		}
 		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, hover) : Theme.TEXT_DISABLED;
 		Shapes.disc(graphics, centreX, centreY, size / (float) scale, knobMaskPx(hover, scale), faded(knobColor));
 		UiText.draw(graphics, font, label.apply(value), labelX(), y + (height - font.lineHeight) / 2 + 1, faded(labelColor(theme)));
+	}
+
+	/**
+	 * The tick dots' centres in GUI px along a track from {@code x}, {@code width} wide (REQ-UI-58): one at each value, where the
+	 * knob's centre would be; none for a slider of more than {@link #MAX_DOTS} values or with values closer than
+	 * {@link #DOT_SPACING} GUI px.
+	 */
+	static float[] dotCentres(SliderModel model, int x, int width) {
+		long count = model.valueCount();
+		float travel = width - KNOB_SIZE;
+		if (count < 2 || count > MAX_DOTS) {
+			return new float[0];
+		}
+		List<Long> values = model.values();
+		float[] centres = new float[values.size()];
+		for (int i = 0; i < centres.length; i++) {
+			centres[i] = (float) (x + KNOB_SIZE / 2.0 + model.fraction(values.get(i)) * travel);
+			// Neighbours closer than the spacing (a last step shorter than the others included): no dots at all.
+			if (i > 0 && centres[i] - centres[i - 1] < DOT_SPACING) {
+				return new float[0];
+			}
+		}
+		return centres;
+	}
+
+	/** Whether a knob {@code knob} GUI px across, centred at {@code knobCentre}, touches the dot centred at {@code dot}. */
+	static boolean underKnob(float dot, float knobCentre, float knob) {
+		return Math.abs(dot - knobCentre) < knob / 2F + DOT / 2F;
 	}
 
 	/**

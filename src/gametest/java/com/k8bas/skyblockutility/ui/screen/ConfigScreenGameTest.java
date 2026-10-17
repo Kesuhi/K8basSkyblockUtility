@@ -109,6 +109,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 			pointers(context);
 			contentScrollbar(context);
 			edgeFades(context);
+			noticeDurationDots(context);
 		} finally {
 			context.runOnClient(client -> {
 				modules.restore();
@@ -1870,6 +1871,79 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	private static com.k8bas.skyblockutility.ui.option.Option option(ConfigScreen screen, String id) {
 		return screen.page().page().rows().stream().filter(row -> row instanceof ConfigLayout.OptionRow o && o.option().id().equals(id))
 				.map(row -> ((ConfigLayout.OptionRow) row).option()).findFirst().orElseThrow();
+	}
+
+	/**
+	 * AC-UI-62 [C] (REQ-UI-58, T3.51) at GUI scales 2 and 3 on General: the notice duration slider (1-15 s) has a dot at each
+	 * value; the one farthest from the knob differs from the track halfway to the next dot (lighter on the track, darker on the
+	 * fill), in a screenshot.
+	 */
+	private static void noticeDurationDots(ClientGameTestContext context) {
+		int before = context.computeOnClient(client -> client.options.guiScale().get());
+		context.getInput().resizeWindow(1280, 960);
+		context.setScreen(() -> new ConfigScreen(null));
+		context.waitForScreen(ConfigScreen.class);
+		context.getInput().setCursorPos(2, 2);
+		try {
+			StringBuilder log = new StringBuilder();
+			for (int scale : new int[] {2, 3}) {
+				int s = scale;
+				context.runOnClient(client -> {
+					client.options.guiScale().set(s);
+					screen(client).select(Category.GENERAL);
+				});
+				context.waitTicks(3);
+				context.runOnClient(client -> {
+					ConfigScreen screen = screen(client);
+					ConfigLayout.OptionRow row = screen.page().page().rows().stream()
+							.filter(r -> r instanceof ConfigLayout.OptionRow o && o.option().id().equals("interface.notice_seconds"))
+							.map(r -> (ConfigLayout.OptionRow) r).findFirst().orElseThrow();
+					screen.scrollArea().ensureVisible(row.y(), row.y() + row.height());
+					screen.scrollArea().setScroll(screen.scrollArea().target());
+				});
+				context.waitTicks(3);
+				float[] geometry = context.computeOnClient(client -> {
+					var slider = (com.k8bas.skyblockutility.ui.widget.Slider) screen(client).page().control(option(screen(client), "interface.notice_seconds"));
+					int knobCentre = slider.knobX() + com.k8bas.skyblockutility.ui.widget.Slider.KNOB_SIZE / 2;
+					return new float[] {slider.x(), slider.width(), slider.y() + (slider.height() - 4) / 2 + 2, knobCentre};
+				});
+				java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(context.takeScreenshot("t3.51-notice-dots-scale-" + s).toFile());
+				float travel = geometry[1] - com.k8bas.skyblockutility.ui.widget.Slider.KNOB_SIZE;
+				float first = geometry[0] + com.k8bas.skyblockutility.ui.widget.Slider.KNOB_SIZE / 2F;
+				float last = first + travel;
+				// The end dot farther from the knob, and the track halfway to its neighbour.
+				boolean atStart = Math.abs(first - geometry[3]) > Math.abs(last - geometry[3]);
+				float dot = atStart ? first : last;
+				float between = dot + (atStart ? 1 : -1) * travel / 28F;
+				int dotPixel = image.getRGB(Math.round(dot * s), Math.round(geometry[2] * s)) & 0xFFFFFF;
+				int trackPixel = image.getRGB(Math.round(between * s), Math.round(geometry[2] * s)) & 0xFFFFFF;
+				check(colourDistance(dotPixel, trackPixel) > 10, "scale " + s + ": a dot at " + (atStart ? "1 s" : "15 s") + " stands out from the track: "
+						+ Integer.toHexString(dotPixel) + " against " + Integer.toHexString(trackPixel));
+				log.append(" scale ").append(s).append(' ').append(Integer.toHexString(dotPixel)).append('/').append(Integer.toHexString(trackPixel)).append(';');
+				// The other end's dot, where the knob does not touch it (the fill when the value is low): darker than the fill.
+				float other = atStart ? last : first;
+				if (Math.abs(other - geometry[3]) > com.k8bas.skyblockutility.ui.widget.Slider.KNOB_GROWN) {
+					float beside = other + (atStart ? -1 : 1) * travel / 28F;
+					int otherPixel = image.getRGB(Math.round(other * s), Math.round(geometry[2] * s)) & 0xFFFFFF;
+					int besidePixel = image.getRGB(Math.round(beside * s), Math.round(geometry[2] * s)) & 0xFFFFFF;
+					boolean onFill = other < geometry[3];
+					check(colourDistance(otherPixel, besidePixel) > 10 && (sum(otherPixel) < sum(besidePixel)) == onFill,
+							"scale " + s + ": the dot at " + (atStart ? "15 s" : "1 s") + (onFill ? " is darker than the fill: " : " is lighter than the track: ")
+									+ Integer.toHexString(otherPixel) + " against " + Integer.toHexString(besidePixel));
+					log.append(" other ").append(Integer.toHexString(otherPixel)).append('/').append(Integer.toHexString(besidePixel)).append(';');
+				}
+			}
+			LOGGER.info("notice duration dots (dot/track):{}", log);
+		} catch (IOException e) {
+			throw new AssertionError("cannot read a screenshot", e);
+		} finally {
+			context.runOnClient(client -> client.options.guiScale().set(before));
+			context.setScreen(() -> null);
+		}
+	}
+
+	private static int sum(int rgb) {
+		return (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF);
 	}
 
 	private static int colourDistance(int a, int b) {
