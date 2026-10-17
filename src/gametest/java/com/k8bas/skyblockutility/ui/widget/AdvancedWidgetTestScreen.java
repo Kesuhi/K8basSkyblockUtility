@@ -71,6 +71,11 @@ public final class AdvancedWidgetTestScreen extends WidgetScreen {
 				() -> { }), 40, 60, 24, 14);
 	}
 
+	/** The swatch of a colour stored with its alpha, translucent (for the screenshot matrix in another package). */
+	public ColorSwatch alphaSwatchForTests() {
+		return alphaSwatch;
+	}
+
 	/** The open colour picker. */
 	ColorPickerOverlay picker() {
 		if (!(overlay() instanceof ColorPickerOverlay picker)) {

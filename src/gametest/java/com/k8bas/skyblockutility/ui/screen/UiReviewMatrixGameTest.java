@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.screen;
 
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.gametest.ModuleStates;
+import com.k8bas.skyblockutility.module.mobhighlighter.MobRulesForTests;
 import com.k8bas.skyblockutility.ui.notice.Notice;
 import com.k8bas.skyblockutility.ui.notice.NoticeLayout;
 import com.k8bas.skyblockutility.ui.notice.Notices;
@@ -55,6 +56,13 @@ import java.util.TreeMap;
  * AC-UI-48 [C] (EC-UI-18): a GUI scale sweep with the colour picker and then an open dropdown list logs no error, and each
  * frame after a change draws from textures made for the new scale, within the caches' bounds. The images are kept for the
  * G3u report.
+ * <p>
+ * T3.56, its second part, AC-UI-65 [C] (R47): at each size, scale and Smooth corners setting also a search with its matches
+ * marked, a search with no hit, an empty rule list, a page scrolled to its middle with both edge fades, a held toggle card,
+ * the notice duration slider with its dots, a rule card half open (on a test clock with motion on), a translucent swatch (the
+ * widget test screen's), and the HUD editor with the shipped element selected: its handles, the toolbar card and its label
+ * chip. The same checks run on them where they apply, and on the editor its selected outline's hairline, its buttons'
+ * outlines and a handle's accent. The images are the review set for the G3v report.
  */
 public class UiReviewMatrixGameTest implements FabricClientGameTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas-gametest");
@@ -72,6 +80,10 @@ public class UiReviewMatrixGameTest implements FabricClientGameTest {
 
 	private static final List<Config> CONFIGS = List.of(new Config(1920, 1080, 1), new Config(1920, 1080, 2), new Config(1920, 1080, 3),
 			new Config(1920, 1080, 4), new Config(1366, 768, 3));
+
+	/** The R47 states of AC-UI-65, as counted in {@link #RAN}. */
+	private static final List<String> R47_STATES = List.of("search marks", "no hit", "empty rules", "edge fades", "held card", "notice dots",
+			"rule half open", "translucent swatch", "hud editor", "empty hud editor");
 
 	/** How many times each check ran, by name, for the log. */
 	private static final Map<String, Integer> RAN = new TreeMap<>();
@@ -93,6 +105,7 @@ public class UiReviewMatrixGameTest implements FabricClientGameTest {
 					context.waitTicks(3);
 					check(context.computeOnClient(client -> ConfigManager.general().smoothCorners()) == smooth, "Smooth corners reads " + smooth);
 					states(context, config, smooth);
+					r47States(context, config, smooth);
 				}
 				onOffDiffer(context, config);
 				context.setScreen(() -> null);
@@ -104,6 +117,9 @@ public class UiReviewMatrixGameTest implements FabricClientGameTest {
 			LOGGER.info("UI review matrix: checks run {}", RAN);
 			for (String kind : List.of("Button", "TextField", "KeybindButton", "ColorSwatch", "Dropdown", "focus ring", "tooltip", "notice", "dropdown list")) {
 				check(RAN.containsKey("AC-UI-29 corners " + kind), "AC-UI-29 measured on a " + kind + ": " + RAN);
+			}
+			for (String state : R47_STATES) {
+				check(RAN.getOrDefault("R47 " + state, 0) == 2 * CONFIGS.size(), "AC-UI-65: " + state + " at every size and setting: " + RAN);
 			}
 		} finally {
 			context.runOnClient(client -> {
@@ -192,6 +208,255 @@ public class UiReviewMatrixGameTest implements FabricClientGameTest {
 		theDatabasePicker(context, config, smooth, tag);
 	}
 
+	/**
+	 * AC-UI-65 [C] (T3.56): the R47 states at this size, scale and Smooth corners setting, each image through the checks that
+	 * apply to it; then the settings screen as {@link #open} leaves it, for the next pass.
+	 */
+	private static void r47States(ClientGameTestContext context, Config config, boolean smooth) {
+		String tag = "t3.56-" + config.tag() + (smooth ? "-on" : "-off");
+		// A search: its matches marked; then one with no hit, with the glass, the line and "Clear search".
+		search(context, "colour");
+		checkImage(context, config, smooth, tag + "-search-marks", false, false);
+		ran("R47 search marks");
+		search(context, "zzqx");
+		BufferedImage noHit = checkImage(context, config, smooth, tag + "-no-hit", false, false);
+		int[] clear = context.computeOnClient(client -> {
+			Button button = screen(client).clearSearchButton();
+			return new int[] {button.x(), button.y(), button.width(), button.height()};
+		});
+		check(clear[2] > 0, tag + ": the no-hit view shows Clear search");
+		if (config.scale() >= 2) {
+			outline(noHit, config.scale(), smooth, clear, Shapes.RADIUS_CONTROL, "Button", tag + ": Clear search");
+		}
+		ran("R47 no hit");
+		search(context, "");
+		// The Mob Highlighter's rule list with no rule, its empty row in view.
+		List<com.k8bas.skyblockutility.highlight.HighlightRule> rules = context.computeOnClient(client -> MobRulesForTests.rules());
+		try {
+			context.runOnClient(client -> MobRulesForTests.use(List.of()));
+			context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+			context.waitTicks(2);
+			context.runOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				ConfigLayout.RuleEmpty empty = screen.page().page().rows().stream().filter(ConfigLayout.RuleEmpty.class::isInstance)
+						.map(ConfigLayout.RuleEmpty.class::cast).findFirst().orElseThrow(() -> new AssertionError("FAILED: no empty rule row"));
+				screen.scrollArea().ensureVisible(empty.y() - 8, empty.y() + empty.height() + 8);
+				screen.scrollArea().setScroll(screen.scrollArea().target());
+			});
+			context.waitTicks(3);
+			checkImage(context, config, smooth, tag + "-empty-rules", false, false);
+			ran("R47 empty rules");
+		} finally {
+			context.runOnClient(client -> MobRulesForTests.use(rules));
+		}
+		// The Waypoints page scrolled to its middle: an edge fade at the top and the bottom.
+		context.runOnClient(client -> screen(client).select(Category.WAYPOINTS));
+		context.waitTicks(2);
+		context.runOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			screen.scrollArea().setScroll(screen.scrollArea().maxScroll() / 2);
+		});
+		context.waitTicks(3);
+		int maxScroll = context.computeOnClient(client -> screen(client).scrollArea().maxScroll());
+		check(maxScroll >= 4 * com.k8bas.skyblockutility.ui.widget.EdgeFade.DEPTH, tag + ": the Waypoints page scrolls far enough for full fades at its middle: "
+				+ maxScroll);
+		checkImage(context, config, smooth, tag + "-edge-fades", false, false);
+		ran("R47 edge fades");
+		// The Mob Highlighter's card held down: the press flips it and the card looks pressed; a second click flips it back.
+		context.runOnClient(client -> {
+			screen(client).select(Category.HIGHLIGHTS);
+			screen(client).scrollTo(0);
+		});
+		context.waitTicks(3);
+		int[] card = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().card(optionRow(screen(client), "mob_highlighter.enabled").option());
+			return window(client, widget.x() + 40, widget.y() + widget.height() / 2);
+		});
+		boolean mobsOn = context.computeOnClient(client -> toggleOption(client, "mob_highlighter.enabled").binding().get());
+		context.getInput().setCursorPos(card[0], card[1]);
+		context.waitTicks(2);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> toggleOption(client, "mob_highlighter.enabled").binding().get()) != mobsOn, tag + ": the press reached the card");
+		float pressLook = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().card(optionRow(screen(client), "mob_highlighter.enabled").option());
+			return widget.pressLook(widget.x() + 40, widget.y() + widget.height() / 2);
+		});
+		check(pressLook == 1F, tag + ": the held card looks pressed: " + pressLook);
+		checkImage(context, config, smooth, tag + "-held-card", false, false);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		context.getInput().setCursorPos(1, 1);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> toggleOption(client, "mob_highlighter.enabled").binding().get()) == mobsOn,
+				tag + ": the held card, pressed twice, is as it was");
+		ran("R47 held card");
+		// The notice duration slider with its dots.
+		context.runOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			screen.select(Category.GENERAL);
+		});
+		context.waitTicks(2);
+		context.runOnClient(client -> {
+			ConfigScreen screen = screen(client);
+			ConfigLayout.OptionRow row = optionRow(screen, "interface.notice_seconds");
+			screen.scrollArea().ensureVisible(row.y() - 8, row.y() + row.height() + 8);
+			screen.scrollArea().setScroll(screen.scrollArea().target());
+		});
+		context.waitTicks(3);
+		checkImage(context, config, smooth, tag + "-notice-dots", false, true);
+		ran("R47 notice dots");
+		ruleHalfOpen(context, config, smooth, tag);
+		translucentSwatch(context, config, smooth, tag);
+		hudEditor(context, config, smooth, tag);
+		open(context, config);
+	}
+
+	/** Types {@code query} into the search box and applies it at once. */
+	private static void search(ClientGameTestContext context, String query) {
+		context.runOnClient(client -> {
+			screen(client).search().model().setText(query);
+			screen(client).applyQueryForTests();
+		});
+		context.waitTicks(3);
+	}
+
+	/** A rule card half open: a settings screen on a test clock with motion on, a rule header clicked and 75 ms stepped. */
+	private static void ruleHalfOpen(ClientGameTestContext context, Config config, boolean smooth, String tag) {
+		java.util.concurrent.atomic.AtomicLong clock = new java.util.concurrent.atomic.AtomicLong(1_000_000);
+		List<com.k8bas.skyblockutility.highlight.HighlightRule> rules = context.computeOnClient(client -> MobRulesForTests.rules());
+		try {
+			context.runOnClient(client -> MobRulesForTests.use(List.of(RuleCardsGameTest.mob("matrix-1", "Zealot", "Zealot", "The End", 0xAA00FF),
+					RuleCardsGameTest.mob("matrix-2", "Voidgloom", "Voidgloom", null, 0x00FF00))));
+			context.setScreen(() -> new ConfigScreen(null, com.k8bas.skyblockutility.settings.OptionCatalog.live(),
+					com.k8bas.skyblockutility.ui.render.UiTime.of(clock::get, () -> true)));
+			context.waitForScreen(ConfigScreen.class);
+			context.runOnClient(client -> {
+				screen(client).plainBackgroundForTests(BACKDROP);
+				screen(client).select(Category.HIGHLIGHTS);
+			});
+			context.getInput().setCursorPos(1, 1);
+			context.waitTicks(3);
+			clock.addAndGet(1_000);
+			context.waitTicks(3);
+			context.runOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				com.k8bas.skyblockutility.ui.option.RuleGroup zealot = screen.page().page().rows().stream()
+						.filter(row -> row instanceof ConfigLayout.RuleHeader h && "Zealot".equals(h.rule().label().get()))
+						.map(row -> ((ConfigLayout.RuleHeader) row).rule()).findFirst().orElseThrow();
+				ConfigLayout.RuleHeader row = screen.page().page().rows().stream()
+						.filter(r -> r instanceof ConfigLayout.RuleHeader h && h.rule() == zealot).map(r -> (ConfigLayout.RuleHeader) r).findFirst().orElseThrow();
+				screen.scrollArea().ensureVisible(row.y() - 8, row.y() + 120);
+				screen.scrollArea().setScroll(screen.scrollArea().target());
+			});
+			context.waitTicks(3);
+			int[] header = context.computeOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				com.k8bas.skyblockutility.ui.option.RuleGroup zealot = screen.page().page().rows().stream()
+						.filter(row -> row instanceof ConfigLayout.RuleHeader h && "Zealot".equals(h.rule().label().get()))
+						.map(row -> ((ConfigLayout.RuleHeader) row).rule()).findFirst().orElseThrow();
+				Widget widget = screen.page().header(zealot);
+				return window(client, widget.x() + widget.width() / 3, widget.y() + widget.height() / 2);
+			});
+			context.getInput().setCursorPos(header[0], header[1]);
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			clock.addAndGet(75);
+			context.getInput().setCursorPos(1, 1);
+			context.waitTicks(2);
+			float reveal = context.computeOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				com.k8bas.skyblockutility.ui.option.RuleGroup zealot = screen.page().page().rows().stream()
+						.filter(row -> row instanceof ConfigLayout.RuleHeader h && "Zealot".equals(h.rule().label().get()))
+						.map(row -> ((ConfigLayout.RuleHeader) row).rule()).findFirst().orElseThrow();
+				return screen.page().header(zealot).reveal();
+			});
+			check(reveal > 0F && reveal < 1F, tag + ": the rule card is half open: " + reveal);
+			checkImage(context, config, smooth, tag + "-rule-half-open", false, false);
+			ran("R47 rule half open");
+		} finally {
+			context.runOnClient(client -> MobRulesForTests.use(rules));
+		}
+	}
+
+	/** The widget test screen's swatch of a colour with alpha: its checkerboard, and its outline (AC-UI-29, AC-UI-34). */
+	private static void translucentSwatch(ClientGameTestContext context, Config config, boolean smooth, String tag) {
+		context.setScreen(com.k8bas.skyblockutility.ui.widget.AdvancedWidgetTestScreen::new);
+		context.waitForScreen(com.k8bas.skyblockutility.ui.widget.AdvancedWidgetTestScreen.class);
+		context.getInput().setCursorPos(1, 1);
+		context.waitTicks(3);
+		BufferedImage shot = HairlineProbe.read(context.takeScreenshot(tag + "-translucent-swatch"));
+		int[] box = context.computeOnClient(client -> {
+			ColorSwatch swatch = ((com.k8bas.skyblockutility.ui.widget.AdvancedWidgetTestScreen) client.gui.screen()).alphaSwatchForTests();
+			return new int[] {swatch.x(), swatch.y(), swatch.width(), swatch.height()};
+		});
+		if (config.scale() >= 2) {
+			outline(shot, config.scale(), smooth, box, Shapes.RADIUS_CONTROL, "ColorSwatch", tag + ": the translucent swatch");
+		}
+		ran("R47 translucent swatch");
+	}
+
+	/**
+	 * The HUD editor with the shipped element selected: its toolbar card, hint panel, handles and label chip. At GUI scales
+	 * 2-4 the selected outline is a hairline (AC-UI-34) at its side away from the window's edge, Reset Selected's, Reset All's and Cancel's
+	 * outlines pass AC-UI-29 and AC-UI-34, and the bottom-right handle is an accent disc. Closed by the next screen, which saves as
+	 * Esc does; nothing moved, so nothing is written. Then the empty editor of AC-UI-58 (no element registered): its card.
+	 */
+	private static void hudEditor(ClientGameTestContext context, Config config, boolean smooth, String tag) {
+		String id = context.computeOnClient(client -> com.k8bas.skyblockutility.hud.ShippedHud.elements().get(0).id());
+		context.setScreen(() -> new HudEditorScreen(null, id));
+		context.waitForScreen(HudEditorScreen.class);
+		context.getInput().setCursorPos(1, 1);
+		context.waitTicks(3);
+		BufferedImage shot = HairlineProbe.read(context.takeScreenshot(tag + "-hud-editor"));
+		double[] geometry = context.computeOnClient(client -> {
+			HudEditorScreen editor = (HudEditorScreen) client.gui.screen();
+			double w = client.getWindow().getGuiScaledWidth();
+			double h = client.getWindow().getGuiScaledHeight();
+			var rect = editor.model().rect(id, w, h);
+			double[] handles = editor.model().handleCentres(w, h);
+			check(handles != null && editor.labelChipForTests(id) != null, tag + ": the selected element has handles and a label chip");
+			return new double[] {rect.x(), rect.y(), Math.ceil(rect.w()), Math.ceil(rect.h()), w, handles[6], handles[7]};
+		});
+		int scale = config.scale();
+		if (scale >= 2) {
+			int accent = context.computeOnClient(client -> Theme.current().accent());
+			boolean left = geometry[0] >= 2;
+			int x = left ? (int) geometry[0] * scale - 1 : (int) (geometry[0] + geometry[2]) * scale;
+			int y = (int) (geometry[1] + geometry[3] / 2) * scale;
+			ran("AC-UI-34 hairline");
+			String line = HairlineProbe.check(shot, tag + ": the selected element's outline", scale, x, y, left ? -1 : 1, 0, accent);
+			check(line.isEmpty(), line);
+			for (Button button : context.computeOnClient(client -> List.of(((HudEditorScreen) client.gui.screen()).resetSelectedButton(),
+					((HudEditorScreen) client.gui.screen()).resetAllButton(), ((HudEditorScreen) client.gui.screen()).cancelButton()))) {
+				outline(shot, scale, smooth, new int[] {button.x(), button.y(), button.width(), button.height()}, Shapes.RADIUS_CONTROL, "Button",
+						tag + ": the HUD editor's " + button.label());
+			}
+			int handle = shot.getRGB((int) Math.floor(geometry[5] * scale), (int) Math.floor(geometry[6] * scale)) & 0xFFFFFF;
+			int a = accent & 0xFFFFFF;
+			int distance = Math.abs((handle >> 16 & 0xFF) - (a >> 16 & 0xFF)) + Math.abs((handle >> 8 & 0xFF) - (a >> 8 & 0xFF)) + Math.abs((handle & 0xFF) - (a & 0xFF));
+			check(distance <= 24, tag + ": the bottom-right handle is an accent disc: " + Integer.toHexString(handle));
+		}
+		context.setScreen(() -> null);
+		ran("R47 hud editor");
+		// The empty editor: the shipped elements unregistered for it, and put back.
+		try {
+			context.runOnClient(client -> com.k8bas.skyblockutility.hud.ShippedHud.elements()
+					.forEach(element -> com.k8bas.skyblockutility.hud.HudRegistry.unregister(element.id())));
+			context.setScreen(() -> new HudEditorScreen(null, null));
+			context.waitForScreen(HudEditorScreen.class);
+			context.waitTicks(3);
+			context.takeScreenshot(tag + "-hud-editor-empty");
+			check(context.computeOnClient(client -> ((HudEditorScreen) client.gui.screen()).emptyCardForTests()) != null, tag + ": the empty editor shows its card");
+			context.setScreen(() -> null);
+		} finally {
+			context.runOnClient(client -> com.k8bas.skyblockutility.hud.ShippedHud.register());
+		}
+		ran("R47 empty hud editor");
+	}
+
 	/** The Fishing page, scrolled so both its sliders show. */
 	private static void showFishingSliders(ClientGameTestContext context) {
 		context.runOnClient(client -> {
@@ -248,7 +513,10 @@ public class UiReviewMatrixGameTest implements FabricClientGameTest {
 		return shot;
 	}
 
-	/** AC-UI-29 at GUI scales 3-4 and AC-UI-34 at 2-4: the outlines of every shown idle control of the page and the search box. */
+	/**
+	 * AC-UI-29 at GUI scales 3-4 and AC-UI-34 at 2-4: the outlines of every shown idle control of the page and the search box;
+	 * a page control reaching into an edge fade (REQ-UI-56, T3.49) is left out, as the fade draws over its outline on purpose.
+	 */
 	private static void outlines(ClientGameTestContext context, BufferedImage shot, Config config, boolean smooth, String name) {
 		int scale = config.scale();
 		if (scale < 2) {
@@ -256,12 +524,22 @@ public class UiReviewMatrixGameTest implements FabricClientGameTest {
 		}
 		List<Object[]> boxes = context.computeOnClient(client -> {
 			List<Object[]> found = new ArrayList<>();
-			List<Widget> candidates = new ArrayList<>(screen(client).page().widgets());
-			candidates.add(screen(client).search());
+			ConfigScreen screen = screen(client);
+			ConfigLayout.Rect content = screen.frame().content();
+			float shown = screen.scrollArea().drawnScroll(Shapes.guiScale());
+			int fadeTop = shown > 0 ? content.y() + com.k8bas.skyblockutility.ui.widget.EdgeFade.DEPTH : Integer.MIN_VALUE;
+			int fadeBottom = shown < screen.scrollArea().maxScroll() ? content.bottom() - com.k8bas.skyblockutility.ui.widget.EdgeFade.DEPTH : Integer.MAX_VALUE;
+			// As ConfigScreen draws it: clear of the scrollbar and the panel's corner.
+			int fadeRight = content.x() + content.w() - Math.max(com.k8bas.skyblockutility.ui.widget.ScrollbarPainter.HIT_WIDTH, Shapes.RADIUS_PANEL);
+			List<Widget> candidates = new ArrayList<>(screen.page().widgets());
+			candidates.add(screen.search());
 			for (Widget widget : candidates) {
+				boolean faded = widget != screen.search() && widget.x() < fadeRight && (widget.y() < fadeTop || widget.y() + widget.height() > fadeBottom);
 				boolean outlined = widget instanceof Button button && button.style() == Button.Style.NORMAL || widget instanceof TextField || widget instanceof KeybindButton
 						|| widget instanceof ColorSwatch || widget instanceof Dropdown<?> dropdown && !dropdown.isOpen();
-				if (outlined && widget.fullyShowing() && widget.isEnabled() && !widget.isDimmed() && widget.width() > 0) {
+				if (outlined && widget.fullyShowing() && widget.isEnabled() && !widget.isDimmed() && widget.width() > 0 && faded) {
+					ran("controls left out in an edge fade");
+				} else if (outlined && widget.fullyShowing() && widget.isEnabled() && !widget.isDimmed() && widget.width() > 0) {
 					found.add(new Object[] {new int[] {widget.x(), widget.y(), widget.width(), widget.height()},
 							widget instanceof Dropdown<?> ? "Dropdown" : widget.getClass().getSimpleName()});
 				}
