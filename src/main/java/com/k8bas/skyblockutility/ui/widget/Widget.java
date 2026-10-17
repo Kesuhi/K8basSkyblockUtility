@@ -24,6 +24,9 @@ public abstract class Widget {
 	protected boolean dimmed;
 	protected boolean focused;
 	private Animated hoverAnimation;
+	/** Whether a press it took is held (a whole-card toggle, a rule header, a switch: REQ-UI-53); set and cleared by them. */
+	protected boolean held;
+	private Animated pressAnimation;
 	private String tooltip = "";
 	/** The region it may draw in and be hit in (a scrolled list), or null for anywhere. */
 	private ClipRect clip;
@@ -238,6 +241,38 @@ public abstract class Widget {
 		}
 		hoverAnimation.animateTo(hot ? 1F : 0F);
 		return hoverAnimation.value();
+	}
+
+	/** How far a pressed whole-card toggle, rule header or switch is mixed toward black at full press (REQ-UI-53). */
+	public static final float PRESS_DARKEN = 0.12F;
+
+	/**
+	 * How pressed it looks now, 0 to 1 (REQ-UI-53): 1 at once while a press it took is held over it ({@link #held}) and it is
+	 * enabled, easing to 0 over 150 ms after the release or once the pointer leaves it.
+	 */
+	public float pressLook(double mouseX, double mouseY) {
+		boolean down = held && enabled && contains(mouseX, mouseY);
+		if (pressAnimation == null) {
+			pressAnimation = new Animated(0F, Animated.DEFAULT_DURATION_MS, UiClock.SOURCE);
+		}
+		if (down) {
+			pressAnimation.snapTo(1F);
+		} else {
+			pressAnimation.animateTo(0F);
+		}
+		return pressAnimation.value();
+	}
+
+	/** {@code argb} as drawn pressed by {@code amount} (0 to 1, {@link #pressLook}): its colour mixed toward black, its alpha kept. */
+	public static int pressed(int argb, float amount) {
+		if (amount <= 0F) {
+			return argb;
+		}
+		float keep = 1F - PRESS_DARKEN * Math.min(1F, amount);
+		int r = Math.round((argb >> 16 & 0xFF) * keep);
+		int g = Math.round((argb >> 8 & 0xFF) * keep);
+		int b = Math.round((argb & 0xFF) * keep);
+		return argb & 0xFF000000 | r << 16 | g << 8 | b;
 	}
 
 	/** A colour faded for a dimmed widget. */

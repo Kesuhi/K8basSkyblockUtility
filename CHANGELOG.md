@@ -10,6 +10,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 - While you search the settings, the matched text in each setting's name and description, and in a rule's
   name, sits on a soft box in the accent colour, so you see at once why a setting is listed.
+- Cards that switch a feature on or off, rule headers and switches darken a little while you hold the mouse
+  button on them, and fade back when you let go.
 
 ### Changed
 

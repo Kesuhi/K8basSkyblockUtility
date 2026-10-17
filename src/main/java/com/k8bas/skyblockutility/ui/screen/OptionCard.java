@@ -103,8 +103,14 @@ final class OptionCard extends Widget {
 		if (toggle == null || !enabled || button != 0 || !contains(mouseX, mouseY)) {
 			return false;
 		}
+		held = true;
 		toggle.toggle();
 		return true;
+	}
+
+	@Override
+	public void release(double mouseX, double mouseY) {
+		held = false;
 	}
 
 	@Override
@@ -146,7 +152,9 @@ final class OptionCard extends Widget {
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		float hover = hoverAmount(enabled && contains(mouseX, mouseY));
-		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover)));
+		// REQ-UI-53: a toggle card held down mixed toward black, over its eased hover colour.
+		int background = pressed(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover), pressLook(mouseX, mouseY));
+		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(background));
 		ConfigLayout.Rect text = ConfigLayout.text(new ConfigLayout.Rect(x, y, width, height), option, indent);
 		if (text.w() <= 0) {
 			return;

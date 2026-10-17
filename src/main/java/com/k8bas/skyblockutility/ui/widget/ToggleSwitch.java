@@ -100,8 +100,14 @@ public final class ToggleSwitch extends Widget {
 		if (!enabled || button != 0 || !contains(mouseX, mouseY)) {
 			return false;
 		}
+		held = true;
 		toggle();
 		return true;
+	}
+
+	@Override
+	public void release(double mouseX, double mouseY) {
+		held = false;
 	}
 
 	@Override
@@ -110,7 +116,9 @@ public final class ToggleSwitch extends Widget {
 		knob.animateTo(binding.get() ? 1F : 0F);
 		Theme theme = Theme.current();
 		float t = knob.value();
-		int track = enabled ? ColorMath.lerp(Theme.SEPARATOR, theme.accent(), t) : Theme.CARD_HOVER;
+		// REQ-UI-53: pressed, the track as drawn now mixed toward black (asked each frame, so a look a disable cut short ends).
+		float press = pressLook(mouseX, mouseY);
+		int track = enabled ? pressed(ColorMath.lerp(Theme.SEPARATOR, theme.accent(), t), press) : Theme.CARD_HOVER;
 		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, t) : Theme.TEXT_DISABLED;
 		Shapes.roundedRect(graphics, x, y, width, height, height / 2, faded(track));
 		int knobSize = height - 4;

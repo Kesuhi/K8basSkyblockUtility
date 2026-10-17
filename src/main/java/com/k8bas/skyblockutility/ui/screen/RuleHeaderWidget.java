@@ -146,8 +146,14 @@ final class RuleHeaderWidget extends Widget {
 		if (button != 0 || !contains(mouseX, mouseY) || overAction(mouseX)) {
 			return false;
 		}
+		held = true;
 		toggle.run();
 		return true;
+	}
+
+	@Override
+	public void release(double mouseX, double mouseY) {
+		held = false;
 	}
 
 	@Override
@@ -159,7 +165,9 @@ final class RuleHeaderWidget extends Widget {
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		float hover = hoverAmount(contains(mouseX, mouseY) && !overAction(mouseX));
-		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover)));
+		// REQ-UI-53: held down, mixed toward black over its eased hover colour.
+		int background = pressed(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover), pressLook(mouseX, mouseY));
+		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(background));
 		int midY = y + height / 2;
 		// REQ-UI-32: the kit's chevron, pointing right while closed, down while open; REQ-UI-52: turning between them as the
 		// card opens or closes, a quarter turn about its centre.

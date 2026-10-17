@@ -259,8 +259,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		open.closed()
 		overlay = null
 		transition = null
-		pressed = null
-		pressedButton = -1
+		dropPress()
 		tooltipTimer.restart()
 		nav.overlayClosed()
 		updateFocusGuard()
@@ -651,6 +650,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			val requestsBefore = focusRequests
 			val overlayBefore = overlay
 			if (widget.press(x, y, event.button())) {
+				if (pressed !== widget) {
+					dropPress()
+				}
 				pressed = widget
 				pressedButton = event.button()
 				if (keyboardNavigation()) {
@@ -706,6 +708,17 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		buttonsHeld = buttonsHeld and buttonBit(event.button()).inv()
 		tooltipTimer.restart()
 		handleRelease(event)
+	}
+
+	/**
+	 * Ends a press whose release will not come to its widget: another button's press took over, or its overlay closed. The
+	 * widget is released away from everything, so it lets go (a held look ends, REQ-UI-53) without acting as on a click.
+	 */
+	private fun dropPress() {
+		val held = pressed ?: return
+		pressed = null
+		pressedButton = -1
+		held.release(NOWHERE, NOWHERE)
 	}
 
 	private fun handleRelease(event: MouseButtonEvent): Boolean {
@@ -942,6 +955,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 	companion object {
 		private const val KEY_ESCAPE = 256
+
+		/** A point away from every widget, for a release that must not act as a click ([dropPress]). */
+		private const val NOWHERE = -1.0e9
 
 		/** A mouse button's bit in [buttonsHeld]; none for a button number past 31. */
 		private fun buttonBit(button: Int): Int = if (button in 0..31) 1 shl button else 0

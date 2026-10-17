@@ -955,11 +955,151 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			context.waitTick();
 			float ended = context.computeOnClient(client -> screen(client).page().header(rule(screen(client), "Zealot")).reveal());
 			check(found == 1F && ended == 0F, "a search opens the rule at once and its end closes it at once: " + found + ", " + ended);
+			pressedLooks(context, clock);
 			LOGGER.info("rule card motion: the next header at {} closed, {} at 75 ms, {} open; closing {} at 75 ms, {} at 150 ms", closed, opening[1],
 					opening[2], halfShut, shut);
 		} finally {
 			context.runOnClient(client -> MobRulesForTests.use(before));
 		}
+	}
+
+	/**
+	 * AC-UI-57 [C] (REQ-UI-53, T3.46) at GUI scale 2 on the test clock, Mob Highlighter on: held down, the feature's whole-card
+	 * toggle and a rule header are drawn in the card colour mixed 12 % toward black, and the switch's track as drawn then,
+	 * mixed the same; 150 ms after the release the card is back in its hover colour. Screenshots of each held. Each press
+	 * flips what it is pressed on, so the card and the switch are pressed twice, leaving the feature as it was.
+	 */
+	private static void pressedLooks(ClientGameTestContext context, AtomicLong clock) {
+		context.runOnClient(client -> ((Toggle) option(screen(client), "mob_highlighter.enabled")).binding().set(true));
+		context.waitTick();
+		// The feature's own card, pressed on its left, away from its switch.
+		int[] card = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().card(option(screen(client), "mob_highlighter.enabled"));
+			return new int[] {widget.x() + 40, widget.y() + widget.height() / 2, widget.x() + 8, widget.y() + widget.height() - 3};
+		});
+		Path held = holdOn(context, card, "t3.46-pressed-card");
+		int pressed = pixel(context, held, card[2], card[3]);
+		int expected = Widget.pressed(Theme.CARD, 1F) & 0xFFFFFF;
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		// The release reaches the screen in the next frame; the 150 ms count from there.
+		context.waitTick();
+		clock.addAndGet(150);
+		context.waitTick();
+		int after = pixel(context, context.takeScreenshot("t3.46-released-card"), card[2], card[3]);
+		check(close(pressed, expected), "the held card is its colour mixed 12 % toward black: " + Integer.toHexString(pressed) + ", expected "
+				+ Integer.toHexString(expected));
+		check(close(after, Theme.CARD_HOVER & 0xFFFFFF), "150 ms after the release it is its hover colour: " + Integer.toHexString(after));
+		clickOn(context, card);
+		// The switch: its track as drawn while held, mixed the same; sampled on the track's row 1 GUI px from the end the knob
+		// is not at.
+		int[] knob = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().control(option(screen(client), "mob_highlighter.enabled"));
+			return new int[] {widget.x() + widget.width() / 2, widget.y() + widget.height() / 2, widget.x(), widget.y(), widget.width()};
+		});
+		Path switchShot = holdOn(context, knob, "t3.46-pressed-switch");
+		int[] track = context.computeOnClient(client -> {
+			ToggleSwitch widget = (ToggleSwitch) screen(client).page().control(option(screen(client), "mob_highlighter.enabled"));
+			float t = widget.knob();
+			int colour = com.k8bas.skyblockutility.ui.render.ColorMath.lerp(Theme.SEPARATOR, Theme.current().accent(), t);
+			return new int[] {Widget.pressed(colour, 1F) & 0xFFFFFF, t < 0.5F ? 1 : 0};
+		});
+		// The knob sits at the off end while t is below one half: sample the on end, and the other way round.
+		int trackX = track[1] == 1 ? knob[2] + knob[4] - 3 : knob[2] + 2;
+		int trackPixel = pixel(context, switchShot, trackX, knob[3] + 1);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		check(close(trackPixel, track[0]), "the held switch's track is its colour mixed 12 % toward black: " + Integer.toHexString(trackPixel)
+				+ ", expected " + Integer.toHexString(track[0]));
+		clickOn(context, knob);
+		// A rule header, held: it opens the rule as a click does.
+		int[] header = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().header(rule(screen(client), "Voidgloom"));
+			return new int[] {widget.x() + widget.width() / 3, widget.y() + widget.height() / 2, widget.x() + widget.width() / 2, widget.y() + 2};
+		});
+		Path headerShot = holdOn(context, header, "t3.46-pressed-header");
+		int headerPixel = pixel(context, headerShot, header[2], header[3]);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		check(close(headerPixel, expected), "the held rule header is its colour mixed 12 % toward black: " + Integer.toHexString(headerPixel));
+		boolean on = context.computeOnClient(client -> ((Toggle) option(screen(client), "mob_highlighter.enabled")).binding().get());
+		check(on, "the card and switch pressed twice each leave Mob Highlighter on");
+		aPressAnotherButtonTookOverEnds(context, clock);
+		LOGGER.info("pressed looks: card {} then {}, header {}", Integer.toHexString(pressed), Integer.toHexString(after), Integer.toHexString(headerPixel));
+	}
+
+	/**
+	 * T3.46 review: the left button held on a toggle card while the right one presses a key binding button (which takes it):
+	 * the card's press ends then, so once both are up it no longer looks pressed under the pointer. Animations, which the
+	 * card flips, is set back after.
+	 */
+	private static void aPressAnotherButtonTookOverEnds(ClientGameTestContext context, AtomicLong clock) {
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.waitTicks(2);
+		boolean animations = context.computeOnClient(client -> ((Toggle) option(screen(client), "interface.animations")).binding().get());
+		try {
+			clock.addAndGet(1_000);
+			context.waitTicks(2);
+			// The card and the key binding button both in view: the page scrolled to put the button at the bottom.
+			context.runOnClient(client -> {
+				ConfigScreen screen = screen(client);
+				ConfigLayout.OptionRow row = screen.page().page().rows().stream()
+						.filter(r -> r instanceof ConfigLayout.OptionRow o && o.option().id().equals("keybinds.open_settings"))
+						.map(r -> (ConfigLayout.OptionRow) r).findFirst().orElseThrow();
+				screen.scrollArea().ensureVisible(row.y(), row.y() + row.height());
+				screen.scrollArea().setScroll(screen.scrollArea().target());
+			});
+			clock.addAndGet(1_000);
+			context.waitTicks(2);
+			boolean bothShow = context.computeOnClient(client -> screen(client).page().control(option(screen(client), "keybinds.open_settings")).fullyShowing()
+					&& screen(client).page().card(option(screen(client), "interface.animations")).fullyShowing());
+			check(bothShow, "the Animations card and the Open settings key binding button both show");
+			int[] card = context.computeOnClient(client -> {
+				Widget widget = screen(client).page().card(option(screen(client), "interface.animations"));
+				return new int[] {widget.x() + 40, widget.y() + widget.height() / 2};
+			});
+			int[] key = context.computeOnClient(client -> {
+				Widget widget = screen(client).page().control(option(screen(client), "keybinds.open_settings"));
+				return window(widget.x() + widget.width() / 2, widget.y() + widget.height() / 2);
+			});
+			holdOn(context, card, "t3.46-held-card-before-right-click");
+			context.getInput().setCursorPos(key[0], key[1]);
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_RIGHT);
+			context.waitTick();
+			context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			clock.addAndGet(150);
+			context.waitTick();
+			float look = context.computeOnClient(client -> screen(client).page().card(option(screen(client), "interface.animations")).pressLook(card[0], card[1]));
+			check(look == 0F, "a press another button took over ends: the card no longer looks pressed under the pointer: " + look);
+		} finally {
+			context.runOnClient(client -> ((Toggle) option(screen(client), "interface.animations")).binding().set(animations));
+		}
+	}
+
+	/** The option {@code id} laid out on the shown page. */
+	private static com.k8bas.skyblockutility.ui.option.Option option(ConfigScreen screen, String id) {
+		return screen.page().page().rows().stream().filter(row -> row instanceof ConfigLayout.OptionRow o && o.option().id().equals(id))
+				.map(row -> ((ConfigLayout.OptionRow) row).option()).findFirst().orElseThrow();
+	}
+
+	/** Holds the left button at GUI point ({@code at[0]}, {@code at[1]}) for one frame and takes a screenshot. */
+	private static Path holdOn(ClientGameTestContext context, int[] at, String name) {
+		int[] window = context.computeOnClient(client -> window(at[0], at[1]));
+		context.getInput().setCursorPos(window[0], window[1]);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		return context.takeScreenshot(name);
+	}
+
+	private static void clickOn(ClientGameTestContext context, int[] at) {
+		int[] window = context.computeOnClient(client -> window(at[0], at[1]));
+		context.getInput().setCursorPos(window[0], window[1]);
+		context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+	}
+
+	private static boolean close(int a, int b) {
+		return Math.abs((a >> 16 & 0xFF) - (b >> 16 & 0xFF)) <= 2 && Math.abs((a >> 8 & 0xFF) - (b >> 8 & 0xFF)) <= 2 && Math.abs((a & 0xFF) - (b & 0xFF)) <= 2;
 	}
 
 	/** The second rule's header, "Voidgloom", in GUI px from the page's top (an opening card may scroll the page into view). */
