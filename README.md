@@ -55,7 +55,7 @@ and Waypoints until you add one; the Mining and Fishing features work without ru
 |---|---|---|
 | Accent colour | teal `#29B6B2` | The colour of selections, focus and section titles. |
 | Smooth corners | ON | Draws rounded corners with soft edges, on this screen, the HUD editor and notices. Off cuts only the corners of boxes, buttons, fields and outlines from whole pixels; round knobs and filled pills (switches, slider tracks, scrollbars) are always smooth. |
-| Animations | ON | Lets this mod's screens and notices move and fade. Off shows every change at once: the panel opening, the category switch, hover, switches, scrolling, opening lists and dialogs, and notices. Tooltips still wait before they show. |
+| Animations | ON | Lets this mod's screens, lists, dialogs and notices move and fade. Off shows every change at once: the panel opening, the category switch, hover and press, switches, scrolling, lists and dialogs opening and closing, rule cards, the HUD editor's toolbar and hints, and notices. Tooltips still wait before they show, then appear at once. |
 | Notice position | Top right | Where the mod's notices appear on the screen. |
 | Notice duration | 5 s | How long a notice stays on screen (1–15 s). |
 
@@ -63,7 +63,7 @@ and Waypoints until you add one; the Mining and Fishing features work without ru
 
 | Setting | Default | What it does |
 |---|---|---|
-| Edit HUD layout | | Opens the HUD editor (also `/ksu hud`): drag an element to move it, scroll over it to scale it. Its only element is the "Corpse ding" line (see Mining). |
+| Edit HUD layout | | Opens the HUD editor (also `/ksu hud`): drag an element to move it, drag a corner of the selected one or scroll over it to scale it. Its buttons sit in a card at the top; "Reset All" asks for a second click. Its only element is the "Corpse ding" line (see Mining). |
 
 **Keybinds**
 

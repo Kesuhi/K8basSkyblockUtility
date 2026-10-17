@@ -6,49 +6,13 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
-### Added
-
-- While you search the settings, the matched text in each setting's name and description, and in a rule's
-  name, sits on a soft box in the accent colour, so you see at once why a setting is listed.
-- Cards that switch a feature on or off, rule headers and switches darken a little while you hold the mouse
-  button on them, and fade back when you let go.
-- A search that finds nothing shows a search glass above its message and a "Clear search" button below
-  it, and a rule list without rules (Mob Highlighter, NPC Search) says where to add one.
-- Scrolling areas (the settings page, the database picker, long dropdown lists) fade their content softly
-  at an edge where there is more to scroll to, so you can tell there is more above or below.
-- A slider with only a few values (the notice duration) shows a small dot at each of them.
-- In the HUD editor, the selected element has a round handle at each corner: drag one to scale the element
-  while the opposite corner stays put. It stops at 0.5 and 3.0 and at the edge of the window.
-- In the HUD editor, an element's centre also lines up with other elements' centres while you drag it,
-  with a guide line, unless you hold Alt.
-
-### Changed
-
-- Rule cards (Mob Highlighter, NPC Search) grow open and shrink closed in a short motion when you click
-  their header or use the keys, and the arrow turns with them. Rules a search opens still open at once.
-  With "Animations" off they open and close at once.
-- Dropdown lists, the colour picker and the database picker now fade out quickly when they close, as they
-  fade in when they open. What closed them (a choice, Save, Cancel, Esc) takes effect at once, and the next
-  click already reaches what lies under them. With "Animations" off they disappear at once.
-- Switches that are off stand out more from their cards.
-- A slider plays its click sound on release only when you changed its value.
-- In the HUD editor, elements have rounded outlines, the selected one is tinted in the accent colour and the
-  one under the pointer lightly, and each element's name sits on a small dark label.
-- The HUD editor's buttons and status line sit in a card at the top of the screen, so the hotbar stays
-  free. The instructions show below it for a few seconds or until you first move or scale something, and
-  come back while you point at the card. The card fades while you drag an element over it, and an element
-  under it can still be picked up. With "Animations" off these fades happen at once.
-- "Reset All" in the HUD editor asks for a second click ("Confirm reset") within 3 seconds before it
-  resets every element.
-- The checkerboard behind see-through colours (colour swatches, the colour picker) has smaller cells, keeps
-  a swatch's rounded corners and dims with a setting that is switched off.
-
 ## [1.3.0] - 2026-10-17
 
-This release reworks how the settings screen and its dialogs look and feel: sharp round knobs, icons,
-outlines and colour wheel at every GUI scale, soft shadows, smooth scrolling and motion, a new
-"Animations" switch, pointer shapes, calmer tooltips and steadier sliders. The features themselves
-work as in 1.2.1.
+This release reworks how the settings screen, its dialogs and the HUD editor look and feel: sharp
+round knobs, icons, outlines and colour wheel at every GUI scale, soft shadows, smooth scrolling and
+motion, a new "Animations" switch, pointer shapes, calmer tooltips, steadier sliders, search
+highlighting, and a HUD editor with its toolbar at the top and corner handles for scaling. The
+features themselves work as in 1.2.1.
 
 **Requirements:** Minecraft 26.2 (Fabric) with Java 25, Fabric Loader 0.19.5 or newer, Fabric API
 0.161.0 or newer, Fabric Language Kotlin 1.14.1 or newer and Hypixel Mod API 1.0.2 or newer (its
@@ -64,6 +28,8 @@ Mod Menu is optional.
 - The mouse wheel no longer changes a slider: over a slider it scrolls the page. Drag the slider, click
   its track, or Tab to it and use the arrow keys.
 - The new "Animations" switch (General › Interface) is ON; switch it off to see every change at once.
+- The HUD editor's buttons moved from the bottom of the screen to a card at the top, and "Reset All"
+  now asks for a second click.
 - If you go back to 1.2.1 later, a "Smooth corners" you never picked reads as OFF there again, as it
   did in 1.2.1.
 
@@ -72,21 +38,41 @@ Mod Menu is optional.
 - Animations (General › Interface): ON.
 - Every other option keeps its 1.2.1 default.
 
+**Known issues:**
+- In the HUD editor, the "Corpse ding" line's default place (top centre) lies under the new toolbar
+  card: its top edge is behind the buttons, and its name label is under the instructions until they
+  fade. Click the part of the line that shows, or drag it out from under the card; where it shows in
+  the game is unchanged.
+
 ### Added
 
 - Soft shadows under the settings window, open dropdown lists, the colour picker, the database picker
   and tooltips, so they stand out from what lies behind them.
 - "Animations" (General › Interface, ON by default): switched off, this mod's screens and notices show
-  every change at once, without sliding or fading: the settings opening, a category switch, hover,
-  switches, scrolling, opening lists and dialogs, and notices. Tooltips still wait the same time before
-  they show. The change applies at once, also in an open settings screen.
+  every change at once, without sliding or fading: the settings opening, a category switch, hover and
+  press, switches, scrolling, lists and dialogs opening and closing, rule cards, the HUD editor's
+  toolbar and hints, and notices. Tooltips still wait the same time before they show, then appear at
+  once. The change applies at once, also in an open settings screen.
 - The mouse pointer shows what a click does in this mod's screens: a hand over buttons, switches,
   toggle cards, the sidebar's categories, dropdowns and their entries, colour swatches, key binding
   buttons, rule headers, sliders, scrollbars, the colour picker's wheel and presets, and the database
   picker's folders and Add buttons; a text cursor over text fields; a sideways arrow while you drag a
   slider and an up-and-down arrow while you drag a scrollbar; a move arrow over the HUD editor's
-  elements. Over a control that is unavailable it stays the normal arrow. It follows the game's "Allow
-  Cursor Changes" option.
+  elements and a crosshair over their corner handles. Over a control that is unavailable it stays the
+  normal arrow. It follows the game's "Allow Cursor Changes" option.
+- While you search the settings, the matched text in each setting's name and description, and in a rule's
+  name, sits on a soft box in the accent colour, so you see at once why a setting is listed.
+- Cards that switch a feature on or off, rule headers and switches darken a little while you hold the mouse
+  button on them, and fade back when you let go.
+- A search that finds nothing shows a search glass above its message and a "Clear search" button below
+  it, and a rule list without rules (Mob Highlighter, NPC Search) says where to add one.
+- Scrolling areas (the settings page, the database picker, long dropdown lists) fade their content softly
+  at an edge where there is more to scroll to, so you can tell there is more above or below.
+- A slider with only a few values (the notice duration) shows a small dot at each of them.
+- In the HUD editor, the selected element has a round handle at each corner: drag one to scale the element
+  while the opposite corner stays put. It stops at 0.5 and 3.0 and at the edge of the window.
+- In the HUD editor, an element's centre also lines up with other elements' centres while you drag it,
+  with a guide line, unless you hold Alt.
 
 ### Changed
 
@@ -119,9 +105,11 @@ Mod Menu is optional.
 - The mouse wheel no longer changes sliders. Over a slider it scrolls the page or list like anywhere
   else, so scrolling never changes a setting by accident, and while you drag a slider the wheel does
   nothing. Drag a slider, click its track, or use the arrow keys after Tab to change it.
-- Dropdown lists, the colour picker and the database picker fade and grow in quickly when they open,
-  and the dimmed background behind a dialog fades in with them. You can click them at once, and they
-  close at once. With "Animations" off they appear at once.
+- Dropdown lists, the colour picker and the database picker fade and grow in quickly when they open and
+  fade out quickly when they close, and the dimmed background behind a dialog fades with them. You can
+  click them as soon as they open; what closed them (a choice, Save, Cancel, Esc) takes effect at once,
+  and the next click already reaches what lies under them. With "Animations" off they appear and
+  disappear at once.
 - One set of corner sizes: the settings window now has rounded corners, the sidebar tabs match the
   other controls, dropdown lists have a little room above their first and below their last entry, and
   the colour picker's sliders are rounded with the same round knob as the other sliders.
@@ -136,6 +124,21 @@ Mod Menu is optional.
 - The settings' sliders feel steadier: a knob no longer jumps under the pointer when you grab it off its
   middle, it grows a little while you point at or drag it, and the value next to it shows in the accent
   colour while you drag. A click elsewhere on the track still moves the knob there.
+- Rule cards (Mob Highlighter, NPC Search) grow open and shrink closed in a short motion when you click
+  their header or use the keys, and the arrow turns with them. Rules a search opens still open at once.
+  With "Animations" off they open and close at once.
+- Switches that are off stand out more from their cards.
+- A slider plays its click sound on release only when you changed its value.
+- In the HUD editor, elements have rounded outlines, the selected one is tinted in the accent colour and the
+  one under the pointer lightly, and each element's name sits on a small dark label.
+- The HUD editor's buttons and status line sit in a card at the top of the screen, so the hotbar stays
+  free. The instructions show below it for a few seconds or until you first move or scale something, and
+  come back while you point at the card. The card fades while you drag an element over it, and an element
+  under it can still be picked up. With "Animations" off these fades happen at once.
+- "Reset All" in the HUD editor asks for a second click ("Confirm reset") within 3 seconds before it
+  resets every element.
+- The checkerboard behind see-through colours (colour swatches, the colour picker) has smaller cells, keeps
+  a swatch's rounded corners and dims with a setting that is switched off.
 
 ### Fixed
 
