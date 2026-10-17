@@ -13,14 +13,17 @@ import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 /**
  * One option's card (REQ-UI-05, REQ-UI-07): its title, at most 2 lines of description (or its status
  * when it does not work right now), and the hover look; the control on its right is a widget of its
  * own, drawn over it. A toggle card flips its switch on a click anywhere on it (REQ-UI-03). The full
- * description and the tooltip show on hover.
+ * description and the tooltip show on hover. While a search runs, its matches in the title and description sit on tinted
+ * boxes (REQ-UI-51).
  */
 final class OptionCard extends Widget {
 	private final Option option;
@@ -29,10 +32,56 @@ final class OptionCard extends Widget {
 	private ConfigLayout.Lines description = new ConfigLayout.Lines(List.of(), false);
 	/** How far its row is indented (a rule's field), so its text ends where its control's layout starts. */
 	private int indent;
+	/** The query as the search sees it; its matches are marked (REQ-UI-51). */
+	private final Supplier<String> query;
+	/** The match boxes as drawn last, {x, y, w, h} in GUI px (for gametests). */
+	private List<int[]> drawnMarks = List.of();
 
 	OptionCard(Option option, ToggleSwitch toggle) {
+		this(option, toggle, () -> "");
+	}
+
+	OptionCard(Option option, ToggleSwitch toggle, Supplier<String> query) {
 		this.option = option;
 		this.toggle = toggle;
+		this.query = query;
+	}
+
+	/** The match boxes as drawn last, {x, y, w, h} in GUI px (for gametests). */
+	List<int[]> marksForTests() {
+		return drawnMarks;
+	}
+
+	/**
+	 * REQ-UI-51: draws the tinted boxes behind the matches of {@code query} in {@code lines}, the drawn lines of {@code full}
+	 * (the first at {@code y}, each {@code step} below the one before; the last cut with the ellipsis if {@code cut}), below the
+	 * text; returns the boxes drawn.
+	 */
+	static List<int[]> drawMarks(GuiGraphicsExtractor graphics, Font font, String full, List<String> lines, boolean cut, String query, int x, int y,
+			int step, int colour) {
+		if (query.isEmpty() || lines.isEmpty()) {
+			return List.of();
+		}
+		List<int[]> drawn = new ArrayList<>();
+		List<List<int[]>> marks = SearchMarks.inLines(full, lines, query, cut);
+		for (int i = 0; i < lines.size(); i++) {
+			for (int[] box : SearchMarks.boxes(lines.get(i), marks.get(i), x, y + i * step, font.lineHeight, font::width)) {
+				if (box[2] <= 0) {
+					continue;
+				}
+				Shapes.roundedRect(graphics, box[0], box[1], box[2], box[3], Math.min(MARK_RADIUS, Math.min(box[2], box[3]) / 2), colour);
+				drawn.add(box);
+			}
+		}
+		return drawn;
+	}
+
+	/** A match box's corner radius in GUI px (REQ-UI-51). */
+	static final int MARK_RADIUS = 2;
+
+	/** A match box's colour: the accent at 35 % alpha (REQ-UI-51). */
+	static int markColour(int accent) {
+		return ColorMath.withAlpha(Math.round(0.35F * 255F), accent & 0xFFFFFF);
 	}
 
 	Option option() {
@@ -102,8 +151,15 @@ final class OptionCard extends Widget {
 		if (text.w() <= 0) {
 			return;
 		}
-		UiText.draw(graphics, font, Ellipsis.fit(option.text().title(), text.w(), font::width), text.x(), y + 8, faded(Theme.TEXT_PRIMARY));
+		String title = Ellipsis.fit(option.text().title(), text.w(), font::width);
 		List<String> lines = description.lines();
+		// REQ-UI-51: the match boxes under the text.
+		List<int[]> marks = new ArrayList<>(drawMarks(graphics, font, option.text().title(), List.of(title), !title.equals(option.text().title()),
+				query.get(), text.x(), y + 8, 0, faded(markColour(Theme.current().accent()))));
+		marks.addAll(drawMarks(graphics, font, option.text().description(), lines, description.cut(), query.get(), text.x(), y + 20, 10,
+				faded(markColour(Theme.current().accent()))));
+		drawnMarks = marks;
+		UiText.draw(graphics, font, title, text.x(), y + 8, faded(Theme.TEXT_PRIMARY));
 		for (int i = 0; i < lines.size(); i++) {
 			UiText.draw(graphics, font, lines.get(i), text.x(), y + 20 + i * 10, faded(Theme.TEXT_SECONDARY));
 		}

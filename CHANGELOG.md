@@ -6,6 +6,11 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+### Added
+
+- While you search the settings, the matched text in each setting's name and description, and in a rule's
+  name, sits on a soft box in the accent colour, so you see at once why a setting is listed.
+
 ## [1.3.0] - 2026-10-17
 
 This release reworks how the settings screen and its dialogs look and feel: sharp round knobs, icons,

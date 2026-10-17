@@ -74,6 +74,7 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 			invalidRegex(context);
 			editsSurviveTheClose(context);
 			searchOpensTheRule(context);
+			searchMarksItsMatches(context);
 			anyNameWithoutATypeWarns(context);
 		} finally {
 			context.runOnClient(client -> {
@@ -347,6 +348,135 @@ public class RuleCardsGameTest implements FabricClientGameTest {
 		rule.namePattern = label;
 		rule.island = island;
 		return rule;
+	}
+
+	/**
+	 * AC-UI-55 [C] (T3.44) at GUI scale 2, after {@link #searchOpensTheRule}: "trini" puts a tinted box behind "Trini" of
+	 * Trinity's label; "mob" behind "Mob" of the scan range's title and "mob" of its description. In each box the row above
+	 * the glyphs is tinted toward the accent against the card just above it, and its brightest glyph pixel is the line's
+	 * text colour as outside the box; a cleared query leaves no box.
+	 */
+	private static void searchMarksItsMatches(ClientGameTestContext context) {
+		check(context.computeOnClient(client -> client.getWindow().getGuiScale()) == 2, "the search marks are checked at GUI scale 2");
+		// "trini": one box, as wide as "Trini" in the game's font, behind the start of Trinity's label.
+		List<int[]> label = context.computeOnClient(client -> screen(client).page().header(headerRule(screen(client), "Trinity")).marksForTests());
+		int trini = context.computeOnClient(client -> client.font.width("Trini"));
+		Path triniShot = context.takeScreenshot("t3.44-search-marks-trini");
+		int headerRight = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().header(headerRule(screen(client), "Trinity"));
+			return widget.x() + widget.width();
+		});
+		check(label.size() == 1 && label.get(0)[2] == trini, "\"trini\" marks \"Trini\" of Trinity's label, " + trini + " GUI px: "
+				+ label.stream().map(java.util.Arrays::toString).toList());
+		String log = markProbe(triniShot, label.get(0), headerRight, "Trinity's label");
+		// "mob": two boxes on the scan range's card, "Mob" on its title row and "mob" of "mobs" on a description row.
+		replaceQuery(context, "mob");
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(3);
+		List<int[]> card = context.computeOnClient(client -> screen(client).page().card(option(screen(client), "mob_highlighter.scan_range")).marksForTests());
+		int[] cardBox = context.computeOnClient(client -> {
+			Widget widget = screen(client).page().card(option(screen(client), "mob_highlighter.scan_range"));
+			return new int[] {widget.x() + widget.width(), widget.y()};
+		});
+		int[] widths = context.computeOnClient(client -> new int[] {client.font.width("Mob"), client.font.width("mob")});
+		Path mob = context.takeScreenshot("t3.44-search-marks-mob");
+		check(card.size() == 2, "\"mob\" marks the scan range's title and description, one box each: " + card.size() + " boxes");
+		check(card.get(0)[1] == cardBox[1] + 7 && card.get(0)[2] == widths[0], "\"Mob\" on the title row (card y + 8, less 1), "
+				+ widths[0] + " GUI px wide: " + java.util.Arrays.toString(card.get(0)));
+		check((card.get(1)[1] == cardBox[1] + 19 || card.get(1)[1] == cardBox[1] + 29) && card.get(1)[2] == widths[1],
+				"\"mob\" on a description row, " + widths[1] + " GUI px wide: " + java.util.Arrays.toString(card.get(1)));
+		for (int[] box : card) {
+			log += "; " + markProbe(mob, box, cardBox[0], "the scan range card");
+		}
+		// "radius" is one of the scan range's keywords, not in its text: the card is shown, with no box.
+		focusSearch(context);
+		replaceQuery(context, "radius");
+		context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+		context.waitTicks(3);
+		boolean shown = context.computeOnClient(client -> screen(client).page().page().rows().stream()
+				.anyMatch(r -> r instanceof ConfigLayout.OptionRow o && o.option().id().equals("mob_highlighter.scan_range")));
+		int keyword = context.computeOnClient(client -> screen(client).page().card(option(screen(client), "mob_highlighter.scan_range")).marksForTests().size());
+		check(shown && keyword == 0, "a match only in a keyword shows the card with no box: shown " + shown + ", " + keyword + " boxes");
+		// Cleared with the keys, as a player clears it: in the next frame the card has no box.
+		focusSearch(context);
+		replaceQuery(context, "");
+		String cleared = context.computeOnClient(client -> screen(client).query());
+		int left = context.computeOnClient(client -> screen(client).page().card(option(screen(client), "mob_highlighter.scan_range")).marksForTests().size());
+		check(cleared.isEmpty() && left == 0, "a cleared query leaves no box: \"" + cleared + "\", " + left + " boxes");
+		LOGGER.info("search marks: {}", log);
+	}
+
+	/** Clicks into the search box, so the keys reach it. */
+	private static void focusSearch(ClientGameTestContext context) {
+		int[] box = context.computeOnClient(client -> {
+			ConfigLayout.Rect search = screen(client).frame().search();
+			return new int[] {search.x() + 20, search.y() + search.h() / 2};
+		});
+		click(context, box);
+	}
+
+	/** The rule whose header shows {@code label} on the shown page. */
+	private static com.k8bas.skyblockutility.ui.option.RuleGroup headerRule(ConfigScreen screen, String label) {
+		return headers(screen).stream().map(ConfigLayout.RuleHeader::rule).filter(rule -> label.equals(rule.label().get())).findFirst().orElseThrow();
+	}
+
+	/** Checks one match box at GUI scale 2 in the screenshot, its line running to {@code right}; returns a log line. */
+	private static String markProbe(Path shot, int[] box, int right, String what) {
+		java.awt.image.BufferedImage image;
+		try {
+			image = javax.imageio.ImageIO.read(shot.toFile());
+		} catch (IOException e) {
+			throw new AssertionError("cannot read " + shot, e);
+		}
+		int scale = 2;
+		// The box's top row lies above the glyphs; the row above the box is the card.
+		int inside = image.getRGB((box[0] + box[2] / 2) * scale, box[1] * scale) & 0xFFFFFF;
+		int above = image.getRGB((box[0] + box[2] / 2) * scale, box[1] * scale - 1) & 0xFFFFFF;
+		int accent = Theme.current().accent() & 0xFFFFFF;
+		check(distance(inside, accent) + 20 < distance(above, accent),
+				what + ": the box's top row " + Integer.toHexString(inside) + " is tinted toward the accent against " + Integer.toHexString(above));
+		int brightInside = brightest(image, box[0] * scale, (box[0] + box[2]) * scale, box[1] * scale, (box[1] + box[3]) * scale);
+		// The glyphs just after the box on the same line (each box here is followed by text): not the colour dot or a button.
+		int after = box[0] + box[2];
+		int brightOutside = brightest(image, after * scale, Math.min(right, after + 12) * scale, box[1] * scale, (box[1] + box[3]) * scale);
+		check(distance(brightInside, brightOutside) <= 6,
+				what + ": the text in the box keeps its colour: " + Integer.toHexString(brightInside) + " against " + Integer.toHexString(brightOutside));
+		return what + " box " + box[0] + "," + box[1] + " " + box[2] + "x" + box[3] + " top " + Integer.toHexString(inside) + " over "
+				+ Integer.toHexString(above) + ", text " + Integer.toHexString(brightInside);
+	}
+
+	/** The brightest pixel (by r + g + b) in the physical-pixel rectangle; 0 for an empty one. */
+	private static int brightest(java.awt.image.BufferedImage image, int x0, int x1, int y0, int y1) {
+		int best = 0;
+		for (int y = Math.max(0, y0); y < Math.min(image.getHeight(), y1); y++) {
+			for (int x = Math.max(0, x0); x < Math.min(image.getWidth(), x1); x++) {
+				int rgb = image.getRGB(x, y) & 0xFFFFFF;
+				if (sum(rgb) > sum(best)) {
+					best = rgb;
+				}
+			}
+		}
+		return best;
+	}
+
+	private static int sum(int rgb) {
+		return (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF);
+	}
+
+	private static int distance(int a, int b) {
+		return Math.abs((a >> 16 & 0xFF) - (b >> 16 & 0xFF)) + Math.abs((a >> 8 & 0xFF) - (b >> 8 & 0xFF)) + Math.abs((a & 0xFF) - (b & 0xFF));
+	}
+
+	private static void replaceQuery(ClientGameTestContext context, String query) {
+		context.getInput().holdControl();
+		context.getInput().pressKey(GLFW.GLFW_KEY_A);
+		context.getInput().releaseControl();
+		if (query.isEmpty()) {
+			context.getInput().pressKey(GLFW.GLFW_KEY_BACKSPACE);
+		} else {
+			context.getInput().typeChars(query);
+		}
+		context.waitTicks(2);
 	}
 
 	private static List<ConfigLayout.RuleHeader> headers(ConfigScreen screen) {

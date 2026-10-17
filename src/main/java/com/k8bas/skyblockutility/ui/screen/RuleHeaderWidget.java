@@ -13,6 +13,9 @@ import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 /**
  * A rule's header (REQ-UI-11): a chevron, the rule's colour dot and its label, cut with "..." when long
  * and "(unnamed)" when empty (EC-UI-07). A rule that does nothing has a warning sign before its label
@@ -26,13 +29,27 @@ final class RuleHeaderWidget extends Widget {
 
 	private final RuleGroup rule;
 	private final Runnable toggle;
+	/** The query as the search sees it; its matches in the label are marked (REQ-UI-51). */
+	private final Supplier<String> query;
+	/** The match boxes as drawn last, {x, y, w, h} in GUI px (for gametests). */
+	private List<int[]> drawnMarks = List.of();
 	private boolean expanded;
 	/** The width kept free at the right end for the Remove button, 0 when there is none. */
 	private int actionRoom;
 
 	RuleHeaderWidget(RuleGroup rule, Runnable toggle) {
+		this(rule, toggle, () -> "");
+	}
+
+	RuleHeaderWidget(RuleGroup rule, Runnable toggle, Supplier<String> query) {
 		this.rule = rule;
 		this.toggle = toggle;
+		this.query = query;
+	}
+
+	/** The match boxes as drawn last, {x, y, w, h} in GUI px (for gametests). */
+	List<int[]> marksForTests() {
+		return drawnMarks;
 	}
 
 	void setExpanded(boolean expanded) {
@@ -146,8 +163,12 @@ final class RuleHeaderWidget extends Widget {
 			room -= warning;
 		}
 		String title = title();
-		UiText.draw(graphics, font, Ellipsis.fit(title, room, font::width), textX, textY,
-				faded(title.equals(UNNAMED) ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY));
+		String shown = Ellipsis.fit(title, room, font::width);
+		// REQ-UI-51: the label's matches on tinted boxes; "(unnamed)" is no label, so it has none.
+		drawnMarks = title.equals(UNNAMED) ? List.of()
+				: OptionCard.drawMarks(graphics, font, title, List.of(shown), !shown.equals(title), query.get(), textX, textY, 0,
+						faded(OptionCard.markColour(Theme.current().accent())));
+		UiText.draw(graphics, font, shown, textX, textY, faded(title.equals(UNNAMED) ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY));
 	}
 
 }

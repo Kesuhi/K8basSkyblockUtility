@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 /**
@@ -38,6 +39,8 @@ final class ConfigPage {
 	private final Controls factory;
 	/** Opens or closes a rule when its header is clicked. */
 	private final Consumer<RuleGroup> toggleRule;
+	/** The query as the search sees it, whose matches the cards and headers mark (REQ-UI-51); "" for none. */
+	private final Supplier<String> query;
 	private final Map<Option, OptionCard> cardWidgets = new IdentityHashMap<>();
 	private final Map<Option, Widget> controls = new IdentityHashMap<>();
 	private final Map<RuleGroup, RuleHeaderWidget> headers = new IdentityHashMap<>();
@@ -48,14 +51,19 @@ final class ConfigPage {
 	private ConfigLayout.Page page;
 
 	ConfigPage(Category category, List<Card> cards, Controls factory) {
-		this(category, cards, factory, rule -> { });
+		this(category, cards, factory, rule -> { }, () -> "");
 	}
 
 	ConfigPage(Category category, List<Card> cards, Controls factory, Consumer<RuleGroup> toggleRule) {
+		this(category, cards, factory, toggleRule, () -> "");
+	}
+
+	ConfigPage(Category category, List<Card> cards, Controls factory, Consumer<RuleGroup> toggleRule, Supplier<String> query) {
 		this.category = category;
 		this.cards = cards;
 		this.factory = factory;
 		this.toggleRule = toggleRule;
+		this.query = query;
 		List<Widget> controlWidgets = new ArrayList<>();
 		for (Card card : cards) {
 			if (card.category() != category) {
@@ -89,7 +97,7 @@ final class ConfigPage {
 		}
 		Widget control = factory.control(option);
 		ToggleSwitch toggle = option instanceof Toggle && control instanceof ToggleSwitch toggleSwitch ? toggleSwitch : null;
-		OptionCard cardWidget = new OptionCard(option, toggle);
+		OptionCard cardWidget = new OptionCard(option, toggle, query);
 		cardWidgets.put(option, cardWidget);
 		controls.put(option, control);
 		ownEnabled.put(control, control.isEnabled());
@@ -181,7 +189,7 @@ final class ConfigPage {
 		List<Widget> placedControls = new ArrayList<>();
 		for (ConfigLayout.Row row : page.rows()) {
 			if (row instanceof ConfigLayout.RuleHeader ruleRow) {
-				RuleHeaderWidget header = headers.computeIfAbsent(ruleRow.rule(), rule -> new RuleHeaderWidget(rule, () -> toggleRule.accept(rule)));
+				RuleHeaderWidget header = headers.computeIfAbsent(ruleRow.rule(), rule -> new RuleHeaderWidget(rule, () -> toggleRule.accept(rule), query));
 				ConfigLayout.Rect rect = ConfigLayout.row(frame, scroll, ruleRow);
 				header.setBounds(rect.x(), rect.y(), rect.w(), rect.h());
 				header.setClip(clip);

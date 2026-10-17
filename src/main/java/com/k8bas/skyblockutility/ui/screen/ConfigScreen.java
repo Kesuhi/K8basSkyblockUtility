@@ -252,7 +252,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			widgets().removeAll(pageWidgets);
 		}
 		selected = category;
-		page = pages.computeIfAbsent(category, shown -> new ConfigPage(shown, cards, this::control, this::toggleRule));
+		page = pages.computeIfAbsent(category, shown -> new ConfigPage(shown, cards, this::control, this::toggleRule, this::query));
 		// Over the scroll area, under the sidebar and the search box.
 		pageWidgets = List.copyOf(page.widgets());
 		widgets().addAll(1, pageWidgets);
