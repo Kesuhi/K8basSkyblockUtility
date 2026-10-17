@@ -5,15 +5,18 @@ import com.k8bas.skyblockutility.ui.render.UiTime;
 
 /**
  * A scroll that glides (REQ-UI-35, T3.26): a whole-GUI-px target, and a shown offset that eases toward it exponentially
- * with a time constant of {@link #TIME_CONSTANT_MS}. The shown offset is worked out from the time since the target last
- * changed and where it was shown then, so it is the same at any frame rate, never passes the target and is at it from
- * {@link #SETTLE_MS} on. The layout runs at the shown offset rounded to whole GUI px ({@link #laidOut()}, where clicks
- * meet it); the rest is drawn as a translation on the physical-pixel grid ({@link #drawn}). With motion off (Animations
+ * with a time constant of {@link #TIME_CONSTANT_MS}, rescaled so it reaches the target exactly at {@link #SETTLE_MS}
+ * (REQ-UI-49, T3.42). The shown offset is worked out from the time since the target last changed and where it was shown
+ * then, so it is the same at any frame rate, never passes the target and is at it from {@link #SETTLE_MS} on, with no step.
+ * The layout runs at the shown offset rounded to whole GUI px ({@link #laidOut()}, where clicks meet it); the rest is drawn
+ * as a translation on the physical-pixel grid ({@link #drawn}). With motion off (Animations
  * OFF) the shown offset is the target. Pure and on an injected clock source; per-frame, so primitives only.
  */
 public final class SmoothScroll {
 	public static final float TIME_CONSTANT_MS = 50F;
 	public static final long SETTLE_MS = 400;
+	/** What the plain exponential still has left at {@link #SETTLE_MS}, e^-8; {@link #remaining} takes it off. */
+	private static final double LEFT_AT_SETTLE = Math.exp(-SETTLE_MS / TIME_CONSTANT_MS);
 
 	private final UiTime time;
 	private int max;
@@ -64,9 +67,15 @@ public final class SmoothScroll {
 		if (elapsed >= SETTLE_MS) {
 			return target;
 		}
-		// A clock that went back reads as the start.
-		float shown = elapsed <= 0 ? from : target + (from - target) * (float) Math.exp(-elapsed / TIME_CONSTANT_MS);
+		// A clock that went back reads as the start. REQ-UI-49: the exponential less what it still has left at SETTLE_MS,
+		// rescaled to start at 1, so the glide reaches the target there with no last step.
+		float shown = elapsed <= 0 ? from : target + (from - target) * remaining(elapsed);
 		return Math.max(0F, Math.min(max, shown));
+	}
+
+	/** The part of the glide still left after {@code elapsed} ms: 1 at 0, falling monotonically to exactly 0 at {@link #SETTLE_MS}. */
+	private static float remaining(long elapsed) {
+		return (float) ((Math.exp(-elapsed / TIME_CONSTANT_MS) - LEFT_AT_SETTLE) / (1 - LEFT_AT_SETTLE));
 	}
 
 	/** The offset the layout runs at, and clicks meet: the shown offset rounded to whole GUI px. */

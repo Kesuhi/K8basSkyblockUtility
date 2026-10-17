@@ -34,10 +34,51 @@ class SmoothScrollTest {
 		UiClock.leave(previous);
 	}
 
+	/** REQ-UI-49's part of a glide left after {@code ms}: the exponential less its value at 400 ms, rescaled to start at 1. */
+	private static float glideLeft(long ms) {
+		double end = Math.exp(-400 / 50.0);
+		return (float) ((Math.exp(-ms / 50.0) - end) / (1 - end));
+	}
+
 	private SmoothScroll scroll(int max) {
 		SmoothScroll scroll = new SmoothScroll(time);
 		scroll.setMax(max);
 		return scroll;
+	}
+
+	/**
+	 * AC-UI-52 (REQ-UI-49, T3.42): a glide ends exactly on its target, with no last step. Over 10 000 GUI px the shown offset
+	 * rises monotonically, is below the target at 399 ms and at it from 400 ms on, and its last 4 ms step is no larger than
+	 * the one before (a plain exponential cut off at 400 ms jumps the 0.03 % still left, here about 3.6 GUI px).
+	 */
+	@Test
+	void aLongGlideEndsOnItsTargetWithoutALastStep() {
+		SmoothScroll scroll = scroll(20_000);
+		long start = now[0];
+		scroll.glideTo(10_000);
+		float previous = 0F;
+		for (int t = 0; t <= 500; t++) {
+			now[0] = start + t;
+			float shown = scroll.shown();
+			assertTrue(shown >= previous, t + " ms: " + shown + " after " + previous + ", monotonic");
+			assertTrue(shown <= 10_000F, t + " ms: never past the target");
+			previous = shown;
+		}
+		now[0] = start + 399;
+		assertTrue(scroll.shown() < 10_000F, "below the target at 399 ms: " + scroll.shown());
+		for (int t : new int[] {400, 401, 450, 1000}) {
+			now[0] = start + t;
+			assertEquals(10_000F, scroll.shown(), t + " ms: at the target");
+		}
+		// The frames at 392, 396 and 400 ms.
+		float[] at = new float[3];
+		for (int i = 0; i < 3; i++) {
+			now[0] = start + 392 + 4 * i;
+			at[i] = scroll.shown();
+		}
+		float last = at[2] - at[1];
+		float before = at[1] - at[0];
+		assertTrue(last <= before, "the last step " + last + " is no larger than the one before, " + before);
 	}
 
 	@Test
@@ -217,7 +258,7 @@ class SmoothScrollTest {
 			}
 		}
 		// The easing written out: three rows of 14 px, 50 ms in; drawn on the half-px grid, laid out at whole px.
-		float shownPx = 42F * (1F - (float) Math.exp(-50 / 50.0));
+		float shownPx = 42F * (1F - glideLeft(50));
 		assertEquals(Math.round(shownPx) - Math.round(shownPx * 2) / 2F, model.drawShift(14, 2), 1e-4F, "drawn where the glide is: " + shownPx);
 		float drawn = model.drawnPx(14, 2);
 		assertEquals(Math.round(drawn * 2), drawn * 2, 1e-4F, "drawn on the physical-pixel grid: " + drawn);
@@ -279,7 +320,7 @@ class SmoothScrollTest {
 		now[0] += 30;
 		assertTrue(list.rows().scroll() < 3 * 3 * 18, "gliding");
 		// The easing written out: 162 px of glide, 30 ms in; drawn on the half-px grid, laid out at whole px.
-		float shown = 162F * (1F - (float) Math.exp(-30 / 50.0));
+		float shown = 162F * (1F - glideLeft(30));
 		float expected = Math.round(shown) - Math.round(shown * 2) / 2F;
 		assertEquals(expected, list.drawShift(2), 1e-4F, "drawn where the glide is, " + shown + ", on the grid");
 		list.setScale(3);
