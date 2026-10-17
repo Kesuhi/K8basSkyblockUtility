@@ -58,6 +58,42 @@ class WheelImageTest {
 	}
 
 	/**
+	 * REQ-UI-48 (T3.41): the wheel is baked once, at full brightness, and drawn tinted with the grey (v, v, v). An HSV
+	 * brightness scales red, green and blue alike, so each tinted pixel is the colour baked at that brightness within 1/255 per
+	 * channel, and its alpha, so its rim, is the same.
+	 */
+	@Test
+	void theFullBrightnessWheelTintedIsTheWheelAtThatBrightness() {
+		WheelImage wheel = WheelImage.of(160);
+		int[] full = wheel.argb(1F);
+		int worst = 0;
+		for (float value : new float[] {0F, 0.13F, 0.25F, 0.5F, 254F / 255F, 1F}) {
+			int tint = WheelImage.tint(value);
+			assertEquals(0xFF, tint >>> 24, "an opaque tint, so the alpha stays the texture's");
+			int[] baked = wheel.argb(value);
+			for (int i = 0; i < full.length; i++) {
+				assertEquals(baked[i] >>> 24, full[i] >>> 24, "value " + value + ", pixel " + i + ": the same alpha");
+				for (int shift = 0; shift <= 16; shift += 8) {
+					// Models the GUI's textured pipeline: texel times vertex colour, each a fraction of 255, rounded to 8 bits.
+					int drawn = Math.round(((full[i] >> shift) & 0xFF) * ((tint >> shift) & 0xFF) / 255F);
+					worst = Math.max(worst, Math.abs(drawn - ((baked[i] >> shift) & 0xFF)));
+				}
+			}
+		}
+		assertTrue(worst <= 1, "the tinted wheel is the baked one within 1/255 per channel: " + worst);
+	}
+
+	/** The tint is the grey (v, v, v), opaque: black at 0, white at 1. */
+	@Test
+	void theTintIsTheBrightnessAsGrey() {
+		assertEquals(0xFF000000, WheelImage.tint(0F));
+		assertEquals(0xFFFFFFFF, WheelImage.tint(1F));
+		assertEquals(0xFF808080, WheelImage.tint(0.5F));
+		assertEquals(0xFF000000, WheelImage.tint(-0.2F), "clamped");
+		assertEquals(0xFFFFFFFF, WheelImage.tint(1.3F), "clamped");
+	}
+
+	/**
 	 * A pixel outside the circle is transparent but keeps the rim's colour (full saturation at its angle), so linear sampling
 	 * at a fractional position or scale blends the rim with its own colour, never with black.
 	 */

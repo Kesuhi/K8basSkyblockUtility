@@ -10,8 +10,9 @@ import org.slf4j.LoggerFactory
 
 /**
  * The colour picker's hue/saturation wheel as a texture (REQ-UI-13, REQ-UI-31, T3.19): baked at the wheel's drawn size in
- * screen pixels ([WheelImage]), so it is drawn 1:1, and rebaked when the GUI scale or the brightness changes, one at a time
- * ([WheelCache]); the picked colour is a marker drawn on top. If it cannot be made, the wheel is drawn the 1.2.1 way, one
+ * screen pixels ([WheelImage]), so it is drawn 1:1, and rebaked when the GUI scale changes, one at a time ([WheelCache]).
+ * It is baked at full brightness and drawn tinted for a lower one ([WheelImage.tint], REQ-UI-48), so a brightness drag bakes
+ * nothing; the picked colour is a marker drawn on top. If it cannot be made, the wheel is drawn the 1.2.1 way, one
  * 128 px texture scaled onto it (REQ-UI-47). Uploaded through the game's texture API (no direct GL, REQ-PORT-12).
  */
 internal object WheelTexture {
@@ -23,7 +24,7 @@ internal object WheelTexture {
 		LOGGER.warn("{}: the picker falls back to the 1.2.1 wheel for this session", message, cause)
 	})
 	private val fallback = WheelCache(GameTextures("ui_color_wheel_legacy_"), MaskCache.Logger { _, cause ->
-		LOGGER.warn("The 1.2.1 colour wheel's texture could not be made or rebaked either: the picker shows no wheel for this session", cause)
+		LOGGER.warn("The 1.2.1 colour wheel's texture could not be made either: the picker shows no wheel for this session", cause)
 	})
 
 	/**
@@ -39,13 +40,13 @@ internal object WheelTexture {
 			}
 		}
 
-	/** The wheel, size × size screen pixels at this brightness; null if it cannot be made (draw [legacy] then). */
+	/** The wheel, size × size screen pixels at full brightness; null if it cannot be made (draw [legacy] then). */
 	@JvmStatic
-	fun get(size: Int, value: Float): Identifier? = if (fallbackForTests) null else scaled.get(size, value)?.id
+	fun get(size: Int): Identifier? = if (fallbackForTests) null else scaled.get(size)?.id
 
-	/** The 1.2.1 wheel, [LEGACY_SIZE] px at this brightness; null if that cannot be made either. */
+	/** The 1.2.1 wheel, [LEGACY_SIZE] px at full brightness; null if that cannot be made either. */
 	@JvmStatic
-	fun legacy(value: Float): Identifier? = fallback.get(LEGACY_SIZE, value)?.id
+	fun legacy(): Identifier? = fallback.get(LEGACY_SIZE)?.id
 
 	/** Frees the wheel's textures when the colour picker closes; the next one makes them again for its GUI scale. */
 	@JvmStatic
@@ -54,21 +55,25 @@ internal object WheelTexture {
 		fallback.clear()
 	}
 
+	/** For gametests (AC-UI-51): how many times the wheel's texture was baked this session. */
+	@JvmStatic
+	fun bakesForTests(): Int = scaled.bakesForTests
+
 	/** For gametests (AC-UI-48): how many wheel textures there are, and the scaled one's size in screen pixels (0 for none). */
 	@JvmStatic
 	fun cachedForTests(): IntArray =
 		intArrayOf((if (scaled.sizeForTests() > 0) 1 else 0) + (if (fallback.sizeForTests() > 0) 1 else 0), scaled.sizeForTests())
 
-	private class Baked(val id: Identifier, val image: WheelImage, val texture: DynamicTexture)
+	private class Baked(val id: Identifier, val texture: DynamicTexture)
 
 	/** Each size has its own id, so a new size is registered before the old one is released. */
 	private class GameTextures(private val prefix: String) : WheelCache.Textures<Baked> {
-		override fun make(size: Int, value: Float): Baked {
+		override fun make(size: Int): Baked {
 			val image = WheelImage.of(size)
 			val id = Identifier.fromNamespaceAndPath("k8bas_skyblock_utility", "dynamic/$prefix$size")
 			val texture = DynamicTexture({ "k8bas colour wheel $size" }, size, size, false)
 			try {
-				fill(texture.pixels, image, value)
+				fill(texture.pixels, image)
 				texture.upload()
 				Minecraft.getInstance().textureManager.register(id, texture)
 			} catch (e: RuntimeException) {
@@ -77,21 +82,16 @@ internal object WheelTexture {
 				texture.close()
 				throw e
 			}
-			return Baked(id, image, texture)
-		}
-
-		override fun refill(texture: Baked, value: Float) {
-			fill(texture.texture.pixels, texture.image, value)
-			texture.texture.upload()
+			return Baked(id, texture)
 		}
 
 		override fun release(texture: Baked) {
 			Minecraft.getInstance().textureManager.release(texture.id)
 		}
 
-		private fun fill(pixels: NativeImage, image: WheelImage, value: Float) {
+		private fun fill(pixels: NativeImage, image: WheelImage) {
 			val size = image.size()
-			val argb = image.argb(value)
+			val argb = image.argb(1f)
 			for (y in 0 until size) {
 				for (x in 0 until size) {
 					pixels.setPixel(x, y, argb[y * size + x])

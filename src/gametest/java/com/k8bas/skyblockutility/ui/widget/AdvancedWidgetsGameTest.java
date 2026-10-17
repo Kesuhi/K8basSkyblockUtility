@@ -52,6 +52,8 @@ import java.util.List;
  *   <li>AC-UI-32 (T3.19): at GUI scales 1-4, in the first frame after a change from 2 to 3, and after a brightness drag,
  *       the wheel is a texture of its size times the scale, drawn 1:1 with linear sampling, its rim anti-aliased and its
  *       colours the colours picked; if it cannot be made, the 1.2.1 wheel is drawn (REQ-UI-47).</li>
+ *   <li>AC-UI-51 (T3.41): a brightness drag over 60 frames bakes no wheel texture and keeps one of 160 px; the dimmed wheel
+ *       shows each pixel's colour at that brightness, and the 1.2.1 fallback is tinted to it too.</li>
  * </ul>
  */
 public class AdvancedWidgetsGameTest implements FabricClientGameTest {
@@ -455,9 +457,31 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 		float saturation = context.computeOnClient(client -> screen(client).picker().state().hsv().s());
 		check(Math.abs(hue - 200F / 360F) <= 1F / 360F && Math.abs(saturation - 0.8F) <= 0.01F,
 				"and back to full keeps hue 200 and saturation 0.8: " + hue * 360 + ", " + saturation);
-		// T3.19: the drag rebaked the wheel's texture in place at each brightness; it shows full brightness again.
+		// T3.19, T3.41: after the drag the wheel shows full brightness again (its texture tinted white).
 		wheelIsBakedForTheScale(context, context.takeScreenshot("t3.19-wheel-after-brightness"), 2);
 		wheelMarkerIsADisc(context);
+		// AC-UI-51 (T3.41): a brightness drag over 60 frames bakes no wheel texture; the wheel shows each brightness's colours.
+		int bakes = context.computeOnClient(client -> WheelTexture.bakesForTests());
+		move(context, screen -> screen.point(screen.picker().brightnessSlider(), 0.95, 0.5));
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		java.util.Set<Float> values = new java.util.HashSet<>();
+		for (int frame = 1; frame <= 60; frame++) {
+			double at = 0.95 - 0.6 * frame / 60;
+			move(context, screen -> screen.point(screen.picker().brightnessSlider(), at, 0.5));
+			values.add(context.computeOnClient(client -> screen(client).picker().state().hsv().v()));
+			int[] cached = context.computeOnClient(client -> WheelTexture.cachedForTests());
+			check(cached[0] == 1 && cached[1] == 160, "frame " + frame + " of the drag: one wheel texture of 160 px: " + cached[0] + ", " + cached[1]);
+		}
+		check(values.size() >= 50, "the drag changed the brightness on most of its 60 frames: " + values.size() + " values");
+		float dimmed = context.computeOnClient(client -> screen(client).picker().state().hsv().v());
+		wheelIsBakedForTheScale(context, context.takeScreenshot("t3.41-wheel-dimmed"), 2);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		int baked = context.computeOnClient(client -> WheelTexture.bakesForTests()) - bakes;
+		LOGGER.info("brightness drag over 60 frames to {}: the wheel was baked {} times", dimmed, baked);
+		check(dimmed > 0.2F && dimmed < 0.5F, "the drag dimmed the picker to about 0.35: " + dimmed);
+		check(baked == 0, "a brightness drag over 60 frames baked the wheel " + baked + " times; it is baked once, at full brightness");
 		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 		context.waitTick();
 
@@ -744,6 +768,18 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			check((l >> 16 & 0xFF) > (l >> 8 & 0xFF) + 40 && (l >> 16 & 0xFF) > (l & 0xFF) + 40, "the fallback wheel: red at the left: " + Integer.toHexString(l));
 			check((r & 0xFF) > (r >> 16 & 0xFF) + 40 && (r >> 8 & 0xFF) > (r >> 16 & 0xFF) + 40, "the fallback wheel: cyan at the right: " + Integer.toHexString(r));
 			check(c == (Theme.PANEL & 0xFFFFFF), "the fallback wheel: outside the circle is the panel: " + Integer.toHexString(c));
+			// AC-UI-51 (T3.41): the fallback is tinted to the brightness as well: at half brightness its red is about half.
+			float value = context.computeOnClient(client -> screen(client).picker().state().hsv().v());
+			context.runOnClient(client -> screen(client).picker().state().setBrightness(value / 2));
+			try {
+				context.waitTicks(2);
+				int half = pixel(context.takeScreenshot("t3.41-wheel-fallback-half-brightness"), left);
+				LOGGER.info("colour wheel fallback at brightness {}: left {}", value / 2, Integer.toHexString(half));
+				check(Math.abs((half >> 16 & 0xFF) - (l >> 16 & 0xFF) / 2) <= 4,
+						"the fallback wheel at half brightness: red " + (half >> 16 & 0xFF) + ", about half of " + (l >> 16 & 0xFF));
+			} finally {
+				context.runOnClient(client -> screen(client).picker().state().setBrightness(value));
+			}
 		} finally {
 			context.runOnClient(client -> WheelTexture.setFallbackForTests(false));
 		}

@@ -2,6 +2,7 @@ package com.k8bas.skyblockutility.ui.widget;
 
 import com.k8bas.skyblockutility.ui.color.ColorPickerState;
 import com.k8bas.skyblockutility.ui.color.WheelGeometry;
+import com.k8bas.skyblockutility.ui.color.WheelImage;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.UiFade;
 import net.minecraft.client.gui.Font;
@@ -64,18 +65,19 @@ final class ColorWheel extends Widget {
 
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
-		float value = state.hsv().v();
+		// REQ-UI-48: baked once at full brightness and tinted to the picked one, so a brightness drag bakes nothing.
+		int tint = WheelImage.tint(state.hsv().v());
 		// REQ-UI-31: baked at the wheel's size in screen pixels, drawn 1:1 and sampled linear.
 		int size = width * Shapes.guiScale();
-		Identifier wheel = WheelTexture.get(size, value);
+		Identifier wheel = WheelTexture.get(size);
 		if (wheel != null) {
-			Shapes.image(graphics, wheel, x, y, size, size, 0xFFFFFFFF);
+			Shapes.image(graphics, wheel, x, y, size, size, tint);
 		} else {
 			// REQ-UI-47: the 1.2.1 wheel, one fixed texture scaled onto the wheel's bounds.
-			Identifier legacy = WheelTexture.legacy(value);
+			Identifier legacy = WheelTexture.legacy();
 			if (legacy != null) {
 				graphics.blit(RenderPipelines.GUI_TEXTURED, legacy, x, y, 0F, 0F, width, height, WheelTexture.LEGACY_SIZE, WheelTexture.LEGACY_SIZE,
-						WheelTexture.LEGACY_SIZE, WheelTexture.LEGACY_SIZE, UiFade.apply(0xFFFFFFFF));
+						WheelTexture.LEGACY_SIZE, WheelTexture.LEGACY_SIZE, UiFade.apply(tint));
 			}
 		}
 		// REQ-UI-30: a white disc with a disc of the picked colour inside it, both from the disc mask.
