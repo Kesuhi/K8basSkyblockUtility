@@ -12,16 +12,16 @@ code tasks carry a "Done" note with a nested "Review" line (see T3.15–T3.17); 
 `RELEASING.md` is the release procedure. Read the parts a task names before changing anything; SPEC is large, so
 search it by id.
 
-## Where the work stands (2026-10-15)
+## Where the work stands (2026-10-17)
 
 - Branch `update/26.2`. v1.2.1 is released (tag `v1.2.1` on the merge commit `ea32dea` on `main`).
-- Current phase: **Phase 3u, the UI review released as 1.3.0** (PLAN.md, "Phase 3u"). Done: T3.14 (spec, approved
-  2026-10-15), T3.15 (one GUI element per rounded shape), T3.16 (slider track never under the knob), T3.17 (Smooth
-  corners ON by default). **Next: T3.18** (discs and pills from one mask quad, linear sampling), then PLAN order,
-  then Checkpoint G3u (the maintainer's field check at GUI scale 2), then the 1.3.0 release tasks T3.38–T3.40.
+- Current phase: **Phase 3u, the UI review released as 1.3.0** (PLAN.md, "Phase 3u"). Done: T3.14–T3.37, every
+  build task of the review (the last, T3.37, is the screenshot matrix `UiReviewMatrixGameTest`). **Next: Checkpoint
+  G3u** (its automatic items, then the maintainer's field check at GUI scale 2 and the hairline rule, Q-UI-08), then
+  the 1.3.0 release tasks T3.38–T3.40 (README, CHANGELOG and version; the release PR; tag and publish), each step
+  with the approvals below.
 - Commit on `update/26.2` itself (`git branch --show-current`). If you were started in a worktree or on another
   branch, ask before committing: the scan and build ranges are `main..update/26.2`.
-
 ## How work is done
 
 - Test-driven, one task at a time: read the task's Req/Accept ids in SPEC, write the failing test first and record
@@ -140,7 +140,13 @@ expands nothing: `& "C:\Program Files\Git\bin\bash.exe" -lc './gradlew build --o
   runs, on unchanged code too (T3.15–T3.17 measured both). Leave them out of normal runs (MarkerBeamRingGameTest
   comes early and would stop the run). When a task touches markers, waypoints or per-frame code, run them on the old
   and the new code and put both numbers in the Done note; ask whether the game is running. Rerun both with the game
-  closed before Checkpoint G3u.
+  closed before Checkpoint G3u (done 2026-10-17, both green).
+- Tooltips wait 400 ms on the UI clock (T3.34): a test that reads one opens its screen on a test clock
+  (`UiTime.of(clock::get, () -> false)`) and steps it past the delay, rather than waiting in real time. The same clock
+  with motion on steps animations frame by frame (ConfigMotionGameTest).
+- `UiReviewMatrixGameTest` runs the UI checks of AC-UI-28 to AC-UI-48 on 120 screenshots and takes several minutes;
+  its images are the review set for a checkpoint. Copy them out of `build/run/clientGameTest/screenshots` before the
+  next run.
 
 ## Windows and shell pitfalls
 
