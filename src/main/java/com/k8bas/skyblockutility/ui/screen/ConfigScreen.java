@@ -116,6 +116,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private final ConfigMotion motion;
 	/** Where the selected tab's highlight is, sliding on a switch (REQ-UI-45). */
 	private final TabIndicator tabIndicator;
+	/** How far each rule card is open, easing as it opens and closes (REQ-UI-52). */
+	private final RuleMotion ruleMotion;
 	private int plainBackground;
 	/** The scroll the page was laid out at this frame: the real scroll less the slide, so text and cards move together. */
 	private int pageScroll;
@@ -150,6 +152,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		setTime(time);
 		this.motion = new ConfigMotion(time::millis, time::motion);
 		this.tabIndicator = new TabIndicator(time);
+		this.ruleMotion = new RuleMotion(time);
 		this.parent = parent;
 		this.cards = cards;
 		this.categories = ConfigLayout.categories(cards);
@@ -272,13 +275,17 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		pendingScroll = Math.max(0, y);
 	}
 
-	/** Opens or closes a rule card; while searching, a matching rule starts open (REQ-UI-09). */
+	/**
+	 * Opens or closes a rule card, easing it there (REQ-UI-52); while searching, a matching rule starts open (REQ-UI-09), at
+	 * once.
+	 */
 	void toggleRule(RuleGroup rule) {
 		UiSound.click();
 		Set<String> set = view.filtering() ? closedInSearch : openRules;
 		if (!set.remove(rule.id())) {
 			set.add(rule.id());
 		}
+		ruleMotion.toggled(rule.id(), filter.expanded(rule));
 	}
 
 	private final ConfigLayout.Filter filter = new ConfigLayout.Filter() {
@@ -295,6 +302,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		@Override
 		public boolean expanded(RuleGroup rule) {
 			return view.filtering() ? !closedInSearch.contains(rule.id()) : openRules.contains(rule.id());
+		}
+
+		@Override
+		public float reveal(RuleGroup rule) {
+			return ruleMotion.reveal(rule.id(), expanded(rule));
 		}
 	};
 
@@ -497,11 +509,15 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 					showTooltip(heading.category().description(), rect.x(), top, rect.w(), Math.max(0, bottom - top));
 				}
 			} else if (row instanceof ConfigLayout.RuleProblem problem) {
-				// Why the rule does nothing, in the fixed error colour (REQ-GLOW-10, REQ-UI-12).
-				int lineY = rect.y() + 1;
-				for (String line : problem.lines()) {
-					UiText.draw(graphics, font, line, rect.x(), lineY, Theme.ERROR);
-					lineY += 10;
+				// Why the rule does nothing, in the fixed error colour (REQ-GLOW-10, REQ-UI-12); cut off at its card's eased
+				// height while the card opens or closes (REQ-UI-52).
+				int bottom = problem.clipBottom() == Integer.MAX_VALUE ? content.bottom() : Math.min(content.bottom(), content.y() + problem.clipBottom() - scroll);
+				try (Clip ignored = Clip.push(graphics, content.x(), content.y(), content.w(), Math.max(0, bottom - content.y()))) {
+					int lineY = rect.y() + 1;
+					for (String line : problem.lines()) {
+						UiText.draw(graphics, font, line, rect.x(), lineY, Theme.ERROR);
+						lineY += 10;
+					}
 				}
 			} else if (row instanceof ConfigLayout.Section section) {
 				String title = Ellipsis.fit(section.card().title(), rect.w(), font::width);
@@ -765,6 +781,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		scrollArea.stopGlide();
 		int slide = motion.slideOffset();
 		motion.finish();
+		// The rule cards too, so a list opened from a card under one that moves stays by its box.
+		ruleMotion.settle();
 		if (slide != 0 && page != null && frame != null) {
 			scrollArea.setScroll(scrollArea.scroll() - slide);
 			page.layout(frame, scrollArea.scroll(), font::width, filter);

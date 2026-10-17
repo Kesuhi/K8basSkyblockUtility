@@ -11,6 +11,12 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - While you search the settings, the matched text in each setting's name and description, and in a rule's
   name, sits on a soft box in the accent colour, so you see at once why a setting is listed.
 
+### Changed
+
+- Rule cards (Mob Highlighter, NPC Search) grow open and shrink closed in a short motion when you click
+  their header or use the keys, and the arrow turns with them. Rules a search opens still open at once.
+  With "Animations" off they open and close at once.
+
 ## [1.3.0] - 2026-10-17
 
 This release reworks how the settings screen and its dialogs look and feel: sharp round knobs, icons,

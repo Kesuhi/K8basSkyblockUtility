@@ -130,7 +130,8 @@ object ConfigLayout {
 
 	/**
 	 * One option's card; [featureToggle] for the feature's own switch, which a click anywhere on it
-	 * flips; [indent] for a rule's field, under its rule's header.
+	 * flips; [indent] for a rule's field, under its rule's header; [clipBottom], in page px, where a rule card that is
+	 * opening or closing cuts it off (REQ-UI-52), [Int.MAX_VALUE] for nowhere.
 	 */
 	data class OptionRow @JvmOverloads constructor(
 		@get:JvmName("card") val card: Card,
@@ -138,40 +139,47 @@ object ConfigLayout {
 		@get:JvmName("featureToggle") val featureToggle: Boolean,
 		private val y: Int,
 		@get:JvmName("indent") val indent: Int = 0,
+		@get:JvmName("clipBottom") val clipBottom: Int = Int.MAX_VALUE,
 	) : Row {
 		override fun y(): Int = y
 
 		override fun height(): Int = CARD
 
-		override fun toString(): String = "OptionRow[card=$card, option=$option, featureToggle=$featureToggle, y=$y, indent=$indent]"
+		override fun toString(): String =
+			"OptionRow[card=$card, option=$option, featureToggle=$featureToggle, y=$y, indent=$indent, clipBottom=$clipBottom]"
 	}
 
-	/** A rule's header: label and colour dot; a click opens or closes the rule (REQ-UI-11). */
+	/**
+	 * A rule's header: label and colour dot; a click opens or closes the rule (REQ-UI-11). [reveal] is how far its card is
+	 * open, 0 to 1, eased while it opens or closes (REQ-UI-52).
+	 */
 	data class RuleHeader(
 		@get:JvmName("card") val card: Card,
 		@get:JvmName("rule") val rule: RuleGroup,
 		@get:JvmName("expanded") val expanded: Boolean,
 		private val y: Int,
+		@get:JvmName("reveal") val reveal: Float = if (expanded) 1f else 0f,
 	) : Row {
 		override fun y(): Int = y
 
 		override fun height(): Int = RULE_HEADER
 
-		override fun toString(): String = "RuleHeader[card=$card, rule=$rule, expanded=$expanded, y=$y]"
+		override fun toString(): String = "RuleHeader[card=$card, rule=$rule, expanded=$expanded, y=$y, reveal=$reveal]"
 	}
 
-	/** Why an open rule does nothing, under its header (REQ-GLOW-10, REQ-UI-12). */
+	/** Why an open rule does nothing, under its header (REQ-GLOW-10, REQ-UI-12); cut off at [clipBottom] as [OptionRow] is. */
 	data class RuleProblem(
 		@get:JvmName("rule") val rule: RuleGroup,
 		@get:JvmName("lines") val lines: List<String>,
 		private val y: Int,
 		private val height: Int,
+		@get:JvmName("clipBottom") val clipBottom: Int = Int.MAX_VALUE,
 	) : Row {
 		override fun y(): Int = y
 
 		override fun height(): Int = height
 
-		override fun toString(): String = "RuleProblem[rule=$rule, lines=$lines, y=$y, height=$height]"
+		override fun toString(): String = "RuleProblem[rule=$rule, lines=$lines, y=$y, height=$height, clipBottom=$clipBottom]"
 	}
 
 	/** What a page shows: which options and rules (a search, REQ-UI-08/09) and which rules are open. */
@@ -181,6 +189,9 @@ object ConfigLayout {
 		fun shows(rule: RuleGroup): Boolean = true
 
 		fun expanded(rule: RuleGroup): Boolean = false
+
+		/** How far the rule's card is open, 0 to 1: eased while it opens or closes (REQ-UI-52), else 1 open and 0 closed. */
+		fun reveal(rule: RuleGroup): Float = if (expanded(rule)) 1f else 0f
 
 		companion object {
 			@JvmStatic
@@ -265,22 +276,45 @@ object ConfigLayout {
 			}
 			for (rule in rules) {
 				val expanded = filter.expanded(rule)
-				rows.add(RuleHeader(card, rule, expanded, y))
+				val reveal = filter.reveal(rule).coerceIn(0f, 1f)
+				rows.add(RuleHeader(card, rule, expanded, y, reveal))
 				y += RULE_HEADER + RULE_GAP
-				if (!expanded) {
+				if (reveal <= 0f) {
 					continue
 				}
+				// The open card's rows, then (REQ-UI-52) only as much of them as its eased height shows, rounded to whole GUI px:
+				// the rows below follow that height, and a row is cut off there, or left out where none of it would show.
+				val body = ArrayList<Row>()
+				val start = y
 				val problem = rule.problem.get()
 				if (problem != null) {
 					val lines = fitLines(problemText(problem), maxOf(1, textWidth - RULE_INDENT), 2, width)
 					val height = lines.lines.size * 10 + 2
-					rows.add(RuleProblem(rule, lines.lines, y, height))
+					body.add(RuleProblem(rule, lines.lines, y, height))
 					y += height + RULE_GAP
 				}
 				for (field in rule.fields) {
-					rows.add(OptionRow(card, field, false, y, RULE_INDENT))
+					body.add(OptionRow(card, field, false, y, RULE_INDENT))
 					y += CARD + CARD_GAP
 				}
+				if (reveal >= 1f) {
+					rows.addAll(body)
+					continue
+				}
+				val limit = start + Math.round(reveal * (y - start))
+				for (row in body) {
+					if (row.y() >= limit) {
+						continue
+					}
+					rows.add(
+						when (row) {
+							is RuleProblem -> row.copy(clipBottom = limit)
+							is OptionRow -> row.copy(clipBottom = limit)
+							else -> row
+						},
+					)
+				}
+				y = limit
 			}
 			y += SECTION_GAP - CARD_GAP
 		}

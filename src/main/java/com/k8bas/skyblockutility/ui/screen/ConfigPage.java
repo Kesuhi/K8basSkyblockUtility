@@ -194,6 +194,7 @@ final class ConfigPage {
 				header.setBounds(rect.x(), rect.y(), rect.w(), rect.h());
 				header.setClip(clip);
 				header.setExpanded(ruleRow.expanded());
+				header.setReveal(ruleRow.reveal());
 				header.setDimmed(featureOff(ruleRow.card()));
 				placedCards.add(header);
 				// Remove, over the header's right end (R31); placed with the controls, so it lies over the header and gets the click.
@@ -223,9 +224,12 @@ final class ConfigPage {
 			cardWidget.setBounds(rect.x(), rect.y(), rect.w(), rect.h());
 			cardWidget.setIndent(optionRow.indent());
 			control.setBounds(controlRect.x(), controlRect.y(), controlRect.w(), controlRect.h());
-			cardWidget.setClip(clip);
+			// A field of a rule card that is opening or closing shows, and takes input, only above its eased height (REQ-UI-52).
+			ClipRect rowClip = optionRow.clipBottom() == Integer.MAX_VALUE ? clip
+					: ClipRect.of(content.x(), content.y(), content.w(), Math.min(content.h(), optionRow.clipBottom() - scroll));
+			cardWidget.setClip(rowClip);
 			cardWidget.fitText(width);
-			control.setClip(clip);
+			control.setClip(rowClip);
 			boolean off = !optionRow.featureToggle() && featureOff(optionRow.card());
 			cardWidget.setDimmed(off);
 			control.setDimmed(off);

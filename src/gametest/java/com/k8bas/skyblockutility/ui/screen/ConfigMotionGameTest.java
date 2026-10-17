@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.screen;
 import com.k8bas.skyblockutility.config.ConfigManager;
 import com.k8bas.skyblockutility.gametest.ModuleStates;
 import com.k8bas.skyblockutility.module.ModuleManager;
+import com.k8bas.skyblockutility.module.mobhighlighter.MobRulesForTests;
 import com.k8bas.skyblockutility.settings.OptionCatalog;
 import com.k8bas.skyblockutility.ui.option.Category;
 import com.k8bas.skyblockutility.ui.option.Choice;
@@ -97,6 +98,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			theWheelGlides(context, clock, time);
 			overlaysFadeIn(context, clock);
 			growingShapesBorrowMasks(context, clock);
+			ruleCardsOpenAndClose(context, clock, time);
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 			context.waitTicks(2);
 			check(!(context.computeOnClient(client -> client.gui.screen()) instanceof ConfigScreen), "Esc closes the screen");
@@ -883,6 +885,93 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		context.waitTick();
 		int after = context.computeOnClient(client -> CornerTextures.cachedForTests()[1]);
 		check(after - before <= 1, what + " adds " + (after - before) + " masks (" + before + " to " + after + "), at most its grown size's 1");
+	}
+
+	/**
+	 * AC-UI-56 [C] (REQ-UI-52, T3.45) at GUI scale 2 on the test clock: a rule card clicked open eases open over 150 ms, the
+	 * next rule's header moving down with it (strictly between at 75 ms, at the open place from 150 ms on), and closes the
+	 * same way; screenshots at 0, 75 and 150 ms. On a screen of its own with two mob rules, the rules restored after.
+	 */
+	private static void ruleCardsOpenAndClose(ClientGameTestContext context, AtomicLong clock, UiTime time) {
+		List<com.k8bas.skyblockutility.highlight.HighlightRule> before = context.computeOnClient(client -> MobRulesForTests.rules());
+		try {
+			context.runOnClient(client -> MobRulesForTests.use(List.of(RuleCardsGameTest.mob("motion-1", "Zealot", "Zealot", "The End", 0xAA00FF),
+					RuleCardsGameTest.mob("motion-2", "Voidgloom", "Voidgloom", null, 0x00FF00))));
+			context.setScreen(() -> new ConfigScreen(null, OptionCatalog.live(), time));
+			context.waitForScreen(ConfigScreen.class);
+			context.getInput().setCursorPos(2, 2);
+			context.runOnClient(client -> screen(client).select(Category.HIGHLIGHTS));
+			// The open starts with the first frame on the test clock: drawn first, then past its end.
+			context.waitTicks(3);
+			clock.addAndGet(1_000);
+			context.waitTicks(3);
+			check(!context.computeOnClient(client -> screen(client).motion().animating()), "the open and the switch have ended");
+			int closed = nextHeaderY(context);
+			// A click on Zealot's header, as a player opens it.
+			int[] header = context.computeOnClient(client -> {
+				Widget widget = screen(client).page().header(rule(screen(client), "Zealot"));
+				return window(widget.x() + widget.width() / 3, widget.y() + widget.height() / 2);
+			});
+			context.getInput().setCursorPos(header[0], header[1]);
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			int[] opening = new int[3];
+			float[] chevron = new float[3];
+			for (int step = 0; step < 3; step++) {
+				opening[step] = nextHeaderY(context);
+				chevron[step] = context.computeOnClient(client -> screen(client).page().header(rule(screen(client), "Zealot")).reveal());
+				context.takeScreenshot("t3.45-rule-opening-" + step * 75 + "ms");
+				clock.addAndGet(75);
+				context.waitTick();
+			}
+			check(chevron[0] == 0F && Math.abs(chevron[1] - 0.875F) < 0.001F && chevron[2] == 1F,
+					"the chevron turns with the card: " + java.util.Arrays.toString(chevron));
+			check(opening[0] == closed, "0 ms: the next header has not moved: " + opening[0] + ", closed " + closed);
+			check(opening[1] > closed && opening[1] < opening[2], "75 ms: between the closed and the open place: " + closed + " < " + opening[1] + " < "
+					+ opening[2]);
+			clock.addAndGet(500);
+			context.waitTick();
+			check(nextHeaderY(context) == opening[2], "150 ms: open, and it stays: " + nextHeaderY(context) + ", " + opening[2]);
+			context.runOnClient(client -> screen(client).toggleRule(rule(screen(client), "Zealot")));
+			context.waitTick();
+			clock.addAndGet(75);
+			context.waitTick();
+			int halfShut = nextHeaderY(context);
+			clock.addAndGet(75);
+			context.waitTick();
+			int shut = nextHeaderY(context);
+			check(halfShut > closed && halfShut < opening[2] && shut == closed, "closing: " + opening[2] + " > " + halfShut + " > " + shut + " = " + closed);
+			// EC-UI-32: a search opens the rule it finds at once, motion on, and its end closes it at once.
+			context.runOnClient(client -> {
+				screen(client).search().model().setText("zealot");
+				screen(client).applyQueryForTests();
+			});
+			context.waitTick();
+			float found = context.computeOnClient(client -> screen(client).page().header(rule(screen(client), "Zealot")).reveal());
+			context.runOnClient(client -> {
+				screen(client).search().model().setText("");
+				screen(client).applyQueryForTests();
+			});
+			context.waitTick();
+			float ended = context.computeOnClient(client -> screen(client).page().header(rule(screen(client), "Zealot")).reveal());
+			check(found == 1F && ended == 0F, "a search opens the rule at once and its end closes it at once: " + found + ", " + ended);
+			LOGGER.info("rule card motion: the next header at {} closed, {} at 75 ms, {} open; closing {} at 75 ms, {} at 150 ms", closed, opening[1],
+					opening[2], halfShut, shut);
+		} finally {
+			context.runOnClient(client -> MobRulesForTests.use(before));
+		}
+	}
+
+	/** The second rule's header, "Voidgloom", in GUI px from the page's top (an opening card may scroll the page into view). */
+	private static int nextHeaderY(ClientGameTestContext context) {
+		return context.computeOnClient(client -> screen(client).page().page().rows().stream()
+				.filter(row -> row instanceof ConfigLayout.RuleHeader header && "Voidgloom".equals(header.rule().label().get()))
+				.findFirst().orElseThrow().y());
+	}
+
+	private static com.k8bas.skyblockutility.ui.option.RuleGroup rule(ConfigScreen screen, String label) {
+		return screen.page().page().rows().stream().filter(row -> row instanceof ConfigLayout.RuleHeader header && label.equals(header.rule().label().get()))
+				.map(row -> ((ConfigLayout.RuleHeader) row).rule()).findFirst().orElseThrow();
 	}
 
 	/** A control's centre in GUI px, scrolled into view at once first. */

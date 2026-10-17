@@ -34,6 +34,8 @@ final class RuleHeaderWidget extends Widget {
 	/** The match boxes as drawn last, {x, y, w, h} in GUI px (for gametests). */
 	private List<int[]> drawnMarks = List.of();
 	private boolean expanded;
+	/** How far its card is open, 0 to 1, eased while it opens or closes (REQ-UI-52); the chevron turns with it. */
+	private float reveal;
 	/** The width kept free at the right end for the Remove button, 0 when there is none. */
 	private int actionRoom;
 
@@ -54,6 +56,15 @@ final class RuleHeaderWidget extends Widget {
 
 	void setExpanded(boolean expanded) {
 		this.expanded = expanded;
+	}
+
+	void setReveal(float reveal) {
+		this.reveal = reveal;
+	}
+
+	/** How far its card is open, 0 to 1, as the chevron shows it. */
+	float reveal() {
+		return reveal;
 	}
 
 	boolean expanded() {
@@ -150,8 +161,22 @@ final class RuleHeaderWidget extends Widget {
 		float hover = hoverAmount(contains(mouseX, mouseY) && !overAction(mouseX));
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CARD, faded(ColorMath.lerp(Theme.CARD, Theme.CARD_HOVER, hover)));
 		int midY = y + height / 2;
-		// REQ-UI-32: the kit's chevron, pointing right while closed, down while open.
-		Shapes.icon(graphics, expanded ? IconShapes.Icon.CHEVRON_DOWN : IconShapes.Icon.CHEVRON_RIGHT, x + 6, midY - 4, 8, faded(Theme.TEXT_SECONDARY));
+		// REQ-UI-32: the kit's chevron, pointing right while closed, down while open; REQ-UI-52: turning between them as the
+		// card opens or closes, a quarter turn about its centre.
+		if (reveal > 0F && reveal < 1F) {
+			graphics.pose().pushMatrix();
+			try {
+				graphics.pose().translate(x + 10, midY);
+				graphics.pose().rotate((float) (reveal * Math.PI / 2));
+				graphics.pose().translate(-(x + 10), -midY);
+				Shapes.icon(graphics, IconShapes.Icon.CHEVRON_RIGHT, x + 6, midY - 4, 8, faded(Theme.TEXT_SECONDARY));
+			} finally {
+				graphics.pose().popMatrix();
+			}
+		} else {
+			Shapes.icon(graphics, reveal >= 1F ? IconShapes.Icon.CHEVRON_DOWN : IconShapes.Icon.CHEVRON_RIGHT, x + 6, midY - 4, 8,
+					faded(Theme.TEXT_SECONDARY));
+		}
 		Shapes.roundedRect(graphics, x + 22, midY - DOT / 2, DOT, DOT, DOT / 2, faded(0xFF000000 | rule.colour().getAsInt()));
 		int textX = x + 22 + DOT + 6;
 		int textY = y + (height - font.lineHeight) / 2 + 1;
