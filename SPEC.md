@@ -757,7 +757,7 @@ Each module lists its origin, dependencies, purpose, functional requirements (RE
 - **REQ-UI-08** Search.
   - Matching: typing in the search box filters options by case-insensitive substring over title, description, keywords and dropdown entry labels. The query is trimmed and limited to 35 characters.
   - Sidebar: it shows only categories with at least one match, and each badge shows that category's match count. If the active category has no match, the screen switches to the first category that has one.
-  - No match anywhere: the content area shows `No settings found for "<q>"`.
+  - No match anywhere: the content area shows `No settings found for "<q>"`; from 1.3.0 with the search glass above it and a "Clear search" button below it (REQ-UI-54) [decided R47].
   - Keys and controls: Ctrl+F focuses the box. Esc while the box is focused leaves the box without closing the screen. A clear (×) control empties the box.
   - Switching category keeps the query.
 
