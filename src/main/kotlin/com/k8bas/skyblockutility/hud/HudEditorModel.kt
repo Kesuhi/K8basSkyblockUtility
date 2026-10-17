@@ -1,6 +1,8 @@
 package com.k8bas.skyblockutility.hud
 
 import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.hypot
 
 /**
  * What the HUD editor changes, without drawing or input plumbing, so it is tested without a game
@@ -52,7 +54,54 @@ class HudEditorModel(items: List<Item>, opened: Map<String, HudPosition>, privat
 	private var guidesScreenW = 0.0
 	private var guidesScreenH = 0.0
 
+	/** The corner whose handle is dragged (0 top-left, 1 top-right, 2 bottom-left, 3 bottom-right), or -1 (REQ-HUD-15). */
+	private var handle = -1
+
+	/** The opposite corner as drawn (the outline spans the size rounded up), which stays where it is, and the dragged corner as it
+	 * was at the press. */
+	private var fixedX = 0.0
+	private var fixedY = 0.0
+	private var cornerX = 0.0
+	private var cornerY = 0.0
+
 	fun items(): List<Item> = items
+
+	/** Whether a corner handle is dragged: the element scales about the opposite corner (REQ-HUD-15). */
+	fun scaling(): Boolean = handle >= 0
+
+	/**
+	 * The selected element's four handle centres, x and y for the top-left, top-right, bottom-left and bottom-right corner,
+	 * each held [HANDLE_RADIUS] inside the window so a handle at its edge is drawn whole (REQ-HUD-15); null with no selection.
+	 */
+	fun handleCentres(screenW: Double, screenH: Double): DoubleArray? {
+		val id = selected ?: return null
+		val rect = rect(id, screenW, screenH)
+		val out = DoubleArray(8)
+		for (corner in 0..3) {
+			out[2 * corner] = (if (corner % 2 == 0) rect.x else rect.x + rect.w).coerceIn(HANDLE_RADIUS, screenW - HANDLE_RADIUS)
+			out[2 * corner + 1] = (if (corner < 2) rect.y else rect.y + rect.h).coerceIn(HANDLE_RADIUS, screenH - HANDLE_RADIUS)
+		}
+		return out
+	}
+
+	/**
+	 * The corner whose handle lies under the point, or -1: the nearest within [HANDLE_REACH], or within a quarter of the
+	 * element's smaller side when that is less, so a small element keeps a middle a press moves.
+	 */
+	fun handleAt(x: Double, y: Double, screenW: Double, screenH: Double): Int {
+		val centres = handleCentres(screenW, screenH) ?: return -1
+		val rect = rect(selected ?: return -1, screenW, screenH)
+		var best = -1
+		var nearest = minOf(HANDLE_REACH, minOf(rect.w, rect.h) / 4)
+		for (corner in 0..3) {
+			val distance = hypot(x - centres[2 * corner], y - centres[2 * corner + 1])
+			if (distance <= nearest) {
+				best = corner
+				nearest = distance
+			}
+		}
+		return best
+	}
 
 	/** Whether an element is grabbed: pressed and not yet released (the editor shows the move pointer, REQ-UI-43). */
 	fun dragging(): Boolean = dragging
@@ -91,8 +140,30 @@ class HudEditorModel(items: List<Item>, opened: Map<String, HudPosition>, privat
 		.firstOrNull { item -> rect(item.id, screenW, screenH).let { x >= it.x && y >= it.y && x < it.x + it.w && y < it.y + it.h } }
 		?.id
 
-	/** Selects the element under the point and grabs it where it was pressed, or deselects on empty space. */
+	/**
+	 * A press on one of the selected element's handles starts a scale about the opposite corner (before the element under it,
+	 * REQ-HUD-15); otherwise it selects the element under the point and grabs it where it was pressed, or deselects on empty space.
+	 */
 	fun press(x: Double, y: Double, screenW: Double, screenH: Double) {
+		val corner = handleAt(x, y, screenW, screenH)
+		val id = selected
+		if (corner >= 0 && id != null) {
+			val rect = rect(id, screenW, screenH)
+			val left = corner % 2 == 0
+			val top = corner < 2
+			handle = corner
+			dragging = false
+			moved = false
+			guides = java.util.List.of()
+			pressX = x
+			pressY = y
+			cornerX = if (left) rect.x else rect.x + rect.w
+			cornerY = if (top) rect.y else rect.y + rect.h
+			fixedX = if (left) rect.x + drawn(rect.w) else rect.x
+			fixedY = if (top) rect.y + drawn(rect.h) else rect.y
+			return
+		}
+		handle = -1
 		val hit = at(x, y, screenW, screenH)
 		selected = hit
 		dragging = hit != null
@@ -115,6 +186,11 @@ class HudEditorModel(items: List<Item>, opened: Map<String, HudPosition>, privat
 	@JvmOverloads
 	fun drag(x: Double, y: Double, screenW: Double, screenH: Double, snap: Boolean = false) {
 		val id = selected
+		if (handle >= 0 && id != null) {
+			// A handle drag scales and never snaps (REQ-HUD-15).
+			scaleFromHandle(id, x, y, screenW, screenH)
+			return
+		}
 		if (!dragging || id == null) {
 			return
 		}
@@ -151,16 +227,54 @@ class HudEditorModel(items: List<Item>, opened: Map<String, HudPosition>, privat
 		guidesScreenH = screenH
 	}
 
-	/** Ends a drag that moved the element: anchored to the screen third of its centre, where it is (REQ-HUD-03). */
+	/** Ends a drag or a handle drag that changed the element: anchored to the screen third of its centre, where it is (REQ-HUD-03). */
 	fun release(screenW: Double, screenH: Double) {
 		val id = selected
-		if (dragging && moved && id != null) {
+		if ((dragging || handle >= 0) && moved && id != null) {
 			reanchor(id, screenW, screenH)
 		}
 		dragging = false
+		handle = -1
 		moved = false
 		guides = java.util.List.of()
 	}
+
+	/**
+	 * REQ-HUD-15: the box from the fixed corner to the dragged one (moved as the mouse moved since the press) over the element's
+	 * unscaled size, the larger of the two ratios, on the 0.1 step (halves up) and in 0.5-3.0; never so large that the element
+	 * would leave the window from the fixed corner (then the largest step that fits). The fixed corner stays where it is drawn.
+	 */
+	private fun scaleFromHandle(id: String, x: Double, y: Double, screenW: Double, screenH: Double) {
+		val w = sizes.width(id)
+		val h = sizes.height(id)
+		if (w <= 0 || h <= 0) {
+			return
+		}
+		val left = handle % 2 == 0
+		val top = handle < 2
+		val toX = cornerX + (x - pressX)
+		val toY = cornerY + (y - pressY)
+		// In tenths straight from the sizes, so a ratio exactly halfway (69 of 60 px: 11.5 tenths) rounds up, not by float error.
+		val tenths = maxOf((if (left) fixedX - toX else toX - fixedX) * 10 / w, (if (top) fixedY - toY else toY - fixedY) * 10 / h)
+		var scale = HudScale.clamp(Math.round(tenths) / 10.0)
+		while (scale > HudScale.MIN && !fits(w * scale, h * scale, left, top, screenW, screenH)) {
+			scale = HudScale.clamp(scale - HudScale.STEP)
+		}
+		val position = working.getValue(id)
+		if (scale == position.scale) {
+			return
+		}
+		working[id] = position.withScale(scale)
+		moveTo(id, if (left) fixedX - drawn(w * scale) else fixedX, if (top) fixedY - drawn(h * scale) else fixedY, screenW, screenH)
+		moved = true
+	}
+
+	/** Whether a [w]×[h] element drawn from the fixed corner towards the dragged one lies inside the window. */
+	private fun fits(w: Double, h: Double, left: Boolean, top: Boolean, screenW: Double, screenH: Double): Boolean =
+		(if (left) fixedX - drawn(w) >= 0 else fixedX + drawn(w) <= screenW) && (if (top) fixedY - drawn(h) >= 0 else fixedY + drawn(h) <= screenH)
+
+	/** A size as its outline spans it: rounded up, past float error (60 × 1.3 is 78, not 79). */
+	private fun drawn(size: Double): Double = ceil(size - 1e-6)
 
 	/** Scales the element under the mouse, else the selected one, in steps of 0.1 (REQ-HUD-05); false if there is none. */
 	fun scroll(x: Double, y: Double, notches: Int, screenW: Double, screenH: Double): Boolean {
@@ -175,7 +289,7 @@ class HudEditorModel(items: List<Item>, opened: Map<String, HudPosition>, privat
 	/** Moves the selected element by ([dx], [dy]) pixels, inside the window. */
 	fun nudge(dx: Int, dy: Int, screenW: Double, screenH: Double) {
 		val id = selected
-		if (id == null || dragging) {
+		if (id == null || dragging || handle >= 0) {
 			return
 		}
 		val rect = rect(id, screenW, screenH)
@@ -194,6 +308,7 @@ class HudEditorModel(items: List<Item>, opened: Map<String, HudPosition>, privat
 	/** Every element back where it was when the editor opened. */
 	fun cancel() {
 		dragging = false
+		handle = -1
 		guides = java.util.List.of()
 		working.clear()
 		working.putAll(opened)
@@ -218,5 +333,9 @@ class HudEditorModel(items: List<Item>, opened: Map<String, HudPosition>, privat
 	private companion object {
 		/** How far (GUI px) the mouse must move from the press before a drag snaps. */
 		const val SNAP_AFTER = 2.0
+
+		/** A handle's radius (a 5 GUI px disc) and how far from its centre a press still takes it, in GUI px (REQ-HUD-15). */
+		const val HANDLE_RADIUS = 2.5
+		const val HANDLE_REACH = 4.0
 	}
 }

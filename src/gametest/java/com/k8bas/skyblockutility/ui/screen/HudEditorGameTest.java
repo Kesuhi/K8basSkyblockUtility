@@ -82,6 +82,8 @@ public class HudEditorGameTest implements FabricClientGameTest {
 				hintGoesAtTheFirstDrag(context);
 				hintGoesAtOnceWithAnimationsOff(context);
 				snapsToTheCentreLine(context);
+				cornerHandles(context);
+				centresSnapToEachOther(context);
 				externalCloseSaves(context);
 				untouchedEntriesStay(context);
 				entryPoints(context, singleplayer);
@@ -577,6 +579,144 @@ public class HudEditorGameTest implements FabricClientGameTest {
 			return editor.resetSelectedButton().contains(at[0], at[1]) || editor.resetAllButton().contains(at[0], at[1])
 					|| editor.cancelButton().contains(at[0], at[1]) || editor.saveButton().contains(at[0], at[1]);
 		});
+	}
+
+	/**
+	 * AC-HUD-16 [A] + [C] (REQ-HUD-15, T3.54): selected, A (60 x 30 at 1.0) shows a handle at each corner, in the accent; the
+	 * pointer over one and while dragging it is the crosshair; the bottom-right handle dragged by (+30, +15) gives 1.5 with the
+	 * top-left corner where it was, and the top-left one by (+15, +6) gives 0.8 with the bottom-right corner where it was; no
+	 * write before Save; screenshots with the handles at GUI scales 2 and 3. Cancelled, so nothing is kept.
+	 */
+	private static void cornerHandles(ClientGameTestContext context) {
+		int saves = context.computeOnClient(client -> ConfigManager.saveRequests());
+		for (int guiScale : new int[] {2, 3}) {
+			context.runOnClient(client -> client.options.guiScale().set(guiScale));
+			context.waitTicks(2);
+			open(context, A);
+			int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+			check(scale == guiScale, "GUI scale " + guiScale + ": " + scale);
+			HudRect before = rect(context, A);
+			double[] handles = context.computeOnClient(client -> editor(client).model().handleCentres(client.getWindow().getGuiScaledWidth(),
+					client.getWindow().getGuiScaledHeight()));
+			check(handles != null && handles[0] == before.x() && handles[1] == before.y() && handles[6] == before.x() + before.w()
+					&& handles[7] == before.y() + before.h(), "a handle at each corner of A " + before + ": " + java.util.Arrays.toString(handles));
+			java.awt.image.BufferedImage shot = HairlineProbe.read(context.takeScreenshot("t3.54-handles-scale" + guiScale));
+			int accent = context.computeOnClient(client -> Theme.current().accent()) & 0xFFFFFF;
+			for (int corner = 0; corner < 4; corner++) {
+				int at = shot.getRGB((int) Math.floor(handles[2 * corner] * scale), (int) Math.floor(handles[2 * corner + 1] * scale)) & 0xFFFFFF;
+				check(distance(at, accent) <= 24, "scale " + guiScale + ": handle " + corner + " is an accent disc: " + Integer.toHexString(at));
+			}
+			// The bottom-right handle, rightwards from its centre: its dark rim (the darkest pixel 2 to 3.5 GUI px out; at GUI scale 3
+			// the disc's edge falls inside a pixel), then the backdrop at 4.
+			int rim = 0xFFFFFF;
+			int row = (int) Math.floor(handles[7] * scale);
+			for (int x = (int) Math.floor((handles[6] + 2) * scale); x <= (int) Math.floor((handles[6] + 3.5) * scale); x++) {
+				int pixel = shot.getRGB(x, row) & 0xFFFFFF;
+				rim = sum(pixel) < sum(rim) ? pixel : rim;
+			}
+			int past = shot.getRGB((int) Math.floor((handles[6] + 4) * scale), (int) Math.floor(handles[7] * scale)) & 0xFFFFFF;
+			check(distance(past, accent) > 60 && sum(rim) + 30 < sum(past) && distance(rim, accent) > 60, "scale " + guiScale
+					+ ": the disc ends in a dark rim within 3 GUI px: rim " + Integer.toHexString(rim) + ", past " + Integer.toHexString(past));
+			if (guiScale == 3) {
+				click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+				break;
+			}
+			com.k8bas.skyblockutility.ui.widget.PointerProbe.expect(context, handles[6], handles[7], com.k8bas.skyblockutility.ui.widget.PointerShape.CROSSHAIR,
+					"the bottom-right handle");
+			cursorExact(context, handles[6], handles[7]);
+			context.waitTicks(2);
+			context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			for (int i = 1; i <= 10; i++) {
+				cursorExact(context, handles[6] + 3.0 * i, handles[7] + 1.5 * i);
+				context.waitTick();
+			}
+			context.waitTick();
+			// Far past the largest scale, away from every handle and from A: still the crosshair, as the drag's own pointer.
+			cursorExact(context, handles[6] + 200, handles[7] + 100);
+			context.waitTicks(2);
+			check(context.computeOnClient(client -> editor(client).model().positions().get(A).scale()) == 3.0, "dragged far out: 3.0 at most");
+			com.k8bas.skyblockutility.ui.widget.PointerProbe.check(context, com.k8bas.skyblockutility.ui.widget.PointerShape.CROSSHAIR,
+					"a handle while it is dragged, away from every handle");
+			cursorExact(context, handles[6] + 30, handles[7] + 15);
+			context.waitTicks(2);
+			context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTicks(2);
+			HudRect grown = rect(context, A);
+			check(context.computeOnClient(client -> editor(client).model().positions().get(A).scale()) == 1.5 && grown.x() == before.x()
+					&& grown.y() == before.y() && grown.w() == 90 && grown.h() == 45, "the bottom-right handle by (+30, +15): 1.5 about the top-left " + grown);
+			// Back to 1.0, then the top-left handle by (+15, +6).
+			context.runOnClient(client -> editor(client).model().positions().put(A, editor(client).model().opened(A)));
+			context.waitTicks(2);
+			double[] topLeft = {before.x(), before.y()};
+			cursorExact(context, topLeft[0], topLeft[1]);
+			context.waitTicks(2);
+			context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			for (int i = 1; i <= 3; i++) {
+				cursorExact(context, topLeft[0] + 5.0 * i, topLeft[1] + 2.0 * i);
+				context.waitTick();
+			}
+			context.waitTick();
+			context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTicks(2);
+			HudRect shrunk = rect(context, A);
+			check(context.computeOnClient(client -> editor(client).model().positions().get(A).scale()) == 0.8
+					&& shrunk.x() + shrunk.w() == before.x() + before.w() && shrunk.y() + shrunk.h() == before.y() + before.h(),
+					"the top-left handle by (+15, +6): 0.8 about the bottom-right " + shrunk);
+			check(context.computeOnClient(client -> ConfigManager.saveRequests()) == saves, "nothing written before Save");
+			click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+			check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closes it");
+		}
+		context.runOnClient(client -> client.options.guiScale().set(2));
+		context.waitTicks(2);
+		LOGGER.info("hud editor handles: four accent discs at GUI scales 2 and 3, the crosshair over and on one, 1.5 and 0.8 about the opposite corner");
+	}
+
+	/**
+	 * AC-HUD-16 [C] (REQ-HUD-14 as amended by R47, T3.54): C, scaled to 2.0 and placed at (600, 300), is far wider than A, so
+	 * when A is dragged with its centre 3 px right of C's, only the centres are within 4 px: A snaps onto C's centre line with
+	 * a guide there; with Alt held it follows the mouse.
+	 */
+	private static void centresSnapToEachOther(ClientGameTestContext context) {
+		open(context, null);
+		context.runOnClient(client -> editor(client).model().positions().put(C, new HudPosition(HudAnchor.TOP_LEFT, 600, 300, 2)));
+		context.waitTicks(2);
+		HudRect c = rect(context, C);
+		HudRect a = rect(context, A);
+		double cCentre = c.x() + c.w() / 2;
+		check(c.w() / 2 - a.w() / 2 > 4 + 3, "C is wide enough that A's edges stay away from C's: " + a + ", " + c);
+		double startX = Math.floor(a.x() + 20) + 0.5;
+		double startY = Math.floor(a.y() + 10) + 0.5;
+		cursorExact(context, startX, startY);
+		context.waitTicks(2);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		double targetX = startX + (cCentre + 3 - a.w() / 2 - a.x());
+		for (int i = 1; i <= 20; i++) {
+			cursorExact(context, startX + (targetX - startX) * i / 20, startY);
+			context.waitTick();
+		}
+		context.waitTick();
+		HudRect snapped = rect(context, A);
+		check(Math.abs(snapped.x() + snapped.w() / 2 - cCentre) <= 0.5 && snapped.y() == a.y(), "A's centre snapped to C's centre line " + cCentre + ": "
+				+ snapped);
+		check(context.computeOnClient(client -> editor(client).model().guides(client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()))
+				.contains(new HudSnap.Guide(true, (int) Math.floor(cCentre))), "with its guide");
+		context.takeScreenshot("t3.54-snap-centres");
+		context.getInput().holdAlt();
+		cursorExact(context, targetX + 1, startY);
+		context.waitTick();
+		cursorExact(context, targetX, startY);
+		context.waitTicks(2);
+		HudRect free = rect(context, A);
+		check(Math.abs(free.x() + free.w() / 2 - (cCentre + 3)) <= 0.5, "with Alt it does not snap: " + free);
+		context.getInput().releaseAlt();
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closes it");
+		LOGGER.info("hud editor: A's centre snapped to C's centre line at {}, and followed the mouse with Alt held", cCentre);
 	}
 
 	/**

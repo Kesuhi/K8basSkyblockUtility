@@ -1032,6 +1032,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 			PointerShape.RESIZE_HORIZONTAL -> CursorTypes.RESIZE_EW
 			PointerShape.RESIZE_VERTICAL -> CursorTypes.RESIZE_NS
 			PointerShape.MOVE -> CursorTypes.RESIZE_ALL
+			PointerShape.CROSSHAIR -> CursorTypes.CROSSHAIR
 		}
 		private const val KEY_SPACE = 32
 

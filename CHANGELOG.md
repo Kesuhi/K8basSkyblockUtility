@@ -17,6 +17,10 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - Scrolling areas (the settings page, the database picker, long dropdown lists) fade their content softly
   at an edge where there is more to scroll to, so you can tell there is more above or below.
 - A slider with only a few values (the notice duration) shows a small dot at each of them.
+- In the HUD editor, the selected element has a round handle at each corner: drag one to scale the element
+  while the opposite corner stays put. It stops at 0.5 and 3.0 and at the edge of the window.
+- In the HUD editor, an element's centre also lines up with other elements' centres while you drag it,
+  with a guide line, unless you hold Alt.
 
 ### Changed
 

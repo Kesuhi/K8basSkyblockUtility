@@ -17,5 +17,7 @@ public enum PointerShape {
 	/** While a scrollbar's thumb is dragged. */
 	RESIZE_VERTICAL,
 	/** Over, and while dragging, an element in the HUD editor. */
-	MOVE
+	MOVE,
+	/** Over, and while dragging, a corner handle in the HUD editor (26.2 has no diagonal-resize pointer, REQ-HUD-15). */
+	CROSSHAIR
 }

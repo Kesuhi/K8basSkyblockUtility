@@ -29,6 +29,7 @@ public final class PointerProbe {
 			case RESIZE_HORIZONTAL -> CursorTypes.RESIZE_EW;
 			case RESIZE_VERTICAL -> CursorTypes.RESIZE_NS;
 			case MOVE -> CursorTypes.RESIZE_ALL;
+			case CROSSHAIR -> CursorTypes.CROSSHAIR;
 		};
 	}
 

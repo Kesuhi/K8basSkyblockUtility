@@ -56,7 +56,7 @@ import java.util.Set;
 public final class HudEditorScreen extends WidgetScreen implements SavesOnClose {
 	public static final String TITLE = "Edit HUD layout";
 	/** The hint panel's two lines (REQ-HUD-08). */
-	static final String HINT_MOVE = "Drag to move · Scroll to scale";
+	static final String HINT_MOVE = "Drag to move · Drag a corner or scroll to scale";
 	static final String HINT_KEYS = "Arrows nudge (Shift: 10 px) · Esc saves";
 	static final String RESET_ALL = "Reset All";
 	/** Reset All while it waits for its second click (REQ-HUD-08). */
@@ -118,6 +118,9 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	/** A name chip's padding at each side and its corners, in GUI px (REQ-HUD-07). */
 	static final int CHIP_PAD = 3;
 	static final int CHIP_RADIUS = 3;
+	/** A corner handle: a disc this many GUI px across in the accent, on a dark rim a hairline wide (REQ-HUD-15). */
+	static final float HANDLE = 5F;
+	private static final int HANDLE_RIM = 0xFF101215;
 
 	public HudEditorScreen(Screen parent) {
 		this(parent, null);
@@ -330,6 +333,7 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			labelChips.put(id, chip);
 			UiText.draw(graphics, font, label, labelX, labelY, disabled ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY);
 		}
+		drawHandles(graphics, accent);
 		// While a drag is snapped, a hairline accent guide per target it lies on (REQ-HUD-14, REQ-UI-33), under the status panel.
 		List<HudSnap.Guide> guides = model.guides(width, height);
 		for (int i = 0; i < guides.size(); i++) {
@@ -354,6 +358,23 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		}
 		// Resting there, not dragging an element across it.
 		drawHint(graphics, dragged == null && mouseX >= 0 && overCard(new HudRect(mouseX, mouseY, 1, 1)));
+	}
+
+	/** REQ-HUD-15: the selected element's four corner handles, held inside the window by the model, over every element. */
+	private void drawHandles(GuiGraphicsExtractor graphics, int accent) {
+		double[] centres = model.handleCentres(width, height);
+		if (centres == null) {
+			return;
+		}
+		graphics.nextStratum();
+		float rim = HANDLE + 2 * Shapes.hairlineGui(Shapes.guiScale());
+		for (int corner = 0; corner < 4; corner++) {
+			Shapes.disc(graphics, (float) centres[2 * corner], (float) centres[2 * corner + 1], rim, HANDLE_RIM);
+		}
+		graphics.nextStratum();
+		for (int corner = 0; corner < 4; corner++) {
+			Shapes.disc(graphics, (float) centres[2 * corner], (float) centres[2 * corner + 1], HANDLE, accent);
+		}
 	}
 
 	/** Whether a rectangle reaches into the toolbar card. */
@@ -564,13 +585,19 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		/** The move pointer over an element, which a press grabs (REQ-UI-43). */
 		@Override
 		public PointerShape cursorAt(double mouseX, double mouseY) {
-			return model.at(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height) != null ? PointerShape.MOVE : PointerShape.DEFAULT;
+			int w = HudEditorScreen.this.width;
+			int h = HudEditorScreen.this.height;
+			// The crosshair over a corner handle (REQ-HUD-15), which a press takes before the element under it.
+			if (model.handleAt(mouseX, mouseY, w, h) >= 0) {
+				return PointerShape.CROSSHAIR;
+			}
+			return model.at(mouseX, mouseY, w, h) != null ? PointerShape.MOVE : PointerShape.DEFAULT;
 		}
 
 		/** And while one is dragged, wherever the mouse goes. */
 		@Override
 		public PointerShape dragCursor() {
-			return model.dragging() ? PointerShape.MOVE : null;
+			return model.scaling() ? PointerShape.CROSSHAIR : model.dragging() ? PointerShape.MOVE : null;
 		}
 
 		@Override
@@ -581,7 +608,9 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			draggedSincePress = false;
 			// A press on the card that misses its buttons and every element (its padding, the gap between two buttons) changes
 			// nothing, rather than dropping the selection as a press on empty space does.
-			if (overCard(new HudRect(mouseX, mouseY, 0, 0)) && model.at(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height) == null) {
+			int w = HudEditorScreen.this.width;
+			int h = HudEditorScreen.this.height;
+			if (overCard(new HudRect(mouseX, mouseY, 0, 0)) && model.at(mouseX, mouseY, w, h) == null && model.handleAt(mouseX, mouseY, w, h) < 0) {
 				return true;
 			}
 			model.press(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height);
@@ -594,6 +623,9 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			model.drag(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height, !minecraft.hasAltDown());
 			if (model.dragging()) {
 				draggedSincePress = true;
+				toolbar.acted();
+			} else if (model.scaling()) {
+				// A handle drag is a scale: the hint starts to fade too.
 				toolbar.acted();
 			}
 		}
