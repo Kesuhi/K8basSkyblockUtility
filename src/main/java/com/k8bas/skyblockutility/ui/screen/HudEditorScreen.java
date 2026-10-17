@@ -17,8 +17,11 @@ import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
+import com.k8bas.skyblockutility.ui.render.UiClock;
+import com.k8bas.skyblockutility.ui.render.UiFade;
 import com.k8bas.skyblockutility.ui.render.UiSound;
 import com.k8bas.skyblockutility.ui.render.UiText;
+import com.k8bas.skyblockutility.ui.render.UiTime;
 import com.k8bas.skyblockutility.ui.widget.Button;
 import com.k8bas.skyblockutility.ui.widget.PointerShape;
 import com.k8bas.skyblockutility.ui.widget.SavesOnClose;
@@ -47,10 +50,25 @@ import java.util.Set;
  * whose feature is off greyed with "(disabled)". Drag to move, the wheel to scale, arrows to nudge. The
  * file is written on Save, on a reset and when the editor closes by any route: Esc and an external close
  * save as Save does (R12); only Cancel puts every element back where it was. Needs no world (EC-HUD-08).
+ * The buttons and the status line sit in a card at the top centre, so the hotbar stays free, with the
+ * instructions in a hint panel below it that fades once the player has started (REQ-HUD-08, R47).
  */
 public final class HudEditorScreen extends WidgetScreen implements SavesOnClose {
 	public static final String TITLE = "Edit HUD layout";
-	static final String HINT = "Drag to move · Scroll to scale · Arrows nudge (Shift: 10 px) · Esc saves";
+	/** The hint panel's two lines (REQ-HUD-08). */
+	static final String HINT_MOVE = "Drag to move · Scroll to scale";
+	static final String HINT_KEYS = "Arrows nudge (Shift: 10 px) · Esc saves";
+	static final String RESET_ALL = "Reset All";
+	/** Reset All while it waits for its second click (REQ-HUD-08). */
+	static final String CONFIRM_RESET = "Confirm reset";
+	/** The toolbar card's distance from the top, its padding and the gap between its buttons, in GUI px. */
+	static final int CARD_TOP = 6;
+	static final int CARD_PAD = 6;
+	private static final int BUTTON_GAP = 4;
+	private static final int[] BUTTON_WIDTHS = {90, 80, 60, 60};
+	private static final int BUTTON_HEIGHT = 18;
+	/** The hint panel's gap below the card, in GUI px. */
+	private static final int HINT_GAP = 4;
 	static final String NOTHING_SELECTED = "Click a HUD to select it";
 	/** The empty editor's card (REQ-UI-54): its title and its line. */
 	static final String NO_ELEMENTS = "No HUD elements yet";
@@ -76,6 +94,19 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	/** Elements whose entry this editor has written (a reset); Cancel puts theirs back. */
 	private final Set<String> written = new HashSet<>();
 	private boolean finished;
+	/**
+	 * The hint panel's and the card's fades and Reset All's second click, on this screen's own clock source, read when asked:
+	 * the arrow keys are handled here before {@code WidgetScreen} sets the frame's clock.
+	 */
+	private final HudToolbar toolbar = new HudToolbar(UiTime.of(() -> getTime().millis(), () -> getTime().motion()));
+	/** Whether the element pressed now has been moved by the mouse: only then is it "dragged" for the card and the hint. */
+	private boolean draggedSincePress;
+	/** The toolbar card, {x, y, w, h} in GUI px, as laid out last. */
+	private final int[] card = new int[4];
+	/** The hint panel as drawn last, {x, y, w, h} in GUI px, and its opacity then; the card's opacity then. */
+	private final int[] hintPanel = new int[4];
+	private float hintAlpha = 1F;
+	private float cardAlpha = 1F;
 	/** The empty editor's card as drawn last, {x, y, w, h} in GUI px; null while there are elements. */
 	private int[] emptyCard;
 	/** Each element's name chip as drawn last, {x, y, w, h} in GUI px (for gametests). */
@@ -94,7 +125,13 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 
 	/** @param select the element to start with selected (an "Edit position" button), or null */
 	public HudEditorScreen(Screen parent, String select) {
+		this(parent, select, UiClock.GAME);
+	}
+
+	/** On a UI clock of its own (a gametest's test clock). */
+	HudEditorScreen(Screen parent, String select, UiTime time) {
 		super(Component.literal(TITLE));
+		setTime(time);
 		this.parent = parent;
 		this.elements = HudRegistry.elements();
 		List<HudEditorModel.Item> items = new ArrayList<>();
@@ -123,9 +160,13 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			model.resetSelected();
 			write();
 		}, UiSound::click));
-		resetAll = add(new Button("Reset All", Button.Style.NORMAL, () -> {
-			model.resetAll();
-			write();
+		// Two clicks (REQ-HUD-08): the first asks, a second within 3 s resets every element.
+		resetAll = add(new Button(RESET_ALL, Button.Style.NORMAL, () -> {
+			if (toolbar.resetAllClicked()) {
+				model.resetAll();
+				write();
+			}
+			relabelResetAll();
 		}, UiSound::click));
 		cancel = add(new Button("Cancel", Button.Style.NORMAL, this::cancelAndClose, UiSound::click));
 		save = add(new Button("Save", Button.Style.PRIMARY, this::onClose, UiSound::click));
@@ -162,21 +203,63 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		return resetAll;
 	}
 
+	/** The toolbar card, {x, y, w, h} in GUI px (for gametests). */
+	int[] toolbarCardForTests() {
+		return card.clone();
+	}
+
+	/** The hint panel as drawn last, {x, y, w, h} in GUI px (for gametests). */
+	int[] hintPanelForTests() {
+		return hintPanel.clone();
+	}
+
+	/** The hint panel's and the card's opacity in the last frame (for gametests). */
+	float hintAlphaForTests() {
+		return hintAlpha;
+	}
+
+	float cardAlphaForTests() {
+		return cardAlpha;
+	}
+
+	/**
+	 * REQ-HUD-08: one card centred at the top, 6 GUI px down, the status line over the four buttons; the hotbar stays free.
+	 */
 	@Override
 	protected void layout() {
 		canvas.setBounds(0, 0, width, height);
-		int[] widths = {96, 72, 64, 64};
 		Button[] buttons = {resetSelected, resetAll, cancel, save};
-		int total = 3 * 6;
-		for (int w : widths) {
-			total += w;
+		int row = BUTTON_GAP * (buttons.length - 1);
+		for (int w : BUTTON_WIDTHS) {
+			row += w;
 		}
-		int x = (width - total) / 2;
+		card[2] = Math.min(row + 2 * CARD_PAD, width - 4);
+		card[3] = CARD_PAD + font.lineHeight + 5 + BUTTON_HEIGHT + CARD_PAD;
+		card[0] = (width - card[2]) / 2;
+		card[1] = CARD_TOP;
+		int x = card[0] + (card[2] - row) / 2;
+		int y = card[1] + card[3] - CARD_PAD - BUTTON_HEIGHT;
 		for (int i = 0; i < buttons.length; i++) {
-			buttons[i].setBounds(x, height - 26, widths[i], 18);
-			x += widths[i] + 6;
+			buttons[i].setBounds(x, y, BUTTON_WIDTHS[i], BUTTON_HEIGHT);
+			x += BUTTON_WIDTHS[i] + BUTTON_GAP;
 		}
 		resetSelected.setEnabled(model.selected() != null);
+		relabelResetAll();
+	}
+
+	/** Reset All as "Confirm reset" in the destructive style while it waits for its second click, else as it was. */
+	private void relabelResetAll() {
+		if (toolbar.confirming()) {
+			resetAll.relabel(CONFIRM_RESET, Button.Style.DESTRUCTIVE);
+		} else {
+			resetAll.relabel(RESET_ALL, Button.Style.NORMAL);
+		}
+	}
+
+	/** The card's buttons fade with it while an element is dragged over it (REQ-HUD-08). */
+	@Override
+	protected float widgetOpacity(Widget widget) {
+		return widget == canvas ? 1F : cardAlpha;
 	}
 
 	@Override
@@ -190,6 +273,18 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		labelChips.clear();
 		String hovered = mouseX < 0 ? null : model.at(mouseX, mouseY, width, height);
 		int accent = Theme.current().accent();
+		// REQ-HUD-08: the toolbar card first, so an element under it is drawn above its background and below its buttons; at
+		// 30 % while an element is dragged over it.
+		String dragged = model.dragging() && draggedSincePress ? model.selected() : null;
+		cardAlpha = toolbar.cardAlpha(dragged != null && overCard(model.rect(dragged, width, height)));
+		float fade = UiFade.enter(cardAlpha);
+		try {
+			Shapes.shadow(graphics, card[0], card[1], card[2], card[3], Shapes.RADIUS_CARD);
+			Shapes.roundedRect(graphics, card[0], card[1], card[2], card[3], Shapes.RADIUS_CARD, Theme.PANEL);
+		} finally {
+			UiFade.leave(fade);
+		}
+		graphics.nextStratum();
 		List<HudRect> rects = new ArrayList<>();
 		for (HudElement element : elements) {
 			// REQ-HUD-07: the selected element on the accent at 15 %, a hovered one on white at 6 %, under its content.
@@ -248,14 +343,44 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		if (elements.isEmpty()) {
 			drawEmptyCard(graphics);
 		}
-		// Above the buttons, clear of the top edge where HUDs usually sit, on a panel over the game's own HUD.
-		String status = status();
-		int panelW = Math.max(font.width(status), font.width(HINT)) + 16;
-		int panelY = height - 26 - 2 * 12 - 5;
-		Shapes.roundedRect(graphics, (width - panelW) / 2, panelY, panelW, 2 * 12 + 6, Shapes.RADIUS_CONTROL, PANEL);
+		// The status line on the card, over any element under it, as its buttons are.
 		graphics.nextStratum();
-		UiText.centred(graphics, font, status, width / 2, panelY + 4, Theme.TEXT_PRIMARY);
-		UiText.centred(graphics, font, HINT, width / 2, panelY + 16, Theme.TEXT_SECONDARY);
+		fade = UiFade.enter(cardAlpha);
+		try {
+			String status = Ellipsis.fit(status(), card[2] - 2 * CARD_PAD, font::width);
+			UiText.centred(graphics, font, status, card[0] + card[2] / 2, card[1] + CARD_PAD, Theme.TEXT_PRIMARY);
+		} finally {
+			UiFade.leave(fade);
+		}
+		// Resting there, not dragging an element across it.
+		drawHint(graphics, dragged == null && mouseX >= 0 && overCard(new HudRect(mouseX, mouseY, 1, 1)));
+	}
+
+	/** Whether a rectangle reaches into the toolbar card. */
+	private boolean overCard(HudRect rect) {
+		return rect.x() < card[0] + card[2] && rect.x() + rect.w() > card[0] && rect.y() < card[1] + card[3] && rect.y() + rect.h() > card[1];
+	}
+
+	/** REQ-HUD-08: the instructions in two lines on a panel just below the card, as faded as the toolbar says. */
+	private void drawHint(GuiGraphicsExtractor graphics, boolean pointerOnCard) {
+		hintAlpha = toolbar.hintAlpha(pointerOnCard);
+		hintPanel[2] = Math.min(Math.max(font.width(HINT_MOVE), font.width(HINT_KEYS)) + 16, width - 4);
+		hintPanel[3] = 2 * 12 + 6;
+		hintPanel[0] = (width - hintPanel[2]) / 2;
+		hintPanel[1] = card[1] + card[3] + HINT_GAP;
+		if (hintAlpha <= 0F) {
+			return;
+		}
+		float fade = UiFade.enter(hintAlpha);
+		try {
+			graphics.nextStratum();
+			Shapes.roundedRect(graphics, hintPanel[0], hintPanel[1], hintPanel[2], hintPanel[3], Shapes.RADIUS_CONTROL, PANEL);
+			graphics.nextStratum();
+			UiText.centred(graphics, font, HINT_MOVE, width / 2, hintPanel[1] + 4, Theme.TEXT_SECONDARY);
+			UiText.centred(graphics, font, HINT_KEYS, width / 2, hintPanel[1] + 16, Theme.TEXT_SECONDARY);
+		} finally {
+			UiFade.leave(fade);
+		}
 	}
 
 	/**
@@ -314,19 +439,19 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 					return true;
 				}
 				case GLFW.GLFW_KEY_LEFT -> {
-					model.nudge(-step, 0, width, height);
+					nudge(-step, 0);
 					return true;
 				}
 				case GLFW.GLFW_KEY_RIGHT -> {
-					model.nudge(step, 0, width, height);
+					nudge(step, 0);
 					return true;
 				}
 				case GLFW.GLFW_KEY_UP -> {
-					model.nudge(0, -step, width, height);
+					nudge(0, -step);
 					return true;
 				}
 				case GLFW.GLFW_KEY_DOWN -> {
-					model.nudge(0, step, width, height);
+					nudge(0, step);
 					return true;
 				}
 				default -> {
@@ -334,6 +459,14 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			}
 		}
 		return super.keyPressed(event);
+	}
+
+	/** A nudge of the selection, which starts the hint's fade when there is one (REQ-HUD-08). */
+	private void nudge(int dx, int dy) {
+		if (model.selected() != null) {
+			toolbar.acted();
+		}
+		model.nudge(dx, dy, width, height);
 	}
 
 	/** Save, and Esc: written, then back to the opener. */
@@ -445,6 +578,12 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			if (button != 0) {
 				return false;
 			}
+			draggedSincePress = false;
+			// A press on the card that misses its buttons and every element (its padding, the gap between two buttons) changes
+			// nothing, rather than dropping the selection as a press on empty space does.
+			if (overCard(new HudRect(mouseX, mouseY, 0, 0)) && model.at(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height) == null) {
+				return true;
+			}
 			model.press(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height);
 			return true;
 		}
@@ -453,16 +592,25 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		public void drag(double mouseX, double mouseY) {
 			// Snaps unless Alt is held (REQ-HUD-14); read live, as a drag event carries the modifiers of its press.
 			model.drag(mouseX, mouseY, HudEditorScreen.this.width, HudEditorScreen.this.height, !minecraft.hasAltDown());
+			if (model.dragging()) {
+				draggedSincePress = true;
+				toolbar.acted();
+			}
 		}
 
 		@Override
 		public void release(double mouseX, double mouseY) {
 			model.release(HudEditorScreen.this.width, HudEditorScreen.this.height);
+			draggedSincePress = false;
 		}
 
 		@Override
 		public boolean scroll(double mouseX, double mouseY, int notches, boolean fine) {
-			return model.scroll(mouseX, mouseY, notches, HudEditorScreen.this.width, HudEditorScreen.this.height);
+			boolean scaled = model.scroll(mouseX, mouseY, notches, HudEditorScreen.this.width, HudEditorScreen.this.height);
+			if (scaled) {
+				toolbar.acted();
+			}
+			return scaled;
 		}
 	}
 }

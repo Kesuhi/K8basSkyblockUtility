@@ -22,8 +22,8 @@ public final class Button extends Widget {
 		LIVE, HOVER, PRESSED
 	}
 
-	private final String label;
-	private final Style style;
+	private String label;
+	private Style style;
 	private final Runnable action;
 	private final Runnable clickSound;
 	private boolean pressed;
@@ -32,6 +32,17 @@ public final class Button extends Widget {
 	/** Its style; a normal one, enabled, has the separator-coloured outline (for gametests too). */
 	public Style style() {
 		return style;
+	}
+
+	/** Its label as drawn (for gametests too). */
+	public String label() {
+		return label;
+	}
+
+	/** A new label and style, e.g. a two-step button asking for its second click (REQ-HUD-08). */
+	public void relabel(String label, Style style) {
+		this.label = label;
+		this.style = style;
 	}
 
 	public Button(String label, Style style, Runnable action, Runnable clickSound) {

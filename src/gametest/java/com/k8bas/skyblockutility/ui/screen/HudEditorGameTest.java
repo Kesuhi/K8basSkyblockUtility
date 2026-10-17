@@ -16,6 +16,8 @@ import com.k8bas.skyblockutility.hud.HudRegistry;
 import com.k8bas.skyblockutility.hud.ShippedHud;
 import com.k8bas.skyblockutility.hud.HudText;
 import com.k8bas.skyblockutility.hud.TextMeasure;
+import com.k8bas.skyblockutility.ui.render.UiTime;
+import com.k8bas.skyblockutility.ui.widget.Button;
 import com.k8bas.skyblockutility.ui.widget.Widget;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -76,6 +78,9 @@ public class HudEditorGameTest implements FabricClientGameTest {
 				pointerShapes(context);
 				dragNudgeScaleAndSave(context);
 				cancelAndResets(context);
+				toolbar(context);
+				hintGoesAtTheFirstDrag(context);
+				hintGoesAtOnceWithAnimationsOff(context);
 				snapsToTheCentreLine(context);
 				externalCloseSaves(context);
 				untouchedEntriesStay(context);
@@ -207,12 +212,13 @@ public class HudEditorGameTest implements FabricClientGameTest {
 		check(bChip != null && bChip[1] >= b.y() + b.h(), "B's name chip lies below its box: " + java.util.Arrays.toString(bChip) + " under " + b);
 		check(context.computeOnClient(client -> editor(client).status()).equals(HudEditorScreen.NOTHING_SELECTED), "nothing selected yet");
 		java.awt.image.BufferedImage editorShot = HairlineProbe.read(context.takeScreenshot("t2.8-editor"));
-		// AC-UI-34 [C] (T3.23): box B's outline is a hairline just outside its box, measured down from its bottom edge.
+		// AC-UI-34 [C] (T3.23): box B's outline is a hairline just outside its box, measured leftwards from its left edge at
+		// mid-height (its bottom edge lies under the toolbar card's buttons since T3.53).
 		int editorScale = context.computeOnClient(client -> client.getWindow().getGuiScale());
-		int bx = (int) b.x() + (int) Math.ceil(b.w()) / 2;
-		int by = (int) b.y() + (int) Math.ceil(b.h());
+		int bx = (int) b.x();
+		int by = (int) b.y() + (int) Math.ceil(b.h()) / 2;
 		// B is registered disabled and nothing hovers it, so its outline has the disabled text colour.
-		String outline = HairlineProbe.check(editorShot, "box B's outline", editorScale, bx * editorScale, by * editorScale, 0, 1, Theme.TEXT_DISABLED);
+		String outline = HairlineProbe.check(editorShot, "box B's outline", editorScale, bx * editorScale - 1, by * editorScale, -1, 0, Theme.TEXT_DISABLED);
 		check(outline.isEmpty(), outline);
 		LOGGER.info("hud editor: {} drawn once each by the editor, none by the HUD", drawn);
 	}
@@ -359,12 +365,218 @@ public class HudEditorGameTest implements FabricClientGameTest {
 		check(context.computeOnClient(client -> HudPositions.LIVE.get(A, A_DEFAULT)).equals(A_DEFAULT), "A is back at its default");
 		check(context.computeOnClient(client -> HudPositions.LIVE.get(C, C_DEFAULT)).equals(stored.get(C)), "C is as it was");
 		context.runOnClient(client -> editor(client).model().positions().put(C, new HudPosition(HudAnchor.CENTER, 0, 0, 2)));
+		Map<String, HudPosition> beforeReset = context.computeOnClient(client -> Map.copyOf(editor(client).model().positions()));
+		click(context, centre(context.computeOnClient(client -> bounds(editor(client).resetAllButton()))));
+		check(context.computeOnClient(client -> editor(client).model().positions()).equals(beforeReset), "Reset All's first click changes nothing");
 		click(context, centre(context.computeOnClient(client -> bounds(editor(client).resetAllButton()))));
 		check(context.computeOnClient(client -> editor(client).model().positions()).equals(Map.of(A, A_DEFAULT, B, B_DEFAULT, C, C_DEFAULT)),
-				"Reset All: every element at its default");
+				"Reset All's second click: every element at its default");
 		click(context, centre(context.computeOnClient(client -> bounds(editor(client).saveButton()))));
 		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Save closes it");
 		LOGGER.info("hud editor: Cancel restored {} entries; Reset Selected and Reset All put defaults back; a resize kept the selection", stored.size());
+	}
+
+	/**
+	 * AC-HUD-15 [C] + [A], its other bullets, and EC-HUD-11 (REQ-HUD-08, T3.53), at GUI scale 2 on a test clock with motion
+	 * on: the toolbar card lies centred 6 GUI px from the top with its four buttons, and neither it nor the hint panel lies
+	 * over the hotbar; the hint shows at 0 ms, fades from 4 s and is gone at 4.3 s, and comes back while the pointer rests on
+	 * the card; box B, whose default place reaches under the card, is selected by a press there outside the buttons; A put
+	 * under the card is drawn above its background, and a press on a button over A presses the button; Reset All asks for a
+	 * second click within 3 s; the card fades to 30 % while A is dragged over it. Cancelled, so nothing is kept.
+	 */
+	private static void toolbar(ClientGameTestContext context) {
+		java.util.concurrent.atomic.AtomicLong clock = new java.util.concurrent.atomic.AtomicLong(100_000);
+		context.setScreen(() -> new HudEditorScreen(null, null, UiTime.of(clock::get, () -> true)));
+		context.waitForScreen(HudEditorScreen.class);
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		int[] gui = context.computeOnClient(client -> new int[] {client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()});
+		int[] card = context.computeOnClient(client -> editor(client).toolbarCardForTests());
+		int[] hint = context.computeOnClient(client -> editor(client).hintPanelForTests());
+		check(card[1] == 6 && Math.abs(2 * card[0] + card[2] - gui[0]) <= 1, "the card is centred, 6 GUI px from the top: "
+				+ java.util.Arrays.toString(card));
+		for (Button button : context.computeOnClient(client -> List.of(editor(client).resetSelectedButton(), editor(client).resetAllButton(),
+				editor(client).cancelButton(), editor(client).saveButton()))) {
+			check(button.x() >= card[0] && button.y() >= card[1] && button.x() + button.width() <= card[0] + card[2]
+					&& button.y() + button.height() <= card[1] + card[3], "its button " + button.label() + " lies on it");
+		}
+		// The hotbar: 182 x 22 GUI px, centred at the bottom.
+		int[] hotbar = {gui[0] / 2 - 91, gui[1] - 22, 182, 22};
+		check(!overlaps(card, hotbar) && !overlaps(hint, hotbar) && hint[1] >= card[1] + card[3], "neither the card nor the hint panel "
+				+ java.util.Arrays.toString(hint) + " lies over the hotbar");
+		java.awt.image.BufferedImage toolbarShot = HairlineProbe.read(context.takeScreenshot("t3.53-toolbar"));
+		check(hintAlpha(context) == 1F, "the hint shows at 0 ms");
+		clock.addAndGet(3_999);
+		check(hintAlpha(context) == 1F, "and at 3.999 s");
+		clock.addAndGet(151);
+		float fading = hintAlpha(context);
+		check(fading > 0F && fading < 1F, "at 4.15 s it fades: " + fading);
+		clock.addAndGet(150);
+		check(hintAlpha(context) == 0F, "at 4.3 s it is gone");
+		cursor(context, card[0] + 3, card[1] + 3);
+		clock.addAndGet(300);
+		check(hintAlpha(context) == 1F, "the pointer on the card brings it back over 300 ms");
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		clock.addAndGet(300);
+		check(hintAlpha(context) == 0F, "and it goes when the pointer leaves");
+
+		// EC-HUD-11: B's default place reaches under the card; a press there outside the buttons selects it.
+		HudRect b = rect(context, B);
+		double[] underCard = {Math.max(b.x(), card[0]) + 2, Math.max(b.y(), card[1]) + 2};
+		check(underCard[0] < b.x() + b.w() && underCard[1] < b.y() + b.h() && underCard[0] < card[0] + card[2] && underCard[1] < card[1] + card[3]
+				&& !onAButton(context, underCard), "a point of B under the card and off the buttons: " + java.util.Arrays.toString(underCard));
+		click(context, underCard);
+		check(B.equals(context.computeOnClient(client -> editor(client).model().selected())), "a press there selects B");
+		// A press on the card's padding, beside its buttons and clear of every element, keeps the selection.
+		double[] padding = {card[0] + 3, card[1] + card[3] - 3};
+		check(!onAButton(context, padding) && context.computeOnClient(client -> editor(client).model().at(padding[0], padding[1], gui[0], gui[1])) == null,
+				"a point of the card's padding: " + java.util.Arrays.toString(padding));
+		click(context, padding);
+		check(B.equals(context.computeOnClient(client -> editor(client).model().selected())), "a press on the card's padding keeps B selected");
+
+		// A under the card, across the gap between Reset Selected and Reset All: drawn above the card's background.
+		HudRect resetAll = context.computeOnClient(client -> bounds(editor(client).resetAllButton()));
+		HudPosition underButtons = new HudPosition(HudAnchor.TOP_LEFT, (int) resetAll.x() - 10, (int) resetAll.y() - 4, 1);
+		context.runOnClient(client -> editor(client).model().positions().put(A, underButtons));
+		context.waitTicks(2);
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		java.awt.image.BufferedImage shot = HairlineProbe.read(context.takeScreenshot("t3.53-under-card"));
+		int gap = shot.getRGB((int) ((resetAll.x() - 2) * scale), (int) ((resetAll.y() + 9) * scale)) & 0xFFFFFF;
+		check(distance(gap, 0xC03030) <= 30, "A shows over the card between its buttons: " + Integer.toHexString(gap));
+		// A press on Reset All, over A, presses the button: nothing is selected anew and nothing moves.
+		Map<String, HudPosition> before = context.computeOnClient(client -> Map.copyOf(editor(client).model().positions()));
+		click(context, centre(resetAll));
+		check(B.equals(context.computeOnClient(client -> editor(client).model().selected())), "a press on a button over A does not select A");
+		check(context.computeOnClient(client -> editor(client).model().positions()).equals(before), "Reset All's first click changes nothing");
+		check(context.computeOnClient(client -> editor(client).resetAllButton().label()).equals(HudEditorScreen.CONFIRM_RESET)
+				&& context.computeOnClient(client -> editor(client).resetAllButton().style()) == Button.Style.DESTRUCTIVE,
+				"and it asks \"" + HudEditorScreen.CONFIRM_RESET + "\" in the destructive style");
+		check(context.computeOnClient(client -> client.font.width(HudEditorScreen.CONFIRM_RESET)) <= resetAll.w() - 8, "\"Confirm reset\" fits its button whole");
+		clock.addAndGet(2_000);
+		click(context, centre(resetAll));
+		check(context.computeOnClient(client -> editor(client).model().positions()).equals(Map.of(A, A_DEFAULT, B, B_DEFAULT, C, C_DEFAULT)),
+				"a second click within 3 s resets every element");
+		check(context.computeOnClient(client -> editor(client).resetAllButton().label()).equals(HudEditorScreen.RESET_ALL), "and it is back");
+		context.runOnClient(client -> editor(client).model().positions().put(A, underButtons));
+		click(context, centre(resetAll));
+		clock.addAndGet(3_000);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> editor(client).resetAllButton().label()).equals(HudEditorScreen.RESET_ALL), "3 s later it is back");
+		click(context, centre(resetAll));
+		check(context.computeOnClient(client -> editor(client).model().positions().get(A)).equals(underButtons), "so one click changes nothing");
+
+		// The card fades to 30 % over 150 ms while A is dragged over it, and back after the drag.
+		check(cardAlpha(context) == 1F, "the card before the drag");
+		double[] grab = {resetAll.x() - 2, resetAll.y() + 9};
+		check(!onAButton(context, grab), "A is grabbed between the buttons");
+		cursor(context, grab[0], grab[1]);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		clock.addAndGet(150);
+		check(cardAlpha(context) == 1F, "a press on A that has not moved it yet leaves the card as it is");
+		cursor(context, grab[0], grab[1] + 4);
+		clock.addAndGet(150);
+		float dimmed = cardAlpha(context);
+		// The hint, which the pointer resting on the card started to bring back, goes once A is dragged across it.
+		clock.addAndGet(150);
+		check(hintAlpha(context) == 0F, "the hint goes while A is dragged across the card");
+		java.awt.image.BufferedImage dimmedShot = HairlineProbe.read(context.takeScreenshot("t3.53-card-dimmed"));
+		// The Save button, drawn at the card's 30 %: its fill near its left end is much darker than at full opacity.
+		HudRect saveAt = context.computeOnClient(client -> bounds(editor(client).saveButton()));
+		int[] savePixel = {(int) ((saveAt.x() + 3) * scale), (int) ((saveAt.y() + 9) * scale)};
+		int saveFull = toolbarShot.getRGB(savePixel[0], savePixel[1]) & 0xFFFFFF;
+		int saveDimmed = dimmedShot.getRGB(savePixel[0], savePixel[1]) & 0xFFFFFF;
+		check(sum(saveDimmed) + 60 < sum(saveFull), "the Save button fades with the card: " + Integer.toHexString(saveDimmed) + " from "
+				+ Integer.toHexString(saveFull));
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		clock.addAndGet(150);
+		float back = cardAlpha(context);
+		check(Math.abs(dimmed - 0.3F) < 1e-4 && back == 1F, "the card at 30 % during the drag, then back: " + dimmed + ", " + back);
+		// EC-HUD-11: A, under the card, can be dragged out of it.
+		cursor(context, grab[0], grab[1]);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		cursor(context, grab[0], grab[1] + 70);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		HudRect out = rect(context, A);
+		check(out.y() >= card[1] + card[3], "A was dragged out from under the card: " + out);
+		click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closes it");
+		LOGGER.info("hud editor toolbar: card {} at the top, hint {} faded from 4 s ({} at 4.15 s), A {} over the card, Reset All in two clicks, "
+				+ "card {} under a drag", java.util.Arrays.toString(card), java.util.Arrays.toString(hint), fading, Integer.toHexString(gap), dimmed);
+	}
+
+	/** AC-HUD-15 [A]: on a test clock with motion on, the hint is gone 300 ms after a first drag, long before its 4 s. */
+	private static void hintGoesAtTheFirstDrag(ClientGameTestContext context) {
+		java.util.concurrent.atomic.AtomicLong clock = new java.util.concurrent.atomic.AtomicLong(200_000);
+		context.setScreen(() -> new HudEditorScreen(null, null, UiTime.of(clock::get, () -> true)));
+		context.waitForScreen(HudEditorScreen.class);
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		clock.addAndGet(1_000);
+		HudRect a = rect(context, A);
+		cursor(context, a.x() + 20, a.y() + 10);
+		context.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		cursor(context, a.x() + 26, a.y() + 10);
+		context.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		float atDrag = hintAlpha(context);
+		clock.addAndGet(300);
+		check(atDrag == 1F && hintAlpha(context) == 0F, "the hint fades from the first drag and is gone 300 ms later: " + atDrag);
+		click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+		check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closes it");
+	}
+
+	/**
+	 * AC-HUD-15 [A], REQ-UI-39: with Animations OFF (a test clock with motion off), the hint is gone at once after a first nudge
+	 * by an arrow key, and in another editor after a first scale by the wheel; a click that only selects keeps it.
+	 */
+	private static void hintGoesAtOnceWithAnimationsOff(ClientGameTestContext context) {
+		// Early on this clock, before the game's own time, so a nudge read on the game's clock would leave the hint.
+		java.util.concurrent.atomic.AtomicLong clock = new java.util.concurrent.atomic.AtomicLong(1_000);
+		for (boolean byKey : new boolean[] {true, false}) {
+			context.setScreen(() -> new HudEditorScreen(null, null, UiTime.of(clock::get, () -> false)));
+			context.waitForScreen(HudEditorScreen.class);
+			context.getInput().setCursorPos(2, 2);
+			context.waitTicks(2);
+			click(context, centre(rect(context, A)));
+			check(hintAlpha(context) == 1F, "a click that only selects keeps the hint");
+			if (byKey) {
+				context.getInput().pressKey(GLFW.GLFW_KEY_RIGHT);
+			} else {
+				cursor(context, centre(rect(context, A))[0], centre(rect(context, A))[1]);
+				context.getInput().scroll(1);
+			}
+			check(hintAlpha(context) == 0F, (byKey ? "a first nudge" : "a first scale") + " hides the hint at once");
+			click(context, centre(context.computeOnClient(client -> bounds(editor(client).cancelButton()))));
+			check(!(context.computeOnClient(client -> client.gui.screen()) instanceof HudEditorScreen), "Cancel closes it");
+		}
+	}
+
+	private static float hintAlpha(ClientGameTestContext context) {
+		context.waitTicks(2);
+		return context.computeOnClient(client -> editor(client).hintAlphaForTests());
+	}
+
+	private static float cardAlpha(ClientGameTestContext context) {
+		context.waitTicks(2);
+		return context.computeOnClient(client -> editor(client).cardAlphaForTests());
+	}
+
+	private static boolean overlaps(int[] a, int[] b) {
+		return a[0] < b[0] + b[2] && a[0] + a[2] > b[0] && a[1] < b[1] + b[3] && a[1] + a[3] > b[1];
+	}
+
+	private static boolean onAButton(ClientGameTestContext context, double[] at) {
+		return context.computeOnClient(client -> {
+			HudEditorScreen editor = editor(client);
+			return editor.resetSelectedButton().contains(at[0], at[1]) || editor.resetAllButton().contains(at[0], at[1])
+					|| editor.cancelButton().contains(at[0], at[1]) || editor.saveButton().contains(at[0], at[1]);
+		});
 	}
 
 	/**

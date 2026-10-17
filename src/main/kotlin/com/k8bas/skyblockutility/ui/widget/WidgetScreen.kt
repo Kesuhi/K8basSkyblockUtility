@@ -317,6 +317,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	protected open fun drawContent(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
 	}
 
+	/** The opacity a page widget is drawn at, 1 unless a screen fades it (the HUD editor's toolbar under a drag, REQ-HUD-08). */
+	protected open fun widgetOpacity(widget: Widget): Float = 1F
+
 	/** Draws over the widgets, under any overlay and the tooltip (a fade veil); in the same scale as the content. */
 	protected open fun drawOverWidgets(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
 	}
@@ -380,7 +383,12 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		try {
 			drawContent(graphics, underX, underY)
 			for (widget in widgets) {
-				drawClipped(graphics, widget, underX, underY)
+				val fade = UiFade.enter(widgetOpacity(widget))
+				try {
+					drawClipped(graphics, widget, underX, underY)
+				} finally {
+					UiFade.leave(fade)
+				}
 			}
 			drawFocusRing(graphics, false)
 			drawOverWidgets(graphics, underX, underY)

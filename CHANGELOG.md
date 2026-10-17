@@ -30,6 +30,12 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - A slider plays its click sound on release only when you changed its value.
 - In the HUD editor, elements have rounded outlines, the selected one is tinted in the accent colour and the
   one under the pointer lightly, and each element's name sits on a small dark label.
+- The HUD editor's buttons and status line sit in a card at the top of the screen, so the hotbar stays
+  free. The instructions show below it for a few seconds or until you first move or scale something, and
+  come back while you point at the card. The card fades while you drag an element over it, and an element
+  under it can still be picked up. With "Animations" off these fades happen at once.
+- "Reset All" in the HUD editor asks for a second click ("Confirm reset") within 3 seconds before it
+  resets every element.
 - The checkerboard behind see-through colours (colour swatches, the colour picker) has smaller cells, keeps
   a swatch's rounded corners and dims with a setting that is switched off.
 
