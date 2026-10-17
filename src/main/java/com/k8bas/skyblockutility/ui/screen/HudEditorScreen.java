@@ -13,6 +13,7 @@ import com.k8bas.skyblockutility.hud.HudRegistry;
 import com.k8bas.skyblockutility.hud.HudRenderer;
 import com.k8bas.skyblockutility.hud.HudText;
 import com.k8bas.skyblockutility.hud.TextMeasure;
+import com.k8bas.skyblockutility.ui.render.ColorMath;
 import com.k8bas.skyblockutility.ui.render.Ellipsis;
 import com.k8bas.skyblockutility.ui.render.Shapes;
 import com.k8bas.skyblockutility.ui.render.Theme;
@@ -56,9 +57,9 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	static final String NO_ELEMENTS_LINE = "Features that show something on screen add it here.";
 	/** Boxes in the top this many pixels have their name below them. */
 	static final int LABEL_FLIP = 48;
-	private static final int GREY = 0xB0202226;
-	private static final int OUTLINE_IDLE = 0xFF8A9099;
-	private static final int PANEL = 0xE0141619;
+	static final int GREY = 0xB0202226;
+	static final int OUTLINE_IDLE = 0xFF8A9099;
+	static final int PANEL = 0xE0141619;
 
 	private final Screen parent;
 	private final List<HudElement> elements;
@@ -77,6 +78,15 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	private boolean finished;
 	/** The empty editor's card as drawn last, {x, y, w, h} in GUI px; null while there are elements. */
 	private int[] emptyCard;
+	/** Each element's name chip as drawn last, {x, y, w, h} in GUI px (for gametests). */
+	private final Map<String, int[]> labelChips = new HashMap<>();
+	/** The selected element's fill: the accent at 15 % (REQ-HUD-07). */
+	static final int SELECTED_FILL = Math.round(0.15F * 255F);
+	/** A hovered element's fill: white at 6 % (REQ-HUD-07). */
+	static final int HOVER_FILL = Math.round(0.06F * 255F) << 24 | 0xFFFFFF;
+	/** A name chip's padding at each side and its corners, in GUI px (REQ-HUD-07). */
+	static final int CHIP_PAD = 3;
+	static final int CHIP_RADIUS = 3;
 
 	public HudEditorScreen(Screen parent) {
 		this(parent, null);
@@ -177,14 +187,24 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 	@Override
 	protected void drawContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		drawn.clear();
+		labelChips.clear();
 		String hovered = mouseX < 0 ? null : model.at(mouseX, mouseY, width, height);
+		int accent = Theme.current().accent();
 		List<HudRect> rects = new ArrayList<>();
 		for (HudElement element : elements) {
-			rects.add(HudRenderer.drawAt(graphics, font, shown(element), model.positions().get(element.id())));
-			drawn.add(element.id());
+			// REQ-HUD-07: the selected element on the accent at 15 %, a hovered one on white at 6 %, under its content.
+			String id = element.id();
+			int fill = id.equals(model.selected()) ? ColorMath.withAlpha(SELECTED_FILL, accent & 0xFFFFFF)
+					: id.equals(hovered) ? HOVER_FILL : 0;
+			if (fill != 0) {
+				HudRect at = model.rect(id, width, height);
+				Shapes.roundedRect(graphics, (float) at.x(), (float) at.y(), (int) Math.ceil(at.w()), (int) Math.ceil(at.h()), Shapes.RADIUS_CONTROL, fill);
+				graphics.nextStratum();
+			}
+			rects.add(HudRenderer.drawAt(graphics, font, shown(element), model.positions().get(id)));
+			drawn.add(id);
 		}
 		graphics.nextStratum();
-		int accent = Theme.current().accent();
 		for (int i = 0; i < elements.size(); i++) {
 			HudElement element = elements.get(i);
 			HudRect rect = rects.get(i);
@@ -194,19 +214,25 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 			int h = (int) Math.ceil(rect.h());
 			boolean disabled = !element.enabled();
 			if (disabled) {
-				graphics.fill(x, y, x + w, y + h, GREY);
+				// Rounded as its outline is, so no grey corner shows outside it.
+				Shapes.roundedRect(graphics, x, y, w, h, Shapes.RADIUS_CONTROL, GREY);
 			}
 			String id = element.id();
 			int outline = id.equals(model.selected()) ? accent : id.equals(hovered) ? Theme.TEXT_PRIMARY : disabled ? Theme.TEXT_DISABLED : OUTLINE_IDLE;
-			Shapes.hairlineAround(graphics, x, y, w, h, 0, outline);
+			// REQ-HUD-07: a rounded hairline at the control radius.
+			Shapes.hairlineAround(graphics, x, y, w, h, Shapes.RADIUS_CONTROL, outline);
 			// The name above the box, below it in the top 48 px, inside its top edge when below would leave the
-			// window; always inside the window.
-			String label = Ellipsis.fit(element.displayName() + (disabled ? " (disabled)" : ""), width - 4, font::width);
-			int labelX = Math.max(2, Math.min(x, width - font.width(label) - 2));
+			// window; always inside the window, its chip too.
+			String label = Ellipsis.fit(element.displayName() + (disabled ? " (disabled)" : ""), width - 4 - 2 * CHIP_PAD, font::width);
+			int labelX = Math.max(2 + CHIP_PAD, Math.min(x, width - font.width(label) - 2 - CHIP_PAD));
 			int labelY = y < LABEL_FLIP ? y + h + 3 : y - font.lineHeight - 2;
 			if (labelY + font.lineHeight > height) {
 				labelY = Math.max(2, y + 2);
 			}
+			// REQ-HUD-07: the name on a chip, a rounded panel-coloured box with 3 GUI px at each side.
+			int[] chip = {labelX - CHIP_PAD, labelY - 2, font.width(label) + 2 * CHIP_PAD, font.lineHeight + 2};
+			Shapes.roundedRect(graphics, chip[0], chip[1], chip[2], chip[3], CHIP_RADIUS, PANEL);
+			labelChips.put(id, chip);
 			UiText.draw(graphics, font, label, labelX, labelY, disabled ? Theme.TEXT_SECONDARY : Theme.TEXT_PRIMARY);
 		}
 		// While a drag is snapped, a hairline accent guide per target it lies on (REQ-HUD-14, REQ-UI-33), under the status panel.
@@ -247,6 +273,16 @@ public final class HudEditorScreen extends WidgetScreen implements SavesOnClose 
 		UiText.centred(graphics, font, NO_ELEMENTS, width / 2, cardY + 8, Theme.TEXT_PRIMARY);
 		UiText.centred(graphics, font, NO_ELEMENTS_LINE, width / 2, cardY + 20, Theme.TEXT_SECONDARY);
 		emptyCard = new int[] {cardX, cardY, cardW, cardH};
+	}
+
+	/** Selects an element, or nothing for null, as a click on it does (for gametests). */
+	void selectForTests(String id) {
+		model.select(id);
+	}
+
+	/** An element's name chip as drawn last, {x, y, w, h} in GUI px, or null (for gametests). */
+	int[] labelChipForTests(String id) {
+		return labelChips.get(id);
 	}
 
 	/** The empty editor's card as drawn last, {x, y, w, h} in GUI px, or null (for gametests). */

@@ -28,6 +28,8 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
   click already reaches what lies under them. With "Animations" off they disappear at once.
 - Switches that are off stand out more from their cards.
 - A slider plays its click sound on release only when you changed its value.
+- In the HUD editor, elements have rounded outlines, the selected one is tinted in the accent colour and the
+  one under the pointer lightly, and each element's name sits on a small dark label.
 - The checkerboard behind see-through colours (colour swatches, the colour picker) has smaller cells, keeps
   a swatch's rounded corners and dims with a setting that is switched off.
 

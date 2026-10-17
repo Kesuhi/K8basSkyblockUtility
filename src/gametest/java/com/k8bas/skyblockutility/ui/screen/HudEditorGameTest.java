@@ -72,6 +72,7 @@ public class HudEditorGameTest implements FabricClientGameTest {
 			try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
 				singleplayer.getConnection().waitForChunksRender();
 				drawnOnceByTheEditor(context);
+				editorLook(context);
 				pointerShapes(context);
 				dragNudgeScaleAndSave(context);
 				cancelAndResets(context);
@@ -122,6 +123,75 @@ public class HudEditorGameTest implements FabricClientGameTest {
 		LOGGER.info("HUD editor with no element: the card at {}", java.util.Arrays.toString(card));
 	}
 
+	/**
+	 * AC-HUD-15 [C] first bullet (REQ-HUD-07, T3.52) at GUI scale 2: box A's outline is rounded (its top edge is drawn, the
+	 * pixel just past its corner is not); text element C, hovered, is drawn brighter in its left margin (the white fill
+	 * under its content) and, selected, nearer the accent there (the accent fill); C's name sits on a chip 3 GUI px wider than
+	 * its text at each side, inside the window.
+	 */
+	private static void editorLook(ClientGameTestContext context) {
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		int scale = context.computeOnClient(client -> client.getWindow().getGuiScale());
+		HudRect a = rect(context, A);
+		HudRect c = rect(context, C);
+		java.awt.image.BufferedImage plain = HairlineProbe.read(context.takeScreenshot("t3.52-editor-plain"));
+		// A's outline: its top edge's middle, one physical row above the box, against the pixel just past its top-left corner.
+		int top = plain.getRGB((int) ((a.x() + a.w() / 2) * scale), (int) (a.y() * scale) - 1) & 0xFFFFFF;
+		int corner = plain.getRGB((int) (a.x() * scale) - 1, (int) (a.y() * scale) - 1) & 0xFFFFFF;
+		int idle = HudEditorScreen.OUTLINE_IDLE & 0xFFFFFF;
+		check(distance(top, idle) <= 12, "box A's outline runs along its top: " + Integer.toHexString(top));
+		check(distance(corner, idle) > 12, "and is rounded at its corner: " + Integer.toHexString(corner));
+		// A's name chip (above A, on the sky): inside its left padding it is near the panel colour, unlike 2 GUI px left of it.
+		int[] aChip = context.computeOnClient(client -> ((HudEditorScreen) client.gui.screen()).labelChipForTests(A));
+		int panel = HudEditorScreen.PANEL & 0xFFFFFF;
+		int onChip = plain.getRGB((aChip[0] + 1) * scale, (aChip[1] + aChip[3] / 2) * scale) & 0xFFFFFF;
+		int besideChip = plain.getRGB((aChip[0] - 2) * scale, (aChip[1] + aChip[3] / 2) * scale) & 0xFFFFFF;
+		check(distance(onChip, panel) + 20 < distance(besideChip, panel), "A's name is on a dark chip: " + Integer.toHexString(onChip) + " beside "
+				+ Integer.toHexString(besideChip));
+		// Box B (disabled): greyed inside its left margin, unlike 3 GUI px left of it; its corner pixel is not grey (rounded).
+		HudRect b = rect(context, B);
+		int grey = HudEditorScreen.GREY & 0xFFFFFF;
+		int inB = plain.getRGB((int) ((b.x() + 1) * scale), (int) ((b.y() + b.h() / 2) * scale)) & 0xFFFFFF;
+		int besideB = plain.getRGB((int) ((b.x() - 3) * scale), (int) ((b.y() + b.h() / 2) * scale)) & 0xFFFFFF;
+		check(distance(inB, grey) + 20 < distance(besideB, grey), "box B is greyed: " + Integer.toHexString(inB) + " beside " + Integer.toHexString(besideB));
+		int bCorner = plain.getRGB((int) (b.x() * scale), (int) (b.y() * scale)) & 0xFFFFFF;
+		int pastBCorner = plain.getRGB((int) (b.x() * scale) - 2, (int) (b.y() * scale) - 2) & 0xFFFFFF;
+		check(distance(bCorner, pastBCorner) <= 12, "and its grey is rounded with its outline: corner " + Integer.toHexString(bCorner) + " past it "
+				+ Integer.toHexString(pastBCorner));
+		// The middle of C's left margin (its text starts 2 GUI px in): inside its fill, clear of the rounded corners and the outline.
+		int[] probe = {(int) ((c.x() + 1) * scale), (int) ((c.y() + c.h() / 2) * scale)};
+		int before = plain.getRGB(probe[0], probe[1]) & 0xFFFFFF;
+		cursor(context, c.x() + c.w() / 2, c.y() + c.h() / 2);
+		int hovered = HairlineProbe.read(context.takeScreenshot("t3.52-editor-hovered")).getRGB(probe[0], probe[1]) & 0xFFFFFF;
+		check(sum(hovered) > sum(before) + 12, "hovered, C is drawn on white at 6 %: " + Integer.toHexString(hovered) + " over " + Integer.toHexString(before));
+		context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+		context.waitTick();
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+		int accent = context.computeOnClient(client -> Theme.current().accent()) & 0xFFFFFF;
+		int selected = HairlineProbe.read(context.takeScreenshot("t3.52-editor-selected")).getRGB(probe[0], probe[1]) & 0xFFFFFF;
+		check(distance(selected, accent) + 20 < distance(before, accent), "selected, C is drawn on the accent at 15 %: " + Integer.toHexString(selected)
+				+ " over " + Integer.toHexString(before));
+		int[] chip = context.computeOnClient(client -> ((HudEditorScreen) client.gui.screen()).labelChipForTests(C));
+		int[] text = context.computeOnClient(client -> new int[] {client.font.width("Text C"), client.font.lineHeight, client.getWindow().getGuiScaledWidth()});
+		check(chip != null && chip[2] == text[0] + 2 * HudEditorScreen.CHIP_PAD && chip[3] == text[1] + 2 && chip[0] >= 2 && chip[0] + chip[2] <= text[2] - 2,
+				"C's name on a chip 3 GUI px wider at each side, inside the window: " + (chip == null ? "none" : java.util.Arrays.toString(chip)));
+		context.runOnClient(client -> ((HudEditorScreen) client.gui.screen()).selectForTests(null));
+		context.waitTick();
+		LOGGER.info("hud editor look: A's top {} and corner {}; C {} plain, {} hovered, {} selected; chip {}", Integer.toHexString(top),
+				Integer.toHexString(corner), Integer.toHexString(before), Integer.toHexString(hovered), Integer.toHexString(selected),
+				java.util.Arrays.toString(chip));
+	}
+
+	private static int sum(int rgb) {
+		return (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF);
+	}
+
+	private static int distance(int a, int b) {
+		return Math.abs((a >> 16 & 0xFF) - (b >> 16 & 0xFF)) + Math.abs((a >> 8 & 0xFF) - (b >> 8 & 0xFF)) + Math.abs((a & 0xFF) - (b & 0xFF));
+	}
+
 	/** AC-HUD-08, AC-HUD-07, AC-HUD-13. */
 	private static void drawnOnceByTheEditor(ClientGameTestContext context) {
 		open(context, null);
@@ -133,6 +203,8 @@ public class HudEditorGameTest implements FabricClientGameTest {
 				"and the HUD draws none of them while it is open");
 		HudRect b = rect(context, B);
 		check(b.y() < HudEditorScreen.LABEL_FLIP, "box B is in the top 48 px, so its label is below it: " + b);
+		int[] bChip = context.computeOnClient(client -> editor(client).labelChipForTests(B));
+		check(bChip != null && bChip[1] >= b.y() + b.h(), "B's name chip lies below its box: " + java.util.Arrays.toString(bChip) + " under " + b);
 		check(context.computeOnClient(client -> editor(client).status()).equals(HudEditorScreen.NOTHING_SELECTED), "nothing selected yet");
 		java.awt.image.BufferedImage editorShot = HairlineProbe.read(context.takeScreenshot("t2.8-editor"));
 		// AC-UI-34 [C] (T3.23): box B's outline is a hairline just outside its box, measured down from its bottom edge.
