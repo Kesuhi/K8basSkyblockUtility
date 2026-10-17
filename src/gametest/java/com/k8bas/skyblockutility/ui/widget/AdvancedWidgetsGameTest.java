@@ -74,6 +74,7 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			}
 			context.runOnClient(client -> client.options.guiScale().set(2));
 			context.waitTicks(3);
+			swatchCheckerboard(context);
 			listOutlineIsAHairline(context);
 			dropdownIcons(context);
 			dropdownScrollbar(context);
@@ -876,6 +877,30 @@ public class AdvancedWidgetsGameTest implements FabricClientGameTest {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * AC-UI-64 [C] (REQ-UI-60, T3.50) at GUI scale 2: the translucent swatch's board has 3 GUI px cells from its top-left
+	 * corner: on its third cell row (GUI 6-8 down, clear of the rounded corners), GUI px 4 and 5 lie in one dark cell, 7 in a
+	 * light one, 10 in a dark one and 13 in a light one; beside the rounded corner the dark cell at GUI 4, 1 is drawn too.
+	 */
+	private static void swatchCheckerboard(ClientGameTestContext context) {
+		int[] box = context.computeOnClient(client -> new int[] {screen(client).alphaSwatch.x(), screen(client).alphaSwatch.y()});
+		java.awt.image.BufferedImage image = HairlineProbe.read(context.takeScreenshot("t3.50-swatch-checkerboard"));
+		int row = (box[1] + 7) * 2;
+		int[] at = new int[5];
+		int[] columns = {4, 5, 7, 10, 13};
+		for (int i = 0; i < columns.length; i++) {
+			int rgb = image.getRGB((box[0] + columns[i]) * 2, row);
+			at[i] = (rgb >> 16 & 0xFF) + (rgb >> 8 & 0xFF) + (rgb & 0xFF);
+		}
+		check(at[0] == at[1] && at[0] + 30 < at[2] && at[3] + 30 < at[2] && at[3] + 30 < at[4],
+				"3 GUI px cells from the corner: dark, dark, light, dark, light at 4, 5, 7, 10, 13: " + java.util.Arrays.toString(at));
+		// Beside the rounded top-left corner, inside the outline, the dark cell from 3 to 6 is drawn there too (GUI 4, 1).
+		int besideCorner = image.getRGB((box[0] + 4) * 2, (box[1] + 1) * 2);
+		int corner = (besideCorner >> 16 & 0xFF) + (besideCorner >> 8 & 0xFF) + (besideCorner & 0xFF);
+		check(Math.abs(corner - at[0]) <= 6, "the dark cell beside the corner is drawn: " + corner + " against a dark cell's " + at[0]);
+		LOGGER.info("swatch checkerboard at 4, 5, 7, 10, 13: {}", java.util.Arrays.toString(at));
 	}
 
 	/** The brightest pixel's r + g + b in the GUI box from (x0, y0) to (x1, y1) of a screenshot at GUI scale {@code scale}. */

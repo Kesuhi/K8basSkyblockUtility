@@ -118,11 +118,21 @@ public final class ToggleSwitch extends Widget {
 		float t = knob.value();
 		// REQ-UI-53: pressed, the track as drawn now mixed toward black (asked each frame, so a look a disable cut short ends).
 		float press = pressLook(mouseX, mouseY);
-		int track = enabled ? pressed(ColorMath.lerp(Theme.SEPARATOR, theme.accent(), t), press) : Theme.CARD_HOVER;
-		int knobColor = enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, t) : Theme.TEXT_DISABLED;
+		int track = pressed(trackColour(t, theme.accent(), enabled), enabled ? press : 0F);
+		int knobColor = knobColour(t, enabled);
 		Shapes.roundedRect(graphics, x, y, width, height, height / 2, faded(track));
 		int knobSize = height - 4;
 		Shapes.roundedRect(graphics, knobX(x, width, height, t, Shapes.guiScale()), y + 2, knobSize, knobSize, knobSize / 2, faded(knobColor));
+	}
+
+	/** Its track at {@code t} (0 off, 1 on) for an enabled switch, or the disabled track. */
+	public static int trackColour(float t, int accent, boolean enabled) {
+		return enabled ? ColorMath.lerp(Theme.TOGGLE_OFF, accent, t) : Theme.CARD_HOVER;
+	}
+
+	/** Its knob at {@code t} for an enabled switch, or the disabled knob. */
+	static int knobColour(float t, boolean enabled) {
+		return enabled ? ColorMath.lerp(Theme.TEXT_SECONDARY, Theme.TEXT_PRIMARY, t) : Theme.TEXT_DISABLED;
 	}
 
 	/**

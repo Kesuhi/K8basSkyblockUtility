@@ -84,12 +84,8 @@ final class GradientSlider extends Widget {
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		if (checkerboard) {
-			for (int cx = 0; cx < width; cx += 4) {
-				for (int cy = 0; cy < height; cy += 4) {
-					boolean light = ((cx + cy) / 4) % 2 == 0;
-					Shapes.plain(graphics, x + cx, y + cy, Math.min(x + width, x + cx + 4), Math.min(y + height, y + cy + 4), light ? 0xFF9A9A9A : 0xFF5E5E5E);
-				}
-			}
+			// REQ-UI-60: the track's round ends are cut out below, so the board is square here.
+			Checkerboard.draw(graphics, x, y, width, height, 0, this::faded);
 		}
 		int knob = Slider.KNOB_SIZE;
 		for (int column = 0; column < width; column++) {

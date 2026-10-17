@@ -25,6 +25,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - Dropdown lists, the colour picker and the database picker now fade out quickly when they close, as they
   fade in when they open. What closed them (a choice, Save, Cancel, Esc) takes effect at once, and the next
   click already reaches what lies under them. With "Animations" off they disappear at once.
+- Switches that are off stand out more from their cards.
+- The checkerboard behind see-through colours (colour swatches, the colour picker) has smaller cells, keeps
+  a swatch's rounded corners and dims with a setting that is switched off.
 
 ## [1.3.0] - 2026-10-17
 

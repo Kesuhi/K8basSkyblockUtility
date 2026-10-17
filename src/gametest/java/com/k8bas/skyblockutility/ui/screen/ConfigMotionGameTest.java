@@ -1153,7 +1153,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		int[] track = context.computeOnClient(client -> {
 			ToggleSwitch widget = (ToggleSwitch) screen(client).page().control(option(screen(client), "mob_highlighter.enabled"));
 			float t = widget.knob();
-			int colour = com.k8bas.skyblockutility.ui.render.ColorMath.lerp(Theme.SEPARATOR, Theme.current().accent(), t);
+			int colour = ToggleSwitch.trackColour(t, Theme.current().accent(), true);
 			return new int[] {Widget.pressed(colour, 1F) & 0xFFFFFF, t < 0.5F ? 1 : 0};
 		});
 		// The knob sits at the off end while t is below one half: sample the on end, and the other way round.

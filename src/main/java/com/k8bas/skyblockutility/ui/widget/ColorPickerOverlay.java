@@ -195,12 +195,8 @@ public final class ColorPickerOverlay extends Overlay {
 	/** A colour box; one with alpha shows a checkerboard behind it. */
 	private void drawColour(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int colour) {
 		if (state.storesAlpha()) {
-			for (int cx = 0; cx < w; cx += 4) {
-				for (int cy = 0; cy < h; cy += 4) {
-					Shapes.plain(graphics, x + cx, y + cy, Math.min(x + w, x + cx + 4), Math.min(y + h, y + cy + 4),
-							((cx + cy) / 4) % 2 == 0 ? 0xFF9A9A9A : 0xFF5E5E5E);
-				}
-			}
+			// REQ-UI-60: the board from the box's corner; the overlay fades it with everything else.
+			Checkerboard.draw(graphics, x, y, w, h, 0, argb -> argb);
 			Shapes.plain(graphics, x, y, x + w, y + h, colour);
 		} else {
 			Shapes.plain(graphics, x, y, x + w, y + h, 0xFF000000 | colour);

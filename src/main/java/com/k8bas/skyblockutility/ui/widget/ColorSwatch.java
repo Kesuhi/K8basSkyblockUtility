@@ -58,16 +58,22 @@ public final class ColorSwatch extends Widget {
 		return true;
 	}
 
+	/** The board's light and dark colours as this swatch draws them (dimmed with it), for tests. */
+	int[] boardColoursForTests() {
+		return new int[] {faded(Checkerboard.LIGHT), faded(Checkerboard.DARK)};
+	}
+
+	/** A colour as this swatch draws it, for tests. */
+	int fadedForTests(int argb) {
+		return faded(argb);
+	}
+
 	@Override
 	public void draw(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
 		int colour = binding.get();
 		if (storesAlpha) {
-			for (int cx = 0; cx < width; cx += 4) {
-				for (int cy = 0; cy < height; cy += 4) {
-					Shapes.plain(graphics, x + cx, y + cy, Math.min(x + width, x + cx + 4), Math.min(y + height, y + cy + 4),
-							((cx + cy) / 4) % 2 == 0 ? 0xFF9A9A9A : 0xFF5E5E5E);
-				}
-			}
+			// REQ-UI-60: the board in the swatch's rounded outline, dimmed with it.
+			Checkerboard.draw(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, this::faded);
 		}
 		Shapes.roundedRect(graphics, x, y, width, height, Shapes.RADIUS_CONTROL, faded(storesAlpha ? colour : 0xFF000000 | colour));
 		float hover = hoverAmount(enabled && contains(mouseX, mouseY));

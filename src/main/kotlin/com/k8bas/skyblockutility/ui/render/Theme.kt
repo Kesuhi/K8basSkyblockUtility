@@ -37,6 +37,10 @@ data class Theme(val accentRgb: Int) {
 		const val CARD: Int = 0xFF262A2F.toInt()
 		const val CARD_HOVER: Int = 0xFF30353B.toInt()
 		const val SEPARATOR: Int = 0xFF3C424A.toInt()
+
+		/** An enabled off toggle's track (REQ-UI-57): 1.89:1 against the card, 1.62:1 against the hovered card, 3.15:1 under its knob. */
+		const val TOGGLE_OFF: Int = 0xFF4E545C.toInt()
+
 		const val TEXT_PRIMARY: Int = 0xFFECEFF3.toInt()
 		const val TEXT_SECONDARY: Int = 0xFFA0A7B0.toInt()
 		const val TEXT_DISABLED: Int = 0xFF626973.toInt()
