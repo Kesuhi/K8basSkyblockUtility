@@ -20,6 +20,9 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 - Rule cards (Mob Highlighter, NPC Search) grow open and shrink closed in a short motion when you click
   their header or use the keys, and the arrow turns with them. Rules a search opens still open at once.
   With "Animations" off they open and close at once.
+- Dropdown lists, the colour picker and the database picker now fade out quickly when they close, as they
+  fade in when they open. What closed them (a choice, Save, Cancel, Esc) takes effect at once, and the next
+  click already reaches what lies under them. With "Animations" off they disappear at once.
 
 ## [1.3.0] - 2026-10-17
 

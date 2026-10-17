@@ -69,6 +69,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	private var overlay: Overlay? = null
 	/** The open overlay's open transition (REQ-UI-38): drawing only; input meets its final layout. */
 	private var transition: OverlayTransition? = null
+	/** An overlay that closed and fades out (REQ-UI-55): drawn only, never given input; its `closed()` runs once it is gone. */
+	private var closing: Overlay? = null
+	private var closingTransition: OverlayTransition? = null
 
 	/** Scrolling left over from fractional wheel or trackpad events, below one notch. */
 	private var scrollRest = 0.0
@@ -168,6 +171,8 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (overlay !== opened) {
 			closeOverlay(true)
 		}
+		// Another overlay opening drops one still fading out (REQ-UI-55, EC-UI-31).
+		dropClosing()
 		focus(null)
 		nav.overlayOpened()
 		if (overlay !== opened) {
@@ -234,6 +239,8 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 	 * the guard for a focused field, armed keybind or open overlay is put back (EC-UI-01).
 	 */
 	override fun init() {
+		// A new size or GUI scale drops an overlay still fading out (REQ-UI-55).
+		dropClosing()
 		timed {
 			super.init()
 			updateFocusGuard()
@@ -256,9 +263,16 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (cancel) {
 			open.cancel()
 		}
-		open.closed()
+		// REQ-UI-55: what closed it has taken effect; from here it is only drawn, fading from where it was, and takes no input.
+		dropClosing()
+		val opacity = transition?.opacity() ?: 1F
 		overlay = null
 		transition = null
+		closing = open
+		closingTransition = timed { OverlayTransition.closing(UiClock.SOURCE, opacity) }
+		if (closingTransition?.done() != false) {
+			dropClosing()
+		}
 		dropPress()
 		tooltipTimer.restart()
 		nav.overlayClosed()
@@ -269,6 +283,7 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 		if (overlay != null) {
 			closeOverlay(true)
 		}
+		dropClosing()
 		focus(null)
 		nav.clear()
 		keysTaken.clear()
@@ -374,54 +389,90 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 				graphics.pose().popMatrix()
 			}
 		}
+		// An overlay that closed fades out over the page (REQ-UI-55): drawn as it was, with no hover, no focus and no input.
+		val ghost = closing
+		val fading = closingTransition
+		if (ghost != null && fading != null) {
+			ghost.layout(width, height)
+			if (fading.done() || !ghost.stillAnchored()) {
+				dropClosing()
+			} else {
+				drawOverlayLayer(graphics, ghost, fading, NOWHERE_PIXEL, NOWHERE_PIXEL, false)
+			}
+		}
 		val open = overlay
 		if (open != null) {
 			open.layout(width, height)
 			if (!open.stillAnchored()) {
+				// Its anchor is gone: no fade out where it no longer belongs.
 				closeOverlay(true)
+				dropClosing()
 				lastTooltip = null
 				lastTooltipAlpha = 0F
 				return
 			}
-			graphics.nextStratum()
-			val shown = transition
-			if (open.modal()) {
-				// The backdrop eases in with the overlay (REQ-UI-38).
-				val alpha = shown?.backdropAlpha(Theme.BACKDROP ushr 24) ?: (Theme.BACKDROP ushr 24)
-				graphics.fill(0, 0, width, height, (alpha shl 24) or (Theme.BACKDROP and 0xFFFFFF))
-				graphics.nextStratum()
-			}
-			val fade = UiFade.enter(shown?.opacity() ?: 1F)
-			var scaled = false
-			try {
-				scaled = scaleIn(graphics, open, shown)
-				// Its soft shadow first, under it, fading and scaling in with it (REQ-UI-41).
-				open.bounds()?.let { box ->
-					val region = open.shadowClip()
-					if (region == null) {
-						Shapes.shadow(graphics, box[0], box[1], box[2] - box[0], box[3] - box[1], open.radius())
-					} else {
-						Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
-							if (clip.visible()) {
-								Shapes.shadow(graphics, box[0], box[1], box[2] - box[0], box[3] - box[1], open.radius())
-							}
-						}
-					}
-				}
-				open.drawFrame(graphics, font, mouseX, mouseY)
-				for (widget in open.widgets()) {
-					drawClipped(graphics, widget, mouseX, mouseY)
-				}
-				drawFocusRing(graphics, true)
-			} finally {
-				if (scaled) {
-					graphics.pose().popMatrix()
-				}
-				UiFade.leave(fade)
-			}
+			drawOverlayLayer(graphics, open, transition, mouseX, mouseY, true)
 		}
 		drawTooltip(graphics, mouseX, mouseY, lookX, lookY)
 	}
+
+	/**
+	 * Draws an overlay over the page: its backdrop if modal and its shadow, frame and widgets, fading and scaling as [shown]
+	 * says (REQ-UI-38, REQ-UI-55), and, if [live], its focus ring.
+	 */
+	private fun drawOverlayLayer(graphics: GuiGraphicsExtractor, layer: Overlay, shown: OverlayTransition?, mouseX: Int, mouseY: Int, live: Boolean) {
+		graphics.nextStratum()
+		if (layer.modal()) {
+			// The backdrop eases in and out with the overlay (REQ-UI-38, REQ-UI-55).
+			val alpha = shown?.backdropAlpha(Theme.BACKDROP ushr 24) ?: (Theme.BACKDROP ushr 24)
+			graphics.fill(0, 0, width, height, (alpha shl 24) or (Theme.BACKDROP and 0xFFFFFF))
+			graphics.nextStratum()
+		}
+		val fade = UiFade.enter(shown?.opacity() ?: 1F)
+		var scaled = false
+		try {
+			scaled = scaleIn(graphics, layer, shown)
+			// Its soft shadow first, under it, fading and scaling with it (REQ-UI-41).
+			layer.bounds()?.let { box ->
+				val region = layer.shadowClip()
+				if (region == null) {
+					Shapes.shadow(graphics, box[0], box[1], box[2] - box[0], box[3] - box[1], layer.radius())
+				} else {
+					Clip.push(graphics, region.x, region.y, region.width, region.height).use { clip ->
+						if (clip.visible()) {
+							Shapes.shadow(graphics, box[0], box[1], box[2] - box[0], box[3] - box[1], layer.radius())
+						}
+					}
+				}
+			}
+			layer.drawFrame(graphics, font, mouseX, mouseY)
+			for (widget in layer.widgets()) {
+				drawClipped(graphics, widget, mouseX, mouseY)
+			}
+			if (live) {
+				drawFocusRing(graphics, true)
+			}
+		} finally {
+			if (scaled) {
+				graphics.pose().popMatrix()
+			}
+			UiFade.leave(fade)
+		}
+	}
+
+	/** Ends a closing overlay's fade: it is no longer drawn, and its `closed()` frees what it held (the wheel's texture). */
+	protected fun dropClosing() {
+		val ghost = closing ?: return
+		closing = null
+		closingTransition = null
+		ghost.closed()
+	}
+
+	/** For tests: the overlay still fading out after it closed, or null (REQ-UI-55). */
+	fun closingOverlay(): Overlay? = closing
+
+	/** For tests: the closing overlay's opacity on this screen's clock (as it is drawn), or -1 for none. */
+	fun closingOpacityForTests(): Float = timed { if (closing == null) -1F else closingTransition?.opacity() ?: -1F }
 
 	/**
 	 * While [open] scales in, maps its box onto the scaled one about its anchor, whose edges lie on the physical-pixel grid
@@ -958,6 +1009,9 @@ abstract class WidgetScreen protected constructor(title: Component) : Screen(tit
 
 		/** A point away from every widget, for a release that must not act as a click ([dropPress]). */
 		private const val NOWHERE = -1.0e9
+
+		/** A pointer away from every widget, for drawing a closing overlay with no hover. */
+		private const val NOWHERE_PIXEL = -100_000
 
 		/** A mouse button's bit in [buttonsHeld]; none for a button number past 31. */
 		private fun buttonBit(button: Int): Int = if (button in 0..31) 1 shl button else 0

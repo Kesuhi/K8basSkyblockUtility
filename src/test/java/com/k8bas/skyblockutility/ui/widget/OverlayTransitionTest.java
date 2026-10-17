@@ -74,6 +74,51 @@ class OverlayTransitionTest {
 		assertEquals(152F, up[1], "up: its bottom");
 	}
 
+	/**
+	 * AC-UI-59 (REQ-UI-55, T3.48): closed, an open overlay fades from 1 to 0 and shrinks from 1.00 to 0.96 over 90 ms on the
+	 * reversed curve, with the backdrop; it is done, so no longer drawn, from 90 ms on.
+	 */
+	@Test
+	void closedItFadesAndShrinksAwayOver90Ms() {
+		OverlayTransition closing = OverlayTransition.closing(time, 1F);
+		assertTrue(closing.isClosing());
+		assertEquals(1F, closing.opacity(), "0 ms");
+		assertEquals(1F, closing.scale(), 1e-6, "0 ms");
+		assertEquals(false, closing.done());
+		now[0] += 45;
+		float opacity = closing.opacity();
+		assertEquals(0.125F, opacity, 1e-4, "45 ms: 1 - outCubic(0.5), 1 - 0.875");
+		float scale = closing.scale();
+		assertTrue(scale > 0.96F && scale < 1F, "45 ms: " + scale);
+		assertEquals(Math.round(0x99 * opacity), closing.backdropAlpha(0x99), "the backdrop on the same curve");
+		now[0] += 45;
+		assertEquals(0F, closing.opacity(), "90 ms");
+		assertEquals(0.96F, closing.scale(), 1e-6);
+		assertTrue(closing.done(), "gone from 90 ms on");
+	}
+
+	/** One closed while still opening fades from where it was, not from fully open. */
+	@Test
+	void closedWhileOpeningItFadesFromWhereItWas() {
+		OverlayTransition opening = new OverlayTransition(time);
+		now[0] += 30;
+		float at = opening.opacity();
+		OverlayTransition closing = OverlayTransition.closing(time, at);
+		assertEquals(at, closing.opacity(), 1e-6);
+		now[0] += 45;
+		assertTrue(closing.opacity() < at, "less than it was: " + closing.opacity());
+	}
+
+	/** With Animations OFF a closed overlay is gone at once. */
+	@Test
+	void withAnimationsOffAClosedOneIsGoneAtOnce() {
+		motion[0] = false;
+		OverlayTransition closing = OverlayTransition.closing(time, 1F);
+		assertEquals(0F, closing.opacity());
+		assertTrue(closing.done());
+		assertEquals(false, new OverlayTransition(time).isClosing(), "an opening one is not closing");
+	}
+
 	@Test
 	void withAnimationsOffItIsOpenAtOnce() {
 		motion[0] = false;

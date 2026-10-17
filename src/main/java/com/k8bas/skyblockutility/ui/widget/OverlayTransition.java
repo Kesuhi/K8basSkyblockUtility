@@ -8,26 +8,60 @@ import com.k8bas.skyblockutility.ui.render.UiTime;
  * An overlay's open transition (REQ-UI-38, T3.29): from the moment it opens, its opacity eases from 0 to 1 and its scale from
  * {@link #FROM_SCALE} to 1 about its anchor over {@link #DURATION_MS}, easing out, and the modal backdrop's alpha follows the
  * same curve; with motion off (Animations OFF) it is open at once. Only the drawing follows it: input meets the overlay's
- * final, unscaled layout from the first frame. There is no close transition. Pure and on an injected clock source.
+ * final, unscaled layout from the first frame. Its closing form (REQ-UI-55, T3.48) runs the other way over
+ * {@link #CLOSE_MS}, from the opacity it had when it closed to 0, while the closed overlay is only drawn. Pure and on an
+ * injected clock source.
  */
 public final class OverlayTransition {
 	public static final long DURATION_MS = 120;
+	/** How long an overlay takes to fade and shrink away once closed (REQ-UI-55). */
+	public static final long CLOSE_MS = 90;
 	public static final float FROM_SCALE = 0.96F;
 
 	private final UiTime time;
 	private final long openedAt;
+	/** For a closing one: the opacity it closed at; -1 for an opening one. */
+	private final float closedAt;
 
 	public OverlayTransition(UiTime time) {
-		this.time = time;
-		this.openedAt = time.millis();
+		this(time, -1F);
 	}
 
-	/** How far it is open: 0 at the start, 1 from {@link #DURATION_MS} on (and with motion off), easing out. */
+	private OverlayTransition(UiTime time, float closedAt) {
+		this.time = time;
+		this.openedAt = time.millis();
+		this.closedAt = closedAt;
+	}
+
+	/** The closing form, from now: the overlay was at {@code opacity} when it closed (1 once fully open). */
+	public static OverlayTransition closing(UiTime time, float opacity) {
+		return new OverlayTransition(time, Math.max(0F, Math.min(1F, opacity)));
+	}
+
+	public boolean isClosing() {
+		return closedAt >= 0F;
+	}
+
+	/** Whether a closing one has faded away (at once with motion off), so it is no longer drawn. */
+	public boolean done() {
+		return isClosing() && opacity() <= 0F;
+	}
+
+	/**
+	 * How far it is open: 0 at the start, 1 from {@link #DURATION_MS} on (and with motion off), easing out; closing, from the
+	 * opacity it closed at to 0 over {@link #CLOSE_MS} on the reversed curve, 0 at once with motion off.
+	 */
 	public float opacity() {
+		long elapsed = time.millis() - openedAt;
+		if (isClosing()) {
+			if (!time.motion() || elapsed >= CLOSE_MS) {
+				return 0F;
+			}
+			return elapsed <= 0 ? closedAt : closedAt * (1F - Easing.outCubic((float) elapsed / CLOSE_MS));
+		}
 		if (!time.motion()) {
 			return 1F;
 		}
-		long elapsed = time.millis() - openedAt;
 		if (elapsed >= DURATION_MS) {
 			return 1F;
 		}

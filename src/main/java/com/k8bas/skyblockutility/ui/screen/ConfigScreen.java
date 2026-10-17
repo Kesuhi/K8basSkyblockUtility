@@ -246,6 +246,8 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		if (category == selected || !categories.contains(category)) {
 			return;
 		}
+		// A list still fading out belongs to the page that goes (REQ-UI-55).
+		dropClosing();
 		if (!keepFocus) {
 			focus(null);
 		}

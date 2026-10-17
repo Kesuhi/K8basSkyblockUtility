@@ -60,7 +60,8 @@ import java.util.concurrent.atomic.AtomicLong;
  *       drawn.</li>
  *   <li>AC-UI-39 [C] (REQ-UI-38, T3.29): the dropdown list, the colour picker and the database picker, screenshotted at 0,
  *       60 and 120 ms after opening: a point inside each, and the modal backdrop, are unchanged at 0 ms, between at 60 ms and
- *       at their end from 120 ms on; closing is at once; a click on a dropdown entry 10 ms after opening picks that entry.
+ *       at their end from 120 ms on; closed, each fades out and is gone after 90 ms (changed by R47, AC-UI-59); a click on a
+ *       dropdown entry 10 ms after opening picks that entry.
  *       With Animations OFF a dropdown list is fully drawn in its first frame (AC-UI-40).</li>
  *   <li>REQ-UI-47 (Checkpoint G3u): at GUI scale 4, frame by frame, a slider's knob growing on hover and the content area's
  *       scrollbar widening each add at most one mask to the cache, their grown size's, not one per size they pass.</li>
@@ -97,6 +98,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			listHoversEase(context, clock);
 			theWheelGlides(context, clock, time);
 			overlaysFadeIn(context, clock);
+			overlaysFadeOut(context, clock);
 			growingShapesBorrowMasks(context, clock);
 			ruleCardsOpenAndClose(context, clock, time);
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
@@ -615,7 +617,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		context.waitTicks(1);
 	}
 
-	/** AC-UI-39 [C]: each overlay fades and scales in on the test clock, and closes at once. */
+	/** AC-UI-39 [C]: each overlay fades and scales in on the test clock, and (R47) fades out after it closes. */
 	private static void overlaysFadeIn(ClientGameTestContext context, AtomicLong clock) {
 		context.runOnClient(client -> screen(client).select(Category.GENERAL));
 		context.waitTicks(2);
@@ -629,7 +631,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		context.waitTicks(2);
 		fadeIn(context, clock, "database-picker", "npc_search.add_from_database", true);
 
-		// A click on a dropdown entry 10 ms after opening picks that entry; the list is gone at once.
+		// A click on a dropdown entry 10 ms after opening picks that entry; the list takes no more input at once.
 		context.runOnClient(client -> screen(client).select(Category.GENERAL));
 		context.waitTicks(2);
 		clock.addAndGet(1_000);
@@ -663,7 +665,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 	/**
 	 * Opens an overlay with the control {@code optionId} on the still test clock and checks a point inside it (and, for a modal,
 	 * the backdrop at the screen's corner) at 0, 60 and 120 ms against the frames before it opened and long after; then closes
-	 * it with Esc and checks it is gone in that frame.
+	 * it with Esc and checks it fades out, gone once its 90 ms have run (R47, AC-UI-59).
 	 */
 	private static void fadeIn(ClientGameTestContext context, AtomicLong clock, String name, String optionId, boolean modal) {
 		int[] control = controlOf(context, optionId);
@@ -735,9 +737,13 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			context.waitTick();
 		}
 		check(context.computeOnClient(client -> screen(client).overlay()) == null, name + ": Esc closes it");
+		// Changed by R47 (AC-UI-59): closed, it fades out over 90 ms, drawn only; then the page shows where it was.
+		check(context.computeOnClient(client -> screen(client).closingOverlay()) != null, name + ": closed, it fades out");
+		clock.addAndGet(com.k8bas.skyblockutility.ui.widget.OverlayTransition.CLOSE_MS);
+		context.waitTick();
 		Path closed = context.takeScreenshot("t3.29-" + name + "-closed");
-		check(pixel(context, closed, inside[0], inside[1]) == insideBefore, name + ": closing is at once, with no fade out");
-		// Closing during the transition is at once too.
+		check(pixel(context, closed, inside[0], inside[1]) == insideBefore, name + ": gone once its 90 ms fade has run");
+		// Closing during the transition fades out too.
 		click(context, control);
 		clock.addAndGet(60);
 		context.waitTicks(2);
@@ -745,8 +751,11 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
 			context.waitTick();
 		}
+		// Changed by R47 (AC-UI-59): it fades out from where it was, and is gone 90 ms later.
+		clock.addAndGet(com.k8bas.skyblockutility.ui.widget.OverlayTransition.CLOSE_MS);
+		context.waitTick();
 		Path closedEarly = context.takeScreenshot("t3.29-" + name + "-closed-at-60ms");
-		check(pixel(context, closedEarly, inside[0], inside[1]) == insideBefore, name + ": closed at 60 ms, it is gone at once");
+		check(pixel(context, closedEarly, inside[0], inside[1]) == insideBefore, name + ": closed at 60 ms, it is gone 90 ms later");
 		if (!modal) {
 			// The drawn list at 10 ms, faint but there: its top edge, at the field, stays; its bottom edge is where the scaled box puts
 			// it, about 2 GUI px short of its end (at 60 ms the scale is too near 1 to tell).
@@ -826,6 +835,150 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 	/** The image's pixel at the middle of a GUI pixel, as {@link #pixel} reads it. */
 	private static int at(BufferedImage image, int[] gui, int guiX, int guiY) {
 		return image.getRGB((int) Math.floor((guiX + 0.5) * image.getWidth() / gui[0]), (int) Math.floor((guiY + 0.5) * image.getHeight() / gui[1])) & 0xFFFFFF;
+	}
+
+	/**
+	 * AC-UI-59 [A]/[C] (REQ-UI-55, T3.48) at GUI scale 2 on the test clock: a dropdown entry picked takes effect at once, and
+	 * the list then fades and shrinks away, drawn only: opacity 1 at 0 ms, about 0.125 at 45 ms, gone from 90 ms on; a click
+	 * 10 ms after a close reaches the field under it, and the list it opens drops the closing one (EC-UI-31); the colour picker
+	 * fades the same way and frees its wheel's texture only once gone; a GUI scale change drops a closing overlay at once.
+	 */
+	private static void overlaysFadeOut(ClientGameTestContext context, AtomicLong clock) {
+		context.runOnClient(client -> screen(client).select(Category.GENERAL));
+		context.waitTicks(2);
+		clock.addAndGet(1_000);
+		context.waitTicks(2);
+		var before = context.computeOnClient(client -> ConfigManager.general().noticePosition);
+		Integer secondsBefore = context.computeOnClient(client -> ConfigManager.general().noticeSeconds);
+		int seconds = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
+		var first = com.k8bas.skyblockutility.ui.notice.NoticePosition.values()[0];
+		var third = com.k8bas.skyblockutility.ui.notice.NoticePosition.values()[2];
+		try {
+			// A pick of an entry that is not the value yet: applied at once; then the list fades out, drawn as it was at 0 ms and
+			// between itself and the page at 45 ms.
+			context.runOnClient(client -> ConfigManager.general().noticePosition = first);
+			context.waitTick();
+			check(context.computeOnClient(client -> ConfigManager.general().noticePosition()) != third, "the third entry is not the value yet");
+			Path page = context.takeScreenshot("t3.48-page-before-list");
+			click(context, controlOf(context, "interface.notice_position"));
+			clock.addAndGet(500);
+			context.waitTick();
+			int[] box = context.computeOnClient(client -> screen(client).overlay().bounds());
+			Path open = context.takeScreenshot("t3.48-list-open");
+			int[] entry = {(box[0] + box[2]) / 2, box[1] + com.k8bas.skyblockutility.ui.widget.Dropdown.LIST_PADDING + 2 * com.k8bas.skyblockutility.ui.widget.Dropdown.ROW_HEIGHT + 4};
+			int[] window = context.computeOnClient(client -> window(entry[0], entry[1]));
+			context.getInput().setCursorPos(window[0], window[1]);
+			context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+			context.waitTick();
+			check(context.computeOnClient(client -> ConfigManager.general().noticePosition()) == third,
+					"the picked entry is applied at once: " + context.computeOnClient(client -> ConfigManager.general().noticePosition()));
+			check(context.computeOnClient(client -> screen(client).overlay()) == null, "the list takes no more input");
+			// The pointer off the page before the clock moves, so no card under the list eases into its hover look meanwhile.
+			context.getInput().setCursorPos(2, 2);
+			List<Path> shots = new ArrayList<>();
+			float[] list = closingSteps(context, clock, "dropdown", shots);
+			check(list[0] == 1F && Math.abs(list[1] - 0.125F) < 0.01F && list[2] < 0F, "the list: 1 at 0 ms, 0.125 at 45 ms, gone at 90 ms: "
+					+ java.util.Arrays.toString(list));
+			// Over the list's box, how far each frame differs from the page: as open at 0 ms, partly at 45 ms, not at all at 90 ms.
+			long openDiff = difference(open, page, box);
+			long[] fading = {difference(shots.get(0), page, box), difference(shots.get(1), page, box), difference(shots.get(2), page, box)};
+			// At 0 ms as open, but for its new value's check mark and no hover; at 45 ms at an eighth of its opacity.
+			check(openDiff > 0 && fading[0] >= openDiff * 9 / 10, "0 ms after the close the list is drawn as it was open: " + fading[0] + " of " + openDiff);
+			check(fading[1] > 0 && fading[1] < fading[0] / 2, "45 ms after, between it and the page: " + fading[1] + " of " + fading[0]);
+			check(fading[2] == 0, "90 ms after, the page: " + fading[2]);
+
+			// Closed with Esc, then 10 ms later a click inside where the list was reaches the page's control there (the notice
+			// duration slider): the closing list takes no input.
+			click(context, controlOf(context, "interface.notice_position"));
+			clock.addAndGet(500);
+			context.waitTick();
+			int[] listBox = context.computeOnClient(client -> screen(client).overlay().bounds());
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTick();
+			check(context.computeOnClient(client -> screen(client).closingOverlay()) != null, "Esc: the list fades out");
+			int[] under = context.computeOnClient(client -> {
+				Widget slider = screen(client).page().control(option(screen(client), "interface.notice_seconds"));
+				int left = Math.max(listBox[0] + 2, slider.x() + 2);
+				int right = Math.min(listBox[2] - 2, slider.x() + slider.width() - 2);
+				int top = Math.max(listBox[1] + 2, slider.y() + 2);
+				int bottom = Math.min(listBox[3] - 2, slider.y() + slider.height() - 2);
+				// The end of the overlap farther from the knob, so the click moves the value.
+				int knob = ((Slider) slider).knobX() + Slider.KNOB_SIZE / 2;
+				int x = Math.abs(left - knob) > Math.abs(right - knob) ? left : right;
+				return right > left && bottom > top ? new int[] {x, (top + bottom) / 2} : null;
+			});
+			check(under != null, "the notice duration slider lies under the list");
+			clock.addAndGet(10);
+			click(context, under);
+			int after = context.computeOnClient(client -> ConfigManager.general().noticeSeconds());
+			check(after != seconds, "a click 10 ms after the close reaches the slider under the list: " + seconds + " to " + after);
+			check(context.computeOnClient(client -> screen(client).closingOverlay()) != null, "while the list still fades out");
+			// Its field clicked 10 ms after the close: a new list, the closing one dropped (EC-UI-31).
+			clock.addAndGet(500);
+			context.waitTick();
+			click(context, controlOf(context, "interface.notice_position"));
+			clock.addAndGet(500);
+			context.waitTick();
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTick();
+			clock.addAndGet(10);
+			click(context, controlOf(context, "interface.notice_position"));
+			check(context.computeOnClient(client -> screen(client).overlay()) != null, "its field clicked 10 ms after the close opens a new list");
+			check(context.computeOnClient(client -> screen(client).closingOverlay()) == null, "which drops the closing one");
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTick();
+
+			// A GUI scale change drops a closing overlay at once.
+			clock.addAndGet(500);
+			context.waitTick();
+			click(context, controlOf(context, "interface.notice_position"));
+			clock.addAndGet(500);
+			context.waitTick();
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTick();
+			context.runOnClient(client -> client.options.guiScale().set(3));
+			context.waitTicks(2);
+			check(context.computeOnClient(client -> screen(client).closingOverlay()) == null, "a GUI scale change drops the closing list");
+			context.runOnClient(client -> client.options.guiScale().set(2));
+			clock.addAndGet(1_000);
+			context.waitTicks(3);
+
+			// The colour picker, closed with Esc: it fades the same way, its wheel's texture kept until it is gone.
+			click(context, controlOf(context, "interface.accent"));
+			clock.addAndGet(500);
+			context.waitTicks(2);
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitTick();
+			int wheelWhileFading = context.computeOnClient(client -> com.k8bas.skyblockutility.ui.widget.WheelTexture.cachedForTests()[0]);
+			float[] picker = closingSteps(context, clock, "colour-picker", new ArrayList<>());
+			int wheelAfter = context.computeOnClient(client -> com.k8bas.skyblockutility.ui.widget.WheelTexture.cachedForTests()[0]);
+			check(picker[0] == 1F && Math.abs(picker[1] - 0.125F) < 0.01F && picker[2] < 0F, "the picker: 1, 0.125, gone: " + java.util.Arrays.toString(picker));
+			check(wheelWhileFading == 1 && wheelAfter == 0, "the wheel's texture is kept while the picker fades and freed once it is gone: "
+					+ wheelWhileFading + ", " + wheelAfter);
+			LOGGER.info("overlays closing: list {}, picker {}", java.util.Arrays.toString(list), java.util.Arrays.toString(picker));
+		} finally {
+			context.runOnClient(client -> {
+				ConfigManager.general().noticePosition = before;
+				ConfigManager.general().noticeSeconds = secondsBefore;
+			});
+		}
+		context.getInput().setCursorPos(2, 2);
+		context.waitTicks(2);
+	}
+
+	/**
+	 * Screenshots a closing overlay at 0, 45 and 90 ms after it closed (the frame of the close is 0 ms) and returns its opacity
+	 * each time, -1 once it is gone.
+	 */
+	private static float[] closingSteps(ClientGameTestContext context, AtomicLong clock, String name, List<Path> shots) {
+		float[] opacity = new float[3];
+		for (int step = 0; step < 3; step++) {
+			opacity[step] = context.computeOnClient(client -> screen(client).closingOpacityForTests());
+			shots.add(context.takeScreenshot("t3.48-" + name + "-closing-" + step * 45 + "ms"));
+			clock.addAndGet(45);
+			context.waitTick();
+		}
+		return opacity;
 	}
 
 	/**
@@ -1444,6 +1597,26 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		var window = Minecraft.getInstance().getWindow();
 		return new int[] {(int) Math.round((guiX + 0.5) * window.getScreenWidth() / window.getGuiScaledWidth()),
 				(int) Math.round((guiY + 0.5) * window.getScreenHeight() / window.getGuiScaledHeight())};
+	}
+
+	/** How far two screenshots at GUI scale 2 differ over a GUI box {x0, y0, x1, y1}: the sum of their pixels' channel differences. */
+	private static long difference(Path a, Path b, int[] box) {
+		try {
+			var one = javax.imageio.ImageIO.read(a.toFile());
+			var two = javax.imageio.ImageIO.read(b.toFile());
+			int scale = 2;
+			long sum = 0;
+			for (int y = box[1] * scale; y < box[3] * scale; y++) {
+				for (int x = box[0] * scale; x < box[2] * scale; x++) {
+					int p = one.getRGB(x, y);
+					int q = two.getRGB(x, y);
+					sum += Math.abs((p >> 16 & 0xFF) - (q >> 16 & 0xFF)) + Math.abs((p >> 8 & 0xFF) - (q >> 8 & 0xFF)) + Math.abs((p & 0xFF) - (q & 0xFF));
+				}
+			}
+			return sum;
+		} catch (IOException e) {
+			throw new AssertionError("cannot read a screenshot", e);
+		}
 	}
 
 	/** The screenshot's pixel at the middle of a GUI pixel, mapped by the image's own size. */
