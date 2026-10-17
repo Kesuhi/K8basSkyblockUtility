@@ -83,6 +83,20 @@ class OptionCatalogTest {
 		}
 	}
 
+	/**
+	 * AC-UI-54 [A] (REQ-UI-50, T3.55): "Animations" names, in its description and tooltip, everything it stops (the motions of
+	 * R46 and R47) and that tooltips still wait.
+	 */
+	@Test
+	void animationsNamesWhatItStops() {
+		Option animations = options().stream().filter(option -> option.id().equals("interface.animations")).findFirst().orElseThrow();
+		String text = (animations.text().description() + " " + animations.text().tooltip()).toLowerCase(java.util.Locale.ROOT);
+		for (String motion : List.of("panel opening", "category switch", "hover", "press", "switches", "scrolling", "lists and dialogs opening and closing",
+				"rule cards", "hud editor", "notices", "tooltips still wait")) {
+			assertTrue(text.contains(motion), "names " + motion + ": " + text);
+		}
+	}
+
 	/** The options that store a value; a button (an action such as "Edit HUD layout", a database picker) stores nothing. */
 	private static List<Option> storedOptions() {
 		return options().stream().filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption)).toList();

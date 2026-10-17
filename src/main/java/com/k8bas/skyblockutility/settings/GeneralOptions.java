@@ -59,9 +59,10 @@ public final class GeneralOptions {
 								List.of("smooth", "corners", "rounded", "anti-aliasing", "look")),
 						true, Binding.of(config::smoothCorners, value -> config.smoothCorners = value)),
 				Toggle.of("interface.animations", "general.animations",
-						new OptionText("Animations", "Lets this mod's screens and notices move and fade.",
-								"Off shows every change at once: the panel opening, the category switch, hover, switches and notices. Tooltips still wait "
-										+ "before they show.",
+						new OptionText("Animations", "Lets this mod's screens, lists, dialogs and notices move and fade.",
+								"Off shows every change at once: the panel opening, the category switch, hover and press, switches, scrolling, lists and "
+										+ "dialogs opening and closing, rule cards, the HUD editor's toolbar and hints, and notices. Tooltips still wait "
+										+ "before they show, then appear at once.",
 								List.of("animations", "motion", "fade", "slide", "reduce motion")),
 						true, Binding.of(config::animations, value -> config.animations = value)),
 				Choice.of("interface.notice_position", "general.noticePosition",
