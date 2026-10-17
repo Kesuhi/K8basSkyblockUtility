@@ -6,26 +6,57 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-17
+
+This release reworks how the settings screen and its dialogs look and feel: sharp round knobs, icons,
+outlines and colour wheel at every GUI scale, soft shadows, smooth scrolling and motion, a new
+"Animations" switch, pointer shapes, calmer tooltips and steadier sliders. The features themselves
+work as in 1.2.1.
+
+**Requirements:** Minecraft 26.2 (Fabric) with Java 25, Fabric Loader 0.19.5 or newer, Fabric API
+0.161.0 or newer, Fabric Language Kotlin 1.14.1 or newer and Hypixel Mod API 1.0.2 or newer (its
+build labelled `mc26.1` also runs on 26.2), the same as for 1.2.1. Render Chest 1.0.3 is bundled.
+Mod Menu is optional.
+
+**Upgrading from 1.2.1:**
+- Install this version by hand: 1.2.1's update check only notifies. Replace
+  `k8bas_skyblock_utility-1.2.1+26.2.jar` with `k8bas_skyblock_utility-1.3.0+26.2.jar` and restart.
+  No other mod needs to change.
+- Your settings, rules and keybinds are kept.
+- "Smooth corners" is now ON unless you switched it off yourself; a choice you made stays.
+- The mouse wheel no longer changes a slider: over a slider it scrolls the page. Drag the slider, click
+  its track, or Tab to it and use the arrow keys.
+- The new "Animations" switch (General › Interface) is ON; switch it off to see every change at once.
+- If you go back to 1.2.1 later, a "Smooth corners" you never picked reads as OFF there again, as it
+  did in 1.2.1.
+
+**Defaults in this version:**
+- Smooth corners (General › Interface): ON.
+- Animations (General › Interface): ON.
+- Every other option keeps its 1.2.1 default.
+
 ### Added
 
 - Soft shadows under the settings window, open dropdown lists, the colour picker, the database picker
   and tooltips, so they stand out from what lies behind them.
 - "Animations" (General › Interface, ON by default): switched off, this mod's screens and notices show
   every change at once, without sliding or fading: the settings opening, a category switch, hover,
-  switches and notices. Tooltips still wait the same time before they show. The change applies at once,
-  also in an open settings screen.
-- The mouse pointer shows what a click does in this mod's screens: a hand over buttons, switches, toggle
-  cards, the sidebar's categories, dropdowns and their entries, colour swatches, key binding buttons,
-  rule headers and the database picker's folders and Add buttons; a text cursor over text fields; a
-  sideways arrow while you drag a slider and an up-and-down arrow while you drag a scrollbar; a move
-  arrow over the HUD editor's elements. Over a control that is unavailable it stays the normal arrow.
-  It follows the game's "Allow Cursor Changes" option.
+  switches, scrolling, opening lists and dialogs, and notices. Tooltips still wait the same time before
+  they show. The change applies at once, also in an open settings screen.
+- The mouse pointer shows what a click does in this mod's screens: a hand over buttons, switches,
+  toggle cards, the sidebar's categories, dropdowns and their entries, colour swatches, key binding
+  buttons, rule headers, sliders, scrollbars, the colour picker's wheel and presets, and the database
+  picker's folders and Add buttons; a text cursor over text fields; a sideways arrow while you drag a
+  slider and an up-and-down arrow while you drag a scrollbar; a move arrow over the HUD editor's
+  elements. Over a control that is unavailable it stays the normal arrow. It follows the game's "Allow
+  Cursor Changes" option.
 
 ### Changed
 
 - "Smooth corners" (General › Interface) is now ON by default, so rounded corners have soft edges. The
-  option changes only how the corners of boxes, buttons and fields are drawn: round knobs and pill shapes
-  are always smooth now. If you switched it off before, it stays off.
+  option changes only how the corners of boxes, buttons, fields and outlines are drawn: round knobs and
+  filled pill shapes (switches, slider tracks, scrollbars) are always smooth now. If you switched it
+  off before, it stays off.
 - Slider and toggle knobs, toggle switches, slider tracks, colour dots and the colour picker's marker are
   drawn as true circles and pill shapes, with evenly soft edges at every GUI scale, odd sizes included.
   The colour picker's marker was a square before.
