@@ -31,6 +31,8 @@ public final class UpdateNotifier {
 	private final Logger logger;
 	private final AtomicBoolean loggedNotSemVer = new AtomicBoolean();
 	private volatile CandidateFinder.Candidate pending;
+	/** Lines the launch's reconciliation left for the first world join (T4.3b). */
+	private final java.util.Queue<String> launchLines = new java.util.concurrent.ConcurrentLinkedQueue<>();
 	/** Client thread only. */
 	private boolean shown;
 	private int shownCount;
@@ -50,8 +52,19 @@ public final class UpdateNotifier {
 		}
 	}
 
+	/** Lines to show once, as soon as the player is in a world; any thread. */
+	public void showOnJoin(java.util.List<String> lines) {
+		launchLines.addAll(lines);
+	}
+
 	/** Shows the pending notice once per session, as soon as the player is in a world. */
 	public void tick(Minecraft client) {
+		if (client.player != null) {
+			String line;
+			while ((line = launchLines.poll()) != null) {
+				ChatUtils.chat(Component.literal(line).withStyle(ChatFormatting.YELLOW));
+			}
+		}
 		CandidateFinder.Candidate candidate = pending;
 		if (!shown && candidate != null && client.player != null) {
 			shown = true;

@@ -31,6 +31,8 @@ public final class UpdateState {
 	public String skippedVersion;
 	/** An update staged for install, or null (T4.3). */
 	public PendingInstall pendingInstall;
+	/** The jar an applied update replaced that could not be deleted yet; tried again at exit and at the next launch (T4.3b). */
+	public String leftoverJar;
 	/** Files the player was already warned about (T4.3b), so each is named once. */
 	public List<String> warnedFiles = new ArrayList<>();
 

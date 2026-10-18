@@ -3,6 +3,8 @@ package com.k8bas.skyblockutility.update
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient
 import com.k8bas.skyblockutility.config.ConfigManager
 import com.k8bas.skyblockutility.net.SharedHttpClient
+import com.k8bas.skyblockutility.ui.notice.Notice
+import com.k8bas.skyblockutility.ui.notice.Notices
 import com.k8bas.skyblockutility.util.RuntimeVersions
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
@@ -26,6 +28,9 @@ import java.util.function.Supplier
 object Updates {
 	private val LOGGER: Logger = LoggerFactory.getLogger("k8bas_skyblock_utility/update")
 	private const val RECHECK_TICKS: Long = 20L * 60 * 30
+
+	/** The title of the updater's notices (REQ-UPD-18; T4.4 adds the others). */
+	const val NOTICE_TITLE: String = "K8bas Skyblock Utility"
 
 	/** In the game directory, beside `mods/`: Fabric never scans it (REQ-UPD-13). */
 	const val STAGING_FOLDER: String = ".k8bas_update"
@@ -77,7 +82,19 @@ object Updates {
 			UpdateNotifier(modVersion, LOGGER),
 		)
 
-		ClientLifecycleEvents.CLIENT_STARTED.register { service!!.triggerAutomatic() }
+		ClientLifecycleEvents.CLIENT_STARTED.register {
+			// The staged update is settled first, locally, then the automatic check may run (REQ-UPD-18).
+			Thread.ofVirtual().name("k8bas-update-launch").start {
+				try {
+					val report = service!!.reconcileAtLaunch()
+					report.toast?.let { Notices.post(Notice(NOTICE_TITLE, listOf(it))) }
+					notifier!!.showOnJoin(report.chat)
+				} catch (e: Exception) {
+					LOGGER.warn("Update: the launch check failed: {}", e.toString())
+				}
+				service!!.triggerAutomatic()
+			}
+		}
 		ClientTickEvents.END_CLIENT_TICK.register { client ->
 			notifier!!.tick(client)
 			if (++ticks % RECHECK_TICKS == 0L) {

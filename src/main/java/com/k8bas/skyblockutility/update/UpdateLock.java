@@ -10,7 +10,9 @@ final class UpdateLock {
 	/** What holds the lock. */
 	enum Holder {
 		CHECK,
-		DOWNLOAD
+		DOWNLOAD,
+		/** The launch's reconciliation (T4.3b). */
+		RECONCILE
 	}
 
 	private final AtomicReference<Holder> held = new AtomicReference<>();

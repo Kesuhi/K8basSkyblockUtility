@@ -238,11 +238,59 @@ public final class UpdateService {
 		}
 		synchronized (state) {
 			state.pendingInstall = new PendingInstall(staged.version(), assetName, staged.sha256(), clock.getAsLong(), runningVersion,
-					armed.old().toString());
+					armed.old().toString(), 0);
 			store.save(state);
 		}
 		store.flush();
 		return staged;
+	}
+
+	/**
+	 * Settles the staged update once per launch, locally and without network (REQ-UPD-18): finishes an applied one,
+	 * re-arms one the last exit did not apply, disarms one that failed twice, clears orphans and names other copies of the
+	 * mod once. Holds the lock, so no check or download runs beside it; it waits for the lock rather than skip a launch.
+	 */
+	public LaunchReconciler.Report reconcileAtLaunch() {
+		if (installer == null || !awaitLock(UpdateLock.Holder.RECONCILE, RECONCILE_WAIT_MS)) {
+			return new LaunchReconciler.Report(null, java.util.List.of());
+		}
+		try {
+			LaunchReconciler reconciler = new LaunchReconciler(runningVersion, installer.runningJar(), installer.root(), installer,
+					hooks.getEligibility(), info, warn);
+			LaunchReconciler.Report report;
+			synchronized (state) {
+				report = reconciler.reconcile(state);
+				store.save(state);
+			}
+			store.flush();
+			reconciler.finish();
+			if (report.getToast() != null) {
+				info.accept(report.getToast());
+			}
+			return report;
+		} finally {
+			lock.release();
+		}
+	}
+
+	/** The longest the launch's reconciliation waits for a check or download to end. */
+	static final long RECONCILE_WAIT_MS = 30_000;
+
+	private boolean awaitLock(UpdateLock.Holder holder, long waitMs) {
+		long until = System.nanoTime() + waitMs * 1_000_000;
+		while (lock.acquireOrHolder(holder) != null) {
+			if (System.nanoTime() >= until) {
+				warn.accept("Update: the launch check gave up waiting for a running check or download");
+				return false;
+			}
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/** What {@link #cancelPending()} did. */

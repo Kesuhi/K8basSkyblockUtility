@@ -317,6 +317,21 @@ class UpdateHelperTest {
 		assertTrue(Files.exists(staged), "not moved; the next launch clears it");
 	}
 
+	/** T4.3b: a replaced jar that was locked at launch is deleted after the game exits; nothing else is touched. */
+	@Test
+	void aDeleteOnlyRunRemovesJustTheOldJar() throws Exception {
+		Map<String, String> before = folder(mods);
+		assertEquals(UpdateHelper.APPLIED, UpdateHelper.run(new String[] {"--delete-only", "--parent-pid", "-1", "--old", mods.resolve(OLD).toString(),
+				"--log", log.toString(), "--retry-ms", "500"}));
+		before.remove(OLD);
+		assertEquals(before, folder(mods));
+		assertTrue(Files.exists(staged));
+		assertTrue(logged("deleted the old jar"), logLines().toString());
+		assertEquals(UpdateHelper.NOT_APPLIED, UpdateHelper.run(new String[] {"--delete-only", "--parent-pid", "-1",
+				"--old", dir.resolve("notes.txt").toString(), "--log", log.toString()}), "only a jar");
+		assertEquals(UpdateHelper.BAD_ARGUMENTS, UpdateHelper.run(new String[] {"--delete-only", "--log", log.toString()}));
+	}
+
 	@Test
 	void badArgumentsChangeNothing() throws Exception {
 		Map<String, String> before = folder(mods);

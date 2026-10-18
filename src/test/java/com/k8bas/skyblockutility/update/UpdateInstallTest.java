@@ -86,7 +86,7 @@ class UpdateInstallTest {
 			assertEquals(List.of(OLD), List.of(mods.toFile().list()), "mods/ untouched until the game exits");
 			assertEquals(1, hooks.size());
 			PendingInstall pending = store().load().pendingInstall;
-			assertEquals(new PendingInstall("2.0.1", NEW, TestJars.sha256(jar), T0, RUNNING, runningJar.toString()), pending);
+			assertEquals(new PendingInstall("2.0.1", NEW, TestJars.sha256(jar), T0, RUNNING, runningJar.toString(), 0), pending);
 		}
 	}
 
@@ -148,6 +148,53 @@ class UpdateInstallTest {
 			gate.countDown();
 			assertInstanceOf(DownloadOutcome.Staged.class, download.get(10, java.util.concurrent.TimeUnit.SECONDS));
 			assertEquals("2.0.1", store().load().pendingInstall.version(), "the busy cancel changed nothing");
+		}
+	}
+
+	/** T4.3b through the service: the launch after an applied update finishes it, saves the state, and says so once. */
+	@Test
+	void theLaunchAfterAnAppliedUpdateFinishesIt() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			Path old = Files.write(mods.resolve("k8bas_skyblock_utility-1.9.0+26.2.jar"), TestJars.mod("1.9.0+26.2"));
+			UpdateState state = new UpdateState();
+			state.pendingInstall = new PendingInstall("2.0.0", OLD, "ab".repeat(32), T0, "1.9.0+26.2", old.toString(), 0);
+			// The helper ran at the last exit: its marker is there (REQ-UPD-18).
+			Files.writeString(Files.createDirectories(root).resolve(StagedInstall.ATTEMPT_MARKER), "1");
+			UpdateStateStore before = store();
+			before.save(state);
+			before.flush();
+			UpdateService service = service(github);
+			LaunchReconciler.Report report = service.reconcileAtLaunch();
+			assertEquals("Updated to v2.0.0", report.getToast());
+			assertNull(store().load().pendingInstall, "saved");
+			assertFalse(Files.exists(old));
+			assertEquals(0, github.requests.size(), "no network");
+		}
+	}
+
+	/** The launch's reconciliation waits for a running download rather than skip the launch. */
+	@Test
+	void theLaunchCheckWaitsForARunningDownload() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			byte[] jar = TestJars.mod("2.0.1+26.2");
+			java.util.concurrent.CountDownLatch gate = new java.util.concurrent.CountDownLatch(1);
+			github.enqueue(MockGitHub.Answer.json(200, "[" + list(github, "2.0.1", jar) + "]"), MockGitHub.Answer.bytes(200, jar).gated(gate));
+			UpdateService service = service(github);
+			service.checkManual();
+			java.util.concurrent.CompletableFuture<DownloadOutcome> download =
+					java.util.concurrent.CompletableFuture.supplyAsync(() -> service.download(Consent.typed("2.0.1")));
+			long until = System.nanoTime() + 5_000_000_000L;
+			while (github.requests.size() < 2 && System.nanoTime() < until) {
+				Thread.sleep(10);
+			}
+			java.util.concurrent.CompletableFuture<LaunchReconciler.Report> launch =
+					java.util.concurrent.CompletableFuture.supplyAsync(service::reconcileAtLaunch);
+			Thread.sleep(300);
+			assertFalse(launch.isDone(), "waiting for the download");
+			gate.countDown();
+			download.get(10, java.util.concurrent.TimeUnit.SECONDS);
+			assertEquals("Update ready, restart Minecraft to apply", launch.get(10, java.util.concurrent.TimeUnit.SECONDS).getToast(),
+					"then it ran, and found the update it had just armed");
 		}
 	}
 

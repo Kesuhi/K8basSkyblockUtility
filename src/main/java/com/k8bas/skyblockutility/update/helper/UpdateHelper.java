@@ -33,8 +33,9 @@ import java.util.concurrent.TimeoutException;
  *
  * <p>Arguments: {@code --parent-pid <pid> [--parent-start <epoch ms>] --staged <file> --dest <file> --old <file>
  * --sha256 <hex> --log <file>}, and for tests {@code --wait-ms <ms>}, {@code --retry-ms <ms>} and {@code --copy} (take
- * the other-drive path). The start time tells the game from a later process that got its PID. Exit codes: 0 applied,
- * 3 applied but the old jar stays, 1 not applied, 2 bad arguments.
+ * the other-drive path). The start time tells the game from a later process that got its PID. With {@code --delete-only}
+ * it only deletes {@code --old} once the game has exited: a replaced jar that was still locked at the last launch
+ * (REQ-UPD-18). Exit codes: 0 applied, 3 applied but the old jar stays, 1 not applied, 2 bad arguments.
  */
 public final class UpdateHelper {
 	public static final int APPLIED = 0;
@@ -73,6 +74,7 @@ public final class UpdateHelper {
 		long waitMs = MAX_WAIT_MS;
 		long retryMs = MAX_RETRY_MS;
 		boolean copy = false;
+		boolean deleteOnly = false;
 		try {
 			for (int i = 0; i < args.length; i++) {
 				switch (args[i]) {
@@ -86,6 +88,7 @@ public final class UpdateHelper {
 					case "--wait-ms" -> waitMs = Long.parseLong(args[++i]);
 					case "--retry-ms" -> retryMs = Long.parseLong(args[++i]);
 					case "--copy" -> copy = true;
+					case "--delete-only" -> deleteOnly = true;
 					default -> {
 						return BAD_ARGUMENTS;
 					}
@@ -93,6 +96,9 @@ public final class UpdateHelper {
 			}
 		} catch (RuntimeException e) {
 			return BAD_ARGUMENTS;
+		}
+		if (deleteOnly) {
+			return deleteOnly(parentPid, parentStart, old, log, waitMs, retryMs);
 		}
 		if (staged == null || dest == null || old == null || sha256 == null || log == null || !sha256.matches("[0-9a-f]{64}")) {
 			return BAD_ARGUMENTS;
@@ -143,6 +149,27 @@ public final class UpdateHelper {
 			}
 		} catch (IOException e) {
 			// the old jar is already gone, or unreadable: the delete below says which
+		}
+		if (!delete(old, retryMs, log)) {
+			log(log, "the old jar stays; the next launch deletes it");
+			return OLD_JAR_STAYS;
+		}
+		log(log, "deleted the old jar: " + old);
+		return APPLIED;
+	}
+
+	/** Deletes the replaced jar once the game has exited; only a .jar. */
+	private static int deleteOnly(long parentPid, long parentStart, Path old, Path log, long waitMs, long retryMs) {
+		if (old == null || log == null) {
+			return BAD_ARGUMENTS;
+		}
+		log(log, "helper started to delete " + old + " after parent " + parentPid);
+		if (!old.getFileName().toString().endsWith(".jar")) {
+			log(log, "refused: " + old.getFileName() + " is not a jar");
+			return NOT_APPLIED;
+		}
+		if (!waitForParent(parentPid, parentStart, waitMs, log)) {
+			return NOT_APPLIED;
 		}
 		if (!delete(old, retryMs, log)) {
 			log(log, "the old jar stays; the next launch deletes it");

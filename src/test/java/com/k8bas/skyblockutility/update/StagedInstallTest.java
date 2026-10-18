@@ -131,6 +131,23 @@ class StagedInstallTest {
 		assertEquals(mods.resolve(newer).toString(), command.get(command.indexOf("--dest") + 1));
 	}
 
+	/** T4.3b: a replaced jar still locked at launch is handed to the helper at exit, alone; gone by then, nothing starts. */
+	@Test
+	void aLeftoverJarIsDeletedByTheHelperAtExit() throws IOException {
+		StagedInstall install = install(runningJar);
+		Path leftover = Files.write(mods.resolve("k8bas_skyblock_utility-1.9.0+26.2.jar"), TestJars.mod("1.9.0+26.2"));
+		install.deleteAtExit(leftover);
+		assertEquals(1, hooks.size());
+		hooks.getFirst().run();
+		List<String> command = started.getFirst();
+		assertEquals(List.of("-Xmx32m", "-cp", "helper", UpdateHelper.class.getName(), "--delete-only"), command.subList(1, 6));
+		assertEquals(leftover.toString(), command.get(command.indexOf("--old") + 1));
+		started.clear();
+		Files.delete(leftover);
+		hooks.getFirst().run();
+		assertTrue(started.isEmpty(), "nothing to delete, nothing started");
+	}
+
 	/** AC-UPD-13 (cancel), REQ-UPD-12: a disarmed update starts no helper at exit. */
 	@Test
 	void aDisarmedUpdateStartsNothing() {

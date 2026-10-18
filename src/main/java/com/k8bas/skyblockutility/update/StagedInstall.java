@@ -58,6 +58,7 @@ final class StagedInstall {
 	private final Consumer<String> warn;
 	private final AtomicBoolean hooked = new AtomicBoolean();
 	private volatile Plan armed;
+	private volatile Path leftover;
 
 	/**
 	 * @param root       {@code .k8bas_update} in the game directory
@@ -111,27 +112,62 @@ final class StagedInstall {
 			return new Armed(null, old, refusal);
 		}
 		Path dest = old.getParent().resolve(assetName);
-		// Loaded now, so a class-loading problem shows while the game runs, not in the shutdown hook.
-		String helperClass = UpdateHelper.class.getName();
-		try (InputStream helper = StagedInstall.class.getClassLoader().getResourceAsStream(HELPER_CLASS)) {
-			if (helper == null) {
-				return new Armed(dest, old, "the helper is missing from the mod");
-			}
-			Path copy = helperFolder().resolve(helperClass.replace('.', '/') + ".class");
-			Files.createDirectories(copy.getParent());
-			Files.copy(helper, copy, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			return new Armed(dest, old, "the helper could not be copied: " + e.getClass().getSimpleName());
+		String helperProblem = copyHelper();
+		if (helperProblem != null) {
+			return new Armed(dest, old, helperProblem);
 		}
 		Plan previous = armed;
 		armed = new Plan(staged, dest, old, sha256);
 		if (previous != null && !previous.staged().equals(staged)) {
 			deleteQuietly(previous.staged());
 		}
+		hook();
+		return new Armed(dest, old, null);
+	}
+
+	/**
+	 * Has the helper delete {@code file} once the game exits: a jar an applied update replaced that was still locked at
+	 * launch (REQ-UPD-18). The next launch tries again if that fails too.
+	 */
+	void deleteAtExit(Path file) {
+		if (copyHelper() != null) {
+			return;
+		}
+		leftover = file;
+		hook();
+	}
+
+	/** Copies the helper's class file out of the mod; null when done, else why not. */
+	private String copyHelper() {
+		// Loaded now, so a class-loading problem shows while the game runs, not in the shutdown hook.
+		String helperClass = UpdateHelper.class.getName();
+		try (InputStream helper = StagedInstall.class.getClassLoader().getResourceAsStream(HELPER_CLASS)) {
+			if (helper == null) {
+				return "the helper is missing from the mod";
+			}
+			Path copy = helperFolder().resolve(helperClass.replace('.', '/') + ".class");
+			Files.createDirectories(copy.getParent());
+			Files.copy(helper, copy, StandardCopyOption.REPLACE_EXISTING);
+			return null;
+		} catch (IOException e) {
+			return "the helper could not be copied: " + e.getClass().getSimpleName();
+		}
+	}
+
+	private void hook() {
 		if (hooked.compareAndSet(false, true)) {
 			hooks.accept(new Thread(this::onExit, "k8bas-update-apply"));
 		}
-		return new Armed(dest, old, null);
+	}
+
+	/** {@code .k8bas_update} in the game directory. */
+	Path root() {
+		return root;
+	}
+
+	/** The jar the mod runs from, or null. */
+	Path runningJar() {
+		return runningJar.get();
 	}
 
 	/** The armed jar's checked file, or null. */
@@ -148,7 +184,8 @@ final class StagedInstall {
 	/** Deletes every staged jar and partial download. */
 	void deleteStaged() {
 		Path staged = root.resolve("staged");
-		if (!Files.isDirectory(staged)) {
+		// Never through a link or junction put in the folder's place.
+		if (!Files.isDirectory(staged, java.nio.file.LinkOption.NOFOLLOW_LINKS) || Files.isSymbolicLink(staged)) {
 			return;
 		}
 		try (DirectoryStream<Path> files = Files.newDirectoryStream(staged)) {
@@ -162,6 +199,16 @@ final class StagedInstall {
 
 	/** The shutdown hook: re-check, mark, start the helper. Never throws and never waits. */
 	private void onExit() {
+		Path file = leftover;
+		if (file != null && Files.exists(file)) {
+			try {
+				launcher.start(List.of(javaLauncher(), "-Xmx32m", "-cp", HELPER_FOLDER, UpdateHelper.class.getName(), "--delete-only",
+						"--parent-pid", Long.toString(ProcessHandle.current().pid()), "--parent-start", parentStart(),
+						"--old", file.toString(), "--log", root.resolve("logs").resolve("helper.log").toString()), root);
+			} catch (IOException | RuntimeException e) {
+				warn.accept("Update: the cleanup could not be started: " + e);
+			}
+		}
 		Plan plan = armed;
 		if (plan == null) {
 			return;
@@ -185,9 +232,13 @@ final class StagedInstall {
 	List<String> command(Plan plan) {
 		return List.of(javaLauncher(), "-Xmx32m", "-cp", HELPER_FOLDER, UpdateHelper.class.getName(),
 				"--parent-pid", Long.toString(ProcessHandle.current().pid()),
-				"--parent-start", Long.toString(ProcessHandle.current().info().startInstant().map(Instant::toEpochMilli).orElse(-1L)),
+				"--parent-start", parentStart(),
 				"--staged", plan.staged().toString(), "--dest", plan.dest().toString(), "--old", plan.old().toString(),
 				"--sha256", plan.sha256(), "--log", root.resolve("logs").resolve("helper.log").toString());
+	}
+
+	private static String parentStart() {
+		return Long.toString(ProcessHandle.current().info().startInstant().map(Instant::toEpochMilli).orElse(-1L));
 	}
 
 	private Path helperFolder() {
