@@ -37,12 +37,71 @@ repositories {
 
 fabricApi {
 	// Client gametests (src/gametest) run with `./gradlew runClientGameTest`. They open a game
-	// window, so they are not part of `check`.
+	// window, so they are not part of `check`; `check` only compiles them (below).
 	configureTests {
 		createSourceSet = true
 		modId = "k8bas_skyblock_utility_gametest"
 		enableGameTests = false
 		enableClientGameTests = true
+	}
+}
+
+// Every build compiles the gametests, so a commit that breaks them fails its build, in CI and in build-each-commit.sh.
+tasks.named("check") {
+	dependsOn "gametestClasses"
+}
+
+// Picks the client gametests of one run without editing the tracked list in src/gametest/resources/fabric.mod.json:
+//   ./gradlew runClientGameTest --offline -q -Pk8bas.gametests=HookStatusGameTest,OpenCloseGameTest
+// Each comma-separated item is a class (simple or full name), `light` (all but the two CPU-time checks) or `all`.
+// `from:<Class>` keeps the selected classes from that one on (alone: every class from it on), to resume a run that
+// stopped there. The classes run in the list's order. An unknown, ambiguous or empty selection fails the build.
+def gametestSelection = providers.gradleProperty("k8bas.gametests")
+tasks.named("processGametestResources") {
+	inputs.property("k8bas.gametests", gametestSelection.orElse("<every class>"))
+	doLast { task ->
+		if (!gametestSelection.isPresent()) {
+			return
+		}
+		def file = new File(task.destinationDir, "fabric.mod.json")
+		def json = new groovy.json.JsonSlurper().parse(file)
+		List<String> listed = json.entrypoints["fabric-client-gametest"]
+		def cpuTimeChecks = ["MarkerBeamRingGameTest", "NpcWaypointGameTest"]
+		def simpleName = { String name -> name.substring(name.lastIndexOf('.') + 1) }
+		def resolve = { String name ->
+			def hits = listed.findAll { it == name || simpleName(it) == name }
+			if (hits.size() != 1) {
+				throw new GradleException("k8bas.gametests: '${name}' matches ${hits.size()} gametest classes")
+			}
+			hits[0]
+		}
+		def items = gametestSelection.get().split(",")*.trim().findAll { !it.isEmpty() }
+		def from = items.findAll { it.startsWith("from:") }
+		if (from.size() > 1) {
+			throw new GradleException("k8bas.gametests: more than one from:")
+		}
+		def picked = [] as Set
+		items.findAll { !it.startsWith("from:") }.each { item ->
+			if (item == "all") {
+				picked.addAll(listed)
+			} else if (item == "light") {
+				picked.addAll(listed.findAll { !(simpleName(it) in cpuTimeChecks) })
+			} else {
+				picked << resolve(item)
+			}
+		}
+		if (picked.isEmpty() && !from.isEmpty()) {
+			picked.addAll(listed)
+		}
+		def start = from.isEmpty() ? 0 : listed.indexOf(resolve(from[0].substring(5)))
+		def selected = listed.withIndex().findAll { cls, i -> i >= start && cls in picked }.collect { it[0] }
+		if (selected.isEmpty()) {
+			throw new GradleException("k8bas.gametests: '${gametestSelection.get()}' selects no gametest class")
+		}
+		json.entrypoints["fabric-client-gametest"] = selected
+		file.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(json)), "UTF-8")
+		// Quiet level: shown under -q too, so a selection left set in a gradle.properties never passes unnoticed.
+		logger.quiet("k8bas.gametests: ${selected.size()} of ${listed.size()} classes: ${selected.collect(simpleName).join(', ')}")
 	}
 }
 
@@ -142,6 +201,10 @@ test {
 	inputs.file(tasks.named("jar").flatMap { it.archiveFile }).withPropertyName("releaseJar").withPathSensitivity(PathSensitivity.NAME_ONLY)
 	// The mixin rules (T3.0f, MixinRulesTest) also scan the gametest sources, which the test task does not compile.
 	inputs.dir("src/gametest/java").withPropertyName("gametestSources").withPathSensitivity(PathSensitivity.RELATIVE)
+	// The scan tests read the main source text (comments included), and OptionCatalogTest reads CHANGELOG.md: an edit to
+	// either alone must rerun the tests.
+	inputs.dir("src/main").withPropertyName("mainSources").withPathSensitivity(PathSensitivity.RELATIVE)
+	inputs.file("CHANGELOG.md").withPropertyName("changelog").withPathSensitivity(PathSensitivity.RELATIVE)
 	systemProperty "k8bas.projectDir", projectDir.absolutePath
 	// ReleaseArtifactTest checks the built jar and its sidecar against the release contract.
 	dependsOn "sha256Sidecar"
