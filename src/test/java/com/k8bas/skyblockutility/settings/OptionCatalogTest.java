@@ -174,8 +174,26 @@ class OptionCatalogTest {
 		expected.put("modules.fishing_hotspots.fillOpacity", 25);
 		// REQ-HOT-14 (R41 (b)): Hypixel's ring particles hidden.
 		expected.put("modules.fishing_hotspots.hideParticles", true);
-		// REQ-BEST-01 (D-6): the Bestiary Tracker OFF.
+		// REQ-BEST-01 (D-6): the Bestiary Tracker OFF. §12.H (R11): the lines tier, kills, to next, milestone, rate and session
+		// kills ON, the others OFF; reset on island change OFF; the rate over 5 minutes (REQ-BEST-06). R59: progress first,
+		// Arabic tiers, auto-follow, hide maxed ON.
 		expected.put("modules.bestiary.enabled", false);
+		expected.put("modules.bestiary.lineFamily", true);
+		expected.put("modules.bestiary.lineKills", true);
+		expected.put("modules.bestiary.lineToNext", true);
+		expected.put("modules.bestiary.lineToMax", false);
+		expected.put("modules.bestiary.lineMilestone", true);
+		expected.put("modules.bestiary.lineRate", true);
+		expected.put("modules.bestiary.lineEta", false);
+		expected.put("modules.bestiary.lineSessionKills", true);
+		expected.put("modules.bestiary.lineSessionAverage", false);
+		expected.put("modules.bestiary.lineSourceAge", false);
+		expected.put("modules.bestiary.lineOrder", com.k8bas.skyblockutility.module.bestiary.LineOrder.PROGRESS_FIRST);
+		expected.put("modules.bestiary.numerals", com.k8bas.skyblockutility.module.bestiary.TierNumerals.ARABIC);
+		expected.put("modules.bestiary.windowMinutes", 5);
+		expected.put("modules.bestiary.resetOnIslandChange", false);
+		expected.put("modules.bestiary.selection", com.k8bas.skyblockutility.module.bestiary.SelectionMode.AUTO);
+		expected.put("modules.bestiary.hideMaxed", true);
 		// REQ-HOT-10/12 (D-6, R12): the warning with title, sound and chat ON, the notice OFF; the pling at full volume (T3.6b).
 		expected.put("modules.fishing_hotspots.warning", true);
 		expected.put("modules.fishing_hotspots.warnTitle", true);

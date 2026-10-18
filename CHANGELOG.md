@@ -8,7 +8,7 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ### Added
 
-- Bestiary Tracker (Odds & Trackers, off by default): follows your bestiary kills, tiers and milestone from the tab list, chat and the Bestiary menu, and remembers them per profile.
+- Bestiary Tracker (Odds & Trackers, off by default): a HUD panel with your bestiary kills, tiers, kills per hour and milestone, read from the tab list, chat and the Bestiary menu and kept per profile.
 
 ## [1.3.1] - 2026-10-18
 

@@ -38,6 +38,10 @@ A client-side **Hypixel SkyBlock** mod for Minecraft 26.2 (Fabric), developed by
 * Fishing Hotspots: ring and filled area in the buff's colour
 * Hotspot gone warning: title, sound, chat line or notice
 
+### Odds & Trackers
+
+* Bestiary Tracker: a HUD panel with kills, tiers, kills per hour and the milestone, per profile
+
 ---
 
 **Requires** Minecraft 26.2, Java 25, Fabric Loader 0.19.5+, Fabric API, Fabric Language Kotlin and the
