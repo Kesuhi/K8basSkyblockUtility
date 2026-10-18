@@ -1,13 +1,17 @@
 package com.k8bas.skyblockutility.module.bestiary
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.k8bas.skyblockutility.skyblock.GameText
 import com.k8bas.skyblockutility.skyblock.SbNumber
 import java.util.Locale
 import java.util.function.Consumer
 import kotlin.math.roundToLong
 
-/** Where a shown value came from (REQ-BEST-10). */
-enum class BestiarySource { WIDGET, MENU, CHAT, STORED }
+/** Where a shown value came from (REQ-BEST-10); a value stored for the profile keeps its own (REQ-BEST-14). */
+enum class BestiarySource { WIDGET, MENU, CHAT }
 
 /**
  * One family as the HUD shows it: the newest server values, what follows from them, and the live kills of the session.
@@ -68,11 +72,15 @@ data class MilestoneView(val milestone: Int, val tiersToNext: Int?, val source: 
  *
  * Pure: the module feeds it on the client thread and passes the time (wall-clock ms, so ages survive a restart).
  */
-class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<String>) {
+class BestiaryTracker(private val families: BestiaryFamilies?, private val warn: Consumer<String>) {
 	private class State(val key: String, val name: String, val family: BestiaryFamily?) {
 		var kills: SbNumber? = null
 		var killsSource: BestiarySource? = null
 		var killsAt: Long? = null
+		/** The last exact count, its source and time: what the profile store keeps (REQ-BEST-17). */
+		var exactKills: Long? = null
+		var exactSource: BestiarySource? = null
+		var exactAt: Long? = null
 		var tier: Int? = null
 		var max: Boolean = false
 		/** The widget's next threshold and the tier it was shown for. */
@@ -105,6 +113,8 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 	private var durationMs = 0L
 	private var lastTick: Long? = null
 	private var lastIsland: String? = null
+	private var changes = 0L
+	private var generation = 0L
 
 	/** The family lines of the `Bestiary:` widget, read on [island]. */
 	fun widget(lines: List<WidgetLine>, island: String?, now: Long) {
@@ -153,7 +163,9 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 					!event.claimed -> milestone = Milestone(event.to, TIERS_PER_MILESTONE, BestiarySource.CHAT, now)
 					// A claim's "to" is a milestone reached earlier: it adds nothing unless the tracker has not seen it.
 					known == null || event.to > known.milestone -> milestone = Milestone(event.to, null, BestiarySource.CHAT, now)
+					else -> return
 				}
+				changes++
 			}
 			is BestiaryChatEvent.Unreadable -> {}
 		}
@@ -169,7 +181,10 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 			state.max = shown.max ?: maxed(family, shown.tier)
 			touch(state, BestiarySource.MENU, now)
 		}
-		page.milestone?.let { milestone = Milestone(it.milestone, it.tiersToNext, BestiarySource.MENU, now) }
+		page.milestone?.let {
+			milestone = Milestone(it.milestone, it.tiersToNext, BestiarySource.MENU, now)
+			changes++
+		}
 	}
 
 	/**
@@ -195,6 +210,7 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 
 	/** Another profile: nothing of the last one shows or counts, and the session's once-a-session logs start over. */
 	fun profileChanged() {
+		generation++
 		resetSession()
 		states.clear()
 		keyByName.clear()
@@ -265,6 +281,127 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 		return SessionView(kills, durationMs, average)
 	}
 
+	/** How often the shown values changed: the module stores the profile's values when this moved (T5.2d). */
+	fun changes(): Long = changes
+
+	/** How often the tracker forgot a profile: the store reads the profile's values again after each (T5.2d). */
+	fun generation(): Long = generation
+
+	/**
+	 * The last exact count and the tier per family and the milestone, with their sources and times, for the profile store
+	 * (REQ-BEST-14); an abbreviated count is never stored as one (REQ-BEST-17). MAX and the widget's next threshold are
+	 * stored too, so a relogin shows neither a false MAX nor the table's threshold where the widget's differs.
+	 */
+	fun snapshot(): String {
+		val root = JsonObject()
+		root.addProperty("version", STORE_VERSION)
+		val rows = JsonArray()
+		for (state in states.values) {
+			val row = JsonObject()
+			row.addProperty("key", state.key)
+			row.addProperty("name", state.name)
+			state.exactKills?.let {
+				row.addProperty("kills", it)
+				row.addProperty("killsSource", state.exactSource?.name)
+				row.addProperty("killsAt", state.exactAt)
+			}
+			state.tier?.let { row.addProperty("tier", it) }
+			row.addProperty("max", state.max)
+			state.widgetNext?.let { row.addProperty("widgetNext", it) }
+			state.widgetTier?.let { row.addProperty("widgetTier", it) }
+			row.addProperty("source", state.source.name)
+			row.addProperty("at", state.updatedAt)
+			rows.add(row)
+		}
+		root.add("families", rows)
+		milestone?.let { known ->
+			val row = JsonObject()
+			row.addProperty("milestone", known.milestone)
+			known.tiersToNext?.let { row.addProperty("tiersToNext", it) }
+			row.addProperty("source", known.source.name)
+			row.addProperty("at", known.updatedAt)
+			root.add("milestone", row)
+		}
+		return root.toString()
+	}
+
+	/**
+	 * Values stored for this profile ([json] from [snapshot]). Each shows with its own source and time until a newer value
+	 * replaces it, the kills, the tier and the milestone each by their own time; the last exact count also survives a
+	 * newer abbreviated one. A stored count is no live baseline (REQ-BEST-11). A row this version cannot read is left out
+	 * whole. Returns false for a file that is missing or not a store this version reads, so the caller does not overwrite it.
+	 */
+	fun restore(json: String?): Boolean = try {
+		val root = json?.let { JsonParser.parseString(it) }?.takeIf { it.isJsonObject }?.asJsonObject
+		val version = root?.get("version")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber }?.asInt
+		val rows = root?.get("families")?.takeIf { it.isJsonArray }?.asJsonArray
+		if (root == null || version != STORE_VERSION || rows == null) {
+			false
+		} else {
+			rows.forEach { row -> storedFamily(row)?.let { apply(it) } }
+			storedMilestone(root.get("milestone"))?.let { stored ->
+				if (milestone.let { it == null || it.updatedAt < stored.updatedAt }) {
+					milestone = stored
+				}
+			}
+			true
+		}
+	} catch (e: RuntimeException) {
+		false
+	}
+
+	/** One stored family, read in full before anything is applied. */
+	private class Stored(
+		val key: String, val name: String, val kills: Long?, val killsSource: BestiarySource?, val killsAt: Long?, val tier: Int?,
+		val max: Boolean, val widgetNext: Int?, val widgetTier: Int?, val source: BestiarySource, val at: Long,
+	)
+
+	private fun storedFamily(element: JsonElement): Stored? = try {
+		val row = element.asJsonObject
+		val kills = row.get("kills")?.asLong
+		Stored(
+			row.get("key").asString, row.get("name").asString, kills,
+			kills?.let { BestiarySource.valueOf(row.get("killsSource").asString) }, kills?.let { row.get("killsAt").asLong },
+			row.get("tier")?.asInt, row.get("max")?.asBoolean ?: false, row.get("widgetNext")?.asInt, row.get("widgetTier")?.asInt,
+			BestiarySource.valueOf(row.get("source").asString), row.get("at").asLong,
+		)
+	} catch (e: RuntimeException) {
+		null
+	}
+
+	private fun storedMilestone(element: JsonElement?): Milestone? = try {
+		element?.asJsonObject?.let { row ->
+			Milestone(row.get("milestone").asInt, row.get("tiersToNext")?.asInt, BestiarySource.valueOf(row.get("source").asString), row.get("at").asLong)
+		}
+	} catch (e: RuntimeException) {
+		null
+	}
+
+	private fun apply(stored: Stored) {
+		val family = families?.family(stored.key)
+		// A family the table no longer has is left out; a name it never knew keeps its stored name.
+		if (family == null && !stored.key.startsWith(UNKNOWN)) {
+			return
+		}
+		val state = states.getOrPut(stored.key) { State(stored.key, family?.name ?: stored.name, family) }
+		if (stored.kills != null && stored.killsSource != null && stored.killsAt != null) {
+			if (state.killsAt.let { it == null || it < stored.killsAt }) {
+				setKills(state, SbNumber(stored.kills.toDouble(), false), stored.killsSource, stored.killsAt)
+			} else if (state.exactAt.let { it == null || it < stored.killsAt }) {
+				state.exactKills = stored.kills
+				state.exactSource = stored.killsSource
+				state.exactAt = stored.killsAt
+			}
+		}
+		if (state.updatedAt < stored.at) {
+			stored.tier?.let { state.tier = it }
+			state.max = stored.max
+			state.widgetNext = stored.widgetNext
+			state.widgetTier = stored.widgetTier
+			touch(state, stored.source, stored.at)
+		}
+	}
+
 	/** Every family seen, in the order first seen. */
 	fun families(): List<FamilyView> = states.values.map { view(it) }
 
@@ -285,11 +422,17 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 		state.kills = kills
 		state.killsSource = source
 		state.killsAt = now
+		kills.exact()?.let {
+			state.exactKills = it
+			state.exactSource = source
+			state.exactAt = now
+		}
 	}
 
 	private fun touch(state: State, source: BestiarySource, now: Long) {
 		state.source = source
 		state.updatedAt = now
+		changes++
 	}
 
 	private fun count(state: State, kills: SbNumber?, now: Long) {
@@ -346,6 +489,7 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 
 	private companion object {
 		const val UNKNOWN = "name:"
+		const val STORE_VERSION = 1
 		const val MAX_DELTA = 50L
 		const val TIERS_PER_MILESTONE = 10
 		const val DEFAULT_WINDOW_MINUTES = 5L

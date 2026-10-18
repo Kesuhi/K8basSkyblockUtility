@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import org.slf4j.LoggerFactory
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
+import java.util.function.Supplier
 
 /** The Bestiary Tracker's settings; OFF in a fresh config (REQ-BEST-01, D-6), the rate over 5 minutes (REQ-BEST-06). */
 class BestiaryConfig : Normalizable {
@@ -56,6 +57,13 @@ class BestiaryModule : Module {
 		get() = config!!
 
 	private val parser = BestiaryChatParser()
+
+	/** The profile's last-known values (T5.2d): read once a profile is known, written when they changed. */
+	private val store = BestiaryProfileStore(
+		Supplier { ProfileService.read(STORE) }, Consumer { ProfileService.write(STORE, it) },
+		BooleanSupplier { ProfileService.storable() }, Supplier { ProfileService.current()?.let { it.account to it.key } },
+		Consumer { LOGGER.warn("{}", it) },
+	)
 	private var tracker: BestiaryTracker? = null
 
 	override fun id(): String = ID
@@ -93,10 +101,13 @@ class BestiaryModule : Module {
 			parser.reset()
 			tracker()?.locationChanged(location.island, cfg.resetOnIslandChange)
 		}
-		// The session's time: only while ON and on SkyBlock (REQ-BEST-07).
+		// The session's time, only while ON and on SkyBlock (REQ-BEST-07), and the profile store (REQ-BEST-14).
 		ClientTickEvents.END_CLIENT_TICK.register {
 			if (cfg.enabled) {
-				tracker()?.tick(IslandTracker.snapshot().onSkyBlock, now())
+				tracker()?.let {
+					it.tick(IslandTracker.snapshot().onSkyBlock, now())
+					store.tick(it, now())
+				}
 			}
 		}
 		ProfileService.subscribe(ID, on)
@@ -136,14 +147,19 @@ class BestiaryModule : Module {
 		}
 		return BestiaryTracker(families, Consumer { LOGGER.info("{}", it) }).also {
 			it.setWindowMinutes(cfg.windowMinutes)
-			// The island it is made on, so the first change after it ends the session when the option says so.
+			// The island and the profile it is made on: the first change after it ends the session when the option says so,
+			// and a later switch makes it forget this profile.
 			it.locationChanged(IslandTracker.getCurrentIsland(), false)
+			ProfileService.current()?.let { profile -> it.profile(profile.account, profile.key, profile.id) }
 			tracker = it
 		}
 	}
 
 	companion object {
 		const val ID = "bestiary"
+
+		/** The profile store entry (reserved for this module in ProfileStore). */
+		private const val STORE = "bestiary"
 		private val LOGGER = LoggerFactory.getLogger("k8bas_skyblock_utility")
 
 		/** The "Bestiary Tracker" card in Odds & Trackers: its toggle, OFF by default (REQ-BEST-01, REQ-XC-TOGGLE-01). */
