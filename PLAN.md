@@ -1851,11 +1851,12 @@ Same rules as the final release (D-13, R4): an intermediate PR to `main`. Your a
   - Two failed applies in a row disarm the update and point the user to a manual install.
   - Accept: unit tests for every REQ-UPD-18 branch; EC-UPD-05, EC-UPD-08, EC-UPD-15; runtime proof in AC-UPD-18 (T4.5).
 - [ ] **T4.4 feat(update): notices, confirmation screen and `/ksu update`** (M, deps T4.3, T2.3d, T2.4a). Shows a found candidate and collects the one click that allows a download (D-14).
-  - Req: REQ-UPD-10, REQ-UPD-11, REQ-UPD-12, REQ-UI-10, REQ-UI-21
+  - Req: REQ-UPD-10, REQ-UPD-11, REQ-UPD-12, REQ-UPD-04, REQ-UI-10, REQ-UI-21
   - A toast through the Phase 2 notice component (R12), plus the once-per-session local chat line. The updater never opens a screen or takes focus on its own.
+  - The automatic check runs only at startup and at the first server join of the session, both through the persisted limits; the 30-minute re-check of T1.4 goes [decided R50].
   - The confirmation screen shows the REQ-UPD-11 fields. **Download & install on restart** issues a token for that version only (→ T4.2 → T4.3).
   - `/ksu update show | check | install | skip | cancel` is a reserved subcommand. Later, Skip (needs a second click) and Cancel pending work as REQ-UPD-12 says.
-  - Accept: AC-UPD-11 ([C] screenshots), AC-UPD-12, the [A] part of AC-UPD-13; EC-UPD-10, EC-UPD-11, EC-UPD-13.
+  - Accept: AC-UPD-11 ([C] screenshots), AC-UPD-12, the [A] part of AC-UPD-13; EC-UPD-10, EC-UPD-11, EC-UPD-13; R50: no automatic request between startup and the first join, nor after it, in a session.
 - [ ] **T4.4b feat(update): General → Updates card** (S, deps T4.4, T4.3b). A card over the same service, with status, channel and the four buttons of REQ-UPD-10.
   - Req: REQ-UPD-07, REQ-UPD-08, REQ-UPD-10, REQ-UPD-19, REQ-UI-04, REQ-XC-TOGGLE-02, REQ-REL-05
   - Shows T1.4's toggle and T1.4b's channel setting with no new defaults. The card writes `updateChannel` only on an explicit choice (REQ-UPD-07).
