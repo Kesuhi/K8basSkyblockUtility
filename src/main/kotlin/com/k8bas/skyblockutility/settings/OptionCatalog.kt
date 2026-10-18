@@ -4,6 +4,8 @@ import com.k8bas.skyblockutility.update.Updates
 import com.k8bas.skyblockutility.config.ConfigManager
 import com.k8bas.skyblockutility.config.GeneralConfig
 import com.k8bas.skyblockutility.module.ModuleManager
+import com.k8bas.skyblockutility.module.bestiary.BestiaryConfig
+import com.k8bas.skyblockutility.module.bestiary.BestiaryModule
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule
 import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsConfig
@@ -36,6 +38,7 @@ object OptionCatalog {
 		bobberFix: BobberFixConfig = BobberFixConfig(),
 		hotspots: HotspotConfig = HotspotConfig(),
 		corpseSpots: CorpseSpotsConfig = CorpseSpotsConfig(),
+		bestiary: BestiaryConfig = BestiaryConfig(),
 	): List<Card> = sorted(
 		GeneralOptions.cards(general) +
 			MobHighlighterOptions.cards(mobHighlighter, general, setMobHighlighterEnabled) +
@@ -43,7 +46,8 @@ object OptionCatalog {
 			MineshaftAlertModule.cards(mineshaftAlert, setMineshaftAlertEnabled) +
 			CorpseSpotsModule.cards(corpseSpots, Consumer { corpseSpots.enabled = it }) +
 			BobberFixModule.cards(bobberFix, Consumer { bobberFix.enabled = it }) +
-			HotspotModule.cards(hotspots, Consumer { hotspots.enabled = it }),
+			HotspotModule.cards(hotspots, Consumer { hotspots.enabled = it }) +
+			BestiaryModule.cards(bestiary, Consumer { bestiary.enabled = it }),
 	)
 
 	/** The catalog of the running game: General plus each registered module's cards. */

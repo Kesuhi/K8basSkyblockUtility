@@ -247,7 +247,9 @@ class ConfigLayoutTest {
 	@Test
 	void aCategoryWithoutCardsIsHidden() {
 		List<Category> shown = ConfigLayout.categories(catalog());
-		assertEquals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING), shown);
+		// SkyBlock XP has no card yet (Phase 6); Odds & Trackers shows since the Bestiary Tracker (T5.2).
+		assertEquals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING, Category.ODDS_TRACKERS), shown);
+		assertTrue(java.util.Arrays.stream(Category.values()).anyMatch(category -> !shown.contains(category)), "a category without cards stays hidden");
 	}
 
 	@Test

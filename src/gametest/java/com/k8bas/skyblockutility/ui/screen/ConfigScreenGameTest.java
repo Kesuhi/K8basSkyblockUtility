@@ -151,7 +151,8 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 	/** AC-UI-04: each category opens with its cards; a feature switched off dims its sub-options. */
 	private static void everyCategory(ClientGameTestContext context) {
 		List<Category> categories = context.computeOnClient(client -> screen(client).categories());
-		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING)),
+		// Odds & Trackers since the Bestiary Tracker (T5.2); SkyBlock XP stays hidden without cards.
+		check(categories.equals(List.of(Category.GENERAL, Category.HIGHLIGHTS, Category.WAYPOINTS, Category.MINING, Category.FISHING, Category.ODDS_TRACKERS)),
 				"the categories with cards: " + categories);
 		for (Category category : categories) {
 			context.runOnClient(client -> screen(client).select(category));

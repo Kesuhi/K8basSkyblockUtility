@@ -10,6 +10,7 @@ import com.k8bas.skyblockutility.highlight.GlowBehaviourText;
 import com.k8bas.skyblockutility.ui.notice.NoticePosition;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig;
 import com.k8bas.skyblockutility.module.hotspot.HotspotConfig;
+import com.k8bas.skyblockutility.module.bestiary.BestiaryConfig;
 import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsConfig;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
@@ -173,6 +174,8 @@ class OptionCatalogTest {
 		expected.put("modules.fishing_hotspots.fillOpacity", 25);
 		// REQ-HOT-14 (R41 (b)): Hypixel's ring particles hidden.
 		expected.put("modules.fishing_hotspots.hideParticles", true);
+		// REQ-BEST-01 (D-6): the Bestiary Tracker OFF.
+		expected.put("modules.bestiary.enabled", false);
 		// REQ-HOT-10/12 (D-6, R12): the warning with title, sound and chat ON, the notice OFF; the pling at full volume (T3.6b).
 		expected.put("modules.fishing_hotspots.warning", true);
 		expected.put("modules.fishing_hotspots.warnTitle", true);
@@ -298,8 +301,9 @@ class OptionCatalogTest {
 		BobberFixConfig bobber = new BobberFixConfig();
 		HotspotConfig hotspots = new HotspotConfig();
 		CorpseSpotsConfig corpses = new CorpseSpotsConfig();
+		BestiaryConfig bestiary = new BestiaryConfig();
 		List<Card> cards = OptionCatalog.build(general, mob, npc, value -> mob.enabled = value, value -> npc.enabled = value, shaft, value -> shaft.enabled = value,
-				bobber, hotspots, corpses);
+				bobber, hotspots, corpses, bestiary);
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		for (Card card : cards) {
 			for (Option option : card.all()) {
@@ -307,10 +311,10 @@ class OptionCatalogTest {
 				if (option instanceof Keybind || option instanceof ActionOption || option instanceof InfoOption) {
 					continue;
 				}
-				Map<String, String> before = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
+				Map<String, String> before = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses, bestiary);
 				Object original = current(option);
 				change(option);
-				Map<String, String> after = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
+				Map<String, String> after = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses, bestiary);
 				Set<String> changed = new TreeSet<>();
 				// Both ways: an island colour is a map entry that exists only once it differs from its default.
 				Set<String> keys = new TreeSet<>(before.keySet());
@@ -322,7 +326,7 @@ class OptionCatalogTest {
 				}
 				assertEquals(Set.of(option.storageKey()), changed, option.id());
 				restore(option, original);
-				Map<String, String> restored = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
+				Map<String, String> restored = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses, bestiary);
 				// A setting absent until picked (R28, the accent) now holds its default: picked, so it is written.
 				if ("null".equals(before.get(option.storageKey()))) {
 					assertEquals(gson.toJson(option.defaultValue()), restored.get(option.storageKey()), option.id() + " holds its default");
@@ -371,7 +375,7 @@ class OptionCatalogTest {
 		Set<String> cardIds = new TreeSet<>();
 		catalog().forEach(card -> cardIds.add(card.id()));
 		assertTrue(cardIds.containsAll(moduleIds), "modules " + moduleIds + " vs cards " + cardIds);
-		assertEquals(6, moduleIds.size());
+		assertEquals(7, moduleIds.size());
 	}
 
 	/** REQ-XC-RULES-07 (P7): no forbidden word in what is shown; "gambling" only as a keyword. */
@@ -464,7 +468,8 @@ class OptionCatalogTest {
 				"modules.mineshaft_alert", gson.toJsonTree(new MineshaftAlertConfig()).getAsJsonObject(),
 				"modules.bobber_fix", gson.toJsonTree(new BobberFixConfig()).getAsJsonObject(),
 				"modules.fishing_hotspots", gson.toJsonTree(new HotspotConfig()).getAsJsonObject(),
-				"modules.corpse_spots", gson.toJsonTree(new CorpseSpotsConfig()).getAsJsonObject());
+				"modules.corpse_spots", gson.toJsonTree(new CorpseSpotsConfig()).getAsJsonObject(),
+				"modules.bestiary", gson.toJsonTree(new BestiaryConfig()).getAsJsonObject());
 		for (Option option : storedOptions()) {
 			String key = option.storageKey();
 			if (key.startsWith("options.txt:")) {
@@ -512,7 +517,7 @@ class OptionCatalogTest {
 	}
 
 	private static Map<String, String> leaves(Gson gson, GeneralConfig general, MobHighlighterConfig mob, NpcSearchConfig npc, MineshaftAlertConfig shaft,
-			BobberFixConfig bobber, HotspotConfig hotspots, CorpseSpotsConfig corpses) {
+			BobberFixConfig bobber, HotspotConfig hotspots, CorpseSpotsConfig corpses, BestiaryConfig bestiary) {
 		Set<String> keys = new TreeSet<>();
 		Map<String, String> values = new LinkedHashMap<>();
 		JsonObject root = new JsonObject();
@@ -523,6 +528,7 @@ class OptionCatalogTest {
 		modules.add("bobber_fix", gson.toJsonTree(bobber));
 		modules.add("fishing_hotspots", gson.toJsonTree(hotspots));
 		modules.add("corpse_spots", gson.toJsonTree(corpses));
+		modules.add("bestiary", gson.toJsonTree(bestiary));
 		modules.add("npc_search", gson.toJsonTree(npc));
 		root.add("modules", modules);
 		flatten("", root, keys);

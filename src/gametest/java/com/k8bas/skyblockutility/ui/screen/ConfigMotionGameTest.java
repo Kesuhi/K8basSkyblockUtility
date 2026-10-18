@@ -1358,7 +1358,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		int[] tabs = context.computeOnClient(client -> {
 			ConfigScreen screen = screen(client);
 			List<Category> categories = screen.view().categories();
-			return new int[] {screen.tabs().x(), screen.tabs().y(), categories.indexOf(screen.selected()), categories.size() - 1,
+			return new int[] {screen.tabs().x(), screen.tabs().y(), categories.indexOf(screen.selected()), categories.indexOf(Category.FISHING),
 					ConfigLayout.TAB + ConfigLayout.TAB_GAP, screen.tabs().y() + screen.tabs().height()};
 		});
 		check(tabs[2] >= 0 && tabs[3] - tabs[2] >= 2 && context.computeOnClient(client -> screen(client).tabs().rows().scroll()) == 0,
@@ -1393,7 +1393,7 @@ public class ConfigMotionGameTest implements FabricClientGameTest {
 		// moves that tab in the shown list, when it selects another tab as the old one has no hit (it does not slide from where
 		// the old one was), and when the search is cleared.
 		Category shown = context.computeOnClient(client -> screen(client).selected());
-		check(shown == Category.FISHING, "the switch went to Fishing, the last tab: " + shown);
+		check(shown == Category.FISHING, "the switch went to Fishing: " + shown);
 		int[] kept = search(context, "bobber");
 		check(context.computeOnClient(client -> screen(client).selected()) == shown && kept[0] >= 0 && kept[0] < tabs[3] && kept[1] == kept[0] * 1000,
 				"\"bobber\": Fishing stays selected, moved up the shown tabs, its highlight there at once: tab " + kept[0] + ", at " + kept[1] / 1000F);

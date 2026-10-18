@@ -205,6 +205,8 @@ public class SettingsScreensGameTest implements FabricClientGameTest {
 			case "fishing_hotspots" -> null;
 			// REQ-CORPSE-08: the possible corpse spots have their settings toggle and no toggle key.
 			case "corpse_spots" -> null;
+			// REQ-BEST-01: the Bestiary Tracker has its settings toggle and no toggle key.
+			case "bestiary" -> null;
 			default -> throw new AssertionError("no toggle key known for " + module.id());
 		};
 	}

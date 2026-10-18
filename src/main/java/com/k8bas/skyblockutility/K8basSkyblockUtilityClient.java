@@ -10,6 +10,7 @@ import com.k8bas.skyblockutility.highlight.GlowHandler;
 import com.k8bas.skyblockutility.highlight.HighlightManager;
 import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
+import com.k8bas.skyblockutility.module.bestiary.BestiaryModule;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixModule;
 import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsModule;
 import com.k8bas.skyblockutility.module.hotspot.HotspotModule;
@@ -82,6 +83,7 @@ public class K8basSkyblockUtilityClient implements ClientModInitializer {
 		ModuleManager.register(new CorpseSpotsModule());
 		ModuleManager.register(new BobberFixModule());
 		ModuleManager.register(new HotspotModule());
+		ModuleManager.register(new BestiaryModule());
 		// Future modules get registered here, one line each.
 
 		SettingsKeybind.register();

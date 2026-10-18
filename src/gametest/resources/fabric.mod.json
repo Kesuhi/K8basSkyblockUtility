@@ -42,6 +42,7 @@
 			"com.k8bas.skyblockutility.module.bobberfix.BobberFixGameTest",
 			"com.k8bas.skyblockutility.module.hotspot.HotspotGameTest",
 			"com.k8bas.skyblockutility.module.hotspot.HotspotGoneGameTest",
+			"com.k8bas.skyblockutility.module.bestiary.BestiaryGameTest",
 			"com.k8bas.skyblockutility.skyblock.ProfileServiceGameTest",
 			"com.k8bas.skyblockutility.skyblock.MenuReaderGameTest",
 			"com.k8bas.skyblockutility.gametest.hook.HookStatusGameTest",

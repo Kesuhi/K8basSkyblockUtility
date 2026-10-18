@@ -4941,7 +4941,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 
 | Requirement | PLAN tasks |
 |---|---|
-| REQ-BEST-01 | T5.3 |
+| REQ-BEST-01 | T5.2, T5.3 |
 | REQ-BEST-02 | T5.2, T5.3 |
 | REQ-BEST-03 | T5.1, T5.2 |
 | REQ-BEST-04 | T5.1, T5.3 |
@@ -5278,7 +5278,7 @@ Generated from the `Req:` and `Accept:` bullets in `PLAN.md` §7 by a check scri
 | T5.1c | data(bestiary): correct NEU's critter brackets [decided R58] | REQ-BEST-15 |
 | T5.2a | feat(bestiary): tab-widget and chat parsers | REQ-BEST-10, REQ-BEST-05, REQ-BEST-17, REQ-BEST-13 |
 | T5.2b | feat(bestiary): Bestiary menu parser | REQ-BEST-10, REQ-BEST-05, REQ-BEST-17, REQ-BEST-13 |
-| T5.2 | feat(bestiary): live session tracking | REQ-BEST-03, REQ-BEST-10, REQ-BEST-05, REQ-BEST-17, REQ-BEST-13, REQ-BEST-02, REQ-BEST-11 |
+| T5.2 | feat(bestiary): live session tracking | REQ-BEST-01, REQ-BEST-03, REQ-BEST-10, REQ-BEST-05, REQ-BEST-17, REQ-BEST-13, REQ-BEST-02, REQ-BEST-11 |
 | T5.2c | feat(bestiary): session stats + rate and ETA | REQ-BEST-06, REQ-BEST-07 |
 | T5.2d | feat(bestiary): per-profile last-known values | REQ-BEST-17, REQ-BEST-14 |
 | T5.2e | feat(bestiary): family selection | REQ-BEST-09 |
