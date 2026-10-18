@@ -24,19 +24,29 @@ search it by id.
 ## How work is done
 
 - Test-driven, one task at a time: read the task's Req/Accept ids in SPEC, write the failing test first and record
-  its failure, implement, run unit tests, build and gametests, review, then commit. A gametest that proves a fix runs
-  once against the old code (the failure goes into the Done note) and once against the new code.
+  its failure, implement, review, then commit. "Which tests run when" (under Gametests) says what each step runs.
+  Write each new check before the code it guards, so its first run is its red. A red counts only when the check
+  fails on its own assertion, so give new API a stub first; several reds share one boot when the new checks collect
+  their failures and throw once at the end of the class. A check written after its code is seen failing once
+  against a mutation of what it guards. A bug fix (a fix task, or a review finding that is a real defect) runs its
+  narrowest test once on the old code (the failure goes into the Done note) and once on the new code.
 - Check every Minecraft or Fabric API with `javap` on the Loom-cached 26.2 jars (under `.gradle/loom-cache/`)
   before using it, and say so in the Done note. Earlier research notes are in `.claude/agent-memory/researcher/`
   (local only; `.claude/` is git-excluded); read the matching one before researching again.
 - Research (API lookups, repo searches, web docs) may go to helper agents; **the main agent writes the code and the
   tests itself** (no code-writing helper agents).
 - Before each task commit, an adversarial review: at least two angles (for example correctness, and tests against
-  the spec), with independent verifiers per finding; fix what is confirmed and list it in the Review line.
+  the spec), with independent verifiers per finding; fix what is confirmed and list it in the Review line. Verifiers
+  check a finding in the code and in saved logs, screenshots and test results newer than the last edit. They may run
+  one unit class (`--tests <Class>`) while no gametest client runs, but no gametest and no full build; if a finding
+  needs a gametest, the main agent runs the narrowest class once. The review may go on while a gametest run goes.
 - Also run `bash scripts/check-forbidden.sh` and `bash scripts/changelog-lint.sh` before a commit (CI runs them,
   the build does not). Look at the gametest screenshots in `build/run/clientGameTest/screenshots` before the next run
-  wipes them. When a task changes pixels, update the affected screenshot gametests and say why in the commit body.
-- Never delete, weaken or skip a failing test to get green. A test left out of a run is named in the Done note.
+  wipes them. When a new probe fails, read its saved screenshot before booting the client again. When a task changes
+  pixels, update the affected screenshot gametests and say why in the commit body.
+- Never delete, weaken or skip a failing test to get green. A class that failed stays in every later run of the task
+  until it passes (the CPU-time checks follow their own rule under Gametests). The Done note names the gametest
+  classes that ran (or "light" / "all").
 - Keep `CHANGELOG.md` `[Unreleased]` current for every player-visible change (Keep a Changelog; the lint rules are in
   RELEASING.md). Player-facing text avoids "ESP", "x-ray", "through walls", "cheat" and "gambling".
 
@@ -109,9 +119,10 @@ search it by id.
 ## Commands (Git Bash)
 
 ```bash
-./gradlew build --offline -q            # compile, unit tests (JUnit), checks; writes build/libs/<jar> and its .sha256
+./gradlew build --offline -q            # compile (gametests too), unit tests, checks; writes build/libs/<jar> and its .sha256
 ./gradlew test --offline --tests "com.k8bas.skyblockutility.ui.render.*"   # a subset
 ./gradlew runClientGameTest --offline -q   # client gametests; log: build/run/clientGameTest/logs/latest.log
+./gradlew runClientGameTest --offline -q -Pk8bas.gametests=HookStatusGameTest,OpenCloseGameTest   # chosen classes
 ./gradlew prodClientStack -Pk8bas.prodMods=<dir>   # tier D boot; ask the maintainer for the mod-set copy, never commit the path
 bash scripts/changelog-lint.sh          # CHANGELOG layout
 bash scripts/check-forbidden.sh         # forbidden wording, packet cancelling, direct GL, banned hosts
@@ -126,26 +137,64 @@ expands nothing: `& "C:\Program Files\Git\bin\bash.exe" -lc './gradlew build --o
 
 - All gametest classes are listed in the `"fabric-client-gametest"` entrypoints of
   `src/gametest/resources/fabric.mod.json`; a new class gets its line there as part of its task.
-- For a subset run, copy that file outside the repo, edit the list, run, and copy it back (use
-  `git checkout -- src/gametest/resources/fabric.mod.json` only when the task has not changed the file). Before
-  committing, `git diff` of the file shows only the task's intended entries.
-- A failing gametest stops the run, so the classes after it do not run: rerun them before calling the suite green.
-  The run directory is wiped before each run.
+- For a subset run, name the classes: `-Pk8bas.gametests=<Class>,<Class>` (simple or full names; also `light`,
+  `all`, and `from:<Class>` to resume a stopped run from that class). The run prints which classes it selected; an
+  unknown or empty selection fails. The tracked file is never edited for a run, so `git diff` of it shows only the
+  task's intended entries.
+- Which tests run when. A unit class takes about 5 s; a gametest run costs about 15 s of client start plus its
+  classes (`ConfigScreenGameTest` about 90 s, `UiReviewMatrixGameTest` about 140 s), and the light suite (all but the
+  two CPU-time checks) about 10 min. So a broad suite runs once per final code state, never per edit:
+  - **Task classes**: the gametest classes the task's text and Accept name; those citing its Req, Accept or EC ids
+    (`git grep -l <id> -- src/gametest/java`); those naming a changed main class or a direct user of a changed
+    helper (`git grep -lw <SimpleName> -- src/gametest/java`, plus `<SimpleName>GameTest`); and the area guards:
+    `highlight/*`, `module/mobhighlighter/*` and `module/npcsearch/*` bring `GlowGameTest`, `HighlightGameTest` and
+    `DungeonNpcGlowGameTest`; `render/marker/*` brings `WaypointLabelGameTest` and `MarkerToolkitGameTest`;
+    `settings/*` and commands bring `SettingsScreensGameTest`; bundled data brings `BundledDataGameTest`,
+    `BundledListsGameTest` and the gametest of the module reading the table. A changed WARN or ERROR line or dump
+    tag in `src/main` adds the classes that read `latest.log`.
+  - **Smoke set**, whenever `src/main` or a build file changes: `HookStatusGameTest`, `OpenCloseGameTest` and
+    `SettingsScreensGameTest` (about 20 s). It shows the mod still loads and its settings and commands work.
+  - **While writing**: the unit class you work on (`--tests <Class>`) and the gametest class you write. **Before the
+    review**: those, green; the review needs no broader run. **After review fixes**: go to the gate; run a class
+    alone only to debug a fix.
+  - **Commit gate**, once, on the final code: the two lint scripts, `./gradlew build`, then the smoke set and the
+    task classes in one run. `UiReviewMatrixGameTest` joins when `ui/*`, a HUD-editor file or `lang/en_us.json`
+    changes. The light suite replaces the task classes when the task edits one of these: `ui/render/*`, `Widget`,
+    `WidgetScreen`, `ConfigManager`, `config/store/*`, `hook/*`, `src/main/resources/fabric.mod.json`,
+    `k8bas_skyblock_utility.mixins.json`, or a dependency, plugin or Loom setting in a build file (the gametest copies
+    of these files, a flag-gated build block and a version bump do not count). A main-code fix the gate forces gets
+    a short review of its own. An edit after the gate started voids it for what the edit reaches.
+  - **Checkpoint**: what the PLAN checkpoint lists, always with one uninterrupted `all` run on the final code (no
+    light run before it; its entrypoint count equals the number of `*GameTest` classes). Tier D after the review
+    fixes are in. `build-each-commit.sh` once before the push; after a later fix, `build-each-commit.sh <last built
+    hash>` for the new commits only, if that hash is still an ancestor of HEAD (`git merge-base --is-ancestor`). The
+    report lists every hash with the run that built it.
+  - Mutation runs only when the PLAN Accept asks for one, for a check written after its code, or when a review
+    finding says a check cannot fail (one run of that check). A script that edits `src/` restores it in a `trap`.
+  - Never start Gradle in the checkout while a gametest client runs from it: the client would run a mix of old and
+    new classes.
+- A failing gametest stops the run, so the classes after it do not run. In a task, after the fix, rerun the failed
+  class, the classes after it (`from:<Class>`) and any earlier class that reaches the fixed code; together the runs
+  count. At a
+  checkpoint the `all` run passes in one go. A failure that disappears in a rerun is order-dependent (shared client
+  state): find its cause. The run directory is wiped before each run.
 - Gametests share one client: read a config value before changing it and restore that value in `finally` (never
   null or a default; `smoothCorners == null` means ON since T3.17). Use `ModuleStates.capture()/restore()` for
   module toggles. In an OFF/ON pass, assert the getter really reads the value you set. Motion is off in gametests
   (`-Dk8bas.ui.motion=off`).
 - The CPU-time checks `NpcWaypointGameTest` and `MarkerBeamRingGameTest` fail while the maintainer's own Minecraft
   runs, on unchanged code too (T3.15–T3.17 measured both). Leave them out of normal runs (MarkerBeamRingGameTest
-  comes early and would stop the run). When a task touches markers, waypoints or per-frame code, run them on the old
-  and the new code and put both numbers in the Done note; ask whether the game is running. Rerun both with the game
-  closed before Checkpoint G3u (done 2026-10-17, both green).
+  comes early and would stop the run). When a task changes the marker pass (`render/marker/*` and what it calls per
+  frame: the `MarkerProvider`s and `IslandTracker`'s per-frame reads; screen and HUD drawing does not count), run
+  them on the old and the new code and put both numbers in the Done note; ask whether the game is running. At a
+  checkpoint they run in the `all` suite with the game closed.
 - Tooltips wait 400 ms on the UI clock (T3.34): a test that reads one opens its screen on a test clock
   (`UiTime.of(clock::get, () -> false)`) and steps it past the delay, rather than waiting in real time. The same clock
   with motion on steps animations frame by frame (ConfigMotionGameTest).
 - `UiReviewMatrixGameTest` runs the UI checks of AC-UI-28 to AC-UI-48 on 120 screenshots and takes several minutes;
-  its images are the review set for a checkpoint. Copy them out of `build/run/clientGameTest/screenshots` before the
-  next run.
+  its images are the review set for a checkpoint. It runs at the commit gate of a task that changes `ui/*`, a
+  HUD-editor file or `lang/en_us.json`, and always at a checkpoint. Copy its images out of
+  `build/run/clientGameTest/screenshots` before the next run.
 
 ## Windows and shell pitfalls
 
