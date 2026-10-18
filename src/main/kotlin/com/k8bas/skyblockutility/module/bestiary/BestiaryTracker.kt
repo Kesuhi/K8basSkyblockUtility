@@ -18,6 +18,8 @@ enum class BestiarySource { WIDGET, MENU, CHAT }
  * [family] is null for a name the table does not know (REQ-BEST-16): then only the server's values show. [toNext] and
  * [toMax] are approximate when [kills] is (REQ-BEST-17); [toNext] is null once maxed. [source] and [updatedAt] are those
  * of the family's newest value; the kills keep their own ([killsSource], [killsUpdatedAt]), null while no count is known.
+ * [changeOrder] is the widget update in which the count last rose (0 if never) and [lastRise] that rise, for the
+ * auto-follow selection (REQ-BEST-09). A family not seen yet has no values and [updatedAt] 0.
  */
 @JvmRecord
 data class FamilyView(
@@ -35,6 +37,8 @@ data class FamilyView(
 	val sessionKills: Long,
 	val killsSource: BestiarySource?,
 	val killsUpdatedAt: Long?,
+	val changeOrder: Long,
+	val lastRise: Long,
 )
 
 /**
@@ -95,6 +99,9 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 		/** The session's counted rises (time, kills), for the rolling rate, and when its first exact count came. */
 		val counted = ArrayDeque<LongArray>()
 		var dataSince: Long? = null
+		/** The widget update in which the count last rose, and by how much. */
+		var changeOrder = 0L
+		var lastRise = 0L
 	}
 
 	private class Milestone(var milestone: Int, var tiersToNext: Int?, var source: BestiarySource, var updatedAt: Long)
@@ -114,10 +121,12 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 	private var lastTick: Long? = null
 	private var lastIsland: String? = null
 	private var changes = 0L
+	private var updates = 0L
 	private var generation = 0L
 
 	/** The family lines of the `Bestiary:` widget, read on [island]. */
 	fun widget(lines: List<WidgetLine>, island: String?, now: Long) {
+		updates++
 		val seen = HashSet<String>()
 		for (line in lines) {
 			val name = normalise(line.name)
@@ -132,6 +141,11 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 				continue
 			}
 			state.widgetLine = line
+			// An abbreviated count that changed is a change for auto-follow, though never a delta (REQ-BEST-17).
+			if (line.kills?.approximate == true && line.kills.value != state.kills?.value) {
+				state.changeOrder = updates
+				state.lastRise = 0
+			}
 			line.kills?.let { setKills(state, it, BestiarySource.WIDGET, now) }
 			state.tier = line.tier
 			state.max = line.max
@@ -402,6 +416,11 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 		}
 	}
 
+	/** The family with [key] as [family] shows it, or, for a table family not seen yet, one without values; null if unknown. */
+	fun familyOrUnseen(key: String): FamilyView? = family(key) ?: families?.family(key)?.let {
+		FamilyView(key, it.name, it, null, null, null, false, null, null, BestiarySource.WIDGET, 0, 0, null, null, 0, 0)
+	}
+
 	/** Every family seen, in the order first seen. */
 	fun families(): List<FamilyView> = states.values.map { view(it) }
 
@@ -443,6 +462,10 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 		val baseline = state.baseline
 		if (baseline != null) {
 			val delta = exact - baseline
+			if (delta > 0) {
+				state.changeOrder = updates
+				state.lastRise = delta
+			}
 			if (delta in 1..MAX_DELTA) {
 				state.session += delta
 				state.counted.addLast(longArrayOf(now, delta))
@@ -484,7 +507,7 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 			else -> null
 		}
 		return FamilyView(state.key, state.name, family, state.kills, tier, next, max, toNext, toMax, state.source, state.updatedAt,
-			state.session, state.killsSource, state.killsAt)
+			state.session, state.killsSource, state.killsAt, state.changeOrder, state.lastRise)
 	}
 
 	private companion object {

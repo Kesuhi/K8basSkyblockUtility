@@ -34,10 +34,26 @@ class BestiaryConfig : Normalizable {
 	@JvmField
 	var resetOnIslandChange = false
 
+	/** Which families the HUD shows (REQ-BEST-09): auto-follow by default. */
+	@JvmField
+	var selection: SelectionMode? = SelectionMode.AUTO
+
+	/** The pinned families' table ids, at most 5. */
+	@JvmField
+	var pins: MutableList<String>? = ArrayList()
+
+	/** Leave maxed families out; ON (R59). */
+	@JvmField
+	var hideMaxed = true
+
 	override fun normalize(): Boolean {
-		val repaired = windowMinutes.coerceIn(1, 60)
-		val changed = repaired != windowMinutes
-		windowMinutes = repaired
+		val window = windowMinutes.coerceIn(1, 60)
+		// A hand-edited file: no mode or list, a null or blank pin, a pin repeated, more than five.
+		val pinned = pins.orEmpty().filter { !it.isNullOrBlank() }.distinct().take(BestiarySelection.MAX_PINS)
+		val changed = window != windowMinutes || selection == null || pins != pinned
+		windowMinutes = window
+		selection = selection ?: SelectionMode.AUTO
+		pins = ArrayList(pinned)
 		return changed
 	}
 }
