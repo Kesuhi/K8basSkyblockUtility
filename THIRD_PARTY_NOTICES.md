@@ -27,7 +27,8 @@ this repository. The SkyOcean section is a credit only: nothing of SkyOcean is b
   `constants/bestiary.json` at revision 24564a1ad22fdb0ca985d78710c401898eac586b, trimmed
   and reshaped: icons and colour codes removed; the families flattened into rows with an id,
   their category and subcategory and a derived tier count; the CRITTERS bracket set renamed
-  `critters_1` to `critters_5`.
+  `critters_1` to `critters_5`; ten families' bracket or cap corrected from game observations and other projects'
+  published values, each such row keeping NEU's values under `neu`.
 - Distribution: the tables `thirdparty/neu-repo/npcdb/npcs.json` and
   `thirdparty/neu-repo/bestiary/families.json` in the jar's bundled data
   (`assets/k8bas_skyblock_utility/data/`). The licence text is

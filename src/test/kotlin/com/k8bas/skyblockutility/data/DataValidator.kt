@@ -377,7 +377,8 @@ object DataValidator {
 	/**
 	 * The bestiary rules (T5.1, REQ-BEST-15, AC-BEST-14) the schema cannot state: the table comes from the pinned NEU
 	 * commit and has all of its families; every bracket increases; each family's bracket, category and subcategory are
-	 * the table's own; and its maxTiers is what the bracket gives below the cap, plus the cap.
+	 * the table's own; a Critter family's cap ends its set (R58); and its maxTiers is what the bracket gives below the
+	 * cap, plus the cap. A corrected row's sources are checked by the per-row source rules.
 	 */
 	private fun bestiary(json: JsonNode, problems: MutableList<Problem>) {
 		val revisions = json.get("sources")?.takeIf { it.isObject }?.values()?.mapNotNull { it.get("revision")?.takeIf { r -> r.isString }?.stringValue() } ?: listOf()
@@ -420,6 +421,10 @@ object DataValidator {
 				return@forEachIndexed
 			}
 			val cap = row.int("cap") ?: return@forEachIndexed
+			// R58: a Critter family's cap ends its set, so it has every tier of it.
+			if (bracket.startsWith("critters_") && thresholds.isNotEmpty() && cap != thresholds.last()) {
+				problems += Problem(BESTIARY, id, "cap $cap is not the last value of $bracket (R58: a Critter family's cap ends its set)")
+			}
 			val tiers = thresholds.count { it < cap } + 1
 			val maxTiers = row.int("maxTiers") ?: return@forEachIndexed
 			if (maxTiers != tiers) {

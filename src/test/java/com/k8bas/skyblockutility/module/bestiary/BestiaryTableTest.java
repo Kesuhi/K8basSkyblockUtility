@@ -2,8 +2,16 @@ package com.k8bas.skyblockutility.module.bestiary;
 
 import org.junit.jupiter.api.Test;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -83,17 +91,70 @@ class BestiaryTableTest {
 
 	@Test
 	void critterFamiliesUseTheirOwnSet() {
-		// CRITTERS set 3 is 1, 5, 10, 15, 20, 25, 35, 45, 60, 75; Hewver's cap 50 is not in it (EC-BEST-10). Its 9 tiers follow
-		// REQ-BEST-15; the in-game count of the five such critters is UNVERIFIED, and the widget's threshold wins (EC-BEST-09).
+		// EC-BEST-10 [decided R58]: Hewver's cap 50 ends Critter set 4 (NEU named set 3, which gave 9 tiers; the logs show tier X).
 		BestiaryFamily hewver = BestiaryTables.shipped().family("hewver");
 		assertNotNull(hewver);
-		assertEquals("critters_3", hewver.bracket());
-		assertEquals(List.of(1, 5, 10, 15, 20, 25, 35, 45, 50), hewver.thresholds());
+		assertEquals("critters_4", hewver.bracket());
+		assertEquals(List.of(1, 3, 6, 10, 15, 20, 25, 30, 40, 50), hewver.thresholds());
 		TierProgress none = hewver.progress(0);
 		assertEquals(0, none.tier());
 		assertEquals(1, none.nextThreshold());
 		assertEquals(1, none.toNext());
 		assertEquals(50, none.toMax());
+		assertEquals(10, hewver.progress(50).tier());
+	}
+
+	@Test
+	void exactlyTheCorrectedRowsKeepNeusValuesAndCiteTheirSources() throws IOException {
+		// R58: NEU's bracket and cap per corrected family, and the sources that show the correction.
+		Map<String, List<Object>> neu = Map.of(
+				"hewver", List.of("critters_3", 50, List.of("game_logs", "hypixel_api_reborn", "kyuwa_caps")),
+				"murkbat", List.of("critters_3", 50, List.of("hypixel_api_reborn", "kyuwa_caps")),
+				"honeymite", List.of("critters_2", 75, List.of("hypixel_api_reborn", "kyuwa_caps")),
+				"woodlouse", List.of("critters_2", 75, List.of("hypixel_api_reborn", "kyuwa_caps")),
+				"parched", List.of("3", 75, List.of("game_logs", "hypixel_api_reborn", "kyuwa_caps")),
+				"stag_beetle", List.of("critters_1", 100, List.of("hypixel_api_reborn", "kyuwa_caps")),
+				"honeyhog", List.of("1", 100, List.of("hypixel_api_reborn", "kyuwa_caps")),
+				"beeheemoth", List.of("critters_5", 25, List.of("hypixel_api_reborn", "kyuwa_caps")),
+				"tidetot", List.of("4", 1000, List.of("hypixel_api_reborn", "kyuwa_caps")),
+				"grizzly_bear", List.of("5", 25, List.of("hypixel_api_reborn", "kyuwa_caps")));
+		JsonObject table;
+		try (InputStream in = BestiaryTableTest.class.getResourceAsStream("/assets/k8bas_skyblock_utility/data/thirdparty/neu-repo/bestiary/families.json")) {
+			table = JsonParser.parseString(new String(in.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
+		}
+		Map<String, List<Object>> actual = new HashMap<>();
+		for (JsonElement element : table.getAsJsonArray("rows")) {
+			JsonObject row = element.getAsJsonObject();
+			if (row.has("neu") || row.has("sourceRefs")) {
+				JsonObject original = row.getAsJsonObject("neu");
+				actual.put(row.get("id").getAsString(), List.of(original.get("bracket").getAsString(), original.get("cap").getAsInt(),
+						row.getAsJsonArray("sourceRefs").asList().stream().map(JsonElement::getAsString).toList()));
+			}
+		}
+		assertEquals(neu, actual);
+	}
+
+	@Test
+	void theFamiliesNeuGetsWrongAreCorrected() {
+		// R58 (T5.1c): bracket and cap per family; each now has 10 tiers.
+		Map<String, List<Object>> corrected = Map.of(
+				"hewver", List.of("critters_4", 50), "murkbat", List.of("critters_4", 50),
+				"honeymite", List.of("critters_3", 75), "woodlouse", List.of("critters_3", 75), "parched", List.of("critters_3", 75),
+				"stag_beetle", List.of("critters_2", 100), "honeyhog", List.of("critters_2", 100), "beeheemoth", List.of("critters_4", 50),
+				"tidetot", List.of("critters_4", 50), "grizzly_bear", List.of("critters_5", 25));
+		BestiaryFamilies families = BestiaryTables.shipped();
+		corrected.forEach((id, expected) -> {
+			BestiaryFamily family = families.family(id);
+			assertNotNull(family, id);
+			assertEquals(expected, List.of(family.bracket(), family.cap()), id);
+			assertEquals(10, family.maxTier(), id);
+		});
+		// Every Critter family ends its set, so each has 10 tiers.
+		for (BestiaryFamily family : families.families()) {
+			if (family.bracket().startsWith("critters_")) {
+				assertEquals(10, family.maxTier(), family.id());
+			}
+		}
 	}
 
 	@Test

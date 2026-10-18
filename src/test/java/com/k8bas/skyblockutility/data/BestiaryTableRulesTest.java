@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * AC-BEST-14 [A] (T5.1, REQ-BEST-15): `check` validates the shipped bestiary table, and a copy fails it when a family is
  * missing against the pinned NEU commit, an id repeats, a bracket or category is unknown, a cap is not above 0, a tier
  * count disagrees with the bracket, a bracket is not increasing, the pin moved alone, or the NEU notice is gone. A
- * SkyBlock XP style reference `bestiary:ghost` resolves and a dangling one fails.
+ * SkyBlock XP style reference `bestiary:ghost` resolves and a dangling one fails. R58 (T5.1c): a Critter family's cap ends its
+ * set, and a row corrected against NEU keeps NEU's values and cites the table's sources.
  */
 class BestiaryTableRulesTest {
 	private static final Path PROJECT = Path.of(System.getProperty("k8bas.projectDir", "."));
@@ -131,6 +132,29 @@ class BestiaryTableRulesTest {
 	void aBracketThatIsNotIncreasingFails() throws IOException {
 		List<String> problems = problemsAfter(text -> text.replace("\"8\": [1,2,3,4,5,8,", "\"8\": [1,2,3,4,5,5,"));
 		assertProblem(problems, "bestiary", "brackets/8", "not increasing");
+	}
+
+	@Test
+	void aCritterCapThatDoesNotEndItsSetFails() throws IOException {
+		// R58: NEU's own mistake, Hewver on set 3 with cap 50 (9 tiers), fails again.
+		List<String> problems = problemsAfter(text -> text.replaceFirst("\\{\"id\":\"hewver\",(.*?)\"bracket\":\"critters_4\",\"cap\":50,\"maxTiers\":10,",
+				"{\"id\":\"hewver\",$1\"bracket\":\"critters_3\",\"cap\":50,\"maxTiers\":9,"));
+		assertProblem(problems, "bestiary", "hewver", "cap 50 is not the last value of critters_3");
+		// A cap in the set that does not end it fails too: 40 is in Critter set 4, whose last value is 50.
+		List<String> inside = problemsAfter(text -> text.replace("\"bracket\":\"critters_3\",\"cap\":50,\"maxTiers\":9,",
+				"\"bracket\":\"critters_4\",\"cap\":40,\"maxTiers\":9,"));
+		assertProblem(inside, "bestiary", "hewver", "cap 40 is not the last value of critters_4");
+	}
+
+	@Test
+	void aCorrectedRowCitesItsSources() throws IOException {
+		List<String> unknown = problemsAfter(text -> text.replaceFirst("\"sourceRefs\":\\[\"game_logs\"", "\"sourceRefs\":[\"my_memory\""));
+		assertProblem(unknown, "bestiary", "sourceRefs", "my_memory is not one of the table's sources");
+		List<String> none = problemsAfter(text -> text.replaceFirst(",\"sourceRefs\":\\[[^]]*]", ""));
+		assertProblem(none, "bestiary", "dependentRequired", "sourceRefs");
+		// And the other way: sources without NEU's values (Murkbat; the steps above changed Hewver's row).
+		List<String> bare = problemsAfter(text -> text.replaceFirst("(\\{\"id\":\"murkbat\"[^\\n]*?),\"neu\":\\{[^}]*}", "$1"));
+		assertProblem(bare, "bestiary", "dependentRequired", "neu");
 	}
 
 	@Test

@@ -3,10 +3,10 @@
   "tables": {
     "bestiary": {
       "path": "thirdparty/neu-repo/bestiary/families.json",
-      "sha256": "bc308b9c78089e032a7e16607a6a35f225fadeed8f333f1b26913792d9f09862",
+      "sha256": "dc647c4312c57a36e6be8e9af8a19f3bc7163dd5f5000da5844ccb510b6bb59a",
       "rows": 359,
       "schemaVersion": 1,
-      "dataVersion": 1,
+      "dataVersion": 2,
       "gameVersion": "0.27.1"
     },
     "mining.corpse_spots": {
