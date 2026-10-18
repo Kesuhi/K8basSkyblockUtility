@@ -101,8 +101,9 @@ this layout:
   headings.
 - There are no link reference definitions (`[1.1.0]: https://…`). The usual Keep a Changelog link
   footer would become part of the last section's release body. Use inline links instead.
-- A release section is self-contained, so it works as the release notes word for word. It holds the
-  requirements, the upgrade note, the behaviour changes and the defaults.
+- A release section works as the release notes word for word. It holds only the changes and fixes,
+  one short bullet each, under Added, Changed, Removed or Fixed: no intro, requirements, upgrade
+  note, defaults or known issues (R51).
 
 The release body is every line after the version's `## ` heading up to the next `## ` heading, with
 leading and trailing blank lines removed. Lines inside code fences are never headings. Extract it
@@ -461,10 +462,8 @@ For a data-only release:
 
 1. Raise the PATCH part of `mod_version` in `gradle.properties` and keep `minecraft_version`. The jar
    becomes `k8bas_skyblock_utility-1.1.1+26.2.jar`.
-2. Add a self-contained `## [1.1.1] - YYYY-MM-DD` section to `CHANGELOG.md`:
-   - the requirements line
-   - a `### Changed` subsection that names each changed table and its new data version
-   - a note that nothing else changed
+2. Add a `## [1.1.1] - YYYY-MM-DD` section to `CHANGELOG.md` with a `### Changed` subsection that
+   names each changed table and its new data version.
 3. Release it with the same flow as any release: PR → approval → merge → "ship" → tag → draft →
    `release-check.sh` and the tier D boot → publish. The updater offers it like any other release.
 
