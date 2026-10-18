@@ -46,6 +46,17 @@ fabricApi {
 	}
 }
 
+// -Pk8bas.updaterTestBuild=true builds a test jar for the updater's Windows run (T4.5): its stand-in source comes from
+// src/updaterTest, and the jar is named *-updatertest.jar, never the release's name. Never for a release;
+// ReleaseArtifactTest and the release draft check refuse a jar that carries it (REQ-UPD-03).
+if (providers.gradleProperty("k8bas.updaterTestBuild").map { it.toBoolean() }.getOrElse(false)) {
+	sourceSets.main.java.srcDir "src/updaterTest/java"
+	sourceSets.main.resources.srcDir "src/updaterTest/resources"
+	tasks.named("jar") {
+		archiveClassifier = "updatertest"
+	}
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

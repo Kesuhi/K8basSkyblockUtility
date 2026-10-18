@@ -81,7 +81,27 @@ object ReleaseDraftCheck {
 		checkLocalFiles(assets[jarName], assets[sidecarName], jar, sidecar, jarName, sidecarName, problems)
 		checkBody(release, expectedNotes, problems)
 		checkModJson(jar, "$modVersion+$minecraftVersion", minecraftVersion, problems)
+		checkNoTestHook(jar, problems)
 		return java.util.List.copyOf(problems)
+	}
+
+	/** REQ-UPD-03 (T4.5): a test build carries the updater's stand-in source and must never be uploaded. */
+	private fun checkNoTestHook(jar: Path, problems: MutableList<String>) {
+		if (!Files.isRegularFile(jar)) {
+			return
+		}
+		try {
+			ZipFile(jar.toFile()).use { zip ->
+				val hook = zip.stream().map { it.name }
+					.filter { it == "META-INF/services/com.k8bas.skyblockutility.update.UpdateTestHook" || it.contains("StandInHook") }
+					.findFirst()
+				if (hook.isPresent) {
+					problems.add("the jar is a test build (" + hook.get() + "); build the release without -Pk8bas.updaterTestBuild")
+				}
+			}
+		} catch (e: IOException) {
+			// checkModJson already reports a jar that cannot be read.
+		}
 	}
 
 	/** Draft, tag, title and pre-release flag (REQ-REL-07). */

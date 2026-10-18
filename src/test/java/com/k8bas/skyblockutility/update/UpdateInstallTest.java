@@ -90,6 +90,28 @@ class UpdateInstallTest {
 		}
 	}
 
+	/**
+	 * R53 (T4.5): as the game wires them, the notices read the service's pending install, so the staged version gets no
+	 * toast; cancelled, it is on offer again.
+	 */
+	@Test
+	void theNoticesKnowTheStagedVersion() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			byte[] jar = TestJars.mod("2.0.1+26.2");
+			github.enqueue(MockGitHub.Answer.json(200, "[" + list(github, "2.0.1", jar) + "]"), MockGitHub.Answer.bytes(200, jar));
+			UpdateService service = service(github);
+			List<com.k8bas.skyblockutility.ui.notice.Notice> toasts = new CopyOnWriteArrayList<>();
+			Updates.use(service, new UpdateNotifier(RUNNING, org.slf4j.LoggerFactory.getLogger("test"), toasts::add));
+			service.checkManual();
+			assertInstanceOf(DownloadOutcome.Staged.class, service.download(Consent.typed("2.0.1")));
+			Updates.notifier().offer(service.offer());
+			assertEquals(List.of(), toasts);
+			assertEquals(UpdateService.Cancel.CANCELLED, service.cancelPending());
+			Updates.notifier().offer(service.offer());
+			assertEquals(1, toasts.size());
+		}
+	}
+
 	/** AC-UPD-17: a development run is notify-only and writes nothing anywhere near its mods folder. */
 	@Test
 	void aDevelopmentRunDownloadsNothing() throws Exception {

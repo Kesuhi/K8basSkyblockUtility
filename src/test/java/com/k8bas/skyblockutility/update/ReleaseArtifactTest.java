@@ -55,6 +55,21 @@ class ReleaseArtifactTest {
 		assertEquals(SemVer.parse(MOD_VERSION), SemVer.parse(version));
 	}
 
+	/**
+	 * REQ-UPD-03: a source override exists only in development or test builds. The release jar registers no
+	 * {@link UpdateTestHook} and carries none of the test build's code (T4.5), so it reads GitHub only.
+	 */
+	@Test
+	void theJarCarriesNoTestHook() throws IOException {
+		try (ZipFile zip = new ZipFile(jar().toFile())) {
+			List<String> found = zip.stream().map(java.util.zip.ZipEntry::getName)
+					.filter(name -> name.startsWith("META-INF/services/") && name.contains("UpdateTestHook") || name.contains("StandInHook"))
+					.toList();
+			assertEquals(List.of(), found);
+			assertTrue(zip.getEntry("com/k8bas/skyblockutility/update/UpdateTestHook.class") != null, "the interface ships, unused");
+		}
+	}
+
 	/** REQ-REL-07: 64 lowercase hex, two spaces, the jar name, LF; UTF-8 without a BOM. */
 	@Test
 	void theSidecarHoldsTheJarsSha256() throws IOException, NoSuchAlgorithmException {

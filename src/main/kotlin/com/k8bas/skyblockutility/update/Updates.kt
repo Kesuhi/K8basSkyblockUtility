@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory
 import java.net.URI
 import java.nio.file.Files
 import java.time.ZoneId
+import java.util.ServiceConfigurationError
+import java.util.ServiceLoader
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.function.Function
@@ -68,20 +70,25 @@ object Updates {
 	fun register() {
 		val modVersion = RuntimeVersions.mod(K8basSkyblockUtilityClient.MOD_ID)
 		val minecraft = RuntimeVersions.minecraft()
-		val source = GitHubReleaseSource.resolve(
+		val hook = testHook()
+		val source = hook?.releases() ?: GitHubReleaseSource.resolve(
 			System.getProperty(GitHubReleaseSource.SOURCE_PROPERTY),
 			FabricLoader.getInstance().isDevelopmentEnvironment,
 		)
-		if (source != GitHubReleaseSource.RELEASES) {
+		if (hook != null) {
+			LOGGER.warn("Update: test build, releases from {}", source)
+		} else if (source != GitHubReleaseSource.RELEASES) {
 			LOGGER.info("Update source overridden for development: {}", source)
 		}
 		val warn = Consumer<String> { LOGGER.warn(it) }
 		val store = UpdateStateStore(FabricLoader.getInstance().configDir.resolve(UpdateStateStore.FILE_NAME), warn)
-		// Downloads go only to GitHub, also when the release list comes from a development override (REQ-UPD-20).
+		// Downloads go only to GitHub, also when the release list comes from a development override (REQ-UPD-20); a test
+		// build adds its stand-in.
 		val userAgent = GitHubReleaseSource.userAgent(modVersion)
-		val downloader = SecureDownloader(SharedHttpClient.get(), userAgent, SecureDownloader.GITHUB, SecureDownloader.TIMEOUT)
+		val hosts = if (hook == null) SecureDownloader.GITHUB else SecureDownloader.GITHUB.or(hook::allowsDownload)
+		val downloader = SecureDownloader(SharedHttpClient.get(), userAgent, hosts, SecureDownloader.TIMEOUT)
 		// A sidecar is read during a check, so it gets the API's budget, not the jar's.
-		val sidecars = SecureDownloader(SharedHttpClient.get(), userAgent, SecureDownloader.GITHUB, GitHubReleaseSource.REQUEST_TIMEOUT)
+		val sidecars = SecureDownloader(SharedHttpClient.get(), userAgent, hosts, GitHubReleaseSource.REQUEST_TIMEOUT)
 		val loader = FabricLoader.getInstance()
 		val root = loader.gameDir.resolve(STAGING_FOLDER)
 		val stager = JarStager(root, downloader, minecraft, RuntimeVersions.mod("fabricloader"))
@@ -114,12 +121,31 @@ object Updates {
 				} catch (e: Exception) {
 					LOGGER.warn("Update: the launch check failed: {}", e.toString())
 				}
+				try {
+					hook?.afterLaunch(service!!)
+				} catch (e: Exception) {
+					LOGGER.warn("Update: the test hook failed: {}", e.toString())
+				}
 				checks.started()
 			}
 		}
 		ClientPlayConnectionEvents.JOIN.register { _, _, _ -> checks.joined() }
 		ClientTickEvents.END_CLIENT_TICK.register { client -> notifier!!.tick(client) }
 		ClientLifecycleEvents.CLIENT_STOPPING.register { service!!.flush() }
+	}
+
+	/**
+	 * The test build's hook (T4.5), or null: the release jar carries none (ReleaseArtifactTest). Only one from this mod's
+	 * own jar counts; one another jar registers is ignored, and a broken one leaves the updater as it is (REQ-UPD-03).
+	 */
+	private fun testHook(): UpdateTestHook? = try {
+		val own = UpdateTestHook::class.java.protectionDomain.codeSource?.location?.toString()
+		ServiceLoader.load(UpdateTestHook::class.java, Updates::class.java.classLoader).stream()
+			.filter { own != null && it.type().protectionDomain.codeSource?.location?.toString() == own }
+			.findFirst().map { it.get() }.orElse(null)
+	} catch (e: ServiceConfigurationError) {
+		LOGGER.warn("Update: no test hook: {}", e.toString())
+		null
 	}
 
 	/** Where Fabric loaded this mod from; the paths only for a PATH origin, whose getPaths() alone does not throw. */
@@ -211,6 +237,7 @@ object Updates {
 	@Synchronized
 	fun use(newService: UpdateService, newNotifier: UpdateNotifier) {
 		newService.setOnOutcome { newNotifier.offer(it) }
+		newNotifier.setStaged { newService.pendingInstall()?.version() }
 		service = newService
 		notifier = newNotifier
 	}

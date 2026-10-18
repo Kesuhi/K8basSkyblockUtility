@@ -22,13 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * The automatic check's notices (REQ-UPD-08, REQ-UPD-10): for a found update a toast on whatever screen is open, once per
  * version in a session, and once per game session, on the first world join, a local chat line with [Changelog] [Update]
  * [Skip this version] [Open release page]. [Update] only opens the confirmation screen; nothing is downloaded without its
- * one click. A notify-only update says why and has no [Update]. A skipped version, a checksum conflict and every other
- * outcome show nothing. The updater never opens a screen or takes focus on its own, and sends nothing to the server.
+ * one click. A notify-only update says why and has no [Update]. A skipped version, a version already staged for install
+ * (R53), a checksum conflict and every other outcome show nothing. The updater never opens a screen or takes focus on its own, and sends nothing to the server.
  */
 public final class UpdateNotifier {
 	static final String REPOSITORY = "https://github.com/Kesuhi/K8basSkyblockUtility";
@@ -44,6 +45,8 @@ public final class UpdateNotifier {
 	/** Lines the launch's reconciliation left for the first world join (T4.3b). */
 	private final Queue<String> launchLines = new ConcurrentLinkedQueue<>();
 	private volatile CheckOutcome.Found pending;
+	/** The version staged for install at the next exit, or null. */
+	private volatile Supplier<String> staged = () -> null;
 	/** Client thread only. */
 	private boolean shown;
 	private int shownCount;
@@ -65,7 +68,7 @@ public final class UpdateNotifier {
 		if (outcome instanceof CheckOutcome.Found found && !found.skipped() && !(found.hash() instanceof UpdateHooks.Hash.Conflict)
 				&& !(found.hash() instanceof UpdateHooks.Hash.Unavailable)) {
 			pending = found;
-			if (toasted.add(found.candidate().version().toString())) {
+			if (!isStaged(found) && toasted.add(found.candidate().version().toString())) {
 				toasts.accept(toast(found));
 			}
 			return;
@@ -75,6 +78,11 @@ public final class UpdateNotifier {
 			logger.info("Running version {} is not a SemVer version; no update is offered (newest release: {})",
 					runningVersion, notARelease.newest());
 		}
+	}
+
+	/** Where the version staged for install is read (the service's pending install); its notices stop (R53). */
+	public void setStaged(Supplier<String> stagedVersion) {
+		staged = stagedVersion;
 	}
 
 	/** Lines to show once, as soon as the player is in a world; any thread. */
@@ -88,12 +96,29 @@ public final class UpdateNotifier {
 			return;
 		}
 		flushLaunchLines(ChatUtils::chat);
+		showJoinLine(ChatUtils::chat);
+	}
+
+	/**
+	 * Hands the found update's line to {@code chat}, once per session, when it is due in a world. Not for a version staged
+	 * for install (R53): an install confirmed after the toast leaves nothing to offer. Cancelled again before the join, the
+	 * line still shows; cancelled later, it does not come back, as the join it belonged to has passed.
+	 */
+	void showJoinLine(Consumer<Component> chat) {
 		CheckOutcome.Found found = pending;
-		if (!shown && found != null) {
-			shown = true;
-			shownCount++;
-			ChatUtils.chat(message(found, runningVersion));
+		if (shown || found == null) {
+			return;
 		}
+		shown = true;
+		if (!isStaged(found)) {
+			shownCount++;
+			chat.accept(message(found, runningVersion));
+		}
+	}
+
+	private boolean isStaged(CheckOutcome.Found found) {
+		SemVer version = SemVer.Companion.fromTagOrNull(staged.get());
+		return version != null && version.compareTo(found.candidate().version()) == 0;
 	}
 
 	/** Hands the launch's lines to {@code chat}, each once (T4.3b). */

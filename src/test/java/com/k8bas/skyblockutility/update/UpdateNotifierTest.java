@@ -123,6 +123,74 @@ class UpdateNotifierTest {
 		assertEquals(List.of(new Notice("K8bas Skyblock Utility", List.of("v2.0.1 is available", "Open /ksu update to install it"))), toasts);
 	}
 
+	/**
+	 * T4.5 (R53): a version already staged for install has nothing left to offer, so it shows no toast and no chat line;
+	 * a newer release still notifies.
+	 */
+	@Test
+	void aStagedVersionShowsNoNotice() {
+		UpdateNotifier notifier = notifier();
+		notifier.setStaged(() -> "1.2.0");
+		notifier.offer(installable("v1.2.0"));
+		List<String> lines = new ArrayList<>();
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(List.of(), toasts);
+		assertEquals(List.of(), lines);
+
+		UpdateNotifier newer = notifier();
+		newer.setStaged(() -> "1.2.0");
+		newer.offer(installable("v1.2.1"));
+		newer.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(1, toasts.size(), "a newer release than the staged one notifies");
+		assertEquals(1, lines.size());
+		assertTrue(lines.getFirst().startsWith("K8bas Skyblock Utility v1.2.1 is available"), lines.getFirst());
+	}
+
+	/** R53: the staged version is compared as a version, not as text. */
+	@Test
+	void aStagedVersionIsComparedAsAVersion() {
+		UpdateNotifier notifier = notifier();
+		notifier.setStaged(() -> "1.2.0+26.2");
+		notifier.offer(installable("v1.2.0"));
+		assertEquals(List.of(), toasts);
+	}
+
+	/**
+	 * T4.5 (R53): an install confirmed after the toast (from the settings card, before any world) leaves no chat line
+	 * offering it at the join; cancelled later in the session, the line does not come back, as its join has passed.
+	 */
+	@Test
+	void aVersionStagedAfterItsToastHasNoChatLine() {
+		UpdateNotifier notifier = notifier();
+		java.util.concurrent.atomic.AtomicReference<String> staged = new java.util.concurrent.atomic.AtomicReference<>();
+		notifier.setStaged(staged::get);
+		notifier.offer(installable("v1.2.0"));
+		assertEquals(1, toasts.size());
+		staged.set("1.2.0");
+		List<String> lines = new ArrayList<>();
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(List.of(), lines);
+		staged.set(null);
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(List.of(), lines, "cancelled during play");
+		assertEquals(0, notifier.shownCount());
+	}
+
+	/** R53: an install cancelled again before the join leaves the update on offer, so its line shows once. */
+	@Test
+	void anInstallCancelledBeforeTheJoinKeepsItsLine() {
+		UpdateNotifier notifier = notifier();
+		java.util.concurrent.atomic.AtomicReference<String> staged = new java.util.concurrent.atomic.AtomicReference<>("1.2.0");
+		notifier.setStaged(staged::get);
+		notifier.offer(installable("v1.2.0"));
+		staged.set(null);
+		List<String> lines = new ArrayList<>();
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(1, lines.size(), "once per session");
+		assertEquals(1, notifier.shownCount());
+	}
+
 	/** T4.3b: the launch's lines are each shown once, at the first chance. */
 	@Test
 	void theLaunchLinesAreShownOnce() {
