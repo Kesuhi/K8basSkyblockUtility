@@ -4,13 +4,14 @@ This is the maintainer procedure for a release (REQ-REL-16). Every release goes
 **draft → verify → publish**: it is created as a draft, checked against the release contract
 below, and published only when every check passes.
 
-The contract matters because the in-game update check reads part of it. The update check of v1.1.0
-looks only at the tag, the draft and pre-release flags, the release page link, and the jar's name
-and upload state. A tag that is not SemVer, a misnamed jar, or a stable version flagged as a
-pre-release (on the STABLE channel) hides the release: nothing shows in game, and at most a line
-is logged. A wrong sidecar, digest, title or body does not hide it, but
-breaks the checksum check users do by hand and the one-click updater planned for 2.0.0, which
-would fall back to notify-only.
+The contract matters because the in-game updater reads it. To find a release, it looks only at
+the tag, the draft and pre-release flags, the release page link, and the jar's name and upload
+state. A tag that is not SemVer, a misnamed jar, or a stable version flagged as a pre-release (on
+the STABLE channel) hides the release: nothing shows in game, and at most a line is logged. A wrong
+title or body does not hide it. A wrong sidecar or digest breaks the checksum check users do by
+hand, and since v1.3.1 the one-click install: without a SHA-256 the updater only notifies, and with
+a digest and sidecar that disagree it shows no notice at all (the settings card and `/ksu update`
+say "checksum conflict").
 
 The examples use v1.1.0 for Minecraft 26.2. For another release, replace `1.1.0` (the version),
 `v1.1.0` (the tag) and `26.2` (the Minecraft version, `minecraft_version` in `gradle.properties`).
@@ -55,6 +56,9 @@ How the updater reads a release:
 - It picks the jar by its asset name, never by the download URL. The asset must be `uploaded`.
 - The `+<mc>` part must equal the running Minecraft version or be a dotted prefix of it: `+26.2`
   also serves 26.2.1.
+- Since v1.3.1 it also reads the jar's `digest` and its `.sha256` sidecar when it checks, and the
+  release body for the confirmation screen (at most 4,000 characters). The download must match the
+  asset's `size` and that SHA-256.
 - On the STABLE channel it skips releases that have the pre-release flag or a pre-release version.
 
 ## Tools
@@ -101,8 +105,9 @@ this layout:
   headings.
 - There are no link reference definitions (`[1.1.0]: https://…`). The usual Keep a Changelog link
   footer would become part of the last section's release body. Use inline links instead.
-- A release section is self-contained, so it works as the release notes word for word. It holds the
-  requirements, the upgrade note, the behaviour changes and the defaults.
+- A release section works as the release notes word for word. It holds only the changes and fixes,
+  one short bullet each, under Added, Changed, Removed or Fixed: no intro, requirements, upgrade
+  note, defaults or known issues (R51).
 
 The release body is every line after the version's `## ` heading up to the next `## ` heading, with
 leading and trailing blank lines removed. Lines inside code fences are never headings. Extract it
@@ -333,6 +338,33 @@ published. The 2.0.0 steps extend this document (PLAN T7.2c).
 
 ## Release records
 
+### v1.3.0, published 2026-10-17
+
+- **PR #4** was merged as merge commit `2f1a105`; its head `b67e08f` was the approved commit, with CI
+  green on it. The maintainer's message of 2026-10-17 ("When finished and everything checks green, put
+  everything in the open pull request, merge the trees, ship version 1.3.0") counted as "merge" and
+  "ship" for the PR's final head once everything on it was green, which it was (Checkpoint G3v). The
+  annotated tag `v1.3.0` is on the merge commit, with the noreply identity. It is a MINOR release:
+  the Animations option and the Smooth corners default (REQ-REL-06).
+- **Build:** `./gradlew clean build` ran from the detached tag; its test results show 1090 tests and
+  no failure.
+  - Jar: `sha256:02496d000b8b50165e11e6b697705b1e51d35e7903dfc05dd049340724a7495c` (1,233,428 bytes).
+    It nests only Render Chest.
+  - Sidecar: `sha256:7266613ff9dd420ceb22d0aeef72fa164b6e8a5f24910a1cc9faf4bdc2e1fe85`.
+- **Draft checks:** `release-check.sh v1.3.0` printed PASS, with all five steps `[ok]`. It ran
+  before and after the tier D boot.
+- **Tier D:** a copy of the maintainer's 50-jar `26.2 Skyblock` mod set with Iris and the shaderpack.
+  The baseline loaded 183 mods without this mod (no `- k8bas_skyblock_utility` line); both boots
+  reached the title screen. The release run loaded 184 mods, among them
+  `k8bas_skyblock_utility 1.3.0+26.2` and `fabric-language-kotlin 1.14.2+kotlin.2.4.21`. Both had
+  the same 7 distinct ERROR messages (offline-account log-ins of other mods, Skyblocker item builds)
+  once thread names and object hashes are removed, so the release jar added no ERROR line. Its one
+  WARN line naming this mod is Iris's known `Found okay program match for
+  k8bas_skyblock_utility:pipeline/marker_ring: BASIC_COLOR`, as in v1.2.1.
+- **Published** as Latest, not as a pre-release, at 2026-10-17T17:18:15Z. The assets are only the
+  jar and the sidecar, and the body equals the CHANGELOG section. An anonymous
+  `GET …/releases/latest` is v1.3.0.
+
 ### v1.2.1, published 2026-10-15
 
 - **PR #3** was merged as merge commit `ea32dea` after the maintainer's approval ("merge"); its head
@@ -434,10 +466,8 @@ For a data-only release:
 
 1. Raise the PATCH part of `mod_version` in `gradle.properties` and keep `minecraft_version`. The jar
    becomes `k8bas_skyblock_utility-1.1.1+26.2.jar`.
-2. Add a self-contained `## [1.1.1] - YYYY-MM-DD` section to `CHANGELOG.md`:
-   - the requirements line
-   - a `### Changed` subsection that names each changed table and its new data version
-   - a note that nothing else changed
+2. Add a `## [1.1.1] - YYYY-MM-DD` section to `CHANGELOG.md` with a `### Changed` subsection that
+   names each changed table and its new data version.
 3. Release it with the same flow as any release: PR → approval → merge → "ship" → tag → draft →
    `release-check.sh` and the tier D boot → publish. The updater offers it like any other release.
 

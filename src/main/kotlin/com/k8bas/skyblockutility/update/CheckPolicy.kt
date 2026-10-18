@@ -55,28 +55,29 @@ object CheckPolicy {
 			}
 			GitHubReleaseSource.Kind.NOT_MODIFIED -> succeeded(state, now)
 			GitHubReleaseSource.Kind.HTTP_ERROR -> when (result.status) {
-				403, 429 -> waitFor(state, now, rateLimitWait(state, result.headers!!, now))
-				404 -> waitFor(state, now, DAY)
-				else -> waitFor(state, now, doubling(state.errorStreak++))
+				403, 429 -> waitFor(state, now, rateLimitWait(state, result.headers!!, now), UpdateState.WAIT_RATE_LIMIT)
+				404 -> waitFor(state, now, DAY, UpdateState.WAIT_NOT_FOUND)
+				else -> waitFor(state, now, doubling(state.errorStreak++), UpdateState.WAIT_ERROR)
 			}
 			GitHubReleaseSource.Kind.NO_RESPONSE, GitHubReleaseSource.Kind.MALFORMED, GitHubReleaseSource.Kind.BAD_REDIRECT ->
-				waitFor(state, now, doubling(state.errorStreak++))
+				waitFor(state, now, doubling(state.errorStreak++), UpdateState.WAIT_ERROR)
 		}
 	}
 
 	private fun succeeded(state: UpdateState, now: Long) {
 		state.lastSuccessMs = now
 		state.nextAllowedMs = 0
+		state.waitKind = null
 		state.secondaryStreak = 0
 		state.errorStreak = 0
 	}
 
 	/** retry-after, else the reset time when no requests remain, else the secondary-limit doubling. */
 	private fun rateLimitWait(state: UpdateState, headers: Map<String, String>, now: Long): Long {
-		number(headers["retry-after"])?.let { return it * SECOND }
+		number(headers["retry-after"])?.let { return millis(it) }
 		val reset = number(headers["x-ratelimit-reset"])
 		if (headers["x-ratelimit-remaining"] == "0" && reset != null) {
-			return reset * SECOND - now
+			return millis(reset) - now
 		}
 		return doubling(state.secondaryStreak++)
 	}
@@ -85,10 +86,31 @@ object CheckPolicy {
 	@JvmStatic
 	fun doubling(previous: Int): Long = minOf(MAX_DOUBLING_WAIT, MINUTE shl minOf(previous, 10))
 
-	private fun waitFor(state: UpdateState, now: Long, wait: Long) {
+	private fun waitFor(state: UpdateState, now: Long, wait: Long, kind: String) {
 		state.nextAllowedMs = now + wait.coerceIn(MIN_WAIT, MAX_WAIT)
+		state.waitKind = kind
 	}
+
+	/** A manual check runs at most once per this long (REQ-UPD-04). */
+	const val MANUAL_COOLDOWN: Long = MINUTE
+
+	/** When the next manual check may run, or 0 if it may now. A last manual check in the future (a wrong clock) does not hold
+	 *  one back. */
+	@JvmStatic
+	fun manualAllowedAt(state: UpdateState, now: Long): Long {
+		val at = state.lastManualMs + MANUAL_COOLDOWN
+		return if (state.lastManualMs <= now && now < at) at else 0
+	}
+
+	/** Inside a rate-limit wait, which holds manual checks back too; other back-offs do not (REQ-UPD-09). A wait saved by a
+	 *  version before T4.1 has no kind, and counts as a rate limit, so it is never cut short. */
+	@JvmStatic
+	fun manualRateLimited(state: UpdateState, now: Long): Boolean =
+		waiting(state, now) && (state.waitKind == null || state.waitKind == UpdateState.WAIT_RATE_LIMIT)
 
 	/** Trimmed as Java's String.trim() does (chars up to U+0020), then parsed as Long.parseLong does. */
 	private fun number(value: String?): Long? = value?.trim { it <= ' ' }?.toLongOrNull()
+
+	/** Seconds in milliseconds; a count too large for that is the largest wait, not a negative one. */
+	private fun millis(seconds: Long): Long = if (seconds > Long.MAX_VALUE / SECOND) Long.MAX_VALUE else seconds * SECOND
 }

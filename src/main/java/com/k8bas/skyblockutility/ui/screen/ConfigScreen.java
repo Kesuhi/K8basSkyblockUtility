@@ -460,6 +460,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		extractDimmedGame(graphics, partialTick);
 	}
 
+	/** The cards this screen shows (for gametests: the Updates card's values and buttons as drawn). */
+	public List<Card> cardsForTests() {
+		return cards;
+	}
+
 	/** For gametests: one colour behind the panel instead of the dimmed game, so its shadow can be read; 0 for the game. */
 	void plainBackgroundForTests(int argb) {
 		plainBackground = argb;
@@ -642,7 +647,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 				button.setTooltip(action.text().description());
 				yield button;
 			}
-			case InfoOption info -> new InfoText(info.value());
+			case InfoOption info -> new InfoText(info.value(), info.wide());
 			// The picker writes each add at once (a discrete commit) and the badges count the new rule.
 			case DatabaseOption database -> new Button(database.buttonLabel(), Button.Style.NORMAL,
 					() -> open(new DatabasePickerOverlay(database.database(), this, () -> {

@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.update;
 
+import com.k8bas.skyblockutility.ui.notice.Notice;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import org.junit.jupiter.api.Test;
@@ -11,9 +12,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** REQ-UPD-01, REQ-UPD-10: the notice's text and its two validated links (T1.4). */
+/**
+ * REQ-UPD-08, REQ-UPD-10, REQ-UPD-12 (T1.4, T4.4): the automatic check's notices. A found update shows a toast and, once per
+ * session, a local chat line with [Changelog] [Update] [Skip this version] [Open release page]; a notify-only one has no
+ * [Update] and says why; a skipped version, a checksum conflict and every other outcome show nothing.
+ */
 class UpdateNotifierTest {
 	private static final String TAG_PAGE = "https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/v1.2.0";
+	private static final String HEX = "ab".repeat(32);
+
+	private final List<Notice> toasts = new ArrayList<>();
 
 	private static CandidateFinder.Candidate candidate(String tag, String htmlUrl, boolean prerelease) {
 		Release.Asset jar = new Release.Asset("k8bas_skyblock_utility-" + tag.substring(1) + "+26.2.jar", "uploaded", "u", null, 1);
@@ -21,29 +29,204 @@ class UpdateNotifierTest {
 		return new CandidateFinder.Candidate(release, SemVer.fromTag(tag).orElseThrow(), jar, List.of());
 	}
 
-	private static List<URI> links(Component message) {
-		List<URI> links = new ArrayList<>();
+	private static CheckOutcome.Found found(String tag, UpdateHooks.Hash hash, UpdateHooks.Eligibility eligibility, boolean skipped) {
+		CandidateFinder.Candidate candidate = candidate(tag, TAG_PAGE, tag.contains("-"));
+		return new CheckOutcome.Found(candidate, hash, eligibility, skipped, tag.contains("-"), "26.2");
+	}
+
+	private static CheckOutcome.Found installable(String tag) {
+		return found(tag, new UpdateHooks.Hash.Verifiable(HEX), UpdateHooks.Eligibility.ELIGIBLE, false);
+	}
+
+	private UpdateNotifier notifier() {
+		return new UpdateNotifier("1.1.0+26.2", org.slf4j.LoggerFactory.getLogger("test"), toasts::add);
+	}
+
+	private static List<String> clicks(Component message) {
+		List<String> clicks = new ArrayList<>();
 		message.visit((style, text) -> {
 			if (style.getClickEvent() instanceof ClickEvent.OpenUrl(URI uri)) {
-				links.add(uri);
+				clicks.add(text + " -> " + uri);
+			} else if (style.getClickEvent() instanceof ClickEvent.RunCommand(String command)) {
+				clicks.add(text + " -> " + command);
 			}
 			return java.util.Optional.empty();
 		}, net.minecraft.network.chat.Style.EMPTY);
-		return links;
+		return clicks;
 	}
 
+	/** REQ-UPD-10: the chat line names both versions and has its four links; [Update] opens the confirmation screen, nothing more. */
 	@Test
-	void theNoticeNamesBothVersionsAndLinksTheChangelogAndTheReleasePage() {
-		Component message = UpdateNotifier.message(candidate("v1.2.0", TAG_PAGE, false), "1.1.0+26.2");
-		assertEquals("K8bas Skyblock Utility v1.2.0 is available; you have v1.1.0. [Changelog] [Open release page]", message.getString());
-		assertEquals(List.of(URI.create("https://github.com/Kesuhi/K8basSkyblockUtility/blob/v1.2.0/CHANGELOG.md"), URI.create(TAG_PAGE)),
-				links(message));
+	void theChatLineHasItsFourLinks() {
+		Component message = UpdateNotifier.message(installable("v1.2.0"), "1.1.0+26.2");
+		assertEquals("K8bas Skyblock Utility v1.2.0 is available; you have v1.1.0. [Changelog] [Update] [Skip this version] [Open release page]",
+				message.getString());
+		assertEquals(List.of("[Changelog] -> https://github.com/Kesuhi/K8basSkyblockUtility/blob/v1.2.0/CHANGELOG.md",
+				"[Update] -> /ksu update show", "[Skip this version] -> /ksu update skip 1.2.0", "[Open release page] -> " + TAG_PAGE), clicks(message));
+	}
+
+	/** REQ-UPD-08: notify-only says why and offers no [Update]. */
+	@Test
+	void aNotifyOnlyUpdateSaysWhyAndHasNoUpdateLink() {
+		Component message = UpdateNotifier.message(found("v1.2.0", UpdateHooks.Hash.Missing.INSTANCE, UpdateHooks.Eligibility.ELIGIBLE, false), "1.1.0");
+		assertEquals("K8bas Skyblock Utility v1.2.0 is available; you have v1.1.0. It has no SHA-256 checksum, so install it by hand from the release page. "
+				+ "[Changelog] [Skip this version] [Open release page]", message.getString());
+		Component managed = UpdateNotifier.message(found("v1.2.0", new UpdateHooks.Hash.Verifiable(HEX),
+				new UpdateHooks.Eligibility(false, InstallEligibility.MANAGED), false), "1.1.0");
+		assertTrue(managed.getString().contains(InstallEligibility.MANAGED + ". [Changelog]"), managed.getString());
 	}
 
 	@Test
 	void aPreReleaseIsLabelledBeta() {
-		Component message = UpdateNotifier.message(candidate("v1.3.0-beta.1", TAG_PAGE, true), "1.2.0");
+		Component message = UpdateNotifier.message(installable("v1.3.0-beta.1"), "1.2.0");
 		assertTrue(message.getString().startsWith("K8bas Skyblock Utility v1.3.0-beta.1 (beta) is available"), message.getString());
+	}
+
+	/** REQ-UPD-10: a toast on whatever screen is open, once per version in a session; a higher version shows its own. */
+	@Test
+	void aFoundUpdateShowsOneToastPerVersion() {
+		UpdateNotifier notifier = notifier();
+		notifier.offer(installable("v1.2.0"));
+		notifier.offer(installable("v1.2.0"));
+		assertEquals(List.of(new Notice("K8bas Skyblock Utility", List.of("v1.2.0 is available", "Open /ksu update to install it"))), toasts);
+		notifier.offer(installable("v1.2.1"));
+		assertEquals(2, toasts.size());
+		notifier.offer(found("v1.3.0", UpdateHooks.Hash.Missing.INSTANCE, UpdateHooks.Eligibility.ELIGIBLE, false));
+		assertEquals(new Notice("K8bas Skyblock Utility", List.of("v1.3.0 is available", "Install it by hand, see /ksu update")), toasts.getLast());
+	}
+
+	/** REQ-UPD-08, REQ-UPD-12, AC-UPD-13: a skipped version, a checksum conflict and the other outcomes stay silent; a newer version notifies again. */
+	@Test
+	void silentOutcomesShowNothing() {
+		UpdateNotifier notifier = notifier();
+		for (CheckOutcome silent : List.of(found("v2.0.1", new UpdateHooks.Hash.Verifiable(HEX), UpdateHooks.Eligibility.ELIGIBLE, true),
+				found("v2.0.1", UpdateHooks.Hash.Conflict.INSTANCE, UpdateHooks.Eligibility.ELIGIBLE, false),
+				found("v2.0.1", UpdateHooks.Hash.Unavailable.INSTANCE, UpdateHooks.Eligibility.ELIGIBLE, false),
+				new CheckOutcome.NoBuild(SemVer.fromTag("v2.1.0").orElseThrow(), "26.2", TAG_PAGE), new CheckOutcome.UpToDate("1.1.0"),
+				CheckOutcome.Unreachable.INSTANCE, new CheckOutcome.RateLimited(1L))) {
+			notifier.offer(installable("v1.9.0"));
+			toasts.clear();
+			notifier.offer(silent);
+			assertEquals(List.of(), toasts, silent.toString());
+			assertTrue(notifier.pendingForTests() == null, "no chat line either: " + silent);
+		}
+		notifier.offer(installable("v2.0.2"));
+		assertEquals(1, toasts.size(), "a version above the skipped one notifies");
+	}
+
+	/** Review (T4.4): a checksum file not read yet stays silent, so a later check that reads it still toasts the install. */
+	@Test
+	void anUnreadChecksumDoesNotUseUpTheToast() {
+		UpdateNotifier notifier = notifier();
+		notifier.offer(found("v2.0.1", UpdateHooks.Hash.Unavailable.INSTANCE, UpdateHooks.Eligibility.ELIGIBLE, false));
+		notifier.offer(installable("v2.0.1"));
+		assertEquals(List.of(new Notice("K8bas Skyblock Utility", List.of("v2.0.1 is available", "Open /ksu update to install it"))), toasts);
+	}
+
+	/**
+	 * T4.5 (R53): a version already staged for install has nothing left to offer, so it shows no toast and no chat line;
+	 * a newer release still notifies.
+	 */
+	@Test
+	void aStagedVersionShowsNoNotice() {
+		UpdateNotifier notifier = notifier();
+		notifier.setStaged(() -> "1.2.0");
+		notifier.offer(installable("v1.2.0"));
+		List<String> lines = new ArrayList<>();
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(List.of(), toasts);
+		assertEquals(List.of(), lines);
+
+		UpdateNotifier newer = notifier();
+		newer.setStaged(() -> "1.2.0");
+		newer.offer(installable("v1.2.1"));
+		newer.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(1, toasts.size(), "a newer release than the staged one notifies");
+		assertEquals(1, lines.size());
+		assertTrue(lines.getFirst().startsWith("K8bas Skyblock Utility v1.2.1 is available"), lines.getFirst());
+	}
+
+	/**
+	 * G4 review (REQ-UPD-12, REQ-UPD-07): the join's line offers only what is still on offer. A skip from the card or the
+	 * screen after the startup toast, or a channel pick that leaves the version out, means no line; the same offer shows it.
+	 */
+	@Test
+	void theJoinLineOffersOnlyWhatIsStillOnOffer() {
+		java.util.concurrent.atomic.AtomicReference<CheckOutcome> current = new java.util.concurrent.atomic.AtomicReference<>();
+		for (CheckOutcome now : List.of(found("v1.2.0", new UpdateHooks.Hash.Verifiable(HEX), UpdateHooks.Eligibility.ELIGIBLE, true),
+				new CheckOutcome.UpToDate("1.1.0"), installable("v1.2.1"))) {
+			UpdateNotifier notifier = notifier();
+			notifier.setCurrentOffer(current::get);
+			notifier.offer(installable("v1.2.0"));
+			current.set(now);
+			List<String> lines = new ArrayList<>();
+			notifier.showJoinLine(component -> lines.add(component.getString()));
+			notifier.showJoinLine(component -> lines.add(component.getString()));
+			assertEquals(List.of(), lines, now.toString());
+		}
+		UpdateNotifier notifier = notifier();
+		notifier.setCurrentOffer(current::get);
+		notifier.offer(installable("v1.2.0"));
+		current.set(installable("v1.2.0"));
+		List<String> lines = new ArrayList<>();
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(1, lines.size(), "the same offer still shows its line");
+	}
+
+	/** R53: the staged version is compared as a version, not as text. */
+	@Test
+	void aStagedVersionIsComparedAsAVersion() {
+		UpdateNotifier notifier = notifier();
+		notifier.setStaged(() -> "1.2.0+26.2");
+		notifier.offer(installable("v1.2.0"));
+		assertEquals(List.of(), toasts);
+	}
+
+	/**
+	 * T4.5 (R53): an install confirmed after the toast (from the settings card, before any world) leaves no chat line
+	 * offering it at the join; cancelled later in the session, the line does not come back, as its join has passed.
+	 */
+	@Test
+	void aVersionStagedAfterItsToastHasNoChatLine() {
+		UpdateNotifier notifier = notifier();
+		java.util.concurrent.atomic.AtomicReference<String> staged = new java.util.concurrent.atomic.AtomicReference<>();
+		notifier.setStaged(staged::get);
+		notifier.offer(installable("v1.2.0"));
+		assertEquals(1, toasts.size());
+		staged.set("1.2.0");
+		List<String> lines = new ArrayList<>();
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(List.of(), lines);
+		staged.set(null);
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(List.of(), lines, "cancelled during play");
+		assertEquals(0, notifier.shownCount());
+	}
+
+	/** R53: an install cancelled again before the join leaves the update on offer, so its line shows once. */
+	@Test
+	void anInstallCancelledBeforeTheJoinKeepsItsLine() {
+		UpdateNotifier notifier = notifier();
+		java.util.concurrent.atomic.AtomicReference<String> staged = new java.util.concurrent.atomic.AtomicReference<>("1.2.0");
+		notifier.setStaged(staged::get);
+		notifier.offer(installable("v1.2.0"));
+		staged.set(null);
+		List<String> lines = new ArrayList<>();
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(1, lines.size(), "once per session");
+		assertEquals(1, notifier.shownCount());
+	}
+
+	/** T4.3b: the launch's lines are each shown once, at the first chance. */
+	@Test
+	void theLaunchLinesAreShownOnce() {
+		UpdateNotifier notifier = notifier();
+		notifier.showOnJoin(List.of("Updated line", "Another copy line"));
+		List<String> shown = new ArrayList<>();
+		notifier.flushLaunchLines(component -> shown.add(component.getString()));
+		notifier.flushLaunchLines(component -> shown.add(component.getString()));
+		assertEquals(List.of("Updated line", "Another copy line"), shown);
 	}
 
 	/** Only this repository's https release pages are linked; anything else falls back to the list. */

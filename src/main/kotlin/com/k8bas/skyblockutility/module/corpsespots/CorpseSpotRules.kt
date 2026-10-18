@@ -22,10 +22,26 @@ object CorpseSpotRules {
 		if (!config.enabled || !shaft.inShaft || spots == null) {
 			return listOf()
 		}
-		val corpses = shaft.corpses
-		val allLooted = corpses.presence == WidgetPresence.PRESENT && corpses.corpses.isNotEmpty() && corpses.corpses.all { it.looted }
-		return if (config.hideWhenLooted && allLooted) listOf() else spots.spots(shaft.code).filter { it.number !in ruledOut }
+		return if (config.hideWhenLooted && allLooted(shaft)) listOf() else spots.spots(shaft.code).filter { it.number !in ruledOut }
 	}
+
+	/**
+	 * REQ-CORPSE-05's "all looted": the widget lists at least one corpse and every one is looted. A missing, cut-off or
+	 * unreadable widget never is.
+	 */
+	@JvmStatic
+	fun allLooted(shaft: MineshaftSnapshot): Boolean {
+		val corpses = shaft.corpses
+		return corpses.presence == WidgetPresence.PRESENT && corpses.corpses.isNotEmpty() && corpses.corpses.all { it.looted }
+	}
+
+	/**
+	 * Whether the "Corpse ding" element may show (REQ-CORPSE-11, R57): the feature and the hint on, and not [allLooted]
+	 * (without the widget it may). Once every corpse is looted a ding has nothing to point at, whatever the spots' own
+	 * toggle says.
+	 */
+	@JvmStatic
+	fun dingShows(config: CorpseSpotsConfig, shaft: MineshaftSnapshot): Boolean = config.enabled && config.dingHint && !allLooted(shaft)
 
 	/**
 	 * The `/ksu corpses` reply (REQ-CORPSE-06): a header with the shaft and its spot count, then `#n x, y, z · d m` per

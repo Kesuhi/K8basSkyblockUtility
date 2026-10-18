@@ -52,6 +52,12 @@ object ConfigLayout {
 	const val SEARCH_HEIGHT: Int = 16
 	const val CONTROL_HEIGHT: Int = 16
 
+	/** A wide value's top in its card: where a description's first line is drawn (T4.4b). */
+	const val WIDE_INFO_TOP: Int = 20
+
+	/** A wide value's two lines. */
+	const val WIDE_INFO_HEIGHT: Int = 20
+
 	/** The category description shows at most this many lines. */
 	const val DESCRIPTION_LINES: Int = 2
 
@@ -396,6 +402,11 @@ object ConfigLayout {
 	@JvmStatic
 	@JvmOverloads
 	fun control(card: Rect, option: Option, indent: Int = 0): Rect {
+		// A wide value (an update check's answer, T4.4b) goes where a description goes: under the title, across the card,
+		// two lines high.
+		if (option is InfoOption && option.wide) {
+			return Rect(card.x + PAD, card.y + WIDE_INFO_TOP, maxOf(0, card.w - 2 * PAD), WIDE_INFO_HEIGHT)
+		}
 		var height = CONTROL_HEIGHT
 		var right = card.right() - PAD
 		var width = when (option) {
@@ -442,6 +453,9 @@ object ConfigLayout {
 	@JvmStatic
 	@JvmOverloads
 	fun text(card: Rect, option: Option, indent: Int = 0): Rect {
+		if (option is InfoOption && option.wide) {
+			return Rect(card.x + PAD, card.y, maxOf(0, card.w - 2 * PAD), card.h)
+		}
 		val control = control(card, option, indent)
 		return Rect(card.x + PAD, card.y, control.x - 8 - (card.x + PAD), card.h)
 	}

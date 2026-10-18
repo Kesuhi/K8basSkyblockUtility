@@ -6,6 +6,20 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-10-18
+
+### Added
+
+- Updates install on restart after one click: a notice shows a new version, and `/ksu update` shows it before it is downloaded.
+- `/ksu update` commands: `show`, `check`, `install <version>`, `skip <version>` and `cancel`.
+- General › Updates: your version, the latest one, the last check and the status, a Stable or Beta channel, and the update buttons.
+- A chat line names a second copy of the mod in your mods folder, once; the copy is kept.
+
+### Changed
+
+- The update check runs only at startup and at the first server join of a session.
+- The "Corpse ding" HUD element hides once the Frozen Corpses tab widget shows every corpse as looted.
+
 ## [1.3.0] - 2026-10-17
 
 ### Added

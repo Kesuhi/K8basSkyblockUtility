@@ -12,7 +12,8 @@ A client-side **Hypixel SkyBlock** mod for Minecraft 26.2 (Fabric), developed by
 * HUD editor: `/ksu hud`
 * Accent colour, smooth corners and animations
 * Keybinds
-* Update check: notifies only, never downloads
+* Updates from GitHub, installed when you quit after you confirm them: `/ksu update` (`check`, `install <version>`,
+  `skip <version>`, `cancel`)
 
 ### Highlights
 

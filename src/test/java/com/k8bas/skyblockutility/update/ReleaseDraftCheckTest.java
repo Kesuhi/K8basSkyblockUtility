@@ -375,6 +375,22 @@ class ReleaseDraftCheckTest {
 		assertOnly(check(draft(jar, sidecar)), "the sidecar is not valid UTF-8");
 	}
 
+	/** REQ-UPD-03 (T4.5): the uploaded jar is not a test build, which would carry the updater's stand-in source. */
+	@Test
+	void aTestBuildFails() throws IOException {
+		jar = dir.resolve(JAR);
+		try (ZipOutputStream zip = new ZipOutputStream(Files.newOutputStream(jar))) {
+			zip.putNextEntry(new ZipEntry("fabric.mod.json"));
+			zip.write(modJson("k8bas_skyblock_utility", "1.1.0+26.2", "~26.2").getBytes(StandardCharsets.UTF_8));
+			zip.closeEntry();
+			zip.putNextEntry(new ZipEntry("META-INF/services/com.k8bas.skyblockutility.update.UpdateTestHook"));
+			zip.write("com.k8bas.skyblockutility.update.StandInHook\n".getBytes(StandardCharsets.UTF_8));
+			zip.closeEntry();
+		}
+		sidecar = sidecar(SIDECAR, sha256(jar) + "  " + JAR + "\n");
+		assertOnly(check(draft(jar, sidecar)), "the jar is a test build");
+	}
+
 	@Test
 	void aJarWithoutModJsonFails() throws IOException {
 		jar = zip(JAR, "META-INF/MANIFEST.MF", "Manifest-Version: 1.0\n");

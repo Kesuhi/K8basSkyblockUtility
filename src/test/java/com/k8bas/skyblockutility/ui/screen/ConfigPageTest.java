@@ -91,7 +91,7 @@ class ConfigPageTest {
 					text.placeholder(), text.binding()::set);
 			case ActionOption action -> new com.k8bas.skyblockutility.ui.widget.Button(action.buttonLabel(), com.k8bas.skyblockutility.ui.widget.Button.Style.DESTRUCTIVE,
 					action.action(), () -> { });
-			case InfoOption info -> new InfoText(info.value());
+			case InfoOption info -> new InfoText(info.value(), info.wide());
 			case DatabaseOption database -> new com.k8bas.skyblockutility.ui.widget.Button(database.buttonLabel(), com.k8bas.skyblockutility.ui.widget.Button.Style.NORMAL, () -> { }, () -> { });
 		};
 	}

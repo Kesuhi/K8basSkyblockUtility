@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The possible corpse spots' rules without a game (T3.3, R40): which spots show (REQ-CORPSE-03, REQ-CORPSE-04,
@@ -64,6 +66,26 @@ class CorpseSpotRulesTest {
 		// A list cut off or with an unknown line is not "all looted" (REQ-GS-10).
 		CorpseList partial = new CorpseList(WidgetPresence.PARTIAL, List.of(new Corpse("Lapis", true)));
 		assertEquals(all, CorpseSpotRules.visible(config(true, true), shaft("OPAL_1", partial), SPOTS));
+	}
+
+	/**
+	 * AC-CORPSE-11, R57: the "Corpse ding" element shows only while a corpse is left to find. Every corpse looted hides
+	 * it, also with the spots' toggle off; a missing or cut-off widget, or one NOT LOOTED corpse, keeps it.
+	 */
+	@Test
+	void theDingShowsOnlyWhileACorpseIsLeft() {
+		CorpseSpotsConfig on = config(true, true);
+		assertTrue(CorpseSpotRules.dingShows(on, shaft("OPAL_1", widget(false, true))));
+		assertFalse(CorpseSpotRules.dingShows(on, shaft("OPAL_1", widget(true, true))), "every corpse looted");
+		assertFalse(CorpseSpotRules.dingShows(config(true, false), shaft("OPAL_1", widget(true, true))), "not the spots' toggle");
+		assertTrue(CorpseSpotRules.dingShows(on, shaft("OPAL_1", CorpseList.ABSENT)), "no widget");
+		assertTrue(CorpseSpotRules.dingShows(on, shaft("OPAL_1", widget())), "a widget listing no corpse");
+		assertTrue(CorpseSpotRules.dingShows(on, shaft("OPAL_1", new CorpseList(WidgetPresence.PARTIAL, List.of(new Corpse("Lapis", true))))),
+				"a cut-off widget");
+		CorpseSpotsConfig hintOff = config(true, true);
+		hintOff.dingHint = false;
+		assertFalse(CorpseSpotRules.dingShows(hintOff, shaft("OPAL_1", widget(false))));
+		assertFalse(CorpseSpotRules.dingShows(config(false, true), shaft("OPAL_1", widget(false))));
 	}
 
 	@Test

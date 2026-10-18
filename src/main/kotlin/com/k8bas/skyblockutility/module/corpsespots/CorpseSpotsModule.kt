@@ -93,7 +93,8 @@ class CorpseSpotsModule : Module {
 		ClientTickEvents.END_CLIENT_TICK.register {
 			noteMissingData()
 			answerRequest()
-			dingText = if (cfg.enabled && cfg.dingHint) ding.warmth(now())?.let { HudText(listOf(DingHint.hudLine(it))) } else null
+			// Nothing once every corpse is looted (R57), whatever it hears.
+			dingText = if (CorpseSpotRules.dingShows(cfg, MineshaftState.snapshot())) ding.warmth(now())?.let { HudText(listOf(DingHint.hudLine(it))) } else null
 			tickRuleOut()
 		}
 		ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->

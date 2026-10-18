@@ -33,7 +33,7 @@ class GitHubReleaseSource(
 	modVersion: String?,
 	private val requestTimeout: Duration?,
 ) {
-	private val userAgent: String = "k8bas_skyblock_utility/$modVersion (+https://github.com/Kesuhi/K8basSkyblockUtility)"
+	private val userAgent: String = userAgent(modVersion)
 
 	enum class Kind {
 		OK,
@@ -180,6 +180,10 @@ class GitHubReleaseSource(
 		val REQUEST_TIMEOUT: Duration = Duration.ofSeconds(20)
 		const val MAX_BODY_BYTES: Int = 2 * 1024 * 1024
 
+		/** The User-Agent of every updater request: the mod id and running version (REQ-UPD-03). */
+		@JvmStatic
+		fun userAgent(modVersion: String?): String = "k8bas_skyblock_utility/$modVersion (+https://github.com/Kesuhi/K8basSkyblockUtility)"
+
 		/** Points the updater at a test server; honoured only in the development environment. */
 		const val SOURCE_PROPERTY: String = "k8bas.update.source"
 
@@ -214,7 +218,7 @@ class GitHubReleaseSource(
 							parseAsset(assetElement)?.let { assets.add(it) }
 						}
 					}
-					releases.add(Release(tag, htmlUrl, bool(obj, "draft"), bool(obj, "prerelease"), assets))
+					releases.add(Release(tag, htmlUrl, bool(obj, "draft"), bool(obj, "prerelease"), assets, string(obj, "body")))
 				} catch (malformed: RuntimeException) {
 					// skipped
 				}

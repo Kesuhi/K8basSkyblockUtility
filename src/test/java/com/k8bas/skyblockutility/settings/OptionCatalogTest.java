@@ -97,9 +97,23 @@ class OptionCatalogTest {
 		}
 	}
 
-	/** The options that store a value; a button (an action such as "Edit HUD layout", a database picker) stores nothing. */
+	/** The options that store a value: not buttons ("Edit HUD layout"), database pickers or shown-only values (the Updates card's, T4.4b). */
 	private static List<Option> storedOptions() {
-		return options().stream().filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption)).toList();
+		return options().stream().filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption || option instanceof InfoOption))
+				.toList();
+	}
+
+	/** Shown-only values outside the rule cards are the Updates card's (T4.4b), so no stored option can hide among them. */
+	@Test
+	void onlyTheUpdatesCardShowsValues() {
+		for (Card card : catalog()) {
+			for (Option option : card.options()) {
+				if (option instanceof InfoOption) {
+					assertEquals("updates", card.id(), option.id());
+					assertTrue(option.storageKey().startsWith("info:"), option.storageKey());
+				}
+			}
+		}
 	}
 
 	/** REQ-UI-04, REQ-HUD-06 (T2.8b): General › HUD, between Interface and Keybinds, has "Edit HUD layout", which runs the action given. */
@@ -123,6 +137,8 @@ class OptionCatalogTest {
 		Map<String, Object> expected = new LinkedHashMap<>();
 		// §12.H: "Update check ON"; the scan range of REQ-GLOW-01; keybinds unbound (REQ-UI-10).
 		expected.put("general.autoUpdateCheckEnabled", true);
+		// §12.H "Update check / channel: ON (notify) / STABLE"; the key stays absent until a choice (REQ-UPD-07, T4.4b).
+		expected.put("general.updateChannel", com.k8bas.skyblockutility.update.UpdateChannel.STABLE);
 		expected.put("general.mobScanRangeBlocks", 64);
 		// D-8: teal accent; R28: notices top right for 5 s until picked.
 		expected.put("general.accentColor", 0x29B6B2);
@@ -180,7 +196,7 @@ class OptionCatalogTest {
 				case ColorOption colour -> colour.binding().get();
 				case TextOption t -> throw new AssertionError("only rule cards have text fields");
 				case ActionOption a -> throw new AssertionError("only rule cards have actions");
-				case InfoOption i -> throw new AssertionError("only rule cards show info");
+				case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 				case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
 			};
 			assertEquals(option.defaultValue(), current, "a fresh config holds the declared default: " + option.id());
@@ -243,6 +259,11 @@ class OptionCatalogTest {
 				if (row instanceof ConfigLayout.OptionRow optionRow && optionRow.card().id().equals(card.id())) {
 					Option option = optionRow.option();
 					String description = option.text().description();
+					// A wide value is drawn where the description goes, so it has none (T4.4b).
+					if (option instanceof InfoOption info && info.wide()) {
+						assertTrue(description.isBlank(), option.id());
+						continue;
+					}
 					assertFalse(description.isBlank(), option.id());
 					ConfigLayout.Rect text = ConfigLayout.text(ConfigLayout.card(frame, 0, optionRow), option);
 					assertFalse(ConfigLayout.fitLines(description, text.w(), 2, sixPixels).cut(), "fits 2 card lines: " + option.id());
@@ -282,8 +303,8 @@ class OptionCatalogTest {
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		for (Card card : cards) {
 			for (Option option : card.all()) {
-				// Keys live in options.txt; a button stores nothing.
-				if (option instanceof Keybind || option instanceof ActionOption) {
+				// Keys live in options.txt; a button or a shown-only value stores nothing.
+				if (option instanceof Keybind || option instanceof ActionOption || option instanceof InfoOption) {
 					continue;
 				}
 				Map<String, String> before = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
@@ -528,7 +549,7 @@ class OptionCatalogTest {
 			case ColorOption colour -> colour.binding().get();
 			case TextOption t -> throw new AssertionError("only rule cards have text fields");
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
-			case InfoOption i -> throw new AssertionError("only rule cards show info");
+			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
 		};
 	}
@@ -542,7 +563,7 @@ class OptionCatalogTest {
 			case ColorOption colour -> colour.binding().set(colour.binding().get() == 0x123456 ? 0x654321 : 0x123456);
 			case TextOption t -> throw new AssertionError("only rule cards have text fields");
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
-			case InfoOption i -> throw new AssertionError("only rule cards show info");
+			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
 		}
 	}
@@ -566,7 +587,7 @@ class OptionCatalogTest {
 			case ColorOption colour -> colour.binding().set((Integer) original);
 			case TextOption t -> throw new AssertionError("only rule cards have text fields");
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
-			case InfoOption i -> throw new AssertionError("only rule cards show info");
+			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
 		}
 	}

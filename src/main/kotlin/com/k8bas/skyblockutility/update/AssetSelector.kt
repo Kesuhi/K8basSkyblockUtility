@@ -37,6 +37,16 @@ object AssetSelector {
 		return prefixMatch
 	}
 
+	/**
+	 * The version a jar named [name] must declare in its fabric.mod.json, "<version>+<minecraft>" as the build writes it
+	 * (REQ-UPD-15), or null if [name] is not a jar of this mod.
+	 */
+	@JvmStatic
+	fun declaredVersion(name: String?): String? {
+		val matcher = JAR.matcher(name ?: return null)
+		return if (matcher.matches()) matcher.group("ver") + "+" + matcher.group("mc") else null
+	}
+
 	@JvmStatic
 	fun select(tagVersion: SemVer, assets: List<Release.Asset?>, runningMc: String): Optional<Release.Asset> =
 		Optional.ofNullable(selectOrNull(tagVersion, assets, runningMc))

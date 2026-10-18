@@ -14,12 +14,11 @@ search it by id.
 
 ## Where the work stands (2026-10-17)
 
-- Branch `update/26.2`. v1.2.1 is released (tag `v1.2.1` on the merge commit `ea32dea` on `main`).
-- Current phase: **Phase 3u, the UI review released as 1.3.0** (PLAN.md, "Phase 3u"). Done: T3.14–T3.38 and
-  Checkpoint G3u (with its fix `7b9ac08`). The release PR (T3.39) is open as PR #4, **not to be merged yet**: R47
-  (approved 2026-10-17) adds the rest of the UI review to 1.3.0. **Now: T3.41–T3.56** in order, then Checkpoint G3v
-  and the docs task T3.57; then PR #4 waits for the maintainer's "merge", and T3.40 (tag and publish) for a separate
-  "ship". Phase 4 follows.
+- Branch `update/26.2`. v1.3.0 is released (tag `v1.3.0` on the merge commit `2f1a105` on `main`, PR #4); the
+  UI review (Phase 3u with R47) and Checkpoints G3v and G3ur are done.
+- Current phase: **Phase 4, the auto-updater on GitHub Releases** (PLAN.md, "Phase 4"). **Next: T4.1**, then the
+  tasks in order. Its research (updater study, 1.0.x audit, helper-swap design) is in
+  `.claude/agent-memory/researcher/scratchpad-2026-10-16/research-updater.md`; read it before researching again.
 - Commit on `update/26.2` itself (`git branch --show-current`). If you were started in a worktree or on another
   branch, ask before committing: the scan and build ranges are `main..update/26.2`.
 ## How work is done
@@ -117,7 +116,7 @@ search it by id.
 bash scripts/changelog-lint.sh          # CHANGELOG layout
 bash scripts/check-forbidden.sh         # forbidden wording, packet cancelling, direct GL, banned hosts
 bash scripts/privacy-scan.sh --range main..update/26.2 --body build/pr-body.md
-bash scripts/build-each-commit.sh ea32dea   # every commit since the v1.2.1 merge builds alone (before a push or PR)
+bash scripts/build-each-commit.sh 2f1a105   # every commit since the v1.3.0 merge builds alone (before a push or PR)
 ```
 
 A Codex backend on Windows usually gets PowerShell; call Git Bash explicitly, with single quotes inside so PowerShell

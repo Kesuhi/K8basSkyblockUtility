@@ -2,6 +2,9 @@ package com.k8bas.skyblockutility.update;
 
 import com.k8bas.skyblockutility.K8basSkyblockUtilityClient;
 import com.k8bas.skyblockutility.net.SharedHttpClient;
+import com.k8bas.skyblockutility.ui.notice.Notice;
+import com.k8bas.skyblockutility.ui.notice.Notices;
+import com.k8bas.skyblockutility.ui.render.UiTime;
 import com.k8bas.skyblockutility.util.RuntimeVersions;
 import com.sun.net.httpserver.HttpServer;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -13,6 +16,7 @@ import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,56 +32,130 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 /**
- * T1.4, AC-UPD-01 and the chat-line part of AC-UPD-11 [C]: with a local stand-in for GitHub serving
- * a newer version, the first world join of the session shows one local chat line with
- * [Changelog] and [Open release page]; the next join shows none. One GET reaches the stand-in,
- * without a 26.1 version, and nothing is downloaded.
+ * T1.4 and T4.4: AC-UPD-01's request rules and AC-UPD-11 [C]. With a local stand-in for GitHub serving a newer version,
+ * the automatic check posts one toast on the title screen; the first world join of the session shows one local chat
+ * line with [Changelog] [Update] [Skip this version] [Open release page], the next join none. The confirmation screen
+ * shows every REQ-UPD-11 field, with notes full of `§` codes and Markdown as plain text cut at 4,000 characters. One GET
+ * reaches the stand-in, without a 26.1 version, and nothing is downloaded.
  */
 public class UpdateNoticeGameTest implements FabricClientGameTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger("k8bas-gametest");
 	private static final String PAGE = "https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/v99.0.0";
+	private static final String DIGEST = "0123456789abcdef".repeat(4);
+	/** Notes as GitHub could hold them: headings, emphasis, links, formatting codes and far more than 4,000 characters. */
+	private static final String NOTES = "## Added\\n\\n- **Bold** feature with §cred§r text and [a link](https://example.com)\\n- `code` and *emphasis*\\n\\n"
+			+ "### Fixed\\n\\n" + "- A long line of fixes that keeps going and going. ".repeat(120);
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
 		List<String> requests = new CopyOnWriteArrayList<>();
 		HttpServer server = startServer(requests);
+		// The client is shared with the other gametests: the updater they find afterwards is the one they had.
+		UpdateService previousService = Updates.service();
+		UpdateNotifier previousNotifier = Updates.notifier();
 		try {
 			Path stateDir = Files.createTempDirectory("k8bas-update-test");
 			String modVersion = RuntimeVersions.mod(K8basSkyblockUtilityClient.MOD_ID);
 			String minecraft = RuntimeVersions.minecraft();
 			URI source = URI.create("http://127.0.0.1:" + server.getAddress().getPort() + "/repos/Kesuhi/K8basSkyblockUtility/releases?per_page=30");
+			// The hash from GitHub's digest; eligible as an installed jar would be, so the line has [Update]. Nothing is downloaded.
 			UpdateService service = new UpdateService(
 					new GitHubReleaseSource(source, SharedHttpClient.get(), modVersion, GitHubReleaseSource.REQUEST_TIMEOUT),
 					new UpdateStateStore(stateDir.resolve(UpdateStateStore.FILE_NAME), LOGGER::warn),
-					System::currentTimeMillis, () -> true, modVersion, minecraft, () -> null, LOGGER::info, LOGGER::warn);
+					System::currentTimeMillis, () -> true, modVersion, minecraft, () -> null, LOGGER::info, LOGGER::warn,
+					new UpdateHooks(UpdateHooks.DEFAULT.getHash(), () -> UpdateHooks.Eligibility.ELIGIBLE));
 			UpdateNotifier notifier = new UpdateNotifier(modVersion, LOGGER);
+			context.runOnClient(client -> Notices.clear());
 			Updates.use(service, notifier);
 			check(service.checkAutomatic(), "the check sent a request");
 			check(requests.size() == 1, "one GET: " + requests);
 			check(!String.join("\n", requests).contains("26.1"), "no 26.1 version in the request: " + requests);
 
+			// AC-UPD-11: the toast on the title screen.
+			context.waitTicks(2);
+			List<Notice> toasts = context.computeOnClient(client -> Notices.visible().stream().map(entry -> entry.notice()).toList());
+			LOGGER.info("update toasts: {}", toasts);
+			check(toasts.equals(List.of(new Notice("K8bas Skyblock Utility", List.of("v99.0.0 is available", "Open /ksu update to install it")))),
+					"one toast names the version: " + toasts);
+			context.takeScreenshot("t4.4-update-toast-title-screen");
+
 			List<String> firstJoin;
 			try (TestSingleplayerContext ignored = context.worldBuilder().create()) {
 				context.waitTicks(5);
 				firstJoin = context.computeOnClient(UpdateNoticeGameTest::noticeLines);
-				List<URI> links = context.computeOnClient(UpdateNoticeGameTest::noticeLinks);
-				LOGGER.info("update notice on the first join: {} with links {}", firstJoin, links);
+				List<String> clicks = context.computeOnClient(UpdateNoticeGameTest::noticeClicks);
+				LOGGER.info("update notice on the first join: {} with clicks {}", firstJoin, clicks);
 				check(firstJoin.size() == 1, "one notice on the first join: " + firstJoin);
-				check(firstJoin.getFirst().contains("v99.0.0 is available") && firstJoin.getFirst().endsWith("[Changelog] [Open release page]"),
-						"the notice names the version and has both links");
-				check(links.contains(URI.create(PAGE)), "[Open release page] opens the release page");
+				check(firstJoin.getFirst().contains("v99.0.0 is available")
+						&& firstJoin.getFirst().endsWith("[Changelog] [Update] [Skip this version] [Open release page]"), "the notice has its four links");
+				check(clicks.equals(List.of("https://github.com/Kesuhi/K8basSkyblockUtility/blob/v99.0.0/CHANGELOG.md", "/ksu update show",
+						"/ksu update skip 99.0.0", PAGE)), "each link does what it says: " + clicks);
+				context.takeScreenshot("t4.4-update-chat-line");
 			}
 			int shownBeforeSecondJoin = context.computeOnClient(client -> notifier.shownCount());
 			try (TestSingleplayerContext ignored = context.worldBuilder().create()) {
 				context.waitTicks(5);
+				// Read from the chat itself, which the game empties when a world is left: no line came, from any source.
+				List<String> secondJoin = context.computeOnClient(UpdateNoticeGameTest::noticeLines);
 				int shown = context.computeOnClient(client -> notifier.shownCount());
-				LOGGER.info("update notices after the second join: {}", shown);
-				check(shownBeforeSecondJoin == 1 && shown == 1, "no notice on the second join");
+				LOGGER.info("update notices on the second join: {} (shown in all {})", secondJoin, shown);
+				check(secondJoin.isEmpty() && shownBeforeSecondJoin == 1 && shown == 1, "no notice on the second join: " + secondJoin);
+				context.takeScreenshot("t4.4-update-second-join");
+
+				// R55: a chat click (the connection's unattended command, as vanilla runs a RunCommand click) on cancel or on
+				// the skip's confirm asks in Fabric's confirmation window first; declined, it changed nothing.
+				service.pendingForTests(new PendingInstall("99.0.0", "k8bas_skyblock_utility-99.0.0+26.2.jar", DIGEST, 1L, "1.3.0", "x.jar", 0));
+				for (String command : List.of("ksu update cancel", "ksu update skip 99.0.0 confirm")) {
+					context.runOnClient(client -> client.getConnection().sendUnattendedCommand(command, null));
+					context.waitTicks(3);
+					check(context.computeOnClient(client -> client.gui.screen() instanceof net.minecraft.client.gui.screens.ConfirmScreen),
+							command + ", clicked, asks first");
+					if (command.endsWith("cancel")) {
+						context.takeScreenshot("g4-update-click-asks");
+					}
+					context.setScreen(() -> null);
+					context.waitTicks(2);
+				}
+				check(service.pendingInstall() != null && service.state().skippedVersion == null, "the declined clicks changed nothing");
+				service.pendingForTests(null);
 			}
-			check(requests.size() == 1, "still one request: " + requests);
+
+			// AC-UPD-11: the confirmation screen with every REQ-UPD-11 field; the notes plain and cut.
+			CheckOutcome.Found found = (CheckOutcome.Found) service.offer();
+			Confirmation confirmation = service.confirmation(found);
+			check(confirmation.getNotes().length() <= ReleaseNotes.MAX_CHARS && confirmation.getNotes().endsWith("…"), "the notes are cut at 4,000");
+			context.setScreen(() -> new UpdateScreen(null, found, confirmation, action -> CompletableFuture.completedFuture(List.of()), lines -> { }));
+			context.waitTicks(3);
+			List<String> drawn = context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).drawnTextForTests());
+			String running = SemVer.parse(modVersion).map(SemVer::toString).orElse(modVersion);
+			LOGGER.info("update screen texts: {}", drawn.subList(0, Math.min(14, drawn.size())));
+			for (String field : List.of("v" + running + " → v99.0.0", "Stable", "k8bas_skyblock_utility-99.0.0+26.2.jar", "1.2 MB",
+					DIGEST.substring(0, 12) + "...", "Added", "• Bold feature with red text and a link", "• code and emphasis")) {
+				check(drawn.contains(field), "the screen shows " + field + ": " + drawn);
+			}
+			String notes = String.join("\n", drawn);
+			check(!notes.contains("§") && !notes.contains("**") && !notes.contains("](") && !notes.contains("##"), "no formatting codes or Markdown");
+			boolean download = context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).downloadButtonForTests().isEnabled());
+			check(download, "Download & install on restart is offered");
+			context.takeScreenshot("t4.4-update-confirmation-screen");
+			// EC-UPD-10: the notes end in the cut, scrolled to their end.
+			context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).scrollNotesToEndForTests());
+			context.waitTicks(2);
+			List<String> scrolled = context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).drawnTextForTests());
+			check(scrolled.stream().anyMatch(line -> line.endsWith("…")), "the last note line ends in the cut");
+			context.takeScreenshot("t4.4-update-notes-cut");
+			context.setScreen(() -> null);
+
+			screenActions(context, service, found, confirmation);
+			updatesCard(context, service);
+
+			check(requests.size() == 1, "still one request, nothing downloaded: " + requests);
 			try (var files = Files.list(stateDir)) {
 				List<String> names = files.map(path -> path.getFileName().toString()).toList();
 				check(names.equals(List.of(UpdateStateStore.FILE_NAME)), "only the state file is written: " + names);
@@ -85,16 +163,187 @@ public class UpdateNoticeGameTest implements FabricClientGameTest {
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		} finally {
+			context.runOnClient(client -> Notices.clear());
+			if (previousService != null && previousNotifier != null) {
+				Updates.use(previousService, previousNotifier);
+			}
 			server.stop(0);
 		}
 	}
 
+	/**
+	 * T4.4b, AC-UPD-13 [C]: the General › Updates card in the settings screen, at its end: a skipped version is still
+	 * listed, marked; then a pending install is its status.
+	 */
+	private static void updatesCard(ClientGameTestContext context, UpdateService service) throws IOException {
+		com.k8bas.skyblockutility.config.GeneralConfig config = com.k8bas.skyblockutility.config.ConfigManager.general();
+		UpdateChannel channelBefore = config.updateChannel;
+		Path file = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("k8bas_skyblock_utility.json");
+		try {
+			// REQ-UPD-07 through the screen's own save: opening and closing the settings writes no channel.
+			config.updateChannel = null;
+			context.setScreen(() -> new com.k8bas.skyblockutility.ui.screen.ConfigScreen(null, "channel"));
+			context.waitTicks(3);
+			context.setScreen(() -> null);
+			context.waitTicks(2);
+			com.k8bas.skyblockutility.config.ConfigManager.flush();
+			check(!Files.readString(file).contains("updateChannel"), "no channel written without a pick");
+
+			// AC-UPD-13 [C]: skipped from the chat or the screen, the card still lists it, marked, without another check.
+			service.skip("99.0.0");
+			// The settings search brings the row in view: "skipped" is the Latest version row's keyword.
+			context.setScreen(() -> new com.k8bas.skyblockutility.ui.screen.ConfigScreen(null, "skipped"));
+			context.waitTicks(3);
+			com.k8bas.skyblockutility.ui.option.Card card = context.computeOnClient(client ->
+					((com.k8bas.skyblockutility.ui.screen.ConfigScreen) client.gui.screen()).cardsForTests().stream()
+							.filter(c -> c.id().equals("updates")).findFirst().orElseThrow());
+			String latest = ((com.k8bas.skyblockutility.ui.option.InfoOption) option(card, "updates.latest")).value().get();
+			check(latest.equals("v99.0.0 (skipped)"), "the card the screen built still lists the skipped version: " + latest);
+			context.takeScreenshot("t4.4b-updates-card-skipped");
+
+			// Install opens the confirmation screen over the settings; Later returns to them.
+			context.runOnClient(client -> ((com.k8bas.skyblockutility.ui.option.ActionOption) option(card, "updates.install")).action().run());
+			for (int i = 0; i < 40 && !context.computeOnClient(client -> client.gui.screen() instanceof UpdateScreen); i++) {
+				context.waitTicks(1);
+			}
+			check(context.computeOnClient(client -> client.gui.screen() instanceof UpdateScreen), "Install opens the confirmation over the settings");
+			context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).laterButtonForTests().activate());
+			context.waitTicks(2);
+			check(context.computeOnClient(client -> client.gui.screen() instanceof com.k8bas.skyblockutility.ui.screen.ConfigScreen), "Later returns to the settings");
+
+			// T4.3b's pending state is the card's status.
+			service.pendingForTests(new PendingInstall("99.0.0", "k8bas_skyblock_utility-99.0.0+26.2.jar", DIGEST, 1L, "1.3.0", "x.jar", 0));
+			context.setScreen(() -> new com.k8bas.skyblockutility.ui.screen.ConfigScreen(null, "status"));
+			context.waitTicks(3);
+			com.k8bas.skyblockutility.ui.option.Card shown = context.computeOnClient(client ->
+					((com.k8bas.skyblockutility.ui.screen.ConfigScreen) client.gui.screen()).cardsForTests().stream()
+							.filter(c -> c.id().equals("updates")).findFirst().orElseThrow());
+			String status = ((com.k8bas.skyblockutility.ui.option.InfoOption) option(shown, "updates.status")).value().get();
+			check(status.equals("Update v99.0.0 ready, restart Minecraft to apply"), "the pending install is the status: " + status);
+			context.takeScreenshot("t4.4b-updates-card-pending");
+
+			// A pick is written, through the same save.
+			context.runOnClient(client -> {
+				@SuppressWarnings("unchecked")
+				com.k8bas.skyblockutility.ui.option.Choice<UpdateChannel> channel = (com.k8bas.skyblockutility.ui.option.Choice<UpdateChannel>) option(shown,
+						"updates.channel");
+				channel.binding().set(UpdateChannel.BETA);
+			});
+			context.setScreen(() -> null);
+			context.waitTicks(2);
+			com.k8bas.skyblockutility.config.ConfigManager.flush();
+			check(Files.readString(file).contains("\"updateChannel\": \"BETA\""), "a picked channel is written");
+		} finally {
+			service.pendingForTests(null);
+			service.state().skippedVersion = null;
+			config.updateChannel = channelBefore;
+			com.k8bas.skyblockutility.config.ConfigManager.save();
+			com.k8bas.skyblockutility.config.ConfigManager.flush();
+			context.setScreen(() -> null);
+		}
+	}
+
+	private static com.k8bas.skyblockutility.ui.option.Option option(com.k8bas.skyblockutility.ui.option.Card card, String id) {
+		return card.options().stream().filter(o -> o.id().equals(id)).findFirst().orElseThrow();
+	}
+
+	/**
+	 * T4.4 review: what the confirmation screen's buttons do. Later and Esc run nothing; Skip needs a second click within
+	 * 3 s, not a double-click, and its answer reaches the player after the screen closed; the download click carries the
+	 * checksum the screen showed; a notify-only screen has no download button and says why.
+	 */
+	private static void screenActions(ClientGameTestContext context, UpdateService service, CheckOutcome.Found found, Confirmation confirmation) {
+		List<Function<UpdateActions, List<String>>> calls = new CopyOnWriteArrayList<>();
+		List<List<String>> said = new CopyOnWriteArrayList<>();
+		Function<Function<UpdateActions, List<String>>, CompletableFuture<List<String>>> recording = action -> {
+			calls.add(action);
+			return CompletableFuture.completedFuture(List.of("ran"));
+		};
+		AtomicLong clock = new AtomicLong(1_000);
+		java.util.function.Supplier<UpdateScreen> screen = () -> new UpdateScreen(null, found, confirmation, recording, said::add,
+				UiTime.of(clock::get, () -> false));
+
+		// AC-UPD-13 "Later": Esc and Later download nothing and skip nothing.
+		context.setScreen(screen::get);
+		context.waitTicks(2);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> !(client.gui.screen() instanceof UpdateScreen)), "Esc closes the screen");
+		context.setScreen(screen::get);
+		context.waitTicks(2);
+		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).laterButtonForTests().activate());
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> !(client.gui.screen() instanceof UpdateScreen)), "Later closes the screen");
+		check(calls.isEmpty() && service.state().skippedVersion == null, "Esc and Later ran nothing: " + calls.size());
+
+		// REQ-UPD-12: Skip asks first; the ask runs out after 3 s; a double-click is not the second click.
+		context.setScreen(screen::get);
+		context.waitTicks(2);
+		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).skipButtonForTests().activate());
+		check(context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).skipButtonForTests().label()).equals(UpdateScreen.CONFIRM_SKIP),
+				"the first click asks");
+		context.takeScreenshot("t4.4-update-skip-asks");
+		clock.addAndGet(UpdateScreen.SKIP_CONFIRM_MS + 1);
+		context.waitTicks(2);
+		check(context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).skipButtonForTests().label()).equals(UpdateScreen.SKIP),
+				"the ask runs out after 3 s");
+		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).skipButtonForTests().activate());
+		clock.addAndGet(100);
+		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).skipButtonForTests().activate());
+		check(calls.isEmpty() && context.computeOnClient(client -> client.gui.screen() instanceof UpdateScreen), "a double-click skips nothing");
+		clock.addAndGet(UpdateScreen.SKIP_MIN_GAP_MS);
+		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).skipButtonForTests().activate());
+		context.waitTicks(2);
+		check(calls.size() == 1 && context.computeOnClient(client -> !(client.gui.screen() instanceof UpdateScreen)), "the second click skips and closes");
+		check(said.equals(List.of(List.of("ran"))), "the skip's answer reaches the player after the screen closed: " + said);
+		calls.clear();
+
+		// The download click carries the checksum the screen showed: shown one thing, GitHub now another, it is refused.
+		CheckOutcome.Found seen = new CheckOutcome.Found(found.candidate(), new UpdateHooks.Hash.Verifiable("ab".repeat(32)), found.eligibility(),
+				false, false, found.minecraft());
+		Confirmation shown = service.confirmation(seen);
+		List<Function<UpdateActions, List<String>>> downloads = new CopyOnWriteArrayList<>();
+		AtomicLong opened = new AtomicLong(1_000);
+		context.setScreen(() -> new UpdateScreen(null, seen, shown, action -> {
+			downloads.add(action);
+			return CompletableFuture.supplyAsync(() -> action.apply(new UpdateActions(service, java.time.ZoneId.of("UTC"))));
+		}, lines -> { }, UiTime.of(opened::get, () -> false)));
+		context.waitTicks(2);
+		// G4 review: a click right after the screen opened is no decision (a server's chat line may open it under the cursor).
+		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).downloadButtonForTests().activate());
+		check(downloads.isEmpty() && !context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).busyForTests()),
+				"a click in the first half second downloads nothing");
+		opened.addAndGet(UpdateScreen.DOWNLOAD_ARM_MS);
+		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).downloadButtonForTests().activate());
+		check(downloads.size() == 1, "a later click is the decision");
+		for (int i = 0; i < 40 && context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).busyForTests()); i++) {
+			context.waitTicks(1);
+		}
+		List<String> status = context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).statusForTests());
+		check(status.equals(List.of("v99.0.0 changed on GitHub since you saw it; open it again to confirm")), "refused with the shown checksum: " + status);
+		context.takeScreenshot("t4.4-update-changed");
+		context.setScreen(() -> null);
+
+		// REQ-UPD-08: a notify-only update: no download button, the reason shown.
+		CheckOutcome.Found manual = new CheckOutcome.Found(found.candidate(), UpdateHooks.Hash.Missing.INSTANCE, found.eligibility(), false, false,
+				found.minecraft());
+		context.setScreen(() -> new UpdateScreen(null, manual, service.confirmation(manual), recording, lines -> { }));
+		context.waitTicks(2);
+		check(!context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).hasDownloadButtonForTests()), "no download button");
+		List<String> notifyOnly = context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).drawnTextForTests());
+		check(String.join(" ", notifyOnly).contains("It has no SHA-256 checksum, so install it by hand from the release page"), "the whole reason: " + notifyOnly);
+		check(notifyOnly.stream().noneMatch(line -> line.startsWith("It has no") && line.endsWith("...")), "the reason is not cut");
+		context.takeScreenshot("t4.4-update-notify-only");
+		context.setScreen(() -> null);
+		check(calls.isEmpty(), "nothing ran on the notify-only screen");
+	}
+
 	private static HttpServer startServer(List<String> requests) {
 		String body = """
-				[{"tag_name": "v99.0.0", "html_url": "%s", "draft": false, "prerelease": false,
+				[{"tag_name": "v99.0.0", "html_url": "%s", "draft": false, "prerelease": false, "body": "%s",
 				  "assets": [{"name": "k8bas_skyblock_utility-99.0.0+26.2.jar", "state": "uploaded",
-				              "browser_download_url": "https://github.com/x.jar", "digest": null, "size": 1}]}]
-				""".formatted(PAGE);
+				              "browser_download_url": "https://github.com/x.jar", "digest": "sha256:%s", "size": 1234567}]}]
+				""".formatted(PAGE, NOTES, DIGEST);
 		try {
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), 0), 0);
 			server.createContext("/", exchange -> {
@@ -128,20 +377,22 @@ public class UpdateNoticeGameTest implements FabricClientGameTest {
 		return messages(client).stream().map(message -> message.content().getString()).filter(text -> text.contains("is available")).toList();
 	}
 
-	private static List<URI> noticeLinks(Minecraft client) {
-		List<URI> links = new ArrayList<>();
+	private static List<String> noticeClicks(Minecraft client) {
+		List<String> clicks = new ArrayList<>();
 		for (GuiMessage message : messages(client)) {
 			Component content = message.content();
 			if (content.getString().contains("is available")) {
 				content.visit((style, text) -> {
 					if (style.getClickEvent() instanceof ClickEvent.OpenUrl(URI uri)) {
-						links.add(uri);
+						clicks.add(uri.toString());
+					} else if (style.getClickEvent() instanceof ClickEvent.RunCommand(String command)) {
+						clicks.add(command);
 					}
 					return Optional.empty();
 				}, Style.EMPTY);
 			}
 		}
-		return links;
+		return clicks;
 	}
 
 	private static void check(boolean condition, String what) {
