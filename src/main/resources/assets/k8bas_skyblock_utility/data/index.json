@@ -1,6 +1,14 @@
 {
   "indexVersion": 1,
   "tables": {
+    "bestiary": {
+      "path": "thirdparty/neu-repo/bestiary/families.json",
+      "sha256": "bc308b9c78089e032a7e16607a6a35f225fadeed8f333f1b26913792d9f09862",
+      "rows": 359,
+      "schemaVersion": 1,
+      "dataVersion": 1,
+      "gameVersion": "0.27.1"
+    },
     "mining.corpse_spots": {
       "path": "thirdparty/skyhanni-repo/mining/corpse_spots.json",
       "sha256": "c5ce6ff90602891b018e148d25893737ed107fde840eba8d8ee2ca890b5d2995",
