@@ -211,17 +211,22 @@ class UpdateManualCheckTest {
 		assertFalse(warnings.getFirst().contains("\tat "), "no stack trace: " + warnings.getFirst());
 	}
 
-	/** AC-UPD-10 [A] manual part: a host that takes the connection and never answers ends within 25 s (the 20 s timeout). */
+	/**
+	 * AC-UPD-10 [A] manual part: a host that takes the connection and never answers ends at the request timeout. The
+	 * game's 20 s ({@link GitHubReleaseSource#REQUEST_TIMEOUT}, under the AC's 25 s, wired in by
+	 * {@code UpdateScheduleScanTest}) is shortened to 1 s here, so the suite does not wait 20 s on every build.
+	 */
 	@Test
-	void aBlackHoledHostCannotBeReachedWithin25s() throws Exception {
+	void aBlackHoledHostEndsAtTheRequestTimeout() throws Exception {
+		assertTrue(GitHubReleaseSource.REQUEST_TIMEOUT.compareTo(Duration.ofSeconds(25)) < 0, "the game's timeout is under 25 s");
 		try (ServerSocket silent = new ServerSocket(0, 50, InetAddress.getLoopbackAddress())) {
 			UpdateService service = service(URI.create("http://127.0.0.1:" + silent.getLocalPort() + "/repos/x/y/releases"), "1.1.0+26.2",
-					Duration.ofSeconds(20));
+					Duration.ofSeconds(1));
 			long start = System.nanoTime();
 			CheckOutcome outcome = service.checkManual();
 			long ms = (System.nanoTime() - start) / 1_000_000;
 			assertEquals(List.of("Couldn't reach GitHub"), outcome.lines(UTC));
-			assertTrue(ms >= 19_000 && ms < 25_000, "the 20 s timeout ended it, within 25 s: " + ms + " ms");
+			assertTrue(ms >= 900 && ms < 5_000, "the 1 s timeout ended it: " + ms + " ms");
 			assertEquals(1, warnings.size(), warnings.toString());
 			assertFalse(warnings.getFirst().contains("\tat "), "no stack trace: " + warnings.getFirst());
 		}
