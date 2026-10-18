@@ -6,11 +6,13 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-10-18
+
 ### Added
 
-- Updates install on restart after one click: a notice shows a new version, and `/ksu update` shows it before anything is downloaded.
-- `/ksu update` commands: `check`, `install <version>`, `skip <version>` and `cancel`.
-- General › Updates shows your version, the latest one, the last check and the update's status, with a Channel choice (Stable or Beta) and Check now, Install, Open release page and Cancel pending update.
+- Updates install on restart after one click: a notice shows a new version, and `/ksu update` shows it before it is downloaded.
+- `/ksu update` commands: `show`, `check`, `install <version>`, `skip <version>` and `cancel`.
+- General › Updates: your version, the latest one, the last check and the status, a Stable or Beta channel, and the update buttons.
 - A chat line names a second copy of the mod in your mods folder, once; the copy is kept.
 
 ### Changed

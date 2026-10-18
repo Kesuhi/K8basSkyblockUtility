@@ -4,13 +4,14 @@ This is the maintainer procedure for a release (REQ-REL-16). Every release goes
 **draft → verify → publish**: it is created as a draft, checked against the release contract
 below, and published only when every check passes.
 
-The contract matters because the in-game update check reads part of it. The update check of v1.1.0
-looks only at the tag, the draft and pre-release flags, the release page link, and the jar's name
-and upload state. A tag that is not SemVer, a misnamed jar, or a stable version flagged as a
-pre-release (on the STABLE channel) hides the release: nothing shows in game, and at most a line
-is logged. A wrong sidecar, digest, title or body does not hide it, but
-breaks the checksum check users do by hand and the one-click updater planned for 2.0.0, which
-would fall back to notify-only.
+The contract matters because the in-game updater reads it. To find a release, it looks only at
+the tag, the draft and pre-release flags, the release page link, and the jar's name and upload
+state. A tag that is not SemVer, a misnamed jar, or a stable version flagged as a pre-release (on
+the STABLE channel) hides the release: nothing shows in game, and at most a line is logged. A wrong
+title or body does not hide it. A wrong sidecar or digest breaks the checksum check users do by
+hand, and since v1.3.1 the one-click install: without a SHA-256 the updater only notifies, and with
+a digest and sidecar that disagree it shows no notice at all (the settings card and `/ksu update`
+say "checksum conflict").
 
 The examples use v1.1.0 for Minecraft 26.2. For another release, replace `1.1.0` (the version),
 `v1.1.0` (the tag) and `26.2` (the Minecraft version, `minecraft_version` in `gradle.properties`).
@@ -55,6 +56,9 @@ How the updater reads a release:
 - It picks the jar by its asset name, never by the download URL. The asset must be `uploaded`.
 - The `+<mc>` part must equal the running Minecraft version or be a dotted prefix of it: `+26.2`
   also serves 26.2.1.
+- Since v1.3.1 it also reads the jar's `digest` and its `.sha256` sidecar when it checks, and the
+  release body for the confirmation screen (at most 4,000 characters). The download must match the
+  asset's `size` and that SHA-256.
 - On the STABLE channel it skips releases that have the pre-release flag or a pre-release version.
 
 ## Tools

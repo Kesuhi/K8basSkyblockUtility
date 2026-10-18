@@ -3,7 +3,7 @@
 	"id": "k8bas_skyblock_utility",
 	"version": "${version}",
 	"name": "K8bas Skyblock Utility",
-	"description": "A modular client-side toolkit for Hypixel SkyBlock: rule-based outlines for the mobs and NPCs you can see, island-aware waypoints with beacon beams for NPCs at fixed spots, a searchable settings screen with mob and NPC lists that stays sharp at every GUI scale, and a notify-only update check on GitHub. For mining: a Glacite Mineshaft entry alert with your corpse keys, possible corpse spots and an Organ Donor ding hint. For fishing: hotspot rings with a warning when yours disappears, and a bobber that floats smoothly. Display only: no automation, and no packet is cancelled or changed. Not affiliated with or endorsed by Hypixel.",
+	"description": "A modular client-side toolkit for Hypixel SkyBlock: rule-based outlines for the mobs and NPCs you can see, island-aware waypoints with beacon beams for NPCs at fixed spots, a searchable settings screen with mob and NPC lists that stays sharp at every GUI scale, and updates from GitHub that install when you quit, after you confirm them. For mining: a Glacite Mineshaft entry alert with your corpse keys, possible corpse spots and an Organ Donor ding hint. For fishing: hotspot rings with a warning when yours disappears, and a bobber that floats smoothly. Display only: no gameplay automation, and no packet is cancelled or changed. Not affiliated with or endorsed by Hypixel.",
 	"authors": [
 		"Kesuhi"
 	],
