@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.module.bestiary
 
 import com.k8bas.skyblockutility.config.ConfigManager
+import com.k8bas.skyblockutility.config.Normalizable
 import com.k8bas.skyblockutility.location.IslandTracker
 import com.k8bas.skyblockutility.module.Module
 import com.k8bas.skyblockutility.skyblock.ChatReader
@@ -14,14 +15,30 @@ import com.k8bas.skyblockutility.ui.option.Card
 import com.k8bas.skyblockutility.ui.option.Category
 import com.k8bas.skyblockutility.ui.option.OptionText
 import com.k8bas.skyblockutility.ui.option.Toggle
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import org.slf4j.LoggerFactory
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 
-/** The Bestiary Tracker's settings; OFF in a fresh config (REQ-BEST-01, D-6). */
-class BestiaryConfig {
+/** The Bestiary Tracker's settings; OFF in a fresh config (REQ-BEST-01, D-6), the rate over 5 minutes (REQ-BEST-06). */
+class BestiaryConfig : Normalizable {
 	@JvmField
 	var enabled = false
+
+	/** The rolling window of the rate, 1 to 60 minutes. */
+	@JvmField
+	var windowMinutes = 5
+
+	/** End the session on another island; OFF (R11, REQ-BEST-07). */
+	@JvmField
+	var resetOnIslandChange = false
+
+	override fun normalize(): Boolean {
+		val repaired = windowMinutes.coerceIn(1, 60)
+		val changed = repaired != windowMinutes
+		windowMinutes = repaired
+		return changed
+	}
 }
 
 /**
@@ -29,7 +46,9 @@ class BestiaryConfig {
  * the BESTIARY chat blocks (also those another mod hides, EC-BEST-13) and the Bestiary menu pages the player opens. The
  * readers read only while it is ON (REQ-GS-16), the tab list only on SkyBlock. It only reads: it never opens a menu,
  * clicks, sends a command or uses the Hypixel API (REQ-BEST-13). A world or server change resyncs the live baselines
- * without ending the session; another profile starts over (REQ-BEST-11). The HUD element and its card follow in T5.3.
+ * without ending the session, unless the player chose "reset on island change"; another profile starts over (REQ-BEST-11,
+ * REQ-BEST-07). The session's time counts on each client tick while ON and on SkyBlock. The HUD element and the rest of its
+ * card follow in T5.3.
  */
 class BestiaryModule : Module {
 	private var config: BestiaryConfig? = null
@@ -68,10 +87,17 @@ class BestiaryModule : Module {
 				BestiaryMenu.parse(event.menu)?.let { tracker()?.menu(it, now()) }
 			}
 		}
-		// A location change is a world or server change or a disconnect (T1.9): every widget value is a baseline again.
-		IslandTracker.onChange {
+		// A location change is a world or server change or a disconnect (T1.9): every widget value is a baseline again, and
+		// with the option another island ends the session.
+		IslandTracker.onChange { location ->
 			parser.reset()
-			tracker?.worldChanged()
+			tracker()?.locationChanged(location.island, cfg.resetOnIslandChange)
+		}
+		// The session's time: only while ON and on SkyBlock (REQ-BEST-07).
+		ClientTickEvents.END_CLIENT_TICK.register {
+			if (cfg.enabled) {
+				tracker()?.tick(IslandTracker.snapshot().onSkyBlock, now())
+			}
 		}
 		ProfileService.subscribe(ID, on)
 		// Unknown on a disconnect is no switch; the tracker tells another profile from the same one seen again.
@@ -95,7 +121,11 @@ class BestiaryModule : Module {
 
 	override fun onSettingsClosed() {
 		ConfigManager.putModuleSection(ID, cfg)
+		tracker?.setWindowMinutes(cfg.windowMinutes)
 	}
+
+	/** For gametests: the settings as they are. */
+	fun configForTest(): BestiaryConfig = cfg
 
 	/** The tracker once the family table has loaded (or failed to: then only the server's values show); else null. */
 	fun tracker(): BestiaryTracker? {
@@ -104,7 +134,12 @@ class BestiaryModule : Module {
 		if (families == null && !BestiaryTable.unavailable()) {
 			return null
 		}
-		return BestiaryTracker(families, Consumer { LOGGER.info("{}", it) }).also { tracker = it }
+		return BestiaryTracker(families, Consumer { LOGGER.info("{}", it) }).also {
+			it.setWindowMinutes(cfg.windowMinutes)
+			// The island it is made on, so the first change after it ends the session when the option says so.
+			it.locationChanged(IslandTracker.getCurrentIsland(), false)
+			tracker = it
+		}
 	}
 
 	companion object {

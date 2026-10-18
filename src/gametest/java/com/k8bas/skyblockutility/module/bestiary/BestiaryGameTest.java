@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.module.bestiary;
 
 import com.k8bas.skyblockutility.gametest.ModuleStates;
+import com.k8bas.skyblockutility.location.IslandTracker;
 import com.k8bas.skyblockutility.module.ModuleManager;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -19,6 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * T5.2 [B]: the Bestiary Tracker reads the real chat and menu paths only while it is ON.
  * <ul>
+ *   <li>With "reset on island change", the first island change after switching it ON ends the session, also when the
+ *   island was known before the tracker existed (AC-BEST-06).</li>
  *   <li>A BESTIARY block another mod hides still sets the family's tier (EC-BEST-13, the chat reader's cancelled-message
  *   path): a listener in Fabric's default phase cancels the lines, as SkyHanni's compact bestiary messages do.</li>
  *   <li>Switching the tracker off and on forgets a block it had begun to read.</li>
@@ -50,6 +53,33 @@ public class BestiaryGameTest implements FabricClientGameTest {
 			singleplayer.getConnection().waitForChunksRender();
 			TestServerContext server = singleplayer.getServer();
 			context.runOnClient(client -> module.setEnabled(false));
+			boolean resetWas = context.computeOnClient(client -> module.configForTest().resetOnIslandChange);
+			try {
+				// The island is known while the tracker is OFF; then it is switched ON with the option, counts, and the player
+				// moves to another island.
+				context.runOnClient(client -> IslandTracker.forceIsland("Dwarven Mines"));
+				context.waitTicks(2);
+				context.runOnClient(client -> {
+					module.configForTest().resetOnIslandChange = true;
+					module.setEnabled(true);
+				});
+				context.waitFor(client -> module.tracker() != null, 100);
+				context.runOnClient(client -> {
+					module.tracker().profileChanged();
+					module.tracker().widget(List.of(BestiaryWidget.parseLine("Ghost 15: 12,449/12,500")), "Dwarven Mines", 1_000);
+					module.tracker().widget(List.of(BestiaryWidget.parseLine("Ghost 15: 12,452/12,500")), "Dwarven Mines", 2_000);
+				});
+				check(context.computeOnClient(client -> module.tracker().session().kills()) == 3, "three kills counted");
+				context.runOnClient(client -> IslandTracker.forceIsland("Hub"));
+				context.waitTicks(2);
+				check(context.computeOnClient(client -> module.tracker().session().kills()) == 0, "another island ends the session with the option ON");
+			} finally {
+				context.runOnClient(client -> {
+					IslandTracker.forceIsland(null);
+					module.configForTest().resetOnIslandChange = resetWas;
+					module.setEnabled(false);
+				});
+			}
 			// The family table loads off the client thread at start.
 			context.waitFor(client -> module.tracker() != null, 100);
 			context.runOnClient(client -> module.tracker().profileChanged());

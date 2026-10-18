@@ -33,6 +33,17 @@ data class FamilyView(
 	val killsUpdatedAt: Long?,
 )
 
+/**
+ * A family's kills per hour over the rolling window (REQ-BEST-06): null ("—") with under 60 s of data or while only an
+ * abbreviated count is known; the ETAs are null while the rate is null or 0, or nothing is left.
+ */
+@JvmRecord
+data class RateView(val perHour: Double?, val etaNextMs: Long?, val etaMaxMs: Long?)
+
+/** The session (REQ-BEST-07): its live kills, the time spent on SkyBlock, and the average per hour (null under 60 s). */
+@JvmRecord
+data class SessionView(val kills: Long, val durationMs: Long, val averagePerHour: Double?)
+
 /** The global Bestiary Milestone, with the family tiers still needed for the next one when known (REQ-BEST-05). */
 @JvmRecord
 data class MilestoneView(val milestone: Int, val tiersToNext: Int?, val source: BestiarySource, val updatedAt: Long)
@@ -50,6 +61,10 @@ data class MilestoneView(val milestone: Int, val tiersToNext: Int?, val source: 
  * per family per session (REQ-BEST-03, EC-BEST-09). A shared name the island cannot place keeps the family it was seen as
  * before. The milestone comes only from the menu's milestone item and from chat: one just reached leaves 10 tiers to the
  * next, and each tier-up after it counts one down (REQ-BEST-05).
+ *
+ * The rate is the kills counted in the last W minutes over min(W, the time since the family's first exact count), "—" under a
+ * minute of that (REQ-BEST-06); the session's time grows only on ticks while on SkyBlock, and the session ends on a manual
+ * reset, another profile, or with the option another island (REQ-BEST-07).
  *
  * Pure: the module feeds it on the client thread and passes the time (wall-clock ms, so ages survive a restart).
  */
@@ -69,6 +84,9 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 		var updatedAt: Long = 0
 		var baseline: Long? = null
 		var session: Long = 0
+		/** The session's counted rises (time, kills), for the rolling rate, and when its first exact count came. */
+		val counted = ArrayDeque<LongArray>()
+		var dataSince: Long? = null
 	}
 
 	private class Milestone(var milestone: Int, var tiersToNext: Int?, var source: BestiarySource, var updatedAt: Long)
@@ -83,6 +101,10 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 	private val mismatchLogged = HashSet<String>()
 	private var milestone: Milestone? = null
 	private var profile: ProfileRef? = null
+	private var windowMs = DEFAULT_WINDOW_MINUTES * MINUTE_MS
+	private var durationMs = 0L
+	private var lastTick: Long? = null
+	private var lastIsland: String? = null
 
 	/** The family lines of the `Bestiary:` widget, read on [island]. */
 	fun widget(lines: List<WidgetLine>, island: String?, now: Long) {
@@ -95,7 +117,7 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 			if (!seen.add(state.key)) {
 				continue
 			}
-			count(state, line.kills)
+			count(state, line.kills, now)
 			if (line == state.widgetLine) {
 				continue
 			}
@@ -173,10 +195,74 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 
 	/** Another profile: nothing of the last one shows or counts, and the session's once-a-session logs start over. */
 	fun profileChanged() {
+		resetSession()
 		states.clear()
 		keyByName.clear()
 		mismatchLogged.clear()
 		milestone = null
+	}
+
+	/** The rolling window of the rate, 1 to 60 minutes (REQ-BEST-06). */
+	fun setWindowMinutes(minutes: Int) {
+		windowMs = minutes.coerceIn(1, MAX_WINDOW_MINUTES) * MINUTE_MS
+	}
+
+	/**
+	 * A client tick while the tracker is ON: the session's time grows while [onSkyBlock]. A gap between ticks (the game
+	 * paused or the tracker off) counts as at most a second.
+	 */
+	fun tick(onSkyBlock: Boolean, now: Long) {
+		val last = lastTick
+		if (last != null && onSkyBlock) {
+			durationMs += (now - last).coerceIn(0, MAX_TICK_GAP_MS)
+		}
+		lastTick = now
+	}
+
+	/**
+	 * Where the player now is: every location change resyncs the baselines (REQ-BEST-11); with [resetOnIslandChange] an
+	 * island other than the last one also ends the session (REQ-BEST-07). An unknown island (a transfer) is no change.
+	 */
+	fun locationChanged(island: String?, resetOnIslandChange: Boolean) {
+		worldChanged()
+		if (island == null) {
+			return
+		}
+		if (resetOnIslandChange && lastIsland != null && island != lastIsland) {
+			resetSession()
+		}
+		lastIsland = island
+	}
+
+	/** A manual reset: the session's kills, rates and time start over; the shown values stay. */
+	fun resetSession() {
+		for (state in states.values) {
+			state.session = 0
+			state.counted.clear()
+			state.dataSince = null
+		}
+		mismatchLogged.clear()
+		durationMs = 0
+	}
+
+	/** The rate and ETAs of the family with [key] at [now]. */
+	fun rate(key: String, now: Long): RateView {
+		val state = states[key] ?: return RateView(null, null, null)
+		val since = state.dataSince?.let { now - it } ?: return RateView(null, null, null)
+		if (since < MIN_DATA_MS) {
+			return RateView(null, null, null)
+		}
+		val kills = state.counted.sumOf { if (it[0] > now - windowMs) it[1] else 0L }
+		val perHour = kills * HOUR_MS.toDouble() / minOf(windowMs, since)
+		val view = view(state)
+		return RateView(perHour, eta(view.toNext, perHour), eta(view.toMax, perHour))
+	}
+
+	/** The session as it stands. */
+	fun session(): SessionView {
+		val kills = sessionTotal()
+		val average = if (durationMs < MIN_DATA_MS) null else kills * HOUR_MS.toDouble() / durationMs
+		return SessionView(kills, durationMs, average)
 	}
 
 	/** Every family seen, in the order first seen. */
@@ -206,13 +292,20 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 		state.updatedAt = now
 	}
 
-	private fun count(state: State, kills: SbNumber?) {
+	private fun count(state: State, kills: SbNumber?, now: Long) {
 		val exact = kills?.exact() ?: return
+		if (state.dataSince == null) {
+			state.dataSince = now
+		}
 		val baseline = state.baseline
 		if (baseline != null) {
 			val delta = exact - baseline
 			if (delta in 1..MAX_DELTA) {
 				state.session += delta
+				state.counted.addLast(longArrayOf(now, delta))
+				while (state.counted.first()[0] <= now - MAX_WINDOW_MINUTES * MINUTE_MS) {
+					state.counted.removeFirst()
+				}
 			}
 		}
 		state.baseline = exact
@@ -255,6 +348,18 @@ class BestiaryTracker(families: BestiaryFamilies?, private val warn: Consumer<St
 		const val UNKNOWN = "name:"
 		const val MAX_DELTA = 50L
 		const val TIERS_PER_MILESTONE = 10
+		const val DEFAULT_WINDOW_MINUTES = 5L
+		const val MAX_WINDOW_MINUTES = 60
+		const val MINUTE_MS = 60_000L
+		const val HOUR_MS = 3_600_000L
+
+		/** Under a minute of data the rate and the average are "—" (REQ-BEST-06). */
+		const val MIN_DATA_MS = 60_000L
+		const val MAX_TICK_GAP_MS = 1_000L
+
+		/** [left] at [perHour], in ms; null when nothing is left or nothing comes. */
+		fun eta(left: Long?, perHour: Double): Long? =
+			if (left == null || left <= 0 || perHour <= 0) null else Math.round(left / perHour * HOUR_MS)
 		val SPACES = Regex("\\s+")
 
 		fun maxed(family: BestiaryFamily?, tier: Int): Boolean = family != null && tier >= family.maxTier()
