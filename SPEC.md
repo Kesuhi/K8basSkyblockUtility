@@ -3178,7 +3178,7 @@ A third reading, **(C)**, a numeric fuel HUD, is not in HSM. This module specifi
   *(Brief: Phase 4 "pre-releases gracefully")*
 
 *Exact outcomes*
-- **REQ-UPD-08** The updater must produce exactly the outcomes in this matrix. "Automatic" is the startup or periodic check; "manual" is *Check now*, `/ksu update check` and the settings card. *(Brief: Phase 4 "Handle rate limits, missing assets, and pre-releases gracefully"; Derived: research §4, §7)*
+- **REQ-UPD-08** The updater must produce exactly the outcomes in this matrix. "Automatic" is the check at startup and at the first server join (R50); "manual" is *Check now*, `/ksu update check` and the settings card. *(Brief: Phase 4 "Handle rate limits, missing assets, and pre-releases gracefully"; Derived: research §4, §7)*
 
 | Situation | Automatic check | Manual check / settings card | Install offered |
 |---|---|---|---|
