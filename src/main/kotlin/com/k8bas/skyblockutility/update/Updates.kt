@@ -238,6 +238,7 @@ object Updates {
 	fun use(newService: UpdateService, newNotifier: UpdateNotifier) {
 		newService.setOnOutcome { newNotifier.offer(it) }
 		newNotifier.setStaged { newService.pendingInstall()?.version() }
+		newNotifier.setCurrentOffer { newService.lastOffer() }
 		service = newService
 		notifier = newNotifier
 	}

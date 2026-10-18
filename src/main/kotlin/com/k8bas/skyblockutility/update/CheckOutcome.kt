@@ -5,9 +5,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
- * What a manual check (*Check now*, `/ksu update check`, the settings card) found, with the text it shows (REQ-UPD-08):
- * one model the notices, the card and the install path all read. The automatic check keeps reporting
- * [CandidateFinder.Outcome] until T4.4 moves its notices onto this model.
+ * What a check (*Check now*, `/ksu update check`, the settings card, the automatic check) found, with the text it shows
+ * (REQ-UPD-08): one model the notices, the card and the install path all read.
  */
 sealed interface CheckOutcome {
 	/** The lines a manual check shows, times in [zone]. */

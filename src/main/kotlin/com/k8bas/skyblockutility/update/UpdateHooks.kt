@@ -2,8 +2,8 @@ package com.k8bas.skyblockutility.update
 
 /**
  * What a found release needs before an install may be offered (REQ-UPD-08): a SHA-256 to check the download against (T4.2)
- * and an install the running game allows (T4.3). Until those tasks land, the defaults read GitHub's digest only and answer
- * notify-only, so every found release is offered for a manual install from its release page.
+ * and an install the running game allows (T4.3). The game wires both (`Updates`); the defaults, for tests, read GitHub's
+ * digest only and answer notify-only.
  */
 class UpdateHooks(val hash: HashCheck, val eligibility: EligibilityCheck) {
 	/** The checksum a download of [jar] would be checked against. */
@@ -44,7 +44,7 @@ class UpdateHooks(val hash: HashCheck, val eligibility: EligibilityCheck) {
 	}
 
 	companion object {
-		/** Until T4.3: an install is never offered, so the player installs by hand. */
+		/** The defaults' answer: an install is never offered, so the player installs by hand. */
 		@JvmField
 		val NOTIFY_ONLY: Eligibility = Eligibility(false, "Install it by hand from the release page")
 

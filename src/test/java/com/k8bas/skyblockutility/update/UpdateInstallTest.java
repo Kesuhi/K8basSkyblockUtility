@@ -109,6 +109,48 @@ class UpdateInstallTest {
 			assertEquals(UpdateService.Cancel.CANCELLED, service.cancelPending());
 			Updates.notifier().offer(service.offer());
 			assertEquals(1, toasts.size());
+			// G4 review: skipped after its toast, the join's line no longer offers it.
+			assertTrue(service.skip("2.0.1"));
+			List<String> lines = new ArrayList<>();
+			Updates.notifier().showJoinLine(component -> lines.add(component.getString()));
+			assertEquals(List.of(), lines);
+		}
+	}
+
+	/**
+	 * G4 review: the card reads the last check and the pending install every frame; neither waits for the state lock, which
+	 * the launch check holds while it reads the mods folder. The values are still the saved ones.
+	 */
+	@Test
+	void theCardReadsNeverWaitForTheStateLock() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			byte[] jar = TestJars.mod("2.0.1+26.2");
+			github.enqueue(MockGitHub.Answer.json(200, "[" + list(github, "2.0.1", jar) + "]"), MockGitHub.Answer.bytes(200, jar));
+			UpdateService service = service(github);
+			service.checkManual();
+			service.download(Consent.typed("2.0.1"));
+			java.util.concurrent.CountDownLatch held = new java.util.concurrent.CountDownLatch(1);
+			java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+			Thread holder = Thread.ofPlatform().start(() -> {
+				synchronized (service.state()) {
+					held.countDown();
+					try {
+						release.await();
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+				}
+			});
+			try {
+				held.await();
+				PendingInstall pending = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(Duration.ofSeconds(2), service::pendingInstall);
+				long lastSuccess = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(Duration.ofSeconds(2), service::lastSuccessMs);
+				assertEquals("2.0.1", pending.version());
+				assertEquals(T0, lastSuccess);
+			} finally {
+				release.countDown();
+				holder.join();
+			}
 		}
 	}
 
@@ -153,7 +195,7 @@ class UpdateInstallTest {
 
 	/** A cancel while a download runs changes nothing and says so; it never runs beside one. */
 	@Test
-	void aCancelDuringADownloadIsBusy() throws Exception {
+	void aCancelDuringADownloadSaysSo() throws Exception {
 		try (MockGitHub github = new MockGitHub()) {
 			byte[] jar = TestJars.mod("2.0.1+26.2");
 			java.util.concurrent.CountDownLatch gate = new java.util.concurrent.CountDownLatch(1);
@@ -166,10 +208,30 @@ class UpdateInstallTest {
 			while (github.requests.size() < 2 && System.nanoTime() < until) {
 				Thread.sleep(10);
 			}
-			assertEquals(UpdateService.Cancel.BUSY, service.cancelPending());
+			assertEquals(UpdateService.Cancel.DOWNLOADING, service.cancelPending());
+			assertEquals(List.of("An update is downloading, try again when it is done"), new UpdateActions(service, UTC).cancel());
 			gate.countDown();
 			assertInstanceOf(DownloadOutcome.Staged.class, download.get(10, java.util.concurrent.TimeUnit.SECONDS));
 			assertEquals("2.0.1", store().load().pendingInstall.version(), "the busy cancel changed nothing");
+		}
+	}
+
+	/** G4 review: a cancel while a check (or the launch check) holds the lock changes nothing and says the updater is busy. */
+	@Test
+	void aCancelDuringACheckSaysBusy() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			java.util.concurrent.CountDownLatch gate = new java.util.concurrent.CountDownLatch(1);
+			github.enqueue(MockGitHub.Answer.json(200, "[]").gated(gate));
+			UpdateService service = service(github);
+			java.util.concurrent.CompletableFuture<CheckOutcome> check = java.util.concurrent.CompletableFuture.supplyAsync(service::checkManual);
+			long until = System.nanoTime() + 5_000_000_000L;
+			while (github.requests.isEmpty() && System.nanoTime() < until) {
+				Thread.sleep(10);
+			}
+			assertEquals(UpdateService.Cancel.BUSY, service.cancelPending());
+			assertEquals(List.of("The updater is busy, try again in a moment"), new UpdateActions(service, UTC).cancel());
+			gate.countDown();
+			check.get(10, java.util.concurrent.TimeUnit.SECONDS);
 		}
 	}
 

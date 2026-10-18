@@ -36,7 +36,17 @@ class UpdatesCardTest {
 	private int services;
 
 	private UpdateService service(MockGitHub github, String running) throws Exception {
+		return service(github, running, saved -> { });
+	}
+
+	/** A service whose state file already holds what {@code seed} sets, as a launch with that file reads it. */
+	private UpdateService service(MockGitHub github, String running, java.util.function.Consumer<UpdateState> seed) throws Exception {
 		Path state = Files.createDirectories(dir.resolve("s" + services++)).resolve(UpdateStateStore.FILE_NAME);
+		UpdateStateStore seeded = new UpdateStateStore(state, warnings::add);
+		UpdateState saved = seeded.load();
+		seed.accept(saved);
+		seeded.save(saved);
+		seeded.flush();
 		return new UpdateService(new GitHubReleaseSource(github.releases(), SharedHttpClient.get(), running, Duration.ofSeconds(5)),
 				new UpdateStateStore(state, warnings::add), () -> NOW, () -> true, running, "26.2", () -> null,
 				line -> { }, warnings::add, new UpdateHooks(UpdateHooks.DEFAULT.getHash(), () -> UpdateHooks.Eligibility.ELIGIBLE));
@@ -182,8 +192,8 @@ class UpdatesCardTest {
 	@Test
 	void aPendingInstallComesFirstAndCanBeCancelled() throws Exception {
 		try (MockGitHub github = new MockGitHub()) {
-			UpdateService service = service(github, "1.3.1+26.2");
-			service.state().pendingInstall = new PendingInstall("1.4.0", "k8bas_skyblock_utility-1.4.0+26.2.jar", HEX, NOW, "1.3.1+26.2", "x.jar", 0);
+			UpdateService service = service(github, "1.3.1+26.2",
+					saved -> saved.pendingInstall = new PendingInstall("1.4.0", "k8bas_skyblock_utility-1.4.0+26.2.jar", HEX, NOW, "1.3.1+26.2", "x.jar", 0));
 			UpdatesCard card = card(service);
 			assertEquals("Update v1.4.0 ready, restart Minecraft to apply", card.status());
 			card.cancelPending();
@@ -252,10 +262,13 @@ class UpdatesCardTest {
 	@Test
 	void theLastCheckReadsTheDay() throws Exception {
 		try (MockGitHub github = new MockGitHub()) {
-			UpdateService service = service(github, "1.3.1+26.2");
+			UpdateService service = service(github, "1.3.1+26.2", saved -> saved.lastSuccessMs = NOW - 26L * 3600 * 1000);
 			UpdatesCard card = card(service);
-			service.state().lastSuccessMs = NOW - 26L * 3600 * 1000;
 			assertEquals("2026-10-17 13:30", card.lastCheck());
+			// A check after the card was built shows at once (the service's saved copy, read live).
+			github.enqueue(MockGitHub.Answer.json(200, "[]"));
+			service.checkManual();
+			assertEquals("Today, 15:30", card.lastCheck());
 		}
 	}
 }

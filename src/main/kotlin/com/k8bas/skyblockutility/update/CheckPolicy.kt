@@ -74,10 +74,10 @@ object CheckPolicy {
 
 	/** retry-after, else the reset time when no requests remain, else the secondary-limit doubling. */
 	private fun rateLimitWait(state: UpdateState, headers: Map<String, String>, now: Long): Long {
-		number(headers["retry-after"])?.let { return it * SECOND }
+		number(headers["retry-after"])?.let { return millis(it) }
 		val reset = number(headers["x-ratelimit-reset"])
 		if (headers["x-ratelimit-remaining"] == "0" && reset != null) {
-			return reset * SECOND - now
+			return millis(reset) - now
 		}
 		return doubling(state.secondaryStreak++)
 	}
@@ -110,4 +110,7 @@ object CheckPolicy {
 
 	/** Trimmed as Java's String.trim() does (chars up to U+0020), then parsed as Long.parseLong does. */
 	private fun number(value: String?): Long? = value?.trim { it <= ' ' }?.toLongOrNull()
+
+	/** Seconds in milliseconds; a count too large for that is the largest wait, not a negative one. */
+	private fun millis(seconds: Long): Long = if (seconds > Long.MAX_VALUE / SECOND) Long.MAX_VALUE else seconds * SECOND
 }

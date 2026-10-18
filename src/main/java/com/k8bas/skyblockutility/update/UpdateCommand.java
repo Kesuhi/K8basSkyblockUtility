@@ -42,11 +42,12 @@ public final class UpdateCommand {
 				.then(ClientCommands.literal("skip").executes(context -> usage("/" + root + " update skip <version>"))
 						.then(ClientCommands.argument("version", StringArgumentType.word())
 						.executes(context -> askSkip(root, StringArgumentType.getString(context, "version")))
-						.then(ClientCommands.literal("confirm").executes(context -> {
+						// A chat click runs the confirm and the cancel only after Fabric's confirmation window (R55).
+						.then(ClientCommands.literal("confirm").requires(FabricClientCommandSource::attended).executes(context -> {
 							String version = StringArgumentType.getString(context, "version");
 							return answer(actions -> actions.skip(version, true));
 						}))))
-				.then(ClientCommands.literal("cancel").executes(context -> answer(UpdateActions::cancel)));
+				.then(ClientCommands.literal("cancel").requires(FabricClientCommandSource::attended).executes(context -> answer(UpdateActions::cancel)));
 	}
 
 	/** A subcommand typed without its argument: how to use it; nothing reaches the server (REQ-UI-25). */
@@ -59,7 +60,7 @@ public final class UpdateCommand {
 	private static int answer(Function<UpdateActions, List<String>> action) {
 		Updates.run(action).whenComplete((lines, error) -> Minecraft.getInstance().execute(() -> {
 			if (error != null) {
-				ChatUtils.chat(Component.literal("The update action failed: " + error.getClass().getSimpleName()).withStyle(ChatFormatting.RED));
+				ChatUtils.chat(Component.literal("The update action failed: " + cause(error)).withStyle(ChatFormatting.RED));
 				return;
 			}
 			for (String line : lines) {
@@ -72,20 +73,31 @@ public final class UpdateCommand {
 	/** The first step of a skip (REQ-UPD-12): what it does, and a click that confirms it. */
 	private static int askSkip(String root, String version) {
 		Updates.run(actions -> actions.skip(version, false)).whenComplete((lines, error) -> Minecraft.getInstance().execute(() -> {
-			if (lines == null || lines.isEmpty()) {
+			if (error != null || lines == null || lines.isEmpty()) {
+				ChatUtils.chat(Component.literal("The update action failed" + (error == null ? "" : ": " + cause(error)))
+						.withStyle(ChatFormatting.RED));
 				return;
 			}
-			MutableComponent text = Component.literal(lines.getFirst() + " ").withStyle(ChatFormatting.YELLOW);
-			if (SemVer.Companion.fromTagOrNull(version) != null) {
+			SemVer parsed = SemVer.Companion.fromTagOrNull(version);
+			// Only the question gets the link; "not the update on offer" has nothing to confirm.
+			boolean asks = parsed != null && lines.getFirst().equals(UpdateActions.skipQuestion(parsed));
+			MutableComponent text = Component.literal(lines.getFirst() + (asks ? " " : "")).withStyle(ChatFormatting.YELLOW);
+			if (asks) {
 				text.append(Component.literal("[Skip it]").withStyle(Style.EMPTY
 						.withColor(ChatFormatting.AQUA)
 						.withUnderlined(true)
 						.withClickEvent(new ClickEvent.RunCommand("/" + root + " update skip " + version + " confirm"))
-						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Skips v" + SemVer.Companion.fromTagOrNull(version))))));
+						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Skips v" + parsed)))));
 			}
 			ChatUtils.chat(text);
 		}));
 		return 1;
+	}
+
+	/** The error's own name, not the CompletionException a background action wraps it in. */
+	private static String cause(Throwable error) {
+		Throwable cause = error instanceof java.util.concurrent.CompletionException && error.getCause() != null ? error.getCause() : error;
+		return cause.getClass().getSimpleName();
 	}
 
 	/** Opens the confirmation screen for the candidate on offer, or says there is none; the screen opens on the next frame. */

@@ -47,6 +47,8 @@ public final class UpdateNotifier {
 	private volatile CheckOutcome.Found pending;
 	/** The version staged for install at the next exit, or null. */
 	private volatile Supplier<String> staged = () -> null;
+	/** What the service offers now (its last offer), or null when it has no view of its own. */
+	private volatile Supplier<CheckOutcome> currentOffer = () -> null;
 	/** Client thread only. */
 	private boolean shown;
 	private int shownCount;
@@ -85,6 +87,14 @@ public final class UpdateNotifier {
 		staged = stagedVersion;
 	}
 
+	/**
+	 * Where the service's offer is read when the join's line is due: a skip or a channel pick after the toast changes it,
+	 * and the line offers only what is still on offer.
+	 */
+	public void setCurrentOffer(Supplier<CheckOutcome> offer) {
+		currentOffer = offer;
+	}
+
 	/** Lines to show once, as soon as the player is in a world; any thread. */
 	public void showOnJoin(List<String> lines) {
 		launchLines.addAll(lines);
@@ -102,7 +112,8 @@ public final class UpdateNotifier {
 	/**
 	 * Hands the found update's line to {@code chat}, once per session, when it is due in a world. Not for a version staged
 	 * for install (R53): an install confirmed after the toast leaves nothing to offer. Cancelled again before the join, the
-	 * line still shows; cancelled later, it does not come back, as the join it belonged to has passed.
+	 * line still shows; cancelled later, it does not come back, as the join it belonged to has passed. Nor for a version
+	 * skipped, or left out by a channel pick, since the toast.
 	 */
 	void showJoinLine(Consumer<Component> chat) {
 		CheckOutcome.Found found = pending;
@@ -110,10 +121,16 @@ public final class UpdateNotifier {
 			return;
 		}
 		shown = true;
-		if (!isStaged(found)) {
+		if (!isStaged(found) && stillOffered(found)) {
 			shownCount++;
 			chat.accept(message(found, runningVersion));
 		}
+	}
+
+	private boolean stillOffered(CheckOutcome.Found found) {
+		CheckOutcome now = currentOffer.get();
+		return now == null || now instanceof CheckOutcome.Found current && !current.skipped()
+				&& current.candidate().version().compareTo(found.candidate().version()) == 0;
 	}
 
 	private boolean isStaged(CheckOutcome.Found found) {

@@ -35,6 +35,8 @@ public final class UpdateScreen extends WidgetScreen {
 	static final long SKIP_CONFIRM_MS = 3_000;
 	/** A second click sooner than this is one double-click, not a decision (REQ-UPD-12). */
 	static final long SKIP_MIN_GAP_MS = 300;
+	/** A click this soon after the screen opened is no decision: a server's chat line may have opened it under the cursor. */
+	static final long DOWNLOAD_ARM_MS = 500;
 	private static final int PANEL_MAX_W = 380;
 	private static final int PANEL_MAX_H = 270;
 	private static final int PAD = 10;
@@ -63,6 +65,7 @@ public final class UpdateScreen extends WidgetScreen {
 	private volatile List<String> status = List.of();
 	private volatile boolean busy;
 	private long skipArmedAt = -1;
+	private final long openedAt;
 	/** Where the last action's answer is drawn: between the notes and the buttons. */
 	private int statusY;
 
@@ -75,6 +78,7 @@ public final class UpdateScreen extends WidgetScreen {
 			java.util.function.Consumer<List<String>> say, UiTime time) {
 		super(Component.literal(TITLE));
 		setTime(time);
+		this.openedAt = time.millis();
 		this.parent = parent;
 		this.found = found;
 		this.confirmation = confirmation;
@@ -98,7 +102,7 @@ public final class UpdateScreen extends WidgetScreen {
 
 	private void download() {
 		Consent consent = confirmation.consent();
-		if (consent == null || busy) {
+		if (consent == null || busy || time().millis() - openedAt < DOWNLOAD_ARM_MS) {
 			return;
 		}
 		busy = true;

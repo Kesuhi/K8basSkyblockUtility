@@ -107,6 +107,23 @@ public class UpdateNoticeGameTest implements FabricClientGameTest {
 				LOGGER.info("update notices on the second join: {} (shown in all {})", secondJoin, shown);
 				check(secondJoin.isEmpty() && shownBeforeSecondJoin == 1 && shown == 1, "no notice on the second join: " + secondJoin);
 				context.takeScreenshot("t4.4-update-second-join");
+
+				// R55: a chat click (the connection's unattended command, as vanilla runs a RunCommand click) on cancel or on
+				// the skip's confirm asks in Fabric's confirmation window first; declined, it changed nothing.
+				service.pendingForTests(new PendingInstall("99.0.0", "k8bas_skyblock_utility-99.0.0+26.2.jar", DIGEST, 1L, "1.3.0", "x.jar", 0));
+				for (String command : List.of("ksu update cancel", "ksu update skip 99.0.0 confirm")) {
+					context.runOnClient(client -> client.getConnection().sendUnattendedCommand(command, null));
+					context.waitTicks(3);
+					check(context.computeOnClient(client -> client.gui.screen() instanceof net.minecraft.client.gui.screens.ConfirmScreen),
+							command + ", clicked, asks first");
+					if (command.endsWith("cancel")) {
+						context.takeScreenshot("g4-update-click-asks");
+					}
+					context.setScreen(() -> null);
+					context.waitTicks(2);
+				}
+				check(service.pendingInstall() != null && service.state().skippedVersion == null, "the declined clicks changed nothing");
+				service.pendingForTests(null);
 			}
 
 			// AC-UPD-11: the confirmation screen with every REQ-UPD-11 field; the notes plain and cut.
@@ -195,7 +212,7 @@ public class UpdateNoticeGameTest implements FabricClientGameTest {
 			check(context.computeOnClient(client -> client.gui.screen() instanceof com.k8bas.skyblockutility.ui.screen.ConfigScreen), "Later returns to the settings");
 
 			// T4.3b's pending state is the card's status.
-			service.state().pendingInstall = new PendingInstall("99.0.0", "k8bas_skyblock_utility-99.0.0+26.2.jar", DIGEST, 1L, "1.3.0", "x.jar", 0);
+			service.pendingForTests(new PendingInstall("99.0.0", "k8bas_skyblock_utility-99.0.0+26.2.jar", DIGEST, 1L, "1.3.0", "x.jar", 0));
 			context.setScreen(() -> new com.k8bas.skyblockutility.ui.screen.ConfigScreen(null, "status"));
 			context.waitTicks(3);
 			com.k8bas.skyblockutility.ui.option.Card shown = context.computeOnClient(client ->
@@ -217,7 +234,7 @@ public class UpdateNoticeGameTest implements FabricClientGameTest {
 			com.k8bas.skyblockutility.config.ConfigManager.flush();
 			check(Files.readString(file).contains("\"updateChannel\": \"BETA\""), "a picked channel is written");
 		} finally {
-			service.state().pendingInstall = null;
+			service.pendingForTests(null);
 			service.state().skippedVersion = null;
 			config.updateChannel = channelBefore;
 			com.k8bas.skyblockutility.config.ConfigManager.save();
@@ -285,10 +302,20 @@ public class UpdateNoticeGameTest implements FabricClientGameTest {
 		CheckOutcome.Found seen = new CheckOutcome.Found(found.candidate(), new UpdateHooks.Hash.Verifiable("ab".repeat(32)), found.eligibility(),
 				false, false, found.minecraft());
 		Confirmation shown = service.confirmation(seen);
-		context.setScreen(() -> new UpdateScreen(null, seen, shown,
-				action -> CompletableFuture.supplyAsync(() -> action.apply(new UpdateActions(service, java.time.ZoneId.of("UTC")))), lines -> { }));
+		List<Function<UpdateActions, List<String>>> downloads = new CopyOnWriteArrayList<>();
+		AtomicLong opened = new AtomicLong(1_000);
+		context.setScreen(() -> new UpdateScreen(null, seen, shown, action -> {
+			downloads.add(action);
+			return CompletableFuture.supplyAsync(() -> action.apply(new UpdateActions(service, java.time.ZoneId.of("UTC"))));
+		}, lines -> { }, UiTime.of(opened::get, () -> false)));
 		context.waitTicks(2);
+		// G4 review: a click right after the screen opened is no decision (a server's chat line may open it under the cursor).
 		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).downloadButtonForTests().activate());
+		check(downloads.isEmpty() && !context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).busyForTests()),
+				"a click in the first half second downloads nothing");
+		opened.addAndGet(UpdateScreen.DOWNLOAD_ARM_MS);
+		context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).downloadButtonForTests().activate());
+		check(downloads.size() == 1, "a later click is the decision");
 		for (int i = 0; i < 40 && context.computeOnClient(client -> ((UpdateScreen) client.gui.screen()).busyForTests()); i++) {
 			context.waitTicks(1);
 		}

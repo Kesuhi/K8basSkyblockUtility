@@ -146,6 +146,33 @@ class UpdateNotifierTest {
 		assertTrue(lines.getFirst().startsWith("K8bas Skyblock Utility v1.2.1 is available"), lines.getFirst());
 	}
 
+	/**
+	 * G4 review (REQ-UPD-12, REQ-UPD-07): the join's line offers only what is still on offer. A skip from the card or the
+	 * screen after the startup toast, or a channel pick that leaves the version out, means no line; the same offer shows it.
+	 */
+	@Test
+	void theJoinLineOffersOnlyWhatIsStillOnOffer() {
+		java.util.concurrent.atomic.AtomicReference<CheckOutcome> current = new java.util.concurrent.atomic.AtomicReference<>();
+		for (CheckOutcome now : List.of(found("v1.2.0", new UpdateHooks.Hash.Verifiable(HEX), UpdateHooks.Eligibility.ELIGIBLE, true),
+				new CheckOutcome.UpToDate("1.1.0"), installable("v1.2.1"))) {
+			UpdateNotifier notifier = notifier();
+			notifier.setCurrentOffer(current::get);
+			notifier.offer(installable("v1.2.0"));
+			current.set(now);
+			List<String> lines = new ArrayList<>();
+			notifier.showJoinLine(component -> lines.add(component.getString()));
+			notifier.showJoinLine(component -> lines.add(component.getString()));
+			assertEquals(List.of(), lines, now.toString());
+		}
+		UpdateNotifier notifier = notifier();
+		notifier.setCurrentOffer(current::get);
+		notifier.offer(installable("v1.2.0"));
+		current.set(installable("v1.2.0"));
+		List<String> lines = new ArrayList<>();
+		notifier.showJoinLine(component -> lines.add(component.getString()));
+		assertEquals(1, lines.size(), "the same offer still shows its line");
+	}
+
 	/** R53: the staged version is compared as a version, not as text. */
 	@Test
 	void aStagedVersionIsComparedAsAVersion() {

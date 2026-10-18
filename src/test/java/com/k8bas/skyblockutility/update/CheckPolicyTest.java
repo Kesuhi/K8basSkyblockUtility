@@ -73,6 +73,14 @@ class CheckPolicyTest {
 		assertEquals(MINUTE, waitAfter(new UpdateState(), status(429, "retry-after", "5"), T0));
 	}
 
+	/** G4 review: a header too large to count in milliseconds is the longest wait, not the shortest after an overflow. */
+	@Test
+	void aHugeWaitHeaderIsTheLongestWait() {
+		String huge = String.valueOf(Long.MAX_VALUE / 1000 + 1);
+		assertEquals(DAY, waitAfter(new UpdateState(), status(403, "retry-after", huge), T0));
+		assertEquals(DAY, waitAfter(new UpdateState(), status(403, "x-ratelimit-remaining", "0", "x-ratelimit-reset", huge), T0));
+	}
+
 	@Test
 	void secondaryLimitsDoubleFromOneMinute() {
 		UpdateState state = new UpdateState();

@@ -30,6 +30,18 @@ public final class UpdateService {
 	private final UpdateState state;
 	private volatile Consumer<CheckOutcome> onOutcome = outcome -> { };
 	private volatile CheckOutcome lastOffer;
+	/**
+	 * Under the state lock: each offer and each skip takes the next number; an offer that read the state before a newer
+	 * one (or a skip) never replaces it, though its hash check may end last.
+	 */
+	private long offerGeneration;
+	private long lastOfferGeneration;
+	/**
+	 * Copies of the two state fields the render thread reads (the card, the notices), set at every save: they never wait
+	 * for the state lock, which the launch check holds while it reads the mods folder.
+	 */
+	private volatile long lastSuccessCopy;
+	private volatile PendingInstall pendingCopy;
 
 	UpdateService(GitHubReleaseSource source, UpdateStateStore store, LongSupplier clock, BooleanSupplier toggle,
 			String runningVersion, String runningMinecraft, Supplier<UpdateChannel> channel, Consumer<String> info, Consumer<String> warn) {
@@ -64,6 +76,8 @@ public final class UpdateService {
 		this.info = info;
 		this.warn = warn;
 		this.state = store.load();
+		this.lastSuccessCopy = state.lastSuccessMs;
+		this.pendingCopy = state.pendingInstall;
 	}
 
 	/** Called with every evaluation's outcome, on the check's thread. */
@@ -116,7 +130,7 @@ public final class UpdateService {
 					return new CheckOutcome.RateLimited(state.nextAllowedMs);
 				}
 				state.lastManualMs = now;
-				store.save(state);
+				save();
 				etag = state.etag;
 			}
 			store.flush();
@@ -124,7 +138,7 @@ public final class UpdateService {
 			long nextAllowed;
 			synchronized (state) {
 				CheckPolicy.apply(state, result, clock.getAsLong());
-				store.save(state);
+				save();
 				nextAllowed = state.nextAllowedMs;
 			}
 			if (result.problem() != null) {
@@ -153,10 +167,12 @@ public final class UpdateService {
 		CandidateFinder.Outcome outcome;
 		SemVer skipped;
 		java.util.List<Release> releases;
+		long generation;
 		synchronized (state) {
 			outcome = CandidateFinder.find(state.releases, runningVersion, runningMinecraft, channel.get(), this::logOnce);
 			skipped = SemVer.Companion.fromTagOrNull(state.skippedVersion);
 			releases = java.util.List.copyOf(state.releases);
+			generation = ++offerGeneration;
 		}
 		String running = runningVersion.contains("+") ? runningVersion.substring(0, runningVersion.indexOf('+')) : runningVersion;
 		CheckOutcome result = switch (outcome) {
@@ -168,8 +184,14 @@ public final class UpdateService {
 			case CandidateFinder.UpToDate upToDate -> new CheckOutcome.UpToDate(running);
 			default -> throw new IllegalStateException("unknown outcome " + outcome);
 		};
-		lastOffer = result;
-		return result;
+		synchronized (state) {
+			if (generation > lastOfferGeneration) {
+				lastOfferGeneration = generation;
+				lastOffer = result;
+			}
+			// Overtaken by a newer offer or a skip, it answers with that one, so no caller shows or toasts a stale view.
+			return lastOffer != null ? lastOffer : result;
+		}
 	}
 
 	/** The last {@link #offer()}, or null before the first: what the settings card reads every frame, at no cost. */
@@ -263,7 +285,7 @@ public final class UpdateService {
 		synchronized (state) {
 			state.pendingInstall = new PendingInstall(staged.version(), assetName, staged.sha256(), clock.getAsLong(), runningVersion,
 					armed.old().toString(), 0);
-			store.save(state);
+			save();
 		}
 		store.flush();
 		return staged;
@@ -284,7 +306,7 @@ public final class UpdateService {
 			LaunchReconciler.Report report;
 			synchronized (state) {
 				report = reconciler.reconcile(state);
-				store.save(state);
+				save();
 			}
 			store.flush();
 			reconciler.finish();
@@ -333,29 +355,27 @@ public final class UpdateService {
 		}
 		synchronized (state) {
 			state.skippedVersion = parsed.toString();
-			store.save(state);
+			save();
+			// The card reads the cached offer; it shows the mark at once, not after the next check (AC-UPD-13). An offer still
+			// running read the state before the skip, so it may not replace this one.
+			if (lastOffer instanceof CheckOutcome.Found found && found.candidate().version().compareTo(parsed) == 0 && !found.skipped()) {
+				lastOffer = new CheckOutcome.Found(found.candidate(), found.hash(), found.eligibility(), true, found.beta(), found.minecraft());
+			}
+			lastOfferGeneration = ++offerGeneration;
 		}
 		store.flush();
-		// The card reads the cached offer; it shows the mark at once, not after the next check (AC-UPD-13).
-		if (lastOffer instanceof CheckOutcome.Found found && found.candidate().version().compareTo(parsed) == 0 && !found.skipped()) {
-			lastOffer = new CheckOutcome.Found(found.candidate(), found.hash(), found.eligibility(), true, found.beta(), found.minecraft());
-		}
 		info.accept("Update v" + parsed + " skipped");
 		return true;
 	}
 
-	/** When the last check got an answer (epoch ms, 0 for never), read safely from any thread (the settings card). */
+	/** When the last check got an answer (epoch ms, 0 for never), as last saved; any thread, never waits (the settings card). */
 	public long lastSuccessMs() {
-		synchronized (state) {
-			return state.lastSuccessMs;
-		}
+		return lastSuccessCopy;
 	}
 
-	/** The pending install (T4.3), or null, read safely from any thread (the settings card). */
+	/** The pending install (T4.3), or null, as last saved; any thread, never waits (the settings card, the notices). */
 	public PendingInstall pendingInstall() {
-		synchronized (state) {
-			return state.pendingInstall;
-		}
+		return pendingCopy;
 	}
 
 	/** What {@link #cancelPending()} did. */
@@ -363,6 +383,8 @@ public final class UpdateService {
 		CANCELLED,
 		NOTHING_PENDING,
 		/** A download holds the lock; nothing changed. */
+		DOWNLOADING,
+		/** A check or the launch check holds the lock; nothing changed. */
 		BUSY
 	}
 
@@ -371,8 +393,9 @@ public final class UpdateService {
 	 * cleared; the running jar is untouched, and it is not a skip. It takes the lock, so it never runs beside a download.
 	 */
 	public Cancel cancelPending() {
-		if (lock.acquireOrHolder(UpdateLock.Holder.DOWNLOAD) != null) {
-			return Cancel.BUSY;
+		UpdateLock.Holder holder = lock.acquireOrHolder(UpdateLock.Holder.DOWNLOAD);
+		if (holder != null) {
+			return holder == UpdateLock.Holder.DOWNLOAD ? Cancel.DOWNLOADING : Cancel.BUSY;
 		}
 		try {
 			boolean pending = installer != null && installer.armedFile() != null;
@@ -383,7 +406,7 @@ public final class UpdateService {
 			synchronized (state) {
 				pending |= state.pendingInstall != null;
 				state.pendingInstall = null;
-				store.save(state);
+				save();
 			}
 			store.flush();
 			if (installer != null) {
@@ -422,7 +445,7 @@ public final class UpdateService {
 			if (due) {
 				// Counted before sending, so a crash mid-request still counts against the daily cap.
 				CheckPolicy.recordAutomatic(state, now);
-				store.save(state);
+				save();
 			}
 			etag = state.etag;
 		}
@@ -435,7 +458,7 @@ public final class UpdateService {
 		GitHubReleaseSource.Result result = source.fetch(etag);
 		synchronized (state) {
 			CheckPolicy.apply(state, result, clock.getAsLong());
-			store.save(state);
+			save();
 		}
 		if (result.problem() != null) {
 			// One line per attempt, without a stack trace (AC-UPD-10).
@@ -453,6 +476,21 @@ public final class UpdateService {
 	/** Writes pending state now, e.g. on client shutdown. */
 	public void flush() {
 		store.flush();
+	}
+
+	/** Saves the state and refreshes the copies the render thread reads; under the state lock. */
+	private void save() {
+		store.save(state);
+		lastSuccessCopy = state.lastSuccessMs;
+		pendingCopy = state.pendingInstall;
+	}
+
+	/** For gametests: a pending install as a staged download leaves it, through the same save. */
+	void pendingForTests(PendingInstall pending) {
+		synchronized (state) {
+			state.pendingInstall = pending;
+			save();
+		}
 	}
 
 	/** For tests. */

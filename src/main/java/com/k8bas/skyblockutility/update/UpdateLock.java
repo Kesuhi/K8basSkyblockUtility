@@ -4,7 +4,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * At most one update check or download in flight (REQ-UPD-04). A holder that cannot take it does not wait: an automatic
- * check is skipped, a manual one or a download answers what holds it.
+ * check is skipped, a manual one or a download answers what holds it. Only the launch's reconciliation waits for it, a
+ * bounded time, rather than skip a launch.
  */
 final class UpdateLock {
 	/** What holds the lock. */

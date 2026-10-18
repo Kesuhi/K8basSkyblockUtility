@@ -129,4 +129,87 @@ class UpdateServiceTest {
 		assertEquals(1, warnings.size());
 		assertTrue(Files.readString(dir.resolve(UpdateStateStore.FILE_NAME)).contains("\"stateVersion\": 0"));
 	}
+
+	/**
+	 * G4 review: an offer that read the state first and ends last (its hash check read a sidecar) never replaces a newer
+	 * one; here it would undo the skip made meanwhile, and the card would show the version unmarked again.
+	 */
+	@Test
+	void aSlowOfferNeverUndoesANewerOne() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			github.enqueue(MockGitHub.Answer.json(200, GitHubReleaseSourceTest.LIST));
+			AtomicBoolean holdNext = new AtomicBoolean();
+			java.util.concurrent.CountDownLatch entered = new java.util.concurrent.CountDownLatch(1);
+			java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+			UpdateHooks hooks = new UpdateHooks((candidate, jar) -> {
+				if (holdNext.compareAndSet(true, false)) {
+					entered.countDown();
+					try {
+						release.await();
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+				}
+				return new UpdateHooks.Hash.Verifiable("ab".repeat(32));
+			}, () -> UpdateHooks.Eligibility.ELIGIBLE);
+			UpdateService service = new UpdateService(
+					new GitHubReleaseSource(github.releases(), SharedHttpClient.get(), "1.1.0+26.2", Duration.ofSeconds(5)),
+					new UpdateStateStore(dir.resolve(UpdateStateStore.FILE_NAME), warnings::add), clock::get, toggle::get, "1.1.0+26.2", "26.2",
+					() -> null, info::add, warnings::add, hooks);
+			assertInstanceOf(CheckOutcome.Found.class, service.checkManual());
+			holdNext.set(true);
+			java.util.concurrent.CompletableFuture<CheckOutcome> slow = java.util.concurrent.CompletableFuture.supplyAsync(service::offer);
+			assertTrue(entered.await(5, java.util.concurrent.TimeUnit.SECONDS));
+			assertTrue(service.skip("1.2.0"));
+			release.countDown();
+			// It read the state before the skip; it answers with the newer view, so no caller toasts the skipped version.
+			assertTrue(assertInstanceOf(CheckOutcome.Found.class, slow.get(5, java.util.concurrent.TimeUnit.SECONDS)).skipped(), "the slow offer's answer");
+			assertTrue(assertInstanceOf(CheckOutcome.Found.class, service.lastOffer()).skipped(), "the card keeps the skip");
+		}
+	}
+
+	/** G4 review: of two offers, the one that read the state later stands, though the other one ends last. */
+	@Test
+	void aSlowOfferNeverReplacesANewerOne() throws Exception {
+		try (MockGitHub github = new MockGitHub()) {
+			github.enqueue(MockGitHub.Answer.json(200, "[" + release("1.3.0-beta.1", true) + "," + release("1.2.0", false) + "]"));
+			AtomicBoolean holdNext = new AtomicBoolean();
+			java.util.concurrent.CountDownLatch entered = new java.util.concurrent.CountDownLatch(1);
+			java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+			UpdateHooks hooks = new UpdateHooks((candidate, jar) -> {
+				if (holdNext.compareAndSet(true, false)) {
+					entered.countDown();
+					try {
+						release.await();
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+				}
+				return new UpdateHooks.Hash.Verifiable("ab".repeat(32));
+			}, () -> UpdateHooks.Eligibility.ELIGIBLE);
+			AtomicReference<UpdateChannel> channel = new AtomicReference<>(UpdateChannel.STABLE);
+			UpdateService service = new UpdateService(
+					new GitHubReleaseSource(github.releases(), SharedHttpClient.get(), "1.1.0+26.2", Duration.ofSeconds(5)),
+					new UpdateStateStore(dir.resolve(UpdateStateStore.FILE_NAME), warnings::add), clock::get, toggle::get, "1.1.0+26.2", "26.2",
+					channel::get, info::add, warnings::add, hooks);
+			assertEquals("1.2.0", assertInstanceOf(CheckOutcome.Found.class, service.checkManual()).candidate().version().toString());
+			holdNext.set(true);
+			java.util.concurrent.CompletableFuture<CheckOutcome> slow = java.util.concurrent.CompletableFuture.supplyAsync(service::offer);
+			assertTrue(entered.await(5, java.util.concurrent.TimeUnit.SECONDS));
+			channel.set(UpdateChannel.BETA);
+			assertEquals("1.3.0-beta.1", assertInstanceOf(CheckOutcome.Found.class, service.offer()).candidate().version().toString());
+			release.countDown();
+			assertEquals("1.3.0-beta.1", assertInstanceOf(CheckOutcome.Found.class, slow.get(5, java.util.concurrent.TimeUnit.SECONDS)).candidate().version().toString(),
+					"the slow offer answers with the newer view");
+			assertEquals("1.3.0-beta.1", assertInstanceOf(CheckOutcome.Found.class, service.lastOffer()).candidate().version().toString(),
+					"the card keeps the newer view");
+		}
+	}
+
+	private static String release(String version, boolean prerelease) {
+		String name = "k8bas_skyblock_utility-" + version + "+26.2.jar";
+		return "{\"tag_name\":\"v" + version + "\",\"html_url\":\"https://github.com/Kesuhi/K8basSkyblockUtility/releases/tag/v" + version
+				+ "\",\"draft\":false,\"prerelease\":" + prerelease + ",\"assets\":[{\"name\":\"" + name + "\",\"state\":\"uploaded\",\"size\":1,"
+				+ "\"browser_download_url\":\"https://github.com/Kesuhi/K8basSkyblockUtility/releases/download/v" + version + "/" + name + "\"}]}";
+	}
 }

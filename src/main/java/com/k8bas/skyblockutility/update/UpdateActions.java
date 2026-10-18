@@ -56,10 +56,15 @@ public final class UpdateActions {
 			return List.of("v" + parsed + " is not the update on offer; " + (found == null ? "there is none" : "that is v" + found.candidate().version()));
 		}
 		if (!confirmed) {
-			return List.of("Skip v" + parsed + "? Its notices stay silent until a newer version is out");
+			return List.of(skipQuestion(parsed));
 		}
 		service.skip(version);
 		return List.of("Skipped v" + parsed + "; a newer version notifies again");
+	}
+
+	/** The first step's answer when the skip may go ahead; only then does the chat line get its [Skip it]. */
+	static String skipQuestion(SemVer version) {
+		return "Skip v" + version + "? Its notices stay silent until a newer version is out";
 	}
 
 	/** Reads the cached release list again (a channel was picked): nothing to say, the card shows the new offer. */
@@ -73,7 +78,8 @@ public final class UpdateActions {
 		return switch (service.cancelPending()) {
 			case CANCELLED -> List.of("The pending update is cancelled; nothing is installed when you quit");
 			case NOTHING_PENDING -> List.of("No update is pending");
-			case BUSY -> List.of("An update is downloading, try again when it is done");
+			case DOWNLOADING -> List.of("An update is downloading, try again when it is done");
+			case BUSY -> List.of("The updater is busy, try again in a moment");
 		};
 	}
 
