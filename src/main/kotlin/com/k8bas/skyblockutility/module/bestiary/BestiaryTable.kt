@@ -59,6 +59,9 @@ class BestiaryFamilies(private val byId: Map<String, BestiaryFamily>, private va
 	/** The menu name of [category], or of its [subcategory] when given ("Dwarven Mines", "Lava"); null if unknown. */
 	fun categoryName(category: String, subcategory: String?): String? =
 		categoryNames[if (subcategory == null) category else "$category/$subcategory"]
+
+	/** Every category's name by key, a subcategory's under `<category>/<subcategory>`. */
+	fun categoryNames(): Map<String, String> = categoryNames
 }
 
 /**
