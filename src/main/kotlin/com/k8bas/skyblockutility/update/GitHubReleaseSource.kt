@@ -218,7 +218,7 @@ class GitHubReleaseSource(
 							parseAsset(assetElement)?.let { assets.add(it) }
 						}
 					}
-					releases.add(Release(tag, htmlUrl, bool(obj, "draft"), bool(obj, "prerelease"), assets))
+					releases.add(Release(tag, htmlUrl, bool(obj, "draft"), bool(obj, "prerelease"), assets, string(obj, "body")))
 				} catch (malformed: RuntimeException) {
 					// skipped
 				}

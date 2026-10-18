@@ -5,14 +5,24 @@ import com.k8bas.skyblockutility.config.ConfigManager
 import com.k8bas.skyblockutility.net.SharedHttpClient
 import com.k8bas.skyblockutility.ui.notice.Notice
 import com.k8bas.skyblockutility.ui.notice.Notices
+import com.k8bas.skyblockutility.util.ChatUtils
 import com.k8bas.skyblockutility.util.RuntimeVersions
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.metadata.ModOrigin
+import net.minecraft.ChatFormatting
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.ChatScreen
+import net.minecraft.network.chat.Component
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
+import java.time.ZoneId
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
+import java.util.function.Function
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 import java.util.function.LongSupplier
@@ -20,14 +30,15 @@ import java.util.function.Predicate
 import java.util.function.Supplier
 
 /**
- * Wires the update check into the game (T1.4): the first check after the client has started, then
- * every 30 minutes a local "is one due?" test; the notice on the client tick; the state flushed on
- * shutdown. Confirmed downloads stage into `.k8bas_update/` in the game directory (T4.2) and are armed
- * for the helper at exit (T4.3) when this game may install them (InstallEligibility).
+ * Wires the updater into the game: the launch's reconciliation (T4.3b), then the automatic check at startup and at the
+ * first server join of the session only (R50); the notices on the client tick (T4.4); `/ksu update` and the
+ * confirmation screen run their actions here, off the render thread; the state flushed on shutdown. Confirmed downloads
+ * stage into `.k8bas_update/` in the game directory (T4.2) and are armed for the helper at exit (T4.3) when this game
+ * may install them (InstallEligibility).
  */
 object Updates {
 	private val LOGGER: Logger = LoggerFactory.getLogger("k8bas_skyblock_utility/update")
-	private const val RECHECK_TICKS: Long = 20L * 60 * 30
+	private val ACTIONS = Executors.newVirtualThreadPerTaskExecutor()
 
 	/** The title of the updater's notices (REQ-UPD-18; T4.4 adds the others). */
 	const val NOTICE_TITLE: String = "K8bas Skyblock Utility"
@@ -40,7 +51,15 @@ object Updates {
 
 	@Volatile
 	private var notifier: UpdateNotifier? = null
-	private var ticks: Long = 0
+	private val checks = SessionChecks { service!!.triggerAutomatic() }
+
+	/** The service in use (for gametests, to restore it). */
+	@JvmStatic
+	fun service(): UpdateService? = service
+
+	/** The notifier in use (for gametests, to restore it). */
+	@JvmStatic
+	fun notifier(): UpdateNotifier? = notifier
 
 	@JvmStatic
 	fun register() {
@@ -92,15 +111,11 @@ object Updates {
 				} catch (e: Exception) {
 					LOGGER.warn("Update: the launch check failed: {}", e.toString())
 				}
-				service!!.triggerAutomatic()
+				checks.started()
 			}
 		}
-		ClientTickEvents.END_CLIENT_TICK.register { client ->
-			notifier!!.tick(client)
-			if (++ticks % RECHECK_TICKS == 0L) {
-				service!!.triggerAutomatic()
-			}
-		}
+		ClientPlayConnectionEvents.JOIN.register { _, _, _ -> checks.joined() }
+		ClientTickEvents.END_CLIENT_TICK.register { client -> notifier!!.tick(client) }
 		ClientLifecycleEvents.CLIENT_STOPPING.register { service!!.flush() }
 	}
 
@@ -110,6 +125,55 @@ object Updates {
 			val origin = container.origin
 			if (origin.kind == ModOrigin.Kind.PATH) InstallEligibility.Origin(true, origin.paths) else InstallEligibility.Origin(false, listOf())
 		}.orElse(null)
+
+	/** Runs an update action off the render thread (`/ksu update`, the confirmation screen). */
+	@JvmStatic
+	fun run(action: Function<UpdateActions, List<String>>): CompletableFuture<List<String>> =
+		CompletableFuture.supplyAsync({ action.apply(UpdateActions(service!!, ZoneId.systemDefault())) }, ACTIONS)
+
+	/**
+	 * Opens the confirmation screen for the candidate on offer, or says in the chat that there is none. The offer is read in
+	 * the background (the hash check may read a sidecar); the screen opens on the client thread, and only if the player is
+	 * still where the command ran (no screen, or the chat): it never covers a menu opened meanwhile (REQ-UPD-10).
+	 */
+	@JvmStatic
+	fun showScreen(client: Minecraft) {
+		val current = service ?: return
+		CompletableFuture.supplyAsync({ UpdateActions(current, ZoneId.systemDefault()).showable() }, ACTIONS).whenComplete { found, error ->
+			client.execute {
+				val open = client.gui.screen()
+				when {
+					found == null || error != null -> say(UpdateActions(current, ZoneId.systemDefault()).nothingToShow())
+					open != null && open !is ChatScreen -> say(listOf("The update is ready to see: /ksu update show"))
+					else -> client.gui.setScreen(UpdateScreen(open, found, current.confirmation(found), Function { run(it) }, Consumer { say(it) }))
+				}
+			}
+		}
+	}
+
+	/**
+	 * `/ksu update install <version>`: the confirmation screen for that version when it is the candidate, else why not. The
+	 * command downloads nothing itself (REQ-UPD-11): a chat click from a server could run it.
+	 */
+	@JvmStatic
+	fun requestInstall(client: Minecraft, version: String) {
+		val current = service ?: return
+		CompletableFuture.supplyAsync({ UpdateActions(current, ZoneId.systemDefault()).refusalToInstall(version) }, ACTIONS)
+			.whenComplete { refusal, error ->
+				if (refusal == null && error == null) {
+					showScreen(client)
+				} else {
+					say(refusal ?: listOf("The update action failed"))
+				}
+			}
+	}
+
+	/** Local chat lines, on the client thread (never sent to the server). */
+	private fun say(lines: List<String>) {
+		Minecraft.getInstance().execute {
+			lines.forEach { ChatUtils.chat(Component.literal(it).withStyle(ChatFormatting.YELLOW)) }
+		}
+	}
 
 	/** Replaces the running service and notifier; also how gametests point it at a test server. */
 	@JvmStatic

@@ -34,9 +34,9 @@ class FeatureSendScanTest {
 	}
 
 	@Test
-	void theOnlyClickCommandIsTheSackButton() throws IOException {
-		// REQ-XC-RULES-02 (R43 (c)): a chat button the player clicks may run one command; the only one is the mineshaft
-		// alert's "[Take out n]", which runs getfromsacks. Nothing else in the mod builds a command click.
+	void theOnlyClickCommandsAreTheSackButtonAndTheUpdatersOwn() throws IOException {
+		// REQ-XC-RULES-02 (R43 (c), R52): a chat button the player clicks may run one command: the mineshaft
+		// alert's "[Take out n]", which runs getfromsacks, and the updater's own links below. Nothing else builds a command click.
 		List<Path> all = SendScan.sources(PROJECT, "src/main/java", "src/main/kotlin");
 		List<String> users = new java.util.ArrayList<>();
 		for (Path file : all) {
@@ -45,10 +45,23 @@ class FeatureSendScanTest {
 				users.add(PROJECT.relativize(file).toString().replace('\\', '/'));
 			}
 		}
-		assertEquals(List.of("src/main/kotlin/com/k8bas/skyblockutility/module/mineshaftalert/MineshaftAlertText.kt"), users);
-		String text = SendScan.withoutComments(java.nio.file.Files.readString(PROJECT.resolve(users.getFirst())));
+		String sack = "src/main/kotlin/com/k8bas/skyblockutility/module/mineshaftalert/MineshaftAlertText.kt";
+		String notifier = "src/main/java/com/k8bas/skyblockutility/update/UpdateNotifier.java";
+		String command = "src/main/java/com/k8bas/skyblockutility/update/UpdateCommand.java";
+		assertEquals(java.util.Set.of(sack, notifier, command), new java.util.HashSet<>(users));
+		String text = SendScan.withoutComments(java.nio.file.Files.readString(PROJECT.resolve(sack)));
 		assertTrue(text.contains("val command = \"getfromsacks $keyName $amount\"") && text.split("RunCommand", -1).length == 2,
 				"one RunCommand, for getfromsacks");
+		// R52: the updater's chat line runs only this mod's own /ksu update show and skip, its skip prompt the confirm; all
+		// three parse in the client's own command tree (UpdateCommandTreeTest), so none reaches the server.
+		String notice = SendScan.withoutComments(java.nio.file.Files.readString(PROJECT.resolve(notifier)));
+		assertEquals(2, notice.split("RunCommand", -1).length, "[Update] and [Skip this version] go through one helper with one RunCommand");
+		assertTrue(notice.contains("command(\"[Update]\", \"/ksu update show\"") && notice.contains("\"/ksu update skip \" + version"),
+				"they run /ksu update show and /ksu update skip <version>");
+		assertFalse(notice.contains("SuggestCommand"));
+		String prompt = SendScan.withoutComments(java.nio.file.Files.readString(PROJECT.resolve(command)));
+		assertEquals(2, prompt.split("RunCommand", -1).length, "one RunCommand, the skip prompt's");
+		assertTrue(prompt.contains("new ClickEvent.RunCommand(\"/\" + root + \" update skip \" + version + \" confirm\")"), "the skip's confirm");
 	}
 
 	@Test

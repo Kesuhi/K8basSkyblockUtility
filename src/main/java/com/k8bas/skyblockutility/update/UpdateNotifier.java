@@ -1,5 +1,7 @@
 package com.k8bas.skyblockutility.update;
 
+import com.k8bas.skyblockutility.ui.notice.Notice;
+import com.k8bas.skyblockutility.ui.notice.Notices;
 import com.k8bas.skyblockutility.util.ChatUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -13,13 +15,20 @@ import org.slf4j.Logger;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
- * The only update notice before the Phase 4 updater (REQ-UPD-01, REQ-UPD-10): one local chat line
- * per game session, once the player is in a world, with [Changelog] and [Open release page].
- * Clicking a link goes through the game's own link confirmation. No toast, nothing downloaded,
- * nothing sent to the server.
+ * The automatic check's notices (REQ-UPD-08, REQ-UPD-10): for a found update a toast on whatever screen is open, once per
+ * version in a session, and once per game session, on the first world join, a local chat line with [Changelog] [Update]
+ * [Skip this version] [Open release page]. [Update] only opens the confirmation screen; nothing is downloaded without its
+ * one click. A notify-only update says why and has no [Update]. A skipped version, a checksum conflict and every other
+ * outcome show nothing. The updater never opens a screen or takes focus on its own, and sends nothing to the server.
  */
 public final class UpdateNotifier {
 	static final String REPOSITORY = "https://github.com/Kesuhi/K8basSkyblockUtility";
@@ -29,47 +38,69 @@ public final class UpdateNotifier {
 
 	private final String runningVersion;
 	private final Logger logger;
+	private final Consumer<Notice> toasts;
 	private final AtomicBoolean loggedNotSemVer = new AtomicBoolean();
-	private volatile CandidateFinder.Candidate pending;
+	private final Set<String> toasted = ConcurrentHashMap.newKeySet();
 	/** Lines the launch's reconciliation left for the first world join (T4.3b). */
-	private final java.util.Queue<String> launchLines = new java.util.concurrent.ConcurrentLinkedQueue<>();
+	private final Queue<String> launchLines = new ConcurrentLinkedQueue<>();
+	private volatile CheckOutcome.Found pending;
 	/** Client thread only. */
 	private boolean shown;
 	private int shownCount;
 
 	public UpdateNotifier(String runningVersion, Logger logger) {
-		this.runningVersion = runningVersion;
-		this.logger = logger;
+		this(runningVersion, logger, Notices::post);
 	}
 
-	/** Takes a check's outcome; any thread. Only a candidate leads to a notice. */
-	public void offer(CandidateFinder.Outcome outcome) {
-		if (outcome instanceof CandidateFinder.Candidate candidate) {
-			pending = candidate;
-		} else if (outcome instanceof CandidateFinder.RunningNotSemVer notSemVer && loggedNotSemVer.compareAndSet(false, true)) {
+	/** @param toasts posts a toast; the notice component in the game */
+	public UpdateNotifier(String runningVersion, Logger logger, Consumer<Notice> toasts) {
+		this.runningVersion = runningVersion;
+		this.logger = logger;
+		this.toasts = toasts;
+	}
+
+	/** Takes a check's outcome; any thread. Only a found, unskipped update without a checksum conflict leads to a notice. */
+	public void offer(CheckOutcome outcome) {
+		// A conflict shows nothing (REQ-UPD-08), nor a checksum file not read yet: a later check may read it and offer the install.
+		if (outcome instanceof CheckOutcome.Found found && !found.skipped() && !(found.hash() instanceof UpdateHooks.Hash.Conflict)
+				&& !(found.hash() instanceof UpdateHooks.Hash.Unavailable)) {
+			pending = found;
+			if (toasted.add(found.candidate().version().toString())) {
+				toasts.accept(toast(found));
+			}
+			return;
+		}
+		pending = null;
+		if (outcome instanceof CheckOutcome.NotARelease notARelease && loggedNotSemVer.compareAndSet(false, true)) {
 			logger.info("Running version {} is not a SemVer version; no update is offered (newest release: {})",
-					runningVersion, notSemVer.newest());
+					runningVersion, notARelease.newest());
 		}
 	}
 
 	/** Lines to show once, as soon as the player is in a world; any thread. */
-	public void showOnJoin(java.util.List<String> lines) {
+	public void showOnJoin(List<String> lines) {
 		launchLines.addAll(lines);
 	}
 
 	/** Shows the pending notice once per session, as soon as the player is in a world. */
 	public void tick(Minecraft client) {
-		if (client.player != null) {
-			String line;
-			while ((line = launchLines.poll()) != null) {
-				ChatUtils.chat(Component.literal(line).withStyle(ChatFormatting.YELLOW));
-			}
+		if (client.player == null) {
+			return;
 		}
-		CandidateFinder.Candidate candidate = pending;
-		if (!shown && candidate != null && client.player != null) {
+		flushLaunchLines(ChatUtils::chat);
+		CheckOutcome.Found found = pending;
+		if (!shown && found != null) {
 			shown = true;
 			shownCount++;
-			ChatUtils.chat(message(candidate, runningVersion));
+			ChatUtils.chat(message(found, runningVersion));
+		}
+	}
+
+	/** Hands the launch's lines to {@code chat}, each once (T4.3b). */
+	void flushLaunchLines(Consumer<Component> chat) {
+		String line;
+		while ((line = launchLines.poll()) != null) {
+			chat.accept(Component.literal(line).withStyle(ChatFormatting.YELLOW));
 		}
 	}
 
@@ -78,14 +109,35 @@ public final class UpdateNotifier {
 		return shownCount;
 	}
 
-	static Component message(CandidateFinder.Candidate candidate, String runningVersion) {
+	/** For tests: the update the chat line would name. */
+	CheckOutcome.Found pendingForTests() {
+		return pending;
+	}
+
+	/** The toast: the version, and where to go from here. */
+	static Notice toast(CheckOutcome.Found found) {
+		return new Notice(Updates.NOTICE_TITLE, List.of("v" + found.candidate().version() + (found.beta() ? " (beta)" : "") + " is available",
+				found.installOffered() ? "Open /ksu update to install it" : "Install it by hand, see /ksu update"));
+	}
+
+	static Component message(CheckOutcome.Found found, String runningVersion) {
 		String running = SemVer.parse(runningVersion).map(SemVer::toString).orElse(runningVersion);
-		boolean beta = UpdateChannel.isPreRelease(candidate.release(), candidate.version());
-		MutableComponent text = Component.literal("K8bas Skyblock Utility v" + candidate.version() + (beta ? " (beta)" : "")
+		String version = found.candidate().version().toString();
+		MutableComponent text = Component.literal("K8bas Skyblock Utility v" + version + (found.beta() ? " (beta)" : "")
 				+ " is available; you have v" + running + ". ").withStyle(ChatFormatting.YELLOW);
-		text.append(link("[Changelog]", changelog(candidate.release().tag())));
+		String reason = UpdateHooks.notOfferedReason(found.hash(), found.eligibility());
+		if (reason != null) {
+			text.append(Component.literal(reason + ". ").withStyle(ChatFormatting.YELLOW));
+		}
+		text.append(link("[Changelog]", changelog(found.candidate().release().tag())));
 		text.append(Component.literal(" "));
-		text.append(link("[Open release page]", releasePage(candidate.release().htmlUrl())));
+		if (found.installOffered()) {
+			text.append(command("[Update]", "/ksu update show", "Shows the update before anything is downloaded"));
+			text.append(Component.literal(" "));
+		}
+		text.append(command("[Skip this version]", "/ksu update skip " + version, "Asks once more before skipping"));
+		text.append(Component.literal(" "));
+		text.append(link("[Open release page]", releasePage(found.candidate().release().htmlUrl())));
 		return text;
 	}
 
@@ -95,6 +147,15 @@ public final class UpdateNotifier {
 				.withUnderlined(true)
 				.withClickEvent(new ClickEvent.OpenUrl(target))
 				.withHoverEvent(new HoverEvent.ShowText(Component.literal(target.toString()))));
+	}
+
+	/** A local command of this mod's own (Fabric runs client commands from a chat click); nothing reaches the server. */
+	private static Component command(String label, String command, String hover) {
+		return Component.literal(label).withStyle(Style.EMPTY
+				.withColor(ChatFormatting.AQUA)
+				.withUnderlined(true)
+				.withClickEvent(new ClickEvent.RunCommand(command))
+				.withHoverEvent(new HoverEvent.ShowText(Component.literal(hover))));
 	}
 
 	/** The release's own page if it is one of this repository's release pages, else the release list. */

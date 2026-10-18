@@ -28,7 +28,7 @@ public final class UpdateService {
 	private final StagedInstall installer;
 	private final Set<String> loggedOnce = ConcurrentHashMap.newKeySet();
 	private final UpdateState state;
-	private volatile Consumer<CandidateFinder.Outcome> onOutcome = outcome -> { };
+	private volatile Consumer<CheckOutcome> onOutcome = outcome -> { };
 
 	UpdateService(GitHubReleaseSource source, UpdateStateStore store, LongSupplier clock, BooleanSupplier toggle,
 			String runningVersion, String runningMinecraft, Supplier<UpdateChannel> channel, Consumer<String> info, Consumer<String> warn) {
@@ -66,15 +66,17 @@ public final class UpdateService {
 	}
 
 	/** Called with every evaluation's outcome, on the check's thread. */
-	public void setOnOutcome(Consumer<CandidateFinder.Outcome> listener) {
+	public void setOnOutcome(Consumer<CheckOutcome> listener) {
 		onOutcome = listener;
 	}
 
-	/** Starts an automatic check on a background thread and returns at once. Does nothing while
-	 *  the toggle is OFF or a check is already running. */
-	public void triggerAutomatic() {
+	/**
+	 * Starts an automatic check on a background thread and returns at once; true if it started. Does nothing while the
+	 * toggle is OFF or a check, download or the launch's reconciliation runs.
+	 */
+	public boolean triggerAutomatic() {
 		if (!toggle.getAsBoolean() || !lock.tryAcquire()) {
-			return;
+			return false;
 		}
 		try {
 			Thread.ofVirtual().name("k8bas-update-check").start(() -> {
@@ -88,6 +90,7 @@ public final class UpdateService {
 			lock.release();
 			throw notStarted;
 		}
+		return true;
 	}
 
 	/**
@@ -127,7 +130,7 @@ public final class UpdateService {
 				warn.accept("Update check failed: " + result.problem());
 			}
 			return switch (result.kind()) {
-				case OK, NOT_MODIFIED -> manualOutcome();
+				case OK, NOT_MODIFIED -> offer();
 				case HTTP_ERROR -> switch (result.status()) {
 					case 403, 429 -> new CheckOutcome.RateLimited(nextAllowed);
 					case 404 -> CheckOutcome.SourceUnavailable.INSTANCE;
@@ -140,8 +143,12 @@ public final class UpdateService {
 		}
 	}
 
-	/** The cached list read for a manual check: the candidate with the hooks' verdicts, or why there is none. */
-	private CheckOutcome manualOutcome() {
+	/**
+	 * What the cached release list offers now, with the hooks' verdicts, or why nothing is offered: the model the manual
+	 * check, the notices, the confirmation screen and the card all read (REQ-UPD-08). No API request; the hash check may
+	 * read the release's sidecar (R49), so callers stay off the render thread.
+	 */
+	public CheckOutcome offer() {
 		CandidateFinder.Outcome outcome;
 		SemVer skipped;
 		java.util.List<Release> releases;
@@ -196,12 +203,16 @@ public final class UpdateService {
 			}
 			UpdateHooks.Hash hash = hooks.getHash().check(candidate.release(), candidate.jar());
 			String notOffered = UpdateHooks.notOfferedReason(hash, hooks.getEligibility().check());
-			if (notOffered != null || stager == null || installer == null) {
-				return new DownloadOutcome.NotOffered(notOffered != null ? notOffered : UpdateHooks.NOTIFY_ONLY.reason());
+			if (notOffered != null) {
+				return new DownloadOutcome.NotOffered(notOffered);
 			}
+			// A file changed since the screen showed its checksum is refused first, whatever else this game allows.
 			String sha256 = ((UpdateHooks.Hash.Verifiable) hash).sha256();
 			if (consent.sha256() != null && !consent.sha256().equalsIgnoreCase(sha256)) {
 				return new DownloadOutcome.Changed(candidate.version());
+			}
+			if (stager == null || installer == null) {
+				return new DownloadOutcome.NotOffered(UpdateHooks.NOTIFY_ONLY.reason());
 			}
 			DownloadOutcome result = stager.stage(candidate.version().toString(), candidate.jar(), sha256);
 			if (result instanceof DownloadOutcome.Staged staged) {
@@ -273,6 +284,11 @@ public final class UpdateService {
 		}
 	}
 
+	/** What the confirmation screen shows for {@code found}: the running version and the channel as this service has them. */
+	public Confirmation confirmation(CheckOutcome.Found found) {
+		return Confirmation.of(found, runningVersion, channel.get());
+	}
+
 	/** The longest the launch's reconciliation waits for a check or download to end. */
 	static final long RECONCILE_WAIT_MS = 30_000;
 
@@ -290,6 +306,24 @@ public final class UpdateService {
 				return false;
 			}
 		}
+		return true;
+	}
+
+	/**
+	 * Skips {@code version} (REQ-UPD-12): no toast and no chat line for it; a higher version notifies again, and the manual
+	 * check and the card still show it, marked. False if it is not a version.
+	 */
+	public boolean skip(String version) {
+		SemVer parsed = SemVer.Companion.fromTagOrNull(version);
+		if (parsed == null) {
+			return false;
+		}
+		synchronized (state) {
+			state.skippedVersion = parsed.toString();
+			store.save(state);
+		}
+		store.flush();
+		info.accept("Update v" + parsed + " skipped");
 		return true;
 	}
 
@@ -350,16 +384,21 @@ public final class UpdateService {
 			return false;
 		}
 		String etag;
+		boolean due;
 		synchronized (state) {
 			long now = clock.getAsLong();
-			if (!CheckPolicy.automaticDue(state, now)) {
-				evaluate();
-				return false;
+			due = CheckPolicy.automaticDue(state, now);
+			if (due) {
+				// Counted before sending, so a crash mid-request still counts against the daily cap.
+				CheckPolicy.recordAutomatic(state, now);
+				store.save(state);
 			}
-			// Counted before sending, so a crash mid-request still counts against the daily cap.
-			CheckPolicy.recordAutomatic(state, now);
-			store.save(state);
 			etag = state.etag;
+		}
+		// Evaluated outside the lock: the hash check may read a sidecar, which must not hold the state up.
+		if (!due) {
+			evaluate();
+			return false;
 		}
 		store.flush();
 		GitHubReleaseSource.Result result = source.fetch(etag);
@@ -375,12 +414,9 @@ public final class UpdateService {
 		return true;
 	}
 
+	/** The automatic check's result for the notices: the same model a manual check gives (T4.4). */
 	private void evaluate() {
-		CandidateFinder.Outcome outcome;
-		synchronized (state) {
-			outcome = CandidateFinder.find(state.releases, runningVersion, runningMinecraft, channel.get(), this::logOnce);
-		}
-		onOutcome.accept(outcome);
+		onOutcome.accept(offer());
 	}
 
 	/** Writes pending state now, e.g. on client shutdown. */

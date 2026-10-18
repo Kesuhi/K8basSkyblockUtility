@@ -41,21 +41,21 @@ class UpdateServiceTest {
 	void twoStartsAnHourApartSendOneRequestAndBothSeeTheCandidate() throws Exception {
 		try (MockGitHub github = new MockGitHub()) {
 			github.enqueue(MockGitHub.Answer.json(200, GitHubReleaseSourceTest.LIST, "ETag", "\"e1\""));
-			AtomicReference<CandidateFinder.Outcome> first = new AtomicReference<>();
+			AtomicReference<CheckOutcome> first = new AtomicReference<>();
 			UpdateService start1 = service(github.releases());
 			start1.setOnOutcome(first::set);
 			assertTrue(start1.checkAutomatic());
 			start1.flush();
 
 			clock.addAndGet(CheckPolicy.HOUR);
-			AtomicReference<CandidateFinder.Outcome> second = new AtomicReference<>();
+			AtomicReference<CheckOutcome> second = new AtomicReference<>();
 			UpdateService start2 = service(github.releases());
 			start2.setOnOutcome(second::set);
 			assertFalse(start2.checkAutomatic());
 
 			assertEquals(1, github.requests.size());
-			assertInstanceOf(CandidateFinder.Candidate.class, first.get());
-			assertInstanceOf(CandidateFinder.Candidate.class, second.get());
+			assertInstanceOf(CheckOutcome.Found.class, first.get());
+			assertInstanceOf(CheckOutcome.Found.class, second.get());
 			assertTrue(warnings.isEmpty(), warnings.toString());
 		}
 	}

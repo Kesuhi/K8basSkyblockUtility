@@ -6,6 +6,15 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+### Added
+
+- Updates install on restart after one click: a notice shows a new version, and `/ksu update` shows it before anything is downloaded.
+- `/ksu update` commands: `check`, `install <version>`, `skip <version>` and `cancel`.
+
+### Changed
+
+- The update check runs only at startup and at the first server join of a session.
+
 ## [1.3.0] - 2026-10-17
 
 ### Added
