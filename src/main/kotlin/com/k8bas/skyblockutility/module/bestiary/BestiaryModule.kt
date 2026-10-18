@@ -94,6 +94,10 @@ class BestiaryConfig : Normalizable {
 	@JvmField
 	var lineOrder: LineOrder? = LineOrder.PROGRESS_FIRST
 
+	/** The lines joined into one (T5.3b); OFF. */
+	@JvmField
+	var compact = false
+
 	/** Tiers as Arabic or Roman numerals; Arabic (R59). */
 	@JvmField
 	var numerals: TierNumerals? = TierNumerals.ARABIC
@@ -101,7 +105,7 @@ class BestiaryConfig : Normalizable {
 	/** The layout these settings give. */
 	fun layout(): BestiaryLayout {
 		val shown = BestiaryLine.entries.filter { shown(it) }
-		return BestiaryLayout(java.util.Set.copyOf(shown), (lineOrder ?: LineOrder.PROGRESS_FIRST).lines, numerals ?: TierNumerals.ARABIC)
+		return BestiaryLayout(java.util.Set.copyOf(shown), (lineOrder ?: LineOrder.PROGRESS_FIRST).lines, numerals ?: TierNumerals.ARABIC, compact)
 	}
 
 	private fun shown(line: BestiaryLine): Boolean = when (line) {
@@ -404,6 +408,11 @@ class BestiaryModule : Module {
 				OptionText("Tier numbers", "Tiers and the milestone as 15 or as XV.", "", java.util.List.of("roman", "arabic", "numerals")),
 				TierNumerals.ARABIC, java.util.List.of(*TierNumerals.entries.toTypedArray()), java.util.function.Function { it.label },
 				Binding.of({ config.numerals ?: TierNumerals.ARABIC }, { config.numerals = it }),
+			)
+			options += Toggle.of(
+				"$ID.compact", "modules.$ID.compact",
+				OptionText("Compact", "Joins each family's lines into one or two; the shared lines stay apart.", "", java.util.List.of("compact", "one line")),
+				false, Binding.of({ config.compact }, { config.compact = it }),
 			)
 			options += IntSlider.of(
 				"$ID.window", "modules.$ID.windowMinutes",

@@ -194,6 +194,8 @@ class OptionCatalogTest {
 		expected.put("modules.bestiary.resetOnIslandChange", false);
 		expected.put("modules.bestiary.selection", com.k8bas.skyblockutility.module.bestiary.SelectionMode.AUTO);
 		expected.put("modules.bestiary.hideMaxed", true);
+		// T5.3b: the compact one-line layout OFF.
+		expected.put("modules.bestiary.compact", false);
 		// REQ-HOT-10/12 (D-6, R12): the warning with title, sound and chat ON, the notice OFF; the pling at full volume (T3.6b).
 		expected.put("modules.fishing_hotspots.warning", true);
 		expected.put("modules.fishing_hotspots.warnTitle", true);

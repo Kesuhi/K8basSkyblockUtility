@@ -274,4 +274,37 @@ class BestiaryHudLinesTest {
 		watch.restart(80_000);
 		assertFalse(watch.hint("Hub", 89_999));
 	}
+
+	@Test
+	void theCompactLayoutIsOneLine() {
+		// T5.3b (REQ-BEST-08 "may"): the enabled lines joined; with compact OFF nothing changes (AC-BEST-07 above).
+		ghostSession();
+		BestiaryLayout compact = new BestiaryLayout(BestiaryLayout.DEFAULT.shown(), LineOrder.PROGRESS_FIRST.getLines(), TierNumerals.ARABIC, true);
+		// Joined at the separators into lines of at most 60 visible characters, so nothing runs off the screen at GUI scale 4.
+		assertEquals(List.of("§6Ghost §e15§7/20 §8· §7Kills: §f12,449 §8· §7To tier 16: §f51",
+				"§7Milestone: §f262 §8(7 tiers to next) §8· §7Rate: §f1,200/h", "§7Session: §f+100"), lines(compact, 5 * MINUTE));
+		BestiaryLayout everything = new BestiaryLayout(EnumSet.allOf(BestiaryLine.class), LineOrder.PROGRESS_FIRST.getLines(), TierNumerals.ROMAN, true);
+		for (String line : lines(everything, 5 * MINUTE)) {
+			assertTrue(com.k8bas.skyblockutility.skyblock.GameText.strip(line).length() <= 60, line);
+		}
+		// Short groups stay one line; an unseen family and the shared lines alone too.
+		assertEquals(List.of("§6Stoneworm §8· §8not seen yet", "§7Milestone: §f262 §8(7 tiers to next)"), BestiaryHudLines.lines(
+				List.of(tracker.familyOrUnseen("stoneworm")), key -> tracker.rate(key, 0), tracker.session(), tracker.milestone(), compact, 5 * MINUTE));
+		assertEquals(List.of("§7Milestone: §f262 §8(7 tiers to next)"), BestiaryHudLines.lines(List.of(), key -> tracker.rate(key, 0), tracker.session(),
+				tracker.milestone(), compact, 5 * MINUTE));
+		assertFalse(BestiaryLayout.DEFAULT.compact(), "OFF by default");
+		// Several families: a line each, and one for the shared lines.
+		tracker.menu(new BestiaryPage("Bestiary", DWARVEN, List.of(new MenuFamily("Goblin", 15, new com.k8bas.skyblockutility.skyblock.SbNumber(1_000, false),
+				10.0, null, false)), null), 4 * MINUTE);
+		BestiaryLayout two = new BestiaryLayout(EnumSet.of(BestiaryLine.FAMILY, BestiaryLine.KILLS, BestiaryLine.MILESTONE), LineOrder.PROGRESS_FIRST.getLines(),
+				TierNumerals.ARABIC, true);
+		assertEquals(List.of("§6Ghost §e15§7/20 §8· §7Kills: §f12,449", "§6Goblin §e15§7/20 §8· §7Kills: §f1,000", "§7Milestone: §f262 §8(7 tiers to next)"),
+				BestiaryHudLines.lines(List.of(tracker.family("ghost"), tracker.family("goblin")), key -> tracker.rate(key, 0), tracker.session(), tracker.milestone(),
+						two, 5 * MINUTE));
+		// The setting gives it.
+		BestiaryConfig config = new BestiaryConfig();
+		assertFalse(config.layout().compact());
+		config.compact = true;
+		assertTrue(config.layout().compact());
+	}
 }

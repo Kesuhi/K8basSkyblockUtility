@@ -1,6 +1,7 @@
 package com.k8bas.skyblockutility.module.bestiary
 
 import com.k8bas.skyblockutility.location.Islands
+import com.k8bas.skyblockutility.skyblock.GameText
 import java.util.Locale
 import java.util.function.Function
 import kotlin.math.roundToLong
@@ -32,9 +33,14 @@ enum class LineOrder(val label: String, val lines: List<BestiaryLine>) {
 /** How tiers are written: "15" or "XV" (REQ-BEST-08; Arabic by default, R59). */
 enum class TierNumerals(val label: String) { ARABIC("Arabic (15)"), ROMAN("Roman (XV)") }
 
-/** What the HUD draws: the lines shown, in [order], and how tiers are written. */
+/** What the HUD draws: the lines shown, in [order], how tiers are written, and whether they are joined into one ([compact]). */
 @JvmRecord
-data class BestiaryLayout(val shown: Set<BestiaryLine>, val order: List<BestiaryLine>, val numerals: TierNumerals) {
+data class BestiaryLayout @JvmOverloads constructor(
+	val shown: Set<BestiaryLine>,
+	val order: List<BestiaryLine>,
+	val numerals: TierNumerals,
+	val compact: Boolean = false,
+) {
 	companion object {
 		/** A fresh config: the default lines (§12.H), progress first, Arabic tiers (R59). */
 		@JvmField
@@ -117,6 +123,11 @@ object BestiaryHudLines {
 	private const val UNKNOWN = "—"
 	private const val APPROX = "≈"
 	private val SPACES = Regex("\\s+")
+	private const val SEPARATOR = " §8· "
+	private val SEPARATOR_WIDTH = GameText.strip(SEPARATOR).length
+
+	/** A compact line's visible characters at most: about 330 GUI px, so it fits a 1920×1080 screen at GUI scale 4. */
+	private const val COMPACT_WIDTH = 60
 
 	@JvmStatic
 	fun lines(
@@ -125,28 +136,62 @@ object BestiaryHudLines {
 	): List<String> {
 		val order = layout.order.filter { it in layout.shown }
 		if (families.isEmpty()) {
-			return order.filter { !it.perFamily }.mapNotNull { shared(it, session, milestone, layout, known = true) }
+			return joined(listOf(order.filter { !it.perFamily }.mapNotNull { shared(it, session, milestone, layout, known = true) }), layout)
 		}
 		if (families.size == 1 && !unseen(families[0])) {
 			val family = families[0]
 			val familyRate = rate.apply(family.key)
-			return order.mapNotNull { line ->
+			return joined(listOf(order.mapNotNull { line ->
 				if (line.perFamily) perFamily(line, family, familyRate, layout, now) else shared(line, session, milestone, layout, known = false)
-			}
+			}), layout)
 		}
 		// Family by family; the shared lines that come before the first family line in the order go above them, the rest below.
 		val first = order.indexOfFirst { it.perFamily }.let { if (it < 0) order.size else it }
-		val out = ArrayList<String>()
-		order.take(first).filter { !it.perFamily }.mapNotNullTo(out) { shared(it, session, milestone, layout, known = false) }
+		val groups = ArrayList<List<String>>()
+		groups += order.take(first).filter { !it.perFamily }.mapNotNull { shared(it, session, milestone, layout, known = false) }
 		for (family in families) {
 			if (unseen(family)) {
-				out += unseenLines(family, layout)
+				groups += unseenLines(family, layout)
 				continue
 			}
 			val familyRate = rate.apply(family.key)
-			order.filter { it.perFamily }.mapNotNullTo(out) { perFamily(it, family, familyRate, layout, now) }
+			groups += order.filter { it.perFamily }.mapNotNull { perFamily(it, family, familyRate, layout, now) }
 		}
-		order.drop(first).filter { !it.perFamily }.mapNotNullTo(out) { shared(it, session, milestone, layout, known = false) }
+		groups += order.drop(first).filter { !it.perFamily }.mapNotNull { shared(it, session, milestone, layout, known = false) }
+		return joined(groups, layout)
+	}
+
+	/**
+	 * The groups' lines one under another, or with [BestiaryLayout.compact] each group joined at the separators (T5.3b),
+	 * into lines of at most [COMPACT_WIDTH] visible characters: the renderer moves an element back on screen but never
+	 * shrinks it, so one long line would run off a small screen.
+	 */
+	private fun joined(groups: List<List<String>>, layout: BestiaryLayout): List<String> {
+		if (!layout.compact) {
+			return groups.flatten()
+		}
+		val out = ArrayList<String>()
+		for (group in groups) {
+			val line = StringBuilder()
+			var visible = 0
+			for (item in group) {
+				val width = GameText.strip(item).length
+				if (line.isNotEmpty() && visible + SEPARATOR_WIDTH + width > COMPACT_WIDTH) {
+					out += line.toString()
+					line.clear()
+					visible = 0
+				}
+				if (line.isNotEmpty()) {
+					line.append(SEPARATOR)
+					visible += SEPARATOR_WIDTH
+				}
+				line.append(item)
+				visible += width
+			}
+			if (line.isNotEmpty()) {
+				out += line.toString()
+			}
+		}
 		return out
 	}
 

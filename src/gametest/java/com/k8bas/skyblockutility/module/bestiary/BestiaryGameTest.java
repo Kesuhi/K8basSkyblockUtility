@@ -34,9 +34,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *   while OFF (the menu subscription with {@link BestiaryMenu#matchesTitle}).</li>
  *   <li>T5.3: the "Bestiary Tracker" element is in the HUD editor with its preview (AC-BEST-01 [C], screenshot
  *   t5.3-bestiary-hud-editor), and with a line hidden, another order and Roman numerals the preview follows them
- *   (AC-BEST-07 [C], t5.3-bestiary-hud-editor-changed); with the tracker ON on an island without a Bestiary widget, the HUD
- *   shows the shared widget hint after 10 s, and none in the Dungeon Hub, while nothing is sent to the server (AC-BEST-11
- *   [C], screenshot t5.3-bestiary-widget-hint).</li>
+ *   (AC-BEST-07 [C], t5.3-bestiary-hud-editor-changed), and the compact layout joins the lines at most 60 characters
+ *   wide (T5.3b, t5.3b-bestiary-compact); with the tracker ON on an island without a Bestiary widget, the HUD shows the
+ *   shared widget hint after 10 s, and none in the Dungeon Hub, while nothing is sent to the server (AC-BEST-11 [C],
+ *   screenshot t5.3-bestiary-widget-hint).</li>
  * </ul>
  */
 public class BestiaryGameTest implements FabricClientGameTest {
@@ -143,6 +144,7 @@ public class BestiaryGameTest implements FabricClientGameTest {
 			// AC-BEST-07 [C]: "to next tier" hidden, session first, Roman numerals; the preview follows on the next tick.
 			BestiaryConfig settings = module.configForTest();
 			boolean toNextWas = settings.lineToNext;
+			boolean compactWas = settings.compact;
 			LineOrder orderWas = settings.lineOrder;
 			TierNumerals numeralsWas = settings.numerals;
 			try {
@@ -161,8 +163,21 @@ public class BestiaryGameTest implements FabricClientGameTest {
 				context.waitTicks(3);
 				context.takeScreenshot("t5.3-bestiary-hud-editor-changed");
 				context.setScreen(() -> null);
+				// T5.3b [C]: the compact layout, joined into lines of at most 60 characters.
+				context.runOnClient(client -> settings.compact = true);
+				context.waitTicks(2);
+				List<String> compact = context.computeOnClient(client -> ((HudText) BestiaryHud.INSTANCE.preview()).lines());
+				check(compact.equals(List.of("§6Ghost §eXV§7/XX §8· §7Session: §f+100 §8· §7Rate: §f1,200/h §8· §7Kills: §f12,449",
+						"§7Milestone: §fCCLXII §8(7 tiers to next)")), "the compact layout: " + compact);
+				context.setScreen(() -> new HudEditorScreen(null, BestiaryHud.ID));
+				context.waitForScreen(HudEditorScreen.class);
+				context.getInput().setCursorPos(1, 1);
+				context.waitTicks(3);
+				context.takeScreenshot("t5.3b-bestiary-compact");
+				context.setScreen(() -> null);
 			} finally {
 				context.runOnClient(client -> {
+					settings.compact = compactWas;
 					settings.lineToNext = toNextWas;
 					settings.lineOrder = orderWas;
 					settings.numerals = numeralsWas;
