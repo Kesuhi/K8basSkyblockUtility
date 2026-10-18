@@ -8,6 +8,11 @@ package com.k8bas.skyblockutility.update;
  * @param fileName  the jar's file name
  * @param sha256    its checked SHA-256, lowercase hex
  * @param stagedAtMs when it was staged, epoch milliseconds
+ * @param fromVersion the version that staged it, as the Loader reports it
+ * @param oldJar    the jar the helper replaces
  */
-public record PendingInstall(String version, String fileName, String sha256, long stagedAtMs) {
+public record PendingInstall(String version, String fileName, String sha256, long stagedAtMs, String fromVersion, String oldJar) {
+	public PendingInstall(String version, String fileName, String sha256, long stagedAtMs) {
+		this(version, fileName, sha256, stagedAtMs, null, null);
+	}
 }

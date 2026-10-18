@@ -11,10 +11,13 @@ sealed interface DownloadOutcome {
 	/** The lines to show, times in [zone]. */
 	fun lines(zone: ZoneId): List<String>
 
-	/** Downloaded, its SHA-256 and its fabric.mod.json checked, and moved to [file] in the staging folder. */
+	/**
+	 * Downloaded, its SHA-256 and its fabric.mod.json checked, moved to [file] in the staging folder, and armed: the helper
+	 * puts it in when the game exits (T4.3).
+	 */
 	@JvmRecord
 	data class Staged(val version: String, val file: Path, val sha256: String) : DownloadOutcome {
-		override fun lines(zone: ZoneId): List<String> = listOf("v$version is downloaded and checked")
+		override fun lines(zone: ZoneId): List<String> = listOf("Update ready, restart Minecraft to apply")
 
 		override fun toString(): String = "Staged[version=$version, file=$file, sha256=$sha256]"
 	}

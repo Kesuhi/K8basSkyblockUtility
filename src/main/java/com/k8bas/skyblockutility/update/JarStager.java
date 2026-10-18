@@ -71,6 +71,10 @@ final class JarStager {
 			if (problem != null) {
 				return new DownloadOutcome.Incompatible(problem);
 			}
+			// On disk before the rename: the helper may move it into mods/ seconds later.
+			try (java.nio.channels.FileChannel channel = java.nio.channels.FileChannel.open(part, StandardOpenOption.WRITE)) {
+				channel.force(true);
+			}
 			Files.move(part, done, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
 			return new DownloadOutcome.Staged(version, done, fetched.sha256());
 		} catch (IOException | IllegalArgumentException e) {

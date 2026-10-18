@@ -25,6 +25,7 @@ public final class UpdateService {
 	private final UpdateLock lock;
 	private final UpdateHooks hooks;
 	private final JarStager stager;
+	private final StagedInstall installer;
 	private final Set<String> loggedOnce = ConcurrentHashMap.newKeySet();
 	private final UpdateState state;
 	private volatile Consumer<CandidateFinder.Outcome> onOutcome = outcome -> { };
@@ -38,16 +39,20 @@ public final class UpdateService {
 	UpdateService(GitHubReleaseSource source, UpdateStateStore store, LongSupplier clock, BooleanSupplier toggle,
 			String runningVersion, String runningMinecraft, Supplier<UpdateChannel> channel, Consumer<String> info, Consumer<String> warn,
 			UpdateHooks hooks) {
-		this(source, store, clock, toggle, runningVersion, runningMinecraft, channel, info, warn, hooks, null);
+		this(source, store, clock, toggle, runningVersion, runningMinecraft, channel, info, warn, hooks, null, null);
 	}
 
-	/** @param stager downloads and checks a confirmed jar (T4.2); null where no download may happen */
+	/**
+	 * @param stager    downloads and checks a confirmed jar (T4.2)
+	 * @param installer arms it for the helper at exit (T4.3); with either null nothing is downloaded
+	 */
 	UpdateService(GitHubReleaseSource source, UpdateStateStore store, LongSupplier clock, BooleanSupplier toggle,
 			String runningVersion, String runningMinecraft, Supplier<UpdateChannel> channel, Consumer<String> info, Consumer<String> warn,
-			UpdateHooks hooks, JarStager stager) {
+			UpdateHooks hooks, JarStager stager, StagedInstall installer) {
 		this.lock = new UpdateLock();
 		this.hooks = hooks;
 		this.stager = stager;
+		this.installer = installer;
 		this.source = source;
 		this.store = store;
 		this.clock = clock;
@@ -191,7 +196,7 @@ public final class UpdateService {
 			}
 			UpdateHooks.Hash hash = hooks.getHash().check(candidate.release(), candidate.jar());
 			String notOffered = UpdateHooks.notOfferedReason(hash, hooks.getEligibility().check());
-			if (notOffered != null || stager == null) {
+			if (notOffered != null || stager == null || installer == null) {
 				return new DownloadOutcome.NotOffered(notOffered != null ? notOffered : UpdateHooks.NOTIFY_ONLY.reason());
 			}
 			String sha256 = ((UpdateHooks.Hash.Verifiable) hash).sha256();
@@ -199,8 +204,12 @@ public final class UpdateService {
 				return new DownloadOutcome.Changed(candidate.version());
 			}
 			DownloadOutcome result = stager.stage(candidate.version().toString(), candidate.jar(), sha256);
+			if (result instanceof DownloadOutcome.Staged staged) {
+				result = arm(staged, candidate.jar().name());
+			}
 			switch (result) {
-				case DownloadOutcome.Staged staged -> info.accept("Update v" + staged.version() + " downloaded and checked: " + staged.file().getFileName());
+				case DownloadOutcome.Staged staged -> info.accept("Update v" + staged.version() + " checked and staged; it installs when the game exits: "
+						+ staged.file().getFileName());
 				case DownloadOutcome.Failed failed -> warn.accept("Update download of v" + candidate.version() + " failed: " + failed.reason());
 				case DownloadOutcome.Incompatible incompatible -> warn.accept("Update v" + candidate.version() + " is an incompatible build: " + incompatible.reason());
 				case DownloadOutcome.ChecksumMismatch mismatch -> warn.accept("Update v" + candidate.version() + " does not match its SHA-256; deleted");
@@ -208,6 +217,69 @@ public final class UpdateService {
 				}
 			}
 			return result;
+		} finally {
+			lock.release();
+		}
+	}
+
+	/** Arms a checked jar for the helper at exit and records it as the pending install, or deletes it if it may not go in. */
+	private DownloadOutcome arm(DownloadOutcome.Staged staged, String assetName) {
+		StagedInstall.Armed armed = installer.arm(staged.file(), assetName, staged.sha256());
+		if (armed.refusal() != null) {
+			// The same version confirmed again overwrote the armed file; that one stays armed.
+			if (!staged.file().equals(installer.armedFile())) {
+				try {
+					java.nio.file.Files.deleteIfExists(staged.file());
+				} catch (java.io.IOException ignored) {
+					// the next launch clears it (T4.3b)
+				}
+			}
+			return new DownloadOutcome.Failed(armed.refusal());
+		}
+		synchronized (state) {
+			state.pendingInstall = new PendingInstall(staged.version(), assetName, staged.sha256(), clock.getAsLong(), runningVersion,
+					armed.old().toString());
+			store.save(state);
+		}
+		store.flush();
+		return staged;
+	}
+
+	/** What {@link #cancelPending()} did. */
+	public enum Cancel {
+		CANCELLED,
+		NOTHING_PENDING,
+		/** A download holds the lock; nothing changed. */
+		BUSY
+	}
+
+	/**
+	 * Cancels a pending update (REQ-UPD-12): disarmed, so no helper starts at exit, the staged files deleted and the record
+	 * cleared; the running jar is untouched, and it is not a skip. It takes the lock, so it never runs beside a download.
+	 */
+	public Cancel cancelPending() {
+		if (lock.acquireOrHolder(UpdateLock.Holder.DOWNLOAD) != null) {
+			return Cancel.BUSY;
+		}
+		try {
+			boolean pending = installer != null && installer.armedFile() != null;
+			// Disarmed first, so a hook running meanwhile cannot install what is being cancelled.
+			if (installer != null) {
+				installer.disarm();
+			}
+			synchronized (state) {
+				pending |= state.pendingInstall != null;
+				state.pendingInstall = null;
+				store.save(state);
+			}
+			store.flush();
+			if (installer != null) {
+				installer.deleteStaged();
+			}
+			if (pending) {
+				info.accept("Pending update cancelled");
+			}
+			return pending ? Cancel.CANCELLED : Cancel.NOTHING_PENDING;
 		} finally {
 			lock.release();
 		}

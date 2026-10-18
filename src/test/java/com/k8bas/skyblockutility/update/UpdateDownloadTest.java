@@ -70,7 +70,8 @@ class UpdateDownloadTest {
 		UpdateStateStore store = new UpdateStateStore(dir.resolve("config").resolve(UpdateStateStore.FILE_NAME), warnings::add);
 		GitHubReleaseSource source = new GitHubReleaseSource(github.releases(), SharedHttpClient.get(), RUNNING, Duration.ofSeconds(5));
 		UpdateService service = new UpdateService(source, store, () -> T0, () -> true, RUNNING, "26.2", () -> null, info::add, warnings::add,
-				hooks, new JarStager(staging, downloader, "26.2", "0.19.5"));
+				hooks, new JarStager(staging, downloader, "26.2", "0.19.5"),
+				new StagedInstall(staging, () -> dir.resolve("mods").resolve("k8bas_skyblock_utility-2.0.0+26.2.jar"), (command, directory) -> { }, thread -> { }, warnings::add));
 		service.state().releases = new ArrayList<>(releases);
 		return service;
 	}
@@ -135,8 +136,14 @@ class UpdateDownloadTest {
 			assertEquals(TestJars.sha256(jar), staged.sha256());
 			assertArrayEquals(jar, Files.readAllBytes(staged.file()));
 			assertEquals(List.of(JAR), stagedFiles(), "no .part left");
-			assertEquals(before, gameFolder(), "nothing else in the game folder changed");
-			assertEquals(List.of("v2.0.1 is downloaded and checked"), outcome.lines(UTC));
+			Map<String, String> after = gameFolder();
+			Set<String> added = new java.util.TreeSet<>(after.keySet());
+			added.removeAll(before.keySet());
+			assertEquals(Set.of(".k8bas_update" + java.io.File.separator + "helper" + java.io.File.separator
+							+ "com/k8bas/skyblockutility/update/helper/UpdateHelper.class".replace("/", java.io.File.separator),
+					"config" + java.io.File.separator + UpdateStateStore.FILE_NAME), added, "only the helper and the update state are new");
+			before.forEach((name, sha) -> assertEquals(sha, after.get(name), name + " is unchanged"));
+			assertEquals(List.of("Update ready, restart Minecraft to apply"), outcome.lines(UTC));
 			assertEquals(List.of("/download/v2.0.1/" + JAR + ".sha256", "/download/v2.0.1/" + JAR), paths(github));
 		}
 	}

@@ -7,18 +7,21 @@ import com.k8bas.skyblockutility.util.RuntimeVersions
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.loader.api.FabricLoader
+import net.fabricmc.loader.api.metadata.ModOrigin
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.nio.file.Files
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 import java.util.function.LongSupplier
+import java.util.function.Predicate
 import java.util.function.Supplier
 
 /**
  * Wires the update check into the game (T1.4): the first check after the client has started, then
  * every 30 minutes a local "is one due?" test; the notice on the client tick; the state flushed on
- * shutdown. Confirmed downloads stage into `.k8bas_update/` in the game directory (T4.2); until T4.3
- * decides install eligibility, every candidate stays notify-only, so nothing is downloaded yet.
+ * shutdown. Confirmed downloads stage into `.k8bas_update/` in the game directory (T4.2) and are armed
+ * for the helper at exit (T4.3) when this game may install them (InstallEligibility).
  */
 object Updates {
 	private val LOGGER: Logger = LoggerFactory.getLogger("k8bas_skyblock_utility/update")
@@ -52,17 +55,24 @@ object Updates {
 		val downloader = SecureDownloader(SharedHttpClient.get(), userAgent, SecureDownloader.GITHUB, SecureDownloader.TIMEOUT)
 		// A sidecar is read during a check, so it gets the API's budget, not the jar's.
 		val sidecars = SecureDownloader(SharedHttpClient.get(), userAgent, SecureDownloader.GITHUB, GitHubReleaseSource.REQUEST_TIMEOUT)
-		val stager = JarStager(
-			FabricLoader.getInstance().gameDir.resolve(STAGING_FOLDER), downloader, minecraft, RuntimeVersions.mod("fabricloader"),
-		)
+		val loader = FabricLoader.getInstance()
+		val root = loader.gameDir.resolve(STAGING_FOLDER)
+		val stager = JarStager(root, downloader, minecraft, RuntimeVersions.mod("fabricloader"))
 		// A download the last game was closed during leaves a .part; it goes now (EC-UPD-03).
 		stager.cleanParts()
+		val eligibility = InstallEligibility(
+			loader.isDevelopmentEnvironment, origin(), modVersion, loader.gameDir, Predicate { Files.isWritable(it) },
+		)
+		val installer = StagedInstall(
+			root, Supplier { eligibility.runningJar }, StagedInstall.processLauncher(),
+			Consumer { Runtime.getRuntime().addShutdownHook(it) }, warn,
+		)
 		use(
 			UpdateService(
 				GitHubReleaseSource(source, SharedHttpClient.get(), modVersion, GitHubReleaseSource.REQUEST_TIMEOUT),
 				store, LongSupplier { System.currentTimeMillis() }, BooleanSupplier { ConfigManager.general().autoUpdateCheckEnabled },
 				modVersion, minecraft, Supplier { ConfigManager.general().updateChannel }, Consumer { LOGGER.info(it) }, warn,
-				UpdateHooks(ReleaseHash(sidecars, warn), UpdateHooks.EligibilityCheck { UpdateHooks.NOTIFY_ONLY }), stager,
+				UpdateHooks(ReleaseHash(sidecars, warn), eligibility), stager, installer,
 			),
 			UpdateNotifier(modVersion, LOGGER),
 		)
@@ -76,6 +86,13 @@ object Updates {
 		}
 		ClientLifecycleEvents.CLIENT_STOPPING.register { service!!.flush() }
 	}
+
+	/** Where Fabric loaded this mod from; the paths only for a PATH origin, whose getPaths() alone does not throw. */
+	private fun origin(): InstallEligibility.Origin? =
+		FabricLoader.getInstance().getModContainer(K8basSkyblockUtilityClient.MOD_ID).map { container ->
+			val origin = container.origin
+			if (origin.kind == ModOrigin.Kind.PATH) InstallEligibility.Origin(true, origin.paths) else InstallEligibility.Origin(false, listOf())
+		}.orElse(null)
 
 	/** Replaces the running service and notifier; also how gametests point it at a test server. */
 	@JvmStatic
