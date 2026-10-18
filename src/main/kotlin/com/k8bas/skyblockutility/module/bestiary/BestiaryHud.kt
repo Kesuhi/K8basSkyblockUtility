@@ -27,7 +27,7 @@ object BestiaryHud : HudElement {
 		val ghost = families?.family("ghost")
 		val toMax = ghost?.let { (it.cap - 12_449).toLong() }
 		val view = FamilyView("ghost", "Ghost", ghost, SbNumber(12_449.0, false), 15, 12_500, false, 51, toMax, BestiarySource.WIDGET, 1, 100,
-			BestiarySource.WIDGET, 1, 1, 3)
+			BestiarySource.WIDGET, 1, 1, 3, true)
 		val rate = RateView(1_200.0, 153_000, toMax?.let { Math.round(it / 1_200.0 * 3_600_000) })
 		return BestiaryHudLines.lines(listOf(view), { rate }, SessionView(100, 300_000, 1_200.0), MilestoneView(262, 7, BestiarySource.CHAT, 1), layout, 1)
 	}
@@ -43,4 +43,23 @@ object BestiaryHud : HudElement {
 	override fun preview(): HudContent = BestiaryModule.previewText() ?: DEFAULT_PREVIEW
 
 	override fun defaultPosition(): HudPosition = DEFAULT
+}
+
+/**
+ * The editor preview, worked out again when the layout or the family table changes: the table loads off the client
+ * thread and may come after the first ticks. Used on the client thread.
+ */
+class BestiaryPreview {
+	private var layout: BestiaryLayout? = null
+	private var families: BestiaryFamilies? = null
+	private var text: HudText? = null
+
+	fun get(layout: BestiaryLayout, families: BestiaryFamilies?): HudText {
+		text?.let { if (layout == this.layout && families === this.families) return it }
+		return HudText(BestiaryHud.previewLines(layout, families)).also {
+			this.layout = layout
+			this.families = families
+			text = it
+		}
+	}
 }

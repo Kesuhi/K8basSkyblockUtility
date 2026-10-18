@@ -166,10 +166,10 @@ class BestiaryModule : Module {
 	@Volatile
 	private var hud: HudText? = null
 
-	/** The editor's preview with the player's lines, order and numerals, and the layout it was made for. */
+	/** The editor's preview with the player's lines, order and numerals, made again when they or the family table change. */
 	@Volatile
 	private var preview: HudText? = null
-	private var previewFor: BestiaryLayout? = null
+	private val previews = BestiaryPreview()
 
 	override fun id(): String = ID
 
@@ -216,10 +216,7 @@ class BestiaryModule : Module {
 
 	private fun tick() {
 		val layout = cfg.layout()
-		if (layout != previewFor) {
-			previewFor = layout
-			preview = HudText(BestiaryHud.previewLines(layout, BestiaryTable.current()))
-		}
+		preview = previews.get(layout, BestiaryTable.current())
 		if (!cfg.enabled) {
 			hud = null
 			return
@@ -234,15 +231,23 @@ class BestiaryModule : Module {
 			watch.seen(now)
 		}
 		val mode = cfg.selection ?: SelectionMode.AUTO
+		// Wrapped, so the hint stays left of the crosshair at any GUI scale.
+		val hint = if (watch.hint(snapshot.island, now)) {
+			BestiaryHudLines.wrap(WidgetHint.text(BestiaryWidget.HEADER).string, HINT_WIDTH).map { "§7$it" }
+		} else {
+			null
+		}
 		val lines = when {
 			// Off SkyBlock (another server, singleplayer) nothing shows.
 			!snapshot.onSkyBlock -> listOf()
-			// Wrapped, so the hint stays left of the crosshair at any GUI scale.
-			watch.hint(snapshot.island, now) -> BestiaryHudLines.wrap(WidgetHint.text(BestiaryWidget.HEADER).string, HINT_WIDTH).map { "§7$it" }
-			mode == SelectionMode.PINNED && cfg.pins.isNullOrEmpty() -> listOf("§8No family pinned yet")
+			mode == SelectionMode.PINNED && cfg.pins.isNullOrEmpty() -> hint ?: listOf("§8No family pinned yet")
 			else -> {
 				val families = BestiarySelection.select(tracker, mode, cfg.pins.orEmpty(), cfg.hideMaxed)
-				BestiaryHudLines.lines(families, { tracker.rate(it, now) }, tracker.session(), tracker.milestone(), layout, now)
+				val panel = Supplier {
+					BestiaryHudLines.lines(families, { tracker.rate(it, now) }, tracker.session(), tracker.milestone(), layout, now, hint == null)
+				}
+				// Without the widget the families known from the menu or the store stay under the hint (EC-BEST-01).
+				if (hint != null) BestiaryHudLines.withHint(hint, families, panel) else panel.get()
 			}
 		}
 		hud = if (lines.isEmpty()) null else HudText(lines)
@@ -371,7 +376,7 @@ class BestiaryModule : Module {
 				OptionText(
 					"Bestiary Tracker", "A HUD panel with your bestiary progress: kills, tiers, kills per hour and the milestone.",
 					"Reads the Bestiary widget of your tab list, the bestiary messages in chat and the Bestiary menu pages " +
-						"you open. It never opens a menu or sends anything.",
+						"you open. It never opens a game menu or sends anything.",
 					keywords,
 				),
 				false, Binding.of({ config.enabled }, setEnabled),

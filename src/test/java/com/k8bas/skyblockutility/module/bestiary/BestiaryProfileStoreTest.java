@@ -137,6 +137,24 @@ class BestiaryProfileStoreTest {
 		assertTrue(files.get("apple").contains("12449"), files.get("apple"));
 	}
 
+	@Test
+	void withoutTheFamilyTableTheFileIsLeftAlone() {
+		// G5: a tracker whose table failed to load cannot place the stored rows, so writing would drop them.
+		String before = stored("12,400", 500);
+		files.put("apple", before);
+		profile.set("apple");
+		storable.set(true);
+		BestiaryTracker bare = new BestiaryTracker(null, line -> { });
+		for (long now = 1_000; now <= 30_000; now += 50) {
+			if (now % 1_000 == 0) {
+				bare.widget(List.of(BestiaryWidget.parseLine("Ghost 15: " + String.format(java.util.Locale.ROOT, "%,d", 12_400 + now / 1_000) + "/12,500")), "Dwarven Mines", now);
+			}
+			store.tick(bare, now);
+		}
+		assertEquals(before, files.get("apple"));
+		assertEquals(List.of(), reads, "nothing to place the values in");
+	}
+
 	private String stored(String kills, long at) {
 		BestiaryTracker other = new BestiaryTracker(BestiaryTables.shipped(), line -> { });
 		other.widget(List.of(BestiaryWidget.parseLine("Ghost 15: " + kills + "/12,500")), "Dwarven Mines", at);

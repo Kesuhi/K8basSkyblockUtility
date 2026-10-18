@@ -6,7 +6,8 @@ import java.util.function.Supplier
 
 /**
  * When the tracker's last-known values are read from and written to the profile store (T5.2d, REQ-BEST-14). Nothing is
- * read or written while the profile is unknown or its store not verified ([storable]). A profile's values are read when
+ * read or written while the profile is unknown or its store not verified ([storable]), or while the family table is
+ * missing (the stored rows would have nowhere to go and the next write would drop them). A profile's values are read when
  * it becomes known, and again whenever the tracker has forgotten a profile since (a switch away and back), so they show
  * with their age after a login and the file is never cut down to what was seen after the switch; the tracker forgets the
  * last profile before, so a file never gets another profile's values. Changed values, also those seen before the read,
@@ -30,7 +31,7 @@ class BestiaryProfileStore(
 
 	/** Once per client tick while the tracker is ON. */
 	fun tick(tracker: BestiaryTracker, now: Long) {
-		if (!storable.asBoolean) {
+		if (!storable.asBoolean || !tracker.hasTable()) {
 			return
 		}
 		val current = profile.get() ?: return

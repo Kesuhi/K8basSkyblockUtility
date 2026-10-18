@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.module.bestiary;
 import com.k8bas.skyblockutility.gametest.ModuleStates;
 import com.k8bas.skyblockutility.hud.HudRegistry;
 import com.k8bas.skyblockutility.hud.HudText;
+import com.k8bas.skyblockutility.skyblock.SbNumber;
 import com.k8bas.skyblockutility.skyblock.WidgetHint;
 import com.k8bas.skyblockutility.ui.screen.HudEditorScreen;
 import com.k8bas.skyblockutility.location.IslandTracker;
@@ -36,7 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *   t5.3-bestiary-hud-editor), and with a line hidden, another order and Roman numerals the preview follows them
  *   (AC-BEST-07 [C], t5.3-bestiary-hud-editor-changed), and the compact layout joins the lines at most 60 characters
  *   wide (T5.3b, t5.3b-bestiary-compact); with the tracker ON on an island without a Bestiary widget, the HUD shows the
- *   shared widget hint after 10 s, and none in the Dungeon Hub, while nothing is sent to the server (AC-BEST-11 [C],
+ *   shared widget hint after 10 s, a family read in the menu meanwhile under it with its age (EC-BEST-01, screenshot
+ *   g5-bestiary-hint-with-menu), and none in the Dungeon Hub, while nothing is sent to the server (AC-BEST-11 [C],
  *   screenshot t5.3-bestiary-widget-hint).</li>
  * </ul>
  */
@@ -210,6 +212,14 @@ public class BestiaryGameTest implements FabricClientGameTest {
 				context.waitTicks(130);
 				check(hintShown(context, hint), "the hint after 10 s on the Hub: " + context.computeOnClient(client -> BestiaryModule.hudText()));
 				context.takeScreenshot("t5.3-bestiary-widget-hint");
+				// EC-BEST-01 (G5): a family read in the menu meanwhile shows under the hint, with its source and age.
+				context.runOnClient(client -> module.tracker().menu(new BestiaryPage("Bestiary", "Hub", List.of(new MenuFamily("Ghost", 15,
+						new SbNumber(12_449, false), 40.0, null, false)), null), System.currentTimeMillis()));
+				context.waitTicks(2);
+				List<String> withMenu = context.computeOnClient(client -> BestiaryModule.hudText().lines());
+				check(withMenu.subList(0, hint.size()).equals(hint) && withMenu.contains("§7Kills: §f12,449 §8(menu, just now)"),
+						"the menu's family under the hint: " + withMenu);
+				context.takeScreenshot("g5-bestiary-hint-with-menu");
 				context.runOnClient(client -> IslandTracker.forceIsland("Dungeon Hub"));
 				context.waitTicks(230);
 				check(!hintShown(context, hint), "no hint in the Dungeon Hub");
@@ -231,8 +241,9 @@ public class BestiaryGameTest implements FabricClientGameTest {
 
 	private static boolean hintShown(ClientGameTestContext context, List<String> hint) {
 		return context.computeOnClient(client -> {
+			// The hint leads the panel; families known from the menu may follow it (EC-BEST-01).
 			HudText text = BestiaryModule.hudText();
-			return text != null && text.lines().equals(hint);
+			return text != null && text.lines().size() >= hint.size() && text.lines().subList(0, hint.size()).equals(hint);
 		});
 	}
 

@@ -17,7 +17,8 @@ enum class BestiarySource { WIDGET, MENU, CHAT }
  * One family as the HUD shows it: the newest server values, what follows from them, and the live kills of the session.
  * [family] is null for a name the table does not know (REQ-BEST-16): then only the server's values show. [toNext] and
  * [toMax] are approximate when [kills] is (REQ-BEST-17); [toNext] is null once maxed. [source] and [updatedAt] are those
- * of the family's newest value; the kills keep their own ([killsSource], [killsUpdatedAt]), null while no count is known.
+ * of the family's newest value; the kills keep their own ([killsSource], [killsUpdatedAt]), null while no count is known,
+ * and [killsLive] says the count came from the widget in this session (not from the menu or the store, REQ-BEST-14).
  * [changeOrder] is the widget update in which the count last rose (0 if never) and [lastRise] that rise, for the
  * auto-follow selection (REQ-BEST-09). A family not seen yet has no values and [updatedAt] 0.
  */
@@ -39,6 +40,7 @@ data class FamilyView(
 	val killsUpdatedAt: Long?,
 	val changeOrder: Long,
 	val lastRise: Long,
+	val killsLive: Boolean,
 )
 
 /**
@@ -81,6 +83,7 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 		var kills: SbNumber? = null
 		var killsSource: BestiarySource? = null
 		var killsAt: Long? = null
+		var killsLive = false
 		/** The last exact count, its source and time: what the profile store keeps (REQ-BEST-17). */
 		var exactKills: Long? = null
 		var exactSource: BestiarySource? = null
@@ -146,7 +149,7 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 				state.changeOrder = updates
 				state.lastRise = 0
 			}
-			line.kills?.let { setKills(state, it, BestiarySource.WIDGET, now) }
+			line.kills?.let { setKills(state, it, BestiarySource.WIDGET, now, live = true) }
 			state.tier = line.tier
 			state.max = line.max
 			state.widgetTier = line.tier
@@ -190,7 +193,7 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 		for (shown in page.families) {
 			val family = resolver?.inMenu(shown.name, page.parent, page.area)
 			val state = state(family, shown.name)
-			shown.kills?.let { setKills(state, it, BestiarySource.MENU, now) }
+			shown.kills?.let { setKills(state, it, BestiarySource.MENU, now, live = false) }
 			state.tier = shown.tier
 			state.max = shown.max ?: maxed(family, shown.tier)
 			touch(state, BestiarySource.MENU, now)
@@ -298,6 +301,9 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 	/** How often the shown values changed: the module stores the profile's values when this moved (T5.2d). */
 	fun changes(): Long = changes
 
+	/** Whether the family table loaded: without it stored rows have no family to go to, so the store leaves the file alone. */
+	fun hasTable(): Boolean = families != null
+
 	/** How often the tracker forgot a profile: the store reads the profile's values again after each (T5.2d). */
 	fun generation(): Long = generation
 
@@ -400,7 +406,7 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 		val state = states.getOrPut(stored.key) { State(stored.key, family?.name ?: stored.name, family) }
 		if (stored.kills != null && stored.killsSource != null && stored.killsAt != null) {
 			if (state.killsAt.let { it == null || it < stored.killsAt }) {
-				setKills(state, SbNumber(stored.kills.toDouble(), false), stored.killsSource, stored.killsAt)
+				setKills(state, SbNumber(stored.kills.toDouble(), false), stored.killsSource, stored.killsAt, live = false)
 			} else if (state.exactAt.let { it == null || it < stored.killsAt }) {
 				state.exactKills = stored.kills
 				state.exactSource = stored.killsSource
@@ -418,7 +424,7 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 
 	/** The family with [key] as [family] shows it, or, for a table family not seen yet, one without values; null if unknown. */
 	fun familyOrUnseen(key: String): FamilyView? = family(key) ?: families?.family(key)?.let {
-		FamilyView(key, it.name, it, null, null, null, false, null, null, BestiarySource.WIDGET, 0, 0, null, null, 0, 0)
+		FamilyView(key, it.name, it, null, null, null, false, null, null, BestiarySource.WIDGET, 0, 0, null, null, 0, 0, false)
 	}
 
 	/** Every family seen, in the order first seen. */
@@ -437,8 +443,9 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 		return states.getOrPut(key) { State(key, family?.name ?: GameText.strip(name).trim(), family) }
 	}
 
-	private fun setKills(state: State, kills: SbNumber, source: BestiarySource, now: Long) {
+	private fun setKills(state: State, kills: SbNumber, source: BestiarySource, now: Long, live: Boolean) {
 		state.kills = kills
+		state.killsLive = live
 		state.killsSource = source
 		state.killsAt = now
 		kills.exact()?.let {
@@ -507,7 +514,7 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 			else -> null
 		}
 		return FamilyView(state.key, state.name, family, state.kills, tier, next, max, toNext, toMax, state.source, state.updatedAt,
-			state.session, state.killsSource, state.killsAt, state.changeOrder, state.lastRise)
+			state.session, state.killsSource, state.killsAt, state.changeOrder, state.lastRise, state.killsLive)
 	}
 
 	private companion object {
@@ -529,7 +536,8 @@ class BestiaryTracker(private val families: BestiaryFamilies?, private val warn:
 			if (left == null || left <= 0 || perHour <= 0) null else Math.round(left / perHour * HOUR_MS)
 		val SPACES = Regex("\\s+")
 
-		fun maxed(family: BestiaryFamily?, tier: Int): Boolean = family != null && tier >= family.maxTier()
+		/** The table's last tier is MAX; a tier past it proves the table short, so the last one is not known (EC-BEST-09). */
+		fun maxed(family: BestiaryFamily?, tier: Int): Boolean = family != null && tier == family.maxTier()
 
 		fun normalise(name: String): String = GameText.strip(name).trim().replace(SPACES, " ").lowercase(Locale.ROOT)
 

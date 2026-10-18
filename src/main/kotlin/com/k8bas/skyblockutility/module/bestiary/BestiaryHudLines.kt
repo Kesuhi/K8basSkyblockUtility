@@ -4,6 +4,7 @@ import com.k8bas.skyblockutility.location.Islands
 import com.k8bas.skyblockutility.skyblock.GameText
 import java.util.Locale
 import java.util.function.Function
+import java.util.function.Supplier
 import kotlin.math.roundToLong
 
 /** The HUD's line types (REQ-BEST-08); [perFamily] lines repeat for each shown family, the others show once. */
@@ -130,9 +131,10 @@ object BestiaryHudLines {
 	private const val COMPACT_WIDTH = 60
 
 	@JvmStatic
+	@JvmOverloads
 	fun lines(
 		families: List<FamilyView>, rate: Function<String, RateView>, session: SessionView, milestone: MilestoneView?,
-		layout: BestiaryLayout, now: Long,
+		layout: BestiaryLayout, now: Long, widgetOn: Boolean = true,
 	): List<String> {
 		val order = layout.order.filter { it in layout.shown }
 		if (families.isEmpty()) {
@@ -142,7 +144,7 @@ object BestiaryHudLines {
 			val family = families[0]
 			val familyRate = rate.apply(family.key)
 			return joined(listOf(order.mapNotNull { line ->
-				if (line.perFamily) perFamily(line, family, familyRate, layout, now) else shared(line, session, milestone, layout, known = false)
+				if (line.perFamily) perFamily(line, family, familyRate, layout, now, widgetOn) else shared(line, session, milestone, layout, known = false)
 			}), layout)
 		}
 		// Family by family; the shared lines that come before the first family line in the order go above them, the rest below.
@@ -155,7 +157,7 @@ object BestiaryHudLines {
 				continue
 			}
 			val familyRate = rate.apply(family.key)
-			groups += order.filter { it.perFamily }.mapNotNull { perFamily(it, family, familyRate, layout, now) }
+			groups += order.filter { it.perFamily }.mapNotNull { perFamily(it, family, familyRate, layout, now, widgetOn) }
 		}
 		groups += order.drop(first).filter { !it.perFamily }.mapNotNull { shared(it, session, milestone, layout, known = false) }
 		return joined(groups, layout)
@@ -195,6 +197,14 @@ object BestiaryHudLines {
 		return out
 	}
 
+	/**
+	 * The panel while the widget hint shows (REQ-BEST-12): the hint, then the families still known from the menu or the
+	 * store with their age (EC-BEST-01); with none of [families] seen, the hint alone (EC-BEST-15).
+	 */
+	@JvmStatic
+	fun withHint(hint: List<String>, families: List<FamilyView>, lines: Supplier<List<String>>): List<String> =
+		if (families.none { it.updatedAt > 0 }) hint else hint + lines.get()
+
 	/** [text] in lines of at most [max] characters, broken between words (a longer word keeps a line of its own). */
 	@JvmStatic
 	fun wrap(text: String, max: Int): List<String> {
@@ -219,9 +229,9 @@ object BestiaryHudLines {
 	private fun unseen(family: FamilyView): Boolean = family.updatedAt == 0L && family.kills == null
 
 	private fun unseenLines(family: FamilyView, layout: BestiaryLayout): List<String> =
-		listOfNotNull(perFamily(BestiaryLine.FAMILY, family, null, layout, 0), "§8not seen yet")
+		listOfNotNull(perFamily(BestiaryLine.FAMILY, family, null, layout, 0, true), "§8not seen yet")
 
-	private fun perFamily(line: BestiaryLine, family: FamilyView, rate: RateView?, layout: BestiaryLayout, now: Long): String? {
+	private fun perFamily(line: BestiaryLine, family: FamilyView, rate: RateView?, layout: BestiaryLayout, now: Long, widgetOn: Boolean): String? {
 		val approx = if (family.kills?.approximate == true) APPROX else ""
 		return when (line) {
 			BestiaryLine.FAMILY -> {
@@ -235,7 +245,8 @@ object BestiaryHudLines {
 				}
 			}
 			BestiaryLine.KILLS -> family.kills?.let { kills ->
-				"§7Kills: §f" + if (kills.approximate) APPROX + BestiaryFormat.compact(kills.value) else BestiaryFormat.grouped(kills.value.roundToLong())
+				"§7Kills: §f" + (if (kills.approximate) APPROX + BestiaryFormat.compact(kills.value) else BestiaryFormat.grouped(kills.value.roundToLong())) +
+					aged(family, layout, now, widgetOn)
 			}
 			BestiaryLine.TO_NEXT -> {
 				val left = family.toNext ?: return null
@@ -256,6 +267,20 @@ object BestiaryHudLines {
 			BestiaryLine.SOURCE_AGE -> "§8${family.source.name.lowercase(Locale.ROOT)}, ${BestiaryFormat.age(now - family.updatedAt)}"
 			BestiaryLine.MILESTONE, BestiaryLine.SESSION_AVERAGE -> null
 		}
+	}
+
+	/**
+	 * A count not from the widget in this session (restored from the store or read in the menu), or any count while the
+	 * widget is off ([widgetOn] false: the hint shows), carries its source and age whatever the source/age line's setting
+	 * (REQ-BEST-14, EC-BEST-01), unless that line is shown and says the same.
+	 */
+	private fun aged(family: FamilyView, layout: BestiaryLayout, now: Long, widgetOn: Boolean): String {
+		val source = family.killsSource ?: return ""
+		val at = family.killsUpdatedAt ?: return ""
+		if (family.killsLive && widgetOn || BestiaryLine.SOURCE_AGE in layout.shown && family.source == source && family.updatedAt == at) {
+			return ""
+		}
+		return " §8(${source.name.lowercase(Locale.ROOT)}, ${BestiaryFormat.age(now - at)})"
 	}
 
 	/** A shared line; with [known], only one whose value is known (no family shown: nothing to say "—" about). */

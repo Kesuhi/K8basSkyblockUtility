@@ -225,6 +225,20 @@ class BestiaryTrackerTest {
 	}
 
 	@Test
+	void aChatTierUpPastTheTablesLastTierIsNoMax() {
+		// EC-BEST-09 (G5): the widget showed a tier after Oasis Rabbit's table end, so reaching IX proves the table short.
+		tracker.widget(List.of(BestiaryWidget.parseLine("Oasis Rabbit 8: 149/150")), null, 1_000);
+		tracker.chat(new TierUp("Oasis Rabbit", 8, 9), null, 2_000);
+		FamilyView rabbit = tracker.family("oasis_rabbit");
+		assertEquals(9, rabbit.tier());
+		assertFalse(rabbit.max(), "past the table's tier 8 the last tier is not known");
+		// Reaching the table's last tier still is MAX.
+		int last = BestiaryTables.shipped().family("ghost").maxTier();
+		tracker.chat(new TierUp("Ghost", last - 1, last), DWARVEN, 3_000);
+		assertTrue(ghostView().max());
+	}
+
+	@Test
 	void anUnchangedWidgetLineDoesNotOverrideANewerValue() {
 		// The tab list changes about every second for other reasons; an unchanged Bestiary line is no new value (EC-BEST-16).
 		WidgetLine approximate = ghost("12.4k");

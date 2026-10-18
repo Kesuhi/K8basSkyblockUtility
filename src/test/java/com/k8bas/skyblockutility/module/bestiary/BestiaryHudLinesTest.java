@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.module.bestiary;
 
+import com.k8bas.skyblockutility.skyblock.SbNumber;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -293,12 +294,13 @@ class BestiaryHudLinesTest {
 		assertEquals(List.of("§7Milestone: §f262 §8(7 tiers to next)"), BestiaryHudLines.lines(List.of(), key -> tracker.rate(key, 0), tracker.session(),
 				tracker.milestone(), compact, 5 * MINUTE));
 		assertFalse(BestiaryLayout.DEFAULT.compact(), "OFF by default");
-		// Several families: a line each, and one for the shared lines.
+		// Several families: a line each, and one for the shared lines; Goblin, read in the menu, with its age (G5).
 		tracker.menu(new BestiaryPage("Bestiary", DWARVEN, List.of(new MenuFamily("Goblin", 15, new com.k8bas.skyblockutility.skyblock.SbNumber(1_000, false),
 				10.0, null, false)), null), 4 * MINUTE);
 		BestiaryLayout two = new BestiaryLayout(EnumSet.of(BestiaryLine.FAMILY, BestiaryLine.KILLS, BestiaryLine.MILESTONE), LineOrder.PROGRESS_FIRST.getLines(),
 				TierNumerals.ARABIC, true);
-		assertEquals(List.of("§6Ghost §e15§7/20 §8· §7Kills: §f12,449", "§6Goblin §e15§7/20 §8· §7Kills: §f1,000", "§7Milestone: §f262 §8(7 tiers to next)"),
+		assertEquals(List.of("§6Ghost §e15§7/20 §8· §7Kills: §f12,449", "§6Goblin §e15§7/20 §8· §7Kills: §f1,000 §8(menu, 1 min ago)",
+				"§7Milestone: §f262 §8(7 tiers to next)"),
 				BestiaryHudLines.lines(List.of(tracker.family("ghost"), tracker.family("goblin")), key -> tracker.rate(key, 0), tracker.session(), tracker.milestone(),
 						two, 5 * MINUTE));
 		// The setting gives it.
@@ -306,5 +308,69 @@ class BestiaryHudLinesTest {
 		assertFalse(config.layout().compact());
 		config.compact = true;
 		assertTrue(config.layout().compact());
+	}
+
+	private static List<String> shown(BestiaryTracker from, BestiaryLayout layout, long now) {
+		return BestiaryHudLines.lines(List.of(from.family("ghost")), key -> from.rate(key, now), from.session(), from.milestone(), layout, now);
+	}
+
+	private static BestiaryPage ghostPage(long kills) {
+		return new BestiaryPage("Bestiary", "Dwarven Mines", List.of(new MenuFamily("Ghost", 15, new SbNumber(kills, false), 40.0, null, false)), null);
+	}
+
+	@Test
+	void aCountNotFromTheWidgetShowsItsSourceAndAge() {
+		// REQ-BEST-14, AC-BEST-13, EC-BEST-01 (G5): a restored or menu count carries its source and age on the kills line,
+		// also with the default lines (the source/age line OFF), until a live widget value replaces it.
+		BestiaryTracker before = new BestiaryTracker(BestiaryTables.shipped(), line -> { });
+		before.widget(List.of(BestiaryWidget.parseLine("Ghost 15: 12,449/12,500")), DWARVEN, 1_000);
+		BestiaryTracker again = new BestiaryTracker(BestiaryTables.shipped(), line -> { });
+		assertTrue(again.restore(before.snapshot()));
+		long now = 1_000 + 12 * MINUTE;
+		List<String> restored = shown(again, BestiaryLayout.DEFAULT, now);
+		assertTrue(restored.contains("§7Kills: §f12,449 §8(widget, 12 min ago)"), restored.toString());
+		again.menu(ghostPage(12_455), now);
+		List<String> menu = shown(again, BestiaryLayout.DEFAULT, now + 2 * MINUTE);
+		assertTrue(menu.contains("§7Kills: §f12,455 §8(menu, 2 min ago)"), menu.toString());
+		// The source/age line, when shown and saying the same, is not repeated on the kills line.
+		BestiaryLayout withAge = new BestiaryLayout(EnumSet.of(BestiaryLine.KILLS, BestiaryLine.SOURCE_AGE), LineOrder.PROGRESS_FIRST.getLines(),
+				TierNumerals.ARABIC);
+		assertEquals(List.of("§7Kills: §f12,455", "§8menu, 2 min ago"), shown(again, withAge, now + 2 * MINUTE));
+		// The widget's first line is live, also with the count unchanged.
+		again.widget(List.of(BestiaryWidget.parseLine("Ghost 15: 12,455/12,500")), DWARVEN, now + 3 * MINUTE);
+		List<String> same = shown(again, BestiaryLayout.DEFAULT, now + 3 * MINUTE);
+		assertTrue(same.contains("§7Kills: §f12,455"), same.toString());
+		again.widget(List.of(BestiaryWidget.parseLine("Ghost 15: 12,460/12,500")), DWARVEN, now + 4 * MINUTE);
+		List<String> live = shown(again, BestiaryLayout.DEFAULT, now + 4 * MINUTE);
+		assertTrue(live.contains("§7Kills: §f12,460"), live.toString());
+	}
+
+	@Test
+	void theHintKeepsTheFamiliesKnownFromTheMenuOrTheStore() {
+		// EC-BEST-01 (G5): with the widget off the hint goes above the families known otherwise; with none it is alone
+		// (EC-BEST-15), also with a pinned family not seen yet.
+		List<String> hint = List.of("§7Bestiary widget off");
+		assertEquals(hint, BestiaryHudLines.withHint(hint, List.of(), () -> List.of("§7Milestone: §f262")));
+		assertEquals(hint, BestiaryHudLines.withHint(hint, List.of(tracker.familyOrUnseen("ghost")), () -> List.of("§6Ghost §8· §8not seen yet")));
+		tracker.menu(ghostPage(12_449), 1_000);
+		List<String> family = lines(BestiaryLayout.DEFAULT, 2_000);
+		List<String> expected = new ArrayList<>(hint);
+		expected.addAll(family);
+		assertEquals(expected, BestiaryHudLines.withHint(hint, List.of(tracker.family("ghost")), () -> family));
+		// A count the widget gave earlier is no longer live once the widget is off: it shows its age as well.
+		tracker.widget(List.of(BestiaryWidget.parseLine("Ghost 15: 12,460/12,500")), DWARVEN, 3_000);
+		long later = 3_000 + 5 * MINUTE;
+		List<String> off = BestiaryHudLines.lines(List.of(tracker.family("ghost")), key -> tracker.rate(key, later), tracker.session(), tracker.milestone(),
+				BestiaryLayout.DEFAULT, later, false);
+		assertTrue(off.contains("§7Kills: §f12,460 §8(widget, 5 min ago)"), off.toString());
+		assertTrue(lines(BestiaryLayout.DEFAULT, later).contains("§7Kills: §f12,460"), "live while the widget is on");
+	}
+
+	@Test
+	void theEditorPreviewFollowsTheTableOnceItLoads() {
+		// G5: the table loads off the client thread; a preview made before it is made again once it is there.
+		BestiaryPreview preview = new BestiaryPreview();
+		assertEquals("§6Ghost §e15", preview.get(BestiaryLayout.DEFAULT, null).lines().get(0));
+		assertEquals("§6Ghost §e15§7/20", preview.get(BestiaryLayout.DEFAULT, BestiaryTables.shipped()).lines().get(0));
 	}
 }
