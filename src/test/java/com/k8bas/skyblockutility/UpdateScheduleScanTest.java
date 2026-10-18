@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * R50 (REQ-UPD-04): the game's wiring starts the automatic update check only through SessionChecks, once when the client
  * has started and once at the first server join; the client tick only shows notices. SessionChecksTest covers the class;
- * this scan covers that nothing else in the wiring triggers a check, so no periodic check can come back unnoticed.
+ * this scan covers that nothing else in the wiring triggers a check, so no periodic check can come back unnoticed. It also
+ * pins the game's release source to the 20 s request timeout, which UpdateManualCheckTest shortens to 1 s for speed.
  */
 class UpdateScheduleScanTest {
 	private static final Path PROJECT = Path.of(System.getProperty("k8bas.projectDir", "."));
@@ -27,5 +28,14 @@ class UpdateScheduleScanTest {
 		assertTrue(code.contains("ClientTickEvents.END_CLIENT_TICK.register { client -> notifier!!.tick(client) }"), "the tick only shows notices");
 		assertEquals(2, code.split("checks\\.started\\(\\)", -1).length, "started() once");
 		assertEquals(2, code.split("checks\\.joined\\(\\)", -1).length, "joined() once");
+	}
+
+	/** AC-UPD-10 [A]: the one release source the game builds uses the 20 s request timeout. */
+	@Test
+	void theGamesReleaseSourceUsesTheRequestTimeout() throws IOException {
+		String code = SendScan.withoutComments(Files.readString(PROJECT.resolve("src/main/kotlin/com/k8bas/skyblockutility/update/Updates.kt")));
+		assertEquals(2, code.split("GitHubReleaseSource\\(", -1).length, "one release source");
+		assertTrue(code.contains("GitHubReleaseSource(source, SharedHttpClient.get(), modVersion, GitHubReleaseSource.REQUEST_TIMEOUT)"),
+				"built with REQUEST_TIMEOUT");
 	}
 }
