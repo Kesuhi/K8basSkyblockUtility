@@ -43,7 +43,7 @@ public final class CaptureFixtures {
 	}
 
 	/** The tab rows of a tab capture in [folder] ({@link #G1} or {@link #G3}), in the client's list order. */
-	static List<TabRow> tabRows(String folder, String file) {
+	public static List<TabRow> tabRows(String folder, String file) {
 		List<TabRow> rows = new ArrayList<>();
 		for (String line : lines(folder + file)) {
 			Matcher m = TAB.matcher(line);
