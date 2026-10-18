@@ -108,6 +108,29 @@ class ConfigLayoutTest {
 	 * REQ-UI-18 (T2.9b): what the page scrolls into view for a control the keyboard reached: its row with the gaps
 	 * around it; for a card's first option also its section title; for the page's first section from the top.
 	 */
+	/**
+	 * T4.4b: a wide value (the Updates card's status) sits under the title, across the card, two lines high, inside its row;
+	 * the title gets the card's width. The longest status the card shows fits those two lines on the common card.
+	 */
+	@Test
+	void aWideValueSitsUnderItsTitleAcrossTheCard() {
+		com.k8bas.skyblockutility.ui.option.InfoOption wide = new com.k8bas.skyblockutility.ui.option.InfoOption("x",
+				new com.k8bas.skyblockutility.ui.option.OptionText("Status", "", "", List.of()), () -> "", true);
+		for (int width : new int[] {120, 300, 520}) {
+			ConfigLayout.Rect card = new ConfigLayout.Rect(10, 40, width, 44);
+			ConfigLayout.Rect value = ConfigLayout.control(card, wide);
+			assertEquals(card.x() + ConfigLayout.PAD, value.x());
+			assertEquals(card.w() - 2 * ConfigLayout.PAD, value.w(), "across the card");
+			assertTrue(value.y() >= card.y() + 18 && value.y() + value.h() <= card.y() + card.h(), "under the title, inside the row: " + value);
+			assertEquals(card.w() - 2 * ConfigLayout.PAD, ConfigLayout.text(card, wide).w(), "the title has the card's width");
+		}
+		ConfigLayout.Frame frame = ConfigLayout.frame(960, 540);
+		int common = frame.content().w() - 2 * ConfigLayout.PAD;
+		String longest = "v1.4.0 is available; v1.4.1 has no build for Minecraft 26.2; It has no SHA-256 checksum, so install it by hand from the release page";
+		assertFalse(ConfigLayout.fitLines(longest, common, ConfigLayout.DESCRIPTION_LINES, text -> text.length() * 5).cut(),
+				"the longest status fits two lines on the common card");
+	}
+
 	@Test
 	void theRevealSpanCoversARowAndItsSectionTitle() {
 		ConfigLayout.Page page = ConfigLayout.page(catalog(), Category.GENERAL, 500, WIDTH);

@@ -29,6 +29,7 @@ public final class UpdateService {
 	private final Set<String> loggedOnce = ConcurrentHashMap.newKeySet();
 	private final UpdateState state;
 	private volatile Consumer<CheckOutcome> onOutcome = outcome -> { };
+	private volatile CheckOutcome lastOffer;
 
 	UpdateService(GitHubReleaseSource source, UpdateStateStore store, LongSupplier clock, BooleanSupplier toggle,
 			String runningVersion, String runningMinecraft, Supplier<UpdateChannel> channel, Consumer<String> info, Consumer<String> warn) {
@@ -158,7 +159,7 @@ public final class UpdateService {
 			releases = java.util.List.copyOf(state.releases);
 		}
 		String running = runningVersion.contains("+") ? runningVersion.substring(0, runningVersion.indexOf('+')) : runningVersion;
-		return switch (outcome) {
+		CheckOutcome result = switch (outcome) {
 			case CandidateFinder.Candidate candidate -> new CheckOutcome.Found(candidate, hooks.getHash().check(candidate.release(), candidate.jar()),
 					hooks.getEligibility().check(), skipped != null && skipped.compareTo(candidate.version()) == 0,
 					UpdateChannel.isPreRelease(candidate.release(), candidate.version()), runningMinecraft);
@@ -167,6 +168,18 @@ public final class UpdateService {
 			case CandidateFinder.UpToDate upToDate -> new CheckOutcome.UpToDate(running);
 			default -> throw new IllegalStateException("unknown outcome " + outcome);
 		};
+		lastOffer = result;
+		return result;
+	}
+
+	/** The last {@link #offer()}, or null before the first: what the settings card reads every frame, at no cost. */
+	public CheckOutcome lastOffer() {
+		return lastOffer;
+	}
+
+	/** The running version as the Loader reports it. */
+	public String runningVersion() {
+		return runningVersion;
 	}
 
 	/** The page of the release tagged {@code version}, or null. */
@@ -323,8 +336,26 @@ public final class UpdateService {
 			store.save(state);
 		}
 		store.flush();
+		// The card reads the cached offer; it shows the mark at once, not after the next check (AC-UPD-13).
+		if (lastOffer instanceof CheckOutcome.Found found && found.candidate().version().compareTo(parsed) == 0 && !found.skipped()) {
+			lastOffer = new CheckOutcome.Found(found.candidate(), found.hash(), found.eligibility(), true, found.beta(), found.minecraft());
+		}
 		info.accept("Update v" + parsed + " skipped");
 		return true;
+	}
+
+	/** When the last check got an answer (epoch ms, 0 for never), read safely from any thread (the settings card). */
+	public long lastSuccessMs() {
+		synchronized (state) {
+			return state.lastSuccessMs;
+		}
+	}
+
+	/** The pending install (T4.3), or null, read safely from any thread (the settings card). */
+	public PendingInstall pendingInstall() {
+		synchronized (state) {
+			return state.pendingInstall;
+		}
 	}
 
 	/** What {@link #cancelPending()} did. */

@@ -136,6 +136,7 @@ public class UpdateNoticeGameTest implements FabricClientGameTest {
 			context.setScreen(() -> null);
 
 			screenActions(context, service, found, confirmation);
+			updatesCard(context, service);
 
 			check(requests.size() == 1, "still one request, nothing downloaded: " + requests);
 			try (var files = Files.list(stateDir)) {
@@ -151,6 +152,82 @@ public class UpdateNoticeGameTest implements FabricClientGameTest {
 			}
 			server.stop(0);
 		}
+	}
+
+	/**
+	 * T4.4b, AC-UPD-13 [C]: the General › Updates card in the settings screen, at its end: a skipped version is still
+	 * listed, marked; then a pending install is its status.
+	 */
+	private static void updatesCard(ClientGameTestContext context, UpdateService service) throws IOException {
+		com.k8bas.skyblockutility.config.GeneralConfig config = com.k8bas.skyblockutility.config.ConfigManager.general();
+		UpdateChannel channelBefore = config.updateChannel;
+		Path file = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("k8bas_skyblock_utility.json");
+		try {
+			// REQ-UPD-07 through the screen's own save: opening and closing the settings writes no channel.
+			config.updateChannel = null;
+			context.setScreen(() -> new com.k8bas.skyblockutility.ui.screen.ConfigScreen(null, "channel"));
+			context.waitTicks(3);
+			context.setScreen(() -> null);
+			context.waitTicks(2);
+			com.k8bas.skyblockutility.config.ConfigManager.flush();
+			check(!Files.readString(file).contains("updateChannel"), "no channel written without a pick");
+
+			// AC-UPD-13 [C]: skipped from the chat or the screen, the card still lists it, marked, without another check.
+			service.skip("99.0.0");
+			// The settings search brings the row in view: "skipped" is the Latest version row's keyword.
+			context.setScreen(() -> new com.k8bas.skyblockutility.ui.screen.ConfigScreen(null, "skipped"));
+			context.waitTicks(3);
+			com.k8bas.skyblockutility.ui.option.Card card = context.computeOnClient(client ->
+					((com.k8bas.skyblockutility.ui.screen.ConfigScreen) client.gui.screen()).cardsForTests().stream()
+							.filter(c -> c.id().equals("updates")).findFirst().orElseThrow());
+			String latest = ((com.k8bas.skyblockutility.ui.option.InfoOption) option(card, "updates.latest")).value().get();
+			check(latest.equals("v99.0.0 (skipped)"), "the card the screen built still lists the skipped version: " + latest);
+			context.takeScreenshot("t4.4b-updates-card-skipped");
+
+			// Install opens the confirmation screen over the settings; Later returns to them.
+			context.runOnClient(client -> ((com.k8bas.skyblockutility.ui.option.ActionOption) option(card, "updates.install")).action().run());
+			for (int i = 0; i < 40 && !context.computeOnClient(client -> client.gui.screen() instanceof UpdateScreen); i++) {
+				context.waitTicks(1);
+			}
+			check(context.computeOnClient(client -> client.gui.screen() instanceof UpdateScreen), "Install opens the confirmation over the settings");
+			context.runOnClient(client -> ((UpdateScreen) client.gui.screen()).laterButtonForTests().activate());
+			context.waitTicks(2);
+			check(context.computeOnClient(client -> client.gui.screen() instanceof com.k8bas.skyblockutility.ui.screen.ConfigScreen), "Later returns to the settings");
+
+			// T4.3b's pending state is the card's status.
+			service.state().pendingInstall = new PendingInstall("99.0.0", "k8bas_skyblock_utility-99.0.0+26.2.jar", DIGEST, 1L, "1.3.0", "x.jar", 0);
+			context.setScreen(() -> new com.k8bas.skyblockutility.ui.screen.ConfigScreen(null, "status"));
+			context.waitTicks(3);
+			com.k8bas.skyblockutility.ui.option.Card shown = context.computeOnClient(client ->
+					((com.k8bas.skyblockutility.ui.screen.ConfigScreen) client.gui.screen()).cardsForTests().stream()
+							.filter(c -> c.id().equals("updates")).findFirst().orElseThrow());
+			String status = ((com.k8bas.skyblockutility.ui.option.InfoOption) option(shown, "updates.status")).value().get();
+			check(status.equals("Update v99.0.0 ready, restart Minecraft to apply"), "the pending install is the status: " + status);
+			context.takeScreenshot("t4.4b-updates-card-pending");
+
+			// A pick is written, through the same save.
+			context.runOnClient(client -> {
+				@SuppressWarnings("unchecked")
+				com.k8bas.skyblockutility.ui.option.Choice<UpdateChannel> channel = (com.k8bas.skyblockutility.ui.option.Choice<UpdateChannel>) option(shown,
+						"updates.channel");
+				channel.binding().set(UpdateChannel.BETA);
+			});
+			context.setScreen(() -> null);
+			context.waitTicks(2);
+			com.k8bas.skyblockutility.config.ConfigManager.flush();
+			check(Files.readString(file).contains("\"updateChannel\": \"BETA\""), "a picked channel is written");
+		} finally {
+			service.state().pendingInstall = null;
+			service.state().skippedVersion = null;
+			config.updateChannel = channelBefore;
+			com.k8bas.skyblockutility.config.ConfigManager.save();
+			com.k8bas.skyblockutility.config.ConfigManager.flush();
+			context.setScreen(() -> null);
+		}
+	}
+
+	private static com.k8bas.skyblockutility.ui.option.Option option(com.k8bas.skyblockutility.ui.option.Card card, String id) {
+		return card.options().stream().filter(o -> o.id().equals(id)).findFirst().orElseThrow();
 	}
 
 	/**

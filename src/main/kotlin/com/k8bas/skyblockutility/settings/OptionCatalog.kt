@@ -1,5 +1,6 @@
 package com.k8bas.skyblockutility.settings
 
+import com.k8bas.skyblockutility.update.Updates
 import com.k8bas.skyblockutility.config.ConfigManager
 import com.k8bas.skyblockutility.config.GeneralConfig
 import com.k8bas.skyblockutility.module.ModuleManager
@@ -48,7 +49,8 @@ object OptionCatalog {
 	/** The catalog of the running game: General plus each registered module's cards. */
 	@JvmStatic
 	fun live(): List<Card> = sorted(
-		GeneralOptions.cards(ConfigManager.general(), Runnable { HudEditorScreen.openEditor(null) }) + ModuleManager.modules().flatMap { it.cards() },
+		GeneralOptions.cards(ConfigManager.general(), Runnable { HudEditorScreen.openEditor(null) }, Updates.panel()) +
+			ModuleManager.modules().flatMap { it.cards() },
 	)
 
 	/** Category order; a stable sort keeps the declaration order inside a category. */

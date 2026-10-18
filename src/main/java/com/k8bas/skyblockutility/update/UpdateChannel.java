@@ -7,6 +7,11 @@ public enum UpdateChannel {
 	/** Pre-releases and stable releases; the highest version wins. */
 	BETA;
 
+	/** Its name in the settings. */
+	public String label() {
+		return this == STABLE ? "Stable" : "Beta";
+	}
+
 	/** The user's choice if there is one (stored), else STABLE, or BETA on a pre-release build. */
 	public static UpdateChannel effective(UpdateChannel stored, SemVer running) {
 		if (stored != null) {

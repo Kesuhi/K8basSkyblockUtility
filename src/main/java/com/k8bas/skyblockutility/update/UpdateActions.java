@@ -62,6 +62,12 @@ public final class UpdateActions {
 		return List.of("Skipped v" + parsed + "; a newer version notifies again");
 	}
 
+	/** Reads the cached release list again (a channel was picked): nothing to say, the card shows the new offer. */
+	List<String> refresh() {
+		service.offer();
+		return List.of();
+	}
+
 	/** `/ksu update cancel` and the card's *Cancel pending update* (REQ-UPD-12). */
 	List<String> cancel() {
 		return switch (service.cancelPending()) {

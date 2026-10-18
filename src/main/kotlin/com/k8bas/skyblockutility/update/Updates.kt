@@ -15,9 +15,12 @@ import net.fabricmc.loader.api.metadata.ModOrigin
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.ChatScreen
+import net.minecraft.client.gui.screens.ConfirmLinkScreen
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URI
 import java.nio.file.Files
 import java.time.ZoneId
 import java.util.concurrent.CompletableFuture
@@ -138,13 +141,18 @@ object Updates {
 	 */
 	@JvmStatic
 	fun showScreen(client: Minecraft) {
+		showScreen(client, null)
+	}
+
+	/** As [showScreen], also over [over] (the settings screen whose card was clicked) if it is still open. */
+	private fun showScreen(client: Minecraft, over: Screen?) {
 		val current = service ?: return
 		CompletableFuture.supplyAsync({ UpdateActions(current, ZoneId.systemDefault()).showable() }, ACTIONS).whenComplete { found, error ->
 			client.execute {
 				val open = client.gui.screen()
 				when {
 					found == null || error != null -> say(UpdateActions(current, ZoneId.systemDefault()).nothingToShow())
-					open != null && open !is ChatScreen -> say(listOf("The update is ready to see: /ksu update show"))
+					open != null && open !is ChatScreen && open !== over -> say(listOf("The update is ready to see: /ksu update show"))
 					else -> client.gui.setScreen(UpdateScreen(open, found, current.confirmation(found), Function { run(it) }, Consumer { say(it) }))
 				}
 			}
@@ -166,6 +174,29 @@ object Updates {
 					say(refusal ?: listOf("The update action failed"))
 				}
 			}
+	}
+
+	/**
+	 * The General › Updates card over the running service (T4.4b), or none before the updater is registered. *Install* opens
+	 * the confirmation screen over the settings, which *Later* returns to; *Open release page* goes through the game's link
+	 * confirmation.
+	 */
+	@JvmStatic
+	fun panel(): UpdatesPanel {
+		val current = service ?: return UpdatesPanel.NONE
+		return UpdatesCard(current, ZoneId.systemDefault(), LongSupplier { System.currentTimeMillis() }, object : UpdatesCard.Actions {
+			override fun run(action: Function<UpdateActions, List<String>>): CompletableFuture<List<String>> = Updates.run(action)
+
+			override fun showScreen() {
+				val client = Minecraft.getInstance()
+				showScreen(client, client.gui.screen())
+			}
+
+			override fun openLink(page: URI) {
+				val client = Minecraft.getInstance()
+				client.execute { ConfirmLinkScreen.confirmLinkNow(client.gui.screen(), page) }
+			}
+		})
 	}
 
 	/** Local chat lines, on the client thread (never sent to the server). */
