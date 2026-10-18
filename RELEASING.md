@@ -338,6 +338,31 @@ published. The 2.0.0 steps extend this document (PLAN T7.2c).
 
 ## Release records
 
+### v1.3.1, published 2026-10-18
+
+- **PR #7** was merged as merge commit `98c3589`; its head `60b8424` was the approved commit, with CI
+  green on it (runs 39143374493 and 39143377288). The maintainer's message of 2026-10-18 ("Push, open
+  Pr, merge and then ship, babysit the entire process") counted as "push", "merge" and "ship". The
+  annotated tag `v1.3.1` is on the merge commit, with the noreply identity. It is a PATCH release by
+  the maintainer's choice, although the confirmed install adds a feature (R48).
+- **Build:** `./gradlew clean build` ran from the detached tag; its test results show 1256 tests and
+  no failure.
+  - Jar: `sha256:c1e648aaf3f11c52cb09c8da8b5cb0ddb9c0da450d5fd8a01820bf1a5a0a886a` (1,408,194 bytes).
+  - Sidecar: `sha256:b493d85d0b46843b5ac05af4be106cfc9525dbf2d0af3d35b4044c7cbb47f57c`.
+- **Draft checks:** `release-check.sh v1.3.1` printed PASS, with all five steps `[ok]`. It ran
+  before and after the tier D boot.
+- **Tier D:** a copy of the maintainer's 50-jar `26.2 Skyblock` mod set with Iris and the shaderpack.
+  The baseline loaded 183 mods without this mod (no `- k8bas_skyblock_utility` line); both boots
+  reached the title screen. The release run loaded 184 mods, among them
+  `k8bas_skyblock_utility 1.3.1+26.2`, and the jar stayed byte for byte the uploaded one. Both had
+  the same 7 distinct ERROR messages once thread names and object hashes are removed, so the release
+  jar added no ERROR line. Its WARN lines naming this mod are Iris's known `BASIC_COLOR` notice and
+  the launch check naming the sources jar beside the booted jar in `build/libs` (it looks beside the
+  running jar; a player's mods folder holds no sources jar).
+- **Published** as Latest, not as a pre-release, at 2026-10-18T16:11:51Z. The assets are only the
+  jar and the sidecar, and the body equals the CHANGELOG section. An anonymous
+  `GET …/releases/latest` is v1.3.1.
+
 ### v1.3.0, published 2026-10-17
 
 - **PR #4** was merged as merge commit `2f1a105`; its head `b67e08f` was the approved commit, with CI
