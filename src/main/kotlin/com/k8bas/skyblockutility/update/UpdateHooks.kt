@@ -27,6 +27,9 @@ class UpdateHooks(val hash: HashCheck, val eligibility: EligibilityCheck) {
 
 		/** The digest and the sidecar disagree (T4.2). */
 		data object Conflict : Hash
+
+		/** The release has a sidecar that could not be read now, so the two cannot be compared yet; asked again next time. */
+		data object Unavailable : Hash
 	}
 
 	/** @param reason shown when not [eligible], a sentence without a full stop */
@@ -48,6 +51,16 @@ class UpdateHooks(val hash: HashCheck, val eligibility: EligibilityCheck) {
 		/** GitHub's digest when it is a SHA-256, else none; never eligible. */
 		@JvmField
 		val DEFAULT: UpdateHooks = UpdateHooks(HashCheck { _, jar -> fromDigest(jar.digest) }, EligibilityCheck { NOTIFY_ONLY })
+
+		/** Why no install may be offered (REQ-UPD-08's notify-only and conflict rows), or null if one may. */
+		@JvmStatic
+		fun notOfferedReason(hash: Hash, eligibility: Eligibility): String? = when {
+			hash is Hash.Conflict -> "Release checksum conflict, install it by hand from the release page"
+			hash is Hash.Missing -> "It has no SHA-256 checksum, so install it by hand from the release page"
+			hash is Hash.Unavailable -> "Couldn't read its checksum file from GitHub, try again later"
+			!eligibility.eligible -> eligibility.reason ?: NOTIFY_ONLY.reason
+			else -> null
+		}
 
 		/** "sha256:" and 64 hex digits, lowercased; anything else is not a usable SHA-256 (REQ-UPD-08). */
 		@JvmStatic

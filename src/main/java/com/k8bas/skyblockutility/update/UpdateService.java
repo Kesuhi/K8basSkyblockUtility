@@ -24,6 +24,7 @@ public final class UpdateService {
 	private final Consumer<String> warn;
 	private final UpdateLock lock;
 	private final UpdateHooks hooks;
+	private final JarStager stager;
 	private final Set<String> loggedOnce = ConcurrentHashMap.newKeySet();
 	private final UpdateState state;
 	private volatile Consumer<CandidateFinder.Outcome> onOutcome = outcome -> { };
@@ -37,8 +38,16 @@ public final class UpdateService {
 	UpdateService(GitHubReleaseSource source, UpdateStateStore store, LongSupplier clock, BooleanSupplier toggle,
 			String runningVersion, String runningMinecraft, Supplier<UpdateChannel> channel, Consumer<String> info, Consumer<String> warn,
 			UpdateHooks hooks) {
+		this(source, store, clock, toggle, runningVersion, runningMinecraft, channel, info, warn, hooks, null);
+	}
+
+	/** @param stager downloads and checks a confirmed jar (T4.2); null where no download may happen */
+	UpdateService(GitHubReleaseSource source, UpdateStateStore store, LongSupplier clock, BooleanSupplier toggle,
+			String runningVersion, String runningMinecraft, Supplier<UpdateChannel> channel, Consumer<String> info, Consumer<String> warn,
+			UpdateHooks hooks, JarStager stager) {
 		this.lock = new UpdateLock();
 		this.hooks = hooks;
+		this.stager = stager;
 		this.source = source;
 		this.store = store;
 		this.clock = clock;
@@ -82,8 +91,9 @@ public final class UpdateService {
 	 * not counted against the automatic cap (REQ-UPD-04, REQ-UPD-09). It works with the toggle OFF.
 	 */
 	public CheckOutcome checkManual() {
-		if (!lock.tryAcquire()) {
-			return CheckOutcome.Busy.INSTANCE;
+		UpdateLock.Holder holder = lock.acquireOrHolder(UpdateLock.Holder.CHECK);
+		if (holder != null) {
+			return holder == UpdateLock.Holder.DOWNLOAD ? CheckOutcome.Downloading.INSTANCE : CheckOutcome.Busy.INSTANCE;
 		}
 		try {
 			String etag;
@@ -131,11 +141,7 @@ public final class UpdateService {
 		SemVer skipped;
 		java.util.List<Release> releases;
 		synchronized (state) {
-			outcome = CandidateFinder.find(state.releases, runningVersion, runningMinecraft, channel.get(), line -> {
-				if (loggedOnce.add(line)) {
-					info.accept(line);
-				}
-			});
+			outcome = CandidateFinder.find(state.releases, runningVersion, runningMinecraft, channel.get(), this::logOnce);
 			skipped = SemVer.Companion.fromTagOrNull(state.skippedVersion);
 			releases = java.util.List.copyOf(state.releases);
 		}
@@ -160,6 +166,57 @@ public final class UpdateService {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Downloads and checks the candidate the player confirmed (REQ-UPD-11, REQ-UPD-13 to REQ-UPD-15) on the calling thread,
+	 * which the caller keeps off the client thread. Not one byte of the jar is fetched unless {@code consent} names the
+	 * candidate on offer now (a skipped one included) and an install may be offered for it; the hash check may read the
+	 * release's sidecar first (REQ-UPD-14). It holds the lock a check holds, so it never runs beside one (REQ-UPD-04).
+	 */
+	public DownloadOutcome download(Consent consent) {
+		UpdateLock.Holder holder = lock.acquireOrHolder(UpdateLock.Holder.DOWNLOAD);
+		if (holder != null) {
+			return holder == UpdateLock.Holder.DOWNLOAD ? DownloadOutcome.Downloading.INSTANCE : DownloadOutcome.Busy.INSTANCE;
+		}
+		try {
+			CandidateFinder.Outcome outcome;
+			synchronized (state) {
+				outcome = CandidateFinder.find(state.releases, runningVersion, runningMinecraft, channel.get(), this::logOnce);
+			}
+			String requested = consent.version() != null && consent.version().startsWith("v") ? consent.version().substring(1) : String.valueOf(consent.version());
+			SemVer wanted = SemVer.Companion.fromTagOrNull(consent.version());
+			if (!(outcome instanceof CandidateFinder.Candidate candidate) || wanted == null || wanted.compareTo(candidate.version()) != 0) {
+				return new DownloadOutcome.Stale(requested, outcome instanceof CandidateFinder.Candidate current ? current.version() : null);
+			}
+			UpdateHooks.Hash hash = hooks.getHash().check(candidate.release(), candidate.jar());
+			String notOffered = UpdateHooks.notOfferedReason(hash, hooks.getEligibility().check());
+			if (notOffered != null || stager == null) {
+				return new DownloadOutcome.NotOffered(notOffered != null ? notOffered : UpdateHooks.NOTIFY_ONLY.reason());
+			}
+			String sha256 = ((UpdateHooks.Hash.Verifiable) hash).sha256();
+			if (consent.sha256() != null && !consent.sha256().equalsIgnoreCase(sha256)) {
+				return new DownloadOutcome.Changed(candidate.version());
+			}
+			DownloadOutcome result = stager.stage(candidate.version().toString(), candidate.jar(), sha256);
+			switch (result) {
+				case DownloadOutcome.Staged staged -> info.accept("Update v" + staged.version() + " downloaded and checked: " + staged.file().getFileName());
+				case DownloadOutcome.Failed failed -> warn.accept("Update download of v" + candidate.version() + " failed: " + failed.reason());
+				case DownloadOutcome.Incompatible incompatible -> warn.accept("Update v" + candidate.version() + " is an incompatible build: " + incompatible.reason());
+				case DownloadOutcome.ChecksumMismatch mismatch -> warn.accept("Update v" + candidate.version() + " does not match its SHA-256; deleted");
+				default -> {
+				}
+			}
+			return result;
+		} finally {
+			lock.release();
+		}
+	}
+
+	private void logOnce(String line) {
+		if (loggedOnce.add(line)) {
+			info.accept(line);
+		}
 	}
 
 	/** The lock a check or a download holds (REQ-UPD-04: one at a time); T4.2's download takes it too. */
@@ -201,11 +258,7 @@ public final class UpdateService {
 	private void evaluate() {
 		CandidateFinder.Outcome outcome;
 		synchronized (state) {
-			outcome = CandidateFinder.find(state.releases, runningVersion, runningMinecraft, channel.get(), line -> {
-				if (loggedOnce.add(line)) {
-					info.accept(line);
-				}
-			});
+			outcome = CandidateFinder.find(state.releases, runningVersion, runningMinecraft, channel.get(), this::logOnce);
 		}
 		onOutcome.accept(outcome);
 	}

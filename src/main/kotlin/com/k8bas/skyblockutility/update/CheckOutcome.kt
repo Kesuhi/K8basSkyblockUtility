@@ -35,11 +35,7 @@ sealed interface CheckOutcome {
 			val out = ArrayList<String>()
 			out.add("v${candidate.version} is available" + (if (beta) " (beta)" else "") + (if (skipped) " (skipped)" else ""))
 			candidate.skippedWithoutJar.firstOrNull()?.let { out.add("v$it has no build for Minecraft $minecraft") }
-			when {
-				hash is UpdateHooks.Hash.Conflict -> out.add("Release checksum conflict, install it by hand from the release page")
-				hash is UpdateHooks.Hash.Missing -> out.add("It has no SHA-256 checksum, so install it by hand from the release page")
-				!eligibility.eligible -> out.add(eligibility.reason ?: UpdateHooks.NOTIFY_ONLY.reason!!)
-			}
+			UpdateHooks.notOfferedReason(hash, eligibility)?.let { out.add(it) }
 			return out
 		}
 
@@ -105,9 +101,14 @@ sealed interface CheckOutcome {
 		override fun toString(): String = "Cooldown[untilMs=$untilMs, nowMs=$nowMs]"
 	}
 
-	/** Another check or a download is running (REQ-UPD-04: one at a time). */
+	/** Another check is running (REQ-UPD-04: one at a time). */
 	data object Busy : CheckOutcome {
 		override fun lines(zone: ZoneId): List<String> = listOf("An update check is already running")
+	}
+
+	/** A download is running (REQ-UPD-04: one check or download at a time). */
+	data object Downloading : CheckOutcome {
+		override fun lines(zone: ZoneId): List<String> = listOf("An update is downloading, try again when it is done")
 	}
 }
 

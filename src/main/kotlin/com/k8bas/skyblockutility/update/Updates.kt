@@ -15,13 +15,17 @@ import java.util.function.LongSupplier
 import java.util.function.Supplier
 
 /**
- * Wires the notify-only update check into the game (T1.4): the first check after the client has
- * started, then every 30 minutes a local "is one due?" test; the notice on the client tick; the
- * state flushed on shutdown.
+ * Wires the update check into the game (T1.4): the first check after the client has started, then
+ * every 30 minutes a local "is one due?" test; the notice on the client tick; the state flushed on
+ * shutdown. Confirmed downloads stage into `.k8bas_update/` in the game directory (T4.2); until T4.3
+ * decides install eligibility, every candidate stays notify-only, so nothing is downloaded yet.
  */
 object Updates {
 	private val LOGGER: Logger = LoggerFactory.getLogger("k8bas_skyblock_utility/update")
 	private const val RECHECK_TICKS: Long = 20L * 60 * 30
+
+	/** In the game directory, beside `mods/`: Fabric never scans it (REQ-UPD-13). */
+	const val STAGING_FOLDER: String = ".k8bas_update"
 
 	@Volatile
 	private var service: UpdateService? = null
@@ -43,11 +47,22 @@ object Updates {
 		}
 		val warn = Consumer<String> { LOGGER.warn(it) }
 		val store = UpdateStateStore(FabricLoader.getInstance().configDir.resolve(UpdateStateStore.FILE_NAME), warn)
+		// Downloads go only to GitHub, also when the release list comes from a development override (REQ-UPD-20).
+		val userAgent = GitHubReleaseSource.userAgent(modVersion)
+		val downloader = SecureDownloader(SharedHttpClient.get(), userAgent, SecureDownloader.GITHUB, SecureDownloader.TIMEOUT)
+		// A sidecar is read during a check, so it gets the API's budget, not the jar's.
+		val sidecars = SecureDownloader(SharedHttpClient.get(), userAgent, SecureDownloader.GITHUB, GitHubReleaseSource.REQUEST_TIMEOUT)
+		val stager = JarStager(
+			FabricLoader.getInstance().gameDir.resolve(STAGING_FOLDER), downloader, minecraft, RuntimeVersions.mod("fabricloader"),
+		)
+		// A download the last game was closed during leaves a .part; it goes now (EC-UPD-03).
+		stager.cleanParts()
 		use(
 			UpdateService(
 				GitHubReleaseSource(source, SharedHttpClient.get(), modVersion, GitHubReleaseSource.REQUEST_TIMEOUT),
 				store, LongSupplier { System.currentTimeMillis() }, BooleanSupplier { ConfigManager.general().autoUpdateCheckEnabled },
 				modVersion, minecraft, Supplier { ConfigManager.general().updateChannel }, Consumer { LOGGER.info(it) }, warn,
+				UpdateHooks(ReleaseHash(sidecars, warn), UpdateHooks.EligibilityCheck { UpdateHooks.NOTIFY_ONLY }), stager,
 			),
 			UpdateNotifier(modVersion, LOGGER),
 		)
