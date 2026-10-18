@@ -47,6 +47,7 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 	public void runTest(ClientGameTestContext context) {
 		Module module = ModuleManager.modules().stream().filter(m -> m.id().equals(CorpseSpotsModule.ID)).findFirst().orElseThrow();
 		Module alert = ModuleManager.modules().stream().filter(m -> m.id().equals(MineshaftAlertModule.ID)).findFirst().orElseThrow();
+		boolean hideBefore = optionValue(context, "corpse_spots.hide_when_looted");
 		try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
 			TestServerContext server = singleplayer.getServer();
 			server.runCommand("time set noon");
@@ -99,6 +100,26 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 			context.waitTicks(3);
 			check(dingLine(context, module) == null && !context.computeOnClient(client -> CorpseDingHud.INSTANCE.enabled()), "the feature off: nothing");
 			context.runOnClient(client -> module.setEnabled(true));
+			context.waitTicks(45);
+			// AC-CORPSE-11 (R57): every corpse looted, a ding shows nothing, also with the spots' toggle OFF; one NOT LOOTED
+			// again, it shows.
+			command(context, "ksu debug shaft OPAL_1 Lapis:LOOTED Umber:LOOTED");
+			option(context, "corpse_spots.hide_when_looted", false);
+			check(!optionValue(context, "corpse_spots.hide_when_looted"), "the spots' toggle reads OFF");
+			context.waitTicks(20);
+			server.runCommand("playsound minecraft:block.note_block.harp block @a -150 12 -170 1 1.968");
+			context.waitTicks(3);
+			check(dingLine(context, module) == null && context.computeOnClient(client -> CorpseDingHud.INSTANCE.content()) == null,
+					"every corpse looted: no ding line");
+			check(context.computeOnClient(client -> CorpseDingHud.INSTANCE.enabled()), "the element stays enabled, so the HUD editor keeps it");
+			context.waitTicks(45);
+			option(context, "corpse_spots.hide_when_looted", hideBefore);
+			command(context, "ksu debug shaft OPAL_1 Lapis:LOOTED Umber:NOT_LOOTED");
+			context.waitTicks(20);
+			check(dingLine(context, module) == null, "the ding heard while all were looted does not come back");
+			server.runCommand("playsound minecraft:block.note_block.harp block @a -150 12 -170 1 1.968");
+			context.waitTicks(3);
+			check("§6Corpse ding: §every close".equals(dingLine(context, module)), "one not looted again: a new ding shows");
 			context.waitTicks(45);
 
 			// AC-CORPSE-14: next to spot #1 (-136, 3, -167); the other OPAL_1 spots are more than 16 blocks from it.
@@ -173,6 +194,7 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 				}
 				WorldMarkers.setHideLabelsWithHud(true);
 			});
+			option(context, "corpse_spots.hide_when_looted", hideBefore);
 		}
 	}
 
@@ -209,6 +231,11 @@ public class CorpseSpotsGameTest implements FabricClientGameTest {
 	private static int labels(ClientGameTestContext context) {
 		context.waitTicks(2);
 		return context.computeOnClient(client -> WorldMarkers.lastFrame().submitted() + WorldMarkers.lastFrame().culled());
+	}
+
+	private static boolean optionValue(ClientGameTestContext context, String id) {
+		return context.computeOnClient(client -> ((com.k8bas.skyblockutility.ui.option.Toggle) com.k8bas.skyblockutility.settings.OptionCatalog.live()
+				.stream().flatMap(card -> card.all().stream()).filter(option -> option.id().equals(id)).findFirst().orElseThrow()).binding().get());
 	}
 
 	private static void option(ClientGameTestContext context, String id, boolean value) {

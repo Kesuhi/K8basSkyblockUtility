@@ -18,6 +18,7 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 ### Changed
 
 - The update check runs only at startup and at the first server join of a session.
+- The "Corpse ding" HUD element hides once the Frozen Corpses tab widget shows every corpse as looted.
 
 ## [1.3.0] - 2026-10-17
 

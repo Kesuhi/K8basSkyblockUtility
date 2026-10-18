@@ -8,8 +8,9 @@ import com.k8bas.skyblockutility.hud.HudText
 
 /**
  * The "Corpse ding" HUD element (T3.3d, REQ-CORPSE-11, R43 (b)): while the Organ Donor dings in a Glacite Mineshaft,
- * "Corpse ding: far|close|very close" from the last ding's pitch; nothing 2 s after the last one. The module works the
- * line out each tick, so drawing only reads it (REQ-HUD-11). Moved and scaled in the HUD editor like any element.
+ * "Corpse ding: far|close|very close" from the last ding's pitch; nothing 2 s after the last one, nor once every corpse
+ * is looted (R57). The module works the line out each tick, so drawing only reads it (REQ-HUD-11). Moved and scaled in
+ * the HUD editor like any element.
  */
 object CorpseDingHud : HudElement {
 	const val ID = "corpse_ding"
