@@ -18,6 +18,7 @@ import com.k8bas.skyblockutility.ui.option.ActionOption
 import com.k8bas.skyblockutility.ui.option.Binding
 import com.k8bas.skyblockutility.ui.option.Card
 import com.k8bas.skyblockutility.ui.option.Category
+import com.k8bas.skyblockutility.ui.option.Checklist
 import com.k8bas.skyblockutility.ui.option.Choice
 import com.k8bas.skyblockutility.ui.option.DatabaseOption
 import com.k8bas.skyblockutility.ui.option.IntSlider
@@ -382,26 +383,27 @@ class BestiaryModule : Module {
 				false, Binding.of({ config.enabled }, setEnabled),
 			)
 			val options = ArrayList<Option>()
-			options += line("family", "Line: family and tier", "The family's name and its tier out of its last one.", BestiaryLine.FAMILY,
-				Binding.of({ config.lineFamily }, { config.lineFamily = it }))
-			options += line("kills", "Line: kills", "The family's kills, as the server counts them.", BestiaryLine.KILLS,
-				Binding.of({ config.lineKills }, { config.lineKills = it }))
-			options += line("to_next", "Line: to next tier", "The kills left to the family's next tier.", BestiaryLine.TO_NEXT,
-				Binding.of({ config.lineToNext }, { config.lineToNext = it }))
-			options += line("to_max", "Line: to max", "The kills left to the family's last tier, or MAX.", BestiaryLine.TO_MAX,
-				Binding.of({ config.lineToMax }, { config.lineToMax = it }))
-			options += line("milestone", "Line: milestone", "Your Bestiary Milestone and the tiers to the next, once known.", BestiaryLine.MILESTONE,
-				Binding.of({ config.lineMilestone }, { config.lineMilestone = it }))
-			options += line("rate", "Line: kills per hour", "The family's kills per hour over the last minutes.", BestiaryLine.RATE,
-				Binding.of({ config.lineRate }, { config.lineRate = it }))
-			options += line("eta", "Line: time to next tier", "How long the next tier and the last one take at that pace.", BestiaryLine.ETA,
-				Binding.of({ config.lineEta }, { config.lineEta = it }))
-			options += line("session_kills", "Line: session kills", "The family's kills since the session began.", BestiaryLine.SESSION_KILLS,
-				Binding.of({ config.lineSessionKills }, { config.lineSessionKills = it }))
-			options += line("session_average", "Line: all families", "The session's kills of all families, per hour, and its length.",
-				BestiaryLine.SESSION_AVERAGE, Binding.of({ config.lineSessionAverage }, { config.lineSessionAverage = it }))
-			options += line("source_age", "Line: source and age", "Where the values come from and how old they are.", BestiaryLine.SOURCE_AGE,
-				Binding.of({ config.lineSourceAge }, { config.lineSourceAge = it }))
+			// The lines in one checklist (REQ-BEST-08, R60); each item keeps the id, config field and default it had as a toggle.
+			val lines = listOf(
+				line("family", "The family's name and its tier out of its last one.", BestiaryLine.FAMILY,
+					Binding.of({ config.lineFamily }, { config.lineFamily = it })),
+				line("kills", "The family's kills, as the server counts them.", BestiaryLine.KILLS, Binding.of({ config.lineKills }, { config.lineKills = it })),
+				line("to_next", "The kills left to the family's next tier.", BestiaryLine.TO_NEXT, Binding.of({ config.lineToNext }, { config.lineToNext = it })),
+				line("to_max", "The kills left to the family's last tier, or MAX.", BestiaryLine.TO_MAX, Binding.of({ config.lineToMax }, { config.lineToMax = it })),
+				line("milestone", "Your Bestiary Milestone and the tiers to the next, once known.", BestiaryLine.MILESTONE,
+					Binding.of({ config.lineMilestone }, { config.lineMilestone = it })),
+				line("rate", "The family's kills per hour over the last minutes.", BestiaryLine.RATE, Binding.of({ config.lineRate }, { config.lineRate = it })),
+				line("eta", "How long the next tier and the last one take at that pace.", BestiaryLine.ETA, Binding.of({ config.lineEta }, { config.lineEta = it })),
+				line("session_kills", "The family's kills since the session began.", BestiaryLine.SESSION_KILLS,
+					Binding.of({ config.lineSessionKills }, { config.lineSessionKills = it })),
+				line("session_average", "The session's kills of all families, per hour, and its length.", BestiaryLine.SESSION_AVERAGE,
+					Binding.of({ config.lineSessionAverage }, { config.lineSessionAverage = it })),
+				line("source_age", "Where the values come from and how old they are.", BestiaryLine.SOURCE_AGE,
+					Binding.of({ config.lineSourceAge }, { config.lineSourceAge = it })),
+			)
+			options += Checklist(
+				"$ID.lines", OptionText("Lines shown", "Pick which lines the panel shows.", "", java.util.List.of("lines", "show", "hide")), lines,
+			)
 			options += Choice.of(
 				"$ID.line_order", "modules.$ID.lineOrder",
 				OptionText("Line order", "Which lines come first: the progress, the session or the milestone.", "", keywords),
@@ -456,9 +458,10 @@ class BestiaryModule : Module {
 			return java.util.List.of(Card(ID, Category.ODDS_TRACKERS, "Bestiary Tracker", toggle, java.util.List.copyOf(options)))
 		}
 
-		private fun line(key: String, title: String, description: String, line: BestiaryLine, binding: Binding<Boolean>): Toggle =
+		/** A line's item of the checklist, labelled as the line; its id and config field are the ones it had as a toggle of its own. */
+		private fun line(key: String, description: String, line: BestiaryLine, binding: Binding<Boolean>): Toggle =
 			Toggle.of("$ID.line_$key", "modules.$ID.line" + key.split('_').joinToString("") { it.replaceFirstChar(Char::uppercaseChar) },
-				OptionText(title, description, "", java.util.List.of("line", "show")), line.defaultShown, binding)
+				OptionText(line.label, description, "", java.util.List.of()), line.defaultShown, binding)
 
 		/** Wall-clock ms: a value's age survives a restart (T5.2d). */
 		private fun now(): Long = System.currentTimeMillis()

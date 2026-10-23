@@ -18,6 +18,7 @@ import com.k8bas.skyblockutility.module.npcsearch.WaypointColors;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
+import com.k8bas.skyblockutility.ui.option.Checklist;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
@@ -69,8 +70,11 @@ class OptionCatalogTest {
 				new MineshaftAlertConfig(), enabled -> { });
 	}
 
+	/** Every option, a checklist's items too (REQ-UI-61): each is checked as it was as a card of its own. */
 	private static List<Option> options() {
-		return catalog().stream().flatMap(card -> card.all().stream()).toList();
+		return catalog().stream().flatMap(card -> card.all().stream())
+				.flatMap(option -> option instanceof Checklist list ? java.util.stream.Stream.concat(java.util.stream.Stream.of(option), list.items().stream())
+						: java.util.stream.Stream.of(option)).toList();
 	}
 
 	/** AC-UI-30 (REQ-UI-29, R46): "Smooth corners" says it changes only how rounded corners are drawn, nothing else. */
@@ -98,9 +102,13 @@ class OptionCatalogTest {
 		}
 	}
 
-	/** The options that store a value: not buttons ("Edit HUD layout"), database pickers or shown-only values (the Updates card's, T4.4b). */
+	/**
+	 * The options that store a value: not buttons ("Edit HUD layout"), database pickers or shown-only values (the Updates card's,
+	 * T4.4b); a checklist's items each store theirs (REQ-UI-61), the checklist nothing.
+	 */
 	private static List<Option> storedOptions() {
-		return options().stream().filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption || option instanceof InfoOption))
+		return options().stream()
+				.filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption || option instanceof InfoOption || option instanceof Checklist))
 				.toList();
 	}
 
@@ -221,6 +229,7 @@ class OptionCatalogTest {
 				case ActionOption a -> throw new AssertionError("only rule cards have actions");
 				case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 				case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
+				case Checklist c -> throw new AssertionError("a checklist stores nothing; its items do");
 			};
 			assertEquals(option.defaultValue(), current, "a fresh config holds the declared default: " + option.id());
 		}
@@ -235,6 +244,10 @@ class OptionCatalogTest {
 			assertTrue(ids.add(card.id()), "card ids are unique: " + card.id());
 			for (Option option : card.all()) {
 				assertTrue(ids.add(option.id()), "option ids are unique: " + option.id());
+				// A checklist's items too (REQ-UI-61).
+				for (Option item : option instanceof Checklist list ? list.items() : List.<Toggle>of()) {
+					assertTrue(ids.add(item.id()), "option ids are unique: " + item.id());
+				}
 			}
 		}
 		Map<String, Card> byId = new LinkedHashMap<>();
@@ -299,8 +312,16 @@ class OptionCatalogTest {
 	@Test
 	void theRealCatalogIsSearchable() {
 		SearchIndex index = SearchIndex.of(catalog());
+		// A checklist's item is found through its checklist, which shows it (REQ-UI-61).
+		Map<String, String> shownBy = new java.util.HashMap<>();
 		for (Option option : options()) {
-			assertTrue(index.search(option.text().title()).hits().stream().anyMatch(hit -> hit.id().equals(option.id())), option.id());
+			if (option instanceof Checklist list) {
+				list.items().forEach(item -> shownBy.put(item.id(), list.id()));
+			}
+		}
+		for (Option option : options()) {
+			String id = shownBy.getOrDefault(option.id(), option.id());
+			assertTrue(index.search(option.text().title()).hits().stream().anyMatch(hit -> hit.id().equals(id)), option.id() + " (" + id + ")");
 		}
 		SearchIndex.Result range = index.search("range");
 		assertEquals(List.of("mob_highlighter.scan_range"), range.hits().stream().map(SearchIndex.Entry::id).toList());
@@ -326,7 +347,8 @@ class OptionCatalogTest {
 				bobber, hotspots, corpses, bestiary);
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		for (Card card : cards) {
-			for (Option option : card.all()) {
+			// A checklist's items each store their value (REQ-UI-61).
+			for (Option option : card.all().stream().flatMap(o -> o instanceof Checklist list ? list.items().stream() : java.util.stream.Stream.of(o)).toList()) {
 				// Keys live in options.txt; a button or a shown-only value stores nothing.
 				if (option instanceof Keybind || option instanceof ActionOption || option instanceof InfoOption) {
 					continue;
@@ -577,6 +599,7 @@ class OptionCatalogTest {
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
+			case Checklist c -> throw new AssertionError("a checklist stores nothing; its items do");
 		};
 	}
 
@@ -591,6 +614,7 @@ class OptionCatalogTest {
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
+			case Checklist c -> throw new AssertionError("a checklist stores nothing; its items do");
 		}
 	}
 
@@ -615,6 +639,7 @@ class OptionCatalogTest {
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
+			case Checklist c -> throw new AssertionError("a checklist stores nothing; its items do");
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.k8bas.skyblockutility.ui.screen
 import com.k8bas.skyblockutility.ui.option.ActionOption
 import com.k8bas.skyblockutility.ui.option.Card
 import com.k8bas.skyblockutility.ui.option.Category
+import com.k8bas.skyblockutility.ui.option.Checklist
 import com.k8bas.skyblockutility.ui.option.Choice
 import com.k8bas.skyblockutility.ui.option.ColorOption
 import com.k8bas.skyblockutility.ui.option.DatabaseOption
@@ -46,6 +47,12 @@ object ConfigLayout {
 
 	/** A rule's fields sit this far right of its header. */
 	const val RULE_INDENT: Int = 12
+
+	/** One item of an open checklist: its check box and label (REQ-UI-61). */
+	const val CHECK_ROW: Int = 18
+
+	/** A checklist's button: room for "10/10" and the chevron. */
+	const val CHECKLIST_BUTTON: Int = 56
 	const val TAB: Int = 22
 	const val TAB_GAP: Int = 2
 	const val SEARCH_WIDTH: Int = 140
@@ -189,6 +196,24 @@ object ConfigLayout {
 	}
 
 	/**
+	 * One item of an open checklist under its card (REQ-UI-61), indented as a rule's fields are; cut off at [clipBottom] while
+	 * the list opens or closes, as [OptionRow] is.
+	 */
+	data class CheckRow(
+		@get:JvmName("card") val card: Card,
+		@get:JvmName("list") val list: Checklist,
+		@get:JvmName("item") val item: Toggle,
+		private val y: Int,
+		@get:JvmName("clipBottom") val clipBottom: Int = Int.MAX_VALUE,
+	) : Row {
+		override fun y(): Int = y
+
+		override fun height(): Int = CHECK_ROW
+
+		override fun toString(): String = "CheckRow[list=${list.id()}, item=${item.id()}, y=$y, clipBottom=$clipBottom]"
+	}
+
+	/**
 	 * Where a feature's rules would start when it has none (REQ-UI-54): a row a rule header high with a hint how to add one.
 	 * Not a control.
 	 */
@@ -213,6 +238,12 @@ object ConfigLayout {
 
 		/** How far the rule's card is open, 0 to 1: eased while it opens or closes (REQ-UI-52), else 1 open and 0 closed. */
 		fun reveal(rule: RuleGroup): Float = if (expanded(rule)) 1f else 0f
+
+		/** Whether the checklist's items show under its card (REQ-UI-61). */
+		fun expanded(list: Checklist): Boolean = false
+
+		/** How far the checklist is open, 0 to 1, eased as a rule card is (REQ-UI-52). */
+		fun reveal(list: Checklist): Float = if (expanded(list)) 1f else 0f
 
 		companion object {
 			@JvmStatic
@@ -294,6 +325,9 @@ object ConfigLayout {
 				}
 				rows.add(OptionRow(card, option, option === card.toggle, y))
 				y += CARD + CARD_GAP
+				if (option is Checklist) {
+					y = checkRows(rows, card, option, y, filter.reveal(option).coerceIn(0f, 1f))
+				}
 			}
 			if (card.hasRuleList() && card.rules().isEmpty() && !filter.searching()) {
 				rows.add(RuleEmpty(card, y))
@@ -347,13 +381,33 @@ object ConfigLayout {
 		return Page(category, java.util.List.copyOf(rows), last.y() + last.height() + PAD)
 	}
 
+	/**
+	 * An open checklist's rows under its card, from [start] (REQ-UI-61), and the card gap after them; while it opens or closes
+	 * (REQ-UI-52), only as much of them as its eased [reveal] shows, as a rule card's. Returns where the next row goes.
+	 */
+	private fun checkRows(rows: MutableList<Row>, card: Card, list: Checklist, start: Int, reveal: Float): Int {
+		if (reveal <= 0f) {
+			return start
+		}
+		val end = start + list.items.size * CHECK_ROW + CARD_GAP
+		val limit = if (reveal >= 1f) Int.MAX_VALUE else start + Math.round(reveal * (end - start))
+		var y = start
+		for (item in list.items) {
+			if (y < limit) {
+				rows.add(CheckRow(card, list, item, y, limit))
+			}
+			y += CHECK_ROW
+		}
+		return minOf(end, limit)
+	}
+
 	/** A row's rectangle on screen, the page scrolled by [scroll]. */
 	@JvmStatic
 	fun row(frame: Frame, scroll: Int, row: Row): Rect {
 		val content = frame.content
 		val indent = when (row) {
 			is OptionRow -> row.indent
-			is RuleProblem -> RULE_INDENT
+			is RuleProblem, is CheckRow -> RULE_INDENT
 			else -> 0
 		}
 		return Rect(content.x + PAD + indent, content.y + row.y() - scroll, content.w - 2 * PAD - SCROLLBAR - indent, row.height())
@@ -420,6 +474,7 @@ object ConfigLayout {
 				maxOf(30, minOf(80, card.w + indent - 2 * PAD - SLIDER_LABEL - 60))
 			}
 			is Choice<*> -> 120
+			is Checklist -> CHECKLIST_BUTTON
 			is TextOption -> 140
 			is ActionOption -> 90
 			is DatabaseOption -> 120

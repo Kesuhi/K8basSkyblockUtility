@@ -44,6 +44,10 @@ final class ConfigPage {
 	private final Map<Option, OptionCard> cardWidgets = new IdentityHashMap<>();
 	private final Map<Option, Widget> controls = new IdentityHashMap<>();
 	private final Map<RuleGroup, RuleHeaderWidget> headers = new IdentityHashMap<>();
+	/** An open checklist's rows, by item (REQ-UI-61). */
+	private final Map<Toggle, CheckRowWidget> checkRows = new IdentityHashMap<>();
+	/** The click of a checklist's row, as a switch makes it. */
+	private final Runnable clickSound;
 	/** Controls the factory made disabled (e.g. a key that is not registered) stay so, whatever the status. */
 	private final Map<Widget, Boolean> ownEnabled = new IdentityHashMap<>();
 	/** What the last layout placed: cards and rule headers first, then controls, so every control lies over its card. */
@@ -59,6 +63,11 @@ final class ConfigPage {
 	}
 
 	ConfigPage(Category category, List<Card> cards, Controls factory, Consumer<RuleGroup> toggleRule, Supplier<String> query) {
+		this(category, cards, factory, toggleRule, query, () -> { });
+	}
+
+	ConfigPage(Category category, List<Card> cards, Controls factory, Consumer<RuleGroup> toggleRule, Supplier<String> query, Runnable clickSound) {
+		this.clickSound = clickSound;
 		this.category = category;
 		this.cards = cards;
 		this.factory = factory;
@@ -129,9 +138,15 @@ final class ConfigPage {
 		return headers.get(rule);
 	}
 
+	/** An open checklist's row for {@code item}, once shown; else null. */
+	CheckRowWidget checkRow(Toggle item) {
+		return checkRows.get(item);
+	}
+
 	/**
 	 * The page's keyboard stops in reading order, as the last layout placed them (REQ-UI-18, T2.9b): each option's control,
-	 * each rule's header and Remove, and an open rule's fields. The caller keeps those that are focusable and enabled.
+	 * each rule's header and Remove, an open rule's fields and an open checklist's rows (REQ-UI-61). The caller keeps those
+	 * that are focusable and enabled.
 	 */
 	void focusOrder(List<Widget> out) {
 		if (page == null) {
@@ -153,11 +168,16 @@ final class ConfigPage {
 				if (control != null) {
 					out.add(control);
 				}
+			} else if (row instanceof ConfigLayout.CheckRow checkRow) {
+				CheckRowWidget item = checkRows.get(checkRow.item());
+				if (item != null) {
+					out.add(item);
+				}
 			}
 		}
 	}
 
-	/** The row a page widget stands in (a control, a rule header or its Remove), or null; to scroll it into view. */
+	/** The row a page widget stands in (a control, a rule header or its Remove, a checklist's row), or null; to scroll it into view. */
 	ConfigLayout.Row rowOf(Widget widget) {
 		if (page == null || widget == null) {
 			return null;
@@ -169,6 +189,8 @@ final class ConfigPage {
 					return row;
 				}
 			} else if (row instanceof ConfigLayout.OptionRow optionRow && controls.get(optionRow.option()) == widget) {
+				return row;
+			} else if (row instanceof ConfigLayout.CheckRow checkRow && checkRows.get(checkRow.item()) == widget) {
 				return row;
 			}
 		}
@@ -213,6 +235,10 @@ final class ConfigPage {
 				}
 				continue;
 			}
+			if (row instanceof ConfigLayout.CheckRow checkRow) {
+				placedCards.add(placeCheckRow(frame, scroll, checkRow));
+				continue;
+			}
 			if (!(row instanceof ConfigLayout.OptionRow optionRow)) {
 				continue;
 			}
@@ -252,6 +278,22 @@ final class ConfigPage {
 		widgets = placed;
 		forgetDeletedRules();
 		return page;
+	}
+
+	/**
+	 * Places an open checklist's row for this frame (REQ-UI-61), made the first time: indented under its card, shown and
+	 * taking input only above the list's eased height while it opens or closes (REQ-UI-52), dimmed with its feature.
+	 */
+	private CheckRowWidget placeCheckRow(ConfigLayout.Frame frame, int scroll, ConfigLayout.CheckRow row) {
+		CheckRowWidget widget = checkRows.computeIfAbsent(row.item(), item -> new CheckRowWidget(item, query, clickSound));
+		ConfigLayout.Rect rect = ConfigLayout.row(frame, scroll, row);
+		ConfigLayout.Rect content = frame.content();
+		widget.setBounds(rect.x(), rect.y(), rect.w(), rect.h());
+		widget.setClip(row.clipBottom() == Integer.MAX_VALUE ? ClipRect.of(content.x(), content.y(), content.w(), content.h())
+				: ClipRect.of(content.x(), content.y(), content.w(), Math.min(content.h(), row.clipBottom() - scroll)));
+		widget.setDimmed(featureOff(row.card()));
+		widget.setEnabled(row.item().status().state() != OptionStatus.State.UNAVAILABLE);
+		return widget;
 	}
 
 	/** Drops the widgets of rules that are gone (deleted), so they do not pile up while the screen is open. */

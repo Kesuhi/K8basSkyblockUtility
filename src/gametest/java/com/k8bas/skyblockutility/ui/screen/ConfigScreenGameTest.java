@@ -1743,6 +1743,7 @@ public class ConfigScreenGameTest implements FabricClientGameTest {
 				case ToggleSwitch ignored -> PointerShape.HAND;
 				case Slider ignored -> PointerShape.HAND;
 				case Dropdown<?> ignored -> PointerShape.HAND;
+				case ChecklistButton ignored -> PointerShape.HAND;
 				case Button ignored -> PointerShape.HAND;
 				case KeybindButton ignored -> PointerShape.HAND;
 				case ColorSwatch ignored -> PointerShape.HAND;
