@@ -22,8 +22,17 @@ this repository. The SkyOcean section is a credit only: nothing of SkyOcean is b
 - Licence: MIT
 - Use: the NPC list for NPC Search (names, islands and positions) was compiled from its
   `items/*_NPC.json` files in August 2026, and cross-checked against revision
-  c4f7d4757641f3a11c74d3d77cec76c100abaf98 in `docs/data-audit-npc-mob.md`.
-- Distribution: the table `thirdparty/neu-repo/npcdb/npcs.json` in the jar's bundled data
+  c4f7d4757641f3a11c74d3d77cec76c100abaf98 in `docs/data-audit-npc-mob.md`. The bestiary
+  families for the Bestiary Tracker (kill brackets, caps, categories and mob ids) are its
+  `constants/bestiary.json` at revision 24564a1ad22fdb0ca985d78710c401898eac586b, trimmed
+  and reshaped: icons and colour codes removed; the families flattened into rows with an id,
+  their category and subcategory and a derived tier count; the CRITTERS bracket set renamed
+  `critters_1` to `critters_5`; ten families' bracket or cap corrected from game observations and other projects'
+  published values (facts only, no code or text: Hypixel-API-Reborn at revision
+  b47774b5aeb0e26cfc871e8f4869158082b6b641 and KyuWa FamilyAddons at revision
+  7d8a09465bae9753be99baeeb36d38af69a84d8c), each such row keeping NEU's values under `neu`.
+- Distribution: the tables `thirdparty/neu-repo/npcdb/npcs.json` and
+  `thirdparty/neu-repo/bestiary/families.json` in the jar's bundled data
   (`assets/k8bas_skyblock_utility/data/`). The licence text is
   `META-INF/licenses/neu-repo.txt` in the jar and `licenses/neu-repo.txt` in this repository.
 

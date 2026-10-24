@@ -6,6 +6,14 @@ All notable changes to K8bas Skyblock Utility are listed here. The format follow
 
 ## [Unreleased]
 
+## [1.3.2] - 2026-10-24
+
+### Added
+
+- Bestiary Tracker (Odds & Trackers): a HUD panel with your bestiary kills, tiers, kills per hour and milestone; the counts are kept per profile.
+- The panel follows the family you hunt or shows up to 5 pinned families.
+- A checklist picks the panel's lines; a compact layout is optional.
+
 ## [1.3.1] - 2026-10-18
 
 ### Added

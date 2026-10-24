@@ -10,6 +10,7 @@ import com.k8bas.skyblockutility.ui.notice.Notices;
 import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
+import com.k8bas.skyblockutility.ui.option.Checklist;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.DatabaseOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
@@ -131,8 +132,10 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 	private final ConfigMotion motion;
 	/** Where the selected tab's highlight is, sliding on a switch (REQ-UI-45). */
 	private final TabIndicator tabIndicator;
-	/** How far each rule card is open, easing as it opens and closes (REQ-UI-52). */
+	/** How far each rule card and checklist is open, easing as it opens and closes (REQ-UI-52, REQ-UI-61). */
 	private final RuleMotion ruleMotion;
+	/** Which checklists are open, on the rule cards' motion (REQ-UI-61). */
+	private final ChecklistStates checklists;
 	private int plainBackground;
 	/** The scroll the page was laid out at this frame: the real scroll less the slide, so text and cards move together. */
 	private int pageScroll;
@@ -168,6 +171,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		this.motion = new ConfigMotion(time::millis, time::motion);
 		this.tabIndicator = new TabIndicator(time);
 		this.ruleMotion = new RuleMotion(time);
+		this.checklists = new ChecklistStates(ruleMotion);
 		this.parent = parent;
 		this.cards = cards;
 		this.categories = ConfigLayout.categories(cards);
@@ -215,6 +219,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		index = SearchIndex.of(cards);
 		view = SearchView.of(index, categories, typed, selected);
 		closedInSearch.clear();
+		checklists.queryChanged();
 		viewStale = false;
 		if (view.selected() != selected) {
 			// Switched by the search itself: the box keeps the keyboard.
@@ -278,7 +283,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 			widgets().removeAll(pageWidgets);
 		}
 		selected = category;
-		page = pages.computeIfAbsent(category, shown -> new ConfigPage(shown, cards, this::control, this::toggleRule, this::query));
+		page = pages.computeIfAbsent(category, shown -> new ConfigPage(shown, cards, this::control, this::toggleRule, this::query, UiSound::click));
 		// Over the scroll area, under the sidebar and the search box.
 		pageWidgets = List.copyOf(page.widgets());
 		widgets().addAll(1, pageWidgets);
@@ -311,6 +316,11 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		ruleMotion.toggled(rule.id(), filter.expanded(rule));
 	}
 
+	/** Opens or closes a checklist under its card, easing it there as a rule card (REQ-UI-61, REQ-UI-52). */
+	void toggleChecklist(Checklist list) {
+		checklists.toggle(list, view.filtering(), query());
+	}
+
 	private final ConfigLayout.Filter filter = new ConfigLayout.Filter() {
 		@Override
 		public boolean shows(Option option) {
@@ -330,6 +340,16 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 		@Override
 		public float reveal(RuleGroup rule) {
 			return ruleMotion.reveal(rule.id(), expanded(rule));
+		}
+
+		@Override
+		public boolean expanded(Checklist list) {
+			return checklists.expanded(list, view.filtering(), query());
+		}
+
+		@Override
+		public float reveal(Checklist list) {
+			return checklists.reveal(list, view.filtering(), query());
 		}
 
 		@Override
@@ -629,6 +649,7 @@ public final class ConfigScreen extends WidgetScreen implements SavesOnClose {
 						value -> slider.format((int) value), UiSound::click);
 			}
 			case Choice<?> choice -> dropdown(choice);
+			case Checklist list -> new ChecklistButton(list, () -> toggleChecklist(list), () -> filter.expanded(list), UiSound::click);
 			case Keybind keybind -> keybindButton(keybind);
 			// Save in the picker is a discrete commit (REQ-UI-15).
 			case ColorOption colour -> new ColorSwatch(colour.binding(), colour.storesAlpha(), colour.text().title(), this, session::commit, UiSound::click);

@@ -55,6 +55,11 @@ object DataValidator {
 	private const val CC0 = "CC0-1.0"
 	private const val CORPSE_SPOTS = "mining.corpse_spots"
 	private const val SHAFTS = "mining_shafts"
+	private const val BESTIARY = "bestiary"
+
+	/** The NEU-REPO commit the bestiary table is trimmed from, and its family count (AC-BEST-14); a new pin moves both. */
+	private const val BESTIARY_PIN = "24564a1ad22fdb0ca985d78710c401898eac586b"
+	private const val BESTIARY_FAMILIES = 359
 	private val THIRD_PARTY = Regex("^thirdparty/([^/]+)/")
 
 	/** How a page a person supplied or found is marked (D-28 (i)); never an origin of its own for a verified number. */
@@ -155,6 +160,9 @@ object DataValidator {
 			rowSources(file.id, file.json!!, problems)
 			if (file.id == CORPSE_SPOTS) {
 				corpseSpots(file.json!!, keysByTable[SHAFTS], problems)
+			}
+			if (file.id == BESTIARY) {
+				bestiary(file.json!!, problems)
 			}
 		}
 		val upstreams = licences(files, schemas, problems)
@@ -364,6 +372,65 @@ object DataValidator {
 		// The shared list is the one most crystal codes have (the first such in file order on a tie), so the odd one is named.
 		val shared = crystal.values.groupingBy { it }.eachCount().maxByOrNull { it.value }?.key
 		crystal.filter { it.value != shared }.keys.sorted().forEach { problems += Problem(CORPSE_SPOTS, it, "a crystal code whose spots differ from the shared list") }
+	}
+
+	/**
+	 * The bestiary rules (T5.1, REQ-BEST-15, AC-BEST-14) the schema cannot state: the table comes from the pinned NEU
+	 * commit and has all of its families; every bracket increases; each family's bracket, category and subcategory are
+	 * the table's own; a Critter family's cap ends its set (R58); and its maxTiers is what the bracket gives below the
+	 * cap, plus the cap. A corrected row's sources are checked by the per-row source rules.
+	 */
+	private fun bestiary(json: JsonNode, problems: MutableList<Problem>) {
+		val revisions = json.get("sources")?.takeIf { it.isObject }?.values()?.mapNotNull { it.get("revision")?.takeIf { r -> r.isString }?.stringValue() } ?: listOf()
+		if (BESTIARY_PIN !in revisions) {
+			problems += Problem(BESTIARY, "/sources/revision", "${revisions.joinToString().ifEmpty { "none" }}; the validator pins NEU-REPO $BESTIARY_PIN ($BESTIARY_FAMILIES families), so a new pin moves both here")
+		}
+		val rows = json.get("rows")?.takeIf { it.isArray } ?: return
+		if (rows.size() != BESTIARY_FAMILIES) {
+			problems += Problem(BESTIARY, "rows", "${rows.size()} families, but NEU-REPO ${BESTIARY_PIN.take(10)} has $BESTIARY_FAMILIES")
+		}
+		val brackets = HashMap<String, List<Int>>()
+		json.get("brackets")?.takeIf { it.isObject }?.properties()?.forEach { (id, list) ->
+			// A value that is not an int is the schema's to report; the rule reads the rest.
+			val values = list.takeIf { it.isArray }?.values()?.filter { it.isInt }?.map { it.intValue() } ?: listOf()
+			brackets[id] = values
+			if (values.zipWithNext().any { (a, b) -> b <= a }) {
+				problems += Problem(BESTIARY, "/brackets/$id", "not increasing")
+			}
+		}
+		val categories = json.get("categories")?.takeIf { it.isObject }
+		// A field missing or of the wrong type is the schema's to report; each check here needs its fields readable.
+		fun JsonNode.text(name: String): String? = get(name)?.takeIf { it.isString }?.stringValue()
+		fun JsonNode.int(name: String): Int? = get(name)?.takeIf { it.isInt }?.intValue()
+		rows.forEachIndexed { i, row ->
+			val id = row.text("id") ?: "/rows/$i"
+			val category = row.text("category")
+			val subcategory = row.text("subcategory")
+			if (category != null) {
+				val subcategories = categories?.get(category)?.get("subcategories")
+				when {
+					categories?.get(category) == null -> problems += Problem(BESTIARY, id, "category $category is not one of the table's categories")
+					subcategory == null && subcategories != null -> problems += Problem(BESTIARY, id, "category $category needs a subcategory")
+					subcategory != null && subcategories?.get(subcategory) == null -> problems += Problem(BESTIARY, id, "subcategory $subcategory is not one of $category's")
+				}
+			}
+			val bracket = row.text("bracket") ?: return@forEachIndexed
+			val thresholds = brackets[bracket]
+			if (thresholds == null) {
+				problems += Problem(BESTIARY, id, "bracket $bracket is not one of the table's brackets")
+				return@forEachIndexed
+			}
+			val cap = row.int("cap") ?: return@forEachIndexed
+			// R58: a Critter family's cap ends its set, so it has every tier of it.
+			if (bracket.startsWith("critters_") && thresholds.isNotEmpty() && cap != thresholds.last()) {
+				problems += Problem(BESTIARY, id, "cap $cap is not the last value of $bracket (R58: a Critter family's cap ends its set)")
+			}
+			val tiers = thresholds.count { it < cap } + 1
+			val maxTiers = row.int("maxTiers") ?: return@forEachIndexed
+			if (maxTiers != tiers) {
+				problems += Problem(BESTIARY, id, "maxTiers $maxTiers, but bracket $bracket with cap $cap gives $tiers")
+			}
+		}
 	}
 
 	/** Every string under a `license` key in [node], with its pointer. */

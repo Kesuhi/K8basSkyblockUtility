@@ -21,9 +21,9 @@ public final class CaptureAllowlist {
 			"Bestiary", "Croesus",
 			// the sack overview (T3.2b, R39)
 			"Sacks");
-	/** "<parent> ➜ <page>", only for leveling parents, the task menus and the bestiary. */
+	/** "<parent> ➜ <page>", only for leveling parents, the task menus and the bestiary (with its Critter Safari biomes). */
 	private static final Pattern SUBMENU = Pattern.compile(
-			"(Tasks|Core|Event|Dungeon|Essence Shop|Slaying|Mining|Farming|Fishing|Foraging|Miscellaneous|Story|Complete Dungeons|Bestiary) ➜ .+");
+			"(Tasks|Core|Event|Dungeon|Essence Shop|Slaying|Mining|Farming|Fishing|Foraging|Miscellaneous|Story|Complete Dungeons|Bestiary|Critter Safari) ➜ .+");
 	private static final Pattern RNG_METER = Pattern.compile(".+ RNG Meter");
 	private static final Pattern REWARD_CHEST = Pattern.compile("(Wood|Gold|Diamond|Emerald|Obsidian|Bedrock) Chest");
 	/** One sack, e.g. "Dwarven Sack" (T3.2b, R39; UNVERIFIED until captured). */

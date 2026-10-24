@@ -21,6 +21,9 @@ class CaptureAllowlistTest {
 		assertTrue(CaptureAllowlist.matches("Essence Shop ➜ Undead"));
 		assertTrue(CaptureAllowlist.matches("Bestiary ➜ The Park"));
 		assertTrue(CaptureAllowlist.matches("Fishing ➜ Water"));
+		// The Bestiary pages T5.2b reads, so a field session can dump them (REQ-GS-14).
+		assertTrue(CaptureAllowlist.matches("Critter Safari ➜ Icy Biome"));
+		assertTrue(CaptureAllowlist.matches("(1/2) Bestiary ➜ The Catacombs"));
 		assertFalse(CaptureAllowlist.matches("Pets ➜ Cats"));
 		assertFalse(CaptureAllowlist.matches("Profile ➜ Kesuhi"));
 	}

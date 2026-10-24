@@ -536,7 +536,8 @@ public class UiReviewMatrixGameTest implements FabricClientGameTest {
 			for (Widget widget : candidates) {
 				boolean faded = widget != screen.search() && widget.x() < fadeRight && (widget.y() < fadeTop || widget.y() + widget.height() > fadeBottom);
 				boolean outlined = widget instanceof Button button && button.style() == Button.Style.NORMAL || widget instanceof TextField || widget instanceof KeybindButton
-						|| widget instanceof ColorSwatch || widget instanceof Dropdown<?> dropdown && !dropdown.isOpen();
+						|| widget instanceof ColorSwatch || widget instanceof Dropdown<?> dropdown && !dropdown.isOpen()
+						|| widget instanceof ChecklistButton list && !list.isOpen();
 				if (outlined && widget.fullyShowing() && widget.isEnabled() && !widget.isDimmed() && widget.width() > 0 && faded) {
 					ran("controls left out in an edge fade");
 				} else if (outlined && widget.fullyShowing() && widget.isEnabled() && !widget.isDimmed() && widget.width() > 0) {

@@ -1,0 +1,6759 @@
+<border>
+
+BESTIARY
+Flare X ➡ XI
+
+REWARDS
++4 Flare ✯ Magic Find
++4 Flare ❁ Strength
++2% Flare coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wither Skeleton IX ➡ X
+
+REWARDS
++3 Wither Skeleton ✯ Magic Find
++3 Wither Skeleton ❁ Strength
++2% Wither Skeleton coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bladesoul XII ➡ XIII
+
+REWARDS
++4 Bladesoul ✯ Magic Find
++4 Bladesoul ❁ Strength
++2% Bladesoul coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+End Stone Protector XII ➡ XIII
+
+REWARDS
++4 End Stone Protector ✯ Magic Find
++4 End Stone Protector ❁ Strength
++2% End Stone Protector coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXI➡CCLXII
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXI ➡ CCLXII
+
+REWARD
++1 ❤ Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Manticore XIV ➡ XV
+
+REWARDS
++4 Manticore ✯ Magic Find
++4 Manticore ❁ Strength
++2% Manticore coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Tank Zombie XII ➡ XIII
+
+REWARDS
++4 Tank Zombie ✯ Magic Find
++4 Tank Zombie ❁ Strength
++2% Tank Zombie coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bat II ➡ III
+
+REWARDS
++2 Bat ✯ Magic Find
++2 Bat ❁ Strength
++2% Bat coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Glacite Bowman XI ➡ XII
+
+REWARDS
++4 Glacite Bowman ✯ Magic Find
++4 Glacite Bowman ❁ Strength
++2% Glacite Bowman coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Glacite Mutt XII ➡ XIII
+
+REWARDS
++4 Glacite Mutt ✯ Magic Find
++4 Glacite Mutt ❁ Strength
++2% Glacite Mutt coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Glacite Caver XII ➡ XIII
+
+REWARDS
++4 Glacite Caver ✯ Magic Find
++4 Glacite Caver ❁ Strength
++2% Glacite Caver coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXII ➡ CCLXIII
+
+REWARD
++1 ❤ Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Littlefoot I
+
+REWARDS
++2 Littlefoot ✯ Magic Find
++2 Littlefoot ❁ Strength
++2% Littlefoot coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Littlefoot I ➡ II
+
+REWARDS
++2 Littlefoot ✯ Magic Find
++2 Littlefoot ❁ Strength
++2% Littlefoot coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Littlefoot II ➡ III
+
+REWARDS
++2 Littlefoot ✯ Magic Find
++2 Littlefoot ❁ Strength
++2% Littlefoot coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXIII➡CCLXIV
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXIII ➡ CCLXIV
+
+REWARD
++1 ❤ Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Glacite Mage XII ➡ XIII
+
+REWARDS
++4 Glacite Mage ✯ Magic Find
++4 Glacite Mage ❁ Strength
++2% Glacite Mage coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Mithril Grubber I
+
+REWARDS
++2 Mithril Grubber ✯ Magic Find
++2 Mithril Grubber ❁ Strength
++2% Mithril Grubber coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Mithril Grubber I ➡ II
+
+REWARDS
++2 Mithril Grubber ✯ Magic Find
++2 Mithril Grubber ❁ Strength
++2% Mithril Grubber coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Mage Outlaw XII ➡ XIII
+
+REWARDS
++4 Mage Outlaw ✯ Magic Find
++4 Mage Outlaw ❁ Strength
++2% Mage Outlaw coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Littlefoot III ➡ IV
+
+REWARDS
++2 Littlefoot ✯ Magic Find
++2 Littlefoot ❁ Strength
++2% Littlefoot coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Barbarian Duke X XII ➡ XIII
+
+REWARDS
++4 Barbarian Duke X ✯ Magic Find
++4 Barbarian Duke X ❁ Strength
++2% Barbarian Duke X coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ghast X ➡ XI
+
+REWARDS
++4 Ghast ✯ Magic Find
++4 Ghast ❁ Strength
++2% Ghast coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Cricket XII ➡ XIII
+
+REWARDS
++0.4☘ Farming Fortune
++2% Cricket coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy I
+
+REWARDS
++0.4☘ Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy I ➡ II
+
+REWARDS
++0.4☘ Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXIV➡CCLXV
+
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy II ➡ III
+
+REWARDS
++0.4☘ Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXIV ➡ CCLXV
+
+REWARDS
++1 ❤ Health
++1,000,000 Combat Experience
+
+<border>
+----
+<border>
+
+BESTIARY
+Skeleton Master XVII ➡ XVIII
+
+REWARDS
++5 Skeleton Master  Magic Find
++5 Skeleton Master  Strength
++2% Skeleton Master coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Zombie Knight XVIII ➡ XIX
+
+REWARDS
++5 Zombie Knight  Magic Find
++5 Zombie Knight  Strength
++2% Zombie Knight coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXV➡CCLXVI
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXV ➡ CCLXVI
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Field Mouse X ➡ XI
+
+REWARDS
++0.4 Farming Fortune
++2% Field Mouse coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail I
+
+REWARDS
++2 Volcanic Snail  Magic Find
++2 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Vanquisher XII ➡ XIII
+
+REWARDS
++4 Vanquisher  Magic Find
++4 Vanquisher  Strength
++2% Vanquisher coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail I ➡ II
+
+REWARDS
++2 Volcanic Snail  Magic Find
++2 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail II ➡ III
+
+REWARDS
++2 Volcanic Snail  Magic Find
++2 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar I
+
+REWARDS
++2 Magma Pillar  Magic Find
++2 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail III ➡ IV
+
+REWARDS
++2 Volcanic Snail  Magic Find
++2 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar I ➡ II
+
+REWARDS
++2 Magma Pillar  Magic Find
++2 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail IV ➡ V
+
+REWARDS
++2 Volcanic Snail  Magic Find
++2 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail V ➡ VI
+
+REWARDS
++3 Volcanic Snail  Magic Find
++3 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXVI➡CCLXVII
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail VI ➡ VII
+
+REWARDS
++3 Volcanic Snail  Magic Find
++3 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar II ➡ III
+
+REWARDS
++2 Magma Pillar  Magic Find
++2 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail VII ➡ VIII
+
+REWARDS
++3 Volcanic Snail  Magic Find
++3 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail VIII ➡ IX
+
+REWARDS
++3 Volcanic Snail  Magic Find
++3 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXVI ➡ CCLXVII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar III ➡ IV
+
+REWARDS
++2 Magma Pillar  Magic Find
++2 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail IX ➡ X
+
+REWARDS
++3 Volcanic Snail  Magic Find
++3 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar IV ➡ V
+
+REWARDS
++2 Magma Pillar  Magic Find
++2 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar V ➡ VI
+
+REWARDS
++3 Magma Pillar  Magic Find
++3 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar VII ➡ VIII
+
+REWARDS
++3 Magma Pillar  Magic Find
++3 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Boss XIII ➡ XIV
+
+REWARDS
++4 Magma Boss  Magic Find
++4 Magma Boss  Strength
++2% Magma Boss coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lava Leech XIII ➡ XIV
+
+REWARDS
++4 Lava Leech  Magic Find
++4 Lava Leech  Strength
++2% Lava Leech coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar VIII ➡ IX
+
+REWARDS
++3 Magma Pillar  Magic Find
++3 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Volcanic Snail XI ➡ XII
+
+REWARDS
++4 Volcanic Snail  Magic Find
++4 Volcanic Snail  Strength
++2% Volcanic Snail coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dumpster Diver VI ➡ VII
+
+REWARDS
++3 Dumpster Diver  Magic Find
++3 Dumpster Diver  Strength
++2% Dumpster Diver coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling I
+
+REWARDS
++2 Inkling  Magic Find
++2 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Trash Gobbler IX ➡ X
+
+REWARDS
++3 Trash Gobbler  Magic Find
++3 Trash Gobbler  Strength
++2% Trash Gobbler coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Banshee VI ➡ VII
+
+REWARDS
++3 Banshee  Magic Find
++3 Banshee  Strength
++2% Banshee coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bayou Sludge III ➡ IV
+
+REWARDS
++2 Bayou Sludge  Magic Find
++2 Bayou Sludge  Strength
++2% Bayou Sludge coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXVIII➡CCLXIX
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling I ➡ II
+
+REWARDS
++2 Inkling  Magic Find
++2 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dumpster Diver VII ➡ VIII
+
+REWARDS
++3 Dumpster Diver  Magic Find
++3 Dumpster Diver  Strength
++2% Dumpster Diver coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling II ➡ III
+
+REWARDS
++2 Inkling  Magic Find
++2 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Banshee VII ➡ VIII
+
+REWARDS
++3 Banshee  Magic Find
++3 Banshee  Strength
++2% Banshee coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling III ➡ IV
+
+REWARDS
++2 Inkling  Magic Find
++2 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bayou Sludge IV ➡ V
+
+REWARDS
++2 Bayou Sludge  Magic Find
++2 Bayou Sludge  Strength
++2% Bayou Sludge coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dumpster Diver VIII ➡ IX
+
+REWARDS
++3 Dumpster Diver  Magic Find
++3 Dumpster Diver  Strength
++2% Dumpster Diver coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Alligator IV ➡ V
+
+REWARDS
++2 Alligator  Magic Find
++2 Alligator  Strength
++2% Alligator coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray I
+
+REWARDS
++2 Manta Ray  Magic Find
++2 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Man X ➡ XI
+
+REWARDS
++4 Frog Man  Magic Find
++4 Frog Man  Strength
++2% Frog Man coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXIX➡CCLXX
+
+<border>
+----
+<border>
+
+BESTIARY
+Blue Ringed Octopus IV ➡ V
+
+REWARDS
++2 Blue Ringed Octopus  Magic Find
++2 Blue Ringed Octopus  Strength
++2% Blue Ringed Octopus coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Trash Gobbler X ➡ XI
+
+REWARDS
++4 Trash Gobbler  Magic Find
++4 Trash Gobbler  Strength
++2% Trash Gobbler coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling IV ➡ V
+
+REWARDS
++2 Inkling  Magic Find
++2 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling V ➡ VI
+
+REWARDS
++3 Inkling  Magic Find
++3 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wiki Tiki I ➡ II
+
+REWARDS
++2 Wiki Tiki  Magic Find
++2 Wiki Tiki  Strength
++2% Wiki Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling VI ➡ VII
+
+REWARDS
++3 Inkling  Magic Find
++3 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray I ➡ II
+
+REWARDS
++2 Manta Ray  Magic Find
++2 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Banshee VIII ➡ IX
+
+REWARDS
++3 Banshee  Magic Find
++3 Banshee  Strength
++2% Banshee coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bayou Sludge V ➡ VI
+
+REWARDS
++3 Bayou Sludge  Magic Find
++3 Bayou Sludge  Strength
++2% Bayou Sludge coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray II ➡ III
+
+REWARDS
++2 Manta Ray  Magic Find
++2 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXX➡CCLXXI
+
+<border>
+----
+<border>
+
+BESTIARY
+Dumpster Diver IX ➡ X
+
+REWARDS
++3 Dumpster Diver  Magic Find
++3 Dumpster Diver  Strength
++2% Dumpster Diver coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling VII ➡ VIII
+
+REWARDS
++3 Inkling  Magic Find
++3 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Snapping Turtle VIII ➡ IX
+
+REWARDS
++3 Snapping Turtle  Magic Find
++3 Snapping Turtle  Strength
++2% Snapping Turtle coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bayou Sludge VI ➡ VII
+
+REWARDS
++3 Bayou Sludge  Magic Find
++3 Bayou Sludge  Strength
++2% Bayou Sludge coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray III ➡ IV
+
+REWARDS
++2 Manta Ray  Magic Find
++2 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wiki Tiki II ➡ III
+
+REWARDS
++2 Wiki Tiki  Magic Find
++2 Wiki Tiki  Strength
++2% Wiki Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Banshee IX ➡ X
+
+REWARDS
++3 Banshee  Magic Find
++3 Banshee  Strength
++2% Banshee coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Titanoboa I
+
+REWARDS
++2 Titanoboa  Magic Find
++2 Titanoboa  Strength
++2% Titanoboa coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling VIII ➡ IX
+
+REWARDS
++3 Inkling  Magic Find
++3 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Trash Gobbler XI ➡ XII
+
+REWARDS
++4 Trash Gobbler  Magic Find
++4 Trash Gobbler  Strength
++2% Trash Gobbler coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXXI➡CCLXXII
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray IV ➡ V
+
+REWARDS
++2 Manta Ray  Magic Find
++2 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Alligator V ➡ VI
+
+REWARDS
++3 Alligator  Magic Find
++3 Alligator  Strength
++2% Alligator coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bayou Sludge VII ➡ VIII
+
+REWARDS
++3 Bayou Sludge  Magic Find
++3 Bayou Sludge  Strength
++2% Bayou Sludge coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling IX ➡ X
+
+REWARDS
++3 Inkling  Magic Find
++3 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dumpster Diver X ➡ XI
+
+REWARDS
++4 Dumpster Diver  Magic Find
++4 Dumpster Diver  Strength
++2% Dumpster Diver coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray V ➡ VI
+
+REWARDS
++3 Manta Ray  Magic Find
++3 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Snapping Turtle IX ➡ X
+
+REWARDS
++3 Snapping Turtle  Magic Find
++3 Snapping Turtle  Strength
++2% Snapping Turtle coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Blue Ringed Octopus V ➡ VI
+
+REWARDS
++3 Blue Ringed Octopus  Magic Find
++3 Blue Ringed Octopus  Strength
++2% Blue Ringed Octopus coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXVIII ➡ CCLXXII
+
+REWARDS
++4  Health
++1,000,000 Combat Experience
++10 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Trash Gobbler XII ➡ XIII
+
+REWARDS
++4 Trash Gobbler  Magic Find
++4 Trash Gobbler  Strength
++2% Trash Gobbler coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wiki Tiki III ➡ IV
+
+REWARDS
++2 Wiki Tiki  Magic Find
++2 Wiki Tiki  Strength
++2% Wiki Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXXII➡CCLXXIII
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Man XI ➡ XII
+
+REWARDS
++4 Frog Man  Magic Find
++4 Frog Man  Strength
++2% Frog Man coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray VI ➡ VII
+
+REWARDS
++3 Manta Ray  Magic Find
++3 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Titanoboa I ➡ II
+
+REWARDS
++2 Titanoboa  Magic Find
++2 Titanoboa  Strength
++2% Titanoboa coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Titanoboa II ➡ III
+
+REWARDS
++2 Titanoboa  Magic Find
++2 Titanoboa  Strength
++2% Titanoboa coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wiki Tiki IV ➡ V
+
+REWARDS
++2 Wiki Tiki  Magic Find
++2 Wiki Tiki  Strength
++2% Wiki Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bayou Sludge VIII ➡ IX
+
+REWARDS
++3 Bayou Sludge  Magic Find
++3 Bayou Sludge  Strength
++2% Bayou Sludge coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Titanoboa III ➡ IV
+
+REWARDS
++2 Titanoboa  Magic Find
++2 Titanoboa  Strength
++2% Titanoboa coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Banshee X ➡ XI
+
+REWARDS
++4 Banshee  Magic Find
++4 Banshee  Strength
++2% Banshee coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Alligator VI ➡ VII
+
+REWARDS
++3 Alligator  Magic Find
++3 Alligator  Strength
++2% Alligator coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXXII ➡ CCLXXIII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Crypt Souleater XVI ➡ XVII
+
+REWARDS
++5 Crypt Souleater  Magic Find
++5 Crypt Souleater  Strength
++2% Crypt Souleater coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCLXXIII➡CCLXXIV
+
+<border>
+----
+<border>
+
+BESTIARY
+Crypt Dreadlord XIX ➡ XX
+
+REWARDS
++5 Crypt Dreadlord  Magic Find
++5 Crypt Dreadlord  Strength
++2% Crypt Dreadlord coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Golem XIII ➡ XIV
+
+REWARDS
++4 Golem  Magic Find
++4 Golem  Strength
++2% Golem coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXXIII ➡ CCLXXIV
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCLXXIV ➡ CCCXIX
+
+REWARDS
++45  Health
++9,000,000 Combat Experience
++40 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Groundhog I
+
+REWARDS
++1 Groundhog  Hunting Fortune
++2% Groundhog coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puck I
+
+REWARDS
++1 Puck  Hunting Fortune
++2% Puck coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bunbun I
+
+REWARDS
++1 Bunbun  Hunting Fortune
++2% Bunbun coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Firefox I
+
+REWARDS
++1 Firefox  Hunting Fortune
++2% Firefox coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Mountain Goat I
+
+REWARDS
++1 Mountain Goat  Hunting Fortune
++2% Mountain Goat coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXIX➡CCCXX
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz I
+
+REWARDS
++2 Honeybuzz  Magic Find
++2 Honeybuzz  Strength
++2% Honeybuzz coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXIX ➡ CCCXX
+
+REWARDS
++1  Health
++1,000,000 Combat Experience
++10 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drybark I
+
+REWARDS
++1 Drybark  Hunting Fortune
++2% Drybark coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Firefox I ➡ II
+
+REWARDS
++1 Firefox  Hunting Fortune
++2% Firefox coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Groundhog I ➡ II
+
+REWARDS
++1 Groundhog  Hunting Fortune
++2% Groundhog coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Beeheemoth I
+
+REWARDS
++2 Beeheemoth  Magic Find
++2 Beeheemoth  Strength
++2% Beeheemoth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Tiki I
+
+REWARDS
++1 Tiki  Hunting Fortune
++2% Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Chill V ➡ VI
+
+REWARDS
++1 Chill  Hunting Fortune
++2% Chill coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Chill VI ➡ VII
+
+REWARDS
++1 Chill  Hunting Fortune
++2% Chill coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Chill VII ➡ VIII
+
+REWARDS
++1 Chill  Hunting Fortune
++2% Chill coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Chill VIII ➡ IX
+
+REWARDS
++1 Chill  Hunting Fortune
++2% Chill coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXX➡CCCXXI
+
+<border>
+----
+<border>
+
+BESTIARY
+Chill IX ➡ X
+
+REWARDS
++1 Chill  Hunting Fortune
++2% Chill coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXX ➡ CCCXXI
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Puck I ➡ II
+
+REWARDS
++1 Puck  Hunting Fortune
++2% Puck coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Beeheemoth I ➡ II
+
+REWARDS
++2 Beeheemoth  Magic Find
++2 Beeheemoth  Strength
++2% Beeheemoth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Beeheemoth II ➡ III
+
+REWARDS
++2 Beeheemoth  Magic Find
++2 Beeheemoth  Strength
++2% Beeheemoth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Mountain Goat I ➡ II
+
+REWARDS
++1 Mountain Goat  Hunting Fortune
++2% Mountain Goat coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Mosquito XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Mosquito coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Cricket XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Cricket coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Locust XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Locust coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Earthworm XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Earthworm coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Slug XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Slug coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXI➡CCCXXII
+
+<border>
+----
+<border>
+
+BESTIARY
+Slug XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Slug coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXI ➡ CCCXXII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Slug XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Slug coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Locust XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Locust coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Praying Mantis XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Praying Mantis coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Locust XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Locust coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dragonfly X ➡ XI
+
+REWARDS
++0.4 Farming Fortune
++2% Dragonfly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Moth XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth I
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth I ➡ II
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth II ➡ III
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXII➡CCCXXIII
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth III ➡ IV
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth IV ➡ V
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth V ➡ VI
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth VI ➡ VII
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXII ➡ CCCXXIII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth VII ➡ VIII
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Rat XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Rat coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Field Mouse XI ➡ XII
+
+REWARDS
++0.4 Farming Fortune
++2% Field Mouse coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dragonfly XI ➡ XII
+
+REWARDS
++0.4 Farming Fortune
++2% Dragonfly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth VIII ➡ IX
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth IX ➡ X
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXIII➡CCCXXIV
+
+<border>
+----
+<border>
+
+BESTIARY
+Moth XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXIII ➡ CCCXXIV
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Earthworm XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Earthworm coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Cricket XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Cricket coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth X ➡ XI
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Mosquito XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Mosquito coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Field Mouse XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Field Mouse coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth XI ➡ XII
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Beetle XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Beetle coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Praying Mantis XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Praying Mantis coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXIV➡CCCXXV
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXIV ➡ CCCXXV
+
+REWARDS
++1  Health
++1,000,000 Combat Experience
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Moth XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dragonfly XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Dragonfly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lunar Moth XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Lunar Moth coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Field Mouse XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Field Mouse coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXV➡CCCXXVI
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXV ➡ CCCXXVI
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz II ➡ III
+
+REWARDS
++2 Honeybuzz  Magic Find
++2 Honeybuzz  Strength
++2% Honeybuzz coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drybark I ➡ II
+
+REWARDS
++1 Drybark  Hunting Fortune
++2% Drybark coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Groundhog III ➡ IV
+
+REWARDS
++1 Groundhog  Hunting Fortune
++2% Groundhog coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Firefox III ➡ IV
+
+REWARDS
++1 Firefox  Hunting Fortune
++2% Firefox coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXVI ➡ CCCXXVII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXVII ➡ CCCXXVIII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz III ➡ IV
+
+REWARDS
++2 Honeybuzz  Magic Find
++2 Honeybuzz  Strength
++2% Honeybuzz coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant I
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant I ➡ II
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXVIII➡CCCXXIX
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant II ➡ III
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant III ➡ IV
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant IV ➡ V
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant V ➡ VI
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant VI ➡ VII
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant VII ➡ VIII
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant VIII ➡ IX
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Ant IX ➡ X
+
+REWARDS
++1 Ant  Hunting Fortune
++10% Ant Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXVIII ➡ CCCXXIX
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Mosquito XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Mosquito coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Zealot XXII ➡ XXIII
+
+REWARDS
++6 Zealot  Magic Find
++6 Zealot  Strength
++2% Zealot coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXIX➡CCCXXX
+
+<border>
+----
+<border>
+
+BESTIARY
+Zealot XXIII ➡ XXIV
+
+REWARDS
++6 Zealot  Magic Find
++6 Zealot  Strength
++2% Zealot coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Zealot XXIV ➡ XXV
+
+REWARDS
++6 Zealot  Magic Find
++6 Zealot  Strength
++2% Zealot coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Endermite XXI ➡ XXII
+
+REWARDS
++6 Endermite  Magic Find
++6 Endermite  Strength
++2% Endermite coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXIX ➡ CCCXXX
+
+REWARDS
++1  Health
++1,000,000 Combat Experience
++10 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Endermite XXII ➡ XXIII
+
+REWARDS
++6 Endermite  Magic Find
++6 Endermite  Strength
++2% Endermite coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Endermite XXIII ➡ XXIV
+
+REWARDS
++6 Endermite  Magic Find
++6 Endermite  Strength
++2% Endermite coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Endermite XXIV ➡ XXV
+
+REWARDS
++6 Endermite  Magic Find
++6 Endermite  Strength
++2% Endermite coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Miner Skeleton IV ➡ V
+
+REWARDS
++2 Miner Skeleton  Magic Find
++2 Miner Skeleton  Strength
++2% Miner Skeleton coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Redstone Pigman IV ➡ V
+
+REWARDS
++2 Redstone Pigman  Magic Find
++2 Redstone Pigman  Strength
++2% Redstone Pigman coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Rain Slime XI ➡ XII
+
+REWARDS
++4 Rain Slime  Magic Find
++4 Rain Slime  Strength
++2% Rain Slime coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Rain Slime XII ➡ XIII
+
+REWARDS
++4 Rain Slime  Magic Find
++4 Rain Slime  Strength
++2% Rain Slime coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXX➡CCCXXXI
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXX ➡ CCCXXXI
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Spider Jockey XII ➡ XIII
+
+REWARDS
++4 Spider Jockey  Magic Find
++4 Spider Jockey  Strength
++2% Spider Jockey coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Earthworm XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Earthworm coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dragonfly XIII ➡ XIV
+
+REWARDS
++0.4 Farming Fortune
++2% Dragonfly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Praying Mantis XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Praying Mantis coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sphinx XVII ➡ XVIII
+
+REWARDS
++5 Sphinx  Magic Find
++5 Sphinx  Strength
++2% Sphinx coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Field Mouse XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Field Mouse coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dragonfly XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Dragonfly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Firefly XII ➡ XIII
+
+REWARDS
++0.4 Farming Fortune
++2% Firefly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Skeletor X ➡ XI
+REWARDS
++4 Skeletor  Magic Find
++4 Skeletor  Strength
++2% Skeletor coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Crypt Ghoul XVI ➡ XVII
+REWARDS
++5 Crypt Ghoul  Magic Find
++5 Crypt Ghoul  Strength
++2% Crypt Ghoul coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+BESTIARY MILESTONE
+CCCXXXI➡CCCXXXII
+<border>
+----
+<border>
+
+BESTIARY
+Vanquisher XIV ➡ XV
+REWARDS
++4 Vanquisher  Magic Find
++4 Vanquisher  Strength
++2% Vanquisher coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Magma Pillar XIII ➡ XIV
+REWARDS
++4 Magma Pillar  Magic Find
++4 Magma Pillar  Strength
++2% Magma Pillar coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXXI ➡ CCCXXXII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Firefly XIII ➡ XIV
+REWARDS
++0.4 Farming Fortune
++2% Firefly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Firefly XIV ➡ XV
+REWARDS
++0.4 Farming Fortune
++2% Firefly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone I
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone I ➡ II
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone II ➡ III
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone III ➡ IV
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone IV ➡ V
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone V ➡ VI
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+BESTIARY MILESTONE
+CCCXXXII➡CCCXXXIII
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone VI ➡ VII
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone VII ➡ VIII
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone VIII ➡ IX
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy III ➡ IV
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy IV ➡ V
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy V ➡ VI
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy VI ➡ VII
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy VII ➡ VIII
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy VIII ➡ IX
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy IX ➡ X
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+BESTIARY MILESTONE
+CCCXXXIII➡CCCXXXIV
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy X ➡ XI
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy XI ➡ XII
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXXII ➡ CCCXXXIV
+
+REWARD
++2  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Cellar Spider VII ➡ VIII
+REWARDS
++3 Cellar Spider  Magic Find
++3 Cellar Spider  Strength
++2% Cellar Spider coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Withermancer XVIII ➡ XIX
+REWARDS
++5 Withermancer  Magic Find
++5 Withermancer  Strength
++2% Withermancer coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Fels XI ➡ XII
+REWARDS
++4 Fels  Magic Find
++4 Fels  Strength
++2% Fels coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Skeleton Soldier XIV ➡ XV
+REWARDS
++4 Skeleton Soldier  Magic Find
++4 Skeleton Soldier  Strength
++2% Skeleton Soldier coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXXIV ➡ CCCXXXVI
+
+REWARDS
++2  Health
++1,000,000 Combat Experience
+
+<border>
+----
+<border>
+
+BESTIARY
+Solar I
+REWARDS
++1 Solar  Hunting Fortune
++10% Solar Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Ember I
+REWARDS
++1 Ember  Hunting Fortune
++10% Ember Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Ember I ➡ II
+REWARDS
++1 Ember  Hunting Fortune
++10% Ember Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Ember II ➡ III
+REWARDS
++1 Ember  Hunting Fortune
++10% Ember Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Giant Isopod I
+REWARDS
++2 Giant Isopod  Magic Find
++2 Giant Isopod  Strength
++2% Giant Isopod coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Solar I ➡ II
+REWARDS
++1 Solar  Hunting Fortune
++10% Solar Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+BESTIARY MILESTONE
+CCCXXXVI➡CCCXXXVII
+<border>
+----
+<border>
+
+BESTIARY
+Solar II ➡ III
+REWARDS
++1 Solar  Hunting Fortune
++10% Solar Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Solar III ➡ IV
+REWARDS
++1 Solar  Hunting Fortune
++10% Solar Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Solar IV ➡ V
+REWARDS
++1 Solar  Hunting Fortune
++10% Solar Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Ember III ➡ IV
+REWARDS
++1 Ember  Hunting Fortune
++10% Ember Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Solar V ➡ VI
+REWARDS
++1 Solar  Hunting Fortune
++10% Solar Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Giant Isopod I ➡ II
+REWARDS
++2 Giant Isopod  Magic Find
++2 Giant Isopod  Strength
++2% Giant Isopod coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Solar VI ➡ VII
+REWARDS
++1 Solar  Hunting Fortune
++10% Solar Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXXVI ➡ CCCXXXVII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Butterfly X ➡ XI
+REWARDS
++4 Butterfly  Magic Find
++4 Butterfly  Strength
++2% Butterfly coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy XII ➡ XIII
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy XIII ➡ XIV
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+BESTIARY MILESTONE
+CCCXXXVII➡CCCXXXVIII
+<border>
+----
+<border>
+
+BESTIARY
+Timestalk Clone IX ➡ X
+REWARDS
++0.4 Farming Fortune
++2% Timestalk Clone coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXXVII ➡ CCCXXXVIII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Zombuddy XIV ➡ XV
+
+REWARDS
++0.4 Farming Fortune
++2% Zombuddy coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig I
+
+REWARDS
++2 Shiny Pig  Magic Find
++2 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig I ➡ II
+
+REWARDS
++2 Shiny Pig  Magic Find
++2 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig II ➡ III
+
+REWARDS
++2 Shiny Pig  Magic Find
++2 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig III ➡ IV
+
+REWARDS
++2 Shiny Pig  Magic Find
++2 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig IV ➡ V
+
+REWARDS
++2 Shiny Pig  Magic Find
++2 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig V ➡ VI
+
+REWARDS
++3 Shiny Pig  Magic Find
++3 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig VI ➡ VII
+
+REWARDS
++3 Shiny Pig  Magic Find
++3 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig VII ➡ VIII
+
+REWARDS
++3 Shiny Pig  Magic Find
++3 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXXVIII➡CCCXXXIX
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXXVIII ➡ CCCXXXIX
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig VIII ➡ IX
+
+REWARDS
++3 Shiny Pig  Magic Find
++3 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig IX ➡ X
+
+REWARDS
++3 Shiny Pig  Magic Find
++3 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig X ➡ XI
+
+REWARDS
++4 Shiny Pig  Magic Find
++4 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig XI ➡ XII
+
+REWARDS
++4 Shiny Pig  Magic Find
++4 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig XII ➡ XIII
+
+REWARDS
++4 Shiny Pig  Magic Find
++4 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Shiny Pig XIII ➡ XIV
+
+REWARDS
++4 Shiny Pig  Magic Find
++4 Shiny Pig  Strength
++2% Shiny Pig coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling X ➡ XI
+
+REWARDS
++4 Inkling  Magic Find
++4 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Banshee XIII ➡ XIV
+
+REWARDS
++4 Banshee  Magic Find
++4 Banshee  Strength
++2% Banshee coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wiki Tiki V ➡ VI
+
+REWARDS
++3 Wiki Tiki  Magic Find
++3 Wiki Tiki  Strength
++2% Wiki Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Titanoboa V ➡ VI
+
+REWARDS
++3 Titanoboa  Magic Find
++3 Titanoboa  Strength
++2% Titanoboa coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXXXIX➡CCCXL
+
+<border>
+----
+<border>
+
+BESTIARY
+Trash Gobbler XIII ➡ XIV
+
+REWARDS
++4 Trash Gobbler  Magic Find
++4 Trash Gobbler  Strength
++2% Trash Gobbler coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Alligator VIII ➡ IX
+
+REWARDS
++3 Alligator  Magic Find
++3 Alligator  Strength
++2% Alligator coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray XI ➡ XII
+
+REWARDS
++4 Manta Ray  Magic Find
++4 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Snapping Turtle XII ➡ XIII
+
+REWARDS
++4 Snapping Turtle  Magic Find
++4 Snapping Turtle  Strength
++2% Snapping Turtle coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Dumpster Diver XI ➡ XII
+
+REWARDS
++4 Dumpster Diver  Magic Find
++4 Dumpster Diver  Strength
++2% Dumpster Diver coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Alligator IX ➡ X
+
+REWARDS
++3 Alligator  Magic Find
++3 Alligator  Strength
++2% Alligator coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Blue Ringed Octopus VI ➡ VII
+
+REWARDS
++3 Blue Ringed Octopus  Magic Find
++3 Blue Ringed Octopus  Strength
++2% Blue Ringed Octopus coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Trash Gobbler XIV ➡ XV
+
+REWARDS
++4 Trash Gobbler  Magic Find
++4 Trash Gobbler  Strength
++2% Trash Gobbler coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXXXIX ➡ CCCXL
+
+REWARDS
++1  Health
++1,000,000 Combat Experience
++10 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker I ➡ II
+
+REWARDS
++2 Atoll Croaker  Magic Find
++2 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker II ➡ III
+
+REWARDS
++2 Atoll Croaker  Magic Find
++2 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXL➡CCCXLI
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF I ➡ II
+
+REWARDS
++2 gorF  Magic Find
++2 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain I
+
+REWARDS
++2 Drowned Captain  Magic Find
++2 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker III ➡ IV
+
+REWARDS
++2 Atoll Croaker  Magic Find
++2 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF II ➡ III
+
+REWARDS
++2 gorF  Magic Find
++2 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian III ➡ IV
+
+REWARDS
++2 Lotus Guardian  Magic Find
++2 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker IV ➡ V
+
+REWARDS
++2 Atoll Croaker  Magic Find
++2 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain I ➡ II
+
+REWARDS
++2 Drowned Captain  Magic Find
++2 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain II ➡ III
+
+REWARDS
++2 Drowned Captain  Magic Find
++2 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker V ➡ VI
+
+REWARDS
++3 Atoll Croaker  Magic Find
++3 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF III ➡ IV
+
+REWARDS
++2 gorF  Magic Find
++2 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLI➡CCCXLII
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker VI ➡ VII
+
+REWARDS
++3 Atoll Croaker  Magic Find
++3 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian IV ➡ V
+
+REWARDS
++2 Lotus Guardian  Magic Find
++2 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF IV ➡ V
+
+REWARDS
++2 gorF  Magic Find
++2 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF V ➡ VI
+
+REWARDS
++3 gorF  Magic Find
++3 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian V ➡ VI
+
+REWARDS
++3 Lotus Guardian  Magic Find
++3 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker VII ➡ VIII
+
+REWARDS
++3 Atoll Croaker  Magic Find
++3 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian VI ➡ VII
+
+REWARDS
++3 Lotus Guardian  Magic Find
++3 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain III ➡ IV
+
+REWARDS
++2 Drowned Captain  Magic Find
++2 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF VI ➡ VII
+
+REWARDS
++3 gorF  Magic Find
++3 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker VIII ➡ IX
+
+REWARDS
++3 Atoll Croaker  Magic Find
++3 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLII➡CCCXLIII
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian VII ➡ VIII
+
+REWARDS
++3 Lotus Guardian  Magic Find
++3 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF VII ➡ VIII
+
+REWARDS
++3 gorF  Magic Find
++3 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain IV ➡ V
+
+REWARDS
++2 Drowned Captain  Magic Find
++2 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain V ➡ VI
+
+REWARDS
++3 Drowned Captain  Magic Find
++3 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain VI ➡ VII
+
+REWARDS
++3 Drowned Captain  Magic Find
++3 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Snapping Turtle XIII ➡ XIV
+
+REWARDS
++4 Snapping Turtle  Magic Find
++4 Snapping Turtle  Strength
++2% Snapping Turtle coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Blue Ringed Octopus VII ➡ VIII
+
+REWARDS
++3 Blue Ringed Octopus  Magic Find
++3 Blue Ringed Octopus  Strength
++2% Blue Ringed Octopus coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Man XII ➡ XIII
+
+REWARDS
++4 Frog Man  Magic Find
++4 Frog Man  Strength
++2% Frog Man coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF VIII ➡ IX
+
+REWARDS
++3 gorF  Magic Find
++3 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper I
+
+REWARDS
++2 Puddle Jumper  Magic Find
++2 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLIII➡CCCXLIV
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker IX ➡ X
+
+REWARDS
++3 Atoll Croaker  Magic Find
++3 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian VIII ➡ IX
+
+REWARDS
++3 Lotus Guardian  Magic Find
++3 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain VII ➡ VIII
+
+REWARDS
++3 Drowned Captain  Magic Find
++3 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain VIII ➡ IX
+
+REWARDS
++3 Drowned Captain  Magic Find
++3 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain IX ➡ X
+
+REWARDS
++3 Drowned Captain  Magic Find
++3 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXL ➡ CCCXLIV
+
+REWARD
++4  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF IX ➡ X
+
+REWARDS
++3 gorF  Magic Find
++3 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Manta Ray XII ➡ XIII
+
+REWARDS
++4 Manta Ray  Magic Find
++4 Manta Ray  Strength
++2% Manta Ray coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker X ➡ XI
+
+REWARDS
++4 Atoll Croaker  Magic Find
++4 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian IX ➡ X
+
+REWARDS
++3 Lotus Guardian  Magic Find
++3 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper I ➡ II
+
+REWARDS
++2 Puddle Jumper  Magic Find
++2 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLIV➡CCCXLV
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper II ➡ III
+
+REWARDS
++2 Puddle Jumper  Magic Find
++2 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper III ➡ IV
+
+REWARDS
++2 Puddle Jumper  Magic Find
++2 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper I
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotum I
+
+REWARDS
++1 Lotum  Hunting Fortune
++10% Lotum Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper I ➡ II
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper II ➡ III
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper IV ➡ V
+
+REWARDS
++2 Puddle Jumper  Magic Find
++2 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Seashine I
+
+REWARDS
++1 Seashine  Hunting Fortune
++2% Seashine coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper III ➡ IV
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper V ➡ VI
+
+REWARDS
++3 Puddle Jumper  Magic Find
++3 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLV➡CCCXLVI
+
+<border>
+----
+<border>
+
+BESTIARY
+Seashine I ➡ II
+
+REWARDS
++1 Seashine  Hunting Fortune
++2% Seashine coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain X ➡ XI
+
+REWARDS
++4 Drowned Captain  Magic Find
++4 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper VI ➡ VII
+
+REWARDS
++3 Puddle Jumper  Magic Find
++3 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper IV ➡ V
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Seashine II ➡ III
+
+REWARDS
++1 Seashine  Hunting Fortune
++2% Seashine coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXLIV ➡ CCCXLVI
+
+REWARDS
++2  Health
++1,000,000 Combat Experience
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper VII ➡ VIII
+
+REWARDS
++3 Puddle Jumper  Magic Find
++3 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotusfish I
+
+REWARDS
++1 Lotusfish  Hunting Fortune
++10% Lotusfish Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper VIII ➡ IX
+
+REWARDS
++3 Puddle Jumper  Magic Find
++3 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince I
+
+REWARDS
++2 Frog Prince  Magic Find
++2 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince I ➡ II
+
+REWARDS
++2 Frog Prince  Magic Find
++2 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLVI➡CCCXLVII
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper IX ➡ X
+
+REWARDS
++3 Puddle Jumper  Magic Find
++3 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince II ➡ III
+
+REWARDS
++2 Frog Prince  Magic Find
++2 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince III ➡ IV
+
+REWARDS
++2 Frog Prince  Magic Find
++2 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince IV ➡ V
+
+REWARDS
++2 Frog Prince  Magic Find
++2 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wiki Tiki VI ➡ VII
+
+REWARDS
++3 Wiki Tiki  Magic Find
++3 Wiki Tiki  Strength
++2% Wiki Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince V ➡ VI
+
+REWARDS
++3 Frog Prince  Magic Find
++3 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXLVI ➡ CCCXLVII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF X ➡ XI
+
+REWARDS
++4 gorF  Magic Find
++4 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian X ➡ XI
+
+REWARDS
++4 Lotus Guardian  Magic Find
++4 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotum I ➡ II
+
+REWARDS
++1 Lotum  Hunting Fortune
++10% Lotum Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper V ➡ VI
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLVII➡CCCXLVIII
+
+<border>
+----
+<border>
+
+BESTIARY
+Seashine III ➡ IV
+
+REWARDS
++1 Seashine  Hunting Fortune
++2% Seashine coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain XI ➡ XII
+
+REWARDS
++4 Drowned Captain  Magic Find
++4 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXLVII ➡ CCCXLVIII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Ghast XII ➡ XIII
+
+REWARDS
++4 Ghast  Magic Find
++4 Ghast  Strength
++2% Ghast coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Kada Knight VIII ➡ IX
+
+REWARDS
++3 Kada Knight  Magic Find
++3 Kada Knight  Strength
++2% Kada Knight coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker XI ➡ XII
+
+REWARDS
++4 Atoll Croaker  Magic Find
++4 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper VI ➡ VII
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF XI ➡ XII
+
+REWARDS
++4 gorF  Magic Find
++4 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper VII ➡ VIII
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain XII ➡ XIII
+
+REWARDS
++4 Drowned Captain  Magic Find
++4 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper VIII ➡ IX
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLVIII➡CCCXLIX
+
+<border>
+----
+<border>
+
+BESTIARY
+Seashine IV ➡ V
+
+REWARDS
++1 Seashine  Hunting Fortune
++2% Seashine coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince VI ➡ VII
+
+REWARDS
++3 Frog Prince  Magic Find
++3 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Flipflopper IX ➡ X
+
+REWARDS
++1 Flipflopper  Hunting Fortune
++10% Flipflopper Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotum II ➡ III
+
+REWARDS
++1 Lotum  Hunting Fortune
++10% Lotum Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wiki Tiki VII ➡ VIII
+
+REWARDS
++3 Wiki Tiki  Magic Find
++3 Wiki Tiki  Strength
++2% Wiki Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian XI ➡ XII
+
+REWARDS
++4 Lotus Guardian  Magic Find
++4 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Wiki Tiki VIII ➡ IX
+
+REWARDS
++3 Wiki Tiki  Magic Find
++3 Wiki Tiki  Strength
++2% Wiki Tiki coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker XII ➡ XIII
+
+REWARDS
++4 Atoll Croaker  Magic Find
++4 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF XII ➡ XIII
+
+REWARDS
++4 gorF  Magic Find
++4 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain XIII ➡ XIV
+
+REWARDS
++4 Drowned Captain  Magic Find
++4 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCXLIX➡CCCL
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCXLVIII ➡ CCCL
+
+REWARDS
++2  Health
++1,000,000 Combat Experience
++10 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotum III ➡ IV
+
+REWARDS
++1 Lotum  Hunting Fortune
++10% Lotum Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince VII ➡ VIII
+
+REWARDS
++3 Frog Prince  Magic Find
++3 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF XIII ➡ XIV
+
+REWARDS
++4 gorF  Magic Find
++4 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper X ➡ XI
+
+REWARDS
++4 Puddle Jumper  Magic Find
++4 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker XIII ➡ XIV
+
+REWARDS
++4 Atoll Croaker  Magic Find
++4 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Drowned Captain XIV ➡ XV
+
+REWARDS
++4 Drowned Captain  Magic Find
++4 Drowned Captain  Strength
++2% Drowned Captain coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince VIII ➡ IX
+
+REWARDS
++3 Frog Prince  Magic Find
++3 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Lotus Guardian XII ➡ XIII
+
+REWARDS
++4 Lotus Guardian  Magic Find
++4 Lotus Guardian  Strength
++2% Lotus Guardian coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+gorF XIV ➡ XV
+
+REWARDS
++4 gorF  Magic Find
++4 gorF  Strength
++2% gorF coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Inkling XI ➡ XII
+
+REWARDS
++4 Inkling  Magic Find
++4 Inkling  Strength
++2% Inkling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCL➡CCCLI
+
+<border>
+----
+<border>
+
+BESTIARY
+Atoll Croaker XIV ➡ XV
+
+REWARDS
++4 Atoll Croaker  Magic Find
++4 Atoll Croaker  Strength
++2% Atoll Croaker coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puddle Jumper XI ➡ XII
+
+REWARDS
++4 Puddle Jumper  Magic Find
++4 Puddle Jumper  Strength
++2% Puddle Jumper coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCL ➡ CCCLI
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Frog Prince IX ➡ X
+
+REWARDS
++3 Frog Prince  Magic Find
++3 Frog Prince  Strength
++2% Frog Prince coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bladesoul XIII ➡ XIV
+
+REWARDS
++4 Bladesoul  Magic Find
++4 Bladesoul  Strength
++2% Bladesoul coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bal VII ➡ VIII
+
+REWARDS
++3 Bal  Magic Find
++3 Bal  Strength
++2% Bal coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bal VIII ➡ IX
+
+REWARDS
++3 Bal  Magic Find
++3 Bal  Strength
++2% Bal coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bal IX ➡ X
+
+REWARDS
++3 Bal  Magic Find
++3 Bal  Strength
++2% Bal coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bal X ➡ XI
+
+REWARDS
++4 Bal  Magic Find
++4 Bal  Strength
++2% Bal coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz IV ➡ V
+
+REWARDS
++1 Honeybuzz  Hunting Fortune
++10% Honeybuzz Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puck II ➡ III
+
+REWARDS
++1 Puck  Hunting Fortune
++10% Puck Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCLI➡CCCLII
+
+<border>
+----
+<border>
+
+BESTIARY
+Grizzly Bear I
+
+REWARDS
++1 Grizzly Bear  Hunting Fortune
++10% Grizzly Bear Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Blue Jay I
+
+REWARDS
++1 Blue Jay  Hunting Fortune
++10% Blue Jay Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Parched I
+
+REWARDS
++2 Parched  Magic Find
++2 Parched  Strength
++10% Parched Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Bunbun II ➡ III
+
+REWARDS
++1 Bunbun  Hunting Fortune
++10% Bunbun Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Parched I ➡ II
+
+REWARDS
++2 Parched  Magic Find
++2 Parched  Strength
++10% Parched Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Tiki II ➡ III
+
+REWARDS
++1 Tiki  Hunting Fortune
++10% Tiki Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Pollendart I
+
+REWARDS
++1 Pollendart  Hunting Fortune
++10% Pollendart Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Pollendart I ➡ II
+
+REWARDS
++1 Pollendart  Hunting Fortune
++10% Pollendart Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Tiki III ➡ IV
+
+REWARDS
++1 Tiki  Hunting Fortune
++10% Tiki Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Firefox IV ➡ V
+
+REWARDS
++1 Firefox  Hunting Fortune
++10% Firefox Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCLII➡CCCLIII
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCLI ➡ CCCLIII
+
+REWARD
++2  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Drybark II ➡ III
+
+REWARDS
++1 Drybark  Hunting Fortune
++10% Drybark Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Timil I
+
+REWARDS
++1 Timil  Hunting Fortune
++10% Timil Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz V ➡ VI
+
+REWARDS
++1 Honeybuzz  Hunting Fortune
++10% Honeybuzz Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Pangolin I
+
+REWARDS
++1 Pangolin  Hunting Fortune
++10% Pangolin Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Timil I ➡ II
+
+REWARDS
++1 Timil  Hunting Fortune
++10% Timil Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Queen Ant I
+
+REWARDS
++1 Queen Ant  Hunting Fortune
++2% Queen Ant coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Queen Ant I ➡ II
+
+REWARDS
++1 Queen Ant  Hunting Fortune
++2% Queen Ant coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Queen Ant II ➡ III
+
+REWARDS
++1 Queen Ant  Hunting Fortune
++2% Queen Ant coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Queen Ant III ➡ IV
+
+REWARDS
++1 Queen Ant  Hunting Fortune
++2% Queen Ant coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Queen Ant IV ➡ V
+
+REWARDS
++1 Queen Ant  Hunting Fortune
++2% Queen Ant coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCLIII➡CCCLIV
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard I
+
+REWARDS
++2 Haggard  Magic Find
++2 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling I
+
+REWARDS
++2 Brineling  Magic Find
++2 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard I ➡ II
+
+REWARDS
++2 Haggard  Magic Find
++2 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl I
+
+REWARDS
++2 Sprawl  Magic Find
++2 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard II ➡ III
+
+REWARDS
++2 Haggard  Magic Find
++2 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling I ➡ II
+
+REWARDS
++2 Brineling  Magic Find
++2 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard III ➡ IV
+
+REWARDS
++2 Haggard  Magic Find
++2 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling II ➡ III
+
+REWARDS
++2 Brineling  Magic Find
++2 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl I ➡ II
+
+REWARDS
++2 Sprawl  Magic Find
++2 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl II ➡ III
+
+REWARDS
++2 Sprawl  Magic Find
++2 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCLIV➡CCCLV
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard IV ➡ V
+
+REWARDS
++2 Haggard  Magic Find
++2 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling III ➡ IV
+
+REWARDS
++2 Brineling  Magic Find
++2 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Torrid I
+
+REWARDS
++2 Torrid  Magic Find
++2 Torrid  Strength
++2% Torrid coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Torrid I ➡ II
+
+REWARDS
++2 Torrid  Magic Find
++2 Torrid  Strength
++2% Torrid coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard V ➡ VI
+
+REWARDS
++3 Haggard  Magic Find
++3 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl III ➡ IV
+
+REWARDS
++2 Sprawl  Magic Find
++2 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard VI ➡ VII
+
+REWARDS
++3 Haggard  Magic Find
++3 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl IV ➡ V
+
+REWARDS
++2 Sprawl  Magic Find
++2 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Torrid II ➡ III
+
+REWARDS
++2 Torrid  Magic Find
++2 Torrid  Strength
++2% Torrid coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard VII ➡ VIII
+
+REWARDS
++3 Haggard  Magic Find
++3 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCLV➡CCCLVI
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl V ➡ VI
+
+REWARDS
++3 Sprawl  Magic Find
++3 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Torrid III ➡ IV
+
+REWARDS
++2 Torrid  Magic Find
++2 Torrid  Strength
++2% Torrid coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling IV ➡ V
+
+REWARDS
++2 Brineling  Magic Find
++2 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard VIII ➡ IX
+
+REWARDS
++3 Haggard  Magic Find
++3 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl VI ➡ VII
+
+REWARDS
++3 Sprawl  Magic Find
++3 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling V ➡ VI
+
+REWARDS
++3 Brineling  Magic Find
++3 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling VI ➡ VII
+
+REWARDS
++3 Brineling  Magic Find
++3 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl VII ➡ VIII
+
+REWARDS
++3 Sprawl  Magic Find
++3 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard IX ➡ X
+
+REWARDS
++3 Haggard  Magic Find
++3 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling VII ➡ VIII
+
+REWARDS
++3 Brineling  Magic Find
++3 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCLVI➡CCCLVII
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl VIII ➡ IX
+
+REWARDS
++3 Sprawl  Magic Find
++3 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Sprawl IX ➡ X
+
+REWARDS
++3 Sprawl  Magic Find
++3 Sprawl  Strength
++2% Sprawl coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Torrid IV ➡ V
+
+REWARDS
++2 Torrid  Magic Find
++2 Torrid  Strength
++2% Torrid coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling VIII ➡ IX
+
+REWARDS
++3 Brineling  Magic Find
++3 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Blue Ringed Octopus VIII ➡ IX
+
+REWARDS
++3 Blue Ringed Octopus  Magic Find
++3 Blue Ringed Octopus  Strength
++2% Blue Ringed Octopus coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Torrid V ➡ VI
+
+REWARDS
++3 Torrid  Magic Find
++3 Torrid  Strength
++2% Torrid coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Torrid VI ➡ VII
+
+REWARDS
++3 Torrid  Magic Find
++3 Torrid  Strength
++2% Torrid coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Brineling IX ➡ X
+
+REWARDS
++3 Brineling  Magic Find
++3 Brineling  Strength
++2% Brineling coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Haggard X ➡ XI
+
+REWARDS
++4 Haggard  Magic Find
++4 Haggard  Strength
++2% Haggard coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCLIII ➡ CCCLVII
+
+REWARDS
++4  Health
++1,000,000 Combat Experience
+
+<border>
+----
+<border>
+
+BESTIARY
+Torrid VII ➡ VIII
+
+REWARDS
++3 Torrid  Magic Find
++3 Torrid  Strength
++2% Torrid coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCLVII➡CCCLVIII
+
+<border>
+----
+<border>
+
+BESTIARY
+Silkbreeze I
+
+REWARDS
++2 Silkbreeze  Magic Find
++2 Silkbreeze  Strength
++2% Silkbreeze coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCLVII ➡ CCCLVIII
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz VI ➡ VII
+
+REWARDS
++1 Honeybuzz  Hunting Fortune
++10% Honeybuzz Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz VII ➡ VIII
+
+REWARDS
++1 Honeybuzz  Hunting Fortune
++10% Honeybuzz Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Parched II ➡ III
+
+REWARDS
++2 Parched  Magic Find
++2 Parched  Strength
++10% Parched Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Hivethief I
+
+REWARDS
++1 Hivethief  Hunting Fortune
++10% Hivethief Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Beeheemoth II ➡ III
+
+REWARDS
++2 Beeheemoth  Magic Find
++2 Beeheemoth  Strength
++10% Beeheemoth Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Puck III ➡ IV
+
+REWARDS
++1 Puck  Hunting Fortune
++10% Puck Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz VIII ➡ IX
+
+REWARDS
++1 Honeybuzz  Hunting Fortune
++10% Honeybuzz Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Honeybuzz IX ➡ X
+
+REWARDS
++1 Honeybuzz  Hunting Fortune
++10% Honeybuzz Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Pollendart II ➡ III
+
+REWARDS
++1 Pollendart  Hunting Fortune
++10% Pollendart Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+BESTIARY MILESTONE
+CCCLVIII➡CCCLIX
+
+<border>
+----
+<border>
+
+BESTIARY
+Parched III ➡ IV
+
+REWARDS
++2 Parched  Magic Find
++2 Parched  Strength
++10% Parched Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY MILESTONE
+CCCLVIII ➡ CCCLIX
+
+REWARD
++1  Health
+
+<border>
+----
+<border>
+
+BESTIARY
+Pollendart III ➡ IV
+
+REWARDS
++1 Pollendart  Hunting Fortune
++10% Pollendart Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Parched IV ➡ V
+
+REWARDS
++2 Parched  Magic Find
++2 Parched  Strength
++10% Parched Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Hivethief I ➡ II
+
+REWARDS
++1 Hivethief  Hunting Fortune
++10% Hivethief Hunting XP
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+<border>
+
+BESTIARY
+Giant Isopod II ➡ III
+
+REWARDS
++2 Giant Isopod  Magic Find
++2 Giant Isopod  Strength
++2% Giant Isopod coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>
+----
+
+BESTIARY
+Zombie Grunt X ➡ XI
+
+REWARDS
++4 Zombie Grunt  Magic Find
++4 Zombie Grunt  Strength
++2% Zombie Grunt coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+Archer Milestone ❶: You have dealt 60,000 Ranged Damage so far! 01s
+[NPC] Mort: You should find it useful if you get lost.
++5 Kill Combo +3%  Magic Find
+[NPC] Mort: Good luck.
+FEAR. A Primal Fear has been summoned!
++10 Kill Combo +10 coins per kill
+----
+<border>
+
+BESTIARY
+Barbarian Duke X XIII ➡ XIV
+
+REWARDS
++4 Barbarian Duke X  Magic Find
++4 Barbarian Duke X  Strength
++2% Barbarian Duke X coins
++50% chance for extra XP orbs
++1 SkyBlock XP
+
+<border>

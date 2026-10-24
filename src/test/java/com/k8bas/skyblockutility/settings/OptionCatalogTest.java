@@ -10,6 +10,7 @@ import com.k8bas.skyblockutility.highlight.GlowBehaviourText;
 import com.k8bas.skyblockutility.ui.notice.NoticePosition;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig;
 import com.k8bas.skyblockutility.module.hotspot.HotspotConfig;
+import com.k8bas.skyblockutility.module.bestiary.BestiaryConfig;
 import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsConfig;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
@@ -17,6 +18,7 @@ import com.k8bas.skyblockutility.module.npcsearch.WaypointColors;
 import com.k8bas.skyblockutility.module.npcsearch.NpcSearchConfig;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
+import com.k8bas.skyblockutility.ui.option.Checklist;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
@@ -68,8 +70,11 @@ class OptionCatalogTest {
 				new MineshaftAlertConfig(), enabled -> { });
 	}
 
+	/** Every option, a checklist's items too (REQ-UI-61): each is checked as it was as a card of its own. */
 	private static List<Option> options() {
-		return catalog().stream().flatMap(card -> card.all().stream()).toList();
+		return catalog().stream().flatMap(card -> card.all().stream())
+				.flatMap(option -> option instanceof Checklist list ? java.util.stream.Stream.concat(java.util.stream.Stream.of(option), list.items().stream())
+						: java.util.stream.Stream.of(option)).toList();
 	}
 
 	/** AC-UI-30 (REQ-UI-29, R46): "Smooth corners" says it changes only how rounded corners are drawn, nothing else. */
@@ -97,9 +102,13 @@ class OptionCatalogTest {
 		}
 	}
 
-	/** The options that store a value: not buttons ("Edit HUD layout"), database pickers or shown-only values (the Updates card's, T4.4b). */
+	/**
+	 * The options that store a value: not buttons ("Edit HUD layout"), database pickers or shown-only values (the Updates card's,
+	 * T4.4b); a checklist's items each store theirs (REQ-UI-61), the checklist nothing.
+	 */
 	private static List<Option> storedOptions() {
-		return options().stream().filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption || option instanceof InfoOption))
+		return options().stream()
+				.filter(option -> !(option instanceof ActionOption || option instanceof DatabaseOption || option instanceof InfoOption || option instanceof Checklist))
 				.toList();
 	}
 
@@ -173,6 +182,28 @@ class OptionCatalogTest {
 		expected.put("modules.fishing_hotspots.fillOpacity", 25);
 		// REQ-HOT-14 (R41 (b)): Hypixel's ring particles hidden.
 		expected.put("modules.fishing_hotspots.hideParticles", true);
+		// REQ-BEST-01 (D-6): the Bestiary Tracker OFF. §12.H (R11): the lines tier, kills, to next, milestone, rate and session
+		// kills ON, the others OFF; reset on island change OFF; the rate over 5 minutes (REQ-BEST-06). R59: progress first,
+		// Arabic tiers, auto-follow, hide maxed ON.
+		expected.put("modules.bestiary.enabled", false);
+		expected.put("modules.bestiary.lineFamily", true);
+		expected.put("modules.bestiary.lineKills", true);
+		expected.put("modules.bestiary.lineToNext", true);
+		expected.put("modules.bestiary.lineToMax", false);
+		expected.put("modules.bestiary.lineMilestone", true);
+		expected.put("modules.bestiary.lineRate", true);
+		expected.put("modules.bestiary.lineEta", false);
+		expected.put("modules.bestiary.lineSessionKills", true);
+		expected.put("modules.bestiary.lineSessionAverage", false);
+		expected.put("modules.bestiary.lineSourceAge", false);
+		expected.put("modules.bestiary.lineOrder", com.k8bas.skyblockutility.module.bestiary.LineOrder.PROGRESS_FIRST);
+		expected.put("modules.bestiary.numerals", com.k8bas.skyblockutility.module.bestiary.TierNumerals.ARABIC);
+		expected.put("modules.bestiary.windowMinutes", 5);
+		expected.put("modules.bestiary.resetOnIslandChange", false);
+		expected.put("modules.bestiary.selection", com.k8bas.skyblockutility.module.bestiary.SelectionMode.AUTO);
+		expected.put("modules.bestiary.hideMaxed", true);
+		// T5.3b: the compact one-line layout OFF.
+		expected.put("modules.bestiary.compact", false);
 		// REQ-HOT-10/12 (D-6, R12): the warning with title, sound and chat ON, the notice OFF; the pling at full volume (T3.6b).
 		expected.put("modules.fishing_hotspots.warning", true);
 		expected.put("modules.fishing_hotspots.warnTitle", true);
@@ -198,6 +229,7 @@ class OptionCatalogTest {
 				case ActionOption a -> throw new AssertionError("only rule cards have actions");
 				case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 				case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
+				case Checklist c -> throw new AssertionError("a checklist stores nothing; its items do");
 			};
 			assertEquals(option.defaultValue(), current, "a fresh config holds the declared default: " + option.id());
 		}
@@ -212,6 +244,10 @@ class OptionCatalogTest {
 			assertTrue(ids.add(card.id()), "card ids are unique: " + card.id());
 			for (Option option : card.all()) {
 				assertTrue(ids.add(option.id()), "option ids are unique: " + option.id());
+				// A checklist's items too (REQ-UI-61).
+				for (Option item : option instanceof Checklist list ? list.items() : List.<Toggle>of()) {
+					assertTrue(ids.add(item.id()), "option ids are unique: " + item.id());
+				}
 			}
 		}
 		Map<String, Card> byId = new LinkedHashMap<>();
@@ -276,8 +312,16 @@ class OptionCatalogTest {
 	@Test
 	void theRealCatalogIsSearchable() {
 		SearchIndex index = SearchIndex.of(catalog());
+		// A checklist's item is found through its checklist, which shows it (REQ-UI-61).
+		Map<String, String> shownBy = new java.util.HashMap<>();
 		for (Option option : options()) {
-			assertTrue(index.search(option.text().title()).hits().stream().anyMatch(hit -> hit.id().equals(option.id())), option.id());
+			if (option instanceof Checklist list) {
+				list.items().forEach(item -> shownBy.put(item.id(), list.id()));
+			}
+		}
+		for (Option option : options()) {
+			String id = shownBy.getOrDefault(option.id(), option.id());
+			assertTrue(index.search(option.text().title()).hits().stream().anyMatch(hit -> hit.id().equals(id)), option.id() + " (" + id + ")");
 		}
 		SearchIndex.Result range = index.search("range");
 		assertEquals(List.of("mob_highlighter.scan_range"), range.hits().stream().map(SearchIndex.Entry::id).toList());
@@ -298,19 +342,21 @@ class OptionCatalogTest {
 		BobberFixConfig bobber = new BobberFixConfig();
 		HotspotConfig hotspots = new HotspotConfig();
 		CorpseSpotsConfig corpses = new CorpseSpotsConfig();
+		BestiaryConfig bestiary = new BestiaryConfig();
 		List<Card> cards = OptionCatalog.build(general, mob, npc, value -> mob.enabled = value, value -> npc.enabled = value, shaft, value -> shaft.enabled = value,
-				bobber, hotspots, corpses);
+				bobber, hotspots, corpses, bestiary);
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		for (Card card : cards) {
-			for (Option option : card.all()) {
+			// A checklist's items each store their value (REQ-UI-61).
+			for (Option option : card.all().stream().flatMap(o -> o instanceof Checklist list ? list.items().stream() : java.util.stream.Stream.of(o)).toList()) {
 				// Keys live in options.txt; a button or a shown-only value stores nothing.
 				if (option instanceof Keybind || option instanceof ActionOption || option instanceof InfoOption) {
 					continue;
 				}
-				Map<String, String> before = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
+				Map<String, String> before = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses, bestiary);
 				Object original = current(option);
 				change(option);
-				Map<String, String> after = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
+				Map<String, String> after = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses, bestiary);
 				Set<String> changed = new TreeSet<>();
 				// Both ways: an island colour is a map entry that exists only once it differs from its default.
 				Set<String> keys = new TreeSet<>(before.keySet());
@@ -322,7 +368,7 @@ class OptionCatalogTest {
 				}
 				assertEquals(Set.of(option.storageKey()), changed, option.id());
 				restore(option, original);
-				Map<String, String> restored = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses);
+				Map<String, String> restored = leaves(gson, general, mob, npc, shaft, bobber, hotspots, corpses, bestiary);
 				// A setting absent until picked (R28, the accent) now holds its default: picked, so it is written.
 				if ("null".equals(before.get(option.storageKey()))) {
 					assertEquals(gson.toJson(option.defaultValue()), restored.get(option.storageKey()), option.id() + " holds its default");
@@ -371,7 +417,7 @@ class OptionCatalogTest {
 		Set<String> cardIds = new TreeSet<>();
 		catalog().forEach(card -> cardIds.add(card.id()));
 		assertTrue(cardIds.containsAll(moduleIds), "modules " + moduleIds + " vs cards " + cardIds);
-		assertEquals(6, moduleIds.size());
+		assertEquals(7, moduleIds.size());
 	}
 
 	/** REQ-XC-RULES-07 (P7): no forbidden word in what is shown; "gambling" only as a keyword. */
@@ -464,7 +510,8 @@ class OptionCatalogTest {
 				"modules.mineshaft_alert", gson.toJsonTree(new MineshaftAlertConfig()).getAsJsonObject(),
 				"modules.bobber_fix", gson.toJsonTree(new BobberFixConfig()).getAsJsonObject(),
 				"modules.fishing_hotspots", gson.toJsonTree(new HotspotConfig()).getAsJsonObject(),
-				"modules.corpse_spots", gson.toJsonTree(new CorpseSpotsConfig()).getAsJsonObject());
+				"modules.corpse_spots", gson.toJsonTree(new CorpseSpotsConfig()).getAsJsonObject(),
+				"modules.bestiary", gson.toJsonTree(new BestiaryConfig()).getAsJsonObject());
 		for (Option option : storedOptions()) {
 			String key = option.storageKey();
 			if (key.startsWith("options.txt:")) {
@@ -512,7 +559,7 @@ class OptionCatalogTest {
 	}
 
 	private static Map<String, String> leaves(Gson gson, GeneralConfig general, MobHighlighterConfig mob, NpcSearchConfig npc, MineshaftAlertConfig shaft,
-			BobberFixConfig bobber, HotspotConfig hotspots, CorpseSpotsConfig corpses) {
+			BobberFixConfig bobber, HotspotConfig hotspots, CorpseSpotsConfig corpses, BestiaryConfig bestiary) {
 		Set<String> keys = new TreeSet<>();
 		Map<String, String> values = new LinkedHashMap<>();
 		JsonObject root = new JsonObject();
@@ -523,6 +570,7 @@ class OptionCatalogTest {
 		modules.add("bobber_fix", gson.toJsonTree(bobber));
 		modules.add("fishing_hotspots", gson.toJsonTree(hotspots));
 		modules.add("corpse_spots", gson.toJsonTree(corpses));
+		modules.add("bestiary", gson.toJsonTree(bestiary));
 		modules.add("npc_search", gson.toJsonTree(npc));
 		root.add("modules", modules);
 		flatten("", root, keys);
@@ -551,6 +599,7 @@ class OptionCatalogTest {
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
+			case Checklist c -> throw new AssertionError("a checklist stores nothing; its items do");
 		};
 	}
 
@@ -565,6 +614,7 @@ class OptionCatalogTest {
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
+			case Checklist c -> throw new AssertionError("a checklist stores nothing; its items do");
 		}
 	}
 
@@ -589,6 +639,7 @@ class OptionCatalogTest {
 			case ActionOption a -> throw new AssertionError("only rule cards have actions");
 			case InfoOption i -> throw new AssertionError("a shown-only value stores nothing");
 			case DatabaseOption d -> throw new AssertionError("only a rule list with a database has this");
+			case Checklist c -> throw new AssertionError("a checklist stores nothing; its items do");
 		}
 	}
 

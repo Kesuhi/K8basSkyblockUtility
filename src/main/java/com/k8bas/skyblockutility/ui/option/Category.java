@@ -7,7 +7,7 @@ public enum Category {
 	WAYPOINTS("waypoints", "Waypoints", "Find NPCs: waypoints at fixed spots, outlines on NPCs by name, and the \"You found\" title."),
 	MINING("mining", "Mining", "Alerts and fixes for mining."),
 	FISHING("fishing", "Fishing", "Fixes and helpers for fishing."),
-	ODDS_TRACKERS("odds_trackers", "Odds & Trackers", "Drop odds and progress trackers."),
+	ODDS_TRACKERS("odds_trackers", "Odds & Trackers", "Trackers of your progress, such as the bestiary."),
 	SKYBLOCK_XP("skyblock_xp", "SkyBlock XP", "Settings for the SkyBlock XP optimizer.");
 
 	private final String id;

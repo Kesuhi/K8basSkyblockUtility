@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.k8bas.skyblockutility.config.GeneralConfig;
 import com.k8bas.skyblockutility.module.bobberfix.BobberFixConfig;
 import com.k8bas.skyblockutility.module.hotspot.HotspotConfig;
+import com.k8bas.skyblockutility.module.bestiary.BestiaryConfig;
 import com.k8bas.skyblockutility.module.corpsespots.CorpseSpotsConfig;
 import com.k8bas.skyblockutility.module.mineshaftalert.MineshaftAlertConfig;
 import com.k8bas.skyblockutility.module.mobhighlighter.MobHighlighterConfig;
@@ -12,6 +13,7 @@ import com.k8bas.skyblockutility.settings.OptionCatalog;
 import com.k8bas.skyblockutility.ui.option.Binding;
 import com.k8bas.skyblockutility.ui.option.Card;
 import com.k8bas.skyblockutility.ui.option.Category;
+import com.k8bas.skyblockutility.ui.option.Checklist;
 import com.k8bas.skyblockutility.ui.option.Choice;
 import com.k8bas.skyblockutility.ui.option.ActionOption;
 import com.k8bas.skyblockutility.ui.option.ColorOption;
@@ -58,8 +60,11 @@ class ConfigPageTest {
 	private final BobberFixConfig bobber = new BobberFixConfig();
 	private final HotspotConfig hotspots = new HotspotConfig();
 	private final CorpseSpotsConfig corpses = new CorpseSpotsConfig();
+	private final BestiaryConfig bestiary = new BestiaryConfig();
 	private final Map<String, String> keys = new HashMap<>();
 	private final List<Overlay> opened = new ArrayList<>();
+	/** The checklists whose button was pressed, by id (REQ-UI-61). */
+	private final List<String> listsToggled = new ArrayList<>();
 	private final OverlayHost host = new OverlayHost() {
 		@Override
 		public void open(Overlay overlay) {
@@ -75,7 +80,7 @@ class ConfigPageTest {
 	private List<Card> catalog() {
 		// As the modules do: switching one stores it in its config.
 		return OptionCatalog.build(general, mobs, npcs, enabled -> mobs.enabled = enabled, enabled -> npcs.enabled = enabled, shaft, enabled -> shaft.enabled = enabled,
-				bobber, hotspots, corpses);
+				bobber, hotspots, corpses, bestiary);
 	}
 
 	private Widget control(Option option) {
@@ -93,6 +98,7 @@ class ConfigPageTest {
 					action.action(), () -> { });
 			case InfoOption info -> new InfoText(info.value(), info.wide());
 			case DatabaseOption database -> new com.k8bas.skyblockutility.ui.widget.Button(database.buttonLabel(), com.k8bas.skyblockutility.ui.widget.Button.Style.NORMAL, () -> { }, () -> { });
+			case Checklist list -> new ChecklistButton(list, () -> listsToggled.add(list.id()), () -> false, () -> { });
 		};
 	}
 
@@ -102,7 +108,7 @@ class ConfigPageTest {
 
 	/** The state every setting is in: the configs (module switches included) and the keys. */
 	private String state() {
-		return GSON.toJson(general) + GSON.toJson(mobs) + GSON.toJson(npcs) + GSON.toJson(shaft) + GSON.toJson(bobber) + GSON.toJson(hotspots) + GSON.toJson(corpses) + keys;
+		return GSON.toJson(general) + GSON.toJson(mobs) + GSON.toJson(npcs) + GSON.toJson(shaft) + GSON.toJson(bobber) + GSON.toJson(hotspots) + GSON.toJson(corpses) + GSON.toJson(bestiary) + keys;
 	}
 
 	/** As WidgetScreen routes a press: topmost first, only inside a widget's clip region. */
@@ -233,6 +239,11 @@ class ConfigPageTest {
 			case ActionOption action -> { }
 			case InfoOption info -> { }
 			case DatabaseOption d -> { }
+			case Checklist list -> {
+				assertEquals(List.of(list.id()), listsToggled, list.id() + " opens its list");
+				assertEquals(before, state(), list.id() + ": nothing stored changes");
+				listsToggled.clear();
+			}
 			case IntSlider slider -> {
 				// A press on the track sets that value; put back what was there (a setting absent until picked stays absent).
 				GeneralConfig was = GSON.fromJson(before.substring(0, before.indexOf('}') + 1), GeneralConfig.class);
@@ -242,6 +253,7 @@ class ConfigPageTest {
 				switch (slider.id()) {
 					case "fishing_hotspots.fill_opacity" -> hotspots.fillOpacity = HotspotConfig.DEFAULT_OPACITY;
 					case "fishing_hotspots.sound_volume" -> hotspots.soundVolume = new HotspotConfig().soundVolume;
+					case "bestiary.window" -> bestiary.windowMinutes = new BestiaryConfig().windowMinutes;
 					default -> { }
 				}
 				assertEquals(before, state(), slider.id() + ": nothing else changed");
@@ -288,6 +300,7 @@ class ConfigPageTest {
 					case ActionOption a -> { }
 					case InfoOption f -> { }
 					case DatabaseOption d -> { }
+					case Checklist l -> { }
 					case IntSlider s -> assertTrue(feature[0] && mode[0].equals("Exact") && keys.isEmpty(), "only the amount changes");
 				}
 				feature[0] = true;
