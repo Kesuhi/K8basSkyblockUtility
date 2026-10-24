@@ -40,7 +40,7 @@ A client-side **Hypixel SkyBlock** mod for Minecraft 26.2 (Fabric), developed by
 
 ### Odds & Trackers
 
-* Bestiary Tracker: a HUD panel with kills, tiers, kills per hour and the milestone, per profile
+* Bestiary Tracker: kills, tiers and kills per hour of the family you hunt or up to 5 pinned ones, and your milestone
 
 ---
 
